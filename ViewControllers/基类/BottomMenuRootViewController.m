@@ -8,6 +8,10 @@
 
 #import "BottomMenuRootViewController.h"
 #import "PetInfoViewController.h"
+#import "ToolTipsViewController.h"
+#import "TouchViewController.h"
+#import "ShakeViewController.h"
+
 #define headBtnWidth 64
 #define circleWidth 82
 @interface BottomMenuRootViewController ()
@@ -23,6 +27,19 @@
         // Custom initialization
     }
     return self;
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [[UIApplication sharedApplication] setApplicationSupportsShakeToEdit:NO];
+    [self becomeFirstResponder];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"rocking" ofType:@"wav"];
+    NSString *path2 = [[NSBundle mainBundle] pathForResource:@"rocked" ofType:@"wav"];
+    AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path2], &soundID2);
+	AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path], &soundID);
+}
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
 }
 
 - (void)viewDidLoad
@@ -94,14 +111,40 @@
 -(void)btn1Click
 {
     NSLog(@"1");
+    ShakeViewController *shake = [[ShakeViewController alloc] init];
+    [self addChildViewController:shake];
+    [shake release];
+    [shake didMoveToParentViewController:self];
+    [self.view addSubview:shake.view];
+//    [shake createAlertView];
+    [self hideAll];
+}
+-(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    NSLog(@"bengin Shaking  times");
+//    label.text = [NSString stringWithFormat:@"%d", count];
 }
 -(void)btn2Click
 {
     NSLog(@"2");
+    ToolTipsViewController *tool = [[ToolTipsViewController alloc] init];
+    [self addChildViewController:tool];
+    [tool release];
+    [tool didMoveToParentViewController:self];
+    [self.view addSubview:tool.view];
+    [tool createPresentGiftAlertView];
+    [self hideAll];
 }
 -(void)btn3Click
 {
     NSLog(@"3");
+    TouchViewController *touch = [[TouchViewController alloc] init];
+    [self addChildViewController:touch];
+    [touch release];
+    [touch didMoveToParentViewController:self];
+    [self.view addSubview:touch.view];
+    [touch createAlertView];
+    [self hideAll];
 }
 -(void)btn4Click
 {

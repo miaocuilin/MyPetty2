@@ -7,10 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 @interface ShakeViewController : UIViewController
 {
-    int count;
-    UILabel * label;
+    MBProgressHUD *alertView;
+    SystemSoundID soundID;
+    SystemSoundID soundID2;
+    MBProgressHUD *unfortunately;
+    MBProgressHUD *goldHUD;
+
 }
+- (void)createAlertView;
 @end

@@ -451,8 +451,8 @@
 - (void)quiltView:(TMQuiltView *)quiltView didSelectCellAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSLog(@"index:%d",indexPath.row+1);
-//    [self HUDText:@"你得到了一个魔法棒" showView:self.view yOffset:110];
-//    [self HUDImageIcon:[UIImage imageNamed:@"gold.png"] showView:self.view yOffset:-40 Number:10];
+//    [ControllerManager HUDText:@"你得到了一个魔法棒" showView:self.view yOffset:110];
+//    [ControllerManager HUDImageIcon:@"gold.png" showView:self.view yOffset:-40 Number:10];
 //    [self HUDImageIcon:[UIImage imageNamed:@"gold.png"] showView:self.view yOffset:50 Number:100];
     if (![ControllerManager getIsSuccess]) {
         [USER setObject:[NSString stringWithFormat:@"%d", 1000+indexPath.row] forKey:@"pageNum"];

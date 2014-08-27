@@ -38,6 +38,7 @@ static int isSuccess;
 static JDSideMenu * sideMenu = nil;
 //static NTSlidingViewController * sliding = nil;
 static MainViewController * main = nil;
+MBProgressHUD *HUD;
 
 +(id)shareManagerRandom
 {
@@ -235,5 +236,48 @@ static MainViewController * main = nil;
         [linesArray addObject:lineString];
     }
     return (NSArray *)linesArray;
+}
+#pragma mark - 金币、星星、红心弹窗
++ (void)HUDText:(NSString *)string showView:(UIView *)inView yOffset:(float) offset
+{
+    HUD = [MBProgressHUD showHUDAddedTo:inView animated:YES];
+    [inView addSubview:HUD];
+    HUD.minSize = CGSizeMake(string.length * 5, 30);
+    HUD.margin = 10;
+    HUD.labelText = string;
+    
+    HUD.mode =MBProgressHUDModeText;
+    [HUD show:YES];
+    HUD.yOffset = offset;
+    HUD.color = [UIColor colorWithRed:247/255.0 green:243/255.0 blue:240/255.0 alpha:1];
+    [HUD hide:YES afterDelay:2.0];
+}
+
++ (void)HUDImageIcon:(NSString *)iconImageString showView:(UIView *)inView yOffset:(float)offset Number:(int)num
+{
+    HUD = [MBProgressHUD showHUDAddedTo:inView animated:YES];
+    [inView addSubview:HUD];
+    HUD.minSize = CGSizeMake(130, 60);
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.yOffset = offset;
+    HUD.margin = 0;
+    UIView *totalView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 150, 60)];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 10, 42, 42)];
+    [totalView addSubview:imageView];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(70, 15, 70, 30)];
+    label.text = [NSString stringWithFormat:@"+ %d",num];
+    label.font = [UIFont boldSystemFontOfSize:20];
+    label.textColor = [UIColor orangeColor];
+    label.textAlignment = NSTextAlignmentLeft;
+    [totalView addSubview:label];
+    HUD.customView = totalView;
+    HUD.color = [UIColor colorWithRed:247/255.0 green:243/255.0 blue:240/255.0 alpha:1];
+    UIImage *imageBG = [UIImage imageNamed:iconImageString];
+    imageView.image = imageBG;
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:2.0];
+    
 }
 @end

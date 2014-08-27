@@ -97,9 +97,12 @@
 //    PublishViewController * info = [[PublishViewController alloc] init];
 //    AtUsersViewController * info = [[AtUsersViewController alloc] init];
 //    ShakeViewController * fvc = [[ShakeViewController alloc] init];
+//    PublishViewController * fvc = [[PublishViewController alloc] init];
+    ShakeViewController * fvc = [[ShakeViewController alloc] init];
 //    RecordViewController * fvc = [[RecordViewController alloc] init];
 //    ChoseLoadViewController * fvc = [[ChoseLoadViewController alloc] init];
 //    JDMenuViewController * info = [[JDMenuViewController alloc] init];
+//    JDMenuViewController * fvc = [[JDMenuViewController alloc] init];
     FirstViewController * info = [[FirstViewController alloc] init];
 //    MyInfoViewController * info = [[MyInfoViewController alloc] init];
 //    PetInfoViewController * info = [[PetInfoViewController alloc] init];

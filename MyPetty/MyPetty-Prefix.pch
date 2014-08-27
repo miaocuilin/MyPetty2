@@ -1,0 +1,160 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_3_0
+#warning "This project uses features only available in iOS SDK 3.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import "MyControl.h"
+    #import "httpDownloadBlock.h"
+    #import "MyMD5.h"
+    #import "OpenUDID.h"
+    #import "ControllerManager.h"
+    #import "UIImageView+WebCache.h"
+    #import "UIImage+UIImageExtras.h"
+    #import "MONActivityIndicatorView.h"
+    #import "MJRefresh.h"
+    #import "MMProgressHUD.h"
+    #import "UMSocial.h"
+    #import "JDSideMenu.h"
+    #import "BottomMenuRootViewController.h"
+    #import "UIImage+ImageBlur.h"
+    #import "MBProgressHUD.h"
+
+    #define iOS7 [[[UIDevice currentDevice] systemVersion] floatValue]>=7.0
+    //橘色
+    #define BGCOLOR [UIColor colorWithRed:255/255.0 green:116/255.0 blue:88/255.0 alpha:1]
+    //棕黄色
+    #define BGCOLOR2 [UIColor colorWithRed:240/255.0 green:235/255.0 blue:230/255.0 alpha:0.8]
+    //浅橘色
+    #define BGCOLOR3 [UIColor colorWithRed:249/255.0 green:162/255.0 blue:133/255.0 alpha:1]
+    //浅绿色
+    #define BGCOLOR4 [UIColor colorWithRed:117/255.0 green:186/255.0 blue:150/255.0 alpha:1]
+
+    #define USER [ControllerManager shareUserDefault]
+    #define NET [UIApplication sharedApplication].networkActivityIndicatorVisible
+    #define DOCDIR [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
+    #define StartLoading [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];[MMProgressHUD showWithStatus:@"加载中..."];
+    #define LoadingSuccess [MMProgressHUD dismissWithSuccess:@"加载完成" title:nil afterDelay:0.5];
+    #define LoadingFailed [MMProgressHUD dismissWithError:@"加载失败" afterDelay:0.5];
+
+    #define SHOWMENU JDSideMenu * menu = [ControllerManager shareJDSideMenu];[menu showMenuAnimated:YES];
+//    #define HIDEMENU JDSideMenu * menu = [ControllerManager shareJDSideMenu];[menu hideMenuAnimated:YES];
+    //IP头API
+    #define IPURL @"http://54.199.161.210/dc/index.php"
+
+    //注册API
+    #define REGISTERAPI @"http://54.199.161.210/dc/index.php?r=user/registerApi&age=&code=&gender=&type=&wechat=&weibo=&sig=%@&SID=%@"
+
+    //登录API
+    #define LOGINAPI [NSString stringWithFormat:@"http://54.199.161.210/dc/index.php?r=user/loginApi&uid=%@&sig=%@", [OpenUDID value], [MyMD5 md5:[NSString stringWithFormat:@"uid=%@dog&cat", [OpenUDID value]]]]
+
+    //获取图片未拼接的URL，后面需要加图片的名称
+    #define IMAGEURL @"http://54.199.161.210/dc/images/upload/"
+    #define TXURL @"http://54.199.161.210/dc/images/tx/"
+
+    //图片、头像上传API
+    #define IMAGEAPI @"http://54.199.161.210/dc/index.php?r=image/uploadApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define TXAPI @"http://54.199.161.210/dc/index.php?r=user/txApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+    //获取用户信息API
+    #define INFOAPI @"http://54.199.161.210/dc/index.php?r=user/infoApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+    //获取用户照片API
+    #define IMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define IMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
+
+    //获取其它用户照片API
+    #define OTHERIMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&usr_id="
+    #define OTHERIMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
+
+    //随机照片API
+    #define RANDOMAPI @"http://54.199.161.210/dc/index.php?r=image/randomApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define RANDOMAPI2 @"http://54.199.161.210/dc/index.php?r=image/randomApi&img_id="
+
+    //用户喜爱照片API
+    #define FAVORITEAPI @"http://54.199.161.210/dc/index.php?r=image/favoriteApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define FAVORITEAPI2 @"http://54.199.161.210/dc/index.php?r=image/favoriteApi&img_id="
+
+    //照片信息
+    #define IMAGEINFOAPI @"http://54.199.161.210/dc/index.php?r=image/infoApi&img_id="
+
+    //其它用户信息
+    #define USERINFOAPI @"http://54.199.161.210/dc/index.php?r=user/otherApi&usr_id="
+
+    //加关注API
+    #define FOLLOWAPI @"http://54.199.161.210/dc/index.php?r=user/followApi&usr_id="
+    //取消关注API
+    #define UNFOLLOWAPI @"http://54.199.161.210/dc/index.php?r=user/unfollowApi&usr_id="
+
+    //我关注的API
+    #define FOLLOWINGAPI @"http://54.199.161.210/dc/index.php?r=user/followingApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define FOLLOWINGAPI2 @"http://54.199.161.210/dc/index.php?r=user/followingApi&usr_id="
+
+    //被关注的API
+    #define FOLLOWERAPI @"http://54.199.161.210/dc/index.php?r=user/followerApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define FOLLOWERAPI2 @"http://54.199.161.210/dc/index.php?r=user/followerApi&usr_id="
+
+    //点赞API
+    #define LIKEAPI @"http://54.199.161.210/dc/index.php?r=image/likeApi&img_id="
+    //取消赞API
+    #define UNLIKEAPI @"http://54.199.161.210/dc/index.php?r=image/unlikeApi&img_id="
+
+    //宠物类型
+    #define TYPEAPI @"http://54.199.161.210/dc/index.php?r=user/typeApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+    //封面照片
+    #define WELCOMEAPI @"http://54.199.161.210/dc/index.php?r=user/welcomeApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+    //照片点赞的人的列表
+    #define LIKERSAPI @"http://54.199.161.210/dc/index.php?r=user/othersApi&usr_ids="
+
+    //用户是否绑定微博或微信
+    #define ISBINDEDAPI @"http://54.199.161.210/dc/index.php?r=user/bindApi&wechat=&weibo="
+
+    //活动页面API
+    #define TOPICLISTAPI @"http://54.199.161.210/dc/index.php?r=topic/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+    //活动图片请求API
+    #define TOPICIMAGEAPI @"http://54.199.161.210/dc/images/topic/"
+
+    //活动详情API
+    #define TOPICINFOAPI @"http://54.199.161.210/dc/index.php?r=topic/infoApi&topic_id="
+
+    //最热
+    #define POPULARAPI @"http://54.199.161.210/dc/index.php?r=topic/popularApi&topic_id="
+    #define POPULARAPI2 @"http://54.199.161.210/dc/index.php?r=topic/popularApi&topic_id=%@&img_id="
+
+    //最新
+    #define NEWESTAPI @"http://54.199.161.210/dc/index.php?r=topic/newestApi&topic_id="
+    #define NEWESTAPI2 @"http://54.199.161.210/dc/index.php?r=topic/newestApi&topic_id=%@&img_id="
+
+    //奖品
+    #define REWARDAPI @"http://54.199.161.210/dc/index.php?r=topic/rewardApi&topic_id="
+
+    //消息列表 mail_id=&is_system=
+    #define NOTIFYAPI @"http://54.199.161.210/dc/index.php?r=mail/listApi&is_system="
+//    #define NOTIFYAPI2 @"http://54.199.161.210/dc/index.php?r=mail/listApi&is_system="
+
+    //发送消息 POST方法 参数为to_id 和 body
+    #define POSTMESSAGEAPI @"http://54.199.161.210/dc/index.php?r=mail/createApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+    //删除消息
+    #define DELMESSAGEAPI @"http://54.199.161.210/dc/index.php?r=mail/deleteApi&mail_id="
+
+    //评论 POST方法  参数img_id 和 body
+    #define COMMENTAPI @"http://54.199.161.210/dc/index.php?r=image/commentApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+    //获取活动数和消息数
+    #define ACTIVITYANDNOTIFYAPI @"http://54.199.161.210/dc/index.php?r=user/notifyApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+
+#endif

@@ -10,6 +10,8 @@
 #define MENUCOLOR [UIColor colorWithRed:125/255.0 green:60/255.0 blue:45/255.0 alpha:1]
 //各个国家头像之间的间隔 (176-40*3)/2+40
 #define SPACE 68
+//偏移量
+#define OFFSET 225
 #import "ActivityViewController.h"
 #import "NoticeViewController.h"
 #import "UIViewController+JDSideMenu.h"
@@ -38,6 +40,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.countryArray = [NSMutableArray arrayWithCapacity:0];
+    self.searchArray = [NSMutableArray arrayWithCapacity:0];
     
     [self createBg];
     [self createUI];
@@ -55,24 +58,12 @@
     //    NSLog(@"%@", data);
     UIImage * image = [UIImage imageWithData:data];
     self.bgImageView.image = image;
-    //    self.bgImageView.image = [UIImage imageNamed:@"Default-568h@2x.png"];
-    
-    //毛玻璃化，需要先设置图片再设置其他
-//    [self.bgImageView setFramesCount:20];
-//    [self.bgImageView setBlurAmount:1];
-    
-    //这里必须延时执行，否则会变白
-    //注意，由于图片较大，这里需要的时间必须在2秒以上
-//    [self performSelector:@selector(blurImage) withObject:nil afterDelay:0.25f];
+
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
     tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
     [self.view addSubview:tempView];
 }
-#pragma mark - 图片毛玻璃化
-//-(void)blurImage
-//{
-//    [self.bgImageView blurInAnimationWithDuration:0.1f];
-//}
+
 -(void)createUI
 {
     //背景
@@ -86,26 +77,31 @@
     
     //scrollView
     sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 20, 320, self.view.frame.size.height-20)];
-    sv.contentSize = CGSizeMake(320, 568-20);
+    sv.contentSize = CGSizeMake(320+225, 568-20);
     sv.showsVerticalScrollIndicator = NO;
+    sv.scrollEnabled = NO;
     [self.view addSubview:sv];
     
     //搜索框
-    UIView * searchBgView = [MyControl createViewWithFrame:CGRectMake(15, 15, 380/2, 25)];
+    UIView * searchBgView = [MyControl createViewWithFrame:CGRectMake(15, 15+20, 340/2, 25)];
     searchBgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
     searchBgView.alpha = 0.6;
     searchBgView.layer.cornerRadius = 7;
     searchBgView.layer.masksToBounds = YES;
-    [sv addSubview:searchBgView];
+    [self.view addSubview:searchBgView];
 
     UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 12, 12) ImageName:@"menu-1.png"];
-    UITextField * tfSearch = [MyControl createTextFieldWithFrame:searchBgView.frame placeholder:nil passWord:NO leftImageView:searchImageView rightImageView:nil Font:13];
+    tfSearch = [MyControl createTextFieldWithFrame:searchBgView.frame placeholder:nil passWord:NO leftImageView:searchImageView rightImageView:nil Font:13];
     tfSearch.delegate = self;
     tfSearch.returnKeyType = UIReturnKeySearch;
     tfSearch.backgroundColor = [UIColor clearColor];
     tfSearch.borderStyle = 0;
-    tfSearch.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"  搜索宠物昵称" attributes:@{NSForegroundColorAttributeName:BGCOLOR}];
-    [sv addSubview:tfSearch];
+    tfSearch.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@" 搜索萌宠的昵称" attributes:@{NSForegroundColorAttributeName:BGCOLOR}];
+    [self.view addSubview:tfSearch];
+    
+    searchBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 37, 38, 20) ImageName:@"" Target:self Action:@selector(searchBtnClick) Title:@"取消"];
+    searchBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [self.view addSubview:searchBtn];
     
     //消息
     UIButton * messageBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 50, 25, 25) ImageName:@"menu_message.png" Target:self Action:@selector(messageBtnClick) Title:nil];
@@ -202,17 +198,17 @@
 //    [self.view addSubview:shopBtn];
     
     //下半段的20%透明黑背景
-    UIView * blackView = [MyControl createViewWithFrame:CGRectMake(0, position.frame.origin.y+20+10, 320, sv.contentSize.height-(position.frame.origin.y+20+10))];
+    UIView * blackView = [MyControl createViewWithFrame:CGRectMake(0, position.frame.origin.y+20+10, OFFSET, sv.contentSize.height-(position.frame.origin.y+20+10))];
     blackView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
     [sv addSubview:blackView];
     
     //当前国家和其他国家
     
     //一个透明一个不透明
-    UIView * countryBg = [MyControl createViewWithFrame:CGRectMake(0, blackView.frame.origin.y, 320, 65)];
+    UIView * countryBg = [MyControl createViewWithFrame:CGRectMake(0, blackView.frame.origin.y, OFFSET, 65)];
     [sv addSubview:countryBg];
     
-    UIView * countryBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 65)];
+    UIView * countryBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, OFFSET, 65)];
     countryBgView.backgroundColor = [ControllerManager colorWithHexString:@"8e2918"];
     countryBgView.alpha = 0.4;
     [countryBg addSubview:countryBgView];
@@ -336,7 +332,7 @@
     NSArray * array = @[@"menu-13.png", @"menu-14.png", @"menu-8.png", @"menu-10.png", @"through.png"];
     NSArray * array2 = @[@"首页", @"商城", @"活动", @"设置", @"穿越"];
     for(int i=0;i<array.count;i++){
-        UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, i*45, 320, 30)];
+        UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, i*45, OFFSET, 30)];
         [noticeBgView addSubview:bgView];
         bgView.tag = 2000+i;
         
@@ -374,7 +370,7 @@
         UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(370/2, 7.5, 9, 15) ImageName:@"menu-11.png"];
         [bgView addSubview:arrow];
         
-        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, 25) ImageName:nil Target:self Action:@selector(menuButtonClick:) Title:nil];
+        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(0, 0, OFFSET, 25) ImageName:nil Target:self Action:@selector(menuButtonClick:) Title:nil];
         [button addTarget:self action:@selector(menuButtonClick2:) forControlEvents:UIControlEventTouchDown];
         [button addTarget:self action:@selector(menuButtonClick3) forControlEvents:UIControlEventTouchDragOutside];
         [bgView addSubview:button];
@@ -393,6 +389,31 @@
 //    
 //    UIButton * switchCategory = [MyControl createButtonWithFrame:CGRectMake(0, 0, 30, 30) ImageName:@"" Target:self Action:@selector(switchCategoryClick) Title:nil];
 //    [switchView addSubview:switchCategory];
+    
+    /*************创建tableView***************/
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(225, 50, 220, self.view.frame.size.height-20-50) style:UITableViewStylePlain];
+    tv.dataSource = self;
+    tv.delegate = self;
+    tv.backgroundColor = [UIColor clearColor];
+    tv.separatorStyle = 0;
+    [sv addSubview:tv];
+}
+-(void)searchBtnClick
+{
+    if ([searchBtn.titleLabel.text isEqualToString:@"取消"]) {
+        NSLog(@"取消~~~");
+        [tfSearch resignFirstResponder];
+        [UIView animateWithDuration:0.3 animations:^{
+            sv.contentOffset = CGPointMake(0, 0);
+        }];
+        [self.searchArray removeAllObjects];
+        [tv reloadData];
+    }else{
+        NSLog(@"搜索用户~~~");
+        [self.searchArray addObject:@"11"];
+        [tv reloadData];
+    }
+    
 }
 -(void)swipeLeft
 {
@@ -494,7 +515,7 @@
 -(void)countryButtonClick:(UIButton *)btn
 {
     NSLog(@"您点击了第%d个国家", btn.tag-100+1);
-    selectedNum = btn.tag-100+1;
+//    selectedNum = btn.tag-100+1;
 //    UIButton * button = self.countryArray[btn.tag-100];
 //    crown.frame = CGRectMake(button.frame.origin.x+25, button.frame.origin.y+27, 18, 18);
 }
@@ -631,13 +652,89 @@
         bgView.backgroundColor = [UIColor clearColor];
     }
 }
+#pragma mark - tableView代理
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.searchArray.count;
+}
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString * cellID = @"ID";
+    UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    UIButton * btn = nil;
+    UILabel * label = nil;
+    if (!cell) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
+        btn = [MyControl createButtonWithFrame:CGRectMake(20, 7, 36, 36) ImageName:@"" Target:self Action:@selector(btnClick:) Title:nil];
+        btn.layer.cornerRadius = btn.frame.size.width/2;
+        btn.layer.masksToBounds = YES;
+        [cell addSubview:btn];
+        
+        label = [MyControl createLabelWithFrame:CGRectMake(70, 15, 140, 20) Font:15 Text:nil];
+        label.textColor = [UIColor blackColor];
+        [cell addSubview:label];
+    }
+    [btn setBackgroundImage:[UIImage imageNamed:@"cat2.jpg"] forState:UIControlStateNormal];
+    btn.tag = indexPath.row;
+    
+    label.text = @"白天不懂夜的黑";
+
+    cell.selectionStyle = 0;
+    cell.backgroundColor = [UIColor clearColor];
+    return cell;
+}
+-(void)btnClick:(UIButton *)btn
+{
+    NSLog(@"点击了第%d个", btn.tag);
+}
+-(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 50.0f;
+}
+
 #pragma mark - textField代理
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    [UIView animateWithDuration:0.3 animations:^{
+        sv.contentOffset = CGPointMake(225, 0);
+    }];
+}
+
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    if (self.tfString != nil) {
+        [self.searchArray addObject:@"11"];
+        [tv reloadData];
+    }
     return YES;
 }
-
+-(BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    [searchBtn setTitle:@"取消" forState:UIControlStateNormal];
+    self.tfString = nil;
+    return YES;
+}
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    //string是最新输入的文字，textField的长度及字符要落后一个操作。
+    if (![string isEqualToString:@""]) {
+        [searchBtn setTitle:@"搜索" forState:UIControlStateNormal];
+    }else if(textField.text.length == 1){
+        [searchBtn setTitle:@"取消" forState:UIControlStateNormal];
+    }
+    if ([searchBtn.titleLabel.text isEqualToString:@"搜索"]) {
+        if ([string isEqualToString:@""]) {
+            self.tfString = [self.tfString substringToIndex:textField.text.length-1];
+        }else{
+            self.tfString = [NSString stringWithFormat:@"%@%@", textField.text, string];
+        }
+        
+    }else{
+        self.tfString = nil;
+    }
+    return YES;
+}
 
 
 - (void)didReceiveMemoryWarning

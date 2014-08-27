@@ -277,7 +277,7 @@
     }
     /*****************************/
     //
-    NSString * str2= @"祭司-Anna";
+    NSString * str2= @"祭司 — Anna";
     CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:15 Text:str2];
 //    positionAndUserName.font = [UIFont boldSystemFontOfSize:15];

@@ -14,7 +14,7 @@
 #import <AviarySDK/AviarySDK.h>
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
-
+#import "AtUsersViewController.h"
 @interface PublishViewController () <UITextViewDelegate,AFPhotoEditorControllerDelegate>
 {
     UITextView * _textView;
@@ -54,42 +54,111 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     // Start the Aviary Editor OpenGL Load
     [AFOpenGLManager beginOpenGLLoad];
     
-    
+    [self createBg];
+    [self createFakeNavigation];
     [self makeUI];
 }
+-(void)createBg
+{
+    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    [self.view addSubview:self.bgImageView];
+    //    self.bgImageView.backgroundColor = [UIColor redColor];
+//    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+//    NSLog(@"%@", filePath);
+//    NSData * data = [NSData dataWithContentsOfFile:filePath];
+//    //    NSLog(@"%@", data);
+//    UIImage * image = [UIImage imageWithData:data];
+    self.bgImageView.image = [self.oriImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
+    [self.view addSubview:tempView];
+}
+-(void)createFakeNavigation
+{
+    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    [self.view addSubview:navView];
+    
+    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    alphaView.alpha = 0.85;
+    alphaView.backgroundColor = BGCOLOR;
+    [navView addSubview:alphaView];
+    
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 30, 20, 20) ImageName:@"7-7.png"];
+    [navView addSubview:backImageView];
+    
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    backBtn.showsTouchWhenHighlighted = YES;
+    [navView addSubview:backBtn];
+    
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"发布照片"];
+    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [navView addSubview:titleLabel];
+    
+    UIButton * rightButton = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-20-17, 30, 20, 20) ImageName:@"30-1.png" Target:self Action:@selector(rightButtonClick) Title:nil];
+    rightButton.showsTouchWhenHighlighted = YES;
+    [navView addSubview:rightButton];
+}
 
+-(void)backBtnClick
+{
+    NSLog(@"返回");
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 -(void)makeUI
 {
-    UIImageView * bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"30-3.png"];
+    bgImageView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    bgImageView.contentSize = CGSizeMake(320, 568);
     [self.view addSubview:bgImageView];
+//    UIImageView * bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@""];
+//    [self.view addSubview:bgImageView];
     
-    UIButton * leftButton = [MyControl createButtonWithFrame:CGRectMake(15, 25, 25, 25) ImageName:@"7-7.png" Target:self Action:@selector(leftButtonClick) Title:nil];
-    [bgImageView addSubview:leftButton];
+//    UIButton * leftButton = [MyControl createButtonWithFrame:CGRectMake(15, 25, 25, 25) ImageName:@"7-7.png" Target:self Action:@selector(leftButtonClick) Title:nil];
+//    [navView addSubview:leftButton];
+//    
+//    UIButton * rightButton = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-25-15, 25, 25, 25) ImageName:@"30-1.png" Target:self Action:@selector(rightButtonClick) Title:nil];
+//    [bgImageView addSubview:rightButton];
     
-    UIButton * rightButton = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-25-15, 25, 25, 25) ImageName:@"30-1.png" Target:self Action:@selector(rightButtonClick) Title:nil];
-    [bgImageView addSubview:rightButton];
-    
-    bigImageView = [MyControl createImageViewWithFrame:CGRectMake(10, rightButton.frame.origin.y+25+10, self.view.frame.size.width-20, 230) ImageName:@""];
+    bigImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 64+5, self.view.frame.size.width-20, 230) ImageName:@""];
+//    bigImageView.image = [UIImage imageNamed:@"cat2.jpg"];
     bigImageView.image = self.oriImage;
-    float Width = self.oriImage.size.width;
-    float Height = self.oriImage.size.height;
-    if (Width>300) {
-        float w = 300/Width;
-        Width *= w;
-        Height *= w;
-    }
-    if (Height>230) {
-        float h = 230/Height;
-        Width *= h;
-        Height *= h;
-    }
-    bigImageView.frame = CGRectMake((self.view.frame.size.width-Width)/2, bigImageView.frame.origin.y, Width, Height);
+//    float Width = bigImageView.image.size.width;
+//    float Height = bigImageView.image.size.height;
+//    if (Width>300) {
+//        float w = 300/Width;
+//        Width *= w;
+//        Height *= w;
+//    }
+//    if (Height>230) {
+//        float h = 230/Height;
+//        Width *= h;
+//        Height *= h;
+//    }
+    bigImageView.frame = CGRectMake((self.view.frame.size.width-300)/2, bigImageView.frame.origin.y, 300, 230);
     bigImageView.layer.cornerRadius = 5;
     bigImageView.layer.masksToBounds = YES;
     [bgImageView addSubview:bigImageView];
     
+    /***********#话题#  @用户************/
+    UIButton * topic = [MyControl createButtonWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, 290/2, 30) ImageName:@"" Target:self Action:@selector(topicClick) Title:@"#喵喵cosplay大比拼#"];
+    topic.titleLabel.font = [UIFont systemFontOfSize:13];
+    topic.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.7];
+    topic.layer.cornerRadius = 3;
+    topic.layer.masksToBounds = YES;
+    topic.showsTouchWhenHighlighted = YES;
+    [bgImageView addSubview:topic];
+    
+    UIButton * users = [MyControl createButtonWithFrame:CGRectMake(320-10-290/2, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, 290/2, 30) ImageName:@"" Target:self Action:@selector(usersClick) Title:@"@豆豆 等3个用户"];
+    users.titleLabel.font = [UIFont systemFontOfSize:13];
+    users.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.7];
+    users.layer.cornerRadius = 3;
+    users.layer.masksToBounds = YES;
+    users.showsTouchWhenHighlighted = YES;
+    [bgImageView addSubview:users];
+    /***********************************/
 //    _textView = [MyControl createTextFieldWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+5, 300, 80) placeholder:@"为您爱宠的靓照写个描述吧~" passWord:NO leftImageView:nil rightImageView:nil Font:17];
-    textBgView = [MyControl createViewWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+5, 300, 80)];
+    textBgView = [MyControl createViewWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+5+33, 300, 80)];
     //将大小赋值给全局变量
     rect = textBgView.frame;
     [bgImageView addSubview:textBgView];
@@ -131,39 +200,54 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     bgImageView2.image = [[UIImage imageNamed:@"30-2-2.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
     [bgImageView addSubview:bgImageView2];
     
-    sina = [MyControl createButtonWithFrame:CGRectMake(20, 5, 35, 35) ImageName:@"weibo.png" Target:self Action:@selector(sinaClick) Title:nil];
+    sina = [MyControl createButtonWithFrame:CGRectMake(20+5, 5+5, 25, 25) ImageName:@"publish_unSelected.png" Target:self Action:@selector(sinaClick) Title:nil];
     if ([[USER objectForKey:@"sina"] intValue] == 1) {
         sina.selected = YES;
     }else{
         sina.selected = NO;
     }
     [bgImageView2 addSubview:sina];
-    [sina setBackgroundImage:[UIImage imageNamed:@"weibo-1.png"] forState:UIControlStateSelected];
+    [sina setBackgroundImage:[UIImage imageNamed:@"publish_selected.png"] forState:UIControlStateSelected];
     
-    UILabel * sinaLabel = [MyControl createLabelWithFrame:CGRectMake(sina.frame.origin.x+sina.frame.size.width+3, 10, 80, 25) Font:15 Text:@"新浪微博"];
+    sinaLabel = [MyControl createLabelWithFrame:CGRectMake(sina.frame.origin.x+sina.frame.size.width+7, 10, 80, 25) Font:15 Text:@"新浪微博"];
     sinaLabel.textColor = [UIColor colorWithRed:56/255.0 green:56/255.0 blue:56/255.0 alpha:1];
     [bgImageView2 addSubview:sinaLabel];
     
     UIImageView * line = [MyControl createImageViewWithFrame:CGRectMake(300/2, 0, 2, bgImageView2.frame.size.height) ImageName:@"30-2.png"];
     [bgImageView2 addSubview:line];
     
-    weChat = [MyControl createButtonWithFrame:CGRectMake(170, 5, 35, 35) ImageName:@"wxFriend.png" Target:self Action:@selector(weChatClick) Title:nil];
+    weChat = [MyControl createButtonWithFrame:CGRectMake(170+5, 5+5, 25, 25) ImageName:@"publish_unSelected.png" Target:self Action:@selector(weChatClick) Title:nil];
     if ([[USER objectForKey:@"weChat"] intValue] == 1) {
         weChat.selected = YES;
     }else{
         weChat.selected = NO;
     }
     [bgImageView2 addSubview:weChat];
-    [weChat setBackgroundImage:[UIImage imageNamed:@"wxFriend-1.png"] forState:UIControlStateSelected];
+    [weChat setBackgroundImage:[UIImage imageNamed:@"publish_selected.png"] forState:UIControlStateSelected];
     
-    UILabel * weChatLabel = [MyControl createLabelWithFrame:CGRectMake(weChat.frame.origin.x+weChat.frame.size.width+3, 10, 80, 25) Font:15 Text:@"微信朋友圈"];
+    weChatLabel = [MyControl createLabelWithFrame:CGRectMake(weChat.frame.origin.x+weChat.frame.size.width+7, 10, 80, 25) Font:15 Text:@"微信朋友圈"];
     weChatLabel.textColor = [UIColor colorWithRed:56/255.0 green:56/255.0 blue:56/255.0 alpha:1];
     [bgImageView2 addSubview:weChatLabel];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasChange:) name:UIKeyboardDidChangeFrameNotification object:nil];
+    
+    [self.view bringSubviewToFront:navView];
 }
+#pragma mark - #话题点击事件
+-(void)topicClick
+{
+    NSLog(@"进入#话题页");
+}
+-(void)usersClick
+{
+    NSLog(@"进入@用户页");
+    AtUsersViewController * vc = [[AtUsersViewController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
+}
+#pragma mark -
 -(void)publishButtonClick:(UIButton *)button
 {
     //规定上传图片的大小尺寸，不符合不允许上传
@@ -245,13 +329,16 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     
 }
+#pragma mark - 新浪、微信点击事件
 -(void)sinaClick
 {
     sina.selected = !sina.selected;
     if (sina.selected) {
         [USER setObject:@"1" forKey:@"sina"];
+        sinaLabel.textColor = BGCOLOR;
     }else{
         [USER setObject:@"0" forKey:@"sina"];
+        sinaLabel.textColor = [UIColor blackColor];
     }
     
 }
@@ -260,8 +347,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     weChat.selected = !weChat.selected;
     if (weChat.selected) {
         [USER setObject:@"1" forKey:@"weChat"];
+        weChatLabel.textColor = BGCOLOR;
     }else{
         [USER setObject:@"0" forKey:@"weChat"];
+        weChatLabel.textColor = [UIColor blackColor];
     }
 }
 
@@ -350,12 +439,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -
 -(void)leftButtonClick
 {
-    [self lauchEditorWithImage:self.oriImage];
+    NSLog(@"重新编辑");
+//    [self lauchEditorWithImage:self.oriImage];
 //    [self dismissViewControllerAnimated:YES completion:nil];
 //    [self presentViewController:self.af animated:YES completion:nil];
 }
 -(void)rightButtonClick
 {
+    NSLog(@"关闭");
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

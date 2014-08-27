@@ -10,8 +10,16 @@
 #import "RandomViewController.h"
 #import "FavoriteViewController.h"
 #import "SquareViewController.h"
+#import "PublishViewController.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <QuartzCore/QuartzCore.h>
+#import <AviarySDK/AviarySDK.h>
+static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
+static NSString * const kAFAviarySecret = @"389160adda815809";
 @interface MainViewController ()
 
+@property (nonatomic, strong) ALAssetsLibrary * assetLibrary;
+@property (nonatomic, strong) NSMutableArray * sessions;
 @end
 
 @implementation MainViewController
@@ -29,6 +37,18 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    // Allocate Asset Library
+    ALAssetsLibrary * assetLibrary = [[ALAssetsLibrary alloc] init];
+    [self setAssetLibrary:assetLibrary];
+    
+    // Allocate Sessions Array
+    NSMutableArray * sessions = [NSMutableArray new];
+    [self setSessions:sessions];
+    [sessions release];
+    
+    // Start the Aviary Editor OpenGL Load
+    [AFOpenGLManager beginOpenGLLoad];
+    
     [self createScrollView];
     [self createFakeNavigation];
     [self createViewControllers];
@@ -52,6 +72,10 @@
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
+    
+    UIButton * camara = [MyControl createButtonWithFrame:CGRectMake(320-82/2-15, 64-54/2-7, 82/2, 54/2) ImageName:@"相机图标.png" Target:self Action:@selector(cameraClick) Title:nil];
+    camara.showsTouchWhenHighlighted = YES;
+    [navView addSubview:camara];
 }
 -(void)menuBtnClick:(UIButton *)button
 {
@@ -167,6 +191,293 @@
             [sv addSubview:fvc.view];
             [self.view bringSubviewToFront:sc];
         }
+    }
+}
+
+//===============================================//
+-(void)cameraClick
+{
+    if (sheet == nil) {
+        // 判断是否支持相机
+        if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+        {
+            sheet  = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
+        }
+        else {
+            
+            sheet = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"从相册选择", nil];
+        }
+        
+        sheet.tag = 255;
+        
+    }else{
+        
+    }
+    [sheet showInView:self.view];
+}
+-(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (actionSheet.tag == 255) {
+        
+        NSUInteger sourceType = 0;
+        
+        [USER setObject:[NSString stringWithFormat:@"%d", buttonIndex] forKey:@"buttonIndex"];
+        // 判断是否支持相机
+        if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+            
+            switch (buttonIndex) {
+                    
+                case 0:
+                    // 相机
+                    sourceType = UIImagePickerControllerSourceTypeCamera;
+                    isCamara = YES;
+                    break;
+                case 1:
+                    // 相册
+                    sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                    isCamara = NO;
+                    break;
+                case 2:
+                    // 取消
+                    return;
+            }
+        }
+        else {
+            if (buttonIndex == 0) {
+                sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+                isCamara = NO;
+            } else {
+                return;
+            }
+        }
+        //跳转到相机或相册页面
+        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+        
+        imagePickerController.delegate = self;
+        
+        imagePickerController.sourceType = sourceType;
+        
+        if ([self hasValidAPIKey]) {
+            [self presentViewController:imagePickerController animated:YES completion:^{}];
+        }
+        
+        [imagePickerController release];
+    }
+}
+
+#pragma mark - UIImagePicker Delegate
+
+- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    
+    NSURL * assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
+    
+    void(^completion)(void)  = ^(void){
+        if (isCamara) {
+            [self lauchEditorWithImage:image];
+        }else{
+            [[self assetLibrary] assetForURL:assetURL resultBlock:^(ALAsset *asset) {
+                if (asset){
+                    [self launchEditorWithAsset:asset];
+                }
+            } failureBlock:^(NSError *error) {
+                [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enable access to your device's photos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            }];
+        }};
+    
+    [self dismissViewControllerAnimated:NO completion:completion];
+    
+}
+
+- (void) imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+}
+
+#pragma mark - ALAssets Helper Methods
+
+- (UIImage *)editingResImageForAsset:(ALAsset*)asset
+{
+    CGImageRef image = [[asset defaultRepresentation] fullScreenImage];
+    
+    return [UIImage imageWithCGImage:image scale:1.0 orientation:UIImageOrientationUp];
+}
+
+- (UIImage *)highResImageForAsset:(ALAsset*)asset
+{
+    ALAssetRepresentation * representation = [asset defaultRepresentation];
+    
+    CGImageRef image = [representation fullResolutionImage];
+    UIImageOrientation orientation = (UIImageOrientation)[representation orientation];
+    CGFloat scale = [representation scale];
+    
+    return [UIImage imageWithCGImage:image scale:scale orientation:orientation];
+}
+
+#pragma mark - Status Bar Style
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
+#pragma mark - Private Helper Methods
+
+- (BOOL) hasValidAPIKey
+{
+    if ([kAFAviaryAPIKey isEqualToString:@"<YOUR-API-KEY>"] || [kAFAviarySecret isEqualToString:@"<YOUR-SECRET>"]) {
+        [[[UIAlertView alloc] initWithTitle:@"Oops!"
+                                    message:@"You forgot to add your API key and secret!"
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
+        return NO;
+    }
+    return YES;
+}
+
+#pragma mark -图片编辑
+#pragma mark =================================
+#pragma mark - Photo Editor Launch Methods
+
+//********************自己方法******************
+-(void)lauchEditorWithImage:(UIImage *)image
+{
+    UIImage * editingResImage = image;
+    UIImage * highResImage = image;
+    [self launchPhotoEditorWithImage:editingResImage highResolutionImage:highResImage];
+}
+
+//*********************************************
+- (void) launchEditorWithAsset:(ALAsset *)asset
+{
+    UIImage * editingResImage = [self editingResImageForAsset:asset];
+    UIImage * highResImage = [self highResImageForAsset:asset];
+    
+    [self launchPhotoEditorWithImage:editingResImage highResolutionImage:highResImage];
+}
+#pragma mark - Photo Editor Creation and Presentation
+- (void) launchPhotoEditorWithImage:(UIImage *)editingResImage highResolutionImage:(UIImage *)highResImage
+{
+    // Customize the editor's apperance. The customization options really only need to be set once in this case since they are never changing, so we used dispatch once here.
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self setPhotoEditorCustomizationOptions];
+    });
+    
+    // Initialize the photo editor and set its delegate
+    AFPhotoEditorController * photoEditor = [[AFPhotoEditorController alloc] initWithImage:editingResImage];
+    [photoEditor setDelegate:self];
+    
+    // If a high res image is passed, create the high res context with the image and the photo editor.
+    if (highResImage) {
+        [self setupHighResContextForPhotoEditor:photoEditor withImage:highResImage];
+    }
+    
+    // Present the photo editor.
+    [self presentViewController:photoEditor animated:YES completion:nil];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+}
+
+- (void) setupHighResContextForPhotoEditor:(AFPhotoEditorController *)photoEditor withImage:(UIImage *)highResImage
+{
+    // Capture a reference to the editor's session, which internally tracks user actions on a photo.
+    __block AFPhotoEditorSession *session = [photoEditor session];
+    
+    // Add the session to our sessions array. We need to retain the session until all contexts we create from it are finished rendering.
+    [[self sessions] addObject:session];
+    
+    // Create a context from the session with the high res image.
+    AFPhotoEditorContext *context = [session createContextWithImage:highResImage];
+    
+    __block MainViewController * blockSelf = self;
+    
+    // Call render on the context. The render will asynchronously apply all changes made in the session (and therefore editor)
+    // to the context's image. It will not complete until some point after the session closes (i.e. the editor hits done or
+    // cancel in the editor). When rendering does complete, the completion block will be called with the result image if changes
+    // were made to it, or `nil` if no changes were made. In this case, we write the image to the user's photo album, and release
+    // our reference to the session.
+    [context render:^(UIImage *result) {
+        if (result) {
+            //            UIImageWriteToSavedPhotosAlbum(result, nil, nil, NULL);
+        }
+        
+        [[blockSelf sessions] removeObject:session];
+        
+        blockSelf = nil;
+        session = nil;
+        
+    }];
+}
+
+#pragma Photo Editor Delegate Methods
+
+// This is called when the user taps "Done" in the photo editor.
+- (void) photoEditor:(AFPhotoEditorController *)editor finishedWithImage:(UIImage *)image
+{
+    self.oriImage = image;
+    //    [[self imagePreviewView] setImage:image];
+    //    [[self imagePreviewView] setContentMode:UIViewContentModeScaleAspectFit];
+    
+    //跳转到UploadViewController
+    //    UploadViewController * vc = [[UploadViewController alloc] init];
+    //    vc.oriImage = image;
+    //    [self presentViewController:vc animated:YES completion:nil];
+    
+    //    NSLog(@"上传图片");
+    //    [self postData:image];
+    
+    //    UINavigationController * nc = [ControllerManager shareManagerMyPet];
+    //    MyPetViewController * vc = nc.viewControllers[0];
+    //    vc.myBlock();
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        //        UploadViewController * vc = [[UploadViewController alloc] init];
+        PublishViewController * vc = [[PublishViewController alloc] init];
+        vc.oriImage = image;
+        //        vc.af = editor;
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    }];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    
+}
+
+// This is called when the user taps "Cancel" in the photo editor.
+- (void) photoEditorCanceled:(AFPhotoEditorController *)editor
+{
+    int a = [[USER objectForKey:@"buttonIndex"] intValue];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self actionSheet:sheet clickedButtonAtIndex:a];
+    }];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+}
+
+#pragma mark - Photo Editor Customization
+
+- (void) setPhotoEditorCustomizationOptions
+{
+    // Set API Key and Secret
+    [AFPhotoEditorController setAPIKey:kAFAviaryAPIKey secret:kAFAviarySecret];
+    
+    // Set Tool Order
+    NSArray * toolOrder = @[kAFEffects, kAFFocus, kAFFrames, kAFStickers, kAFEnhance, kAFOrientation, kAFCrop, kAFAdjustments, kAFSplash, kAFDraw, kAFText, kAFRedeye, kAFWhiten, kAFBlemish, kAFMeme];
+    [AFPhotoEditorCustomization setToolOrder:toolOrder];
+    
+    // Set Custom Crop Sizes
+    [AFPhotoEditorCustomization setCropToolOriginalEnabled:NO];
+    [AFPhotoEditorCustomization setCropToolCustomEnabled:YES];
+    NSDictionary * fourBySix = @{kAFCropPresetHeight : @(4.0f), kAFCropPresetWidth : @(6.0f)};
+    NSDictionary * fiveBySeven = @{kAFCropPresetHeight : @(5.0f), kAFCropPresetWidth : @(7.0f)};
+    NSDictionary * square = @{kAFCropPresetName: @"Square", kAFCropPresetHeight : @(1.0f), kAFCropPresetWidth : @(1.0f)};
+    [AFPhotoEditorCustomization setCropToolPresets:@[fourBySix, fiveBySeven, square]];
+    
+    // Set Supported Orientations
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        NSArray * supportedOrientations = @[@(UIInterfaceOrientationPortrait), @(UIInterfaceOrientationPortraitUpsideDown), @(UIInterfaceOrientationLandscapeLeft), @(UIInterfaceOrientationLandscapeRight)];
+        [AFPhotoEditorCustomization setSupportedIpadOrientations:supportedOrientations];
     }
 }
 - (void)didReceiveMemoryWarning

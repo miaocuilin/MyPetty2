@@ -8,12 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MainViewController : UIViewController <UIScrollViewDelegate>
+@interface MainViewController : UIViewController <UIScrollViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
     UIView * navView;
     UIScrollView * sv;
     BOOL isCreated[3];
     UISegmentedControl * sc;
+    
+    BOOL isCamara;
+    UIActionSheet * sheet;
 }
 @property(nonatomic,retain)UIButton * menuBtn;
+@property(nonatomic,retain)UIImage * oriImage;
 @end

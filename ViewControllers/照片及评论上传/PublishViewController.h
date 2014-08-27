@@ -16,7 +16,12 @@
     UIImageView * bigImageView;
     
     UIView * textBgView;
+    UIView * navView;
+    UIScrollView * bgImageView;
+    UILabel * sinaLabel;
+    UILabel * weChatLabel;
 }
+@property (nonatomic,retain)UIImageView * bgImageView;
 @property (nonatomic,retain)UIImage * oriImage;
 //@property (nonatomic,retain)AFPhotoEditorController * af;
 

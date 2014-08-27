@@ -1,0 +1,180 @@
+//
+//  AtUsersViewController.m
+//  MyPetty
+//
+//  Created by miaocuilin on 14-8-27.
+//  Copyright (c) 2014年 AidiGame. All rights reserved.
+//
+
+#import "AtUsersViewController.h"
+#import "AtUsersCell.h"
+@interface AtUsersViewController ()
+
+@end
+
+@implementation AtUsersViewController
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self createBg];
+    [self createFakeNavigation];
+    [self createHeader];
+    [self createTableView];
+    
+    [self.view bringSubviewToFront:navView];
+    [self.view bringSubviewToFront:headerView];
+}
+-(void)createBg
+{
+    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    [self.view addSubview:self.bgImageView];
+
+    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+
+    NSData * data = [NSData dataWithContentsOfFile:filePath];
+
+    UIImage * image = [UIImage imageWithData:data];
+    self.bgImageView.image = image;
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+    [self.view addSubview:tempView];
+}
+-(void)createFakeNavigation
+{
+    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    [self.view addSubview:navView];
+    
+    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    alphaView.alpha = 0.85;
+    alphaView.backgroundColor = BGCOLOR;
+    [navView addSubview:alphaView];
+    
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 30, 20, 20) ImageName:@"7-7.png"];
+    [navView addSubview:backImageView];
+    
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    backBtn.showsTouchWhenHighlighted = YES;
+    [navView addSubview:backBtn];
+    
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"@用户"];
+    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [navView addSubview:titleLabel];
+    
+    UIButton * rightButton = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-60, 27, 50, 27) ImageName:@"greenBtnBg.png" Target:self Action:@selector(rightButtonClick) Title:@"确定"];
+    rightButton.titleLabel.font = [UIFont systemFontOfSize:15];
+    rightButton.showsTouchWhenHighlighted = YES;
+    [navView addSubview:rightButton];
+}
+-(void)createHeader
+{
+    headerView = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, 35)];
+    [self.view addSubview:headerView];
+    
+    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 35)];
+    alphaView.backgroundColor = BGCOLOR;
+    alphaView.alpha = 0.85;
+    [headerView addSubview:alphaView];
+    
+    //
+    UIView * redView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 1)];
+    redView.backgroundColor = [UIColor redColor];
+    redView.alpha = 0.2;
+    [headerView addSubview:redView];
+    
+    UIImageView * search = [MyControl createImageViewWithFrame:CGRectMake(10, 13, 14, 13) ImageName:@"5-5.png"];
+    [headerView addSubview:search];
+    
+    tf = [MyControl createTextFieldWithFrame:CGRectMake(30, 10, 560/2, 20) placeholder:@"" passWord:NO leftImageView:nil rightImageView:nil Font:15];
+    tf.borderStyle = 0;
+    //    tf.returnKeyType = UIReturnKeySearch;
+    //    tf.backgroundColor = BGCOLOR;
+    tf.delegate = self;
+    tf.textColor = [UIColor whiteColor];
+    [headerView addSubview:tf];
+    
+    UIView * lineView = [MyControl createViewWithFrame:CGRectMake(10, 28, 590/2, 2)];
+    lineView.backgroundColor = [UIColor colorWithRed:246/255.0 green:189/255.0 blue:142/255.0 alpha:1];
+    [headerView addSubview:lineView];
+
+}
+-(void)createTableView
+{
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv.delegate = self;
+    tv.dataSource = self;
+    tv.backgroundColor = [UIColor clearColor];
+    tv.separatorStyle = 0;
+    [self.view addSubview:tv];
+    
+    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64+35)];
+    tv.tableHeaderView = view;
+    
+    
+}
+
+#pragma mark - 点击事件
+-(void)backBtnClick
+{
+    NSLog(@"返回");
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+-(void)rightButtonClick
+{
+    NSLog(@"确定");
+}
+
+#pragma mark - tableView代理
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 20;
+}
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString * cellID = @"ID";
+    AtUsersCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[[AtUsersCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
+    }
+    cell.selectionStyle = 0;
+    [cell modifyWith:@"白天不懂夜的黑" row:indexPath.row];
+    cell.backgroundColor = [UIColor clearColor];
+    return cell;
+}
+
+#pragma mark - textField
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [tf resignFirstResponder];
+    return YES;
+}
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

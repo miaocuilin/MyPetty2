@@ -7,7 +7,8 @@
 //
 
 #import "UserInfoViewController.h"
-
+#import "UserInfoActivityCell.h"
+#import "UserInfoRankCell.h"
 @interface UserInfoViewController ()
 
 @end
@@ -27,7 +28,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    cellNum = 30;
+    cellNum = 15;
     
     [self createScrollView];
     [self createFakeNavigation];
@@ -356,7 +357,11 @@
 #pragma mark - tableView代理
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return cellNum;
+    if (tableView == tv4) {
+        return 1;
+    }else{
+        return cellNum;
+    }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -367,6 +372,8 @@
             if (!cell) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[cellID0 autorelease]];
             }
+            cell.selectionStyle = 0;
+            
             UIButton * button = [MyControl createButtonWithFrame:CGRectMake(40, 8, 240, 35) ImageName:@"" Target:self Action:@selector(addCountry) Title:@"+"];
             [cell addSubview:button];
             button.backgroundColor = [UIColor colorWithRed:205/255.0 green:205/255.0 blue:205/255.0 alpha:1];
@@ -391,28 +398,90 @@
         }
         
         return cell;
-    }else{
+    }else if (tableView == tv2) {
         static NSString * cellID2 = @"ID2";
-        UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID2];
+        UserInfoRankCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID2];
         if(!cell){
-            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID2] autorelease];
+            cell = [[[NSBundle mainBundle] loadNibNamed:@"UserInfoRankCell" owner:self options:nil] objectAtIndex:0];
         }
-        cell.textLabel.text = @"1111111111";
-        if (tableView == tv) {
-            //        cell.backgroundColor = [UIColor redColor];
-        }else if (tableView == tv2) {
-            cell.backgroundColor = [UIColor redColor];
-        }else if (tableView == tv3) {
-            cell.backgroundColor = [UIColor orangeColor];
-        }else{
-            cell.backgroundColor = [UIColor yellowColor];
+        cell.selectionStyle = 0;
+        [cell modifyWithName:@"吃了么吃了么" sex:2 cate:@"107" age:@"3" position:@"祭司" userName:@"韩梅梅" rank:@"70"];
+        return cell;
+    }else if (tableView == tv3) {
+        static NSString * cellID3 = @"ID3";
+        UserInfoActivityCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID3];
+        if(!cell){
+            cell = [[[NSBundle mainBundle] loadNibNamed:@"UserInfoActivityCell" owner:self options:nil] objectAtIndex:0];
+        }
+        cell.selectionStyle = 0;
+        [cell modifyWithString:@"# 萌宠时装秀 #"];
+        return cell;
+    }else{
+        static NSString * cellID4 = @"ID4";
+        UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID4];
+        if(!cell){
+            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID4] autorelease];
+        }
+        cell.selectionStyle = 0;
+        
+        for(int i=0;i<3*10;i++){
+            CGRect rect = CGRectMake(20+i%3*100, 15+i/3*100, 85, 90);
+            UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"giftBg.png"];
+            [cell addSubview:imageView];
+            
+            UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
+            [imageView addSubview:triangle];
+            
+            UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-3, 1, 20, 9) Font:8 Text:@"人气"];
+            rq.font = [UIFont boldSystemFontOfSize:8];
+            rq.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
+            [triangle addSubview:rq];
+            
+            UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 8, 25, 10) Font:9 Text:@"+150"];
+            rqNum.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
+            rqNum.textAlignment = NSTextAlignmentCenter;
+            //            rqNum.backgroundColor = [UIColor redColor];
+            [triangle addSubview:rqNum];
+            
+            UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 5, 85, 15) Font:11 Text:@"汪汪项圈"];
+            giftName.textColor = [UIColor grayColor];
+            giftName.textAlignment = NSTextAlignmentCenter;
+            [imageView addSubview:giftName];
+            
+            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(20, 20, 45, 45) ImageName:[NSString stringWithFormat:@"bother%d_2.png", arc4random()%6+1]];
+            [imageView addSubview:giftPic];
+            
+            UIImageView * gift = [MyControl createImageViewWithFrame:CGRectMake(20, 90-14-5, 12, 14) ImageName:@"detail_gift.png"];
+            [imageView addSubview:gift];
+            
+            UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(35, 90-18, 40, 15) Font:13 Text:@" × 3"];
+            giftNum.textColor = BGCOLOR;
+            [imageView addSubview:giftNum];
+            
+            UIButton * button = [MyControl createButtonWithFrame:rect ImageName:@"" Target:self Action:@selector(buttonClick:) Title:nil];
+            [cell addSubview:button];
+            button.tag = 1000+i;
         }
         return cell;
     }
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 100.0f;
+    if (tableView == tv) {
+        return 100.0f;
+    }else if(tableView == tv2){
+        return 70.0f;
+    }else if (tableView == tv3) {
+        return 200.0f;
+    }else{
+        return 15+10*100;
+    }
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == tv) {
+        NSLog(@"%d", indexPath.row);
+    }
 }
 
 #pragma mark - cell代理
@@ -431,6 +500,11 @@
     }
 }
 #pragma mark -
+//礼物点击事件
+-(void)buttonClick:(UIButton *)btn
+{
+    NSLog(@"%d", btn.tag);
+}
 -(void)addCountry
 {
     NSLog(@"加入国家");

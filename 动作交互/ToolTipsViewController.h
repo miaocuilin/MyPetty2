@@ -17,6 +17,7 @@
     MBProgressHUD *expHUD;
     MBProgressHUD *governmentHUD;
     MBProgressHUD *giftHUD;
+    MBProgressHUD *noMoneyHUD;
     
     UIScrollView *giftScrollView;
     UIPageControl *giftPageControl;
@@ -35,4 +36,5 @@
 -(void)createExpAlertView;
 //官职升级
 - (void)createGovernmentAlertView;
+- (void)createPresentGiftAlertView;
 @end

@@ -25,4 +25,6 @@
     UIImageView * bgImageView1;
     
     int cellNum;
-}@end
+}
+@property(nonatomic)int offset;
+@end

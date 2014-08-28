@@ -62,24 +62,12 @@
     //    NSLog(@"%@", data);
     UIImage * image = [UIImage imageWithData:data];
     self.bgImageView.image = image;
-    //    self.bgImageView.image = [UIImage imageNamed:@"Default-568h@2x.png"];
-    
-    //毛玻璃化，需要先设置图片再设置其他
-//    [self.bgImageView setFramesCount:20];
-//    [self.bgImageView setBlurAmount:1];
-    
-    //这里必须延时执行，否则会变白
-    //注意，由于图片较大，这里需要的时间必须在2秒以上
-//    [self performSelector:@selector(blurImage) withObject:nil afterDelay:0.25f];
+
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
     tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
     [self.view addSubview:tempView];
 }
-#pragma mark - 图片毛玻璃化
-//-(void)blurImage
-//{
-//    [self.bgImageView blurInAnimationWithDuration:0.1f];
-//}
+
 -(void)getListData
 {
     NSDictionary * oriDict = [USER objectForKey:@"CateNameList"];
@@ -120,7 +108,7 @@
     alphaView.backgroundColor = BGCOLOR;
     [navView addSubview:alphaView];
     
-    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 30, 20, 20) ImageName:@"7-7.png"];
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
     UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
@@ -128,7 +116,7 @@
 //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
     
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"选择王国"];
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"选择王国"];
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];

@@ -98,6 +98,9 @@
 //    DetailViewController * fvc = [[DetailViewController alloc] init];
 //    PublishViewController * info = [[PublishViewController alloc] init];
 //    AtUsersViewController * info = [[AtUsersViewController alloc] init];
+//    TopicViewController * info = [[TopicViewController alloc] init];
+//    ShakeViewController * fvc = [[ShakeViewController alloc] init];
+//    PublishViewController * info = [[PublishViewController alloc] init];
 //    ShakeViewController * fvc = [[ShakeViewController alloc] init];
 //    PublishViewController * fvc = [[PublishViewController alloc] init];
 //    ShakeViewController * fvc = [[ShakeViewController alloc] init];

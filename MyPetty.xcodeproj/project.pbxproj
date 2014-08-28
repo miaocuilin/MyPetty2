@@ -458,6 +458,13 @@
 		60D62A8119A4A6CB00224976 /* cardBgTriangle.png in Resources */ = {isa = PBXBuildFile; fileRef = 60D62A8019A4A6CB00224976 /* cardBgTriangle.png */; };
 		60D62A8519A4AD4700224976 /* circleBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 60D62A8419A4AD4700224976 /* circleBg.png */; };
 		60D62A8719A4BF6B00224976 /* gold.png in Resources */ = {isa = PBXBuildFile; fileRef = 60D62A8619A4BF6B00224976 /* gold.png */; };
+		60DDF24119AF120400CB3042 /* TopicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60DDF24019AF120400CB3042 /* TopicViewController.m */; };
+		60DDF24419AF135100CB3042 /* topic_activity.png in Resources */ = {isa = PBXBuildFile; fileRef = 60DDF24219AF135100CB3042 /* topic_activity.png */; };
+		60DDF24519AF135100CB3042 /* topic_tfBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 60DDF24319AF135100CB3042 /* topic_tfBg.png */; };
+		60DDF24919AF182E00CB3042 /* jinghao.png in Resources */ = {isa = PBXBuildFile; fileRef = 60DDF24819AF182E00CB3042 /* jinghao.png */; };
+		60DDF24C19AF196900CB3042 /* topicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60DDF24B19AF196900CB3042 /* topicCell.m */; };
+		60DDF24E19AF21A300CB3042 /* leftArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 60DDF24D19AF21A300CB3042 /* leftArrow.png */; };
+		60DDF25119AF25D700CB3042 /* GiftShopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60DDF25019AF25D700CB3042 /* GiftShopViewController.m */; };
 		60EC8F9F198B429F00F1781A /* ChoseLoadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60EC8F9E198B429F00F1781A /* ChoseLoadViewController.m */; };
 		60EC8FA8198B444300F1781A /* 1-a.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EC8FA1198B444300F1781A /* 1-a.png */; };
 		60EC8FAA198B444300F1781A /* 1-c.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EC8FA3198B444300F1781A /* 1-c.png */; };
@@ -1103,6 +1110,16 @@
 		60D62A8019A4A6CB00224976 /* cardBgTriangle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cardBgTriangle.png; sourceTree = "<group>"; };
 		60D62A8419A4AD4700224976 /* circleBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circleBg.png; sourceTree = "<group>"; };
 		60D62A8619A4BF6B00224976 /* gold.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gold.png; sourceTree = "<group>"; };
+		60DDF23F19AF120400CB3042 /* TopicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopicViewController.h; sourceTree = "<group>"; };
+		60DDF24019AF120400CB3042 /* TopicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopicViewController.m; sourceTree = "<group>"; };
+		60DDF24219AF135100CB3042 /* topic_activity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topic_activity.png; sourceTree = "<group>"; };
+		60DDF24319AF135100CB3042 /* topic_tfBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topic_tfBg.png; sourceTree = "<group>"; };
+		60DDF24819AF182E00CB3042 /* jinghao.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jinghao.png; sourceTree = "<group>"; };
+		60DDF24A19AF196900CB3042 /* topicCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = topicCell.h; sourceTree = "<group>"; };
+		60DDF24B19AF196900CB3042 /* topicCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = topicCell.m; sourceTree = "<group>"; };
+		60DDF24D19AF21A300CB3042 /* leftArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leftArrow.png; sourceTree = "<group>"; };
+		60DDF24F19AF25D700CB3042 /* GiftShopViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftShopViewController.h; sourceTree = "<group>"; };
+		60DDF25019AF25D700CB3042 /* GiftShopViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftShopViewController.m; sourceTree = "<group>"; };
 		60EC8F9D198B429F00F1781A /* ChoseLoadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoseLoadViewController.h; sourceTree = "<group>"; };
 		60EC8F9E198B429F00F1781A /* ChoseLoadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChoseLoadViewController.m; sourceTree = "<group>"; };
 		60EC8FA1198B444300F1781A /* 1-a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1-a.png"; sourceTree = "<group>"; };
@@ -1519,6 +1536,8 @@
 				091770011962A67D002F8502 /* PublishViewController.m */,
 				602A880E19ADF009004F368C /* AtUsersViewController.h */,
 				602A880F19ADF009004F368C /* AtUsersViewController.m */,
+				60DDF23F19AF120400CB3042 /* TopicViewController.h */,
+				60DDF24019AF120400CB3042 /* TopicViewController.m */,
 			);
 			path = "照片及评论上传";
 			sourceTree = "<group>";
@@ -1936,6 +1955,8 @@
 				602A880719AD9583004F368C /* UserInfoRankCell.xib */,
 				602A881119ADFC03004F368C /* AtUsersCell.h */,
 				602A881219ADFC03004F368C /* AtUsersCell.m */,
+				60DDF24A19AF196900CB3042 /* topicCell.h */,
+				60DDF24B19AF196900CB3042 /* topicCell.m */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -2137,6 +2158,8 @@
 				4922D5EA19A754970018160A /* GiftDetialViewController.xib */,
 				49CE193119A9AC14005F21EE /* PresentDetailViewController.h */,
 				49CE193219A9AC14005F21EE /* PresentDetailViewController.m */,
+				60DDF24F19AF25D700CB3042 /* GiftShopViewController.h */,
+				60DDF25019AF25D700CB3042 /* GiftShopViewController.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -2245,6 +2268,10 @@
 		60EC8FA0198B442F00F1781A /* 2014-08-01 */ = {
 			isa = PBXGroup;
 			children = (
+				60DDF24D19AF21A300CB3042 /* leftArrow.png */,
+				60DDF24819AF182E00CB3042 /* jinghao.png */,
+				60DDF24219AF135100CB3042 /* topic_activity.png */,
+				60DDF24319AF135100CB3042 /* topic_tfBg.png */,
 				602A881419ADFEC9004F368C /* atUsers_selected.png */,
 				602A881519ADFEC9004F368C /* atUsers_unSelected.png */,
 				602A880A19ADED08004F368C /* publish_selected.png */,
@@ -2504,6 +2531,7 @@
 				6038619319A73B5E00B1312A /* fish.png in Resources */,
 				6020BD7E1998B8D5002C74FA /* tool2_selected.png in Resources */,
 				600376681990AB2500F3107F /* menu-10.png in Resources */,
+				60DDF24919AF182E00CB3042 /* jinghao.png in Resources */,
 				09D98A9C1935D4E900C83C4B /* 7-7.png in Resources */,
 				601BB35819AB2D4D0076E051 /* sendOne.png in Resources */,
 				6038618419A71A5600B1312A /* PicDetailViewController.xib in Resources */,
@@ -2576,6 +2604,7 @@
 				09F88497195060500053A6D0 /* UMSnsAccountViewController.xib in Resources */,
 				601BB34419AB02050076E051 /* flag.png in Resources */,
 				09C87C801951B0A500F41C6A /* 20-4.png in Resources */,
+				60DDF24519AF135100CB3042 /* topic_tfBg.png in Resources */,
 				090872D119739B33004276EF /* talkRight.png in Resources */,
 				0908737F1973B2F2004276EF /* talkLeft.png in Resources */,
 				6038617919A6EDB600B1312A /* greenBall.png in Resources */,
@@ -2588,6 +2617,7 @@
 				091770421962A970002F8502 /* 31-1.png in Resources */,
 				096520D41963F23C00A8186D /* 30-2.png in Resources */,
 				60F617FF1999C884003C34F2 /* page3_selected.png in Resources */,
+				60DDF24419AF135100CB3042 /* topic_activity.png in Resources */,
 				09F88498195060500053A6D0 /* UMSShareListController.xib in Resources */,
 				098EA866195473AC00EF0AC6 /* 29-5.png in Resources */,
 				4927D99419AB53B200EBDC88 /* 6.png in Resources */,
@@ -2614,6 +2644,7 @@
 				09D98A861935D4E900C83C4B /* 2-1.png in Resources */,
 				601BB35119AB18FD0076E051 /* myCountry_join.png in Resources */,
 				49500A4119ADD5C800D175D8 /* head_cricle.png in Resources */,
+				60DDF24E19AF21A300CB3042 /* leftArrow.png in Resources */,
 				09F8848E195060500053A6D0 /* UMSocialLocalizable.strings in Resources */,
 				49500A4219ADD5C800D175D8 /* reward_bg.png in Resources */,
 				6065A97519A9910300333B0D /* arrow_right.png in Resources */,
@@ -2781,6 +2812,7 @@
 				09D989F41935C1FE00C83C4B /* TMQuiltViewController.m in Sources */,
 				6024A61E19A1D79E005ED3D3 /* SettingViewController.m in Sources */,
 				09D989F21935C1FE00C83C4B /* TMQuiltView.m in Sources */,
+				60DDF24119AF120400CB3042 /* TopicViewController.m in Sources */,
 				09C87C26195137CA00F41C6A /* UIImage+UIImageExtras.m in Sources */,
 				09D98AC01935E87300C83C4B /* FavoriteCell.m in Sources */,
 				60F6180A1999DCB1003C34F2 /* CountryInfoCell.m in Sources */,
@@ -2830,6 +2862,7 @@
 				602A880819AD9583004F368C /* UserInfoRankCell.m in Sources */,
 				602A880319AD80AA004F368C /* UserInfoActivityCell.m in Sources */,
 				601BB36019AB4CAD0076E051 /* NIDropDown.m in Sources */,
+				60DDF25119AF25D700CB3042 /* GiftShopViewController.m in Sources */,
 				0908736C1973B2F2004276EF /* MessageFrame.m in Sources */,
 				60D62A6F19A46D5900224976 /* MainViewController.m in Sources */,
 				0914B6D2196E3F410056CFB0 /* MMProgressHUD.m in Sources */,
@@ -2839,6 +2872,7 @@
 				496CF22B19A495070081BF5E /* MassWatchViewController.m in Sources */,
 				09561ACC193829E2008A13EB /* FirstViewController.m in Sources */,
 				0979B7721941C6BF007C36A7 /* SDWebImageManager.m in Sources */,
+				60DDF24C19AF196900CB3042 /* topicCell.m in Sources */,
 				1818E53D195D1CDD001ED167 /* MJRefreshBaseView.m in Sources */,
 				0914B6D1196E3F410056CFB0 /* MMProgressHUD+Class.m in Sources */,
 				09F46ACE196A399800209749 /* FTUtils+NSObject.m in Sources */,

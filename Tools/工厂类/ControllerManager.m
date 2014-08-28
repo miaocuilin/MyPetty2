@@ -237,6 +237,8 @@ MBProgressHUD *HUD;
     }
     return (NSArray *)linesArray;
 }
+
+
 #pragma mark - 金币、星星、红心弹窗
 + (void)HUDText:(NSString *)string showView:(UIView *)inView yOffset:(float) offset
 {

@@ -50,6 +50,17 @@
         [self.contentView addSubview:nameLabel];
     }
 }
+-(void)modify:(int)row
+{
+    if (row == 0) {
+        self.switchLabel1.text = @"默 认";
+        self.switchLabel2.text = @"宠 物";
+    }else{
+        self.switchLabel1.text = @"设 为";
+        self.switchLabel2.text = @"默 认";
+    }
+    
+}
 //手势操作
 - (IBAction)show:(id)sender {
 
@@ -111,6 +122,8 @@
     [_buttonBgView release];
     [_qiutBtn release];
     [_switchBtn release];
+    [_switchLabel1 release];
+    [_switchLabel2 release];
     [super dealloc];
 }
 @end

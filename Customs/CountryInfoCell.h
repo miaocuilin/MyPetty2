@@ -28,4 +28,8 @@
 @property (retain, nonatomic) IBOutlet UIView *buttonBgView;
 @property (retain, nonatomic) IBOutlet UIButton *qiutBtn;
 @property (retain, nonatomic) IBOutlet UIButton *switchBtn;
+@property (retain, nonatomic) IBOutlet UILabel *switchLabel1;
+@property (retain, nonatomic) IBOutlet UILabel *switchLabel2;
+
+-(void)modify:(int)row;
 @end

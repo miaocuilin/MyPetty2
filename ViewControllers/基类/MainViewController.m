@@ -37,6 +37,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
     // Allocate Asset Library
     ALAssetsLibrary * assetLibrary = [[ALAssetsLibrary alloc] init];
     [self setAssetLibrary:assetLibrary];
@@ -53,6 +54,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self createFakeNavigation];
     [self createViewControllers];
     [self createSegment];
+
 }
 -(void)createFakeNavigation
 {

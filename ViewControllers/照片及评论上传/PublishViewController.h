@@ -20,6 +20,9 @@
     UIScrollView * bgImageView;
     UILabel * sinaLabel;
     UILabel * weChatLabel;
+    
+    UIButton * topic;
+    UIButton * users;
 }
 @property (nonatomic,retain)UIImageView * bgImageView;
 @property (nonatomic,retain)UIImage * oriImage;

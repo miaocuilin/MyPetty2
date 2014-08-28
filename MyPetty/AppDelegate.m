@@ -42,8 +42,8 @@
 #import "ToolTipsViewController.h"
 #import "UserInfoViewController.h"
 #import "AtUsersViewController.h"
-#import "ShoutViewController.h"
-
+#import "TopicViewController.h"
+#import "GiftShopViewController.h"
 @implementation AppDelegate
 -(void)dealloc
 {
@@ -100,8 +100,6 @@
 //    AtUsersViewController * info = [[AtUsersViewController alloc] init];
 //    TopicViewController * info = [[TopicViewController alloc] init];
 //    ShakeViewController * fvc = [[ShakeViewController alloc] init];
-//    PublishViewController * info = [[PublishViewController alloc] init];
-//    ShakeViewController * fvc = [[ShakeViewController alloc] init];
 //    PublishViewController * fvc = [[PublishViewController alloc] init];
 //    ShakeViewController * fvc = [[ShakeViewController alloc] init];
     RecordViewController * fvc = [[RecordViewController alloc] init];
@@ -125,6 +123,7 @@
 //    ToolTipsViewController *toolTips =[[ToolTipsViewController alloc] init];
 //    UserInfoViewController * info = [[UserInfoViewController alloc] init];
     ShoutViewController *shout = [[ShoutViewController alloc] init];
+//    GiftShopViewController * info = [[GiftShopViewController alloc] init];
     self.window.rootViewController = info;
 //    [menu release];
 //    [fvc release];

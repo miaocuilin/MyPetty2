@@ -11,6 +11,7 @@
 #import "ToolTipsViewController.h"
 #import "TouchViewController.h"
 #import "ShakeViewController.h"
+#import "ShoutViewController.h"
 
 #define headBtnWidth 64
 #define circleWidth 82
@@ -19,28 +20,6 @@
 @end
 
 @implementation BottomMenuRootViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-- (void)viewWillAppear:(BOOL)animated
-{
-    [[UIApplication sharedApplication] setApplicationSupportsShakeToEdit:NO];
-    [self becomeFirstResponder];
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"rocking" ofType:@"wav"];
-    NSString *path2 = [[NSBundle mainBundle] pathForResource:@"rocked" ofType:@"wav"];
-    AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path2], &soundID2);
-	AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path], &soundID);
-}
-- (BOOL)canBecomeFirstResponder
-{
-    return YES;
-}
 
 - (void)viewDidLoad
 {
@@ -115,15 +94,12 @@
     [self addChildViewController:shake];
     [shake release];
     [shake didMoveToParentViewController:self];
+    [shake becomeFirstResponder];
     [self.view addSubview:shake.view];
-//    [shake createAlertView];
+    [shake createAlertView];
     [self hideAll];
 }
--(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
-{
-    NSLog(@"bengin Shaking  times");
-//    label.text = [NSString stringWithFormat:@"%d", count];
-}
+
 -(void)btn2Click
 {
     NSLog(@"2");
@@ -138,12 +114,18 @@
 -(void)btn3Click
 {
     NSLog(@"3");
-    TouchViewController *touch = [[TouchViewController alloc] init];
-    [self addChildViewController:touch];
-    [touch release];
-    [touch didMoveToParentViewController:self];
-    [self.view addSubview:touch.view];
-    [touch createAlertView];
+//    TouchViewController *touch = [[TouchViewController alloc] init];
+//    [self addChildViewController:touch];
+//    [touch release];
+//    [touch didMoveToParentViewController:self];
+//    [self.view addSubview:touch.view];
+//    [touch createAlertView];
+//    [self hideAll];
+    ShoutViewController *shout = [[ShoutViewController alloc] init];
+    [self addChildViewController:shout];
+    [shout release];
+    [shout didMoveToParentViewController:self];
+    [self.view addSubview:shout.view];
     [self hideAll];
 }
 -(void)btn4Click

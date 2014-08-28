@@ -13,7 +13,11 @@
 {
     UIView *bodyView;
     BOOL isShaking;
-    BOOL first;
+    BOOL isGold;
+    BOOL isGoods;
+    BOOL isUnfortunately;
+    
+    int count;
 }
 @end
 
@@ -24,72 +28,103 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 //    [self createButton];
-    
-}
-- (void)viewWillAppear:(BOOL)animated
-{
-    [[UIApplication sharedApplication] setApplicationSupportsShakeToEdit:NO];
+    count = 10;
+    [[UIApplication sharedApplication] setApplicationSupportsShakeToEdit:YES];
     [self becomeFirstResponder];
     NSString *path = [[NSBundle mainBundle] pathForResource:@"rocking" ofType:@"wav"];
     NSString *path2 = [[NSBundle mainBundle] pathForResource:@"rocked" ofType:@"wav"];
     AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path2], &soundID2);
 	AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path], &soundID);
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(ShakingAction) name:@"shake" object:nil];
 }
-- (void)viewDidAppear:(BOOL)animated
+- (void)ShakingAction
 {
-    [self createAlertView];
-
-}
--(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
-{
-    NSLog(@"bengin Shaking times");
-
+    if (!count) {
+        [goodsHUD hide:YES];
+        [unfortunately hide:YES];
+        [goldHUD hide:YES];
+        [noChanceHUD hide:YES];
+        [self createNoChanceAlertView];
+        return;
+    }
     if (!isShaking) {
-        if (!first) {
-            
-            [unfortunately hide:YES];
-            unfortunately.completionBlock = ^{
-                first = YES;
-                [self createAlertView];
-            };
-        }
+        
         AudioServicesPlaySystemSound (soundID);
         [self performSelector:@selector(soundAction) withObject:nil afterDelay:0.2];
         isShaking = YES;
-        [self performSelector:@selector(soundEnd) withObject:nil afterDelay:3.0];
+        [self performSelector:@selector(soundEnd:) withObject:nil afterDelay:3.0];
     }
 }
-- (void)soundEnd
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [self resignFirstResponder];
+}
+- (BOOL)canBecomeFirstResponder
+{
+    return NO;
+}
+
+- (void)soundEnd:(MBProgressHUD *)numHUD
 {
     AudioServicesPlaySystemSound(soundID2);
-    [alertView hide:YES];
-    [self createUnfortunatelyAlertView];
     isShaking = NO;
-    first = NO;
+    if (!count) {
+        [self createNoChanceAlertView];
+    }else{
+        if (isGold) {
+            [goldHUD hide:YES];
+            isGold = NO;
+            [self choosenView];
+        }else if (isGoods){
+            [goodsHUD hide:YES];
+            isGoods = NO;
+            [self choosenView];
+
+        }else if(isUnfortunately){
+            [unfortunately hide:YES];
+            isUnfortunately = NO;
+            [self choosenView];
+        }else{
+            [alertView hide:YES];
+            [self choosenView];
+        }
+    }
+
+}
+
+- (void)choosenView
+{
+    count--;
+
+    int choosen = arc4random()%3;
+    NSLog(@"choosen:%d",choosen);
+    if (choosen == 0) {
+        isUnfortunately =YES;
+        [self createUnfortunatelyAlertView];
+    }else if ( choosen == 1){
+        isGold = YES;
+        [self createGoldAlertView];
+    }else if (choosen == 2){
+        isGoods = YES;
+        [self createGoodsAlertView];
+    }
 }
 - (void)soundAction
 {
     AudioServicesPlaySystemSound (soundID);
 
 }
-//-(void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
-//{
-//
-//    //摇动结束
-//    NSLog(@"end Shaking");
-//    [self performSelector:@selector(soundEnd) withObject:nil afterDelay:3.0];
-//    
-//
-//}
-//-(void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent *)event
-//{
-//    //摇动取消或者被中断
-//    NSLog(@"cancel Shaking");
-//    [self performSelector:@selector(soundEnd) withObject:nil afterDelay:3.0];
-//}
-- (BOOL)canBecomeFirstResponder
+
+#pragma mark - 摇到礼物界面
+- (void)createGoodsAlertView
 {
-    return YES;
+    goodsHUD = [self alertViewInit:CGSizeMake(300, 425)];
+    UIView *totalView = [self shopGiftTitle];
+    [self goldAndGiftUpView:[NSString stringWithFormat:@"宠物香波%d个",1] rewardImage:@"bdog6_2.png" descLabel:nil];
+    [self addDownView:[NSString stringWithFormat:@"%d",count]];
+    goodsHUD.customView = totalView;
+    [goodsHUD show:YES];
 }
 
 #pragma mark - 摇到金币界面
@@ -97,12 +132,12 @@
 {
     goldHUD = [self alertViewInit:CGSizeMake(300, 425)];
     UIView *totalView = [self shopGiftTitle];
-    [self goldAndGiftUpView];
-    [self addDownView];
+    [self goldAndGiftUpView:[NSString stringWithFormat:@"金币%d个",10] rewardImage:@"gold.png" descLabel:nil];
+    [self addDownView:[NSString stringWithFormat:@"%d",count]];
     goldHUD.customView = totalView;
     [goldHUD show:YES];
 }
-- (void)goldAndGiftUpView
+- (void)goldAndGiftUpView:(NSString *)titleString rewardImage:(NSString *)imageString descLabel:(UILabel *)descLabel
 {
     UIView *upView = [MyControl createViewWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
     [bodyView addSubview:upView];
@@ -113,49 +148,80 @@
     [upView addSubview:shakeDescLabel];
     
     
-    UILabel *titleLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2-100, 40, 200, 15) Font:16 Text:[NSString stringWithFormat:@"金币%d个",10]];
+    UILabel *titleLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2-100, 40, 200, 15) Font:16 Text:titleString];
     [upView addSubview:titleLabel];
     titleLabel.font = [UIFont boldSystemFontOfSize:16];
     titleLabel.textColor = LIGHTORANGECOLOR;
     titleLabel.textAlignment = NSTextAlignmentCenter;
     UIImageView *rewardBGImageView = [MyControl createImageViewWithFrame:CGRectMake(upView.frame.size.width/2-58, 55, 115, 130) ImageName:@"reward_bg.png"];
     [upView addSubview:rewardBGImageView];
-    UIImageView *goldImgeView = [MyControl createImageViewWithFrame:CGRectMake(rewardBGImageView.frame.size.width/2-35, rewardBGImageView.frame.size.height/2-35, 70, 70) ImageName:@"gold.png"];
+    UIImageView *goldImgeView = [MyControl createImageViewWithFrame:CGRectMake(rewardBGImageView.frame.size.width/2-35, rewardBGImageView.frame.size.height/2-35, 70, 70) ImageName:imageString];
     [rewardBGImageView addSubview:goldImgeView];
     
     
     
     UIView *shareView = [MyControl createViewWithFrame:CGRectMake(upView.frame.size.width/2-195/2.0, 250, 195, 50)];
     [upView addSubview:shareView];
+    NSArray *array = @[@"rock_weixin.png",@"rock_pengyou.png",@"rock_xinlang.png"];
+    NSArray *arrayDesc = @[@"微信好友",@"朋 友 圈",@"微 博"];
     for (int i = 0; i < 3; i++) {
-        UIImageView *shareImageView = [MyControl createImageViewWithFrame:CGRectMake(18+shareView.frame.size.width/3 * i, 0, 36, 36) ImageName:@"rock_weixin.png"];
+        UIImageView *shareImageView = [MyControl createImageViewWithFrame:CGRectMake(0+shareView.frame.size.width/3 * i +(i*15), 0, 36, 36) ImageName:array[i]];
         [shareView addSubview:shareImageView];
+        UIButton *shareButton = [MyControl createButtonWithFrame:shareImageView.frame ImageName:nil Target:self Action:@selector(shareAction:) Title:nil];
+        shareButton.tag = 77+i;
+        [shareButton setShowsTouchWhenHighlighted:YES];
+        [shareView addSubview:shareButton];
+        UILabel *label = [MyControl createLabelWithFrame:CGRectMake(shareImageView.frame.origin.x, 38, 40, 14) Font:10 Text:arrayDesc[i]];
+        label.textColor = [UIColor blackColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        [shareView addSubview:label];
     }
     
     UILabel *shareTextLabel = [MyControl createLabelWithFrame:CGRectMake(55, 230, 50, 15) Font:12 Text:@"分享到"];
     shareTextLabel.textColor = [UIColor grayColor];
     [upView addSubview:shareTextLabel];
 }
+- (void)shareAction:(UIButton *)sender
+{
+    if (sender.tag == 77) {
+        NSLog(@"微信");
+    }else if (sender.tag == 78){
+        NSLog(@"朋友");
+    }else{
+        NSLog(@"新浪");
+
+    }
+}
+#pragma mark - 次数用完界面
+- (void)createNoChanceAlertView
+{
+    noChanceHUD = [self alertViewInit:CGSizeMake(300, 425)];
+    UIView *totalView =[self shopGiftTitle];
+    [self unfortunatelyUpView:@"摇一摇，要到外婆桥。猫君今天的摇一摇次数用完啦，换个宠物试试吧~" imageString:@"nochance.png"];
+    [self addDownView:[NSString stringWithFormat:@"%d",count]];
+    noChanceHUD.customView = totalView;
+    [noChanceHUD show:YES];
+}
 #pragma mark - 一无所获界面
 - (void)createUnfortunatelyAlertView
 {
     unfortunately = [self alertViewInit:CGSizeMake(300, 425)];
     UIView *totalView =[self shopGiftTitle];
-    [self unfortunatelyUpView];
-    [self addDownView];
+    [self unfortunatelyUpView:@"这次什么都没有摇出......再试一次吧" imageString:@"unfortunately.png"];
+    [self addDownView:[NSString stringWithFormat:@"%d",count]];
     unfortunately.customView = totalView;
     [unfortunately show:YES];
 }
-- (void)unfortunatelyUpView
+- (void)unfortunatelyUpView:(NSString *)descString imageString:(NSString *)imageString
 {
     UIView *upView = [MyControl createViewWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
     [bodyView addSubview:upView];
     
-    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2 - 115, 10, 230, 40) Font:16 Text:@"这次什么都没有摇出......再试一次吧"];
+    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2 - 115, 10, 230, 60) Font:16 Text:descString];
     shakeDescLabel.textColor = GRAYBLUECOLOR;
     [upView addSubview:shakeDescLabel];
     
-    UIImageView *shakeImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2 - 95, 65, 190, 190) ImageName:@"unfortunately.png"];
+    UIImageView *shakeImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2 - 95, 65, 190, 190) ImageName:imageString];
     [upView addSubview:shakeImageView];
 }
 #pragma mark - 初始界面
@@ -175,14 +241,14 @@
     UIImageView *shakeImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2 - 95, 65, 190, 190) ImageName:@"rock.png"];
     [upView addSubview:shakeImageView];
    //下方视图
-   [self addDownView];
+    [self addDownView:[NSString stringWithFormat:@"%d",count]];
     
     alertView.customView = totalView;
     [alertView show:YES];
 }
 
 
-- (void)addDownView
+- (void)addDownView:(NSString *)countString
 {
     UIView *downView = [MyControl createViewWithFrame:CGRectMake(0, bodyView.frame.size.height-70, bodyView.frame.size.width, 70)];
     [bodyView addSubview:downView];
@@ -202,7 +268,7 @@
     [downView addSubview:helpPetLabel];
     
     UILabel *timesLabel = [MyControl createLabelWithFrame:CGRectMake(70, 27, 200, 20) Font:12 Text:nil];
-    NSAttributedString *timesString = [self firstString:@"今天还有次机会哦~" formatString:@"2" insertAtIndex:3];
+    NSAttributedString *timesString = [self firstString:@"今天还有次机会哦~" formatString:countString insertAtIndex:3];
     timesLabel.attributedText = timesString;
     [timesString release];
     [downView addSubview:timesLabel];
@@ -250,11 +316,11 @@
     
 //    bodyView = nil;
     bodyView = [MyControl createViewWithFrame:CGRectMake(0, 40, 300, 385)];
-    bodyView.backgroundColor = [UIColor clearColor];
-    UIView *alphaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 385)];
-    alphaView.backgroundColor = [UIColor whiteColor];
-    alphaView.alpha = 0.9;
-    [bodyView addSubview:alphaView];
+    bodyView.backgroundColor = [UIColor whiteColor];
+//    UIView *alphaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 385)];
+//    alphaView.backgroundColor = [UIColor whiteColor];
+//    alphaView.alpha = 0.9;
+//    [bodyView addSubview:alphaView];
     [totalView addSubview:bodyView];
     return totalView;
 }
@@ -283,15 +349,35 @@
 }
 - (void)colseGiftAction
 {
-    [alertView hide:YES];
-    [unfortunately hide:YES];
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    if (!isShaking) {
+        [alertView hide:YES];
+        [unfortunately hide:YES];
+        [goodsHUD hide:YES];
+        [goldHUD hide:YES];
+        [noChanceHUD hide:YES];
+        [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+    }
+    
+    
 }
 
 - (void)buttonAction:(UIButton *)sender
 {
-    [self createAlertView];
+    if ([sender.currentTitle isEqualToString:@"每日登陆"]) {
+        [self createNoChanceAlertView];
+    }else if ([sender.currentTitle isEqualToString:@"升级经验"]){
+        [self createUnfortunatelyAlertView];
+    }else if ([sender.currentTitle isEqualToString:@"官职升级"]){
+        
+    }else if ([sender.currentTitle isEqualToString:@"加入国家"]){
+        
+    }else if ([sender.currentTitle isEqualToString:@"购买成功"]){
+        
+    }else if ([sender.currentTitle isEqualToString:@"送礼物"]){
+        
+    }
+
 }
 
 

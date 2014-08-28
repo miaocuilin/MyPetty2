@@ -467,9 +467,11 @@
 - (void)colseGiftAction
 {
     [giftHUD hide:YES];
-    [self removeFromParentViewController];
+    giftHUD.completionBlock = ^{
+        [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+    };
     
-    [self.view removeFromSuperview];
 }
 
 - (void)productBuyAction:(UIButton *)sender
@@ -646,7 +648,7 @@
     bodyView.backgroundColor = [UIColor clearColor];
     UIView *alphaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 385)];
     alphaView.backgroundColor = [UIColor whiteColor];
-    alphaView.alpha = 0.8;
+    alphaView.alpha = 1.0;
     [bodyView addSubview:alphaView];
     [totalView addSubview:bodyView];
     

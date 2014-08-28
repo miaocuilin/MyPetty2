@@ -7,14 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AudioToolbox/AudioToolbox.h>
 
 @interface BottomMenuRootViewController : UIViewController
 {
     BOOL isOpen;
     UIImageView * headCircle;
-    SystemSoundID soundID;
-    SystemSoundID soundID2;
 }
 @property(nonatomic,retain)UIButton *menuBgBtn;
 @property(nonatomic,retain)UIView *menuBgView;

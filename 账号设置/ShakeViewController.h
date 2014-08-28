@@ -16,7 +16,8 @@
     SystemSoundID soundID2;
     MBProgressHUD *unfortunately;
     MBProgressHUD *goldHUD;
-
+    MBProgressHUD *goodsHUD;
+    MBProgressHUD *noChanceHUD;
 }
 - (void)createAlertView;
 @end

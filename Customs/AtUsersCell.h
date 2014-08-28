@@ -14,5 +14,6 @@
     UILabel * nameLabel;
     UIButton * btn;
 }
--(void)modifyWith:(NSString *)name row:(int)row;
+-(void)modifyWith:(NSString *)name row:(int)row selected:(BOOL)isSelected;
+@property(nonatomic,copy)void(^click)(int, BOOL);
 @end

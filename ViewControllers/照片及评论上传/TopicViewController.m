@@ -1,18 +1,18 @@
 //
-//  AtUsersViewController.m
+//  TopicViewController.m
 //  MyPetty
 //
-//  Created by miaocuilin on 14-8-27.
+//  Created by miaocuilin on 14-8-28.
 //  Copyright (c) 2014年 AidiGame. All rights reserved.
 //
 
-#import "AtUsersViewController.h"
-#import "AtUsersCell.h"
-@interface AtUsersViewController ()
+#import "TopicViewController.h"
+#import "topicCell.h"
+@interface TopicViewController ()
 
 @end
 
-@implementation AtUsersViewController
+@implementation TopicViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,7 +27,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.selectArray = [NSMutableArray arrayWithCapacity:0];
     
     [self createBg];
     [self createFakeNavigation];
@@ -36,18 +35,17 @@
     
     [self.view bringSubviewToFront:navView];
     [self.view bringSubviewToFront:headerView];
-    
 }
 -(void)createBg
 {
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:self.bgImageView];
-
+    
     NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
-
+    
     NSData * data = [NSData dataWithContentsOfFile:filePath];
-
+    
     UIImage * image = [UIImage imageWithData:data];
     self.bgImageView.image = image;
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
@@ -71,7 +69,7 @@
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"@用户"];
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"# 话题"];
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
@@ -97,21 +95,21 @@
     redView.alpha = 0.2;
     [headerView addSubview:redView];
     
-    UIImageView * search = [MyControl createImageViewWithFrame:CGRectMake(10, 13, 14, 13) ImageName:@"5-5.png"];
-    [headerView addSubview:search];
+    //
+    UIImageView * searchBg = [MyControl createImageViewWithFrame:CGRectMake(10, 5, 300, 25) ImageName:@""];
+    searchBg.image = [[UIImage imageNamed:@"topic_tfBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:10];
+    [headerView addSubview:searchBg];
     
-    tf = [MyControl createTextFieldWithFrame:CGRectMake(30, 10, 560/2, 20) placeholder:@"" passWord:NO leftImageView:nil rightImageView:nil Font:15];
+    UIImageView * jinghao = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 10, 10) ImageName:@"jinghao.png"];
+    tf = [MyControl createTextFieldWithFrame:CGRectMake(20, 7.5, 290, 20) placeholder:nil passWord:NO leftImageView:jinghao rightImageView:nil Font:15];
     tf.borderStyle = 0;
     //    tf.returnKeyType = UIReturnKeySearch;
     //    tf.backgroundColor = BGCOLOR;
     tf.delegate = self;
     tf.textColor = [UIColor whiteColor];
+    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@" 请插入话题名称" attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     [headerView addSubview:tf];
     
-    UIView * lineView = [MyControl createViewWithFrame:CGRectMake(10, 28, 590/2, 2)];
-    lineView.backgroundColor = [UIColor colorWithRed:246/255.0 green:189/255.0 blue:142/255.0 alpha:1];
-    [headerView addSubview:lineView];
-
 }
 -(void)createTableView
 {
@@ -135,6 +133,14 @@
 -(void)rightButtonClick
 {
     NSLog(@"确定");
+//    NSLog(@"%@", [tf.text class]);
+    if (tf.text == nil || [tf.text isEqualToString:@""]) {
+        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"话题为空!"];
+    }else{
+        [USER setObject:tf.text forKey:@"topic"];
+        [tf resignFirstResponder];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 #pragma mark - tableView代理
@@ -145,39 +151,24 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString * cellID = @"ID";
-    AtUsersCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-
+    topicCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
-        cell = [[[AtUsersCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
+        cell = [[[topicCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
     }
-    cell.click = ^(int a, BOOL select){
-        NSLog(@"%d -- %d", a, select);
-        if (select) {
-            [self.selectArray addObject:[NSString stringWithFormat:@"%d", a]];
-        }else{
-            [self.selectArray removeObject:[NSString stringWithFormat:@"%d", a]];
-        }
-        NSLog(@"%@", self.selectArray);
-//        [USER setObject:self.selectArray forKey:@"atUsers"];
-    };
+    if (indexPath.row < 3) {
+        [cell modifyWithName:@"喵喵cosplay大比拼" isActivity:YES];
+    }else{
+        [cell modifyWithName:@"喵喵cosplay大比拼" isActivity:NO];
+    }
     
     cell.selectionStyle = 0;
-    if (self.selectArray.count == 0) {
-        [cell modifyWith:@"白天不懂夜的黑" row:indexPath.row selected:NO];
-    }
-    for (int i=0; i<self.selectArray.count; i++) {
-        if ([self.selectArray[i] intValue] == indexPath.row) {
-            [cell modifyWith:@"白天不懂夜的黑" row:indexPath.row selected:YES];
-            break;
-        }else{
-            if (i == self.selectArray.count-1) {
-                [cell modifyWith:@"白天不懂夜的黑" row:indexPath.row selected:NO];
-            }
-        }
-    }
-    
     cell.backgroundColor = [UIColor clearColor];
     return cell;
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"选择了第%d个", indexPath.row);
+    tf.text = @"喵喵cosplay大比拼";
 }
 
 #pragma mark - textField
@@ -186,6 +177,8 @@
     [tf resignFirstResponder];
     return YES;
 }
+
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

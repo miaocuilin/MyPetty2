@@ -38,16 +38,27 @@
     line.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:line];
 }
--(void)modifyWith:(NSString *)name row:(int)row
+-(void)modifyWith:(NSString *)name row:(int)row selected:(BOOL)isSelected
 {
     head.image = [UIImage imageNamed:@"cat1.jpg"];
     nameLabel.text = name;
     btn.tag = 100+row;
+    if (isSelected) {
+        btn.selected = YES;
+    }else{
+        btn.selected = NO;
+    }
 }
 -(void)btnClick:(UIButton *)button
 {
     button.selected = !button.selected;
-    NSLog(@"点击了第%d个", btn.tag-100);
+//    NSLog(@"点击了第%d个", btn.tag-100);
+    if (button.selected) {
+        self.click(btn.tag-100, YES);
+    }else{
+        self.click(btn.tag-100, NO);
+    }
+    
 }
 - (void)awakeFromNib
 {

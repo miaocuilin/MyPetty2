@@ -1,14 +1,14 @@
 //
-//  AtUsersViewController.h
+//  TopicViewController.h
 //  MyPetty
 //
-//  Created by miaocuilin on 14-8-27.
+//  Created by miaocuilin on 14-8-28.
 //  Copyright (c) 2014年 AidiGame. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface AtUsersViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
+@interface TopicViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
     UIView * navView;
     UITableView * tv;
@@ -16,5 +16,4 @@
     UIView * headerView;
 }
 @property (nonatomic,retain)UIImageView * bgImageView;
-@property (nonatomic,retain)NSMutableArray * selectArray;
 @end

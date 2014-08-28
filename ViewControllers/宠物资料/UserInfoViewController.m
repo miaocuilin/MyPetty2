@@ -275,6 +275,9 @@
     bottom = [MyControl createViewWithFrame:CGRectMake(0, 40, 80, 4)];
     bottom.backgroundColor = BGCOLOR;
     [toolBgView addSubview:bottom];
+    
+    //加入从商店跳背包偏移量设置320*3 这里将直接偏移
+    sv.contentOffset = CGPointMake(self.offset, 0);
 }
 -(void)imageButtonClick
 {
@@ -397,6 +400,7 @@
             [cell addSubview:crown];
         }
         
+        [cell modify:indexPath.row];
         return cell;
     }else if (tableView == tv2) {
         static NSString * cellID2 = @"ID2";

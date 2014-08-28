@@ -101,14 +101,14 @@
                                         <rect key="frame" x="35" y="12" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="切 换 并" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AL7-hO-K6R">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="设 为" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AL7-hO-K6R">
                                         <rect key="frame" x="10" y="45" width="80" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="置 顶 ~ " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Dz-gk-Zuh">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="默 认" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Dz-gk-Zuh">
                                         <rect key="frame" x="10" y="65" width="80" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -144,6 +144,8 @@
                 <outlet property="nameLabel" destination="Veb-M5-guq" id="psC-qA-H5w"/>
                 <outlet property="qiutBtn" destination="XcB-P0-pVy" id="Hp0-n4-74O"/>
                 <outlet property="switchBtn" destination="FfZ-Ho-jYd" id="zov-zg-D01"/>
+                <outlet property="switchLabel1" destination="AL7-hO-K6R" id="oto-5y-VQe"/>
+                <outlet property="switchLabel2" destination="8Dz-gk-Zuh" id="5na-qW-rJD"/>
                 <outletCollection property="gestureRecognizers" destination="fch-Nd-ILf" appends="YES" id="Mvw-hf-5eA"/>
                 <outletCollection property="gestureRecognizers" destination="7AP-ru-hVa" appends="YES" id="aoD-Tj-gzQ"/>
             </connections>

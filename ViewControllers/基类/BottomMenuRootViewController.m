@@ -37,10 +37,7 @@
     AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path2], &soundID2);
 	AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path], &soundID);
 }
-- (BOOL)canBecomeFirstResponder
-{
-    return YES;
-}
+
 
 - (void)viewDidLoad
 {
@@ -119,11 +116,17 @@
 //    [shake createAlertView];
     [self hideAll];
 }
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
 -(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
     NSLog(@"bengin Shaking  times");
 //    label.text = [NSString stringWithFormat:@"%d", count];
 }
+
 -(void)btn2Click
 {
     NSLog(@"2");

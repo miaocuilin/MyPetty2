@@ -15,6 +15,7 @@
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 #import "AtUsersViewController.h"
+#import "TopicViewController.h"
 @interface PublishViewController () <UITextViewDelegate,AFPhotoEditorControllerDelegate>
 {
     UITextView * _textView;
@@ -37,10 +38,25 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     return self;
 }
-
+-(void)viewWillAppear:(BOOL)animated
+{
+    [topic setTitle:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]] forState:UIControlStateNormal];
+    
+//    if ([[[USER objectForKey:@"atUsers"] count] intValue] == 0) {
+//        [users setTitle:@"点击@用户" forState:UIControlStateNormal];
+//    }else{
+//        [users setTitle:[NSString stringWithFormat:@"@豆豆 等%d个用户", [[[USER objectForKey:@"atUsers"] count] intValue]] forState:UIControlStateNormal];
+//    }
+    
+    
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //清空topic
+    [USER setObject:@"点击添加话题" forKey:@"topic"];
+    
     // Do any additional setup after loading the view.
     // Allocate Asset Library
     ALAssetsLibrary * assetLibrary = [[ALAssetsLibrary alloc] init];
@@ -141,17 +157,22 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [bgImageView addSubview:bigImageView];
     
     /***********#话题#  @用户************/
-    UIButton * topic = [MyControl createButtonWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, 290/2, 30) ImageName:@"" Target:self Action:@selector(topicClick) Title:@"#喵喵cosplay大比拼#"];
+    topic = [MyControl createButtonWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, 290/2, 30) ImageName:@"" Target:self Action:@selector(topicClick) Title:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]]];
     topic.titleLabel.font = [UIFont systemFontOfSize:13];
-    topic.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.7];
+    topic.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
     topic.layer.cornerRadius = 3;
     topic.layer.masksToBounds = YES;
     topic.showsTouchWhenHighlighted = YES;
     [bgImageView addSubview:topic];
     
-    UIButton * users = [MyControl createButtonWithFrame:CGRectMake(320-10-290/2, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, 290/2, 30) ImageName:@"" Target:self Action:@selector(usersClick) Title:@"@豆豆 等3个用户"];
+    users = [MyControl createButtonWithFrame:CGRectMake(320-10-290/2, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, 290/2, 30) ImageName:@"" Target:self Action:@selector(usersClick) Title:@"点击@用户"];
+//    if ([[USER objectForKey:@"atUsers"] count] == 0) {
+//        [users setTitle:@"点击@用户" forState:UIControlStateNormal];
+//    }else{
+//        [users setTitle:[NSString stringWithFormat:@"@豆豆 等%d个用户", [[[USER objectForKey:@"atUsers"] count] intValue]] forState:UIControlStateNormal];
+//    }
     users.titleLabel.font = [UIFont systemFontOfSize:13];
-    users.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.7];
+    users.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
     users.layer.cornerRadius = 3;
     users.layer.masksToBounds = YES;
     users.showsTouchWhenHighlighted = YES;
@@ -239,6 +260,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)topicClick
 {
     NSLog(@"进入#话题页");
+    TopicViewController * vc = [[TopicViewController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 }
 -(void)usersClick
 {

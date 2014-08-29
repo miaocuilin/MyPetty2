@@ -12,6 +12,7 @@
 #import "TouchViewController.h"
 #import "ShakeViewController.h"
 #import "ShoutViewController.h"
+#import "CallViewController.h"
 
 #define headBtnWidth 64
 #define circleWidth 82
@@ -121,11 +122,14 @@
 //    [self.view addSubview:touch.view];
 //    [touch createAlertView];
 //    [self hideAll];
-    ShoutViewController *shout = [[ShoutViewController alloc] init];
-    [self addChildViewController:shout];
-    [shout release];
-    [shout didMoveToParentViewController:self];
-    [self.view addSubview:shout.view];
+    CallViewController *call = [[CallViewController alloc] init];
+    [self addChildViewController:call];
+    [call release];
+    [call didMoveToParentViewController:self];
+    [call createRecordOne];
+
+    [self.view addSubview:call.view];
+//    [self.view.superview bringSubviewToFront:self.view];
     [self hideAll];
 }
 -(void)btn4Click

@@ -222,7 +222,6 @@
         
         _duration.text = [NSString stringWithFormat:@"%.2d:%.2d %.2d", m, s, ss];
         NSInteger fileSize =  [self getFileSize:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]];
-        
         _cafFileSize.text = [NSString stringWithFormat:@"%d kb", fileSize/1024];
     }
     if (_playing)

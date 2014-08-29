@@ -13,6 +13,8 @@
 #import "MyPhotoCell.h"
 #import "InfoModel.h"
 #import "PicDetailViewController.h"
+#import "PopularityListViewController.h"
+#import "ContributionViewController.h"
 @interface PetInfoViewController ()
 
 @end
@@ -323,10 +325,16 @@
 -(void)GXListClick
 {
     NSLog(@"跳转贡献榜");
+    ContributionViewController * vc = [[ContributionViewController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 }
 -(void)RQListClick
 {
     NSLog(@"跳转人气榜");
+    PopularityListViewController * vc = [[PopularityListViewController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 }
 -(void)attentionBtnClick
 {

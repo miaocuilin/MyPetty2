@@ -331,6 +331,7 @@
     if (dropDown == nil) {
         CGFloat f = 200;
         dropDown = [[NIDropDown alloc] showDropDown:raceBtn :&f :self.totalArray];
+        
         dropDown.delegate = self;
         headerView.frame = CGRectMake(0, 64, 320, 35+200);
         isRaceShow = YES;
@@ -339,7 +340,6 @@
         isRaceShow = NO;
         [self rel];
     }
-
 }
 -(void)systemBtnClick
 {

@@ -21,6 +21,19 @@
 @synthesize list;
 @synthesize delegate;
 
+-(void)setDefaultCellType
+{
+    [self setCellTextColor:[UIColor whiteColor] Font:[UIFont boldSystemFontOfSize:14] BgColor:[UIColor colorWithRed:246/255.0 green:168/255.0 blue:146/255.0 alpha:0.6] lineColor:[UIColor whiteColor]];
+}
+
+-(void)setCellTextColor:(UIColor *)color Font:(UIFont *)font BgColor:(UIColor *)bgColor lineColor:(UIColor *)LineColor
+{
+    cellTextColor = color;
+    cellTextFont = font;
+    cellBgColor = bgColor;
+    lineColor = LineColor;
+}
+
 - (id)showDropDown:(UIButton *)b:(CGFloat *)height:(NSArray *)arr {
     btnSender = b;
     self = [super init];
@@ -94,9 +107,9 @@
         cell.textLabel.textAlignment = NSTextAlignmentCenter;
     }
     cell.textLabel.text =[list objectAtIndex:indexPath.row];
-    cell.textLabel.textColor = [UIColor whiteColor];
-    cell.textLabel.font = [UIFont boldSystemFontOfSize:14];
-    cell.backgroundColor = [UIColor colorWithRed:246/255.0 green:168/255.0 blue:146/255.0 alpha:0.6];
+    cell.textLabel.textColor = cellTextColor;
+    cell.textLabel.font = cellTextFont;
+    cell.backgroundColor = cellBgColor;
 //    cell.alpha = 0.5;
     
     UIView * v = [[UIView alloc] init];
@@ -104,7 +117,7 @@
     cell.selectedBackgroundView = v;
     
     UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 39, tableView.frame.size.width, 1)];
-    line.backgroundColor = [UIColor whiteColor];
+    line.backgroundColor = lineColor;
     [cell addSubview:line];
     return cell;
 }

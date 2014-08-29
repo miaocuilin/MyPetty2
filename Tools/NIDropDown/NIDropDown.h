@@ -14,9 +14,16 @@
 @end 
 
 @interface NIDropDown : UIView <UITableViewDelegate, UITableViewDataSource>
-
+{
+    UIColor * cellTextColor;
+    UIFont * cellTextFont;
+    UIColor * cellBgColor;
+    UIColor * lineColor;
+}
 @property (nonatomic, retain) id <NIDropDownDelegate> delegate;
 
 -(void)hideDropDown:(UIButton *)b;
 - (id)showDropDown:(UIButton *)b:(CGFloat *)height:(NSArray *)arr;
+-(void)setCellTextColor:(UIColor *)color Font:(UIFont *)font BgColor:(UIColor *)bgColor lineColor:(UIColor *)LineColor;
+-(void)setDefaultCellType;
 @end

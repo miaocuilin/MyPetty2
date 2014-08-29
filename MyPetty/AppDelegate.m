@@ -44,6 +44,9 @@
 #import "AtUsersViewController.h"
 #import "TopicViewController.h"
 #import "GiftShopViewController.h"
+#import "PopularityListViewController.h"
+#import "RecordViewController.h"
+#import "ContributionViewController.h"
 @implementation AppDelegate
 -(void)dealloc
 {
@@ -102,11 +105,13 @@
 //    ShakeViewController * fvc = [[ShakeViewController alloc] init];
 //    PublishViewController * fvc = [[PublishViewController alloc] init];
 //    ShakeViewController * fvc = [[ShakeViewController alloc] init];
-    RecordViewController * fvc = [[RecordViewController alloc] init];
+//    RecordViewController * fvc = [[RecordViewController alloc] init];
 //    ChoseLoadViewController * fvc = [[ChoseLoadViewController alloc] init];
 //    JDMenuViewController * info = [[JDMenuViewController alloc] init];
 //    JDMenuViewController * fvc = [[JDMenuViewController alloc] init];
     FirstViewController * info = [[FirstViewController alloc] init];
+//    PopularityListViewController * info = [[PopularityListViewController alloc] init];
+//    ContributionViewController * info = [[ContributionViewController alloc] init];
 //    MyInfoViewController * info = [[MyInfoViewController alloc] init];
 //    PetInfoViewController * info = [[PetInfoViewController alloc] init];
 //    BottomMenuBaseViewController * info = [[BottomMenuBaseViewController alloc] init];
@@ -122,8 +127,9 @@
 //    self.window.rootViewController = sideMenu;
 //    ToolTipsViewController *toolTips =[[ToolTipsViewController alloc] init];
 //    UserInfoViewController * info = [[UserInfoViewController alloc] init];
-    ShoutViewController *shout = [[ShoutViewController alloc] init];
+//    ShoutViewController *shout = [[ShoutViewController alloc] init];
 //    GiftShopViewController * info = [[GiftShopViewController alloc] init];
+//    RecordViewController * info = [[RecordViewController alloc] init];
     self.window.rootViewController = info;
 //    [menu release];
 //    [fvc release];

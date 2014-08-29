@@ -29,8 +29,8 @@
     noticeSystem_name = [MyControl createLabelWithFrame:CGRectMake(70, 15, 100, 20) Font:15 Text:@"仁者神鬼"];
     noticeSystem_name.textColor = BGCOLOR;
     [self.contentView addSubview:noticeSystem_name];
-    
-    noticeSystem_action = [MyControl createLabelWithFrame:CGRectMake(150, 15, 120, 20) Font:15 Text:@"回复了我的评论"];
+    //回复了我、评论了我
+    noticeSystem_action = [MyControl createLabelWithFrame:CGRectMake(150, 15, 120, 20) Font:15 Text:@"回复了我"];
     noticeSystem_action.textColor = [UIColor blackColor];
     [self.contentView addSubview:noticeSystem_action];
     

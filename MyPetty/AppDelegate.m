@@ -47,6 +47,8 @@
 #import "PopularityListViewController.h"
 #import "RecordViewController.h"
 #import "ContributionViewController.h"
+#import "CallViewController.h"
+
 @implementation AppDelegate
 -(void)dealloc
 {
@@ -130,6 +132,7 @@
 //    ShoutViewController *shout = [[ShoutViewController alloc] init];
 //    GiftShopViewController * info = [[GiftShopViewController alloc] init];
 //    RecordViewController * info = [[RecordViewController alloc] init];
+    CallViewController *call = [[CallViewController alloc] init];
     self.window.rootViewController = info;
 //    [menu release];
 //    [fvc release];

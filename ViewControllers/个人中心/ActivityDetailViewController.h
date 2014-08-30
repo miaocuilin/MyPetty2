@@ -14,7 +14,7 @@
     UIScrollView * sv;
     BOOL isCamara;
     UITableView * tv;
-    
+    UIView * navView;
 }
 @property(nonatomic,retain)NSMutableString * txs;
 @property(nonatomic,retain)TopicListModel * listModel;

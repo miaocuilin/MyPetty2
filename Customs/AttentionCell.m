@@ -38,8 +38,7 @@
     cateAndNameLabel = [MyControl createLabelWithFrame:CGRectMake(55, 40, 200, 20) Font:15 Text:nil];
     cateAndNameLabel.textColor = [UIColor grayColor];
     [self.contentView addSubview:cateAndNameLabel];
-    
-    
+     
 }
 
 -(void)configUI:(InfoModel *)model

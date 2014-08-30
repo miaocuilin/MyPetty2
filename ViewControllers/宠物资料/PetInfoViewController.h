@@ -6,9 +6,10 @@
 //  Copyright (c) 2014年 AidiGame. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+//#import <UIKit/UIKit.h>
+#import "BottomMenuRootViewController.h"
 
-@interface PetInfoViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate>
+@interface PetInfoViewController : BottomMenuRootViewController <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate>
 {
     UIScrollView * sv;
     UITableView * tv;
@@ -23,6 +24,10 @@
     BOOL isCreated[3];
     UIImageView * bgImageView1;
     BOOL isPhotoDownload;
+    
+    BOOL isMoreCreated;
+    UIView * moreView;
+    UIButton * alphaBtn;
 }
 @property (nonatomic,copy)NSString * lastImg_id;
 @property (nonatomic,retain)NSMutableArray * photosDataArray;

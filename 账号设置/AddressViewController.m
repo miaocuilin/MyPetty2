@@ -57,7 +57,7 @@
     [self.view addSubview:nav];
     [nav release];
     
-    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 30, 20, 20) ImageName:@"7-7.png"];
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [nav addSubview:backImageView];
     
     UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(comeBackAction) Title:nil];

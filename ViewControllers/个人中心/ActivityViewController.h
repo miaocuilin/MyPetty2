@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface ActivityViewController : UIViewController
-
+{
+    UIView * navView;
+    UIImageView * bgImageView;
+}
 @property(nonatomic,retain)NSMutableArray * dataArray;
 @end

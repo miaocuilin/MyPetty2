@@ -34,27 +34,51 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
     
-    [self createNavgation];
+    [self createBg];
+    [self createFakeNavigation];
 //    [self createTableView];
     [self loadData];
 }
 #pragma mark - 视图的创建
-- (void)createNavgation
+-(void)createBg
 {
-//    self.navigationController.navigationBar.alpha = 0.85;
-    if (iOS7) {
-        self.navigationController.navigationBar.barTintColor = BGCOLOR;
-    }else{
-        self.navigationController.navigationBar.tintColor = BGCOLOR;
-    }
-    self.navigationController.navigationBar.translucent = NO;
-    self.navigationItem.title = @"活动";
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-    UIButton * button1 = [MyControl createButtonWithFrame:CGRectMake(0, 0, 56/2, 56/2) ImageName:@"7-7.png" Target:self Action:@selector(returnClick:) Title:nil];
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:button1];
+    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    [self.view addSubview:bgImageView];
+    //    self.bgImageView.backgroundColor = [UIColor redColor];
+    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+    NSLog(@"%@", filePath);
+    NSData * data = [NSData dataWithContentsOfFile:filePath];
+    //    NSLog(@"%@", data);
+    UIImage * image = [UIImage imageWithData:data];
+    bgImageView.image = image;
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+    [self.view addSubview:tempView];
+}
+-(void)createFakeNavigation
+{
+    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    [self.view addSubview:navView];
     
-    self.navigationItem.leftBarButtonItem = leftItem;
-    [leftItem release];
+    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    alphaView.alpha = 0.85;
+    alphaView.backgroundColor = BGCOLOR;
+    [navView addSubview:alphaView];
+    
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+    [navView addSubview:backImageView];
+    
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
+    backBtn.showsTouchWhenHighlighted = YES;
+    //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    [navView addSubview:backBtn];
+    
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"活动"];
+    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+//    titleLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    [navView addSubview:titleLabel];
 }
 
 -(void)loadData
@@ -81,8 +105,14 @@
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    _tableView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_tableView];
     [_tableView release];
+    
+    UIView * headerView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    _tableView.tableHeaderView = headerView;
+    
+    [self.view bringSubviewToFront:navView];
 }
 
 #pragma mark - 表视图datasource和delegate
@@ -97,6 +127,7 @@
     if (_tableViewCell == nil) {
         _tableViewCell = [[[ActiveCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:idetifierCell]autorelease];
     }
+    _tableViewCell.backgroundColor = [UIColor clearColor];
     _tableViewCell.selectionStyle = 0;
     TopicListModel * model = self.dataArray[indexPath.row];
     [_tableViewCell configUI:model];
@@ -113,13 +144,13 @@
     //跳转到活动详情页
     ActivityDetailViewController * vc = [[ActivityDetailViewController alloc] init];
     vc.listModel = self.dataArray[indexPath.row];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
 
 
 #pragma mark - 点击事件
-- (void)returnClick:(UIButton *)button
+- (void)backBtnClick:(UIButton *)button
 {
     button.selected = !button.selected;
     JDSideMenu * menu = [ControllerManager shareJDSideMenu];
@@ -135,6 +166,22 @@
 {
     [super didReceiveMemoryWarning];
 }
-
+//- (void)createNavgation
+//{
+////    self.navigationController.navigationBar.alpha = 0.85;
+//    if (iOS7) {
+//        self.navigationController.navigationBar.barTintColor = BGCOLOR;
+//    }else{
+//        self.navigationController.navigationBar.tintColor = BGCOLOR;
+//    }
+//    self.navigationController.navigationBar.translucent = NO;
+//    self.navigationItem.title = @"活动";
+//    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+//    UIButton * button1 = [MyControl createButtonWithFrame:CGRectMake(0, 0, 56/2, 56/2) ImageName:@"7-7.png" Target:self Action:@selector(returnClick:) Title:nil];
+//    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:button1];
+//
+//    self.navigationItem.leftBarButtonItem = leftItem;
+//    [leftItem release];
+//}
 
 @end

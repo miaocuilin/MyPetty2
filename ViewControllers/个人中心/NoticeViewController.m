@@ -159,12 +159,11 @@
     alphaView.backgroundColor = BGCOLOR;
     [navView addSubview:alphaView];
     
-    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 30, 20, 20) ImageName:@"7-7.png"];
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
     UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
-    //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
     
     UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"消息"];

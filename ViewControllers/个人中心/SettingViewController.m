@@ -9,6 +9,7 @@
 #import "SettingViewController.h"
 #import "AddressViewController.h"
 #import "FeedbackViewController.h"
+#import "SetDefaultPetViewController.h"
 @interface SettingViewController ()
 
 @end
@@ -28,7 +29,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.arr1 = @[@"资料修改", @"收货地址", @"绑定新浪微博"];
+    self.arr1 = @[@"资料修改", @"收货地址", @"设置默认宠物", @"绑定新浪微博"];
     self.arr2 = @[@"新浪微博", @"微信朋友圈"];
     self.arr3 = @[@"清除缓存", @"检查更新", @"常见问题", @"意见反馈", @"赏个好评", @"关于我们"];
     
@@ -93,7 +94,7 @@
     alphaView.backgroundColor = BGCOLOR;
     [navView addSubview:alphaView];
     
-    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 30, 20, 20) ImageName:@"7-7.png"];
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
     UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
@@ -120,7 +121,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0) {
-        return 3;
+        return 4;
     }else if(section == 1){
         return 2;
     }else{
@@ -141,7 +142,7 @@
     }
     
     if (indexPath.section == 0) {
-        if (indexPath.row == 2) {
+        if (indexPath.row == 3) {
             sinaBind = [[UISwitch alloc] initWithFrame:CGRectMake(500/2, 7, 0, 0)];
             [sinaBind addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
             [cell addSubview:sinaBind];
@@ -177,7 +178,7 @@
 - (void)normalCell:(UITableViewCell *)cell arrow:(NSIndexPath *)indexPath
 {
     //右箭头
-    if((indexPath.section == 0 && indexPath.row != 2) ||(indexPath.section == 2 && indexPath.row != 0)){
+    if((indexPath.section == 0 && indexPath.row != 3) ||(indexPath.section == 2 && indexPath.row != 0)){
         UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(570/2, 10, 20, 20) ImageName:@"14-6-2.png"];
 //        [cell addSubview:arrow];
         cell.accessoryView = arrow;
@@ -210,6 +211,11 @@
             [self presentViewController:address animated:YES completion:^{
                 [address release];
             }];
+        }else if(indexPath.row == 2){
+            NSLog(@"设置默认宠物");
+            SetDefaultPetViewController * vc = [[SetDefaultPetViewController alloc] init];
+            [self presentViewController:vc animated:YES completion:nil];
+            [vc release];
         }
     }else if (indexPath.section == 1){
         

@@ -25,6 +25,14 @@
     UIImageView * bgImageView1;
     
     int cellNum;
+    
+    BOOL isMoreCreated;
+    UIView * moreView;
+    
+    UIButton * menuBgBtn;
+    
+    BOOL isOwner;
 }
+
 @property(nonatomic)int offset;
 @end

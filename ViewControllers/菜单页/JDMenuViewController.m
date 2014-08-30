@@ -20,6 +20,7 @@
 #import "RandomViewController.h"
 #import "MainViewController.h"
 #import "ToolTipsViewController.h"
+#import "GiftShopViewController.h"
 @interface JDMenuViewController ()
 
 @end
@@ -607,12 +608,14 @@
         [self.sideMenuController setContentController:vc animted:YES];
     }else if (button.tag == 1001) {
         //商城
-        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"敬请期待~"];
+        GiftShopViewController *vc = [[GiftShopViewController alloc] init];
+        [self.sideMenuController setContentController:vc animted:YES];
+//        [vc release];
     }else if (button.tag == 1002) {
         //活动
         ActivityViewController *vc = [[ActivityViewController alloc] init];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-        [self.sideMenuController setContentController:nav animted:YES];
+//        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+        [self.sideMenuController setContentController:vc animted:YES];
         [vc release];
     }else if (button.tag == 1003) {
         //设置

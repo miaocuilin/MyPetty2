@@ -99,22 +99,24 @@
     //下方视图
     [self addDownView:[NSString stringWithFormat:@"%d",count]];
 }
-- (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag
-{
-    NSLog(@"recordFinish");
-    upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width, 0);
-}
+
 - (void)recordButtonTouchUp:(UIButton *)sender
 {
     NSLog(@"录音结束");
-    [_timer invalidate];
-    _timer = nil;
     
     //停止，发送
     [_recorder stop];
-//    [_recorder release];
-//    _recorder = nil;
+    [_recorder release];
+    _recorder = nil;
     
+}
+//录音代理方法
+- (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag
+{
+    NSLog(@"recordFinish");
+    [_timer invalidate];
+    _timer = nil;
+    upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width, 0);
 }
 - (void)recordButtonTouchDown:(UIButton *)sender
 {
@@ -226,7 +228,6 @@
 {
 //    [totalView removeFromSuperview];
     [self.view removeFromSuperview];
-
     [self removeFromParentViewController];
 }
 
@@ -281,13 +282,15 @@
 //重新录制
 - (void)RerecordAction
 {
+    if (_timer) {
+        [_timer invalidate];
+        _timer = nil;
+    }
     upScrollView.contentOffset = CGPointMake(0, 0);
     RecordImageView.hidden = NO;
     initView.hidden = YES;
     _player = nil;
-    
-    [_timer invalidate];
-    _timer = nil;
+
     uploadingImageView.hidden = YES;
     [recordUploadingButton setHidden:NO];
     [rerecordingButton setHidden:NO];

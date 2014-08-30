@@ -64,14 +64,27 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - 视图的创建
 - (void)makeNavgation
 {
-    self.navigationController.navigationBar.translucent = NO;
-    self.navigationItem.title = @"线上活动详情";
-//    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-    UIButton * button1 = [MyControl createButtonWithFrame:CGRectMake(0, 0, 56/2, 56/2) ImageName:@"7-7.png" Target:self Action:@selector(returnClick) Title:nil];
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]initWithCustomView:button1];
+    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    [self.view addSubview:navView];
     
-    self.navigationItem.leftBarButtonItem = leftItem;
-    [leftItem release];
+    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    alphaView.alpha = 0.85;
+    alphaView.backgroundColor = BGCOLOR;
+    [navView addSubview:alphaView];
+    
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+    [navView addSubview:backImageView];
+    
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    backBtn.showsTouchWhenHighlighted = YES;
+    //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    [navView addSubview:backBtn];
+    
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"活动"];
+    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    //    titleLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    [navView addSubview:titleLabel];
 }
 
 #pragma mark - 下载数据
@@ -135,16 +148,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }];
 }
 
-
+#pragma mark - tableView创建
 -(void)makeUI
 {
 //    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
 //    [self.view addSubview:sv];
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-40-64) style:UITableViewStylePlain];
     [self.view addSubview:tv];
     
-    UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 760/2)];
     tv.tableHeaderView = bgView;
+    
+    [self.view bringSubviewToFront:navView];
     
     UIImageView * imageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, 135) ImageName:@"cat1.jpg"];
     [bgView addSubview:imageView];
@@ -310,9 +325,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [vc release];
 }
 
--(void)returnClick
+-(void)backBtnClick
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex

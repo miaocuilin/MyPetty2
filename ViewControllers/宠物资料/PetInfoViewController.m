@@ -44,7 +44,8 @@
 //    [self createHeader];
     [self createTableView];
     
-    
+//    [self.view bringSubviewToFront:self.menuBgBtn];
+//    [self.view bringSubviewToFront:self.menuBgView];
 }
 #pragma mark -请求国王数据
 -(void)loadKingData
@@ -67,6 +68,10 @@
             [self createHeader];
             [self.view bringSubviewToFront:navView];
             [self.view bringSubviewToFront:toolBgView];
+            
+            [self.view bringSubviewToFront:self.menuBgBtn];
+            [self.view bringSubviewToFront:self.menuBgView];
+            
             NET = NO;
         }else{
             NSLog(@"用户数据加载失败。");
@@ -121,7 +126,10 @@
     alphaView.backgroundColor = BGCOLOR;
     [navView addSubview:alphaView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(17, 64-17-22, 28, 28) ImageName:@"7-7.png" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+    [navView addSubview:backImageView];
+    
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
@@ -130,13 +138,14 @@
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
     
-    UIButton * joinBtn = [MyControl createButtonWithFrame:CGRectMake(320-45-17, 64-25-12, 45, 25) ImageName:@"" Target:self Action:@selector(joinBtnClick) Title:@"加入"];
-    joinBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    joinBtn.backgroundColor = BGCOLOR4;
-    joinBtn.layer.cornerRadius = 5;
-    joinBtn.layer.masksToBounds = YES;
-    joinBtn.showsTouchWhenHighlighted = YES;
-    [navView addSubview:joinBtn];
+    UIImageView * more = [MyControl createImageViewWithFrame:CGRectMake(280, 38, 47/2, 9/2) ImageName:@"threePoint.png"];
+    [navView addSubview:more];
+    
+    UIButton * moreBtn = [MyControl createButtonWithFrame:CGRectMake(270, 25, 47/2+20, 9/2+16+10) ImageName:@"" Target:self Action:@selector(moreBtnClick) Title:nil];
+    moreBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+
+    moreBtn.showsTouchWhenHighlighted = YES;
+    [navView addSubview:moreBtn];
 }
 
 #pragma mark - 导航点击事件
@@ -145,9 +154,135 @@
     NSLog(@"back");
     [self dismissViewControllerAnimated:YES completion:nil];
 }
--(void)joinBtnClick
+-(void)moreBtnClick
 {
-    NSLog(@"join");
+    NSLog(@"more");
+    if (!isMoreCreated) {
+        //create more
+        [self createMore];
+    }
+    //show more
+    alphaBtn.hidden = NO;
+    [UIView animateWithDuration:0.3 animations:^{
+        moreView.frame = CGRectMake(0, self.view.frame.size.height-234, 320, 234);
+        alphaBtn.alpha = 0.5;
+    }];
+
+}
+#pragma mark - 创建更多视图
+-(void)createMore
+{
+    alphaBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(cancelBtnClick) Title:nil];
+    alphaBtn.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:alphaBtn];
+    alphaBtn.alpha = 0;
+    alphaBtn.hidden = YES;
+    
+    // 318*234
+    moreView = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height, 320, 234)];
+    moreView.backgroundColor = [ControllerManager colorWithHexString:@"efefef"];
+    [self.view addSubview:moreView];
+    
+    //orange line
+    UIView * orangeLine = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 4)];
+    orangeLine.backgroundColor = [ControllerManager colorWithHexString:@"fc7b51"];
+    [moreView addSubview:orangeLine];
+    //label
+    UILabel * shareLabel = [MyControl createLabelWithFrame:CGRectMake(15, 10, 80, 15) Font:13 Text:@"分享到"];
+    shareLabel.textColor = [UIColor blackColor];
+    [moreView addSubview:shareLabel];
+    //3个按钮
+    NSArray * arr = @[@"more_weixin.png", @"more_friend.png", @"more_sina.png"];
+    NSArray * arr2 = @[@"微信好友", @"朋友圈", @"微博"];
+    for(int i=0;i<3;i++){
+        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(40+i*92, 33, 42, 42) ImageName:arr[i] Target:self Action:@selector(shareClick:) Title:nil];
+        button.tag = 200+i;
+        [moreView addSubview:button];
+        
+        CGRect rect = button.frame;
+        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(rect.origin.x-10, rect.origin.y+rect.size.height+5, rect.size.width+20, 15) Font:12 Text:arr2[i]];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor blackColor];
+//        label.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        [moreView addSubview:label];
+    }
+    //grayLine1
+    UIView * grayLine1 = [MyControl createViewWithFrame:CGRectMake(0, 105, 320, 2)];
+    grayLine1.backgroundColor = [ControllerManager colorWithHexString:@"e3e3e3"];
+    [moreView addSubview:grayLine1];
+    
+    //stranger and fakeOwner 20 127
+    UIView * strangerAndFakeOwnerView = [MyControl createViewWithFrame:CGRectMake(0, 127, 320, 76/2)];
+    [moreView addSubview:strangerAndFakeOwnerView];
+    
+    UIButton * addBtn = [MyControl createButtonWithFrame:CGRectMake(20, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(addBtnClick:) Title:@"加入"];
+    [addBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
+    [addBtn setTitle:@"已加入" forState:UIControlStateSelected];
+    addBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [strangerAndFakeOwnerView addSubview:addBtn];
+    
+    UIButton * attentionBtn = [MyControl createButtonWithFrame:CGRectMake(354/2, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(attentionBtnClick:) Title:@"关注"];
+    [attentionBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
+    [attentionBtn setTitle:@"已关注" forState:UIControlStateSelected];
+    attentionBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [strangerAndFakeOwnerView addSubview:attentionBtn];
+    
+//    strangerAndFakeOwnerView.hidden = YES;
+    
+    //OwnerView
+    UIView * ownerView = [MyControl createViewWithFrame:CGRectMake(0, 127, 320, 76/2)];
+    [moreView addSubview:ownerView];
+    
+    UIButton * takePhoto = [MyControl createButtonWithFrame:CGRectMake(30, 0, 526/2, 76/2) ImageName:@"" Target:self Action:@selector(takePhoto) Title:@"拍照"];
+    [takePhoto setBackgroundImage:[[UIImage imageNamed:@"more_greenBg.png"]stretchableImageWithLeftCapWidth:100 topCapHeight:30] forState:UIControlStateNormal];
+    takePhoto.titleLabel.font = [UIFont systemFontOfSize:15];
+    [ownerView addSubview:takePhoto];
+    
+    ownerView.hidden = YES;
+    
+    //grayLine2
+    UIView * grayLine2 = [MyControl createViewWithFrame:CGRectMake(0, 180, 320, 5)];
+    grayLine2.backgroundColor = [ControllerManager colorWithHexString:@"e3e3e3"];
+    [moreView addSubview:grayLine2];
+    
+    //cancelBtn
+    UIButton * cancelBtn = [MyControl createButtonWithFrame:CGRectMake(0, 188, 320, 46) ImageName:@"" Target:self Action:@selector(cancelBtnClick) Title:@"取消"];
+    [cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    cancelBtn.showsTouchWhenHighlighted = YES;
+    cancelBtn.titleLabel.font = [UIFont systemFontOfSize:17];
+    [moreView addSubview:cancelBtn];
+}
+-(void)shareClick:(UIButton *)button
+{
+    if (button.tag == 200) {
+        NSLog(@"微信");
+    }else if(button.tag == 201){
+        NSLog(@"朋友圈");
+    }else{
+        NSLog(@"微博");
+    }
+}
+-(void)addBtnClick:(UIButton *)button
+{
+    button.selected = !button.selected;
+}
+-(void)attentionBtnClick:(UIButton *)button
+{
+    button.selected = !button.selected;
+}
+-(void)takePhoto
+{
+    NSLog(@"take photos");
+}
+-(void)cancelBtnClick
+{
+    NSLog(@"cancel");
+    [UIView animateWithDuration:0.3 animations:^{
+        moreView.frame = CGRectMake(0, self.view.frame.size.height, 320, 234);
+        alphaBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        alphaBtn.hidden = YES;
+    }];
 }
 #pragma mark - 创建tableView的tableHeaderView
 -(void)createHeader
@@ -522,7 +657,7 @@
         }
         cell.selectionStyle = 0;
         cell.clipsToBounds = YES;
-        [cell modifyWithType:indexPath.row%6+1];
+        [cell modifyWithType:indexPath.row%7+1];
         return cell;
     }else if (tableView == tv2) {
         static NSString * cellID2 = @"ID2";
@@ -671,7 +806,7 @@
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == tv) {
-        int a = indexPath.row%6+1;
+        int a = indexPath.row%7+1;
         if (a == 1) {
             return 90.0f;
         }else if (a == 2) {
@@ -682,6 +817,8 @@
             return 90.0f;
         }else if (a == 5) {
             return 90.0f;
+        }else if (a == 6) {
+            return 70.0f;
         }else{
             return 70.0f;
         }

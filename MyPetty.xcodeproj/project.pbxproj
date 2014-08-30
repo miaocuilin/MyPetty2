@@ -460,6 +460,18 @@
 		6057847419B05C14007FAF4C /* PopularityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6057847219B05C14007FAF4C /* PopularityCell.m */; };
 		6057847519B05C14007FAF4C /* PopularityCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6057847319B05C14007FAF4C /* PopularityCell.xib */; };
 		6057847819B089EA007FAF4C /* ContributionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6057847719B089EA007FAF4C /* ContributionViewController.m */; };
+		606181AB19B17DC2009AF63D /* myCountry_trouble.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181AA19B17DC2009AF63D /* myCountry_trouble.png */; };
+		606181AE19B1819A009AF63D /* SetDefaultPetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 606181AD19B1819A009AF63D /* SetDefaultPetViewController.m */; };
+		606181B219B1856C009AF63D /* DefaultPetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 606181B019B1856C009AF63D /* DefaultPetCell.m */; };
+		606181B319B1856C009AF63D /* DefaultPetCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 606181B119B1856C009AF63D /* DefaultPetCell.xib */; };
+		606181B619B19749009AF63D /* defaultPet.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181B419B19749009AF63D /* defaultPet.png */; };
+		606181B719B19749009AF63D /* setToDefaultPet.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181B519B19749009AF63D /* setToDefaultPet.png */; };
+		606181B919B1A7BE009AF63D /* threePoint.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181B819B1A7BE009AF63D /* threePoint.png */; };
+		606181BD19B1B3E5009AF63D /* more_friend.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181BA19B1B3E5009AF63D /* more_friend.png */; };
+		606181BE19B1B3E5009AF63D /* more_sina.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181BB19B1B3E5009AF63D /* more_sina.png */; };
+		606181BF19B1B3E5009AF63D /* more_weixin.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181BC19B1B3E5009AF63D /* more_weixin.png */; };
+		606181C219B1BA80009AF63D /* more_greenBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181C019B1BA80009AF63D /* more_greenBg.png */; };
+		606181C319B1BA80009AF63D /* more_orangeBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181C119B1BA80009AF63D /* more_orangeBg.png */; };
 		6065A97519A9910300333B0D /* arrow_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 6065A97419A9910300333B0D /* arrow_right.png */; };
 		60BFBC6319B00FCE00EE3746 /* PopularityListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60BFBC6219B00FCE00EE3746 /* PopularityListViewController.m */; };
 		60BFBC6C19B0271300EE3746 /* copperMedal.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6519B0271300EE3746 /* copperMedal.png */; };
@@ -1135,6 +1147,20 @@
 		6057847319B05C14007FAF4C /* PopularityCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopularityCell.xib; sourceTree = "<group>"; };
 		6057847619B089EA007FAF4C /* ContributionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContributionViewController.h; sourceTree = "<group>"; };
 		6057847719B089EA007FAF4C /* ContributionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContributionViewController.m; sourceTree = "<group>"; };
+		606181AA19B17DC2009AF63D /* myCountry_trouble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myCountry_trouble.png; sourceTree = "<group>"; };
+		606181AC19B1819A009AF63D /* SetDefaultPetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetDefaultPetViewController.h; sourceTree = "<group>"; };
+		606181AD19B1819A009AF63D /* SetDefaultPetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetDefaultPetViewController.m; sourceTree = "<group>"; };
+		606181AF19B1856C009AF63D /* DefaultPetCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultPetCell.h; sourceTree = "<group>"; };
+		606181B019B1856C009AF63D /* DefaultPetCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DefaultPetCell.m; sourceTree = "<group>"; };
+		606181B119B1856C009AF63D /* DefaultPetCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DefaultPetCell.xib; sourceTree = "<group>"; };
+		606181B419B19749009AF63D /* defaultPet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = defaultPet.png; sourceTree = "<group>"; };
+		606181B519B19749009AF63D /* setToDefaultPet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = setToDefaultPet.png; sourceTree = "<group>"; };
+		606181B819B1A7BE009AF63D /* threePoint.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = threePoint.png; sourceTree = "<group>"; };
+		606181BA19B1B3E5009AF63D /* more_friend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more_friend.png; sourceTree = "<group>"; };
+		606181BB19B1B3E5009AF63D /* more_sina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more_sina.png; sourceTree = "<group>"; };
+		606181BC19B1B3E5009AF63D /* more_weixin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more_weixin.png; sourceTree = "<group>"; };
+		606181C019B1BA80009AF63D /* more_greenBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more_greenBg.png; sourceTree = "<group>"; };
+		606181C119B1BA80009AF63D /* more_orangeBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more_orangeBg.png; sourceTree = "<group>"; };
 		6065A97419A9910300333B0D /* arrow_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_right.png; sourceTree = "<group>"; };
 		60BFBC6119B00FCE00EE3746 /* PopularityListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopularityListViewController.h; sourceTree = "<group>"; };
 		60BFBC6219B00FCE00EE3746 /* PopularityListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopularityListViewController.m; sourceTree = "<group>"; };
@@ -1696,6 +1722,8 @@
 				099D0EFF1945D246002137CB /* VisibleViewController.m */,
 				496CF21E19A44F570081BF5E /* AddressViewController.h */,
 				496CF21F19A44F570081BF5E /* AddressViewController.m */,
+				606181AC19B1819A009AF63D /* SetDefaultPetViewController.h */,
+				606181AD19B1819A009AF63D /* SetDefaultPetViewController.m */,
 			);
 			name = "账号设置";
 			path = "../账号设置";
@@ -2012,6 +2040,9 @@
 				6057847119B05C14007FAF4C /* PopularityCell.h */,
 				6057847219B05C14007FAF4C /* PopularityCell.m */,
 				6057847319B05C14007FAF4C /* PopularityCell.xib */,
+				606181AF19B1856C009AF63D /* DefaultPetCell.h */,
+				606181B019B1856C009AF63D /* DefaultPetCell.m */,
+				606181B119B1856C009AF63D /* DefaultPetCell.xib */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -2374,6 +2405,14 @@
 		60EC8FA0198B442F00F1781A /* 2014-08-01 */ = {
 			isa = PBXGroup;
 			children = (
+				606181C019B1BA80009AF63D /* more_greenBg.png */,
+				606181C119B1BA80009AF63D /* more_orangeBg.png */,
+				606181BA19B1B3E5009AF63D /* more_friend.png */,
+				606181BB19B1B3E5009AF63D /* more_sina.png */,
+				606181BC19B1B3E5009AF63D /* more_weixin.png */,
+				606181B819B1A7BE009AF63D /* threePoint.png */,
+				606181B419B19749009AF63D /* defaultPet.png */,
+				606181B519B19749009AF63D /* setToDefaultPet.png */,
 				60DDF24D19AF21A300CB3042 /* leftArrow.png */,
 				60DDF24819AF182E00CB3042 /* jinghao.png */,
 				60DDF24219AF135100CB3042 /* topic_activity.png */,
@@ -2396,6 +2435,7 @@
 				601BB34B19AB18FD0076E051 /* myCountry_join.png */,
 				601BB34C19AB18FD0076E051 /* myCountry_photo.png */,
 				601BB34D19AB18FD0076E051 /* myCountry_shout.png */,
+				606181AA19B17DC2009AF63D /* myCountry_trouble.png */,
 				6065A97419A9910300333B0D /* arrow_right.png */,
 				600A5EC719A9840700FB4358 /* detail_comment.png */,
 				600A5EBF19A97A5200FB4358 /* detail_gift.png */,
@@ -2608,8 +2648,12 @@
 				091EAD62194ECEA200B0DE41 /* bcat4_1.png in Resources */,
 				60F617FB1999C884003C34F2 /* page1_selected.png in Resources */,
 				091EAD6E194ECEA200B0DE41 /* bdog4_1.png in Resources */,
+				606181AB19B17DC2009AF63D /* myCountry_trouble.png in Resources */,
+				606181C219B1BA80009AF63D /* more_greenBg.png in Resources */,
+				606181B719B19749009AF63D /* setToDefaultPet.png in Resources */,
 				09D98A7E1935D4E900C83C4B /* 14-5.png in Resources */,
 				091EAD28194EBCA900B0DE41 /* 19-1(2).png in Resources */,
+				606181B319B1856C009AF63D /* DefaultPetCell.xib in Resources */,
 				096A0BD519668BCD00FE25ED /* 36-2.png in Resources */,
 				49FA203019AF3DF50077897D /* recordButton.png in Resources */,
 				09D98A8E1935D4E900C83C4B /* 3-6.png in Resources */,
@@ -2640,6 +2684,7 @@
 				60BFBC7019B0271300EE3746 /* list_moreArrow.png in Resources */,
 				6020BD7E1998B8D5002C74FA /* tool2_selected.png in Resources */,
 				600376681990AB2500F3107F /* menu-10.png in Resources */,
+				606181B919B1A7BE009AF63D /* threePoint.png in Resources */,
 				60DDF24919AF182E00CB3042 /* jinghao.png in Resources */,
 				09D98A9C1935D4E900C83C4B /* 7-7.png in Resources */,
 				601BB35819AB2D4D0076E051 /* sendOne.png in Resources */,
@@ -2666,6 +2711,7 @@
 				4922D5EC19A754970018160A /* GiftDetialViewController.xib in Resources */,
 				09D989E41935C1F100C83C4B /* blueArrow.png in Resources */,
 				091EAD89194F0D2B00B0DE41 /* 对勾.png in Resources */,
+				606181B619B19749009AF63D /* defaultPet.png in Resources */,
 				0917703B1962A970002F8502 /* 30-1.png in Resources */,
 				09C87C681951ADAB00F41C6A /* 23-2.png in Resources */,
 				091EAD7E194ECEA200B0DE41 /* bother6_1.png in Resources */,
@@ -2695,6 +2741,7 @@
 				091EAD5C194ECEA200B0DE41 /* bcat1_1.png in Resources */,
 				60F617F81999C884003C34F2 /* cry.png in Resources */,
 				6020BD7D1998B8D5002C74FA /* tool1.png in Resources */,
+				606181C319B1BA80009AF63D /* more_orangeBg.png in Resources */,
 				09F46ADC196AB2DC00209749 /* 37x-Checkmark.png in Resources */,
 				6020BD831998B8D5002C74FA /* tool4.png in Resources */,
 				600A5EC419A97A5200FB4358 /* detail_share.png in Resources */,
@@ -2769,6 +2816,7 @@
 				60179B7F19ACA3A700758D21 /* yellow_star.png in Resources */,
 				090872CF19739B33004276EF /* talkHeader.png in Resources */,
 				09D98A6D1935D4E900C83C4B /* 1-2.png in Resources */,
+				606181BE19B1B3E5009AF63D /* more_sina.png in Resources */,
 				600AF3CA199B697D00613DCB /* Icon@2x.png in Resources */,
 				6056902119A2E54400E04F89 /* dogAmbassador.png in Resources */,
 				602A880D19ADED08004F368C /* publish_unSelected.png in Resources */,
@@ -2855,6 +2903,7 @@
 				495FFFE219AAD1BD00976F18 /* title_bg.png in Resources */,
 				09FD09CB1961661500335894 /* 14-7.png in Resources */,
 				0917704C1962A970002F8502 /* 扩展更多图标.png in Resources */,
+				606181BD19B1B3E5009AF63D /* more_friend.png in Resources */,
 				09D989551935C08E00C83C4B /* Images.xcassets in Resources */,
 				091EAD5D194ECEA200B0DE41 /* bcat1_2.png in Resources */,
 				091EAD24194EBCA900B0DE41 /* 18-6.png in Resources */,
@@ -2863,6 +2912,7 @@
 				09D98AAF1935D4E900C83C4B /* 相机图标.png in Resources */,
 				60F617FE1999C884003C34F2 /* page2.png in Resources */,
 				096520D01963EFD200A8186D /* wxFriend.png in Resources */,
+				606181BF19B1B3E5009AF63D /* more_weixin.png in Resources */,
 				602A881719ADFEC9004F368C /* atUsers_unSelected.png in Resources */,
 				60EC8FA8198B444300F1781A /* 1-a.png in Resources */,
 				60D62A7219A4854200224976 /* haveDog.png in Resources */,
@@ -2946,6 +2996,7 @@
 				09E2C898193740CE002D9E65 /* ASIDataCompressor.m in Sources */,
 				601716EB198F5ACD001E6DE6 /* SearchFamilyViewController.m in Sources */,
 				09A0B23E195FB4B40085A39B /* ActiveCell.m in Sources */,
+				606181AE19B1819A009AF63D /* SetDefaultPetViewController.m in Sources */,
 				1818E53F195D1CDD001ED167 /* MJRefreshFooterView.m in Sources */,
 				49500A2919AD85F700D175D8 /* TouchViewController.m in Sources */,
 				09D989F31935C1FE00C83C4B /* TMQuiltViewCell.m in Sources */,
@@ -3012,6 +3063,7 @@
 				09D98ACA1935EC3D00C83C4B /* DetailViewController.m in Sources */,
 				60EC8FB1198B650A00F1781A /* ChooseInViewController.m in Sources */,
 				098FC7EA194053320064A004 /* HttpDownLoad.m in Sources */,
+				606181B219B1856C009AF63D /* DefaultPetCell.m in Sources */,
 				4922D5EB19A754970018160A /* GiftDetialViewController.m in Sources */,
 				096D40AC193EFA1F003E1545 /* OpenUDID.m in Sources */,
 				09F46ACA196A389600209749 /* FTAnimationManager.m in Sources */,

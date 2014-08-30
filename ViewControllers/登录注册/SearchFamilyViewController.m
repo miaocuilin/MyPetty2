@@ -51,7 +51,10 @@
     alphaView.backgroundColor = BGCOLOR;
     [navView addSubview:alphaView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(17, 30, 20, 20) ImageName:@"7-7.png" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+    [navView addSubview:backImageView];
+    
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     

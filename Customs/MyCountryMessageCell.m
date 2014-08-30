@@ -168,7 +168,7 @@
         [touchOne setBackgroundImage:[UIImage imageNamed:@"touchOne.png"] forState:UIControlStateNormal];
 //        touchOne = [MyControl createButtonWithFrame:CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20) ImageName:@"touchOne.png" Target:self Action:@selector(touchOneClick) Title:nil];
 //        [self.contentView addSubview:touchOne];
-    }else{
+    }else if(type == 6){
         //成为粉丝
         typeImageView.image = [UIImage imageNamed:@"myCountry_heart.png"];
         
@@ -180,6 +180,27 @@
         
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+5, str2.length)];
 
+        CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
+        
+        body.frame = CGRectMake(60, 30, 240, size.height);
+        body.attributedText = str;
+    }else{
+        //扔炸弹 -人气
+        typeImageView.image = [UIImage imageNamed:@"myCountry_trouble.png"];
+        
+        NSString * str1 = @"Anna";
+        NSString * str2 = @"猫君";
+        NSString * str3 = @"炸弹";
+        NSString * str4 = @"-10";
+        
+        NSString * bodyStr = [NSString stringWithFormat:@"%@ 向 %@ 扔了一个%@ 人气 %@", str1, str2, str3, str4];
+        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
+        
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+3, str2.length)];
+        
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+3+str2.length+5+str3.length+4, str4.length)];
+        
         CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
         
         body.frame = CGRectMake(60, 30, 240, size.height);

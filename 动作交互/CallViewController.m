@@ -8,6 +8,7 @@
 
 #import "CallViewController.h"
 #import "DACircularProgressView.h"
+static int recordCount;
 
 #define GRAYBLUECOLOR [UIColor colorWithRed:127/255.0 green:151/255.0 blue:179/255.0 alpha:1]
 #define LIGHTORANGECOLOR [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1]
@@ -105,18 +106,37 @@
     NSLog(@"录音结束");
     
     //停止，发送
-    [_recorder stop];
-    [_recorder release];
-    _recorder = nil;
-    
+    if ((int)_recorder.currentTime >=2 ) {
+        [_recorder stop];
+        [_recorder release];
+        _recorder = nil;
+        upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width, 0);
+
+    }else{
+        RecordImageView.hidden = NO;
+        initView.hidden = YES;
+        recordProgress.progress = 0.0;
+    }
+    if (_timer) {
+        [_timer invalidate];
+        _timer = nil;
+    }
+
 }
 //录音代理方法
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag
 {
     NSLog(@"recordFinish");
-    [_timer invalidate];
-    _timer = nil;
-    upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width, 0);
+//    [_timer invalidate];
+//    _timer = nil;
+//    NSLog(@"%d",recordCount);
+//    if (recordCount >=2) {
+//        upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width, 0);
+//    }else{
+//        RecordImageView.hidden = NO;
+//        initView.hidden = YES;
+//        recordProgress.progress = 0.0;
+//    }
 }
 - (void)recordButtonTouchDown:(UIButton *)sender
 {
@@ -227,6 +247,12 @@
 -(void)colseGiftAction
 {
 //    [totalView removeFromSuperview];
+    if (_timer) {
+        [_timer invalidate];
+        _timer = nil;
+    }
+    [_player stop];
+    [_player release],_player = nil;
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
 }
@@ -290,6 +316,7 @@
     RecordImageView.hidden = NO;
     initView.hidden = YES;
     _player = nil;
+    recordProgress.progress = 0.0;
 
     uploadingImageView.hidden = YES;
     [recordUploadingButton setHidden:NO];
@@ -303,6 +330,7 @@
     [rerecordingButton setHidden:YES];
     _timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(barUploadProgress) userInfo:nil repeats:YES];
 }
+//上传进度
 - (void)barUploadProgress
 {
     if ((int)barUpload.progress != 1) {
@@ -313,9 +341,7 @@
         upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width*2, 0);
     }
 }
-
 //播放录音
-
 - (void)playingAction:(UIButton *)sender
 {
     
@@ -350,29 +376,14 @@
                                                   cancelButtonTitle:@"OK"
                                                   otherButtonTitles: nil];
             [alert show];
-            [alert release];
-        }
-    }else{
+            [alert release];                   }
+    }else{                                               
         _playing = NO;
         [_player pause];
         [playAndPauseImageView setImage:[UIImage imageNamed:@"record_play.png"]];
         [_timer invalidate];
-    }
-    
-//    if (_player.isPlaying) {
-//        [_player stop];
-//        [playAndPauseImageView setImage:[UIImage imageNamed:@"record_play.png"]];
-//        [_timer invalidate];
-//        _timer = nil;
-//    }else{
-//        [_player play];
-//        playAndPauseImageView.image = [UIImage imageNamed:@"record_pause.png"];
-//        _timer = [NSTimer scheduledTimerWithTimeInterval:0.05
-//                                                  target:self
-//                                                selector:@selector(timerUpdate)
-//                                                userInfo:nil
-//                                                 repeats:YES];
-//    }
+        _timer = nil;
+     }                                                  
 }
 
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
@@ -444,6 +455,7 @@
 {
     [super viewDidLoad];
     [self backgroundView];
+    recordCount = 0;
     // Do any additional setup after loading the view.
 //    [self createButton];
     
@@ -454,12 +466,19 @@
     UIView *bgView = [MyControl createViewWithFrame:self.view.frame];
     [self.view addSubview:bgView];
     bgView.backgroundColor = [UIColor blackColor];
-    bgView.alpha = 0.3;
+    bgView.alpha = 0.5;
 }
 #pragma mark - Record
 //更新
 - (void) timerUpdate
 {
+//    if ((int)_recorder.currentTime <2) {
+//        [_timer invalidate];
+//        _timer = nil;
+//        [_recorder stop];
+//        [_recorder release];
+//        return;
+//    }
     if ((int)_recorder.currentTime == 30) {
         [_timer invalidate];
         _timer = nil;
@@ -474,6 +493,8 @@
 //    if (_recording)
 //    {
     NSLog(@"%f",_recorder.currentTime);
+    NSLog(@"%d",recordCount);
+    recordCount = (int)_recorder.currentTime;
 //        int m = _recorder.currentTime / 60;
         int s = ((int) _recorder.currentTime) % 60;
 //        int ss = (_recorder.currentTime - ((int) _recorder.currentTime)) * 100;
@@ -481,7 +502,6 @@
         timerLabel.text = [NSString stringWithFormat:@"0:%.2d", s];
         NSInteger fileSize =  [self getFileSize:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]];
         recordProgress.progress = 1/30.0*_recorder.currentTime;
-        _cafFileSize.text = [NSString stringWithFormat:@"%d kb", fileSize/1024];
 //    }
     if (_playing)
     {

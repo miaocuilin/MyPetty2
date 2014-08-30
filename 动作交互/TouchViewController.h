@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
-@interface TouchViewController : UIViewController
+@interface TouchViewController : UIViewController<AVAudioPlayerDelegate>
 {
-    MBProgressHUD *alertView;
-
+    NSURL*                          _recordedFile;
+    AVAudioPlayer*                  _player;
+    UIImageView *playAndPauseImageView;
+    BOOL isplaying;
 }
 - (void)createAlertView;
 @end

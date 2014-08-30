@@ -121,7 +121,14 @@
 {
     goodsHUD = [self alertViewInit:CGSizeMake(300, 425)];
     UIView *totalView = [self shopGiftTitle];
-    [self goldAndGiftUpView:[NSString stringWithFormat:@"宠物香波%d个",1] rewardImage:@"bdog6_2.png" descLabel:nil];
+    
+    [self goldAndGiftUpView:[NSString stringWithFormat:@"宠物香波%d个",1] rewardImage:@"bdog6_2.png"];
+    UIImageView *descGoodsImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2-65, 190, 130, 25) ImageName:@"reward_desc.png"];
+    [bodyView addSubview:descGoodsImageView];
+    UILabel *descGoodsLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, descGoodsImageView.frame.size.width, descGoodsImageView.frame.size.height) Font:14 Text:@"猫君人气 +100"];
+    descGoodsLabel.textAlignment = NSTextAlignmentCenter;
+    [descGoodsImageView addSubview:descGoodsLabel];
+    
     [self addDownView:[NSString stringWithFormat:@"%d",count]];
     goodsHUD.customView = totalView;
     [goodsHUD show:YES];
@@ -132,12 +139,12 @@
 {
     goldHUD = [self alertViewInit:CGSizeMake(300, 425)];
     UIView *totalView = [self shopGiftTitle];
-    [self goldAndGiftUpView:[NSString stringWithFormat:@"金币%d个",10] rewardImage:@"gold.png" descLabel:nil];
+    [self goldAndGiftUpView:[NSString stringWithFormat:@"金币%d个",10] rewardImage:@"gold.png"];
     [self addDownView:[NSString stringWithFormat:@"%d",count]];
     goldHUD.customView = totalView;
     [goldHUD show:YES];
 }
-- (void)goldAndGiftUpView:(NSString *)titleString rewardImage:(NSString *)imageString descLabel:(UILabel *)descLabel
+- (void)goldAndGiftUpView:(NSString *)titleString rewardImage:(NSString *)imageString
 {
     UIView *upView = [MyControl createViewWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
     [bodyView addSubview:upView];

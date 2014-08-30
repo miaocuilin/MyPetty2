@@ -10,13 +10,6 @@
 #import <AVFoundation/AVFoundation.h>
 @interface CallViewController : UIViewController<AVAudioPlayerDelegate,AVAudioRecorderDelegate>
 {
-    UILabel*                        _duration;
-    UILabel*                        _cafFileSize;
-    UIButton*                       _recordBtn;
-    UIButton*                       _playBtn;
-    
-    UIProgressView*                 _progress;
-    
     AVAudioRecorder*                _recorder;
     AVAudioPlayer*                  _player;
     NSURL*                          _recordedFile;

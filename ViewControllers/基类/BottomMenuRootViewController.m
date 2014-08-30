@@ -115,13 +115,6 @@
 -(void)btn3Click
 {
     NSLog(@"3");
-//    TouchViewController *touch = [[TouchViewController alloc] init];
-//    [self addChildViewController:touch];
-//    [touch release];
-//    [touch didMoveToParentViewController:self];
-//    [self.view addSubview:touch.view];
-//    [touch createAlertView];
-//    [self hideAll];
     CallViewController *call = [[CallViewController alloc] init];
     [self addChildViewController:call];
     [call release];
@@ -135,6 +128,13 @@
 -(void)btn4Click
 {
     NSLog(@"4");
+    TouchViewController *touch = [[TouchViewController alloc] init];
+    [self addChildViewController:touch];
+    [touch release];
+    [touch didMoveToParentViewController:self];
+    [self.view addSubview:touch.view];
+//    [touch createAlertView];
+    [self hideAll];
 }
 -(void)headBtnClick
 {

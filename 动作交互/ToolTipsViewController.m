@@ -25,7 +25,7 @@
     self.positionName = @"喵骑士";
     self.headImageName = @"cat1.jpg";
     //    self.expCoinNum = 100;
-    //    [self createButton];
+//    [self createButton];
 }
 #pragma mark - 每日登陆、官职升级、等级升级弹窗
 //经验值升级奖励弹窗
@@ -255,18 +255,15 @@
     bodyView.layer.masksToBounds = YES;
     
     //创建取消和确认button
-    UILabel *cancelLabel = [MyControl createLabelWithFrame:CGRectMake(20, 160, 100, 35) Font:16 Text:@"取消"];
-    cancelLabel.backgroundColor = [UIColor grayColor];
-    cancelLabel.layer.cornerRadius = 5;
-    cancelLabel.layer.masksToBounds = YES;
-    cancelLabel.textAlignment = NSTextAlignmentCenter;
-    [bodyView addSubview:cancelLabel];
+
+    UIImageView *cancelImageView = [MyControl createImageViewWithFrame:CGRectMake(250, 5, 30, 30) ImageName:@"button_close.png"];
+    [bodyView addSubview:cancelImageView];
     
-    UIButton *cancelButton = [MyControl createButtonWithFrame:cancelLabel.frame ImageName:nil Target:self Action:@selector(cancelAction:) Title:nil];
+    UIButton *cancelButton = [MyControl createButtonWithFrame:CGRectMake(250, 5, 30, 30) ImageName:nil Target:self Action:@selector(cancelAction:) Title:nil];
     cancelButton.showsTouchWhenHighlighted = YES;
     [bodyView addSubview:cancelButton];
     
-    UILabel *sureLabel = [MyControl createLabelWithFrame:CGRectMake(165, 160, 100, 35) Font:16 Text:titleString];
+    UILabel *sureLabel = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2-50, 160, 100, 35) Font:16 Text:titleString];
     
     sureLabel.backgroundColor = BGCOLOR;
     sureLabel.layer.cornerRadius = 5;

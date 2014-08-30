@@ -46,7 +46,7 @@
     [super viewDidLoad];
 //    [self createFakeNavigation];
     // Do any additional setup after loading the view.
-    self.menuBgView.frame = CGRectMake(50, self.view.frame.size.height-40, 220, 80);
+//    self.menuBgView.frame = CGRectMake(50, self.view.frame.size.height-40, 220, 80);
     
     
     self.view.backgroundColor = [UIColor purpleColor];
@@ -108,7 +108,7 @@
 //}
 -(void)buttonClick
 {
-    [MyControl saveScreenshotsWithView:[UIApplication sharedApplication].keyWindow];
+//    [MyControl saveScreenshotsWithView:[UIApplication sharedApplication].keyWindow];
     [locManager startUpdatingLocation];
 }
 -(void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation

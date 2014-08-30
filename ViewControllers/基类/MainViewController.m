@@ -55,6 +55,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self createViewControllers];
     [self createSegment];
 
+    [self.view bringSubviewToFront:self.menuBgBtn];
+    [self.view bringSubviewToFront:self.menuBgView];
 }
 -(void)createFakeNavigation
 {
@@ -114,6 +116,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self addChildViewController:rvc];
     [rvc.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
     [sv addSubview:rvc.view];
+    
+    [self.view bringSubviewToFront:self.menuBgBtn];
+    [self.view bringSubviewToFront:self.menuBgView];
 }
 -(void)createSegment
 {
@@ -183,6 +188,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [svc.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
             [sv addSubview:svc.view];
             [self.view bringSubviewToFront:sc];
+            
+            [self.view bringSubviewToFront:self.menuBgBtn];
+            [self.view bringSubviewToFront:self.menuBgView];
         }
     }else if(scrollView.contentOffset.x == 320*2){
         if (isCreated[2] == NO) {
@@ -192,6 +200,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [fvc.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
             [sv addSubview:fvc.view];
             [self.view bringSubviewToFront:sc];
+            
+            [self.view bringSubviewToFront:self.menuBgBtn];
+            [self.view bringSubviewToFront:self.menuBgView];
         }
     }
 }

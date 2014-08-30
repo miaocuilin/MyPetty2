@@ -66,7 +66,7 @@
 //    [self createTableView];
 //    [self createHeaderView];
 //	[self performSelector:@selector(testFinishedLoadData) withObject:nil afterDelay:0.0f];
-    self.menuBgView.frame = CGRectMake(50, self.view.frame.size.height-40, 220, 80);
+//    self.menuBgView.frame = CGRectMake(50, self.view.frame.size.height-40, 220, 80);
 }
 
 -(UIColor *)activityIndicatorView:(MONActivityIndicatorView *)activityIndicatorView circleBackgroundColorAtIndex:(NSUInteger)index
@@ -208,8 +208,8 @@
 //    [tv headerBeginRefreshing];
     [tv release];
     
-    [self.view bringSubviewToFront:self.menuBgBtn];
-    [self.view bringSubviewToFront:self.menuBgView];
+//    [self.view bringSubviewToFront:self.menuBgBtn];
+//    [self.view bringSubviewToFront:self.menuBgView];
 }
 #pragma mark - 刷新头尾
 - (void)refreshHeader

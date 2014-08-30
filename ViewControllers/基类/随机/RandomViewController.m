@@ -47,8 +47,8 @@
     [self loadData];
 	
 //	[self performSelector:@selector(testFinishedLoadData) withObject:nil afterDelay:0.0f];
-    self.menuBgView.frame = CGRectMake(50, self.view.frame.size.height-40, 220, 80);
-    [self.view bringSubviewToFront:self.menuBgBtn];
+//    self.menuBgView.frame = CGRectMake(50, self.view.frame.size.height-40, 220, 80);
+//    [self.view bringSubviewToFront:self.menuBgBtn];
     
 }
 //-(void)createFakeNavigation
@@ -86,7 +86,7 @@
 {
     NSLog(@"%f", qtmquitView.frame.origin.y);
     if (!isMenuBgViewAppear) {
-        [self.view bringSubviewToFront:self.menuBgView];
+//        [self.view bringSubviewToFront:self.menuBgView];
         isMenuBgViewAppear = YES;
     }
     toolTipsVC = [[ToolTipsViewController alloc ]init];

@@ -6,8 +6,8 @@
 //  Copyright (c) 2014年 AidiGame. All rights reserved.
 //
 
-#import "RootViewController.h"
-
+//#import "RootViewController.h"
+#import <UIKit/UIKit.h>
 struct _size{
     int Width;
     int Height;
@@ -16,7 +16,7 @@ struct _size{
 //struct _image{
 //    UIImage * image;
 //};
-@interface FavoriteViewController : BottomMenuRootViewController <UITableViewDataSource,UITableViewDelegate>
+@interface FavoriteViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
 {
     BOOL _reloading;
     

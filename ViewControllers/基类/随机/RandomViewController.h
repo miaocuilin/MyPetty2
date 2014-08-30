@@ -7,9 +7,9 @@
 //
 
 //#import "RootViewController.h"
-#import "BottomMenuRootViewController.h"
-//#import <UIKit/UIKit.h>
-@interface RandomViewController : BottomMenuRootViewController
+//#import "BottomMenuRootViewController.h"
+#import <UIKit/UIKit.h>
+@interface RandomViewController : UIViewController
 {
     UIView * navView;
     BOOL isMenuBgViewAppear;

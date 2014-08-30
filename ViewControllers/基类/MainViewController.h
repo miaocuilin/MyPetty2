@@ -6,9 +6,9 @@
 //  Copyright (c) 2014年 AidiGame. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
-@interface MainViewController : UIViewController <UIScrollViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
+//#import <UIKit/UIKit.h>
+#import "BottomMenuRootViewController.h"
+@interface MainViewController : BottomMenuRootViewController <UIScrollViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
     UIView * navView;
     UIScrollView * sv;

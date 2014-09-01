@@ -49,6 +49,7 @@
 #import "ContributionViewController.h"
 #import "CallViewController.h"
 #import "WaterFlowLayout.h"
+#import "AboutViewController.h"
 
 @implementation AppDelegate
 -(void)dealloc

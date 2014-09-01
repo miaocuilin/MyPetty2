@@ -18,7 +18,8 @@
     float fileSize;
     UILabel * cacheLabel;
     
-    ;
+    UIButton * alphaBtn;
+    UIButton * backBtn;
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 

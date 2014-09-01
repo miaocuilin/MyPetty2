@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "CountryInfoCell.h"
 
+@class PetInfoViewController;
+
 @interface UserInfoViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,CountryInfoCellDelegate>
 {
     UIScrollView * sv;
@@ -35,4 +37,5 @@
 }
 
 @property(nonatomic)int offset;
+@property(nonatomic)BOOL isFromPetInfo;
 @end

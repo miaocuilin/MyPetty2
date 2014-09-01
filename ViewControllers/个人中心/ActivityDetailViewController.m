@@ -151,13 +151,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - tableView创建
 -(void)makeUI
 {
-//    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-//    [self.view addSubview:sv];
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-40-64) style:UITableViewStylePlain];
-    [self.view addSubview:tv];
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    [self.view addSubview:sv];
+//    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-40-64) style:UITableViewStylePlain];
+//    [self.view addSubview:tv];
     
     UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 760/2)];
-    tv.tableHeaderView = bgView;
+    [sv addSubview:bgView];
+//    tv.tableHeaderView = bgView;
     
     [self.view bringSubviewToFront:navView];
     

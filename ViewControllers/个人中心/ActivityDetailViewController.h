@@ -13,7 +13,7 @@
 {
     UIScrollView * sv;
     BOOL isCamara;
-    UITableView * tv;
+//    UITableView * tv;
     UIView * navView;
 }
 @property(nonatomic,retain)NSMutableString * txs;

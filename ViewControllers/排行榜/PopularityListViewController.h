@@ -18,7 +18,7 @@
     UIButton * raceBtn;
     UIButton * titleBtn;
     UIButton * findMeBtn;
-    UIImageView * arrow;
+    UIButton * arrow;
     BOOL isRaceShow;
     
     NIDropDown *dropDown;

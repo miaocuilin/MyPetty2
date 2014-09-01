@@ -57,7 +57,31 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
     [self.view bringSubviewToFront:self.menuBgBtn];
     [self.view bringSubviewToFront:self.menuBgView];
+    
+    [self createAlphaBtn];
 }
+/***********************/
+-(void)createAlphaBtn
+{
+    self.alphaBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(hideSideMenu) Title:nil];
+    self.alphaBtn.backgroundColor = [UIColor blackColor];
+    self.alphaBtn.alpha = 0;
+    self.alphaBtn.hidden = YES;
+    [self.view addSubview:self.alphaBtn];
+}
+-(void)hideSideMenu
+{
+    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
+    [menu hideMenuAnimated:YES];
+    [UIView animateWithDuration:0.25 animations:^{
+        self.alphaBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        self.alphaBtn.hidden = YES;
+        self.menuBtn.selected = NO;
+    }];
+}
+
+
 -(void)createFakeNavigation
 {
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
@@ -96,8 +120,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        }];
         
         [menu showMenuAnimated:YES];
+        self.alphaBtn.hidden = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+            self.alphaBtn.alpha = 0.5;
+        }];
     }else{
         [menu hideMenuAnimated:YES];
+        [UIView animateWithDuration:0.25 animations:^{
+            self.alphaBtn.alpha = 0;
+        } completion:^(BOOL finished) {
+            self.alphaBtn.hidden = YES;
+        }];
     }
 }
 -(void)createScrollView

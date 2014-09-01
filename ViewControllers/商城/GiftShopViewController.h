@@ -23,6 +23,9 @@
     
     UIScrollView * sv;
     UIScrollView * sv2;
+    
+    UIButton * alphaBtn;
+    UIButton * backBtn;
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 

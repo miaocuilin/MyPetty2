@@ -60,10 +60,14 @@
 #pragma mark - 创建tableView
 -(void)createTableView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-50*4) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 64+35+50*5) style:UITableViewStylePlain];
+    if (self.view.frame.size.height == 480) {
+        tv.frame = CGRectMake(0, 0, 320, 64+35+50*3);
+    }
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
+    tv.scrollEnabled = NO;
     tv.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tv];
     
@@ -82,9 +86,22 @@
 #pragma mark - 创建arrow
 -(void)createArrow
 {
-    arrow = [MyControl createImageViewWithFrame:CGRectMake(150, self.view.frame.size.height-50*4+13.5, 20, 34) ImageName:@"list_moreArrow.png"];
+   arrow = [MyControl createButtonWithFrame:CGRectMake(150, self.view.frame.size.height-50*4+13.5, 20, 34) ImageName:@"list_moreArrow.png" Target:self Action:@selector(showEntireList) Title:nil];
     [self.view addSubview:arrow];
 }
+-(void)showEntireList
+{
+    tv.scrollEnabled = YES;
+    arrow.alpha = 0;
+    arrow.hidden = YES;
+    //    findMeBtn.userInteractionEnabled = NO;
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
+        tv2.frame = CGRectMake(0, self.view.frame.size.height, 320, 0);
+    }];
+}
+
 
 #pragma mark - tableViewDelegate
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -119,15 +136,15 @@
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView == tv) {
-        arrow.alpha = 0;
-        arrow.hidden = YES;
+//        arrow.alpha = 0;
+//        arrow.hidden = YES;
         findMeBtn.userInteractionEnabled = NO;
         
-        [UIView animateWithDuration:0.3 animations:^{
-            tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
-            tv2.frame = CGRectMake(0, self.view.frame.size.height, 320, 0);
-        }];
-        
+//        [UIView animateWithDuration:0.3 animations:^{
+//            tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
+//            tv2.frame = CGRectMake(0, self.view.frame.size.height, 320, 0);
+//        }];
+//        
     }
 }
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -144,6 +161,7 @@
         findMeBtn.userInteractionEnabled = YES;
     }
 }
+
 
 #pragma mark - 创建导航
 -(void)createFakeNavigation
@@ -231,11 +249,28 @@
     
     NSLog(@"findMe");
     arrow.hidden = NO;
+    tv.scrollEnabled = NO;
     [UIView animateWithDuration:0.3 animations:^{
         arrow.alpha = 1;
-        tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height-50*4);
+        if (self.view.frame.size.height == 480) {
+            tv.frame = CGRectMake(0, 0, 320, 64+35+50*3);
+        }else{
+            tv.frame = CGRectMake(0, 0, 320, 64+35+50*5);
+        }
         tv2.frame = CGRectMake(0, self.view.frame.size.height-50*3, 320, 50*3);
     }];
+    
+    //控制tv的偏移量为50的整数倍
+    for (int i=0; i<100; i++) {
+        if (tv.contentOffset.y>i*50 && tv.contentOffset.y<(i+1)*50) {
+//            [UIView animateWithDuration:0 animations:^{
+                tv.contentOffset = CGPointMake(0, (i+1)*50);
+//            } completion:^(BOOL finished) {
+                findMeBtn.userInteractionEnabled = YES;
+//            }];
+            break;
+        }
+    }
 }
 
 #pragma mark - 创建顶栏2

@@ -306,7 +306,15 @@
 #pragma mark - 跳转点击事件
 -(void)jumpToUserInfo
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    NSLog(@"%d", self.isFromPetInfo);
+    if (self.isFromPetInfo) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }else{
+        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    }
+    
 }
 -(void)GXListClick
 {

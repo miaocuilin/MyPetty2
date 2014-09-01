@@ -454,6 +454,8 @@
 		603B021D1991E68B005A6D30 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 603B021C1991E68B005A6D30 /* area.plist */; };
 		6042F59E1994D4B100CA2A0E /* menu-13.png in Resources */ = {isa = PBXBuildFile; fileRef = 6042F59D1994D4B100CA2A0E /* menu-13.png */; };
 		6042F5A01994D62800CA2A0E /* menu-14.png in Resources */ = {isa = PBXBuildFile; fileRef = 6042F59F1994D62800CA2A0E /* menu-14.png */; };
+		605195C519B47038005E9E2C /* about.png in Resources */ = {isa = PBXBuildFile; fileRef = 605195C419B47038005E9E2C /* about.png */; };
+		605195CD19B484B3005E9E2C /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 605195CC19B484B3005E9E2C /* AboutViewController.m */; };
 		6056901F19A2E54400E04F89 /* catAmbassador.png in Resources */ = {isa = PBXBuildFile; fileRef = 6056901619A2E54400E04F89 /* catAmbassador.png */; };
 		6056902019A2E54400E04F89 /* catHead.png in Resources */ = {isa = PBXBuildFile; fileRef = 6056901719A2E54400E04F89 /* catHead.png */; };
 		6056902119A2E54400E04F89 /* dogAmbassador.png in Resources */ = {isa = PBXBuildFile; fileRef = 6056901819A2E54400E04F89 /* dogAmbassador.png */; };
@@ -1148,6 +1150,9 @@
 		603B021C1991E68B005A6D30 /* area.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = area.plist; sourceTree = "<group>"; };
 		6042F59D1994D4B100CA2A0E /* menu-13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-13.png"; sourceTree = "<group>"; };
 		6042F59F1994D62800CA2A0E /* menu-14.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-14.png"; sourceTree = "<group>"; };
+		605195C419B47038005E9E2C /* about.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = about.png; sourceTree = "<group>"; };
+		605195CB19B484B3005E9E2C /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		605195CC19B484B3005E9E2C /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		6056901619A2E54400E04F89 /* catAmbassador.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = catAmbassador.png; sourceTree = "<group>"; };
 		6056901719A2E54400E04F89 /* catHead.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = catHead.png; sourceTree = "<group>"; };
 		6056901819A2E54400E04F89 /* dogAmbassador.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dogAmbassador.png; sourceTree = "<group>"; };
@@ -1740,6 +1745,8 @@
 				496CF21F19A44F570081BF5E /* AddressViewController.m */,
 				606181AC19B1819A009AF63D /* SetDefaultPetViewController.h */,
 				606181AD19B1819A009AF63D /* SetDefaultPetViewController.m */,
+				605195CB19B484B3005E9E2C /* AboutViewController.h */,
+				605195CC19B484B3005E9E2C /* AboutViewController.m */,
 			);
 			name = "账号设置";
 			path = "../账号设置";
@@ -2438,6 +2445,7 @@
 		60EC8FA0198B442F00F1781A /* 2014-08-01 */ = {
 			isa = PBXGroup;
 			children = (
+				605195C419B47038005E9E2C /* about.png */,
 				606181C019B1BA80009AF63D /* more_greenBg.png */,
 				606181C119B1BA80009AF63D /* more_orangeBg.png */,
 				606181BA19B1B3E5009AF63D /* more_friend.png */,
@@ -2686,6 +2694,7 @@
 				606181B719B19749009AF63D /* setToDefaultPet.png in Resources */,
 				09D98A7E1935D4E900C83C4B /* 14-5.png in Resources */,
 				091EAD28194EBCA900B0DE41 /* 19-1(2).png in Resources */,
+				605195C519B47038005E9E2C /* about.png in Resources */,
 				606181B319B1856C009AF63D /* DefaultPetCell.xib in Resources */,
 				096A0BD519668BCD00FE25ED /* 36-2.png in Resources */,
 				49FA203019AF3DF50077897D /* recordButton.png in Resources */,
@@ -3110,6 +3119,7 @@
 				1818E53E195D1CDD001ED167 /* MJRefreshConst.m in Sources */,
 				0974AB5919441DB80010DFE5 /* UploadViewController.m in Sources */,
 				090F046219540278002B1F45 /* LikersLIstViewController.m in Sources */,
+				605195CD19B484B3005E9E2C /* AboutViewController.m in Sources */,
 				0979B7751941C6BF007C36A7 /* UIImageView+WebCache.m in Sources */,
 				09F46AE1196AB34E00209749 /* MBProgressHUD.m in Sources */,
 				0914B6D5196E3F410056CFB0 /* MMProgressHUDWindow.m in Sources */,
@@ -3282,8 +3292,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3304,7 +3314,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "cff11c5e-d759-4f03-8a8b-f9c5385e68ee";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3316,8 +3326,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3338,7 +3348,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "cff11c5e-d759-4f03-8a8b-f9c5385e68ee";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

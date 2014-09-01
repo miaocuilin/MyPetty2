@@ -779,12 +779,13 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	
 	if (_annular) {
 		// Draw background
-		CGFloat lineWidth = 5.f;
+//        self.lineWidth = 5.0f;
+//		CGFloat lineWidth = 5.f;
 		UIBezierPath *processBackgroundPath = [UIBezierPath bezierPath];
-		processBackgroundPath.lineWidth = lineWidth;
+		processBackgroundPath.lineWidth = self.lineWidth;
 		processBackgroundPath.lineCapStyle = kCGLineCapRound;
 		CGPoint center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
-		CGFloat radius = (self.bounds.size.width - lineWidth)/2;
+		CGFloat radius = (self.bounds.size.width - self.lineWidth)/2;
 		CGFloat startAngle = - ((float)M_PI / 2); // 90 degrees
 		CGFloat endAngle = (2 * (float)M_PI) + startAngle;
 		[processBackgroundPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
@@ -793,7 +794,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 		// Draw progress
 		UIBezierPath *processPath = [UIBezierPath bezierPath];
 		processPath.lineCapStyle = kCGLineCapRound;
-		processPath.lineWidth = lineWidth;
+		processPath.lineWidth = self.lineWidth;
 		endAngle = (self.progress * 2 * (float)M_PI) + startAngle;
 		[processPath addArcWithCenter:center radius:radius startAngle:startAngle endAngle:endAngle clockwise:YES];
 		[_progressTintColor set];

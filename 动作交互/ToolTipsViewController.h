@@ -37,4 +37,6 @@
 //官职升级
 - (void)createGovernmentAlertView;
 - (void)createPresentGiftAlertView;
+//注册弹框
+- (void)createLoginAlertView;
 @end

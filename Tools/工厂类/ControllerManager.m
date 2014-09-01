@@ -282,4 +282,62 @@ MBProgressHUD *HUD;
     [HUD hide:YES afterDelay:2.0];
     
 }
+
++ (void)loginHUDAlertView:(UIView *)showInView
+{
+    HUD = [[MBProgressHUD alloc] initWithWindow:showInView.window];
+    [showInView.window addSubview:HUD];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.color = [UIColor clearColor];
+    HUD.dimBackground = YES;
+    HUD.margin = 0 ;
+    HUD.removeFromSuperViewOnHide = YES;
+    
+    
+    UIView *bodyView = [MyControl createViewWithFrame:CGRectMake(0, 0, 290, 215)];
+    bodyView.backgroundColor = [UIColor clearColor];
+    UIView *alphaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 290, 215)];
+    alphaView.backgroundColor = [UIColor whiteColor];
+    alphaView.alpha = 0.8;
+    [bodyView addSubview:alphaView];
+    bodyView.layer.cornerRadius = 10;
+    bodyView.layer.masksToBounds = YES;
+    //创建取消和确认button
+    
+    UIImageView *cancelImageView = [MyControl createImageViewWithFrame:CGRectMake(250, 5, 30, 30) ImageName:@"button_close.png"];
+    [bodyView addSubview:cancelImageView];
+    
+    UIButton *cancelButton = [MyControl createButtonWithFrame:CGRectMake(250, 5, 30, 30) ImageName:nil Target:self Action:@selector(cancelAction) Title:nil];
+    cancelButton.showsTouchWhenHighlighted = YES;
+    [bodyView addSubview:cancelButton];
+    
+    UILabel *sureLabel = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2-50, 160, 100, 35) Font:16 Text:@"确认"];
+    
+    sureLabel.backgroundColor = BGCOLOR;
+    sureLabel.layer.cornerRadius = 5;
+    sureLabel.layer.masksToBounds = YES;
+    sureLabel.textAlignment = NSTextAlignmentCenter;
+    [bodyView addSubview:sureLabel];
+    
+    UIButton *sureButton = [MyControl createButtonWithFrame:sureLabel.frame ImageName:nil Target:self Action:@selector(sureAction) Title:nil];
+    sureButton.showsTouchWhenHighlighted = YES;
+    [bodyView addSubview:sureButton];
+    UILabel *askLabel1 = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 -80, 40, 160, 20) Font:16 Text:@"确定加入一个新国家？"];
+    askLabel1.textColor = [UIColor grayColor];
+    [bodyView addSubview:askLabel1];
+    UILabel *askLabel2 = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 - 80, 70, 160, 20) Font:16 Text:@"这将花费您 100"];
+    
+    
+    askLabel2.textColor = [UIColor grayColor];
+    [bodyView addSubview:askLabel2];
+    
+    UIImageView *coinImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2 +35, 63, 30, 30) ImageName:@"gold.png"];
+    [bodyView addSubview:coinImageView];
+    
+    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 - 120, 130, 230, 20) Font:13 Text:@"星球提示：每个人最多加入10个圈子"];
+    descLabel.textColor = [UIColor grayColor];
+    [bodyView addSubview:descLabel];
+    HUD.customView = bodyView;
+    [HUD show:YES];
+}
 @end

@@ -115,14 +115,19 @@
 -(void)btn3Click
 {
     NSLog(@"3");
-    CallViewController *call = [[CallViewController alloc] init];
-    [self addChildViewController:call];
-    [call release];
-    [call didMoveToParentViewController:self];
-    [call createRecordOne];
-
-    [self.view addSubview:call.view];
-//    [self.view.superview bringSubviewToFront:self.view];
+//    CallViewController *call = [[CallViewController alloc] init];
+//    [self addChildViewController:call];
+//    [call release];
+//    [call didMoveToParentViewController:self];
+//    [call createRecordOne];
+//    [self.view addSubview:call.view];
+    
+    ShoutViewController *shout = [[ShoutViewController alloc] init];
+    [self addChildViewController:shout];
+    [shout release];
+    [shout didMoveToParentViewController:self];
+    [shout createRecordOne];
+    [self.view addSubview:shout.view];
     [self hideAll];
 }
 -(void)btn4Click

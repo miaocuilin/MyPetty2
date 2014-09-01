@@ -8,8 +8,6 @@
 
 #import "CallViewController.h"
 #import "DACircularProgressView.h"
-static int recordCount;
-
 #define GRAYBLUECOLOR [UIColor colorWithRed:127/255.0 green:151/255.0 blue:179/255.0 alpha:1]
 #define LIGHTORANGECOLOR [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1]
 @interface CallViewController ()
@@ -236,7 +234,11 @@ static int recordCount;
     UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"叫一叫"];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [totalView addSubview:titleLabel];
-    UIButton *closeButton = [MyControl createButtonWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png" Target:self Action:@selector(colseGiftAction) Title:nil];
+    
+    UIImageView *closeImageView = [MyControl createImageViewWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png"];
+    [totalView addSubview:closeImageView];
+    UIButton *closeButton = [MyControl createButtonWithFrame:CGRectMake(252.5, 2.5, 35, 35) ImageName:nil Target:self Action:@selector(colseGiftAction) Title:nil];
+    closeButton.showsTouchWhenHighlighted = YES;
     [totalView addSubview:closeButton];
     
     bodyView = [MyControl createViewWithFrame:CGRectMake(0, 40, 300, 385)];
@@ -381,6 +383,7 @@ static int recordCount;
         _playing = NO;
         [_player pause];
         [playAndPauseImageView setImage:[UIImage imageNamed:@"record_play.png"]];
+        
         [_timer invalidate];
         _timer = nil;
      }                                                  
@@ -434,7 +437,6 @@ static int recordCount;
         NSLog(@"朋友");
     }else{
         NSLog(@"新浪");
-        
     }
 }
 #pragma mark - 每天录完后出现的界面
@@ -455,7 +457,6 @@ static int recordCount;
 {
     [super viewDidLoad];
     [self backgroundView];
-    recordCount = 0;
     // Do any additional setup after loading the view.
 //    [self createButton];
     
@@ -472,42 +473,31 @@ static int recordCount;
 //更新
 - (void) timerUpdate
 {
-//    if ((int)_recorder.currentTime <2) {
-//        [_timer invalidate];
-//        _timer = nil;
-//        [_recorder stop];
-//        [_recorder release];
-//        return;
-//    }
     if ((int)_recorder.currentTime == 30) {
         [_timer invalidate];
         _timer = nil;
         
         //停止，发送
         [_recorder stop];
-        //    [_recorder release];
-        //    _recorder = nil;
+        [_recorder release];
+        _recorder = nil;
         upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width, 0);
         return;
     }
 //    if (_recording)
 //    {
-    NSLog(@"%f",_recorder.currentTime);
-    NSLog(@"%d",recordCount);
-    recordCount = (int)_recorder.currentTime;
-//        int m = _recorder.currentTime / 60;
+    NSLog(@"录音的当前时间：%f",_recorder.currentTime);
         int s = ((int) _recorder.currentTime) % 60;
-//        int ss = (_recorder.currentTime - ((int) _recorder.currentTime)) * 100;
-    
         timerLabel.text = [NSString stringWithFormat:@"0:%.2d", s];
         NSInteger fileSize =  [self getFileSize:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]];
         recordProgress.progress = 1/30.0*_recorder.currentTime;
 //    }
     if (_playing)
     {
-        NSLog(@"%f",_player.currentTime);
+        NSLog(@"播放的当前时间：%f",_player.currentTime);
         playProgress.progress = _player.currentTime/_player.duration;
         playingTimerLabel.text =[NSString stringWithFormat:@"0:%0.2d/0:%.2d",(int)_player.currentTime%60, (int)_player.duration];
+        
     }
     
 }

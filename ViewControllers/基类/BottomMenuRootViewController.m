@@ -205,6 +205,7 @@
         self.menuBgView.frame = CGRectMake(50, self.view.frame.size.height-headBtnWidth+24, 220, headBtnWidth);
         self.headButton.frame = CGRectMake(78, self.menuBgView.frame.size.height-headBtnWidth, headBtnWidth, headBtnWidth);
         headCircle.frame = CGRectMake(60+9, self.menuBgView.frame.size.height-circleWidth+5, circleWidth, circleWidth);
+//        NSLog(@"%f--%f", self.menuBgView.frame.origin.y, headCircle.frame.origin.y);
     } completion:^(BOOL finished) {
         self.menuBgBtn.hidden = YES;
 //        NSLog(@"%f--%f", self.menuBgView.frame.size.height, self.btn1.frame.origin.y);

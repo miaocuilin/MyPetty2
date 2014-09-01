@@ -17,7 +17,10 @@
     
     BOOL isCamara;
     UIActionSheet * sheet;
+    
 }
+@property(nonatomic,retain)UIButton * alphaBtn;
+
 @property(nonatomic,retain)UIButton * menuBtn;
 @property(nonatomic,retain)UIImage * oriImage;
 @end

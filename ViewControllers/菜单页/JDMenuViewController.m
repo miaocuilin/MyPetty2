@@ -77,8 +77,8 @@
     [self.view addSubview:alphaView];
     
     //scrollView
-    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 20, 320, self.view.frame.size.height-20)];
-    sv.contentSize = CGSizeMake(320+225, 568-20);
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 20, 225, self.view.frame.size.height-20)];
+    sv.contentSize = CGSizeMake(225*2, 568-20);
     sv.showsVerticalScrollIndicator = NO;
     sv.scrollEnabled = NO;
     [self.view addSubview:sv];
@@ -578,7 +578,6 @@
     }
 }
 
-
 #pragma mark - 各种点击事件
 -(void)switchCategoryClick
 {
@@ -605,6 +604,11 @@
         //首页
         MainViewController * vc = [ControllerManager shareMain];
         vc.menuBtn.selected = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+            vc.alphaBtn.alpha = 0;
+        } completion:^(BOOL finished) {
+            vc.alphaBtn.hidden = YES;
+        }];
         [self.sideMenuController setContentController:vc animted:YES];
     }else if (button.tag == 1001) {
         //商城

@@ -10,6 +10,7 @@
 #import "AddressViewController.h"
 #import "FeedbackViewController.h"
 #import "SetDefaultPetViewController.h"
+#import "AboutViewController.h"
 @interface SettingViewController ()
 
 @end
@@ -37,6 +38,26 @@
     [self createTableView];
     [self createFakeNavigation];
     
+    [self createAlphaBtn];
+}
+-(void)createAlphaBtn
+{
+    alphaBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(hideSideMenu) Title:nil];
+    alphaBtn.backgroundColor = [UIColor blackColor];
+    alphaBtn.alpha = 0;
+    alphaBtn.hidden = YES;
+    [self.view addSubview:alphaBtn];
+}
+-(void)hideSideMenu
+{
+    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
+    [menu hideMenuAnimated:YES];
+    [UIView animateWithDuration:0.25 animations:^{
+        alphaBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        alphaBtn.hidden = YES;
+        backBtn.selected = NO;
+    }];
 }
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -97,7 +118,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
+    backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
@@ -112,8 +133,17 @@
     JDSideMenu * menu = [ControllerManager shareJDSideMenu];
     if (button.selected) {
         [menu showMenuAnimated:YES];
+        alphaBtn.hidden = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+            alphaBtn.alpha = 0.5;
+        }];
     }else{
         [menu hideMenuAnimated:YES];
+        [UIView animateWithDuration:0.25 animations:^{
+            alphaBtn.alpha = 0;
+        } completion:^(BOOL finished) {
+            alphaBtn.hidden = YES;
+        }];
     }
 }
 
@@ -165,6 +195,9 @@
     }else{
         if (indexPath.row == 0) {
             cacheLabel = [MyControl createLabelWithFrame:CGRectMake(320-100-20, 10, 100, 20) Font:15 Text:nil];
+            cacheLabel.textColor = [UIColor blackColor];
+            cacheLabel.textAlignment = NSTextAlignmentRight;
+            cacheLabel.text = [NSString stringWithFormat:@"%.1fMB", [self fileSizeForDir:DOCDIR]];
             [cell addSubview:cacheLabel];
 
         }
@@ -220,11 +253,17 @@
     }else if (indexPath.section == 1){
         
     }else if (indexPath.section == 2){
-        if (indexPath.row == 3) {
+        if (indexPath.row == 0) {
+            [self clearData];
+        }else if (indexPath.row == 3) {
             FeedbackViewController *feedBackVC = [[FeedbackViewController alloc] init];
-            [self presentViewController:feedBackVC animated:NO completion:^{
+            [self presentViewController:feedBackVC animated:YES completion:^{
                 [feedBackVC release];
             }];
+        }else if (indexPath.row == 5){
+            AboutViewController * vc = [[AboutViewController alloc] init];
+            [self presentViewController:vc animated:YES completion:nil];
+            [vc release];
         }
     }
 }
@@ -249,7 +288,7 @@
     NSArray* array = [fileManager contentsOfDirectoryAtPath:path error:nil];
     for(int i = 0; i<[array count]; i++)
     {
-        //        NSLog(@"%d--%@", array.count, [array objectAtIndex:i]);
+        //NSLog(@"%d--%@", array.count, [array objectAtIndex:i]);
         NSString *fullPath = [path stringByAppendingPathComponent:[array objectAtIndex:i]];
         
         BOOL isDir;

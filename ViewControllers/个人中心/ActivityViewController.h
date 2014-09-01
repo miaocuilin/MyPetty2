@@ -12,6 +12,8 @@
 {
     UIView * navView;
     UIImageView * bgImageView;
+    UIButton * alphaBtn;
+    UIButton * backBtn;
 }
 @property(nonatomic,retain)NSMutableArray * dataArray;
 @end

@@ -36,7 +36,30 @@
     [self createHeader];
     [self createUI];
     [self createBottom];
+    
+    [self createAlphaBtn];
 }
+/****************/
+-(void)createAlphaBtn
+{
+    alphaBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(hideSideMenu) Title:nil];
+    alphaBtn.backgroundColor = [UIColor blackColor];
+    alphaBtn.alpha = 0;
+    alphaBtn.hidden = YES;
+    [self.view addSubview:alphaBtn];
+}
+-(void)hideSideMenu
+{
+    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
+    [menu hideMenuAnimated:YES];
+    [UIView animateWithDuration:0.25 animations:^{
+        alphaBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        alphaBtn.hidden = YES;
+        backBtn.selected = NO;
+    }];
+}
+
 -(void)createBg
 {
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
@@ -66,7 +89,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
+    backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
@@ -122,10 +145,18 @@
     JDSideMenu * menu = [ControllerManager shareJDSideMenu];
     if (button.selected) {
         [menu showMenuAnimated:YES];
+        alphaBtn.hidden = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+            alphaBtn.alpha = 0.5;
+        }];
     }else{
         [menu hideMenuAnimated:YES];
+        [UIView animateWithDuration:0.25 animations:^{
+            alphaBtn.alpha = 0;
+        } completion:^(BOOL finished) {
+            alphaBtn.hidden = YES;
+        }];
     }
-//    [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)giftBagBtnClick
 {
@@ -172,6 +203,7 @@
     if (dropDown == nil) {
         CGFloat f = 200;
         dropDown = [[NIDropDown alloc] showDropDown:cateBtn :&f :self.cateArray];
+        [dropDown setDefaultCellType];
         dropDown.delegate = self;
         headerView.frame = CGRectMake(0, 64, 320, 35+200);
         isCateShow = YES;
@@ -186,6 +218,7 @@
     if (dropDown2 == nil) {
         CGFloat f = 120;
         dropDown2 = [[NIDropDown alloc] showDropDown:orderBtn :&f :self.orderArray];
+        [dropDown2 setDefaultCellType];
         dropDown2.delegate = self;
         if (!isCateShow) {
             headerView.frame = CGRectMake(0, 64, 320, 35+120);

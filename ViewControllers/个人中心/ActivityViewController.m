@@ -69,7 +69,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
+    backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
@@ -79,6 +79,26 @@
     titleLabel.textAlignment = NSTextAlignmentCenter;
 //    titleLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:titleLabel];
+}
+//
+-(void)createAlphaBtn
+{
+    alphaBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(hideSideMenu) Title:nil];
+    alphaBtn.backgroundColor = [UIColor blackColor];
+    alphaBtn.alpha = 0;
+    alphaBtn.hidden = YES;
+    [self.view addSubview:alphaBtn];
+}
+-(void)hideSideMenu
+{
+    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
+    [menu hideMenuAnimated:YES];
+    [UIView animateWithDuration:0.25 animations:^{
+        alphaBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        alphaBtn.hidden = YES;
+        backBtn.selected = NO;
+    }];
 }
 
 -(void)loadData
@@ -113,6 +133,9 @@
     _tableView.tableHeaderView = headerView;
     
     [self.view bringSubviewToFront:navView];
+    
+    /************************/
+    [self createAlphaBtn];
 }
 
 #pragma mark - 表视图datasource和delegate
@@ -156,8 +179,17 @@
     JDSideMenu * menu = [ControllerManager shareJDSideMenu];
     if (button.selected) {
         [menu showMenuAnimated:YES];
+        alphaBtn.hidden = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+            alphaBtn.alpha = 0.5;
+        }];
     }else{
         [menu hideMenuAnimated:YES];
+        [UIView animateWithDuration:0.25 animations:^{
+            alphaBtn.alpha = 0;
+        } completion:^(BOOL finished) {
+            alphaBtn.hidden = YES;
+        }];
     }
 //    [self dismissViewControllerAnimated:YES completion:nil];
 }

@@ -454,6 +454,7 @@
 {
     UserInfoViewController * vc = [[UserInfoViewController alloc] init];
     vc.modalTransitionStyle = 2;
+    vc.isFromPetInfo = YES;
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }

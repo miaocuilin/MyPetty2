@@ -331,7 +331,7 @@
     if (dropDown == nil) {
         CGFloat f = 200;
         dropDown = [[NIDropDown alloc] showDropDown:raceBtn :&f :self.totalArray];
-        
+        [dropDown setDefaultCellType];
         dropDown.delegate = self;
         headerView.frame = CGRectMake(0, 64, 320, 35+200);
         isRaceShow = YES;
@@ -347,6 +347,7 @@
     if (dropDown2 == nil) {
         CGFloat f = 120;
         dropDown2 = [[NIDropDown alloc] showDropDown:systemBtn :&f :self.systemListArray];
+        [dropDown2 setDefaultCellType];
         dropDown2.delegate = self;
         if (!isRaceShow) {
             headerView.frame = CGRectMake(0, 64, 320, 35+120);

@@ -393,7 +393,7 @@
     NSDate * date = [NSDate date];
     NSDateFormatter * format = [[NSDateFormatter alloc] init];
     [format setDateFormat:@"yyyy-MM-dd HH:mm"];
-    UILabel * topicTime = [MyControl createLabelWithFrame:CGRectMake(320-10-150, topicUser.frame.origin.y+3, 150, 15) Font:12 Text:[NSString stringWithFormat:@"%@", date]];
+    UILabel * topicTime = [MyControl createLabelWithFrame:CGRectMake(320-10-150, topicUser.frame.origin.y+3, 150, 15) Font:12 Text:[format stringFromDate:date]];
     topicTime.textAlignment = NSTextAlignmentRight;
     topicTime.textColor = [UIColor lightGrayColor];
     [self.sv addSubview:topicTime];
@@ -464,7 +464,9 @@
         commentsBgViewHeight = line.frame.origin.y+1;
     }
     commentsBgView.frame = CGRectMake(0, commentsBgView.frame.origin.y, 320, commentsBgViewHeight);
-    self.sv.contentSize = CGSizeMake(320, usersBgView.frame.origin.y+usersBgView.frame.size.height+commentsBgViewHeight);
+    //54为menu按钮的露出高度
+    self.sv.contentSize = CGSizeMake(320, usersBgView.frame.origin.y+usersBgView.frame.size.height+commentsBgViewHeight+54);
+//    NSLog(@"%f--%f--%d", usersBgView.frame.origin.y, usersBgView.frame.size.height, commentsBgViewHeight);
 }
 -(void)createComment
 {

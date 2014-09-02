@@ -39,4 +39,8 @@
 - (void)createPresentGiftAlertView;
 //注册弹框
 - (void)createLoginAlertView;
+//购买礼物成功
+- (void)createBuyGiftAlertView;
+//加入国家弹窗
+- (void)createJoinCountryAlertView;
 @end

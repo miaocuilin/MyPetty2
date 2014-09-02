@@ -158,10 +158,16 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)createViewControllers
 {
-    RandomViewController * rvc = [[RandomViewController alloc] init];
-    [self addChildViewController:rvc];
-    [rvc.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
-    [sv addSubview:rvc.view];
+//    RandomViewController * rvc = [[RandomViewController alloc] init];
+//    [self addChildViewController:rvc];
+//    [rvc.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
+//    [sv addSubview:rvc.view];
+    
+    WaterViewController *water = [[WaterViewController alloc] init];
+//    [self addChildViewController:water];
+    [water.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
+    [sv addSubview:water.view];
+
     
     [self.view bringSubviewToFront:self.menuBgBtn];
     [self.view bringSubviewToFront:self.menuBgView];

@@ -18,7 +18,7 @@
         // Initialization code
         self.contentView.layer.borderColor = [UIColor whiteColor].CGColor;
         self.contentView.layer.borderWidth = 1.f;
-        AsyncImageView *asyncimageView = [[AsyncImageView alloc]initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height)];
+        UIImageView *asyncimageView = [[UIImageView alloc]initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, frame.size.height)];
         [self.contentView addSubview:asyncimageView];
         _imageView = asyncimageView;
         

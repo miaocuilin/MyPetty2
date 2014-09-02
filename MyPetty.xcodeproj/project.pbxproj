@@ -355,10 +355,11 @@
 		496CF22B19A495070081BF5E /* MassWatchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 496CF22A19A495070081BF5E /* MassWatchViewController.m */; };
 		496CF22E19A49ADE0081BF5E /* MassWatchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 496CF22D19A49ADE0081BF5E /* MassWatchCell.m */; };
 		49A1A1E119A9D76F00213C04 /* SAStepperControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A1A1E019A9D76F00213C04 /* SAStepperControl.m */; };
-		49A723FD19B484DF000D7826 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A723F919B484DF000D7826 /* AsyncImageView.m */; };
-		49A723FE19B484DF000D7826 /* FullyLoaded.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A723FB19B484DF000D7826 /* FullyLoaded.m */; };
 		49A7240319B484FC000D7826 /* ColllectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A7240019B484FC000D7826 /* ColllectionViewCell.m */; };
 		49A7240419B484FC000D7826 /* WaterFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A7240219B484FC000D7826 /* WaterFlowLayout.m */; };
+		49A799AA19B566E3002411FC /* WaterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799A919B566E3002411FC /* WaterViewController.m */; };
+		49A799FE19B5A075002411FC /* MyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799FB19B5A075002411FC /* MyCollectionViewCell.m */; };
+		49A799FF19B5A075002411FC /* MyCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799FD19B5A075002411FC /* MyCollectionViewLayout.m */; };
 		49CE193319A9AC14005F21EE /* PresentDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CE193219A9AC14005F21EE /* PresentDetailViewController.m */; };
 		49E75C6E19B1B0F500F42FE5 /* button_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 49E75C6D19B1B0F500F42FE5 /* button_close.png */; };
 		49FA203019AF3DF50077897D /* recordButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 49FA202F19AF3DF50077897D /* recordButton.png */; };
@@ -1026,15 +1027,16 @@
 		496CF22D19A49ADE0081BF5E /* MassWatchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MassWatchCell.m; sourceTree = "<group>"; };
 		49A1A1DF19A9D76F00213C04 /* SAStepperControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAStepperControl.h; sourceTree = "<group>"; };
 		49A1A1E019A9D76F00213C04 /* SAStepperControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SAStepperControl.m; sourceTree = "<group>"; };
-		49A723F819B484DF000D7826 /* AsyncImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncImageView.h; sourceTree = "<group>"; };
-		49A723F919B484DF000D7826 /* AsyncImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncImageView.m; sourceTree = "<group>"; };
-		49A723FA19B484DF000D7826 /* FullyLoaded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullyLoaded.h; sourceTree = "<group>"; };
-		49A723FB19B484DF000D7826 /* FullyLoaded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FullyLoaded.m; sourceTree = "<group>"; };
-		49A723FC19B484DF000D7826 /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
 		49A723FF19B484FC000D7826 /* ColllectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColllectionViewCell.h; sourceTree = "<group>"; };
 		49A7240019B484FC000D7826 /* ColllectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColllectionViewCell.m; sourceTree = "<group>"; };
 		49A7240119B484FC000D7826 /* WaterFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterFlowLayout.h; sourceTree = "<group>"; };
 		49A7240219B484FC000D7826 /* WaterFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterFlowLayout.m; sourceTree = "<group>"; };
+		49A799A819B566E3002411FC /* WaterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterViewController.h; sourceTree = "<group>"; };
+		49A799A919B566E3002411FC /* WaterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterViewController.m; sourceTree = "<group>"; };
+		49A799FA19B5A075002411FC /* MyCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyCollectionViewCell.h; path = ../MyCollectionViewCell.h; sourceTree = "<group>"; };
+		49A799FB19B5A075002411FC /* MyCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyCollectionViewCell.m; path = ../MyCollectionViewCell.m; sourceTree = "<group>"; };
+		49A799FC19B5A075002411FC /* MyCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyCollectionViewLayout.h; path = ../MyCollectionViewLayout.h; sourceTree = "<group>"; };
+		49A799FD19B5A075002411FC /* MyCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyCollectionViewLayout.m; path = ../MyCollectionViewLayout.m; sourceTree = "<group>"; };
 		49CE193119A9AC14005F21EE /* PresentDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PresentDetailViewController.h; sourceTree = "<group>"; };
 		49CE193219A9AC14005F21EE /* PresentDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PresentDetailViewController.m; sourceTree = "<group>"; };
 		49E75C6D19B1B0F500F42FE5 /* button_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_close.png; sourceTree = "<group>"; };
@@ -1521,6 +1523,8 @@
 				1818E545195D1EFD001ED167 /* RandomViewController.m */,
 				09EC596319876C9500FDE806 /* RecommendViewController.h */,
 				09EC596419876C9500FDE806 /* RecommendViewController.m */,
+				49A799A819B566E3002411FC /* WaterViewController.h */,
+				49A799A919B566E3002411FC /* WaterViewController.m */,
 			);
 			name = "随机";
 			path = "基类/随机";
@@ -2384,15 +2388,14 @@
 		49A723F719B484DF000D7826 /* FullyLoaded */ = {
 			isa = PBXGroup;
 			children = (
+				49A799FA19B5A075002411FC /* MyCollectionViewCell.h */,
+				49A799FB19B5A075002411FC /* MyCollectionViewCell.m */,
+				49A799FC19B5A075002411FC /* MyCollectionViewLayout.h */,
+				49A799FD19B5A075002411FC /* MyCollectionViewLayout.m */,
 				49A723FF19B484FC000D7826 /* ColllectionViewCell.h */,
 				49A7240019B484FC000D7826 /* ColllectionViewCell.m */,
 				49A7240119B484FC000D7826 /* WaterFlowLayout.h */,
 				49A7240219B484FC000D7826 /* WaterFlowLayout.m */,
-				49A723F819B484DF000D7826 /* AsyncImageView.h */,
-				49A723F919B484DF000D7826 /* AsyncImageView.m */,
-				49A723FA19B484DF000D7826 /* FullyLoaded.h */,
-				49A723FB19B484DF000D7826 /* FullyLoaded.m */,
-				49A723FC19B484DF000D7826 /* SynthesizeSingleton.h */,
 			);
 			path = FullyLoaded;
 			sourceTree = "<group>";
@@ -3019,6 +3022,7 @@
 				49A7240319B484FC000D7826 /* ColllectionViewCell.m in Sources */,
 				0914B6D7196E3F410056CFB0 /* MMVectorImage.m in Sources */,
 				0979B7731941C6BF007C36A7 /* SDWebImagePrefetcher.m in Sources */,
+				49A799FF19B5A075002411FC /* MyCollectionViewLayout.m in Sources */,
 				496CF22019A44F570081BF5E /* AddressViewController.m in Sources */,
 				09D989531935C08E00C83C4B /* AppDelegate.m in Sources */,
 				6024A61B19A18DE0005ED3D3 /* BottomMenuRootViewController.m in Sources */,
@@ -3045,7 +3049,6 @@
 				49500A2919AD85F700D175D8 /* TouchViewController.m in Sources */,
 				09D989F31935C1FE00C83C4B /* TMQuiltViewCell.m in Sources */,
 				496CF22E19A49ADE0081BF5E /* MassWatchCell.m in Sources */,
-				49A723FD19B484DF000D7826 /* AsyncImageView.m in Sources */,
 				1818E543195D1CDD001ED167 /* UIView+Extension.m in Sources */,
 				600AF3C5199B46EB00613DCB /* BottomMenuBaseViewController.m in Sources */,
 				09E2C89B193740CE002D9E65 /* ASIFormDataRequest.m in Sources */,
@@ -3053,6 +3056,7 @@
 				49590B5719B044CC0090E697 /* CircularProgressView.m in Sources */,
 				098FC7EC194053320064A004 /* MyMD5.m in Sources */,
 				60EC8F9F198B429F00F1781A /* ChoseLoadViewController.m in Sources */,
+				49A799AA19B566E3002411FC /* WaterViewController.m in Sources */,
 				6038619919A75E1100B1312A /* UIImage+ImageBlur.m in Sources */,
 				09E2C899193740CE002D9E65 /* ASIDataDecompressor.m in Sources */,
 				6020BD6819987DC3002C74FA /* PetInfoViewController.m in Sources */,
@@ -3062,6 +3066,7 @@
 				600376521990800C00F3107F /* JDMenuViewController.m in Sources */,
 				490425F119B017B800F44DB8 /* CallViewController.m in Sources */,
 				6056903919A36D9200E04F89 /* MainTabBarViewController.m in Sources */,
+				49A799FE19B5A075002411FC /* MyCollectionViewCell.m in Sources */,
 				6057847419B05C14007FAF4C /* PopularityCell.m in Sources */,
 				60D62A6C19A4499300224976 /* MyControl.m in Sources */,
 				49CE193319A9AC14005F21EE /* PresentDetailViewController.m in Sources */,
@@ -3077,7 +3082,6 @@
 				099D0F001945D246002137CB /* VisibleViewController.m in Sources */,
 				0979B7701941C6BF007C36A7 /* SDWebImageDecoder.m in Sources */,
 				6038618319A71A5600B1312A /* PicDetailViewController.m in Sources */,
-				49A723FE19B484DF000D7826 /* FullyLoaded.m in Sources */,
 				091770021962A67D002F8502 /* PublishViewController.m in Sources */,
 				602A880819AD9583004F368C /* UserInfoRankCell.m in Sources */,
 				602A880319AD80AA004F368C /* UserInfoActivityCell.m in Sources */,
@@ -3292,8 +3296,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3314,7 +3318,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "cff11c5e-d759-4f03-8a8b-f9c5385e68ee";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3326,8 +3330,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3348,7 +3352,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "cff11c5e-d759-4f03-8a8b-f9c5385e68ee";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

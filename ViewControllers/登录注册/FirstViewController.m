@@ -64,7 +64,6 @@
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor blackColor];
 //    NSLog(@"%f", self.view.frame.size.height);
-    
     //全局变量，存储在本地，用于判断各种条件，以做出相应操作
     [USER setObject:@"0" forKey:@"MyHomeTimes"];
     /*关注是否有变化*/
@@ -164,6 +163,9 @@
                 return;
             }
             NSLog(@"%@", load.dataDict);
+#pragma SetIsSuccess
+//            [ControllerManager setIsSuccess:1];
+
             [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
             [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
             

@@ -48,9 +48,8 @@
 #import "RecordViewController.h"
 #import "ContributionViewController.h"
 #import "CallViewController.h"
-#import "WaterFlowLayout.h"
 #import "AboutViewController.h"
-
+#import "WaterViewController.h"
 @implementation AppDelegate
 -(void)dealloc
 {
@@ -136,8 +135,8 @@
 //    GiftShopViewController * info = [[GiftShopViewController alloc] init];
 //    RecordViewController * info = [[RecordViewController alloc] init];
     CallViewController *call = [[CallViewController alloc] init];
-    WaterFlowLayout *layout = [[WaterFlowLayout alloc]init];
-
+    
+    WaterViewController *water = [[WaterViewController alloc] init];
     self.window.rootViewController = info;
 //    [menu release];
 //    [fvc release];

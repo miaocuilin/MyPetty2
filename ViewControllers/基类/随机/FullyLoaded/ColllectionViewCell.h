@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AsyncImageView.h"
 
 @interface ColllectionViewCell : UICollectionViewCell
 
-@property (assign, nonatomic) AsyncImageView* imageView;
+@property (assign, nonatomic) UIImageView* imageView;
 
 @end

@@ -17,6 +17,9 @@
 #define headBtnWidth 64
 #define circleWidth 82
 @interface BottomMenuRootViewController ()
+{
+    NSString *masterID;
+}
 
 @end
 
@@ -26,10 +29,53 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    [self loadAnimalInfoData];
     [self createMenu];
+//    [self getUserData];
 }
 
+-(void)getUserData
+{
+    NSString * url = [NSString stringWithFormat:@"%@%@", INFOAPI,[ControllerManager getSID]];
+    NSLog(@"url:%@",url);
+    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            if ([[load.dataDict objectForKey:@"errorCode"] intValue] == 2) {
+                //SID过期,需要重新登录获取SID
+//                [self getUserData];
+                return;
+            }else{
+                //SID未过期，直接获取用户数据
+                NSLog(@"用户数据：%@", load.dataDict);
+                NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
+                //                [USER setObject:[dict objectForKey:@"code"] forKey:@"code"];
+                [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
+                [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
+                //                [USER setObject:[dict objectForKey:@"type"] forKey:@"type"];
+                [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
+                [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
+                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
+                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
+                }
+                //                [self dismissViewControllerAnimated:YES completion:nil];
+            }
+        }
+    }];
+}
+- (void)loadAnimalInfoData
+{
+    NSString *aid = [USER objectForKey:@"aid"];
+    NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",aid]];
+NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=2bnam089fro8vopklg1dv144o6",ANIMALINFOAPI,aid,animalInfoSig];
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalInfo Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"宠物信息：%@",load.dataDict);
+        if (isFinish) {
+            masterID =[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"];
+        }
+    }];
+    [request release];
+}
 -(void)createMenu
 {
     self.menuBgBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(menuBgBtnClick) Title:nil];
@@ -90,7 +136,7 @@
 
 -(void)btn1Click
 {
-    NSLog(@"1");
+    NSLog(@"摇一摇");
     ShakeViewController *shake = [[ShakeViewController alloc] init];
     [self addChildViewController:shake];
     [shake release];
@@ -103,7 +149,7 @@
 
 -(void)btn2Click
 {
-    NSLog(@"2");
+    NSLog(@"送礼物");
     ToolTipsViewController *tool = [[ToolTipsViewController alloc] init];
     [self addChildViewController:tool];
     [tool release];
@@ -114,32 +160,36 @@
 }
 -(void)btn3Click
 {
-    NSLog(@"3");
+    NSLog(@"录音和摸一摸");
 //    CallViewController *call = [[CallViewController alloc] init];
 //    [self addChildViewController:call];
 //    [call release];
 //    [call didMoveToParentViewController:self];
 //    [call createRecordOne];
 //    [self.view addSubview:call.view];
+    if ([masterID isEqualToString:[USER objectForKey:@"usr_id"]]) {
+        ShoutViewController *shout = [[ShoutViewController alloc] init];
+        [self addChildViewController:shout];
+        [shout release];
+        [shout didMoveToParentViewController:self];
+        [shout createRecordOne];
+        [self.view addSubview:shout.view];
+        [self hideAll];
+    }else{
+        TouchViewController *touch = [[TouchViewController alloc] init];
+        [self addChildViewController:touch];
+        [touch release];
+        [touch didMoveToParentViewController:self];
+        [self.view addSubview:touch.view];
+        //    [touch createAlertView];
+        [self hideAll];
+    }
     
-    ShoutViewController *shout = [[ShoutViewController alloc] init];
-    [self addChildViewController:shout];
-    [shout release];
-    [shout didMoveToParentViewController:self];
-    [shout createRecordOne];
-    [self.view addSubview:shout.view];
-    [self hideAll];
 }
 -(void)btn4Click
 {
-    NSLog(@"4");
-    TouchViewController *touch = [[TouchViewController alloc] init];
-    [self addChildViewController:touch];
-    [touch release];
-    [touch didMoveToParentViewController:self];
-    [self.view addSubview:touch.view];
-//    [touch createAlertView];
-    [self hideAll];
+    NSLog(@"遛一遛");
+    
 }
 -(void)headBtnClick
 {

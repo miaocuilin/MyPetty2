@@ -162,4 +162,8 @@
     //注销API
     #define DELETEAPI @"http://54.199.161.210/dc/index.php?r=site/clearUser&name="
 
+    //宠物信息API
+    #define ANIMALINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/infoApi&aid="
+
+
 #endif

@@ -18,6 +18,7 @@
     {
         self.imageView=[[UIImageView alloc]init];
         [self addSubview:self.imageView];
+        self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         //--------------
         //透明栏
         //--------------

@@ -12,7 +12,7 @@
 #import "PhotoModel.h"
 @interface WaterViewController ()
 @property(nonatomic)CGFloat itemWidth;
-
+@property (nonatomic)int index;
 @end
 
 @implementation WaterViewController
@@ -24,6 +24,7 @@
     self.dataArray = [NSMutableArray array];
 
     [self loadData];
+    
    
 }
 - (void)viewDidAppear:(BOOL)animated
@@ -37,7 +38,7 @@
 
 //    MyCollectionViewLayout *layout = [[MyCollectionViewLayout alloc] init];
     UICollectionViewFlowLayout *grid = [[UICollectionViewFlowLayout alloc] init];
-    grid.itemSize = CGSizeMake(100.0, 200.0);
+    grid.itemSize = CGSizeMake(100.0, 100.0);
     grid.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
 //    grid.headerReferenceSize = CGSizeMake(320, 200);
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) collectionViewLayout:grid];
@@ -77,7 +78,9 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 
 {
-    return CGSizeMake(150, 200);
+//    self.index = arc4random()%50+100;
+
+    return CGSizeMake(155, 100);
 }
 
 
@@ -86,7 +89,7 @@
 -(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insertForSectionAtIndex:(NSInteger)section
 
 {
-    return UIEdgeInsetsMake(5, 5, 5, 5);
+    return UIEdgeInsetsMake(0, 0, 0, 0);
 //    return UIEdgeInsetsMake(30, 30, 30, 30);
     
 }
@@ -147,10 +150,10 @@
             }];
         }
     }
-    
-
-    
-    cell.imageView.frame=CGRectMake(0, 0, 150, 200);
+//    cell.imageView.image = [UIImage imageNamed:@"cat1.jpg"];
+    int index = arc4random()%100+100;
+    NSLog(@"index:%d,%d",index,indexPath.item);
+    cell.imageView.frame=CGRectMake(0, 0, 156, index);
     return cell;
     
 }

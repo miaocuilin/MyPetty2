@@ -17,5 +17,8 @@
     
     UIView * miBgView;
     UIView * waBgView;
+    
+    //1猫 2狗
+    int planet;
 }
 @end

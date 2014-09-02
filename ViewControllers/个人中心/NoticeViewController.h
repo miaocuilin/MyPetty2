@@ -13,6 +13,9 @@
     UIView * navView;
     UILabel *messageLabel;
     UILabel *systemLabel;
+    
+    UIButton * alphaBtn;
+    UIButton * backBtn;
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 

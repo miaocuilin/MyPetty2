@@ -51,31 +51,33 @@
 }
 - (void)createNavgation
 {
-    UIView *nav = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 64)];
-    nav.backgroundColor = BGCOLOR;
-    nav.layer.opacity = 0.85;
-    [self.view addSubview:nav];
-    [nav release];
+    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    [self.view addSubview:navView];
+    
+    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    alphaView.alpha = 0.85;
+    alphaView.backgroundColor = BGCOLOR;
+    [navView addSubview:alphaView];
     
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
-    [nav addSubview:backImageView];
+    [navView addSubview:backImageView];
     
     UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(comeBackAction) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
-    [nav addSubview:backBtn];
+    [navView addSubview:backBtn];
     
 //    UIButton *comeBack = [MyControl createButtonWithFrame:CGRectMake(5, 25, 25, 25) ImageName:@"7-7.png" Target:self Action:@selector(comeBackAction) Title:nil];
 //    [nav addSubview:comeBack];
     
     
-    UIButton *changeButton = [MyControl createButtonWithFrame:CGRectMake(320-50-10, 32, 50, 20) ImageName:@"greenBtnBg.png" Target:self Action:@selector(buttonAction:) Title:@"保存"];
-    changeButton.titleLabel.font = [UIFont systemFontOfSize:15];
-    [nav addSubview:changeButton];
+    UIButton *changeButton = [MyControl createButtonWithFrame:CGRectMake(320-50-10, 30, 50, 23) ImageName:@"greenBtnBg.png" Target:self Action:@selector(buttonAction:) Title:@"保存"];
+    changeButton.titleLabel.font = [UIFont systemFontOfSize:14];
+    [navView addSubview:changeButton];
     
     UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"设置"];
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
-    [nav addSubview:titleLabel];
+    [navView addSubview:titleLabel];
 }
 
 - (void)createBody

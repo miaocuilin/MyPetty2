@@ -56,12 +56,30 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.userDataArray = [NSMutableArray arrayWithCapacity:0];
     self.view.backgroundColor = [UIColor whiteColor];
     
+    [self createBg];
     [self makeNavgation];
     [self loadData];
 //    [self makeUI];
 }
 
 #pragma mark - 视图的创建
+-(void)createBg
+{
+    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    [self.view addSubview:bgImageView];
+    //    self.bgImageView.backgroundColor = [UIColor redColor];
+    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+    NSLog(@"%@", filePath);
+    NSData * data = [NSData dataWithContentsOfFile:filePath];
+    //    NSLog(@"%@", data);
+    UIImage * image = [UIImage imageWithData:data];
+   bgImageView.image = image;
+    
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+    [self.view addSubview:tempView];
+}
 - (void)makeNavgation
 {
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
@@ -151,12 +169,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - tableView创建
 -(void)makeUI
 {
-    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
+    sv.contentSize = CGSizeMake(320, 865/2+64+self.view.frame.size.height-40);
     [self.view addSubview:sv];
 //    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-40-64) style:UITableViewStylePlain];
 //    [self.view addSubview:tv];
     
-    UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 760/2)];
+    UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, 865/2)];
     [sv addSubview:bgView];
 //    tv.tableHeaderView = bgView;
     
@@ -171,19 +190,23 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(13, 140, 200, 20) Font:17 Text:[self.listModel topic]];
     titleLabel.textColor = [UIColor darkGrayColor];
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    titleLabel.textColor = BGCOLOR;
     [bgView addSubview:titleLabel];
     
 //    NSString * str = @"那些年，我们一起追过的狗狗，\n一起怀念狗狗的友情岁月，和你在一起慢慢变老!";
-    CGSize size = [[self.dataArray[0] des] sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(320-26, 500) lineBreakMode:NSLineBreakByCharWrapping];
-    UILabel * introduceLabel = [MyControl createLabelWithFrame:CGRectMake(13, 165, 320-26, size.height) Font:15 Text:[self.dataArray[0] des]];
+    CGSize size = [[self.dataArray[0] des] sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(320-26, 500) lineBreakMode:NSLineBreakByCharWrapping];
+    UILabel * introduceLabel = [MyControl createLabelWithFrame:CGRectMake(13, 165, 320-26, size.height) Font:14 Text:[self.dataArray[0] des]];
     introduceLabel.textColor = [UIColor grayColor];
     [bgView addSubview:introduceLabel];
     
     NSArray * array = @[@"24-3.png", @"24-4.png", @"24-5.png"];
     for(int i=0;i<3;i++){
-        UIImageView * line = [MyControl createImageViewWithFrame:CGRectMake(0, 170+size.height+i*35, 320, 1) ImageName:@""];
-        line.image = [[UIImage imageNamed:@"20-灰色线.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:1];
-        [bgView addSubview:line];
+        UIView * lineView = [MyControl createViewWithFrame:CGRectMake(0, 170+size.height+i*35, 320, 1)];
+        lineView.backgroundColor = [UIColor whiteColor];
+        [bgView addSubview:lineView];
+//        UIImageView * line = [MyControl createImageViewWithFrame:CGRectMake(0, 170+size.height+i*35, 320, 1) ImageName:@""];
+//        line.image = [[UIImage imageNamed:@"20-灰色线.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:1];
+//        [bgView addSubview:line];
         
         UIImageView * imageView2 = [MyControl createImageViewWithFrame:CGRectMake(13, 175+size.height+i*35, 25, 25) ImageName:array[i]];
         [bgView addSubview:imageView2];
@@ -219,7 +242,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(320-15-10, imageView2.frame.origin.y+5, 15, 20) ImageName:@"扩展更多图标.png"];
             [bgView addSubview:arrow];
             
-            UIButton * button = [MyControl createButtonWithFrame:CGRectMake(0, line.frame.origin.y, 320, 35) ImageName:@"" Target:self Action:@selector(rewardClick) Title:nil];
+            UIButton * button = [MyControl createButtonWithFrame:CGRectMake(0, lineView.frame.origin.y, 320, 35) ImageName:@"" Target:self Action:@selector(rewardClick) Title:nil];
 //            button.backgroundColor = [UIColor redColor];
 //            button.alpha = 0.5;
             [bgView addSubview:button];
@@ -229,7 +252,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     UILabel * desLabel = (UILabel *)[self.view viewWithTag:102];
     
-    for (int i=0; i<self.userDataArray.count; i++) {
+//    self.userDataArray.count
+    for (int i=0; i<8; i++) {
         UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(13+i*35, desLabel.frame.origin.y+desLabel.frame.size.height+10, 30, 30) ImageName:@"cat2.jpg"];
         headImageView.layer.cornerRadius = 15;
         headImageView.layer.masksToBounds = YES;

@@ -7,6 +7,7 @@
 //
 
 #import "ToolTipsViewController.h"
+#import "ChooseInViewController.h"
 #define PAGENUMBER 5
 @interface ToolTipsViewController ()
 
@@ -25,7 +26,7 @@
     self.positionName = @"喵骑士";
     self.headImageName = @"cat1.jpg";
     //    self.expCoinNum = 100;
-    [self createButton];
+//    [self createButton];
 }
 #pragma mark - 每日登陆、官职升级、等级升级弹窗
 //经验值升级奖励弹窗
@@ -224,7 +225,7 @@
     alertView = [self alertViewInit:CGSizeMake(290, 215)];
     
     UIView *bodyView =[self JoinAndBuyBody:224 Title:@"注册"];
-    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2-80, 40, 160, 50) Font:16 Text:@"还木有注册呢~\n快来加入我们的宠物星球吧！"];
+    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(0, 70, 290, 50) Font:16 Text:@"还木有注册呢~\n快来加入我们的宠物星球吧！"];
     descLabel.textAlignment = NSTextAlignmentCenter;
     descLabel.textColor = [UIColor grayColor];
     [bodyView addSubview:descLabel];
@@ -295,6 +296,8 @@
 {
     NSLog(@"取消");
     [alertView hide:YES];
+    [self removeFromParentViewController];
+    [self.view removeFromSuperview];
 }
 
 - (void)sureAction:(UIButton *)sender
@@ -305,6 +308,14 @@
         NSLog(@"赠送");
     }else if (sender.tag == 224){
         NSLog(@"注册");
+        ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+        [self presentViewController:vc animated:YES completion:nil];
+        //
+        [alertView hide:YES];
+        [self removeFromParentViewController];
+        [self.view removeFromSuperview];
+        //
+        [vc release];
     }
 }
 

@@ -211,24 +211,105 @@
 -(void)miBtnClick
 {
     NSLog(@"进入喵星");
-    ChooseInViewController * vc = [[ChooseInViewController alloc] init];
-    vc.isMi = YES;
-    [self presentViewController:vc animated:YES completion:nil];
+//    ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+//    vc.isMi = YES;
+//    [self presentViewController:vc animated:YES completion:nil];
+    planet = 1;
+    [USER setObject:[NSString stringWithFormat:@"%d", planet] forKey:@"planet"];
+    [self login];
     [timer invalidate];
     timer = nil;
-    [vc release];
+//    [vc release];
 }
 -(void)waBtnClick
 {
     NSLog(@"进入汪星");
-    ChooseInViewController * vc = [[ChooseInViewController alloc] init];
-    vc.isMi = NO;
-    [self presentViewController:vc animated:YES completion:nil];
+//    ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+//    vc.isMi = NO;
+//    [self presentViewController:vc animated:YES completion:nil];
+    planet = 2;
+    [USER setObject:[NSString stringWithFormat:@"%d", planet] forKey:@"planet"];
+    [self login];
     [timer invalidate];
     timer = nil;
-    [vc release];
+//    [vc release];
 }
-
+#pragma mark -登录
+-(void)login
+{
+    StartLoading;
+    NSString * code = [NSString stringWithFormat:@"planet=%d&uid=%@dog&cat", planet, [OpenUDID value]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&uid=%@&sig=%@", LOGINAPI, planet, [OpenUDID value], [MyMD5 md5:code]];
+    NSLog(@"login-url:%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if(isFinish){
+            NSLog(@"%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"errorCode"] intValue]) {
+                UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[load.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
+                return;
+            }
+            [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
+            [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
+            
+            NSLog(@"isSuccess:%d,SID:%@", [ControllerManager getIsSuccess], [ControllerManager getSID]);
+            if ([ControllerManager getIsSuccess]) {
+                [self getUserData];
+                
+            }else{
+                LoadingSuccess;
+                //跳转到主页
+                JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+                [self presentViewController:sideMenu animated:YES completion:nil];
+            }
+        }else{
+            LoadingFailed;
+            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"数据请求失败，是否重新请求？" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+        }
+    }];
+    [request release];
+}
+#pragma mark -alert代理
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex) {
+        [self login];
+    }
+}
+#pragma mark -获取用户数据
+-(void)getUserData
+{
+    
+    NSString * url = [NSString stringWithFormat:@"%@%@", INFOAPI,[ControllerManager getSID]];
+    NSLog(@"%@", url);
+    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            if ([[load.dataDict objectForKey:@"errorCode"] intValue] == 2) {
+                //SID过期,需要重新登录获取SID
+                [self login];
+                [self getUserData];
+                return;
+            }else{
+                //SID未过期，直接获取用户数据
+                NSLog(@"用户数据：%@", load.dataDict);
+                NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
+//                [USER setObject:[dict objectForKey:@"code"] forKey:@"code"];
+                [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
+                [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
+                [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
+//                [USER setObject:[dict objectForKey:@"type"] forKey:@"type"];
+                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
+                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
+                }
+                
+                LoadingSuccess;
+                //跳转到主页
+                JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+                [self presentViewController:sideMenu animated:YES completion:nil];
+            }
+        }
+    }];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

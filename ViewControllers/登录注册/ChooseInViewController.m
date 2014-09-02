@@ -30,6 +30,9 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = BGCOLOR3;
     
+    if ([[USER objectForKey:@"planet"] intValue] == 1) {
+        self.isMi = YES;
+    }
     [self createUI];
 }
 
@@ -170,8 +173,8 @@
 //}
 -(void)haveBtnClick
 {
-//    RegisterViewController * vc = [[RegisterViewController alloc] init];
-    ChooseFamilyViewController * vc = [[ChooseFamilyViewController alloc] init];
+    RegisterViewController * vc = [[RegisterViewController alloc] init];
+//    ChooseFamilyViewController * vc = [[ChooseFamilyViewController alloc] init];
 //    UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
     [self presentViewController:vc animated:YES completion:nil];
 //    [nc release];

@@ -396,6 +396,9 @@
 		60179B7B19AC86E600758D21 /* giftBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 60179B7919AC86E600758D21 /* giftBg.png */; };
 		60179B7D19AC96D200758D21 /* flag_gold.png in Resources */ = {isa = PBXBuildFile; fileRef = 60179B7C19AC96D200758D21 /* flag_gold.png */; };
 		60179B7F19ACA3A700758D21 /* yellow_star.png in Resources */ = {isa = PBXBuildFile; fileRef = 60179B7E19ACA3A700758D21 /* yellow_star.png */; };
+		60186DD719B5714400207ED6 /* CateNameList.plist in Resources */ = {isa = PBXBuildFile; fileRef = 60186DD619B5714400207ED6 /* CateNameList.plist */; };
+		60186DDA19B5730C00207ED6 /* defaultPetHead.png in Resources */ = {isa = PBXBuildFile; fileRef = 60186DD819B5730C00207ED6 /* defaultPetHead.png */; };
+		60186DDB19B5730C00207ED6 /* defaultUserHead.png in Resources */ = {isa = PBXBuildFile; fileRef = 60186DD919B5730C00207ED6 /* defaultUserHead.png */; };
 		601BB34419AB02050076E051 /* flag.png in Resources */ = {isa = PBXBuildFile; fileRef = 601BB34319AB02050076E051 /* flag.png */; };
 		601BB34719AB11C80076E051 /* MyCountryMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 601BB34619AB11C80076E051 /* MyCountryMessageCell.m */; };
 		601BB34E19AB18FD0076E051 /* myCountry_game.png in Resources */ = {isa = PBXBuildFile; fileRef = 601BB34819AB18FD0076E051 /* myCountry_game.png */; };
@@ -1079,6 +1082,9 @@
 		60179B7919AC86E600758D21 /* giftBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = giftBg.png; sourceTree = "<group>"; };
 		60179B7C19AC96D200758D21 /* flag_gold.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flag_gold.png; sourceTree = "<group>"; };
 		60179B7E19ACA3A700758D21 /* yellow_star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yellow_star.png; sourceTree = "<group>"; };
+		60186DD619B5714400207ED6 /* CateNameList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CateNameList.plist; sourceTree = "<group>"; };
+		60186DD819B5730C00207ED6 /* defaultPetHead.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = defaultPetHead.png; sourceTree = "<group>"; };
+		60186DD919B5730C00207ED6 /* defaultUserHead.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = defaultUserHead.png; sourceTree = "<group>"; };
 		601BB34319AB02050076E051 /* flag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flag.png; sourceTree = "<group>"; };
 		601BB34519AB11C80076E051 /* MyCountryMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCountryMessageCell.h; sourceTree = "<group>"; };
 		601BB34619AB11C80076E051 /* MyCountryMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCountryMessageCell.m; sourceTree = "<group>"; };
@@ -1867,6 +1873,7 @@
 		09D989491935C08E00C83C4B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				60186DD619B5714400207ED6 /* CateNameList.plist */,
 				603B021C1991E68B005A6D30 /* area.plist */,
 				09D9894A1935C08E00C83C4B /* MyPetty-Info.plist */,
 				09D9894B1935C08E00C83C4B /* InfoPlist.strings */,
@@ -2445,6 +2452,8 @@
 		60EC8FA0198B442F00F1781A /* 2014-08-01 */ = {
 			isa = PBXGroup;
 			children = (
+				60186DD819B5730C00207ED6 /* defaultPetHead.png */,
+				60186DD919B5730C00207ED6 /* defaultUserHead.png */,
 				605195C419B47038005E9E2C /* about.png */,
 				606181C019B1BA80009AF63D /* more_greenBg.png */,
 				606181C119B1BA80009AF63D /* more_orangeBg.png */,
@@ -2723,16 +2732,19 @@
 				49E75C6E19B1B0F500F42FE5 /* button_close.png in Resources */,
 				09D98A791935D4E900C83C4B /* 14-10.png in Resources */,
 				495FFFEB19AAD1BD00976F18 /* alertBg.png in Resources */,
+				60186DDB19B5730C00207ED6 /* defaultUserHead.png in Resources */,
 				6038619319A73B5E00B1312A /* fish.png in Resources */,
 				60BFBC7019B0271300EE3746 /* list_moreArrow.png in Resources */,
 				6020BD7E1998B8D5002C74FA /* tool2_selected.png in Resources */,
 				600376681990AB2500F3107F /* menu-10.png in Resources */,
 				606181B919B1A7BE009AF63D /* threePoint.png in Resources */,
 				60DDF24919AF182E00CB3042 /* jinghao.png in Resources */,
+				60186DD719B5714400207ED6 /* CateNameList.plist in Resources */,
 				09D98A9C1935D4E900C83C4B /* 7-7.png in Resources */,
 				601BB35819AB2D4D0076E051 /* sendOne.png in Resources */,
 				6038618419A71A5600B1312A /* PicDetailViewController.xib in Resources */,
 				6020BD7F1998B8D5002C74FA /* tool2.png in Resources */,
+				60186DDA19B5730C00207ED6 /* defaultPetHead.png in Resources */,
 				091EAD31194EBCA900B0DE41 /* 19-5.png in Resources */,
 				49500A4719ADD5C800D175D8 /* rock.png in Resources */,
 				6024A62719A227FD005ED3D3 /* shake.png in Resources */,
@@ -3292,8 +3304,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3314,7 +3326,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "cff11c5e-d759-4f03-8a8b-f9c5385e68ee";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3326,8 +3338,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3348,7 +3360,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "cff11c5e-d759-4f03-8a8b-f9c5385e68ee";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

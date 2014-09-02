@@ -25,6 +25,6 @@
     UIView *bodyView;
     //完成按钮
     UIButton *doneButton;
-    
+    UIView * navView;
 }
 @end

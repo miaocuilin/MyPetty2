@@ -45,8 +45,30 @@
 
 //    [self loadMessageData];
 //    [self loadSystemData];
+    [self createAlphaBtn];
+}
+/****************************/
+-(void)createAlphaBtn
+{
+    alphaBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(hideSideMenu) Title:nil];
+    alphaBtn.backgroundColor = [UIColor blackColor];
+    alphaBtn.alpha = 0;
+    alphaBtn.hidden = YES;
+    [self.view addSubview:alphaBtn];
+}
+-(void)hideSideMenu
+{
+    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
+    [menu hideMenuAnimated:YES];
+    [UIView animateWithDuration:0.25 animations:^{
+        alphaBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        alphaBtn.hidden = YES;
+        backBtn.selected = NO;
+    }];
 }
 
+#pragma mark -
 -(void)loadMessageData
 {
     NSString * code = [NSString stringWithFormat:@"is_system=%ddog&cat", 0];
@@ -162,7 +184,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
+    backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
@@ -191,8 +213,17 @@
     JDSideMenu * menu = [ControllerManager shareJDSideMenu];
     if (button.selected) {
         [menu showMenuAnimated:YES];
+        alphaBtn.hidden = NO;
+        [UIView animateWithDuration:0.25 animations:^{
+            alphaBtn.alpha = 0.5;
+        }];
     }else{
         [menu hideMenuAnimated:YES];
+        [UIView animateWithDuration:0.25 animations:^{
+            alphaBtn.alpha = 0;
+        } completion:^(BOOL finished) {
+            alphaBtn.hidden = YES;
+        }];
     }
 }
 - (void)searchBtnClick

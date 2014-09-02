@@ -61,6 +61,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.dogArray = [NSMutableArray arrayWithCapacity:0];
     self.otherArray = [NSMutableArray arrayWithCapacity:0];
     self.cateArray = @[@"喵星", @"汪星", @"其它星"];
+    self.u_city = 1000;
     
 //    self.catArray = @[@"猫咪", @"布偶猫", @"波斯猫", @"挪威猫", @"缅因猫", @"伯曼猫", @"索马利猫", @"土耳其梵猫", @"美国短尾猫", @"西伯利亚森林猫", @"巴厘猫", @"土耳其安哥拉猫", @"褴褛猫", @"拉邦猫", @"暹罗猫", @"苏格兰折耳猫", @"短毛猫", @"俄罗斯蓝猫", @"孟买猫" @"埃及猫", @"斯芬克斯猫" @"缅甸猫", @"阿比西尼亚猫", @"新加坡猫", @"中国狸花猫", @"日本短尾猫", @"东奇尼猫", @"卷毛猫", @"马恩岛猫", @"奥西猫", @"沙特尔猫", @"呵叻猫", @"美国刚毛猫", @"哈瓦那棕猫", @"波米拉猫", @"东方猫", @"混血"];
 //    self.dogArray = @[@"狗狗", @"吉娃娃", @"博美犬", @"马尔济斯犬", @"约克夏梗", @"贵宾犬", @"蝴蝶犬", @"八哥犬", @"西施犬", @"比熊犬", @"北京犬", @"迷你杜宾", @"拉萨犬", @"冠毛犬", @"小型雪瑞纳", @"柯基犬", @"巴吉度犬", @"哈士奇", @"松狮", @"牧羊犬", @"柴犬", @"斗牛犬", @"萨摩耶犬", @"腊肠犬", @"猎兔犬", @"惠比特犬", @"拉布拉多", @"大麦町犬(斑点狗)", @"爱斯基摩犬", @"沙皮犬", @"山地犬", @"无毛犬", @"雪纳瑞", @"藏獒", @"史毕诺犬", @"卡斯罗", @"罗威纳犬", @"阿拉斯加雪橇犬", @"金毛", @"柯利犬", @"波尔多犬", @"法国狼犬", @"雪达犬", @"奇努克犬", @"威玛犬", @"比利时马林诺斯犬", @"寻回犬", @"浣熊犬", @"迦南犬", @"猎犬", @"梗犬", @"混血"];
@@ -69,12 +70,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.detailName = @"布偶猫";
     
     [self createIQ];
-    [self loadCateNameList];
 //    [self createNavigation];
     [self createBg];
-    
-    
     [self getCityData];
+    [self loadCateNameList];
+    
 }
 - (void)createIQ
 {
@@ -92,17 +92,19 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)loadCateNameList
 {
-    [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TYPEAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        if (isFinish) {
-//            NSLog(@"宠物类型：%@", load.dataDict);
-            [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"CateNameList"];
-            NSString * path = [DOCDIR stringByAppendingPathComponent:@"CateNameList.plist"];
-            NSMutableDictionary * data = [load.dataDict objectForKey:@"data"];
-            [data writeToFile:path atomically:YES];
+//    [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TYPEAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+////            NSLog(@"宠物类型：%@", load.dataDict);
+//            [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"CateNameList"];
+//            NSString * path = [DOCDIR stringByAppendingPathComponent:@"CateNameList.plist"];
+//            NSMutableDictionary * data = [load.dataDict objectForKey:@"data"];
+//            [data writeToFile:path atomically:YES];
+            NSMutableDictionary * dataDic = [NSMutableDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CateNameList" ofType:@"plist"]];
+    NSLog(@"%@", dataDic);
             //将数据存到数组中
-            NSDictionary * dict1 = [[load.dataDict objectForKey:@"data"] objectForKey:@"1"];
-            NSDictionary * dict2 = [[load.dataDict objectForKey:@"data"] objectForKey:@"2"];
-            NSDictionary * dict3 = [[load.dataDict objectForKey:@"data"] objectForKey:@"3"];
+            NSDictionary * dict1 = [dataDic objectForKey:@"1"];
+            NSDictionary * dict2 = [dataDic objectForKey:@"2"];
+            NSDictionary * dict3 = [dataDic objectForKey:@"3"];
             
             for (int i=0; i<[dict1 count]; i++) {
                 NSString * str = [dict1 objectForKey:[NSString stringWithFormat:@"%d", 100+i+1]];
@@ -121,8 +123,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             //开始搭建界面
             [self createUI];
             [self createFakeNavigation];
-        }
-    }];
+//        }
+//    }];
 }
 -(void)createBg
 {
@@ -136,23 +138,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //    NSLog(@"%@", data);
     UIImage * image = [UIImage imageWithData:data];
     self.bgImageView.image = image;
-    //    self.bgImageView.image = [UIImage imageNamed:@"Default-568h@2x.png"];
-    
-    //毛玻璃化，需要先设置图片再设置其他
-//    [self.bgImageView setFramesCount:20];
-//    [self.bgImageView setBlurAmount:1];
-    
-    //这里必须延时执行，否则会变白
-    //注意，由于图片较大，这里需要的时间必须在2秒以上
-//    [self performSelector:@selector(blurImage) withObject:nil afterDelay:0.25f];
+
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
     tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
     [self.view addSubview:tempView];
 }
-//-(void)blurImage
-//{
-//    [self.bgImageView blurInAnimationWithDuration:0.1f];
-//}
+
 -(void)createFakeNavigation
 {
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
@@ -289,12 +280,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UIImageView * roundImageView = [MyControl createImageViewWithFrame:CGRectMake(108.5, 326/2-116/2, 217/2, 116/2) ImageName:@"4-3.png"];
     [sv addSubview:roundImageView];
     
-    photoButton = [MyControl createButtonWithFrame:CGRectMake(105+(116-80)/2, 42+18+64, 80, 80) ImageName:@"3-3.png" Target:self Action:@selector(photoButtonClick) Title:nil];
+    photoButton = [MyControl createButtonWithFrame:CGRectMake(105+(116-80)/2, 42+18+64-5, 80, 80) ImageName:@"defaultPetHead" Target:self Action:@selector(photoButtonClick) Title:nil];
     photoButton.layer.cornerRadius = 40;
     photoButton.layer.masksToBounds = YES;
     [sv addSubview:photoButton];
     
-    UILabel * miTitle = [MyControl createLabelWithFrame:CGRectMake(100, 205, 120, 20) Font:18 Text:@"喵喵信息"];
+    UILabel * miTitle = [MyControl createLabelWithFrame:CGRectMake(100, 205, 120, 20) Font:18 Text:@"宠物信息"];
     miTitle.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:miTitle];
     
@@ -372,7 +363,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UIImageView * roundImageView2 = [MyControl createImageViewWithFrame:CGRectMake(-30+320+108.5, 100-116/2+64, 217/2, 116/2) ImageName:@"4-3.png"];
     [sv addSubview:roundImageView2];
     
-    photoButton2 = [MyControl createButtonWithFrame:CGRectMake(-30+320+105+(116-80)/2, 42+18+64, 80, 80) ImageName:@"3-3.png" Target:self Action:@selector(photoButtonClick2) Title:nil];
+    photoButton2 = [MyControl createButtonWithFrame:CGRectMake(-30+320+105+(116-80)/2, 42+18+64-5, 80, 80) ImageName:@"defaultUserHead" Target:self Action:@selector(photoButtonClick2) Title:nil];
     photoButton2.layer.cornerRadius = 40;
     photoButton2.layer.masksToBounds = YES;
     [sv addSubview:photoButton2];
@@ -880,10 +871,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)finishButtonClick:(UIButton *)sender
 {
-    if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"] || tfUserName.text.length == 0 || tfUserName.text.length >8 || tfCity.text.length == 0) {
+    if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"] || tfUserName.text.length == 0 || tfCity.text.length == 0) {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"您有信息没有填写!" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
         [alert show];
         [alert release];
+        return;
+    }
+    if (tfUserName.text.length >8) {
+        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"昵称不可以超过8个汉字哦~"];
         return;
     }
     if ([ageTextField.text intValue]>=100) {
@@ -893,6 +888,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     //跳转到个人主页
     NSLog(@"完成！");
+    
     //将数据整合，发送给服务器进行注册
     age = [ageTextField.text intValue];
     //宠物性别
@@ -912,14 +908,20 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         type = 300+num+1;
     }
     [USER setObject:self.detailName forKey:@"detailName"];
+    self.u_name = tfUserName.text;
+    if (isMan) {
+        self.u_gender = 1;
+    }else{
+        self.u_gender = 2;
+    }
     
     //用户注册
-//    [self userRegister];
+    [self userRegister];
 
     //跳到主页
-    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
-    [sideMenu setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"30-3" ofType:@"png"]]];
-    [self presentViewController:sideMenu animated:YES completion:nil];
+//    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+//    [sideMenu setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"30-3" ofType:@"png"]]];
+//    [self presentViewController:sideMenu animated:YES completion:nil];
 }
 
 #pragma mark -注册
@@ -931,17 +933,20 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSString * str = nil;
     NSString * str2 = nil;
     NSString * sig = nil;
-    if([USER objectForKey:@"sinaUsid"] != nil){
-        str = [NSString stringWithFormat:@"age=%d&code=&gender=%d&name=%@&type=%d&wechat=&weibo=%@", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, [USER objectForKey:@"sinaUsid"]];
-        str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&wechat=&weibo=%@dog&cat", age, gender, type, [USER objectForKey:@"sinaUsid"]];
+//    if([USER objectForKey:@"sinaUsid"] != nil){
+//        str = [NSString stringWithFormat:@"age=%d&code=&gender=%d&name=%@&type=%d&wechat=&weibo=%@", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, [USER objectForKey:@"sinaUsid"]];
+//        str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&wechat=&weibo=%@dog&cat", age, gender, type, [USER objectForKey:@"sinaUsid"]];
+//        sig = [MyMD5 md5:str2];
+//    }else{
+//        str = [NSString stringWithFormat:@"age=%d&code=&gender=%d&name=%@&type=%d&wechat=&weibo=", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type];
+//        str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&wechat=&weibo=dog&cat", age, gender, type];
+        
+        str = [NSString stringWithFormat:@"age=%d&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, gender, type, self.u_city, self.u_gender];
         sig = [MyMD5 md5:str2];
-    }else{
-        str = [NSString stringWithFormat:@"age=%d&code=&gender=%d&name=%@&type=%d&wechat=&weibo=", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type];
-        str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&wechat=&weibo=dog&cat", age, gender, type];
-        sig = [MyMD5 md5:str2];
-    }
+//    }
     //访问注册API
-    NSString * message = [NSString stringWithFormat:@"%@?r=user/registerApi&%@&sig=%@&SID=%@", IPURL, str, sig, [ControllerManager getSID]];
+    NSString * message = [NSString stringWithFormat:@"%@?r=user/registerApi&%@&sig=%@&SID=%@", IPURL2, str, sig, [ControllerManager getSID]];
     //进行注册
     NSLog(@"%d", [ControllerManager getIsSuccess]);
     NSLog(@"%@", [ControllerManager getSID]);
@@ -977,7 +982,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 if (self.oriImage){
                     [self postImage];
                 }else{
-                    [alert0 setTitle:@"注册成功,未上传头像"];
+                    [alert0 setTitle:@"注册成功"];
                     
                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 //                    alert0.hidden = YES;
@@ -985,10 +990,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //                    [alert show];
 //                    [alert release];
 //                    [self login];
-                    [self login];
                     [USER setObject:@"1" forKey:@"Menu"];
-                    //dismiss到主界面
-                    [self dismissViewControllerAnimated:YES completion:nil];
+                    //present到主界面
+                    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+                    [self presentViewController:sideMenu animated:YES completion:nil];
                 }
 //                //注册成功，进入之前的选择页
 //                NSString * pageNum = [USER objectForKey:@"pageNum"];
@@ -1060,12 +1065,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 NSLog(@"用户数据：%@", load.dataDict);
                 NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
                 [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
-                [USER setObject:[dict objectForKey:@"code"] forKey:@"code"];
+//                [USER setObject:[dict objectForKey:@"code"] forKey:@"code"];
                 [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
                 [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
-                [USER setObject:[dict objectForKey:@"type"] forKey:@"type"];
+//                [USER setObject:[dict objectForKey:@"type"] forKey:@"type"];
                 [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
-                [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
+                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
+                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
+                }
 //                [self dismissViewControllerAnimated:YES completion:nil];
             }
         }
@@ -1177,7 +1184,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else if([provinceStr isEqualToString: cityStr]){
         cityStr = @"";
     }
-    
+    NSLog(@"------------%d", (provinceIndex+10)*100+cityIndex);
+    self.u_city = (provinceIndex+10)*100+cityIndex;
     NSString *showMsg = [NSString stringWithFormat: @"%@%@", provinceStr, cityStr];
     tfCity.text = showMsg;
     

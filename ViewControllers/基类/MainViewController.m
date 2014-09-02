@@ -14,6 +14,8 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
 #import <AviarySDK/AviarySDK.h>
+#import "ToolTipsViewController.h"
+
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 @interface MainViewController ()
@@ -107,30 +109,41 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)menuBtnClick:(UIButton *)button
 {
+    /***********/
+//    [ControllerManager setIsSuccess:1];
     
     button.selected = !button.selected;
     JDSideMenu * menu = [ControllerManager shareJDSideMenu];
-    if (button.selected) {
-        //截屏
-        UIImage * image = [MyControl imageWithView:[UIApplication sharedApplication].keyWindow];
-        UIImage * image2 = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
-        [MyControl saveScreenshotsWithImage:image2];
-//        [UIView animateWithDuration:0.1 animations:^{
-//            [MyControl saveScreenshotsWithView:[UIApplication sharedApplication].keyWindow];
-//        }];
-        
-        [menu showMenuAnimated:YES];
-        self.alphaBtn.hidden = NO;
-        [UIView animateWithDuration:0.25 animations:^{
-            self.alphaBtn.alpha = 0.5;
-        }];
+    if ([ControllerManager getIsSuccess]) {
+        if (button.selected) {
+            //截屏
+            UIImage * image = [MyControl imageWithView:[UIApplication sharedApplication].keyWindow];
+            UIImage * image2 = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+            [MyControl saveScreenshotsWithImage:image2];
+            //        [UIView animateWithDuration:0.1 animations:^{
+            //            [MyControl saveScreenshotsWithView:[UIApplication sharedApplication].keyWindow];
+            //        }];
+            
+            [menu showMenuAnimated:YES];
+            self.alphaBtn.hidden = NO;
+            [UIView animateWithDuration:0.25 animations:^{
+                self.alphaBtn.alpha = 0.5;
+            }];
+        }else{
+            [menu hideMenuAnimated:YES];
+            [UIView animateWithDuration:0.25 animations:^{
+                self.alphaBtn.alpha = 0;
+            } completion:^(BOOL finished) {
+                self.alphaBtn.hidden = YES;
+            }];
+        }
     }else{
-        [menu hideMenuAnimated:YES];
-        [UIView animateWithDuration:0.25 animations:^{
-            self.alphaBtn.alpha = 0;
-        } completion:^(BOOL finished) {
-            self.alphaBtn.hidden = YES;
-        }];
+        //提示注册
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+//        [vc release];
     }
 }
 -(void)createScrollView

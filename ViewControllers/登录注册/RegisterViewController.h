@@ -63,6 +63,7 @@
     
 //    UIButton * pageBtn;
     UIView * navView;
+    
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 
@@ -79,5 +80,9 @@
 
 @property (nonatomic,copy)NSString * FileName;
 @property (nonatomic,retain)UIImage * oriImage;
+
+@property (nonatomic,copy)NSString * u_name;
+@property (nonatomic)int u_gender;
+@property (nonatomic)int u_city;
 @end
 

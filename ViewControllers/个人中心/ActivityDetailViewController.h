@@ -15,6 +15,7 @@
     BOOL isCamara;
 //    UITableView * tv;
     UIView * navView;
+    UIImageView * bgImageView;
 }
 @property(nonatomic,retain)NSMutableString * txs;
 @property(nonatomic,retain)TopicListModel * listModel;

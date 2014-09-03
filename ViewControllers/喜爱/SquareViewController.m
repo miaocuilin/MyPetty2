@@ -50,20 +50,20 @@
     
     
     self.view.backgroundColor = [UIColor purpleColor];
-    locManager = [[CLLocationManager alloc] init];
-    locManager.delegate = self;
-    locManager.desiredAccuracy = kCLLocationAccuracyBest;
-    locManager.distanceFilter = 500.0;
-    [locManager startUpdatingLocation];
+//    locManager = [[CLLocationManager alloc] init];
+//    locManager.delegate = self;
+//    locManager.desiredAccuracy = kCLLocationAccuracyBest;
+//    locManager.distanceFilter = 500.0;
+//    [locManager startUpdatingLocation];
     
 //    [[UIApplication sharedApplication] setApplicationSupportsShakeToEdit:YES];
 //    [self becomeFirstResponder];
-    UIButton * button = [MyControl createButtonWithFrame:CGRectMake(110, 150, 100, 50) ImageName:@"" Target:self Action:@selector(buttonClick) Title:@"重新定位"];
-    button.backgroundColor = [UIColor redColor];
-    [self.view addSubview:button];
+//    UIButton * button = [MyControl createButtonWithFrame:CGRectMake(110, 150, 100, 50) ImageName:@"" Target:self Action:@selector(buttonClick) Title:@"重新定位"];
+//    button.backgroundColor = [UIColor redColor];
+//    [self.view addSubview:button];
 
     
-    [self.view addSubview:test];
+//    [self.view addSubview:test];
     
 }
 -(void)createFakeNavigation

@@ -78,6 +78,9 @@
     //likersList页根据此判断来自哪，该dismiss还是pop
     [USER setObject:@"0" forKey:@"isFromAvtivity"];
     
+    //看是否需要dismiss
+    [USER setObject:@"0" forKey:@"isChooseInShouldDismiss"];
+    
     //从本地读取种类数据，然后
 //    NSString * path = [DOCDIR stringByAppendingPathComponent:@"CateNameList.plist"];
 //    NSLog(@"CateNameList= %@",path);
@@ -248,7 +251,7 @@
 -(void)postImage
 {
     //网络上传
-    NSString * url = [NSString stringWithFormat:@"%@%@", IMAGEAPI, [ControllerManager getSID]];
+    NSString * url = [NSString stringWithFormat:@"%@%@", PETIMAGEAPI, [ControllerManager getSID]];
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:url]];
     _request.requestMethod = @"POST";
     _request.timeOutSeconds = 20;

@@ -180,6 +180,8 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            NSLog(@"dataDict:%@", load.dataDict);
+            //只包含img_id和图片的url
+            
             [self.dataArray removeAllObjects];
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
@@ -285,6 +287,7 @@
         }else{
 //            cell.photoView.image = [UIImage imageNamed:@"20-1.png"];
             cell.photoView.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"20-1" ofType:@"png"]];
+            
             [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     //本地目录，用于存放favorite下载的原图
@@ -454,13 +457,13 @@
 //    [ControllerManager HUDText:@"你得到了一个魔法棒" showView:self.view yOffset:110];
 //    [ControllerManager HUDImageIcon:@"gold.png" showView:self.view yOffset:-40 Number:10];
 //    [self HUDImageIcon:[UIImage imageNamed:@"gold.png"] showView:self.view yOffset:50 Number:100];
-    if (![ControllerManager getIsSuccess]) {
-        [USER setObject:[NSString stringWithFormat:@"%d", 1000+indexPath.row] forKey:@"pageNum"];
+//    if (![ControllerManager getIsSuccess]) {
+//        [USER setObject:[NSString stringWithFormat:@"%d", 1000+indexPath.row] forKey:@"pageNum"];
 //        [UIView animateWithDuration:0.3 animations:^{
 //            view.frame = CGRectMake(0, 0, 320, self.view.frame.size.height+[MyControl isIOS7]);
 //        }];
-        return;
-    }
+//        return;
+//    }
     PhotoModel * model = self.dataArray[indexPath.row];
     //跳转到详情页，并传值
     PicDetailViewController * vc = [[PicDetailViewController alloc] init];

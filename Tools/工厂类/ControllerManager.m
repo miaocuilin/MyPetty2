@@ -17,7 +17,7 @@
 #import "RewardViewController.h"
 #define DEFAULT_VOID_COLOR [UIColor whiteColor]
 #import "JDMenuViewController.h"
-#import "MainTabBarViewController.h"
+//#import "MainTabBarViewController.h"
 #import "MainViewController.h"
 #import <CoreText/CoreText.h>
 @implementation ControllerManager
@@ -339,5 +339,22 @@ MBProgressHUD *HUD;
     [bodyView addSubview:descLabel];
     HUD.customView = bodyView;
     [HUD show:YES];
+}
+
++(NSString *)returnCateNameWithType:(NSString *)type
+{
+    NSString * str = nil;
+    int a = [type intValue];
+    NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"%@/CateNameList.plist", DOCDIR]];
+    if (a/100 == 1) {
+        str = [[dict objectForKey:@"1"] objectForKey:type];
+    }else if(a/100 == 2){
+        str = [[dict objectForKey:@"2"] objectForKey:type];
+    }else if(a/100 == 3){
+        str = [[dict objectForKey:@"3"] objectForKey:type];
+    }else{
+        str = @"苏格兰折耳猫";
+    }
+    return str;
 }
 @end

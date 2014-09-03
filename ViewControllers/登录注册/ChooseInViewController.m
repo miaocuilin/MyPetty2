@@ -23,7 +23,12 @@
     }
     return self;
 }
-
+-(void)viewDidAppear:(BOOL)animated
+{
+    if ([[USER objectForKey:@"isChooseInShouldDismiss"] intValue]) {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -176,6 +181,9 @@
     RegisterViewController * vc = [[RegisterViewController alloc] init];
 //    ChooseFamilyViewController * vc = [[ChooseFamilyViewController alloc] init];
 //    UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
+//    vc.dismiss = ^(){
+//        [self dismissViewControllerAnimated:YES completion:nil];
+//    };
     [self presentViewController:vc animated:YES completion:nil];
 //    [nc release];
     [vc release];
@@ -190,6 +198,7 @@
 //    RegisterViewController * vc = [[RegisterViewController alloc] init];
     ChooseFamilyViewController * vc = [[ChooseFamilyViewController alloc] init];
 //    UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
+    
     [self presentViewController:vc animated:YES completion:nil];
 //    [nc release];
     [vc release];

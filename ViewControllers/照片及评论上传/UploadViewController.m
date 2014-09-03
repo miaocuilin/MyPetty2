@@ -144,7 +144,7 @@
 -(void)postData:(UIImage *)image
 {
     //网络上传
-    NSString * url = [NSString stringWithFormat:@"%@%@", IMAGEAPI, [ControllerManager getSID]];
+    NSString * url = [NSString stringWithFormat:@"%@%@", PETIMAGEAPI, [ControllerManager getSID]];
     NSLog(@"postUrl:%@", url);
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:url]];
     _request.requestMethod = @"POST";

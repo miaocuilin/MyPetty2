@@ -699,7 +699,7 @@
             headImageView.image = image;
         }else{
             //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TXURL, self.headImageURL] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, self.headImageURL] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     headImageView.image = load.dataImage;
                     NSString * docDir = DOCDIR;
@@ -823,7 +823,7 @@
                     txImageView.image = image;
                 }else{
                     //下载头像
-                    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TXURL, self.likerTxArray[i]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, self.likerTxArray[i]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                         if (isFinish) {
                             txImageView.image = load.dataImage;
                             NSString * docDir = DOCDIR;

@@ -8,7 +8,7 @@
 
 //#import <UIKit/UIKit.h>
 #import "BottomMenuRootViewController.h"
-@interface MainViewController : BottomMenuRootViewController <UIScrollViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
+@interface MainViewController : BottomMenuRootViewController <UIScrollViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate>
 {
     UIView * navView;
     UIScrollView * sv;
@@ -18,6 +18,7 @@
     BOOL isCamara;
     UIActionSheet * sheet;
     
+    int segmentClickIndex;
 }
 @property(nonatomic,retain)UIButton * alphaBtn;
 

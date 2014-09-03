@@ -22,6 +22,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 @interface RegisterViewController () <UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate,AFPhotoEditorControllerDelegate>
 {
     ASIFormDataRequest * _request;
+    ASIFormDataRequest * _requestUser;
     UIAlertView * alert0;
     UIAlertView * alert1;
 }
@@ -927,8 +928,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -注册
 -(void)userRegister
 {
-    alert0 = [[UIAlertView alloc] initWithTitle:@"正在注册，请稍后..." message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-    [alert0 show];
+    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+    [MMProgressHUD showWithStatus:@"正在注册，请稍后..."];
+//    alert0 = [[UIAlertView alloc] initWithTitle:@"正在注册，请稍后..." message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+//    [alert0 show];
 //    [alert0 release];
     NSString * str = nil;
     NSString * str2 = nil;
@@ -971,18 +974,40 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 //发生错误，显示错误信息，用户名已存在等。
                 NSString * errorMessage = [load.dataDict objectForKey:@"errorMessage"];
                 [alert0 setTitle:errorMessage];
+                [MMProgressHUD dismissWithError:@"注册失败" afterDelay:0];
 //                alert0 = [[UIAlertView alloc] initWithTitle:@"错误" message:errorMessage delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
 //                [alert0 show];
                 
 //                [alert0 release];
+                
             }else{
                 //[USER setObject:@"1" forKey:@"isLogin"];
 //                [self login];
                 [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
-                if (self.oriImage){
-                    [self postImage];
+                
+                if (self.oriImage || self.self.oriUserImage){
+                    isNeedPostImage = YES;
+                    
+//                    if (self.oriImage!= nil && self.oriUserImage == nil) {
+//                        doubleNeedPost = NO;
+//                        [self postImage];
+//                    }
+//                    if (self.oriImage == nil && self.oriUserImage != nil) {
+//                        doubleNeedPost = NO;
+//                        [self postUserImage];
+//                    }
+//                    if (self.oriImage != nil && self.oriUserImage != nil) {
+//                        doubleNeedPost = YES;
+//                        [self postImage];
+//                        [self postUserImage];
+//                    }
+                    
+//                    [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0];
+//                    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//                    [MMProgressHUD showWithStatus:@"上传头像中..."];
                 }else{
-                    [alert0 setTitle:@"注册成功"];
+////                    [alert0 setTitle:@"注册成功"];
+//                    [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
                     
                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 //                    alert0.hidden = YES;
@@ -990,11 +1015,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //                    [alert show];
 //                    [alert release];
 //                    [self login];
-                    [USER setObject:@"1" forKey:@"Menu"];
-                    //present到主界面
-                    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
-                    [self presentViewController:sideMenu animated:YES completion:nil];
+            
+//                    [USER setObject:@"1" forKey:@"Menu"];
+//                    [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+//                    [self dismissViewControllerAnimated:NO completion:nil];
                 }
+                [self login];
 //                //注册成功，进入之前的选择页
 //                NSString * pageNum = [USER objectForKey:@"pageNum"];
 //                if([pageNum isEqualToString:@"1"]){
@@ -1012,7 +1038,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
             }
         }else{
-            [alert0 setTitle:@"数据下载失败"];
+            [MMProgressHUD dismissWithError:@"注册失败%>_<%" afterDelay:0.5];
+//            [alert0 setTitle:@"数据下载失败"];
 //            alert0.hidden = YES;
 //            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"数据下载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
 //            [alert show];
@@ -1038,8 +1065,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -登录
 -(void)login
 {
-    [[httpDownloadBlock alloc] initWithUrlStr:LOGINAPI Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    NSString * code = [NSString stringWithFormat:@"planet=%@&uid=%@dog&cat", [USER objectForKey:@"planet"], [OpenUDID value]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&uid=%@&sig=%@&SID=%@", LOGINAPI, [USER objectForKey:@"planet"], [OpenUDID value], [MyMD5 md5:code], [ControllerManager getSID]];
+    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){
+            NSLog(@"%@", load.dataDict);
             [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
             [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
             NSLog(@"isSuccess:%d,SID:%@", [ControllerManager getIsSuccess], [ControllerManager getSID]);
@@ -1064,16 +1094,43 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 //SID未过期，直接获取用户数据
                 NSLog(@"用户数据：%@", load.dataDict);
                 NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                
+                [USER setObject:[dict objectForKey:@"a_name"] forKey:@"a_name"];
+                if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
+                    [USER setObject:[dict objectForKey:@"a_tx"] forKey:@"a_tx"];
+                }
                 [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
-//                [USER setObject:[dict objectForKey:@"code"] forKey:@"code"];
                 [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
                 [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
-//                [USER setObject:[dict objectForKey:@"type"] forKey:@"type"];
+                [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
+                [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];
                 [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
+                [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
+                
                 if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
                     [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
                 }
-//                [self dismissViewControllerAnimated:YES completion:nil];
+                /****************/
+                if (isNeedPostImage) {
+                    if (self.oriImage!= nil && self.oriUserImage == nil) {
+                        doubleNeedPost = NO;
+                        [self postImage];
+                    }
+                    if (self.oriImage == nil && self.oriUserImage != nil) {
+                        doubleNeedPost = NO;
+                        [self postUserImage];
+                    }
+                    if (self.oriImage != nil && self.oriUserImage != nil) {
+                        doubleNeedPost = YES;
+                        [self postImage];
+                        [self postUserImage];
+                    }
+                }else{
+                    [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+                    [USER setObject:@"1" forKey:@"Menu"];
+                    [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+                    [self dismissViewControllerAnimated:NO completion:nil];
+                }
             }
         }
     }];
@@ -1083,17 +1140,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -ASI
 -(void)postImage
 {
-//    alert0.hidden = YES;
-    [alert0 setTitle:@"正在上传头像，请稍后..."];
-//    alert1 = [[UIAlertView alloc] initWithTitle:@"正在上传头像，请稍后..." message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-//    [alert1 show];
-//    [alert1 release];
-
+    //宠物头像上传
+    
     //网络上传
-    NSString * url = [NSString stringWithFormat:@"%@%@", TXAPI, [ControllerManager getSID]];
+    NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETTXAPI, [USER objectForKey:@"aid"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@--%@", code, url);
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:url]];
     _request.requestMethod = @"POST";
-    _request.timeOutSeconds = 60;
+    _request.timeOutSeconds = 30;
     
     NSData * data = UIImageJPEGRepresentation(self.oriImage, 0.1);
 //    NSLog(@"data:%@", data);
@@ -1107,14 +1162,35 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
 }
-
+-(void)postUserImage
+{
+    //网络上传
+    NSString * url = [NSString stringWithFormat:@"%@%@", TXAPI, [ControllerManager getSID]];
+    NSLog(@"user:%@", url);
+    _requestUser = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    _requestUser.requestMethod = @"POST";
+    _requestUser.timeOutSeconds = 30;
+    
+    NSData * data = UIImageJPEGRepresentation(self.oriUserImage, 0.1);
+    //    NSLog(@"data:%@", data);
+    //小图片用这种
+    //    [_request setPostValue:data forKey:@"tx"];
+    //大小图片用这种，比较保险
+    [_requestUser setData:data withFileName:@"userHeadImage.png" andContentType:@"image/jpg" forKey:@"tx"];
+    
+    _requestUser.delegate = self;
+    [_requestUser startAsynchronous];
+    //    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    
+}
 -(void)requestFinished:(ASIHTTPRequest *)request
 {
     [USER setObject:@"1" forKey:@"needRefresh"];
+    
 //    alert1.hidden = YES;
 //    [alert1 release];
 //    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [alert0 setTitle:@"注册成功"];
+//    [alert0 setTitle:@"注册成功"];
 //    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"注册成功" message:@"头像上传成功" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
 //    [alert show];
 //    [alert release];
@@ -1127,20 +1203,45 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     NSLog(@"%@",docDir);
     NSLog(@"saving png");
-    NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", docDir, [USER objectForKey:@"usr_id"]];
-    NSData * data = UIImagePNGRepresentation(self.oriImage);
-    BOOL a = [data writeToFile:pngFilePath atomically:YES];
-    NSLog(@"头像存放结果：%d", a);
+    if (request == _request) {
+        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", docDir, [USER objectForKey:@"aid"]];
+        NSData * data = UIImagePNGRepresentation(self.oriImage);
+        BOOL a = [data writeToFile:pngFilePath atomically:YES];
+        NSLog(@"头像存放结果：%d", a);
+    }else{
+        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_userHeadImage.png.png", docDir, [USER objectForKey:@"usr_id"]];
+        NSData * data = UIImagePNGRepresentation(self.oriUserImage);
+        BOOL a = [data writeToFile:pngFilePath atomically:YES];
+        NSLog(@"头像存放结果：%d", a);
+    }
     
     
-    [self login];
+//    [self login];
     [USER setObject:@"1" forKey:@"Menu"];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (doubleNeedPost) {
+        if (++postCount == 2) {
+            [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+            [USER setObject:@"1" forKey:@"Menu"];
+            [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+            [self dismissViewControllerAnimated:NO completion:nil];
+        }
+    }else{
+        [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+        [USER setObject:@"1" forKey:@"Menu"];
+        [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+    
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [alert0 setTitle:@"头像上传失败"];
+    if (request == _request) {
+        [MMProgressHUD dismissWithError:@"宠物头像上传失败" afterDelay:0.5];
+    }else{
+        [MMProgressHUD dismissWithError:@"用户头像上传失败" afterDelay:0.5];
+    }
+//    [alert0 setTitle:@"头像上传失败"];
 //    alert1.hidden = YES;
 //    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"头像上传失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
 //    [alert show];
@@ -1200,9 +1301,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)photoButtonClick2
 {
     isUserPhoto = 1;
-    [self photoButtonClick];
+    [self actionSheetResopnse];
 }
 -(void)photoButtonClick
+{
+    isUserPhoto = 0;
+    [self actionSheetResopnse];
+}
+-(void)actionSheetResopnse
 {
     UIActionSheet *sheet;
     
@@ -1220,7 +1326,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     [sheet showInView:self.view];
     [self completeButton];
-
 }
 
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -1273,7 +1378,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -imagePicker代理
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    self.oriImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    if (!isUserPhoto) {
+        self.oriImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    }else{
+        self.oriUserImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    }
+    
 //    [oriImage retain];
     
 //    NSData * data = UIImageJPEGRepresentation(oriImage, 0.1);
@@ -1285,7 +1395,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     void(^completion)(void)  = ^(void){
         if (isCamara) {
-            [self lauchEditorWithImage:self.oriImage];
+            if (!isUserPhoto) {
+                [self lauchEditorWithImage:self.oriImage];
+            }else{
+                [self lauchEditorWithImage:self.oriUserImage];
+            }
+            
         }else{
             [[self assetLibrary] assetForURL:assetURL resultBlock:^(ALAsset *asset) {
                 if (asset){
@@ -1420,25 +1535,27 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 // This is called when the user taps "Done" in the photo editor.
 - (void) photoEditor:(AFPhotoEditorController *)editor finishedWithImage:(UIImage *)image
 {
-    self.oriImage = image;
+    
     if (isUserPhoto) {
+        self.oriUserImage = image;
         [self dismissViewControllerAnimated:YES completion:^{
-            [photoButton2 setBackgroundImage:self.oriImage forState:UIControlStateNormal];
+            [photoButton2 setBackgroundImage:self.oriUserImage forState:UIControlStateNormal];
         }];
     }else{
+        self.oriImage = image;
         [self dismissViewControllerAnimated:YES completion:^{
             [photoButton setBackgroundImage:self.oriImage forState:UIControlStateNormal];
         }];
     }
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    isUserPhoto = NO;
+//    isUserPhoto = NO;
 }
 
 // This is called when the user taps "Cancel" in the photo editor.
 - (void) photoEditorCanceled:(AFPhotoEditorController *)editor
 {
-    isUserPhoto = NO;
+//    isUserPhoto = NO;
     [self dismissViewControllerAnimated:YES completion:nil];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 }

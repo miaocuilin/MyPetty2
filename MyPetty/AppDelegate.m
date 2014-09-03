@@ -130,13 +130,13 @@
 //    UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:info];
 //    ChooseFamilyViewController * info = [[ChooseFamilyViewController alloc] init];
 //    self.window.rootViewController = sideMenu;
-    ToolTipsViewController *toolTips =[[ToolTipsViewController alloc] init];
+//    ToolTipsViewController *toolTips =[[ToolTipsViewController alloc] init];
 //    UserInfoViewController * info = [[UserInfoViewController alloc] init];
 //    ShoutViewController *shout = [[ShoutViewController alloc] init];
 //    GiftShopViewController * info = [[GiftShopViewController alloc] init];
 //    RecordViewController * info = [[RecordViewController alloc] init];
-    CallViewController *call = [[CallViewController alloc] init];
-    WaterFlowLayout *layout = [[WaterFlowLayout alloc]init];
+//    CallViewController *call = [[CallViewController alloc] init];
+//    WaterFlowLayout *layout = [[WaterFlowLayout alloc]init];
 
     self.window.rootViewController = info;
 //    [menu release];

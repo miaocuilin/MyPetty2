@@ -134,9 +134,9 @@
 //    ShoutViewController *shout = [[ShoutViewController alloc] init];
 //    GiftShopViewController * info = [[GiftShopViewController alloc] init];
 //    RecordViewController * info = [[RecordViewController alloc] init];
-    CallViewController *call = [[CallViewController alloc] init];
-    
-    WaterViewController *water = [[WaterViewController alloc] init];
+//    CallViewController *call = [[CallViewController alloc] init];
+//    WaterFlowLayout *layout = [[WaterFlowLayout alloc]init];
+
     self.window.rootViewController = info;
 //    [menu release];
 //    [fvc release];

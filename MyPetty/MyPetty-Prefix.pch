@@ -61,10 +61,11 @@
 
     //获取图片未拼接的URL，后面需要加图片的名称
     #define IMAGEURL @"http://54.199.161.210/dc/images/upload/"
-    #define TXURL @"http://54.199.161.210/dc/images/tx/"
-
-    //图片、头像上传API
-    #define IMAGEAPI @"http://54.199.161.210/dc/index.php?r=image/uploadApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define TXURL @"http://54.199.161.210:8001/images/tx/tx_usr/"
+    #define USERTXURL @"http://54.199.161.210:8001/images/tx/tx_usr/"
+    #define PETTXURL @"http://54.199.161.210:8001/images/tx/tx_ani/"
+//图片、头像上传API
+    #define IMAGEAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
     #define TXAPI @"http://54.199.161.210/dc/index.php?r=user/txApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
     //获取用户信息API
@@ -75,12 +76,17 @@
     #define IMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     #define IMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
 
+    #define PETIMAGESAPI @"http://54.199.161.210:8001/index.php?r=animal/imagesApi&aid="
+    #define PETIMAGESAPI2 @"http://54.199.161.210:8001/index.php?r=animal/imagesApi&img_id="
+
     //获取其它用户照片API
     #define OTHERIMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&usr_id="
     #define OTHERIMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
 
     //随机照片API
-    #define RANDOMAPI @"http://54.199.161.210/dc/index.php?r=image/randomApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define RANDOMAPI @"http://54.199.161.210:8001/index.php?r=image/randomApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+
     #define RANDOMAPI2 @"http://54.199.161.210/dc/index.php?r=image/randomApi&img_id="
 
     //用户喜爱照片API
@@ -161,9 +167,20 @@
 
     //注销API
     #define DELETEAPI @"http://54.199.161.210/dc/index.php?r=site/clearUser&name="
-
+    //用户信息API
+    #define USERINFOAPI @"http://54.199.161.210:8001/index.php?r=user/infoApi&usr_id="
+#pragma mark - 宠物相关的API
+    //宠物礼物API
+    #define PETPRESENTSAPI @"http://54.199.161.210:8001/index.php?r=animal/itemsApi&aid="
+    //宠物成员API
+    #define PETMEMBERSAPI @"http://54.199.161.210:8001/index.php?r=animal/fansApi&aid="
+    #define  PETMEMBERSAPI2 @"http://54.199.161.210:8001/index.php?r=animal/fansApi&aid="
+    //宠物动态API
+    #define PETNEWSAPI @"http://54.199.161.210:8001/index.php?r=animal/newsApi&aid="
+    #define PETNEWSAPI2 @"http://54.199.161.210:8001/index.php?r=animal/newsApi&aid="
     //宠物信息API
     #define ANIMALINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/infoApi&aid="
-
+    //宠物头像
+    #define ANIMALTXAPI @"http://54.199.161.210:8001/index.php?r=animal/txApi&aid="
 
 #endif

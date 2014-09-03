@@ -10,7 +10,8 @@
 #import "MyCollectionViewLayout.h"
 #import "MyCollectionViewCell.h"
 #import "PhotoModel.h"
-@interface WaterViewController ()
+#import "ColllectionViewCell.h"
+@interface WaterViewController ()<WaterFLayoutDelegate>
 @property(nonatomic)CGFloat itemWidth;
 @property (nonatomic)int index;
 @end
@@ -24,7 +25,6 @@
     self.dataArray = [NSMutableArray array];
 
     [self loadData];
-    
    
 }
 - (void)viewDidAppear:(BOOL)animated
@@ -38,10 +38,13 @@
 
 //    MyCollectionViewLayout *layout = [[MyCollectionViewLayout alloc] init];
     UICollectionViewFlowLayout *grid = [[UICollectionViewFlowLayout alloc] init];
-    grid.itemSize = CGSizeMake(100.0, 100.0);
+    grid.itemSize = CGSizeMake(150.0, 0.0);
     grid.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
 //    grid.headerReferenceSize = CGSizeMake(320, 200);
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) collectionViewLayout:grid];
+    
+    MyCollectionViewLayout *mylayout = [[MyCollectionViewLayout alloc] init];
+    mylayout.delegate = self;
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) collectionViewLayout:mylayout];
     self.collectionView.delegate=self;
     self.collectionView.dataSource=self;
     self.collectionView.scrollEnabled=YES;
@@ -62,37 +65,26 @@
 }
 #pragma -mark UICollectionView delegate
 
-
-//根据传入的图片得到宽高
-
--(CGSize)getImgSize:(UIImage *)image
-
-{
-    //得到比例
-    float rate=(self.itemWidth/image.size.width);
-    return CGSizeMake(self.itemWidth, (image.size.height*rate));
-}
-
-//定义每个UICollectionView 的大小
-
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-
 {
-//    self.index = arc4random()%50+100;
-
-    return CGSizeMake(155, 100);
+   
+    float height = 0;
+    if (Height[indexPath.row] == 0) {
+        height = 100;
+    }else if(Height[indexPath.row] < 100){
+        height = 100;
+    }else if(Height[indexPath.row] < 300){
+        height = Height[indexPath.row]/1.3;
+    }else{
+        if (Height[indexPath.row]/4 < 100) {
+           height = 100;
+        }
+        height = Height[indexPath.row]/4;
+    }
+    return CGSizeMake(150, height);
 }
-
-
 //定义每个UICollectionView 的 margin
 
--(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insertForSectionAtIndex:(NSInteger)section
-
-{
-    return UIEdgeInsetsMake(0, 0, 0, 0);
-//    return UIEdgeInsetsMake(30, 30, 30, 30);
-    
-}
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 
 {
@@ -112,7 +104,7 @@
     MyCollectionViewCell *cell = (MyCollectionViewCell *)[collectionViews dequeueReusableCellWithReuseIdentifier:@"CollectionCell" forIndexPath:indexPath];
     cell.backgroundColor=[UIColor clearColor];
     //加载图片
-//    cell.imageView.image = img;
+
     PhotoModel * model = self.dataArray[indexPath.row];
     //图片存放到本地，从本地取
     NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -124,6 +116,8 @@
         UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
         if (image) {
             cell.imageView.image = image;
+            Height[indexPath.item] = image.size.height;
+
         }else{
             cell.imageView.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"20-1" ofType:@"png"]];
             [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -135,25 +129,16 @@
                     }else{
                         NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
                         //将下载的图片存放到本地
+                        Height[indexPath.item] = load.dataImage.size.height;
                         [load.data writeToFile:randomFilePath atomically:YES];
                         cell.imageView.image = load.dataImage;
                         [self.collectionView reloadData];
                     }
-                    //
-                    //                    [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
-                    //                    [self setFooterView];
-                }else{
-                    //            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"图片加载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-                    //            [alert show];
-                    //            [alert release];
                 }
             }];
         }
     }
-//    cell.imageView.image = [UIImage imageNamed:@"cat1.jpg"];
-    int index = arc4random()%100+100;
-    NSLog(@"index:%d,%d",index,indexPath.item);
-    cell.imageView.frame=CGRectMake(0, 0, 156, index);
+
     return cell;
     
 }

@@ -16,35 +16,9 @@
     self = [super initWithFrame:frame];
     if (self)
     {
-        self.imageView=[[UIImageView alloc]init];
+        self.imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
         [self addSubview:self.imageView];
-        self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-        //--------------
-        //透明栏
-        //--------------
-//        float h=30;
-//        float x=0;
-//        float w=CGRectGetWidth(frame);
-//        float y=0;
-//        self.bottomBar=[[UIImageView alloc]initWithFrame:CGRectMake(x, y, w, h)];
-//        [self addSubview:self.bottomBar];
-//        self.bottomBar.image=[UIImage imageNamed:@"cat2.jpg"];
-//        //产品名
-//        y=0;
-//        float tempH=h/2;
-//        x=3;
-//        //产品价格
-//        y+=tempH;
-//        
-//        self.priceLbl=[[UILabel alloc]initWithFrame:CGRectMake(x, y, w, tempH)];
-//        self.priceLbl.textColor=[UIColor whiteColor];
-//        
-//        self.priceLbl.backgroundColor=[UIColor clearColor];
-//        
-//        self. priceLbl.font=[UIFont systemFontOfSize:12];
-//        
-//        [self.bottomBar addSubview:self.priceLbl]; 
-        
+        self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
     }
     
     return self;

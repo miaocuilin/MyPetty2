@@ -31,43 +31,14 @@
     // Do any additional setup after loading the view.
     [self loadAnimalInfoData];
     [self createMenu];
-//    [self getUserData];
 }
 
--(void)getUserData
-{
-    NSString * url = [NSString stringWithFormat:@"%@%@", INFOAPI,[ControllerManager getSID]];
-    NSLog(@"url:%@",url);
-    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        if (isFinish) {
-            if ([[load.dataDict objectForKey:@"errorCode"] intValue] == 2) {
-                //SID过期,需要重新登录获取SID
-//                [self getUserData];
-                return;
-            }else{
-                //SID未过期，直接获取用户数据
-                NSLog(@"用户数据：%@", load.dataDict);
-                NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-                [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
-                //                [USER setObject:[dict objectForKey:@"code"] forKey:@"code"];
-                [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
-                [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
-                //                [USER setObject:[dict objectForKey:@"type"] forKey:@"type"];
-                [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
-                [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
-                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
-                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
-                }
-                //                [self dismissViewControllerAnimated:YES completion:nil];
-            }
-        }
-    }];
-}
 - (void)loadAnimalInfoData
 {
     NSString *aid = [USER objectForKey:@"aid"];
     NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",aid]];
-NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=2bnam089fro8vopklg1dv144o6",ANIMALINFOAPI,aid,animalInfoSig];
+NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALINFOAPI,aid,animalInfoSig,[ControllerManager getSID]];
+    NSLog(@"宠物信息API:%@",animalInfo);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalInfo Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"宠物信息：%@",load.dataDict);
         if (isFinish) {

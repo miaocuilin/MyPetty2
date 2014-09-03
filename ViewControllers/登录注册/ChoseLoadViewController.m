@@ -297,6 +297,7 @@
                 [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
                 [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
                 [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
+                [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
 //                [USER setObject:[dict objectForKey:@"type"] forKey:@"type"];
                 if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
                     [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];

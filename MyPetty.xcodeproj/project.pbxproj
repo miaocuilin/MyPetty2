@@ -313,6 +313,7 @@
 		493DEF6719AED166009D0027 /* UIWindow+MotionEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 493DEF6619AED166009D0027 /* UIWindow+MotionEvent.m */; };
 		493DEF6919AF05C7009D0027 /* nochance.png in Resources */ = {isa = PBXBuildFile; fileRef = 493DEF6819AF05C7009D0027 /* nochance.png */; };
 		493DEF6C19AF1A32009D0027 /* ShoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 493DEF6B19AF1A32009D0027 /* ShoutViewController.m */; };
+		4945EF6A19B73D760041E8F3 /* CatNomenklatura.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4945EF6919B73D760041E8F3 /* CatNomenklatura.plist */; };
 		49500A2919AD85F700D175D8 /* TouchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49500A2819AD85F700D175D8 /* TouchViewController.m */; };
 		49500A2D19ADA1AC00D175D8 /* HYScratchCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 49500A2C19ADA1AC00D175D8 /* HYScratchCardView.m */; };
 		49500A3119ADA51D00D175D8 /* product_bg1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49500A2E19ADA51D00D175D8 /* product_bg1.png */; };
@@ -356,7 +357,6 @@
 		496CF22E19A49ADE0081BF5E /* MassWatchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 496CF22D19A49ADE0081BF5E /* MassWatchCell.m */; };
 		49A1A1E119A9D76F00213C04 /* SAStepperControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A1A1E019A9D76F00213C04 /* SAStepperControl.m */; };
 		49A7240319B484FC000D7826 /* ColllectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A7240019B484FC000D7826 /* ColllectionViewCell.m */; };
-		49A7240419B484FC000D7826 /* WaterFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A7240219B484FC000D7826 /* WaterFlowLayout.m */; };
 		49A799AA19B566E3002411FC /* WaterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799A919B566E3002411FC /* WaterViewController.m */; };
 		49A799FE19B5A075002411FC /* MyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799FB19B5A075002411FC /* MyCollectionViewCell.m */; };
 		49A799FF19B5A075002411FC /* MyCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799FD19B5A075002411FC /* MyCollectionViewLayout.m */; };
@@ -977,6 +977,7 @@
 		493DEF6819AF05C7009D0027 /* nochance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nochance.png; sourceTree = "<group>"; };
 		493DEF6A19AF1A32009D0027 /* ShoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShoutViewController.h; sourceTree = "<group>"; };
 		493DEF6B19AF1A32009D0027 /* ShoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShoutViewController.m; sourceTree = "<group>"; };
+		4945EF6919B73D760041E8F3 /* CatNomenklatura.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CatNomenklatura.plist; sourceTree = "<group>"; };
 		49500A2719AD85F700D175D8 /* TouchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchViewController.h; sourceTree = "<group>"; };
 		49500A2819AD85F700D175D8 /* TouchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchViewController.m; sourceTree = "<group>"; };
 		49500A2B19ADA1AC00D175D8 /* HYScratchCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYScratchCardView.h; sourceTree = "<group>"; };
@@ -1032,8 +1033,6 @@
 		49A1A1E019A9D76F00213C04 /* SAStepperControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SAStepperControl.m; sourceTree = "<group>"; };
 		49A723FF19B484FC000D7826 /* ColllectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColllectionViewCell.h; sourceTree = "<group>"; };
 		49A7240019B484FC000D7826 /* ColllectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColllectionViewCell.m; sourceTree = "<group>"; };
-		49A7240119B484FC000D7826 /* WaterFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterFlowLayout.h; sourceTree = "<group>"; };
-		49A7240219B484FC000D7826 /* WaterFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterFlowLayout.m; sourceTree = "<group>"; };
 		49A799A819B566E3002411FC /* WaterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterViewController.h; sourceTree = "<group>"; };
 		49A799A919B566E3002411FC /* WaterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterViewController.m; sourceTree = "<group>"; };
 		49A799FA19B5A075002411FC /* MyCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyCollectionViewCell.h; path = ../MyCollectionViewCell.h; sourceTree = "<group>"; };
@@ -2401,8 +2400,6 @@
 				49A799FD19B5A075002411FC /* MyCollectionViewLayout.m */,
 				49A723FF19B484FC000D7826 /* ColllectionViewCell.h */,
 				49A7240019B484FC000D7826 /* ColllectionViewCell.m */,
-				49A7240119B484FC000D7826 /* WaterFlowLayout.h */,
-				49A7240219B484FC000D7826 /* WaterFlowLayout.m */,
 			);
 			path = FullyLoaded;
 			sourceTree = "<group>";
@@ -2423,6 +2420,7 @@
 				6020BD6719987DC3002C74FA /* PetInfoViewController.m */,
 				6020BD6F1998A442002C74FA /* UserInfoViewController.h */,
 				6020BD701998A442002C74FA /* UserInfoViewController.m */,
+				4945EF6919B73D760041E8F3 /* CatNomenklatura.plist */,
 			);
 			path = "宠物资料";
 			sourceTree = "<group>";
@@ -2784,6 +2782,7 @@
 				6042F59E1994D4B100CA2A0E /* menu-13.png in Resources */,
 				091EAD79194ECEA200B0DE41 /* bother3_2.png in Resources */,
 				09D98A6E1935D4E900C83C4B /* 1-3.png in Resources */,
+				4945EF6A19B73D760041E8F3 /* CatNomenklatura.plist in Resources */,
 				096520D91964388700A8186D /* DoneDown.png in Resources */,
 				09D98A821935D4E900C83C4B /* 14-9.png in Resources */,
 				600376691990AB2500F3107F /* menu-11.png in Resources */,
@@ -3173,7 +3172,6 @@
 				496CF22819A4908D0081BF5E /* IQKeyboardManager.m in Sources */,
 				09C9DFC7197CF8E400198BDE /* AFPopupView.m in Sources */,
 				09E2C89E193740CE002D9E65 /* ASINetworkQueue.m in Sources */,
-				49A7240419B484FC000D7826 /* WaterFlowLayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

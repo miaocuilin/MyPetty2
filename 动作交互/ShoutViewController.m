@@ -459,10 +459,8 @@
 {
     [super viewDidLoad];
     [self backgroundView];
+    
     // Do any additional setup after loading the view.
-    //    [self createButton];
-    
-    
 }
 - (void)backgroundView
 {

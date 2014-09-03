@@ -179,7 +179,7 @@
     NSLog(@"randomAPI:%@",[NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]]);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-//            NSLog(@"dataDict:%@", load.dataDict);
+            NSLog(@"宇宙广场数据:%@", load.dataDict);
             [self.dataArray removeAllObjects];
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {

@@ -16,54 +16,95 @@
 #import "PopularityListViewController.h"
 #import "ContributionViewController.h"
 @interface PetInfoViewController ()
-
+{
+    NSDictionary *petInfoDict;
+}
 @end
 
 @implementation PetInfoViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.photosDataArray = [NSMutableArray arrayWithCapacity:0];
-    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
     
     [self loadKingData];
-    [self loadPhotoData];
+//    [self loadPhotoData];
     [self createScrollView];
     [self createFakeNavigation];
 //    [self createHeader];
     [self createTableView];
-    
+    [self loadKingDynamicData];
+    [self loadKingMembersData];
+    [self loadKingPresentsData];
 //    [self.view bringSubviewToFront:self.menuBgBtn];
 //    [self.view bringSubviewToFront:self.menuBgView];
 }
-#pragma mark -请求国王数据
+
+#pragma mark - 国王动态数据
+- (void)loadKingDynamicData
+{
+    NSString *animalNewsSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *animalNewsString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI,[USER objectForKey:@"aid"],animalNewsSig, [ControllerManager getSID]];
+    NSLog(@"国王动态API:%@",animalNewsString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalNewsString Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"国王动态数据：%@",load.dataDict);
+        }
+    }];
+    [request release];
+}
+#pragma mark - 国家成员数据
+- (void)loadKingMembersData
+{
+    NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI,[USER objectForKey:@"aid"],animalMembersSig, [ControllerManager getSID]];
+    NSLog(@"国王成员API:%@",animalMembersString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalMembersString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        if (isFinish) {
+            NSLog(@"国王成员数据：%@",load.dataDict);
+        }
+    }];
+    [request release];
+    
+}
+#pragma mark - 国王礼物数据
+
+- (void)loadKingPresentsData
+{
+    NSString *animalPresentsSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *animalPresentsString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETPRESENTSAPI,[USER objectForKey:@"aid"],animalPresentsSig, [ControllerManager getSID]];
+    NSLog(@"国王礼物API:%@",animalPresentsString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalPresentsString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        if (isFinish) {
+            
+            NSLog(@"国王礼物数据：%@",load.dataDict);
+        }
+    }];
+    [request release];
+}
+
+#pragma mark - 请求国王数据
 -(void)loadKingData
 {
     NET = YES;
-    
-    NSLog(@"%@", [NSString stringWithFormat:@"%@%@", INFOAPI, [ControllerManager getSID]]);
-    [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", INFOAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *animalInfoAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ANIMALINFOAPI,[USER objectForKey:@"aid"],animalInfoSig, [ControllerManager getSID]];
+    NSLog(@"国王信息API:%@", animalInfoAPI);
+    [[httpDownloadBlock alloc] initWithUrlStr:animalInfoAPI Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"%@", load.dataDict);
-            [self.userDataArray removeAllObjects];
-            
-            NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-            InfoModel * model = [[InfoModel alloc] init];
-            [model setValuesForKeysWithDictionary:dict];
-            [self.userDataArray addObject:model];
-            [model release];
-            NSLog(@"%@", [self.userDataArray[0] tx]);
+            NSLog(@"国王信息:%@", load.dataDict);
+            petInfoDict = [load.dataDict objectForKey:@"data"];
+//            [self.userDataArray removeAllObjects];
+//            
+//            NSDictionary * dict = [load.dataDict objectForKey:@"data"] ;
+//            InfoModel * model = [[InfoModel alloc] init];
+//            [model setValuesForKeysWithDictionary:dict];
+//            [self.userDataArray addObject:model];
+//            [model release];
+//            NSLog(@"宠物头像：%@", [self.userDataArray[0] tx]);
 
             [self createHeader];
             [self.view bringSubviewToFront:navView];
@@ -79,13 +120,16 @@
         }
     }];
 }
-
+#pragma mark - 国王图片数据
 -(void)loadPhotoData
 {
     NET = YES;
-    [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGESAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    NSString *petImagesSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *petImageAPIString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETIMAGESAPI,[USER objectForKey:@"aid"],petImagesSig,[ControllerManager getSID]];
+    NSLog(@"宠物照片数据API:%@",petImageAPIString);
+    [[httpDownloadBlock alloc] initWithUrlStr:petImageAPIString Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"%@", load.dataDict);
+            NSLog(@"宠物照片数据%@", load.dataDict);
             [self.photosDataArray removeAllObjects];
             
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
@@ -293,20 +337,21 @@
     //
     bgImageView1 = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
     /************************/
-    NSString * txFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.userDataArray[0] tx]]];
-    NSLog(@"%@", txFilePath);
-    UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txFilePath]];
+    NSString * txPetFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
+    NSLog(@"本地宠物头像路径：%@", txPetFilePath);
+    UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txPetFilePath]];
     if (image) {
         bgImageView1.image = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
     }else{
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TXURL, [self.userDataArray[0] tx]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+
+        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 //本地目录，用于存放favorite下载的原图
-                NSString * docDir = DOCDIR;
-                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.userDataArray[0] tx]]];
-                //将下载的图片存放到本地
-                [load.data writeToFile:txFilePath atomically:YES];
-                bgImageView1.image = [load.dataImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.userDataArray[0] tx]]];
+                    //将下载的图片存放到本地
+                    [load.data writeToFile:txFilePath atomically:YES];
+                    bgImageView1.image = [load.dataImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
             }else{
                 NSLog(@"download failed");
             }
@@ -329,14 +374,20 @@
     if (image) {
         headerView.image = image;
     }else{
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TXURL, [self.userDataArray[0] tx]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 //本地目录，用于存放favorite下载的原图
-                NSString * docDir = DOCDIR;
-                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.userDataArray[0] tx]]];
-                //将下载的图片存放到本地
-                [load.data writeToFile:txFilePath atomically:YES];
-                headerView.image = load.dataImage;
+                NSLog(@"宠物头像：%@",load.dataImage);
+                if (load.dataImage == NULL) {
+                    headerView.image = [UIImage imageNamed:@"20-1.png"];
+                }else{
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
+                    //将下载的图片存放到本地
+                    [load.data writeToFile:txFilePath atomically:YES];
+                    headerView.image = load.dataImage;
+                }
+                
             }else{
                 NSLog(@"download failed");
             }
@@ -358,20 +409,22 @@
     [bgView addSubview:name];
     
     UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 14, 17) ImageName:@"woman"];
-    if ([[self.userDataArray[0] gender] intValue] == 1) {
+    if ((int)[petInfoDict objectForKey:@"gender"] == 1) {
         sex.image = [UIImage imageNamed:@"man.png"];
     }
     [bgView addSubview:sex];
     
     //
-    UILabel * cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, 130, 20) Font:14 Text:[NSString stringWithFormat:@"苏格兰折耳猫 | %@岁", [self.userDataArray[0] age]]];
+    int age = [[petInfoDict objectForKey:@"age"] intValue];
+
+    UILabel * cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, 130, 20) Font:14 Text:[NSString stringWithFormat:@"苏格兰折耳猫 | %d岁", age]];
     cateNameLabel.font = [UIFont boldSystemFontOfSize:13];
 //    cateNameLabel.alpha = 0.65;
     [bgView addSubview:cateNameLabel];
     
     /*****************************/
-    int a = [[self.userDataArray[0] type] intValue];
-    NSLog(@"%@--%d", [self.userDataArray[0] type], a);
+    int a = [[petInfoDict objectForKey:@"type"] intValue];
+    NSLog(@"%@--%d", [petInfoDict objectForKey:@"type"], a);
     NSString * cateName = nil;
     
     if (a/100 == 1) {
@@ -393,7 +446,7 @@
                 //本地及内存存储
                 [data writeToFile:path atomically:YES];
                 [USER setObject:data forKey:@"CateNameList"];
-                int a = [[self.userDataArray[0] type] intValue];
+                int a = [[petInfoDict objectForKey:@"type"] intValue];
                 NSString * cateName = nil;
                 
                 if (a/100 == 1) {
@@ -405,26 +458,52 @@
                 }else{
                     cateName = @"未知物种";
                 }
-                cateNameLabel.text = [NSString stringWithFormat:@"%@ | %@岁", cateName, [self.userDataArray[0] age]];
+                cateNameLabel.text = [NSString stringWithFormat:@"%@ | %@岁", cateName, [petInfoDict objectForKey:@"age"]];
             }
         }];
         
     }else{
-        cateNameLabel.text = [NSString stringWithFormat:@"%@ | %@岁", cateName, [self.userDataArray[0] age]];
+        cateNameLabel.text = [NSString stringWithFormat:@"%@ | %@岁", cateName, [petInfoDict objectForKey:@"age"]];
     }
     /*****************************/
-    //
-    NSString * str2= @"祭司 — Anna";
+    NSString *str2 = [NSString stringWithFormat:@"祭司 - %@",[petInfoDict objectForKey:@"u_name"]];
+//    NSString *str2 = [NSString stringWithFormat:@"祭司 - %@",[self.userDataArray[0] u_name]];
     CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:15 Text:str2];
 //    positionAndUserName.font = [UIFont boldSystemFontOfSize:15];
     [bgView addSubview:positionAndUserName];
     
     //用户头像，点击进入个人中心
-    UIButton * userImageBtn = [MyControl createButtonWithFrame:CGRectMake(positionAndUserName.frame.origin.x+positionAndUserName.frame.size.width+5, 160/2, 30, 30) ImageName:@"cat1.jpg" Target:self Action:@selector(jumpToUserInfo) Title:nil];
+    UIButton * userImageBtn = [MyControl createButtonWithFrame:CGRectMake(positionAndUserName.frame.origin.x+positionAndUserName.frame.size.width+5, 160/2, 30, 30) ImageName:@"" Target:self Action:@selector(jumpToUserInfo) Title:nil];
     userImageBtn.layer.cornerRadius = 15;
     userImageBtn.layer.masksToBounds = YES;
     [bgView addSubview:userImageBtn];
+    
+    NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"u_tx"]]];
+    NSLog(@"本地用户头像路径：%@", txUserFilePath);
+    UIImage *User_image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txUserFilePath]];
+    if (image) {
+        [userImageBtn setBackgroundImage:User_image forState:UIControlStateNormal];
+    }else{
+        
+        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"u_tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                if (load.dataImage == NULL) {
+                    [userImageBtn setBackgroundImage:[UIImage imageNamed:@"20-1.png"] forState:UIControlStateNormal];
+                }else{
+                    //本地目录，用于存放favorite下载的原图
+                    NSString * docDir = DOCDIR;
+                    NSString * txUserFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"u_tx"]]];
+                    //将下载的图片存放到本地
+                    [load.data writeToFile:txUserFilePath atomically:YES];
+                    [userImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                }
+            }else{
+                NSLog(@"download failed");
+            }
+        }];
+    }
+
     
     //123  164
     UIImageView * flagImageView = [MyControl createImageViewWithFrame:CGRectMake(240, 0, 124/2, 164/2) ImageName:@"flag.png"];
@@ -443,7 +522,9 @@
     [flagImageView addSubview:RQList];
     
     //人气、成员、粉丝数
-    NSString * dataStr = [NSString stringWithFormat:@"总人气 %d  |   成员 123  |   粉丝 %d", [[self.userDataArray[0] exp] intValue], [[self.userDataArray[0] follower] intValue]];
+    int t_rq = [[petInfoDict objectForKey:@"t_rq"] intValue];
+    int fans = [[petInfoDict objectForKey:@"fans"] intValue];
+    NSString * dataStr = [NSString stringWithFormat:@"总人气 %d  |   成员 123  |   粉丝 %d",t_rq,fans];
     UILabel * dataLabel = [MyControl createLabelWithFrame:CGRectMake(0, 130, 320, 15) Font:13 Text:dataStr];
     dataLabel.textAlignment = NSTextAlignmentCenter;
     [bgView addSubview:dataLabel];

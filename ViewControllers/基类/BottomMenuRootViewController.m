@@ -125,6 +125,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }
     
     NSLog(@"1");
+    NSLog(@"摇一摇");
     ShakeViewController *shake = [[ShakeViewController alloc] init];
     [self addChildViewController:shake];
     [shake release];
@@ -143,6 +144,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }
     
     NSLog(@"2");
+    NSLog(@"送礼物");
     ToolTipsViewController *tool = [[ToolTipsViewController alloc] init];
     [self addChildViewController:tool];
     [tool release];
@@ -159,6 +161,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }
     
     NSLog(@"3");
+    NSLog(@"录音和摸一摸");
 //    CallViewController *call = [[CallViewController alloc] init];
 //    [self addChildViewController:call];
 //    [call release];
@@ -190,6 +193,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     if (![ControllerManager getIsSuccess]) {
         return;
     }
+    NSLog(@"遛一遛");
     
     NSLog(@"4");
     TouchViewController *touch = [[TouchViewController alloc] init];

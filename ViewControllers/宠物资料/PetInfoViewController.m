@@ -343,7 +343,8 @@
     if (image) {
         bgImageView1.image = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
     }else{
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userDataArray[0] tx]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+
+        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 //本地目录，用于存放favorite下载的原图
                     NSString * docDir = DOCDIR;
@@ -373,7 +374,7 @@
     if (image) {
         headerView.image = image;
     }else{
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userDataArray[0] tx]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 //本地目录，用于存放favorite下载的原图
                 NSLog(@"宠物头像：%@",load.dataImage);

@@ -520,6 +520,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else{
         [_request setPostValue:@"" forKey:@"comment"];
     }
+//    [_request setPostValue:@"" forKey:@"comments"];
+//
     [_request setPostValue:@"" forKey:@"topic_id"];
     [_request setPostValue:@"" forKey:@"topic_name"];
     [_request setPostValue:@"" forKey:@"relates"];

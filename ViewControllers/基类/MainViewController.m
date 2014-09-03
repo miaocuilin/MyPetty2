@@ -19,7 +19,7 @@
 #import "WaterViewController.h"
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
-@interface MainViewController ()
+@interface MainViewController () <AFPhotoEditorControllerDelegate>
 
 @property (nonatomic, strong) ALAssetsLibrary * assetLibrary;
 @property (nonatomic, strong) NSMutableArray * sessions;
@@ -36,6 +36,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     return self;
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    self.menuBtn.selected = NO;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -53,6 +57,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     // Start the Aviary Editor OpenGL Load
     [AFOpenGLManager beginOpenGLLoad];
     
+    segmentClickIndex = 1;
     [self createScrollView];
     [self createFakeNavigation];
     [self createViewControllers];
@@ -144,7 +149,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [self addChildViewController:vc];
         [self.view addSubview:vc.view];
         [vc createLoginAlertView];
-//        [vc release];
+//        [vc autorelease];
     }
 }
 -(void)createScrollView
@@ -190,7 +195,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)segmentClick:(UISegmentedControl *)seg
 {
+    if (sc.selectedSegmentIndex == 2 && ![ControllerManager getIsSuccess]) {
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+        
+        sc.selectedSegmentIndex = segmentClickIndex;
+        return;
+    }
+
     int a = sc.selectedSegmentIndex;
+    segmentClickIndex = a;
     if (a == 0) {
         [UIView animateWithDuration:0.3 animations:^{
             sv.contentOffset = CGPointMake(0, 0);
@@ -204,6 +220,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             sv.contentOffset = CGPointMake(320*2, 0);
         }];
     }
+    sc.selectedSegmentIndex = segmentClickIndex;
 }
 #pragma mark - scrollViewDelegate
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -221,6 +238,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.view bringSubviewToFront:sc];
         }
     }else if(a == 320*2){
+        if (![ControllerManager getIsSuccess]) {
+            sv.contentOffset = CGPointMake(320, 0);
+            //提示注册
+            ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+            [self addChildViewController:vc];
+            [self.view addSubview:vc.view];
+            [vc createLoginAlertView];
+            return;
+        }
         if (isCreated[2] == NO) {
             isCreated[2] = YES;
             FavoriteViewController * fvc = [[FavoriteViewController alloc] init];
@@ -246,6 +272,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.view bringSubviewToFront:self.menuBgView];
         }
     }else if(scrollView.contentOffset.x == 320*2){
+        if (![ControllerManager getIsSuccess]) {
+            sv.contentOffset = CGPointMake(320, 0);
+            //提示注册
+            ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+            [self addChildViewController:vc];
+            [self.view addSubview:vc.view];
+            [vc createLoginAlertView];
+            return;
+        }
         if (isCreated[2] == NO) {
             isCreated[2] = YES;
             FavoriteViewController * fvc = [[FavoriteViewController alloc] init];
@@ -263,23 +298,33 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //===============================================//
 -(void)cameraClick
 {
-    if (sheet == nil) {
-        // 判断是否支持相机
-        if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-        {
-            sheet  = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
-        }
-        else {
+    if ([ControllerManager getIsSuccess]) {
+        if (sheet == nil) {
+            // 判断是否支持相机
+            if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+            {
+                sheet  = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
+            }
+            else {
+                
+                sheet = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"从相册选择", nil];
+            }
             
-            sheet = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"从相册选择", nil];
+            sheet.tag = 255;
+            
+        }else{
+            
         }
-        
-        sheet.tag = 255;
-        
+        [sheet showInView:self.view];
     }else{
-        
+        //提示注册
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+//        [vc autorelease];
     }
-    [sheet showInView:self.view];
+    
 }
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {

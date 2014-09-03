@@ -47,29 +47,40 @@
     #define LoadingFailed [MMProgressHUD dismissWithError:@"加载失败" afterDelay:0.5];
 
     #define SHOWMENU JDSideMenu * menu = [ControllerManager shareJDSideMenu];[menu showMenuAnimated:YES];
-//    #define HIDEMENU JDSideMenu * menu = [ControllerManager shareJDSideMenu];[menu hideMenuAnimated:YES];
+
     //IP头API
     #define IPURL @"http://54.199.161.210/dc/index.php"
     #define IPURL2 @"http://54.199.161.210:8001/index.php"
 
     //注册API
-//    #define REGISTERAPI @"http://54.199.161.210/dc/index.php?r=user/registerApi&age=&code=&gender=&type=&wechat=&weibo=&sig=%@&SID=%@"
     #define REGISTERAPI @"http://54.199.161.210:8001/index.php?r=user/registerApi&age=&code=&gender=&type=&wechat=&weibo=&sig=%@&SID=%@"
     //登录API
-//    #define LOGINAPI [NSString stringWithFormat:@"http://54.199.161.210/dc/index.php?r=user/loginApi&uid=%@&sig=%@", [OpenUDID value], [MyMD5 md5:[NSString stringWithFormat:@"uid=%@dog&cat", [OpenUDID value]]]]
     #define LOGINAPI @"http://54.199.161.210:8001/index.php?r=user/loginApi&planet="
 
     //获取图片未拼接的URL，后面需要加图片的名称
-    #define IMAGEURL @"http://54.199.161.210/dc/images/upload/"
-    #define TXURL @"http://54.199.161.210/dc/images/tx/"
+    #define IMAGEURL @"http://54.199.161.210:8001/images/upload/"
+    #define USERTXURL @"http://54.199.161.210:8001/images/tx/tx_usr/"
+    #define PETTXURL @"http://54.199.161.210:8001/images/tx/tx_ani/"
 
     //图片、头像上传API
-    #define IMAGEAPI @"http://54.199.161.210/dc/index.php?r=image/uploadApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    #define TXAPI @"http://54.199.161.210/dc/index.php?r=user/txApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define PETIMAGEAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
+
+    #define IMAGEUPLOADAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
+    //IMAGEUPLOAD需要POST的数据：comment topic_id(可留空), topic_name, relates(usr_id1,usr_id2...)"
+
+    //获取头像API
+    #define TXAPI @"http://54.199.161.210:8001/index.php?r=user/txApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define PETTXAPI @"http://54.199.161.210:8001/index.php?r=animal/txApi&aid="
+
 
     //获取用户信息API
-//    #define INFOAPI @"http://54.199.161.210/dc/index.php?r=user/infoApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     #define INFOAPI @"http://54.199.161.210:8001/index.php?r=user/infoApi&usr_id=&sig=c47578e3a7aec3b5de510773bfdb9011&SID="
+
+    //其它用户信息
+    #define USERINFOAPI @"http://54.199.161.210:8001/index.php?r=user/infoApi&usr_id="
+
+    //获取宠物信息API
+    #define PETINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/infoApi&aid="
 
     //获取用户照片API
     #define IMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
@@ -80,18 +91,17 @@
     #define OTHERIMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
 
     //随机照片API
-    #define RANDOMAPI @"http://54.199.161.210/dc/index.php?r=image/randomApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    #define RANDOMAPI2 @"http://54.199.161.210/dc/index.php?r=image/randomApi&img_id="
+    #define RANDOMAPI @"http://54.199.161.210:8001/index.php?r=image/randomApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define RANDOMAPI2 @"http://54.199.161.210:8001/index.php?r=image/randomApi&img_id="
 
     //用户喜爱照片API
     #define FAVORITEAPI @"http://54.199.161.210/dc/index.php?r=image/favoriteApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     #define FAVORITEAPI2 @"http://54.199.161.210/dc/index.php?r=image/favoriteApi&img_id="
 
     //照片信息
-    #define IMAGEINFOAPI @"http://54.199.161.210/dc/index.php?r=image/infoApi&img_id="
+    #define IMAGEINFOAPI @"http://54.199.161.210:8001/index.php?r=image/infoApi&img_id="
 
-    //其它用户信息
-    #define USERINFOAPI @"http://54.199.161.210/dc/index.php?r=user/otherApi&usr_id="
+
 
     //加关注API
     #define FOLLOWAPI @"http://54.199.161.210/dc/index.php?r=user/followApi&usr_id="
@@ -154,12 +164,12 @@
     #define DELMESSAGEAPI @"http://54.199.161.210/dc/index.php?r=mail/deleteApi&mail_id="
 
     //评论 POST方法  参数img_id 和 body
-    #define COMMENTAPI @"http://54.199.161.210/dc/index.php?r=image/commentApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define COMMENTAPI @"http://54.199.161.210:8001/index.php?r=image/commentApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
     //获取活动数和消息数
     #define ACTIVITYANDNOTIFYAPI @"http://54.199.161.210/dc/index.php?r=user/notifyApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
     //注销API
-    #define DELETEAPI @"http://54.199.161.210/dc/index.php?r=site/clearUser&name="
+    #define DELETEAPI @"http://54.199.161.210:8001/index.php?r=site/clearUser&name="
 
 #endif

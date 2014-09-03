@@ -239,7 +239,7 @@
 {
     StartLoading;
     NSString * code = [NSString stringWithFormat:@"planet=%d&uid=%@dog&cat", planet, [OpenUDID value]];
-    NSString * url = [NSString stringWithFormat:@"%@%d&uid=%@&sig=%@", LOGINAPI, planet, [OpenUDID value], [MyMD5 md5:code]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&uid=%@&sig=%@&", LOGINAPI, planet, [OpenUDID value], [MyMD5 md5:code]];
     NSLog(@"login-url:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){
@@ -259,6 +259,7 @@
                 LoadingSuccess;
                 //跳转到主页
                 JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+                sideMenu.modalTransitionStyle = 1;
                 [self presentViewController:sideMenu animated:YES completion:nil];
             }
         }else{
@@ -278,10 +279,8 @@
 #pragma mark -获取用户数据
 -(void)getUserData
 {
-    
     NSString * url = [NSString stringWithFormat:@"%@%@", INFOAPI,[ControllerManager getSID]];
-    NSLog(@"%@", url);
-    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             if ([[load.dataDict objectForKey:@"errorCode"] intValue] == 2) {
                 //SID过期,需要重新登录获取SID
@@ -291,25 +290,32 @@
             }else{
                 //SID未过期，直接获取用户数据
                 NSLog(@"用户数据：%@", load.dataDict);
-                NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-                [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
-//                [USER setObject:[dict objectForKey:@"code"] forKey:@"code"];
-                [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
-                [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
-                [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
-//                [USER setObject:[dict objectForKey:@"type"] forKey:@"type"];
-                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
-                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
-                }
-                
-                LoadingSuccess;
-                //跳转到主页
-                JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
-                [self presentViewController:sideMenu animated:YES completion:nil];
+//                NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+//                
+//                [USER setObject:[dict objectForKey:@"a_name"] forKey:@"a_name"];
+//                if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
+//                    [USER setObject:[dict objectForKey:@"a_tx"] forKey:@"a_tx"];
+//                }
+//                [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
+//                [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
+//                [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
+//                [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
+//                [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];
+//                [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
+//                [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
+//                
+//                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
+//                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
+//                }
+                JDSideMenu * menu = [ControllerManager shareJDSideMenu];
+                menu.modalTransitionStyle = 1;
+                [self presentViewController:menu animated:YES completion:nil];
             }
         }
     }];
+    [request release];
 }
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

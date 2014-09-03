@@ -298,6 +298,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     int s = [[USER objectForKey:@"sina"] intValue];
     int w = [[USER objectForKey:@"weChat"] intValue];
     
+    [self postData:self.oriImage];
+    
     if (s == 1 && w == 0) {
         BOOL isOauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
 //        if (isOauth) {
@@ -313,7 +315,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-                [self postData:self.oriImage];
+//                [self postData:self.oriImage];
             }
             
         }];
@@ -324,7 +326,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             NSLog(@"weChat-response:%@", response);
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-                [self postData:self.oriImage];
+//                [self postData:self.oriImage];
             }
         }];
 
@@ -344,12 +346,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 
-                [self postData:self.oriImage];
+//                [self postData:self.oriImage];
             }
             
         }];
     }else{
-        [self postData:self.oriImage];
+//        [self postData:self.oriImage];
     }
     
 }
@@ -478,8 +480,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -ASI
 -(void)postData:(UIImage *)image
 {
+    NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]];
     //网络上传
-    NSString * url = [NSString stringWithFormat:@"%@%@", IMAGEAPI, [ControllerManager getSID]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETIMAGEAPI, [USER objectForKey:@"aid"], [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"postUrl:%@", url);
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:url]];
     _request.requestMethod = @"POST";
@@ -495,6 +498,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else{
         [_request setPostValue:@"" forKey:@"comment"];
     }
+    [_request setPostValue:@"" forKey:@"topic_id"];
+    [_request setPostValue:@"" forKey:@"topic_name"];
+    [_request setPostValue:@"" forKey:@"relates"];
 //    NSLog(@"%@", _textView.text);
     _request.delegate = self;
     [_request startAsynchronous];

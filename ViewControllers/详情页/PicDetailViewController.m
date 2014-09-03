@@ -9,6 +9,7 @@
 #import "PicDetailViewController.h"
 #import "PresentDetailViewController.h"
 #import "IQKeyboardManager.h"
+#import "PetInfoModel.h"
 @interface PicDetailViewController ()
 
 @end
@@ -35,6 +36,7 @@
     self.nameArray = [NSMutableArray arrayWithCapacity:0];
     self.bodyArray = [NSMutableArray arrayWithCapacity:0];
     self.createTimeArray = [NSMutableArray arrayWithCapacity:0];
+//    self.petInfoArray = [NSMutableArray arrayWithCapacity:0];
     
     [self createIQ];
     [self loadData];
@@ -75,6 +77,7 @@
             NSLog(@"%@", load.dataDict);
             
             NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
+            self.aid = [dict objectForKey:@"aid"];
             self.cmt = [dict objectForKey:@"cmt"];
             self.num = [dict objectForKey:@"likes"];
             self.imageURL = [dict objectForKey:@"url"];
@@ -86,7 +89,7 @@
             
             self.createTime = [dict objectForKey:@"create_time"];
             //
-            [self loadUserData];
+            [self loadPetData];
             //
             [self downloadBigImage];
             //分析评论字符串
@@ -129,53 +132,86 @@
         [self createUI];
     }
 }
--(void)loadUserData
+-(void)loadPetData
 {
-    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, self.usr_id, sig, [ControllerManager getSID]];
-    NSLog(@"UserInfoAPI:%@", url);
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.aid]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, self.aid, sig, [ControllerManager getSID]];
+    NSLog(@"PetInfoAPI:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+//            PetInfoModel * model = [[PetInfoModel alloc] init];
+//            [model setValuesForKeysWithDictionary:load.dataDict];
+//            [self.petInfoArray addObject:model];
+            NSDictionary * dic = [load.dataDict objectForKey:@"data"];
             LoadingSuccess;
-            
-            NSLog(@"用户信息：%@", load.dataDict);
-            NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectForKey:@"user"];
-            self.petName = [dict objectForKey:@"name"];
-            if ([[dict objectForKey:@"type"] intValue]/100 == 1) {
-                self.cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"1"] objectForKey:[dict objectForKey:@"type"]];
-            }else if([[dict objectForKey:@"type"] intValue]/100 == 2){
-                self.cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"2"] objectForKey:[dict objectForKey:@"type"]];
-            }else if([[dict objectForKey:@"type"] intValue]/100 == 3){
-                self.cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"3"] objectForKey:[dict objectForKey:@"type"]];
-            }else{
-                self.cateName = @"苏格兰折耳猫";
-            }
-            //
-            NSLog(@"%@", [dict objectForKey:@"tx"]);
-            self.headImageURL = [dict objectForKey:@"tx"];
-            
-            [self downloadHeadImage];
-            self.name.text = self.petName;
-            if ([[dict objectForKey:@"gender"] intValue] == 1) {
+            //改变header数据
+            self.name.text = [dic objectForKey:@"name"];
+            if ([[dic objectForKey:@"gender"] intValue] == 1) {
                 self.sex.image = [UIImage imageNamed:@"woman.png"];
             }
-            self.cate.text = [NSString stringWithFormat:@"%@ | %@岁", self.cateName, [dict objectForKey:@"age"]];
-            if ([[load.dataDict objectForKey:@"isFriend"] intValue] == 1) {
-                [self.attentionBtn setImage:[UIImage imageNamed:@"didAttention.png"] forState:UIControlStateNormal];
-            }
+            self.cateName = [ControllerManager returnCateNameWithType:[dic objectForKey:@"type"]];
+            self.headImageURL = [dic objectForKey:@"tx"];
+            //
+            [self downloadHeadImage];
+            
+            self.cate.text = [NSString stringWithFormat:@"%@ | %@岁", self.cateName, [dic objectForKey:@"age"]];
         }else{
             LoadingFailed;
-            NSLog(@"用户信息数据加载失败");
+            NSLog(@"请求宠物数据失败");
         }
     }];
     [request release];
 }
+//-(void)loadUserData
+//{
+//    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
+//    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, self.usr_id, sig, [ControllerManager getSID]];
+//    NSLog(@"UserInfoAPI:%@", url);
+//    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            LoadingSuccess;
+//            
+//            NSLog(@"用户信息：%@", load.dataDict);
+//            NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectForKey:@"user"];
+//            self.petName = [dict objectForKey:@"a_name"];
+//            if ([[dict objectForKey:@"type"] intValue]/100 == 1) {
+//                self.cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"1"] objectForKey:[dict objectForKey:@"type"]];
+//            }else if([[dict objectForKey:@"type"] intValue]/100 == 2){
+//                self.cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"2"] objectForKey:[dict objectForKey:@"type"]];
+//            }else if([[dict objectForKey:@"type"] intValue]/100 == 3){
+//                self.cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"3"] objectForKey:[dict objectForKey:@"type"]];
+//            }else{
+//                self.cateName = @"苏格兰折耳猫";
+//            }
+//            //
+//            NSLog(@"%@", [dict objectForKey:@"tx"]);
+//            self.headImageURL = [dict objectForKey:@"tx"];
+//            
+//            [self downloadHeadImage];
+//            self.name.text = self.petName;
+//            if ([[dict objectForKey:@"gender"] intValue] == 1) {
+//                self.sex.image = [UIImage imageNamed:@"woman.png"];
+//            }
+//            self.cate.text = [NSString stringWithFormat:@"%@ | %@岁", self.cateName, [dict objectForKey:@"age"]];
+//            if ([[load.dataDict objectForKey:@"isFriend"] intValue] == 1) {
+//                [self.attentionBtn setImage:[UIImage imageNamed:@"didAttention.png"] forState:UIControlStateNormal];
+//            }
+//        }else{
+//            LoadingFailed;
+//            NSLog(@"用户信息数据加载失败");
+//        }
+//    }];
+//    [request release];
+//}
+
+
 //下载头像及图像
 -(void)downloadHeadImage
 {
     
     if ([self.headImageURL isKindOfClass:[NSNull class]] || self.headImageURL.length==0) {
-        [self.headBtn setBackgroundImage:[UIImage imageNamed:@"20-1.png"] forState:UIControlStateNormal];
+        [self.headBtn setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
     }else{
         NSString * docDir = DOCDIR;
         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.headImageURL]];
@@ -185,7 +221,7 @@
             [self.headBtn setBackgroundImage:image forState:UIControlStateNormal];
         }else{
             //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TXURL, self.headImageURL] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, self.headImageURL] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     [self.headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
                     NSString * docDir = DOCDIR;
@@ -347,13 +383,19 @@
     [self.sv addSubview:giftBgView];
     
     UIButton * sendGift = [MyControl createButtonWithFrame:CGRectMake(20, 11/2, 45/2, 48/2) ImageName:@"detail_gift.png" Target:self Action:@selector(sendGiftClick) Title:nil];
+    sendGift.showsTouchWhenHighlighted = YES;
     [giftBgView addSubview:sendGift];
     
     UIView * vLine = [MyControl createViewWithFrame:CGRectMake(60, 2, 1, 31)];
     vLine.backgroundColor = [UIColor lightGrayColor];
     [giftBgView addSubview:vLine];
     
-    UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(65, 7.5, 120, 20) Font:15 Text:@"已经收到8件礼物"];
+    UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(65, 7.5, 120, 20) Font:15 Text:nil];
+    if (self.gifts) {
+        giftNum.text = [NSString stringWithFormat:@"已经收到%@件礼物", self.gifts];
+    }else{
+        giftNum.text = @"已经收到0件礼物";
+    }
     giftNum.textColor = [UIColor blackColor];
     [giftBgView addSubview:giftNum];
     
@@ -361,7 +403,7 @@
     UIButton * comment = [MyControl createButtonWithFrame:CGRectMake(435/2, 9, 35*0.75, 18) ImageName:@"detail_comment.png" Target:self Action:@selector(commentClick) Title:nil];
     [giftBgView addSubview:comment];
     
-    UILabel * commentNum = [MyControl createLabelWithFrame:CGRectMake(comment.frame.origin.x+comment.frame.size.width, 7.5, 20, 20) Font:10 Text:@"123"];
+    commentNum = [MyControl createLabelWithFrame:CGRectMake(comment.frame.origin.x+comment.frame.size.width, 7.5, 30, 20) Font:10 Text:[NSString stringWithFormat:@"%d", self.nameArray.count]];
     commentNum.textAlignment = NSTextAlignmentCenter;
     commentNum.textColor = [UIColor lightGrayColor];
     [giftBgView addSubview:commentNum];
@@ -369,7 +411,12 @@
     UIButton * share = [MyControl createButtonWithFrame:CGRectMake(546/2, 9, 32*(18/30.0), 18) ImageName:@"detail_share.png" Target:self Action:@selector(shareClick) Title:nil];
     [giftBgView addSubview:share];
     
-    UILabel * shareNum = [MyControl createLabelWithFrame:CGRectMake(share.frame.origin.x+share.frame.size.width, 7.5, 20, 20) Font:10 Text:@"135"];
+    shareNum = [MyControl createLabelWithFrame:CGRectMake(share.frame.origin.x+share.frame.size.width, 7.5, 20, 20) Font:10 Text:nil];
+    if (self.shares) {
+        shareNum.text = [NSString stringWithFormat:@"%@", self.shares];
+    }else{
+        shareNum.text = @"0";
+    }
     shareNum.textAlignment = NSTextAlignmentCenter;
     shareNum.textColor = [UIColor lightGrayColor];
     [giftBgView addSubview:shareNum];
@@ -386,7 +433,7 @@
     topicDetail.textColor = [UIColor darkGrayColor];
     [self.sv addSubview:topicDetail];
     
-    UILabel * topicUser = [MyControl createLabelWithFrame:CGRectMake(15, topicDetail.frame.origin.y+topicDetail.frame.size.height+10, 200, 20) Font:14 Text:@"@一起来看流星雨 等用户"];
+    UILabel * topicUser = [MyControl createLabelWithFrame:CGRectMake(15, topicDetail.frame.origin.y+topicDetail.frame.size.height+10, 200, 20) Font:14 Text:@"@一起来看流星雨 等小伙伴"];
     topicUser.textColor = BGCOLOR;
     [self.sv addSubview:topicUser];
     
@@ -644,7 +691,8 @@
     }];
     bgButton.hidden = YES;
     [MMProgressHUD dismissWithSuccess:@"评论成功" title:nil afterDelay:1];
-    
+    //
+    commentNum.text = [NSString stringWithFormat:@"%d", self.nameArray.count];
     
     [commentsBgView removeFromSuperview];
 //    if (!([self.likerTxArray isKindOfClass:[NSNull class]] || self.likerTxArray.count == 0)) {

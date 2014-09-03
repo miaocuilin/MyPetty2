@@ -308,8 +308,11 @@
         NSLog(@"赠送");
     }else if (sender.tag == 224){
         NSLog(@"注册");
+        
         ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+//        UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
         [self presentViewController:vc animated:YES completion:nil];
+//        [self.navigationController pushViewController:nc animated:YES];
         //
         [alertView hide:YES];
         [self removeFromParentViewController];

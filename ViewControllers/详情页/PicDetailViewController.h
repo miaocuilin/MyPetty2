@@ -23,6 +23,9 @@
     UIView * commentsBgView;
     int prepareCreateUINum;
     UIView * usersBgView;
+    
+    UILabel * shareNum;
+    UILabel * commentNum;
 }
 @property (retain, nonatomic) UIImageView * bgImageView;
 @property (retain, nonatomic) IBOutlet UIScrollView *sv;
@@ -62,4 +65,11 @@
 @property (nonatomic,copy)NSString * likers;
 //评论
 @property (nonatomic,copy)NSString * comments;
+@property (nonatomic,copy)NSString * aid;
+@property (nonatomic,copy)NSString * gifts;
+@property (nonatomic,copy)NSString * shares;
+//送礼物的人的usr_id,用逗号隔开
+@property (nonatomic,copy)NSString * senders;
+
+//@property (nonatomic,retain)NSMutableArray * petInfoArray;
 @end

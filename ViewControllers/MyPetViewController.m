@@ -339,7 +339,7 @@
         UIImage * headImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:pngFilePath]];
         headImageView.image = headImage;
     }else{
-        [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", TXURL, [self.dataArray[0] tx]]]];
+        [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.dataArray[0] tx]]]];
     }
     
     

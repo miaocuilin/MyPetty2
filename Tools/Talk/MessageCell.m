@@ -76,7 +76,7 @@
             _iconView.image = image;
         }else{
             //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TXURL, message.icon] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, message.icon] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     _iconView.image = load.dataImage;
                     NSString * docDir = DOCDIR;

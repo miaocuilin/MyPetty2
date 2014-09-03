@@ -129,7 +129,7 @@
 //    UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:info];
 //    ChooseFamilyViewController * info = [[ChooseFamilyViewController alloc] init];
 //    self.window.rootViewController = sideMenu;
-    ToolTipsViewController *toolTips =[[ToolTipsViewController alloc] init];
+//    ToolTipsViewController *toolTips =[[ToolTipsViewController alloc] init];
 //    UserInfoViewController * info = [[UserInfoViewController alloc] init];
 //    ShoutViewController *shout = [[ShoutViewController alloc] init];
 //    GiftShopViewController * info = [[GiftShopViewController alloc] init];

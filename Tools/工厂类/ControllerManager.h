@@ -38,4 +38,5 @@
 + (void)HUDImageIcon:(NSString *)iconImageString showView:(UIView *)inView yOffset:(float)offset Number:(int)num;
 + (void)loginHUDAlertView:(UIView *)showInView;
 
++(NSString *)returnCateNameWithType:(NSString *)type;
 @end

@@ -87,9 +87,26 @@
     self.headButton.layer.masksToBounds = YES;
     [self.menuBgView addSubview:self.headButton];
 }
-
+#pragma mark -
+-(void)isRegister
+{
+    if (![ControllerManager getIsSuccess]) {
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+        
+        [self hideAll];
+        return;
+    }
+}
 -(void)btn1Click
 {
+    [self isRegister];
+    if (![ControllerManager getIsSuccess]) {
+        return;
+    }
+    
     NSLog(@"1");
     ShakeViewController *shake = [[ShakeViewController alloc] init];
     [self addChildViewController:shake];
@@ -103,6 +120,11 @@
 
 -(void)btn2Click
 {
+    [self isRegister];
+    if (![ControllerManager getIsSuccess]) {
+        return;
+    }
+    
     NSLog(@"2");
     ToolTipsViewController *tool = [[ToolTipsViewController alloc] init];
     [self addChildViewController:tool];
@@ -114,6 +136,11 @@
 }
 -(void)btn3Click
 {
+    [self isRegister];
+    if (![ControllerManager getIsSuccess]) {
+        return;
+    }
+    
     NSLog(@"3");
 //    CallViewController *call = [[CallViewController alloc] init];
 //    [self addChildViewController:call];
@@ -132,6 +159,11 @@
 }
 -(void)btn4Click
 {
+    [self isRegister];
+    if (![ControllerManager getIsSuccess]) {
+        return;
+    }
+    
     NSLog(@"4");
     TouchViewController *touch = [[TouchViewController alloc] init];
     [self addChildViewController:touch];
@@ -144,6 +176,15 @@
 -(void)headBtnClick
 {
     if(isOpen){
+        if (![ControllerManager getIsSuccess]) {
+            ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+            [self addChildViewController:vc];
+            [self.view addSubview:vc.view];
+            [vc createLoginAlertView];
+            
+            [self hideAll];
+            return;
+        }
         NSLog(@"跳到王国");
         [self hideAll];
         PetInfoViewController * vc = [[PetInfoViewController alloc] init];

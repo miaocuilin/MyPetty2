@@ -270,7 +270,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (image) {
         headImageView.image = image;
     }else{
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TXURL, [self.userDataArray[0] tx]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userDataArray[0] tx]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 //本地目录，用于存放favorite下载的原图
                 NSString * docDir = DOCDIR;

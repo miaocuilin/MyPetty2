@@ -64,6 +64,12 @@
 //    UIButton * pageBtn;
     UIView * navView;
     
+    //需要上传图片
+    BOOL isNeedPostImage;
+    //判断是否两个头像都有
+    BOOL doubleNeedPost;
+    //用来判断进行了几次post
+    int postCount;
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 
@@ -80,9 +86,12 @@
 
 @property (nonatomic,copy)NSString * FileName;
 @property (nonatomic,retain)UIImage * oriImage;
+@property (nonatomic,retain)UIImage * oriUserImage;
 
 @property (nonatomic,copy)NSString * u_name;
 @property (nonatomic)int u_gender;
 @property (nonatomic)int u_city;
+
+//@property (nonatomic,copy)void (^dismiss)(void);
 @end
 

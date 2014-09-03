@@ -17,6 +17,9 @@
 #define headBtnWidth 64
 #define circleWidth 82
 @interface BottomMenuRootViewController ()
+{
+    NSString *masterID;
+}
 
 @end
 
@@ -26,10 +29,24 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    [self loadAnimalInfoData];
     [self createMenu];
 }
 
+- (void)loadAnimalInfoData
+{
+    NSString *aid = [USER objectForKey:@"aid"];
+    NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",aid]];
+NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALINFOAPI,aid,animalInfoSig,[ControllerManager getSID]];
+    NSLog(@"宠物信息API:%@",animalInfo);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalInfo Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"宠物信息：%@",load.dataDict);
+        if (isFinish) {
+            masterID =[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"];
+        }
+    }];
+    [request release];
+}
 -(void)createMenu
 {
     self.menuBgBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(menuBgBtnClick) Title:nil];
@@ -148,14 +165,24 @@
 //    [call didMoveToParentViewController:self];
 //    [call createRecordOne];
 //    [self.view addSubview:call.view];
+    if ([masterID isEqualToString:[USER objectForKey:@"usr_id"]]) {
+        ShoutViewController *shout = [[ShoutViewController alloc] init];
+        [self addChildViewController:shout];
+        [shout release];
+        [shout didMoveToParentViewController:self];
+        [shout createRecordOne];
+        [self.view addSubview:shout.view];
+        [self hideAll];
+    }else{
+        TouchViewController *touch = [[TouchViewController alloc] init];
+        [self addChildViewController:touch];
+        [touch release];
+        [touch didMoveToParentViewController:self];
+        [self.view addSubview:touch.view];
+        //    [touch createAlertView];
+        [self hideAll];
+    }
     
-    ShoutViewController *shout = [[ShoutViewController alloc] init];
-    [self addChildViewController:shout];
-    [shout release];
-    [shout didMoveToParentViewController:self];
-    [shout createRecordOne];
-    [self.view addSubview:shout.view];
-    [self hideAll];
 }
 -(void)btn4Click
 {

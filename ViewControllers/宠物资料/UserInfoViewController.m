@@ -10,19 +10,12 @@
 #import "UserInfoActivityCell.h"
 #import "UserInfoRankCell.h"
 @interface UserInfoViewController ()
-
+{
+    NSDictionary *headerDict;
+}
 @end
 
 @implementation UserInfoViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -33,11 +26,32 @@
     
     [self createScrollView];
     [self createFakeNavigation];
-    [self createHeader];
+//    [self createHeader];
     [self createTableView];
-    
+    [self loadUserInfoData];
     
 }
+
+#pragma mark - 用户信息
+- (void)loadUserInfoData
+{
+//    user/infoApi&usr_id=
+    NSString *userInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat",[USER objectForKey:@"usr_id"]]];
+    NSString *userInfoString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",USERINFOAPI,[USER objectForKey:@"usr_id"],userInfoSig,[ControllerManager getSID]];
+    NSLog(@"用户信息API:%@",userInfoString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:userInfoString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        if (isFinish) {
+            NSLog(@"用户信息数据：%@",load.dataDict);
+           headerDict=  [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            [self createHeader];
+        }
+    }];
+    [request release];
+
+}
+#pragma mark - 用户列表
+
+#pragma mark - 
 -(void)createFakeNavigation
 {
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
@@ -211,13 +225,19 @@
     [bgView addSubview:alphaView];
     
     //头像
+    
     UIImageView * headerView = [MyControl createImageViewWithFrame:CGRectMake(10, 25, 70, 70) ImageName:@"cat1.jpg"];
+    if ([headerDict objectForKey:@"tx"]) {
+        NSLog(@"111");
+    }else{
+        headerView.image = [UIImage imageNamed:@"20-1.png"];
+    }
     headerView.layer.cornerRadius = 70/2;
     headerView.layer.masksToBounds = YES;
     [bgView addSubview:headerView];
 
     //等级
-    UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headerView.frame.origin.x+70-20, headerView.frame.origin.y+70-16, 30, 16) Font:10 Text:@"Lv.11"];
+    UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headerView.frame.origin.x+70-20, headerView.frame.origin.y+70-16, 30, 16) Font:10 Text:[NSString stringWithFormat:@"Lv.%@",[headerDict objectForKey:@"lv"]]];
     exp.textAlignment = NSTextAlignmentCenter;
     exp.backgroundColor = [UIColor colorWithRed:249/255.0 green:135/255.0 blue:88/255.0 alpha:1];
     exp.textColor = [UIColor colorWithRed:229/255.0 green:79/255.0 blue:36/255.0 alpha:1];
@@ -235,12 +255,15 @@
 //    [bgView addSubview:attentionBtn];
     
     //
-    NSString * str = @"Anna";
+    NSString *str = [NSString stringWithFormat:@"%@",[headerDict objectForKey:@"name"]];
     CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * name = [MyControl createLabelWithFrame:CGRectMake(105, 25, size.width+5, 20) Font:15 Text:str];
     [bgView addSubview:name];
     
     UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 14, 17) ImageName:@"woman"];
+    if ((int)[headerDict objectForKey:@"gender"]==1) {
+        sex.image = [UIImage imageNamed:@"men"];
+    }
     [bgView addSubview:sex];
     
     //
@@ -266,7 +289,7 @@
     UIImageView * flagImageView = [MyControl createImageViewWithFrame:CGRectMake(240, 0, 123/2, 164/2) ImageName:@"flag_gold.png"];
     [bgView addSubview:flagImageView];
     
-    UILabel * gold = [MyControl createLabelWithFrame:CGRectMake(0, 10, 60, 20) Font:12 Text:@"20000"];
+    UILabel * gold = [MyControl createLabelWithFrame:CGRectMake(0, 10, 60, 20) Font:12 Text:[NSString stringWithFormat:@"%@",[headerDict objectForKey:@"gold"]]];
     gold.textAlignment = NSTextAlignmentCenter;
     [flagImageView addSubview:gold];
     
@@ -278,7 +301,7 @@
     UIImageView * star = [MyControl createImageViewWithFrame:CGRectMake(74/2, 126, 20, 20) ImageName:@"yellow_star.png"];
     [bgView addSubview:star];
     
-    NSString * str3= @"Lv.11";
+    NSString * str3= [NSString stringWithFormat:@"Lv.%@",[headerDict objectForKey:@"lv"]];
     CGSize size3 = [str3 sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(100, 100) lineBreakMode:1];
     UILabel * RQLabel = [MyControl createLabelWithFrame:CGRectMake(64, 130, size3.width, 15) Font:13 Text:str3];
     [bgView addSubview:RQLabel];

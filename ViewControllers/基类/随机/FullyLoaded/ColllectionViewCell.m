@@ -22,14 +22,15 @@
         [self.contentView addSubview:asyncimageView];
         _imageView = asyncimageView;
         
-        self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
         self.imageView.backgroundColor = [UIColor grayColor];
-        
+        [self.contentView addSubview:self.imageView];
+
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, frame.size.height - 15, frame.size.width, 15)];
         label.textAlignment = NSTextAlignmentCenter;
         label.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
         label.backgroundColor = [UIColor colorWithWhite:1 alpha:.5];
-        [self.contentView addSubview:label];
+//        [self.contentView addSubview:label];
         label.text = @"meow~";
     }
     return self;

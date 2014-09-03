@@ -86,6 +86,9 @@
     #define IMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     #define IMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
 
+    #define PETIMAGESAPI @"http://54.199.161.210:8001/index.php?r=animal/imagesApi&aid="
+    #define PETIMAGESAPI2 @"http://54.199.161.210:8001/index.php?r=animal/imagesApi&img_id="
+
     //获取其它用户照片API
     #define OTHERIMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&usr_id="
     #define OTHERIMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="

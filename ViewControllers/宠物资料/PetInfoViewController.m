@@ -85,11 +85,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.countryMembersDataArray = [NSMutableArray array];
     
     [self loadKingData];
-
-    [self createScrollView];
     [self createFakeNavigation];
+    [self createScrollView];
+
     [self createTableView];
-    [self loadAttentionAPI];
+//    [self loadAttentionAPI];
 //    [self.view bringSubviewToFront:self.menuBgBtn];
 //    [self.view bringSubviewToFront:self.menuBgView];
 
@@ -107,6 +107,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             isFans = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_fan"] intValue];
             isFollow = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_follow"] intValue];
             [self createMore];
+            //show more
+            alphaBtn.hidden = NO;
+            [UIView animateWithDuration:0.3 animations:^{
+                moreView.frame = CGRectMake(0, self.view.frame.size.height-234, 320, 234);
+                alphaBtn.alpha = 0.5;
+            }];
         }
     }];
     [request release];
@@ -350,12 +356,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         //create more
         [self loadAttentionAPI];
     }
-    //show more
-    alphaBtn.hidden = NO;
-    [UIView animateWithDuration:0.3 animations:^{
-        moreView.frame = CGRectMake(0, self.view.frame.size.height-234, 320, 234);
-        alphaBtn.alpha = 0.5;
-    }];
+    
 
 }
 #pragma mark - 创建更多视图
@@ -517,6 +518,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         alphaBtn.alpha = 0;
     } completion:^(BOOL finished) {
 //        [moreView bringSubviewToFront:self]
+        
         alphaBtn.hidden = YES;
     }];
 }

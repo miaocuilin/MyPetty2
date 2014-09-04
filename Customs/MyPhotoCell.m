@@ -117,19 +117,52 @@
 -(void)zanBtnClick:(UIButton *)btn
 {
     btn.selected = !btn.selected;
+    NSString * code = [NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id];
+    NSString * sig = [MyMD5 md5:code];
     if (btn.selected) {
-        fish.image = [UIImage imageNamed:@"fish1.png"];
-        zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
-        [UIView animateWithDuration:0.5 animations:^{
-            fish.frame = CGRectMake(0-15, 4-12, 30*2, 12*2);
-        } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.5 animations:^{
-                fish.frame = CGRectMake(0, 4, 30, 12);
-            }];
+        //赞
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKEAPI, self.img_id, sig, [ControllerManager getSID]];
+        NSLog(@"likeURL:%@", url);
+        
+        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"点赞失败 = =."];
+                    fish.image = [UIImage imageNamed:@"fish1.png"];
+                    zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
+                    [UIView animateWithDuration:0.5 animations:^{
+                        fish.frame = CGRectMake(0-15, 4-12, 30*2, 12*2);
+                    } completion:^(BOOL finished) {
+                        [UIView animateWithDuration:0.5 animations:^{
+                            fish.frame = CGRectMake(0, 4, 30, 12);
+                        }];
+                    }];
+                }
+            }else{
+                NSLog(@"数据请求失败");
+            }
         }];
+        
+        
     }else{
-        fish.image = [UIImage imageNamed:@"fish.png"];
-        zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]-1];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNLIKEAPI, self.img_id,sig, [ControllerManager getSID]];
+        NSLog(@"UNlikeURL:%@", url);
+        
+        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消赞失败 = =."];
+                    fish.image = [UIImage imageNamed:@"fish.png"];
+                    zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]-1];
+                }
+            }else{
+                NSLog(@"数据请求失败");
+            }
+            //            button.userInteractionEnabled = YES;
+            //            self.contentView.userInteractionEnabled = YES;
+        }];
+
+        
     }
 }
 -(void)heartButtonClick:(UIButton *)button

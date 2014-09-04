@@ -123,9 +123,9 @@
     #define FOLLOWERAPI2 @"http://54.199.161.210/dc/index.php?r=user/followerApi&usr_id="
 
     //点赞API
-    #define LIKEAPI @"http://54.199.161.210/dc/index.php?r=image/likeApi&img_id="
+    #define LIKEAPI @"http://54.199.161.210:8001/index.php?r=image/likeApi&img_id="
     //取消赞API
-    #define UNLIKEAPI @"http://54.199.161.210/dc/index.php?r=image/unlikeApi&img_id="
+    #define UNLIKEAPI @"http://54.199.161.210:8001/index.php?r=image/unlikeApi&img_id="
 
     //宠物类型
     #define TYPEAPI @"http://54.199.161.210/dc/index.php?r=user/typeApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
@@ -180,7 +180,7 @@
     #define DELETEAPI @"http://54.199.161.210/dc/index.php?r=site/clearUser&name="
     //用户信息API
     #define USERINFOAPI @"http://54.199.161.210:8001/index.php?r=user/infoApi&usr_id="
-#pragma mark - 宠物相关的API
+#pragma mark - 张景瑞API
     //宠物礼物API
     #define PETPRESENTSAPI @"http://54.199.161.210:8001/index.php?r=animal/itemsApi&aid="
     //宠物成员API
@@ -193,5 +193,12 @@
     #define ANIMALINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/infoApi&aid="
     //宠物头像
     #define ANIMALTXAPI @"http://54.199.161.210:8001/index.php?r=animal/txApi&aid="
-
+    //加入宠物圈子
+    #define JOINPETCRICLEAPI @"http://54.199.161.210:8001/index.php?r=animal/joinApi&aid="
+    //退出宠物圈子
+    #define EXITPETCRICLEAPI @"http://54.199.161.210:8001/index.php?r=animal/exitApi&aid="
+    //关注宠物圈子
+    #define PETATTENTIONAPI @"http://54.199.161.210:8001/index.php?r=animal/followApi&aid="
+    //取消关注宠物圈子
+    #define PETATTENTIONCANCELAPI @"http://54.199.161.210:8001/index.php?r=animal/followApi&aid="
 #endif

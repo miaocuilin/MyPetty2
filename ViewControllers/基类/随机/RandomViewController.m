@@ -84,24 +84,24 @@
 //}
 -(void)viewDidAppear:(BOOL)animated
 {
-    NSLog(@"%f", qtmquitView.frame.origin.y);
-    if (!isMenuBgViewAppear) {
-//        [self.view bringSubviewToFront:self.menuBgView];
-        isMenuBgViewAppear = YES;
-    }
-    toolTipsVC = [[ToolTipsViewController alloc ]init];
-    [self addChildViewController:toolTipsVC];
-    [toolTipsVC didMoveToParentViewController:self];
-    [self.view addSubview:toolTipsVC.view];
-    int tt = arc4random()%3;
-    NSLog(@"tt%d",tt);
-    if (tt == 0) {
-        [toolTipsVC createAlertView];
-    }else if(tt == 1){
-        [toolTipsVC createExpAlertView];
-    }else if (tt == 2){
-        [toolTipsVC createGovernmentAlertView];
-    }
+//    NSLog(@"%f", qtmquitView.frame.origin.y);
+//    if (!isMenuBgViewAppear) {
+////        [self.view bringSubviewToFront:self.menuBgView];
+//        isMenuBgViewAppear = YES;
+//    }
+//    toolTipsVC = [[ToolTipsViewController alloc ]init];
+//    [self addChildViewController:toolTipsVC];
+//    [toolTipsVC didMoveToParentViewController:self];
+//    [self.view addSubview:toolTipsVC.view];
+//    int tt = arc4random()%3;
+//    NSLog(@"tt%d",tt);
+//    if (tt == 0) {
+//        [toolTipsVC createAlertView];
+//    }else if(tt == 1){
+//        [toolTipsVC createExpAlertView];
+//    }else if (tt == 2){
+//        [toolTipsVC createGovernmentAlertView];
+//    }
 
 }
 

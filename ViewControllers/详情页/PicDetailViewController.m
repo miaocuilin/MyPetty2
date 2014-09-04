@@ -11,6 +11,7 @@
 #import "IQKeyboardManager.h"
 #import "PetInfoModel.h"
 #import "ToolTipsViewController.h"
+#import "PetInfoViewController.h"
 @interface PicDetailViewController ()
 
 @end
@@ -838,6 +839,11 @@
         [self.view addSubview:vc.view];
         [vc createLoginAlertView];
     }
+    PetInfoViewController *petInfoKing = [[PetInfoViewController alloc] init];
+    petInfoKing.aid = self.aid;
+    [self presentViewController:petInfoKing animated:YES completion:^{
+        NSLog(@"进入王国");
+    }];
 }
 - (IBAction)attentionBtnClick:(id)sender {
     if (![ControllerManager getIsSuccess]) {

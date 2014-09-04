@@ -32,4 +32,6 @@
 @property (nonatomic,copy)NSString * lastImg_id;
 @property (nonatomic,retain)NSMutableArray * photosDataArray;
 @property (nonatomic,retain)NSMutableArray * userDataArray;
+@property (nonatomic,copy)NSString *aid;
+//@property (nonatomic,copy)NSString *usr_id;
 @end

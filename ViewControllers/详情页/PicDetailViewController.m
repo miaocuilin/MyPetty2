@@ -828,6 +828,7 @@
 //        zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]-1];
 //    }
 }
+#pragma mark - 进入国王
 - (IBAction)headBtnClick:(id)sender {
     NSLog(@"进入王国");
     if (![ControllerManager getIsSuccess]) {

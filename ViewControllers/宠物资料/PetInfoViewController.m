@@ -15,6 +15,8 @@
 #import "PicDetailViewController.h"
 #import "PopularityListViewController.h"
 #import "ContributionViewController.h"
+#import "ClickImage.h"
+#include "ToolTipsViewController.h"
 @interface PetInfoViewController ()
 {
     NSDictionary *petInfoDict;
@@ -22,7 +24,38 @@
 @end
 
 @implementation PetInfoViewController
+- (NSString *)aid
+{
+    if (!_aid) {
+        _aid = [USER objectForKey:@"aid"];
+    }
+    return _aid;
+}
+- (void)createButton
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(0, 100, 100, 100);
+    button.backgroundColor = [UIColor redColor];
+    [button setTitle:@"button" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(buttonAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+}
+- (void)buttonAction
+{
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",@"1000000220"]];
+    NSString *string = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,@"1000000220",sig,[ControllerManager getSID]];
+    NSLog(@"string:%@",string);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:string Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"load.data:%@",load.dataDict);
+    }];
+    [request release];
+}
+- (void)viewDidAppear:(BOOL)animated
+{
+//    [self createButton];
 
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -31,7 +64,7 @@
 //    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
     
     [self loadKingData];
-//    [self loadPhotoData];
+    [self loadPhotoData];
     [self createScrollView];
     [self createFakeNavigation];
 //    [self createHeader];
@@ -41,13 +74,14 @@
     [self loadKingPresentsData];
 //    [self.view bringSubviewToFront:self.menuBgBtn];
 //    [self.view bringSubviewToFront:self.menuBgView];
+
 }
 
 #pragma mark - 国王动态数据
 - (void)loadKingDynamicData
 {
-    NSString *animalNewsSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *animalNewsString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI,[USER objectForKey:@"aid"],animalNewsSig, [ControllerManager getSID]];
+    NSString *animalNewsSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+    NSString *animalNewsString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI,self.aid,animalNewsSig, [ControllerManager getSID]];
     NSLog(@"国王动态API:%@",animalNewsString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalNewsString Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -59,8 +93,8 @@
 #pragma mark - 国家成员数据
 - (void)loadKingMembersData
 {
-    NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI,[USER objectForKey:@"aid"],animalMembersSig, [ControllerManager getSID]];
+    NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+    NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI,self.aid,animalMembersSig, [ControllerManager getSID]];
     NSLog(@"国王成员API:%@",animalMembersString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalMembersString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
@@ -74,8 +108,8 @@
 
 - (void)loadKingPresentsData
 {
-    NSString *animalPresentsSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *animalPresentsString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETPRESENTSAPI,[USER objectForKey:@"aid"],animalPresentsSig, [ControllerManager getSID]];
+    NSString *animalPresentsSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+    NSString *animalPresentsString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETPRESENTSAPI,self.aid,animalPresentsSig, [ControllerManager getSID]];
     NSLog(@"国王礼物API:%@",animalPresentsString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalPresentsString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
@@ -90,8 +124,8 @@
 -(void)loadKingData
 {
     NET = YES;
-    NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *animalInfoAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ANIMALINFOAPI,[USER objectForKey:@"aid"],animalInfoSig, [ControllerManager getSID]];
+    NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+    NSString *animalInfoAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ANIMALINFOAPI,self.aid,animalInfoSig, [ControllerManager getSID]];
     NSLog(@"国王信息API:%@", animalInfoAPI);
     [[httpDownloadBlock alloc] initWithUrlStr:animalInfoAPI Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -120,19 +154,19 @@
         }
     }];
 }
-#pragma mark - 国王图片数据
+#pragma mark - 国王照片数据
 -(void)loadPhotoData
 {
     NET = YES;
-    NSString *petImagesSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *petImageAPIString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETIMAGESAPI,[USER objectForKey:@"aid"],petImagesSig,[ControllerManager getSID]];
-    NSLog(@"宠物照片数据API:%@",petImageAPIString);
+    NSString *petImagesSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+    NSString *petImageAPIString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETIMAGESAPI,self.aid,petImagesSig,[ControllerManager getSID]];
+    NSLog(@" 国王照片数据API:%@",petImageAPIString);
     [[httpDownloadBlock alloc] initWithUrlStr:petImageAPIString Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"宠物照片数据%@", load.dataDict);
+            NSLog(@"国王照片数据:%@", load.dataDict);
             [self.photosDataArray removeAllObjects];
             
-            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
             for(int i=0;i<array.count;i++){
                 NSDictionary * dict = array[i];
                 PhotoModel * model = [[PhotoModel alloc] init];
@@ -255,34 +289,36 @@
     grayLine1.backgroundColor = [ControllerManager colorWithHexString:@"e3e3e3"];
     [moreView addSubview:grayLine1];
     
-    //stranger and fakeOwner 20 127
-    UIView * strangerAndFakeOwnerView = [MyControl createViewWithFrame:CGRectMake(0, 127, 320, 76/2)];
-    [moreView addSubview:strangerAndFakeOwnerView];
+    if (![[petInfoDict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+        //stranger and fakeOwner 20 127
+        UIView * strangerAndFakeOwnerView = [MyControl createViewWithFrame:CGRectMake(0, 127, 320, 76/2)];
+        [moreView addSubview:strangerAndFakeOwnerView];
+        
+        UIButton * addBtn = [MyControl createButtonWithFrame:CGRectMake(20, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(addBtnClick:) Title:@"加入"];
+        [addBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
+        [addBtn setTitle:@"已加入" forState:UIControlStateSelected];
+        addBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [strangerAndFakeOwnerView addSubview:addBtn];
+        
+        UIButton * attentionBtn = [MyControl createButtonWithFrame:CGRectMake(354/2, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(attentionBtnClick:) Title:@"关注"];
+        [attentionBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
+        [attentionBtn setTitle:@"已关注" forState:UIControlStateSelected];
+        attentionBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [strangerAndFakeOwnerView addSubview:attentionBtn];
+        //    strangerAndFakeOwnerView.hidden = YES;
+
+    }else{
+        //OwnerView
+        UIView * ownerView = [MyControl createViewWithFrame:CGRectMake(0, 127, 320, 76/2)];
+        [moreView addSubview:ownerView];
+        
+        UIButton * takePhoto = [MyControl createButtonWithFrame:CGRectMake(30, 0, 526/2, 76/2) ImageName:@"" Target:self Action:@selector(takePhoto) Title:@"拍照"];
+        [takePhoto setBackgroundImage:[[UIImage imageNamed:@"more_greenBg.png"]stretchableImageWithLeftCapWidth:100 topCapHeight:30] forState:UIControlStateNormal];
+        takePhoto.titleLabel.font = [UIFont systemFontOfSize:15];
+        [ownerView addSubview:takePhoto];
+//        ownerView.hidden = YES;
+    }
     
-    UIButton * addBtn = [MyControl createButtonWithFrame:CGRectMake(20, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(addBtnClick:) Title:@"加入"];
-    [addBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
-    [addBtn setTitle:@"已加入" forState:UIControlStateSelected];
-    addBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [strangerAndFakeOwnerView addSubview:addBtn];
-    
-    UIButton * attentionBtn = [MyControl createButtonWithFrame:CGRectMake(354/2, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(attentionBtnClick:) Title:@"关注"];
-    [attentionBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
-    [attentionBtn setTitle:@"已关注" forState:UIControlStateSelected];
-    attentionBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [strangerAndFakeOwnerView addSubview:attentionBtn];
-    
-//    strangerAndFakeOwnerView.hidden = YES;
-    
-    //OwnerView
-    UIView * ownerView = [MyControl createViewWithFrame:CGRectMake(0, 127, 320, 76/2)];
-    [moreView addSubview:ownerView];
-    
-    UIButton * takePhoto = [MyControl createButtonWithFrame:CGRectMake(30, 0, 526/2, 76/2) ImageName:@"" Target:self Action:@selector(takePhoto) Title:@"拍照"];
-    [takePhoto setBackgroundImage:[[UIImage imageNamed:@"more_greenBg.png"]stretchableImageWithLeftCapWidth:100 topCapHeight:30] forState:UIControlStateNormal];
-    takePhoto.titleLabel.font = [UIFont systemFontOfSize:15];
-    [ownerView addSubview:takePhoto];
-    
-    ownerView.hidden = YES;
     
     //grayLine2
     UIView * grayLine2 = [MyControl createViewWithFrame:CGRectMake(0, 180, 320, 5)];
@@ -309,10 +345,46 @@
 -(void)addBtnClick:(UIButton *)button
 {
     button.selected = !button.selected;
+    if (button.selected) {
+        ToolTipsViewController *tool = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:tool];
+        [tool release];
+        [tool didMoveToParentViewController:self];
+        [self.view addSubview:tool.view];
+        [tool createJoinCountryAlertView];
+        NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+        NSString *joinPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,self.aid,joinPetCricleSig,[ControllerManager getSID]];
+        NSLog(@"加入圈子:%@",joinPetCricleString);
+//        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:joinPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//            if (isFinish) {
+//                NSLog(@"加入成功数据：%@",load.dataDict);
+//                
+//            }else{
+//                NSLog(@"加入国家失败");
+//            }
+//        }];
+        
+    }else{
+        NSString *exitPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+        NSString *exitPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",EXITPETCRICLEAPI,self.aid,exitPetCricleSig,[ControllerManager getSID]];
+        NSLog(@"退出圈子：%@",exitPetCricleString);
+    }
 }
 -(void)attentionBtnClick:(UIButton *)button
 {
     button.selected = !button.selected;
+    if (button.selected) {
+        
+        NSString *petAttentionSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+        NSString *petAttentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETATTENTIONAPI,self.aid,petAttentionSig,[ControllerManager getSID]];
+        NSLog(@"关注宠物：%@",petAttentionString);
+    }else{
+        NSString *petAttentionSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+        NSString *petAttentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETATTENTIONCANCELAPI,self.aid,petAttentionSig,[ControllerManager getSID]];
+        NSLog(@"关注宠物：%@",petAttentionString);
+    }
+
+    
 }
 -(void)takePhoto
 {
@@ -348,7 +420,7 @@
             if (isFinish) {
                 //本地目录，用于存放favorite下载的原图
                     NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.userDataArray[0] tx]]];
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
                     //将下载的图片存放到本地
                     [load.data writeToFile:txFilePath atomically:YES];
                     bgImageView1.image = [load.dataImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
@@ -366,8 +438,9 @@
     alphaView.alpha = 0.7;
     alphaView.backgroundColor = [ControllerManager colorWithHexString:@"a85848"];
     [bgView addSubview:alphaView];
-    
-    UIImageView * headerView = [MyControl createImageViewWithFrame:CGRectMake(10, 25, 70, 70) ImageName:@""];
+//    ClickImage * headerView = [MyControl createImageViewWithFrame:CGRectMake(10, 25, 70, 70) ImageName:@""];
+    ClickImage *headerView = [[ClickImage alloc]initWithFrame:CGRectMake(10, 25, 70, 70)];
+    headerView.canClick = YES;
     headerView.layer.cornerRadius = 70/2;
     headerView.layer.masksToBounds = YES;
     [bgView addSubview:headerView];
@@ -394,22 +467,22 @@
         }];
     }
     
-    UIButton * attentionBtn = [MyControl createButtonWithFrame:CGRectMake(60, 75, 20, 20) ImageName:@"" Target:self Action:@selector(attentionBtnClick) Title:@"关注"];
-    attentionBtn.titleLabel.font = [UIFont systemFontOfSize:10];
-    attentionBtn.layer.cornerRadius = 20/2;
-    attentionBtn.layer.masksToBounds = YES;
-    attentionBtn.backgroundColor = BGCOLOR4;
+//    UIButton * attentionBtn = [MyControl createButtonWithFrame:CGRectMake(60, 75, 20, 20) ImageName:@"" Target:self Action:@selector(attentionBtnClick) Title:@"关注"];
+//    attentionBtn.titleLabel.font = [UIFont systemFontOfSize:10];
+//    attentionBtn.layer.cornerRadius = 20/2;
+//    attentionBtn.layer.masksToBounds = YES;
+//    attentionBtn.backgroundColor = BGCOLOR4;
 //    attentionBtn.showsTouchWhenHighlighted = YES;
-    [bgView addSubview:attentionBtn];
+//    [bgView addSubview:attentionBtn];
     
     //
-    NSString * str = [self.userDataArray[0] name];
+    NSString * str = [petInfoDict objectForKey:@"name"];
     CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * name = [MyControl createLabelWithFrame:CGRectMake(105, 25, size.width+5, 20) Font:15 Text:str];
     [bgView addSubview:name];
     
     UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 14, 17) ImageName:@"woman"];
-    if ((int)[petInfoDict objectForKey:@"gender"] == 1) {
+    if ([[petInfoDict objectForKey:@"gender"] intValue] == 1) {
         sex.image = [UIImage imageNamed:@"man.png"];
     }
     [bgView addSubview:sex];
@@ -486,8 +559,9 @@
         [userImageBtn setBackgroundImage:User_image forState:UIControlStateNormal];
     }else{
         
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"u_tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL,[petInfoDict objectForKey:@"u_tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
+                NSLog(@"load.dataImage:%@",load.dataImage);
                 if (load.dataImage == NULL) {
                     [userImageBtn setBackgroundImage:[UIImage imageNamed:@"20-1.png"] forState:UIControlStateNormal];
                 }else{
@@ -524,7 +598,8 @@
     //人气、成员、粉丝数
     int t_rq = [[petInfoDict objectForKey:@"t_rq"] intValue];
     int fans = [[petInfoDict objectForKey:@"fans"] intValue];
-    NSString * dataStr = [NSString stringWithFormat:@"总人气 %d  |   成员 123  |   粉丝 %d",t_rq,fans];
+    int followers = [[petInfoDict objectForKey:@"followers"] intValue];
+    NSString * dataStr = [NSString stringWithFormat:@"总人气 %d  |   成员 %d  |   粉丝 %d",t_rq,followers,fans];
     UILabel * dataLabel = [MyControl createLabelWithFrame:CGRectMake(0, 130, 320, 15) Font:13 Text:dataStr];
     dataLabel.textAlignment = NSTextAlignmentCenter;
     [bgView addSubview:dataLabel];

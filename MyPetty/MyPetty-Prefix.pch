@@ -110,7 +110,8 @@
 
 
     //加关注API
-    #define FOLLOWAPI @"http://54.199.161.210/dc/index.php?r=user/followApi&usr_id="
+    #define FOLLOWAPI @"http://54.199.161.210:8001/index.php?r=animal/followApi&aid="
+
     //取消关注API
     #define UNFOLLOWAPI @"http://54.199.161.210/dc/index.php?r=user/unfollowApi&usr_id="
 
@@ -123,7 +124,7 @@
     #define FOLLOWERAPI2 @"http://54.199.161.210/dc/index.php?r=user/followerApi&usr_id="
 
     //点赞API
-    #define LIKEAPI @"http://54.199.161.210/dc/index.php?r=image/likeApi&img_id="
+    #define LIKEAPI @"http://54.199.161.210:8001/index.php?r=image/likeApi&img_id="
     //取消赞API
     #define UNLIKEAPI @"http://54.199.161.210/dc/index.php?r=image/unlikeApi&img_id="
 

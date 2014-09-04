@@ -40,7 +40,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-    [topic setTitle:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]] forState:UIControlStateNormal];
+    if ([[USER objectForKey:@"selectTopic"] intValue] == 1) {
+        [topic setTitle:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]] forState:UIControlStateNormal];
+        [USER setObject:@"0" forKey:@"selectTopic"];
+    }
     
 //    if ([[[USER objectForKey:@"atUsers"] count] intValue] == 0) {
 //        [users setTitle:@"点击@用户" forState:UIControlStateNormal];
@@ -76,8 +79,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)createBg
 {
-    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
-    [self.view addSubview:self.bgImageView];
+    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    [self.view addSubview:bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
 //    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 //    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
@@ -85,7 +88,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    NSData * data = [NSData dataWithContentsOfFile:filePath];
 //    //    NSLog(@"%@", data);
 //    UIImage * image = [UIImage imageWithData:data];
-    self.bgImageView.image = [self.oriImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+    bgImageView.image = [self.oriImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
     tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
     [self.view addSubview:tempView];
@@ -124,9 +127,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)makeUI
 {
-    bgImageView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    bgImageView.contentSize = CGSizeMake(320, 568);
-    [self.view addSubview:bgImageView];
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    sv.contentSize = CGSizeMake(320, 568);
+    [self.view addSubview:sv];
 //    UIImageView * bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@""];
 //    [self.view addSubview:bgImageView];
     
@@ -154,7 +157,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     bigImageView.frame = CGRectMake((self.view.frame.size.width-300)/2, bigImageView.frame.origin.y, 300, 230);
     bigImageView.layer.cornerRadius = 5;
     bigImageView.layer.masksToBounds = YES;
-    [bgImageView addSubview:bigImageView];
+    [sv addSubview:bigImageView];
     
     /***********#话题#  @用户************/
     topic = [MyControl createButtonWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, 290/2, 30) ImageName:@"" Target:self Action:@selector(topicClick) Title:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]]];
@@ -163,7 +166,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     topic.layer.cornerRadius = 3;
     topic.layer.masksToBounds = YES;
     topic.showsTouchWhenHighlighted = YES;
-    [bgImageView addSubview:topic];
+    [sv addSubview:topic];
     
     users = [MyControl createButtonWithFrame:CGRectMake(320-10-290/2, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, 290/2, 30) ImageName:@"" Target:self Action:@selector(usersClick) Title:@"点击@用户"];
 //    if ([[USER objectForKey:@"atUsers"] count] == 0) {
@@ -176,13 +179,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     users.layer.cornerRadius = 3;
     users.layer.masksToBounds = YES;
     users.showsTouchWhenHighlighted = YES;
-    [bgImageView addSubview:users];
+    [sv addSubview:users];
     /***********************************/
 //    _textView = [MyControl createTextFieldWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+5, 300, 80) placeholder:@"为您爱宠的靓照写个描述吧~" passWord:NO leftImageView:nil rightImageView:nil Font:17];
     textBgView = [MyControl createViewWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+5+33, 300, 80)];
     //将大小赋值给全局变量
     rect = textBgView.frame;
-    [bgImageView addSubview:textBgView];
+    [sv addSubview:textBgView];
     
     limitLabel = [MyControl createLabelWithFrame:CGRectMake(textBgView.frame.size.width-15-80, textBgView.frame.size.height-25-30, 80, 30) Font:25 Text:@"40"];
     limitLabel.textAlignment = NSTextAlignmentRight;
@@ -212,14 +215,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     publishButton.backgroundColor = BGCOLOR;
     publishButton.layer.cornerRadius = 5;
     publishButton.layer.masksToBounds = YES;
-    [bgImageView addSubview:publishButton];
+    [sv addSubview:publishButton];
     
     /************************************/
     UIImageView * bgImageView2 = [MyControl createImageViewWithFrame:CGRectMake(10, publishButton.frame.origin.y+publishButton.frame.size.height+5, 300, 45) ImageName:nil];
 //    bgImageView2.image = [[UIImage imageNamed:@"30-2-2.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:0];
     
     bgImageView2.image = [[UIImage imageNamed:@"30-2-2.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
-    [bgImageView addSubview:bgImageView2];
+    [sv addSubview:bgImageView2];
     
     sina = [MyControl createButtonWithFrame:CGRectMake(20+5, 5+5, 25, 25) ImageName:@"publish_unSelected.png" Target:self Action:@selector(sinaClick) Title:nil];
     if ([[USER objectForKey:@"sina"] intValue] == 1) {

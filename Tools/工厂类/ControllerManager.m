@@ -345,7 +345,9 @@ MBProgressHUD *HUD;
 {
     NSString * str = nil;
     int a = [type intValue];
-    NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"%@/CateNameList.plist", DOCDIR]];
+    NSString * path = [[NSBundle mainBundle] pathForResource:@"CateNameList" ofType:@"plist"];
+    NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:path];
+//    NSLog(@"%@", dict);
     if (a/100 == 1) {
         str = [[dict objectForKey:@"1"] objectForKey:type];
     }else if(a/100 == 2){

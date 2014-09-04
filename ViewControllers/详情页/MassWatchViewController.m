@@ -22,6 +22,7 @@
     [self createBg];
     [self createTableView];
     [self createNavgation];
+    
 }
 
 - (void)createNavgation
@@ -34,7 +35,10 @@
     alphaView.backgroundColor = BGCOLOR;
     [navView addSubview:alphaView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(17, 30, 20, 20) ImageName:@"7-7.png" Target:self Action:@selector(backBtnClick:) Title:nil];
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+    [navView addSubview:backImageView];
+    
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
@@ -48,6 +52,7 @@
 -(void)backBtnClick:(UIButton *)button
 {
     NSLog(@"从围观群众页返回");
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)createTableView
 {
@@ -55,6 +60,7 @@
     tv.dataSource = self;
     tv.delegate = self;
     tv.backgroundColor = [UIColor clearColor];
+    tv.separatorStyle = 0;
     [self.view addSubview:tv];
     
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
@@ -80,7 +86,7 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 80;
+    return 70;
 }
 -(void)createBg
 {

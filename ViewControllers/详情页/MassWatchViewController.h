@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@class ANBlurredImageView;
+//@class ANBlurredImageView;
 @interface MassWatchViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 {
     UIView * navView;

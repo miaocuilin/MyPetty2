@@ -39,4 +39,6 @@
 + (void)loginHUDAlertView:(UIView *)showInView;
 
 +(NSString *)returnCateNameWithType:(NSString *)type;
+
++(NSString *)returnProvinceAndCityWithCityNum:(NSString *)cityNum;
 @end

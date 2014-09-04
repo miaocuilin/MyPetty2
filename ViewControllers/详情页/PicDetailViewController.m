@@ -829,6 +829,7 @@
 //        zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]-1];
 //    }
 }
+
 #pragma mark - 进入国王
 - (IBAction)headBtnClick:(id)sender {
     NSLog(@"进入王国");
@@ -838,12 +839,14 @@
         [self addChildViewController:vc];
         [self.view addSubview:vc.view];
         [vc createLoginAlertView];
+    }else{
+        PetInfoViewController *petInfoKing = [[PetInfoViewController alloc] init];
+        petInfoKing.aid = self.aid;
+        [self presentViewController:petInfoKing animated:YES completion:^{
+            NSLog(@"进入王国");
+        }];
     }
-    PetInfoViewController *petInfoKing = [[PetInfoViewController alloc] init];
-    petInfoKing.aid = self.aid;
-    [self presentViewController:petInfoKing animated:YES completion:^{
-        NSLog(@"进入王国");
-    }];
+    
 }
 - (IBAction)attentionBtnClick:(id)sender {
     if (![ControllerManager getIsSuccess]) {

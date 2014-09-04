@@ -90,7 +90,7 @@
     #define IMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
 
     #define PETIMAGESAPI @"http://54.199.161.210:8001/index.php?r=animal/imagesApi&aid="
-    #define PETIMAGESAPI2 @"http://54.199.161.210:8001/index.php?r=animal/imagesApi&img_id="
+    #define PETIMAGESAPI2 @"http://54.199.161.210:8001/index.php?r=animal/imagesApi&aid="
 
     //获取其它用户照片API
     #define OTHERIMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&usr_id="
@@ -161,7 +161,7 @@
     #define REWARDAPI @"http://54.199.161.210/dc/index.php?r=topic/rewardApi&topic_id="
 
     //消息列表 mail_id=&is_system=
-    #define NOTIFYAPI @"http://54.199.161.210/dc/index.php?r=mail/listApi&is_system="
+    #define NOTIFYAPI @"http://54.199.161.210:8001/index.php?r=mail/listApi&is_system="
 //    #define NOTIFYAPI2 @"http://54.199.161.210/dc/index.php?r=mail/listApi&is_system="
 
     //发送消息 POST方法 参数为to_id 和 body
@@ -202,4 +202,6 @@
     #define PETATTENTIONAPI @"http://54.199.161.210:8001/index.php?r=animal/followApi&aid="
     //取消关注宠物圈子
     #define PETATTENTIONCANCELAPI @"http://54.199.161.210:8001/index.php?r=animal/followApi&aid="
+    //关注关系
+    #define RELATIONAPI @"http://54.199.161.210:8001/index.php?r=animal/relationApi&aid="
 #endif

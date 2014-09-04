@@ -73,9 +73,7 @@
         self.likersArray = [model.likers componentsSeparatedByString:@","];
         for(NSString * str in self.likersArray){
             if ([str isEqualToString:[USER objectForKey:@"usr_id"]]) {
-                isLike = YES;
-                heartButton.selected = YES;
-                heart.image = [UIImage imageNamed:@"11-2.png"];
+                fish.image = [UIImage imageNamed:@"fish1.png"];
             }
         }
     }
@@ -126,8 +124,8 @@
         
         [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
-                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"点赞失败 = =."];
+                if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                    btn.enabled = NO;
                     fish.image = [UIImage imageNamed:@"fish1.png"];
                     zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
                     [UIView animateWithDuration:0.5 animations:^{
@@ -145,22 +143,22 @@
         
         
     }else{
-        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNLIKEAPI, self.img_id,sig, [ControllerManager getSID]];
-        NSLog(@"UNlikeURL:%@", url);
-        
-        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消赞失败 = =."];
-                    fish.image = [UIImage imageNamed:@"fish.png"];
-                    zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]-1];
-                }
-            }else{
-                NSLog(@"数据请求失败");
-            }
-            //            button.userInteractionEnabled = YES;
-            //            self.contentView.userInteractionEnabled = YES;
-        }];
+        btn.enabled = NO;
+//        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNLIKEAPI, self.img_id,sig, [ControllerManager getSID]];
+//        NSLog(@"UNlikeURL:%@", url);
+//        
+//        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+//                    fish.image = [UIImage imageNamed:@"fish.png"];
+//                    zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]-1];
+//                }
+//            }else{
+//                NSLog(@"数据请求失败");
+//            }
+//            //            button.userInteractionEnabled = YES;
+//            //            self.contentView.userInteractionEnabled = YES;
+//        }];
 
         
     }

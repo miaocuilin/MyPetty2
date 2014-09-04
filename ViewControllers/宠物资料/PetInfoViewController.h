@@ -21,17 +21,22 @@
     UIView * toolBgView;
     UIView * bottom;
     UIView * bgView;
-    BOOL isCreated[3];
+    BOOL isCreated[4];
     UIImageView * bgImageView1;
     BOOL isPhotoDownload;
     
     BOOL isMoreCreated;
     UIView * moreView;
     UIButton * alphaBtn;
+    MBProgressHUD *alertView;
+
+
 }
 @property (nonatomic,copy)NSString * lastImg_id;
+@property (nonatomic,copy)NSString * lastUsr_id;
 @property (nonatomic,retain)NSMutableArray * photosDataArray;
 @property (nonatomic,retain)NSMutableArray * userDataArray;
+@property (nonatomic,retain)NSMutableArray * countryMembersDataArray;
 @property (nonatomic,copy)NSString *aid;
 //@property (nonatomic,copy)NSString *usr_id;
 @end

@@ -238,19 +238,20 @@
     alertView = [self alertViewInit:CGSizeMake(290, 215)];
     
     UIView *bodyView =[self JoinAndBuyBody:222 Title:@"确认"];
-    UILabel *askLabel1 = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 -80, 40, 160, 20) Font:16 Text:@"确定加入一个新国家？"];
+    UILabel *askLabel1 = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 -80, 80, 160, 20) Font:16 Text:@"确定加入一个新国家？"];
     askLabel1.textColor = [UIColor grayColor];
     [bodyView addSubview:askLabel1];
-    UILabel *askLabel2 = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 - 80, 70, 160, 20) Font:16 Text:@"这将花费您 100"];
+//    UILabel *askLabel2 = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 - 80, 70, 160, 20) Font:16 Text:@"这将花费您 100"];
+//    
+//    
+//    askLabel2.textColor = [UIColor grayColor];
+//    [bodyView addSubview:askLabel2];
+//    
+//    UIImageView *coinImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2 +35, 63, 30, 30) ImageName:@"gold.png"];
+//    [bodyView addSubview:coinImageView];
     
-    
-    askLabel2.textColor = [UIColor grayColor];
-    [bodyView addSubview:askLabel2];
-    
-    UIImageView *coinImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2 +35, 63, 30, 30) ImageName:@"gold.png"];
-    [bodyView addSubview:coinImageView];
-    
-    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 - 120, 130, 230, 20) Font:13 Text:@"星球提示：每个人最多加入10个圈子"];
+    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 - 120, 120, 230, 20) Font:13 Text:@"星球提示：每个人最多加入10个圈子"];
+    descLabel.textAlignment = NSTextAlignmentCenter;
     descLabel.textColor = [UIColor grayColor];
     [bodyView addSubview:descLabel];
     alertView.customView = bodyView;
@@ -277,7 +278,7 @@
     cancelButton.showsTouchWhenHighlighted = YES;
     [bodyView addSubview:cancelButton];
     
-    UILabel *sureLabel = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2-50, 160, 100, 35) Font:16 Text:titleString];
+    UILabel *sureLabel = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2-70, 160, 140, 35) Font:16 Text:titleString];
     
     sureLabel.backgroundColor = BGCOLOR;
     sureLabel.layer.cornerRadius = 5;
@@ -296,8 +297,11 @@
 {
     NSLog(@"取消");
     [alertView hide:YES];
-    [self removeFromParentViewController];
-    [self.view removeFromSuperview];
+    alertView.completionBlock = ^{
+        [self removeFromParentViewController];
+        [self.view removeFromSuperview];
+    };
+    
 }
 
 - (void)sureAction:(UIButton *)sender

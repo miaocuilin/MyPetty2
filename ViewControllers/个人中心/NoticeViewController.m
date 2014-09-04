@@ -43,8 +43,8 @@
     [self createDivision];
     
 
-//    [self loadMessageData];
-//    [self loadSystemData];
+    [self loadMessageData];
+    [self loadSystemData];
     [self createAlphaBtn];
 }
 /****************************/

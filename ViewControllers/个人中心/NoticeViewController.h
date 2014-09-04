@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-@class ANBlurredImageView;
 @interface NoticeViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
 {
     UIView * navView;

@@ -16,11 +16,32 @@
 #import "PopularityListViewController.h"
 #import "ContributionViewController.h"
 #import "ClickImage.h"
-#include "ToolTipsViewController.h"
-@interface PetInfoViewController ()
+#import "CountryMembersModel.h"
+#import "ToolTipsViewController.h"
+#import "MJRefresh.h"
+
+#import "PublishViewController.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <QuartzCore/QuartzCore.h>
+#import <AviarySDK/AviarySDK.h>
+static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
+static NSString * const kAFAviarySecret = @"389160adda815809";
+@interface PetInfoViewController ()<AFPhotoEditorControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 {
     NSDictionary *petInfoDict;
+    UIButton * addBtn;
+    UIButton * attentionBtn;
+    BOOL attentionBtnFirst;
+    
+    BOOL isCamara;
+    UIActionSheet * sheet;
+    BOOL isFans;
+    BOOL isFollow;
 }
+@property (nonatomic, strong) ALAssetsLibrary * assetLibrary;
+@property (nonatomic, strong) NSMutableArray * sessions;
+@property(nonatomic,retain)UIImage * oriImage;
+
 @end
 
 @implementation PetInfoViewController
@@ -30,16 +51,6 @@
         _aid = [USER objectForKey:@"aid"];
     }
     return _aid;
-}
-- (void)createButton
-{
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(0, 100, 100, 100);
-    button.backgroundColor = [UIColor redColor];
-    [button setTitle:@"button" forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(buttonAction) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:button];
 }
 - (void)buttonAction
 {
@@ -51,32 +62,55 @@
     }];
     [request release];
 }
-- (void)viewDidAppear:(BOOL)animated
-{
-//    [self createButton];
-
-}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    // Allocate Asset Library
+    ALAssetsLibrary * assetLibrary = [[ALAssetsLibrary alloc] init];
+    [self setAssetLibrary:assetLibrary];
+    
+    // Allocate Sessions Array
+    NSMutableArray * sessions = [NSMutableArray new];
+    [self setSessions:sessions];
+    [sessions release];
+    
+    // Start the Aviary Editor OpenGL Load
+    [AFOpenGLManager beginOpenGLLoad];
+    
+    
     self.photosDataArray = [NSMutableArray arrayWithCapacity:0];
 //    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.countryMembersDataArray = [NSMutableArray array];
     
     [self loadKingData];
-    [self loadPhotoData];
+
     [self createScrollView];
     [self createFakeNavigation];
-//    [self createHeader];
     [self createTableView];
-    [self loadKingDynamicData];
-    [self loadKingMembersData];
-    [self loadKingPresentsData];
+    [self loadAttentionAPI];
 //    [self.view bringSubviewToFront:self.menuBgBtn];
 //    [self.view bringSubviewToFront:self.menuBgView];
 
 }
-
+#pragma mark - 关系API
+- (void)loadAttentionAPI
+{
+//    animal/relationApi&aid=
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+    NSString *attentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RELATIONAPI,self.aid,sig,[ControllerManager getSID]];
+    NSLog(@"%@",attentionString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:attentionString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        if (isFinish) {
+            [load.dataDict objectForKey:@"data"];
+            isFans = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_fan"] intValue];
+            isFollow = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_follow"] intValue];
+            [self createMore];
+        }
+    }];
+    [request release];
+}
 #pragma mark - 国王动态数据
 - (void)loadKingDynamicData
 {
@@ -86,6 +120,9 @@
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalNewsString Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"国王动态数据：%@",load.dataDict);
+            [self createNewsTableView];
+//            [self loadPhotoData];
+
         }
     }];
     [request release];
@@ -94,15 +131,56 @@
 - (void)loadKingMembersData
 {
     NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-    NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI,self.aid,animalMembersSig, [ControllerManager getSID]];
+    NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETMEMBERSAPI,self.aid,animalMembersSig, [ControllerManager getSID]];
     NSLog(@"国王成员API:%@",animalMembersString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalMembersString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
             NSLog(@"国王成员数据：%@",load.dataDict);
+            [self.countryMembersDataArray removeAllObjects];
+            NSArray *array = [load.dataDict objectForKey:@"data"];
+            
+            for (int i = 0; i<array.count; i++) {
+                NSDictionary * dict = array[i];
+                CountryMembersModel *model = [[CountryMembersModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.countryMembersDataArray addObject:model];
+                if (i == array.count-1) {
+                    self.lastUsr_id = model.usr_id;
+                }
+                [model release];
+            }
+            [self createCountryMembersTableView];
+//            [self loadKingPresentsData];
         }
     }];
     [request release];
     
+}
+- (void)loadKingMembersDataMore
+{
+    NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@usr_id=%@dog&cat",self.aid,self.lastUsr_id]];
+    NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&usr_id=%@&sig=%@&SID=%@", PETMEMBERSAPI,self.aid,self.lastUsr_id,animalMembersSig, [ControllerManager getSID]];
+    NSLog(@"更多国王成员API:%@",animalMembersString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalMembersString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        if (isFinish) {
+            NSLog(@"更多国王成员数据：%@",load.dataDict);
+            [self.countryMembersDataArray removeAllObjects];
+            NSArray *array = [load.dataDict objectForKey:@"data"];
+            
+            for (int i = 0; i<array.count; i++) {
+                NSDictionary * dict = array[i];
+                CountryMembersModel *model = [[CountryMembersModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.countryMembersDataArray addObject:model];
+                if (i == array.count-1) {
+                    self.lastUsr_id = model.usr_id;
+                }
+                [model release];
+            }
+            [tv3 footerEndRefreshing];
+        }
+    }];
+    [request release];
 }
 #pragma mark - 国王礼物数据
 
@@ -115,6 +193,7 @@
         if (isFinish) {
             
             NSLog(@"国王礼物数据：%@",load.dataDict);
+            [self createPresentsTableView];
         }
     }];
     [request release];
@@ -131,16 +210,12 @@
         if (isFinish) {
             NSLog(@"国王信息:%@", load.dataDict);
             petInfoDict = [load.dataDict objectForKey:@"data"];
-//            [self.userDataArray removeAllObjects];
-//            
-//            NSDictionary * dict = [load.dataDict objectForKey:@"data"] ;
-//            InfoModel * model = [[InfoModel alloc] init];
-//            [model setValuesForKeysWithDictionary:dict];
-//            [self.userDataArray addObject:model];
-//            [model release];
-//            NSLog(@"宠物头像：%@", [self.userDataArray[0] tx]);
 
             [self createHeader];
+            
+            [self loadKingDynamicData];
+
+
             [self.view bringSubviewToFront:navView];
             [self.view bringSubviewToFront:toolBgView];
             
@@ -166,7 +241,43 @@
             NSLog(@"国王照片数据:%@", load.dataDict);
             [self.photosDataArray removeAllObjects];
             
-            NSArray * array = [load.dataDict objectForKey:@"data"];
+            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for(int i=0;i<array.count;i++){
+                NSDictionary * dict = array[i];
+                PhotoModel * model = [[PhotoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                
+                //model.headImage = tempImage;
+                model.title = [USER objectForKey:@"name"];
+                model.detail = [USER objectForKey:@"detailName"];
+                [self.photosDataArray addObject:model];
+                if (i == array.count-1) {
+                    self.lastImg_id = model.img_id;
+                }
+                [model release];
+            }
+            isPhotoDownload = YES;
+//            [self loadKingMembersData];
+            [self createPhotosTableView];
+//            self.view.userInteractionEnabled = YES;
+        }else{
+            [tv2 headerEndRefreshing];
+//            self.view.userInteractionEnabled = YES;
+            NSLog(@"数据加载失败。");
+            NET = NO;
+        }
+    }];
+}
+- (void)loadPhotoDataMore
+{
+    NET = YES;
+    NSString *petImagesSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&img_id=%@dog&cat",self.aid,self.lastImg_id]];
+    NSString *petImageAPIString = [NSString stringWithFormat:@"%@%@&img_id=%@&sig=%@&SID=%@",PETIMAGESAPI,self.aid,self.lastImg_id,petImagesSig,[ControllerManager getSID]];
+    NSLog(@" 更多国王照片数据API:%@",petImageAPIString);
+    [[httpDownloadBlock alloc] initWithUrlStr:petImageAPIString Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"更多国王照片数据:%@", load.dataDict);
+            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for(int i=0;i<array.count;i++){
                 NSDictionary * dict = array[i];
                 PhotoModel * model = [[PhotoModel alloc] init];
@@ -183,16 +294,16 @@
             }
             isPhotoDownload = YES;
             [tv2 reloadData];
-            
-            [tv2 headerEndRefreshing];
-//            self.view.userInteractionEnabled = YES;
+            [tv2 footerEndRefreshing];
+            //            self.view.userInteractionEnabled = YES;
         }else{
             [tv2 headerEndRefreshing];
-//            self.view.userInteractionEnabled = YES;
+            //            self.view.userInteractionEnabled = YES;
             NSLog(@"数据加载失败。");
             NET = NO;
         }
     }];
+
 }
 -(void)createFakeNavigation
 {
@@ -237,7 +348,7 @@
     NSLog(@"more");
     if (!isMoreCreated) {
         //create more
-        [self createMore];
+        [self loadAttentionAPI];
     }
     //show more
     alphaBtn.hidden = NO;
@@ -259,6 +370,7 @@
     // 318*234
     moreView = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height, 320, 234)];
     moreView.backgroundColor = [ControllerManager colorWithHexString:@"efefef"];
+//    [self.view bringSubviewToFront:moreView];
     [self.view addSubview:moreView];
     
     //orange line
@@ -281,7 +393,7 @@
         UILabel * label = [MyControl createLabelWithFrame:CGRectMake(rect.origin.x-10, rect.origin.y+rect.size.height+5, rect.size.width+20, 15) Font:12 Text:arr2[i]];
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [UIColor blackColor];
-//        label.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        //        label.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
         [moreView addSubview:label];
     }
     //grayLine1
@@ -294,19 +406,20 @@
         UIView * strangerAndFakeOwnerView = [MyControl createViewWithFrame:CGRectMake(0, 127, 320, 76/2)];
         [moreView addSubview:strangerAndFakeOwnerView];
         
-        UIButton * addBtn = [MyControl createButtonWithFrame:CGRectMake(20, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(addBtnClick:) Title:@"加入"];
+        addBtn = [MyControl createButtonWithFrame:CGRectMake(20, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(addBtnClick:) Title:@"加入"];
         [addBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
         [addBtn setTitle:@"已加入" forState:UIControlStateSelected];
         addBtn.titleLabel.font = [UIFont systemFontOfSize:15];
         [strangerAndFakeOwnerView addSubview:addBtn];
-        
-        UIButton * attentionBtn = [MyControl createButtonWithFrame:CGRectMake(354/2, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(attentionBtnClick:) Title:@"关注"];
+        addBtn.selected = isFans;
+        attentionBtn = [MyControl createButtonWithFrame:CGRectMake(354/2, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(attentionBtnClick:) Title:@"关注"];
         [attentionBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
         [attentionBtn setTitle:@"已关注" forState:UIControlStateSelected];
         attentionBtn.titleLabel.font = [UIFont systemFontOfSize:15];
         [strangerAndFakeOwnerView addSubview:attentionBtn];
+        attentionBtn.selected = isFollow;
         //    strangerAndFakeOwnerView.hidden = YES;
-
+        
     }else{
         //OwnerView
         UIView * ownerView = [MyControl createViewWithFrame:CGRectMake(0, 127, 320, 76/2)];
@@ -316,7 +429,7 @@
         [takePhoto setBackgroundImage:[[UIImage imageNamed:@"more_greenBg.png"]stretchableImageWithLeftCapWidth:100 topCapHeight:30] forState:UIControlStateNormal];
         takePhoto.titleLabel.font = [UIFont systemFontOfSize:15];
         [ownerView addSubview:takePhoto];
-//        ownerView.hidden = YES;
+        //        ownerView.hidden = YES;
     }
     
     
@@ -331,6 +444,7 @@
     cancelBtn.showsTouchWhenHighlighted = YES;
     cancelBtn.titleLabel.font = [UIFont systemFontOfSize:17];
     [moreView addSubview:cancelBtn];
+
 }
 -(void)shareClick:(UIButton *)button
 {
@@ -344,44 +458,18 @@
 }
 -(void)addBtnClick:(UIButton *)button
 {
-    button.selected = !button.selected;
-    if (button.selected) {
-        ToolTipsViewController *tool = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:tool];
-        [tool release];
-        [tool didMoveToParentViewController:self];
-        [self.view addSubview:tool.view];
-        [tool createJoinCountryAlertView];
-        NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-        NSString *joinPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,self.aid,joinPetCricleSig,[ControllerManager getSID]];
-        NSLog(@"加入圈子:%@",joinPetCricleString);
-//        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:joinPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-//            if (isFinish) {
-//                NSLog(@"加入成功数据：%@",load.dataDict);
-//                
-//            }else{
-//                NSLog(@"加入国家失败");
-//            }
-//        }];
-        
+    if (!button.selected) {
+        [self createJoinCountryAlertView];
     }else{
-        NSString *exitPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-        NSString *exitPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",EXITPETCRICLEAPI,self.aid,exitPetCricleSig,[ControllerManager getSID]];
-        NSLog(@"退出圈子：%@",exitPetCricleString);
+        [self createExitCountryAlertView];
     }
 }
 -(void)attentionBtnClick:(UIButton *)button
 {
-    button.selected = !button.selected;
-    if (button.selected) {
-        
-        NSString *petAttentionSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-        NSString *petAttentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETATTENTIONAPI,self.aid,petAttentionSig,[ControllerManager getSID]];
-        NSLog(@"关注宠物：%@",petAttentionString);
+    if (!button.selected) {
+        [self createAttentionAlertView];
     }else{
-        NSString *petAttentionSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-        NSString *petAttentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETATTENTIONCANCELAPI,self.aid,petAttentionSig,[ControllerManager getSID]];
-        NSLog(@"关注宠物：%@",petAttentionString);
+        [self createAttentionCancelAlertView];
     }
 
     
@@ -389,16 +477,235 @@
 -(void)takePhoto
 {
     NSLog(@"take photos");
+//    moreView.hidden = YES;
+//    alphaBtn.hidden = YES;
+    if ([ControllerManager getIsSuccess]) {
+        if (sheet == nil) {
+            // 判断是否支持相机
+            if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+            {
+                sheet  = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
+            }
+            else {
+                
+                sheet = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"从相册选择", nil];
+            }
+            
+            sheet.tag = 255;
+            
+        }else{
+            
+        }
+        [sheet showInView:self.view];
+    }else{
+        //提示注册
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+        //        [vc autorelease];
+    }
+    
+
 }
 -(void)cancelBtnClick
 {
     NSLog(@"cancel");
+
     [UIView animateWithDuration:0.3 animations:^{
         moreView.frame = CGRectMake(0, self.view.frame.size.height, 320, 234);
         alphaBtn.alpha = 0;
     } completion:^(BOOL finished) {
+//        [moreView bringSubviewToFront:self]
         alphaBtn.hidden = YES;
     }];
+}
+#pragma mark - 确认加入国家/离开国家弹窗
+- (void)cancelAction
+{
+    [alertView hide:YES];
+}
+- (void)sureAction:(UIButton *)sender
+{
+    if (sender.tag == 222) {
+        if (!addBtn.selected) {
+            NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+            NSString *joinPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,self.aid,joinPetCricleSig,[ControllerManager getSID]];
+            NSLog(@"加入圈子:%@",joinPetCricleString);
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:joinPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                if (isFinish) {
+                    NSLog(@"加入成功数据：%@",load.dataDict);
+                    if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                        addBtn.selected = YES;
+                        [alertView hide:YES];
+                    }
+                    
+                }else{
+                    NSLog(@"加入国家失败");
+                }
+            }];
+            [request release];
+        }else{
+            NSString *exitPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+            NSString *exitPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",EXITPETCRICLEAPI,self.aid,exitPetCricleSig,[ControllerManager getSID]];
+            NSLog(@"退出圈子：%@",exitPetCricleString);
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:exitPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                if (isFinish) {
+                    NSLog(@"退出成功数据：%@",load.dataDict);
+                    if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                        addBtn.selected = NO;
+                        [alertView hide:YES];
+                    }
+                    
+                }else{
+                    NSLog(@"退出国家失败");
+                }
+            }];
+            [request release];
+
+        }
+    }else if (sender.tag== 223){
+        if (!attentionBtn.selected) {
+            NSString *petAttentionSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+            NSString *petAttentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETATTENTIONAPI,self.aid,petAttentionSig,[ControllerManager getSID]];
+            NSLog(@"关注宠物：%@",petAttentionString);
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:petAttentionString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                if (isFinish) {
+                    NSLog(@"关注成功数据：%@",load.dataDict);
+                    if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                        attentionBtn.selected = YES;
+                        [alertView hide:YES];
+                    }
+                    
+                }else{
+                    NSLog(@"关注失败");
+                }
+            }];
+            [request release];
+        }else{
+            NSString *petAttentionSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+            NSString *petAttentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETATTENTIONCANCELAPI,self.aid,petAttentionSig,[ControllerManager getSID]];
+            NSLog(@"关注宠物：%@",petAttentionString);
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:petAttentionString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                if (isFinish) {
+                    NSLog(@"关注成功数据：%@",load.dataDict);
+                    if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                        attentionBtn.selected = NO;
+                        [alertView hide:YES];
+                    }
+                    
+                }else{
+                    NSLog(@"关注失败");
+                }
+            }];
+            [request release];
+        }
+    }
+}
+- (void)createAttentionAlertView
+{
+    alertView = [self alertViewInit:CGSizeMake(290, 215)];
+
+    UIView *bodyView =[self JoinAndBuyBody:223 Title:@"确认"];
+    UILabel *askLabel1 = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 -80, 80, 160, 20) Font:16 Text:@"确定加入关注吗？"];
+    askLabel1.textAlignment = NSTextAlignmentCenter;
+    askLabel1.textColor = [UIColor grayColor];
+    [bodyView addSubview:askLabel1];
+    alertView.customView = bodyView;
+    [alertView show:YES];
+}
+- (void)createAttentionCancelAlertView
+{
+    alertView = [self alertViewInit:CGSizeMake(290, 215)];
+    
+    UIView *bodyView =[self JoinAndBuyBody:223 Title:@"确认"];
+    NSArray *askArray = @[@"真的忍心取消关注TA么？",@"这是真的么~",@"是么~"];
+    for (int i = 0 ; i< askArray.count; i++) {
+        UILabel *askLabel1 = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 -80, 40+i*30, 160, 20) Font:16 Text:askArray[i]];
+        askLabel1.textAlignment = NSTextAlignmentCenter;
+        askLabel1.textColor = [UIColor grayColor];
+        [bodyView addSubview:askLabel1];
+    }
+    alertView.customView = bodyView;
+    [alertView show:YES];
+}
+- (void)createExitCountryAlertView
+{
+    alertView = [self alertViewInit:CGSizeMake(290, 215)];
+    
+    UIView *bodyView =[self JoinAndBuyBody:222 Title:@"确认"];
+    NSArray *askArray = @[@"你说什么？",@"退出国家！",@"三思而后行啊~"];
+    for (int i = 0 ; i< askArray.count; i++) {
+        UILabel *askLabel1 = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 -80, 20+i*30, 160, 20) Font:16 Text:askArray[i]];
+        askLabel1.textAlignment = NSTextAlignmentCenter;
+        askLabel1.textColor = [UIColor grayColor];
+        [bodyView addSubview:askLabel1];
+    }
+    alertView.customView = bodyView;
+    [alertView show:YES];
+}
+- (void)createJoinCountryAlertView
+{
+    alertView = [self alertViewInit:CGSizeMake(290, 215)];
+    
+    UIView *bodyView =[self JoinAndBuyBody:222 Title:@"确认"];
+    UILabel *askLabel1 = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 -80, 80, 160, 20) Font:16 Text:@"确定加入一个新国家？"];
+    askLabel1.textColor = [UIColor grayColor];
+    [bodyView addSubview:askLabel1];
+    
+    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2 - 120, 120, 230, 20) Font:13 Text:@"星球提示：每个人最多加入10个圈子"];
+    descLabel.textAlignment = NSTextAlignmentCenter;
+    descLabel.textColor = [UIColor grayColor];
+    [bodyView addSubview:descLabel];
+    alertView.customView = bodyView;
+    [alertView show:YES];
+}
+- (UIView *)JoinAndBuyBody:(NSInteger)tagNumber Title:(NSString *)titleString
+{
+    UIView *bodyView = [MyControl createViewWithFrame:CGRectMake(0, 0, 290, 215)];
+    bodyView.backgroundColor = [UIColor clearColor];
+    UIView *alphaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 290, 215)];
+    alphaView.backgroundColor = [UIColor whiteColor];
+    alphaView.alpha = 0.8;
+    [bodyView addSubview:alphaView];
+    bodyView.layer.cornerRadius = 10;
+    bodyView.layer.masksToBounds = YES;
+    
+    //创建取消和确认button
+    
+    UIImageView *cancelImageView = [MyControl createImageViewWithFrame:CGRectMake(250, 5, 30, 30) ImageName:@"button_close.png"];
+    [bodyView addSubview:cancelImageView];
+    
+    UIButton *cancelButton = [MyControl createButtonWithFrame:CGRectMake(250, 5, 30, 30) ImageName:nil Target:self Action:@selector(cancelAction) Title:nil];
+    cancelButton.showsTouchWhenHighlighted = YES;
+    [bodyView addSubview:cancelButton];
+    
+    UILabel *sureLabel = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2-70, 160, 140, 35) Font:16 Text:titleString];
+    
+    sureLabel.backgroundColor = BGCOLOR;
+    sureLabel.layer.cornerRadius = 5;
+    sureLabel.layer.masksToBounds = YES;
+    sureLabel.textAlignment = NSTextAlignmentCenter;
+    [bodyView addSubview:sureLabel];
+    
+    UIButton *sureButton = [MyControl createButtonWithFrame:sureLabel.frame ImageName:nil Target:self Action:@selector(sureAction:) Title:nil];
+    sureButton.showsTouchWhenHighlighted = YES;
+    sureButton.tag = tagNumber;
+    [bodyView addSubview:sureButton];
+    return bodyView;
+}
+- (MBProgressHUD *)alertViewInit:(CGSize)widthAndHeight
+{
+    MBProgressHUD * alertViewInit = [[MBProgressHUD alloc] initWithWindow:self.view.window];
+    [self.view.window addSubview:alertViewInit];
+    alertViewInit.mode = MBProgressHUDModeCustomView;
+    alertViewInit.color = [UIColor clearColor];
+    alertViewInit.dimBackground = YES;
+    alertViewInit.margin = 0 ;
+    alertViewInit.removeFromSuperViewOnHide = YES;
+    //    alertViewInit.minSize = CGSizeMake(235.0f, 340.0f);
+    alertViewInit.minSize = widthAndHeight;
+    return alertViewInit;
 }
 #pragma mark - 创建tableView的tableHeaderView
 -(void)createHeader
@@ -555,7 +862,7 @@
     NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"u_tx"]]];
     NSLog(@"本地用户头像路径：%@", txUserFilePath);
     UIImage *User_image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txUserFilePath]];
-    if (image) {
+    if (User_image) {
         [userImageBtn setBackgroundImage:User_image forState:UIControlStateNormal];
     }else{
         
@@ -599,7 +906,7 @@
     int t_rq = [[petInfoDict objectForKey:@"t_rq"] intValue];
     int fans = [[petInfoDict objectForKey:@"fans"] intValue];
     int followers = [[petInfoDict objectForKey:@"followers"] intValue];
-    NSString * dataStr = [NSString stringWithFormat:@"总人气 %d  |   成员 %d  |   粉丝 %d",t_rq,followers,fans];
+    NSString * dataStr = [NSString stringWithFormat:@"总人气 %d  |   成员 %d  |   粉丝 %d",t_rq,fans,followers];
     UILabel * dataLabel = [MyControl createLabelWithFrame:CGRectMake(0, 130, 320, 15) Font:13 Text:dataStr];
     dataLabel.textAlignment = NSTextAlignmentCenter;
     [bgView addSubview:dataLabel];
@@ -644,8 +951,9 @@
 }
 
 #pragma mark - 创建tableView
--(void)createTableView
+- (void)createNewsTableView
 {
+    //动态
     tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
@@ -654,27 +962,37 @@
     
     UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
     tv.tableHeaderView = tvHeaderView;
-    
-    //
+
+}
+- (void)createPhotosTableView
+{
+    //图片
     tv2 = [[UITableView alloc] initWithFrame:CGRectMake(320, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv2.delegate = self;
     tv2.dataSource = self;
     tv2.separatorStyle = 0;
+    [tv2 addFooterWithTarget:self action:@selector(loadPhotoDataMore)];
     [sv addSubview:tv2];
     
     UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
     tv2.tableHeaderView = tvHeaderView2;
-    
-    //
+
+}
+- (void)createCountryMembersTableView
+{
+    //成员
     tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv3.delegate = self;
     tv3.dataSource = self;
+    [tv3 addFooterWithTarget:self action:@selector(loadKingMembersDataMore)];
     [sv addSubview:tv3];
     
     UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
     tv3.tableHeaderView = tvHeaderView3;
-    
-    //
+}
+- (void)createPresentsTableView
+{
+    //礼物
     tv4 = [[UITableView alloc] initWithFrame:CGRectMake(320*3, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv4.delegate = self;
     tv4.dataSource = self;
@@ -682,7 +1000,10 @@
     
     UIView * tvHeaderView4 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
     tv4.tableHeaderView = tvHeaderView4;
-    
+
+}
+-(void)createTableView
+{
     [self.view bringSubviewToFront:bgView];
     [self.view bringSubviewToFront:navView];
     
@@ -717,7 +1038,7 @@
 }
 -(void)imageButtonClick
 {
-
+    NSLog(@"111");
 }
 -(void)toolBtnClick:(UIButton *)button
 {
@@ -728,18 +1049,38 @@
     int a = button.tag;
     UIButton * temp = (UIButton *)[toolBgView viewWithTag:a-100];
     temp.selected = YES;
+   
+//    if (isCreated[0]) {
+//        [self loadKingDynamicData];
+//    }else if (isCreated)
     
     int x = a-200;
     if (x == 0) {
         tempTv = tv;
+        if (!isCreated[0]) {
+            [self loadKingDynamicData];
+            isCreated[0] = 1;
+        }
     }else if(x == 1){
         tempTv = tv2;
+        if (!isCreated[1]) {
+            [self loadPhotoData];
+            isCreated[1] = 1;
+        }
     }else if(x == 2){
         tempTv = tv3;
+        if (!isCreated[2]) {
+            [self loadKingMembersData];
+            isCreated[2] = 1;
+        }
     }else{
         tempTv = tv4;
+        if (!isCreated[3]) {
+            [self loadKingPresentsData];
+            isCreated[3] = 1;
+        }
     }
-    
+
     [UIView animateWithDuration:0.2 animations:^{
         bottom.frame = CGRectMake(x*80, 40, 80, 4);
 //        tempTv.contentOffset = CGPointMake(0, 0);
@@ -800,6 +1141,8 @@
         return self.photosDataArray.count;
     }else if(tableView == tv4){
         return 1;
+    }else if(tableView == tv3){
+        return self.countryMembersDataArray.count;
     }else{
         return 20;
     }
@@ -898,6 +1241,8 @@
         }else{
             [cell modifyWithBOOL:NO lineNum:indexPath.row];
         }
+        CountryMembersModel *model = [self.countryMembersDataArray objectAtIndex:indexPath.row];
+        [cell configUI:model];
         return cell;
     }else{
         static NSString * cellID4 = @"ID4";
@@ -995,6 +1340,273 @@
 {
     NSLog(@"%d", btn.tag);
 }
+#pragma - 相机
+-(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (actionSheet.tag == 255) {
+        
+        NSUInteger sourceType = 0;
+        
+        [USER setObject:[NSString stringWithFormat:@"%d", buttonIndex] forKey:@"buttonIndex"];
+        // 判断是否支持相机
+        if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+            
+            switch (buttonIndex) {
+                    
+                case 0:
+                    // 相机
+                    sourceType = UIImagePickerControllerSourceTypeCamera;
+                    isCamara = YES;
+                    break;
+                case 1:
+                    // 相册
+                    sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                    isCamara = NO;
+                    break;
+                case 2:
+                    // 取消
+                    return;
+            }
+        }
+        else {
+            if (buttonIndex == 0) {
+                sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+                isCamara = NO;
+            } else {
+                return;
+            }
+        }
+        //跳转到相机或相册页面
+        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+        
+        imagePickerController.delegate = self;
+        
+        imagePickerController.sourceType = sourceType;
+        
+        if ([self hasValidAPIKey]) {
+            [self presentViewController:imagePickerController animated:YES completion:^{}];
+        }
+        
+        [imagePickerController release];
+    }
+}
+
+#pragma mark - UIImagePicker Delegate
+
+- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    
+    NSURL * assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
+    
+    void(^completion)(void)  = ^(void){
+        if (isCamara) {
+            [self lauchEditorWithImage:image];
+        }else{
+            [[self assetLibrary] assetForURL:assetURL resultBlock:^(ALAsset *asset) {
+                if (asset){
+                    [self launchEditorWithAsset:asset];
+                }
+            } failureBlock:^(NSError *error) {
+                [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enable access to your device's photos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            }];
+        }};
+    
+    [self dismissViewControllerAnimated:NO completion:completion];
+    
+}
+
+- (void) imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+}
+
+#pragma mark - ALAssets Helper Methods
+
+- (UIImage *)editingResImageForAsset:(ALAsset*)asset
+{
+    CGImageRef image = [[asset defaultRepresentation] fullScreenImage];
+    
+    return [UIImage imageWithCGImage:image scale:1.0 orientation:UIImageOrientationUp];
+}
+
+- (UIImage *)highResImageForAsset:(ALAsset*)asset
+{
+    ALAssetRepresentation * representation = [asset defaultRepresentation];
+    
+    CGImageRef image = [representation fullResolutionImage];
+    UIImageOrientation orientation = (UIImageOrientation)[representation orientation];
+    CGFloat scale = [representation scale];
+    
+    return [UIImage imageWithCGImage:image scale:scale orientation:orientation];
+}
+
+#pragma mark - Status Bar Style
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
+#pragma mark - Private Helper Methods
+
+- (BOOL) hasValidAPIKey
+{
+    if ([kAFAviaryAPIKey isEqualToString:@"<YOUR-API-KEY>"] || [kAFAviarySecret isEqualToString:@"<YOUR-SECRET>"]) {
+        [[[UIAlertView alloc] initWithTitle:@"Oops!"
+                                    message:@"You forgot to add your API key and secret!"
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
+        return NO;
+    }
+    return YES;
+}
+
+#pragma mark -图片编辑
+#pragma mark =================================
+#pragma mark - Photo Editor Launch Methods
+
+//********************自己方法******************
+-(void)lauchEditorWithImage:(UIImage *)image
+{
+    UIImage * editingResImage = image;
+    UIImage * highResImage = image;
+    [self launchPhotoEditorWithImage:editingResImage highResolutionImage:highResImage];
+}
+
+//*********************************************
+- (void) launchEditorWithAsset:(ALAsset *)asset
+{
+    UIImage * editingResImage = [self editingResImageForAsset:asset];
+    UIImage * highResImage = [self highResImageForAsset:asset];
+    
+    [self launchPhotoEditorWithImage:editingResImage highResolutionImage:highResImage];
+}
+#pragma mark - Photo Editor Creation and Presentation
+- (void) launchPhotoEditorWithImage:(UIImage *)editingResImage highResolutionImage:(UIImage *)highResImage
+{
+    // Customize the editor's apperance. The customization options really only need to be set once in this case since they are never changing, so we used dispatch once here.
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self setPhotoEditorCustomizationOptions];
+    });
+    
+    // Initialize the photo editor and set its delegate
+    AFPhotoEditorController * photoEditor = [[AFPhotoEditorController alloc] initWithImage:editingResImage];
+    [photoEditor setDelegate:self];
+    
+    // If a high res image is passed, create the high res context with the image and the photo editor.
+    if (highResImage) {
+        [self setupHighResContextForPhotoEditor:photoEditor withImage:highResImage];
+    }
+    
+    // Present the photo editor.
+    [self presentViewController:photoEditor animated:YES completion:nil];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+}
+
+- (void) setupHighResContextForPhotoEditor:(AFPhotoEditorController *)photoEditor withImage:(UIImage *)highResImage
+{
+    // Capture a reference to the editor's session, which internally tracks user actions on a photo.
+    __block AFPhotoEditorSession *session = [photoEditor session];
+    
+    // Add the session to our sessions array. We need to retain the session until all contexts we create from it are finished rendering.
+    [[self sessions] addObject:session];
+    
+    // Create a context from the session with the high res image.
+    AFPhotoEditorContext *context = [session createContextWithImage:highResImage];
+    
+    __block PetInfoViewController * blockSelf = self;
+    
+    // Call render on the context. The render will asynchronously apply all changes made in the session (and therefore editor)
+    // to the context's image. It will not complete until some point after the session closes (i.e. the editor hits done or
+    // cancel in the editor). When rendering does complete, the completion block will be called with the result image if changes
+    // were made to it, or `nil` if no changes were made. In this case, we write the image to the user's photo album, and release
+    // our reference to the session.
+    [context render:^(UIImage *result) {
+        if (result) {
+            //            UIImageWriteToSavedPhotosAlbum(result, nil, nil, NULL);
+        }
+        
+        [[blockSelf sessions] removeObject:session];
+        
+        blockSelf = nil;
+        session = nil;
+        
+    }];
+}
+
+#pragma Photo Editor Delegate Methods
+
+// This is called when the user taps "Done" in the photo editor.
+- (void) photoEditor:(AFPhotoEditorController *)editor finishedWithImage:(UIImage *)image
+{
+    self.oriImage = image;
+    //    [[self imagePreviewView] setImage:image];
+    //    [[self imagePreviewView] setContentMode:UIViewContentModeScaleAspectFit];
+    
+    //跳转到UploadViewController
+    //    UploadViewController * vc = [[UploadViewController alloc] init];
+    //    vc.oriImage = image;
+    //    [self presentViewController:vc animated:YES completion:nil];
+    
+    //    NSLog(@"上传图片");
+    //    [self postData:image];
+    
+    //    UINavigationController * nc = [ControllerManager shareManagerMyPet];
+    //    MyPetViewController * vc = nc.viewControllers[0];
+    //    vc.myBlock();
+    
+    [self dismissViewControllerAnimated:YES completion:^{
+        //        UploadViewController * vc = [[UploadViewController alloc] init];
+        PublishViewController * vc = [[PublishViewController alloc] init];
+        vc.oriImage = image;
+        //        vc.af = editor;
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    }];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    
+}
+
+// This is called when the user taps "Cancel" in the photo editor.
+- (void) photoEditorCanceled:(AFPhotoEditorController *)editor
+{
+    int a = [[USER objectForKey:@"buttonIndex"] intValue];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self actionSheet:sheet clickedButtonAtIndex:a];
+    }];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+}
+
+#pragma mark - Photo Editor Customization
+
+- (void) setPhotoEditorCustomizationOptions
+{
+    // Set API Key and Secret
+    [AFPhotoEditorController setAPIKey:kAFAviaryAPIKey secret:kAFAviarySecret];
+    
+    // Set Tool Order
+    NSArray * toolOrder = @[kAFEffects, kAFFocus, kAFFrames, kAFStickers, kAFEnhance, kAFOrientation, kAFCrop, kAFAdjustments, kAFSplash, kAFDraw, kAFText, kAFRedeye, kAFWhiten, kAFBlemish, kAFMeme];
+    [AFPhotoEditorCustomization setToolOrder:toolOrder];
+    
+    // Set Custom Crop Sizes
+    [AFPhotoEditorCustomization setCropToolOriginalEnabled:NO];
+    [AFPhotoEditorCustomization setCropToolCustomEnabled:YES];
+    NSDictionary * fourBySix = @{kAFCropPresetHeight : @(4.0f), kAFCropPresetWidth : @(6.0f)};
+    NSDictionary * fiveBySeven = @{kAFCropPresetHeight : @(5.0f), kAFCropPresetWidth : @(7.0f)};
+    NSDictionary * square = @{kAFCropPresetName: @"Square", kAFCropPresetHeight : @(1.0f), kAFCropPresetWidth : @(1.0f)};
+    [AFPhotoEditorCustomization setCropToolPresets:@[fourBySix, fiveBySeven, square]];
+    
+    // Set Supported Orientations
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        NSArray * supportedOrientations = @[@(UIInterfaceOrientationPortrait), @(UIInterfaceOrientationPortraitUpsideDown), @(UIInterfaceOrientationLandscapeLeft), @(UIInterfaceOrientationLandscapeRight)];
+        [AFPhotoEditorCustomization setSupportedIpadOrientations:supportedOrientations];
+    }
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

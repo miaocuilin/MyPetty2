@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "CountryMembersModel.h"
 @interface MyCountryContributeCell : UITableViewCell
 {
     UIImageView * sex;
@@ -21,4 +21,6 @@
 @property (retain, nonatomic) IBOutlet UILabel *contribution;
 
 -(void)modifyWithBOOL:(BOOL)isThis lineNum:(int)num;
+-(void)configUI:(CountryMembersModel *)model;
+
 @end

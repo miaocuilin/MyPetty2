@@ -56,6 +56,43 @@
     self.contribution.text = @"60000";
     self.contribution.textColor = BGCOLOR;
 }
+-(void)configUI:(CountryMembersModel *)model
+{
+    self.name.text = model.name;
+    self.location.text =[ControllerManager returnProvinceAndCityWithCityNum:model.city];
+    self.contribution.text = model.t_contri;
+    if ([model.gender intValue]==1) {
+        sex.image = [UIImage imageNamed:@"man.png"];
+    }else{
+        sex.image = [UIImage imageNamed:@"woman.png"];
+    }
+    
+    NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+    NSLog(@"本地用户头像路径：%@", txUserFilePath);
+    UIImage *User_image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txUserFilePath]];
+    if (User_image) {
+        [self.headBtn setBackgroundImage:User_image forState:UIControlStateNormal];
+    }else{
+        
+        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"load.dataImage:%@",load.dataImage);
+                if (load.dataImage == NULL) {
+                    [self.headBtn setBackgroundImage:[UIImage imageNamed:@"20-1.png"] forState:UIControlStateNormal];
+                }else{
+                    //本地目录，用于存放favorite下载的原图
+                    NSString * docDir = DOCDIR;
+                    NSString * txUserFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+                    //将下载的图片存放到本地
+                    [load.data writeToFile:txUserFilePath atomically:YES];
+                    [self.headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                }
+            }else{
+                NSLog(@"download failed");
+            }
+        }];
+    }
+}
 - (IBAction)headBtnClick:(id)sender {
     NSLog(@"点击头像--%d", self.headBtn.tag-10000);
 }

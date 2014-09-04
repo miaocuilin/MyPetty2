@@ -12,6 +12,7 @@
 #import "PetInfoModel.h"
 #import "ToolTipsViewController.h"
 #import "PetInfoViewController.h"
+#import "MassWatchViewController.h"
 @interface PicDetailViewController ()
 
 @end

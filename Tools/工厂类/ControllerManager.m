@@ -359,6 +359,7 @@ MBProgressHUD *HUD;
     }
     return str;
 }
+
 +(NSString *)returnProvinceAndCityWithCityNum:(NSString *)cityNum
 {
     NSString * province = nil;
@@ -368,7 +369,7 @@ MBProgressHUD *HUD;
     int cit = code%100;
     NSString * path = [[NSBundle mainBundle] pathForResource:@"area" ofType:@"plist"];
     NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:path];
-    //    NSLog(@"%@", dict);
+//    NSLog(@"%@", dict);
     NSDictionary * dictPro = [dict objectForKey:[NSString stringWithFormat:@"%d", pro]];
     province = [[dictPro allKeys] objectAtIndex:0];
     

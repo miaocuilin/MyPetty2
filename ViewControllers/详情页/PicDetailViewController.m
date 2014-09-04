@@ -10,6 +10,7 @@
 #import "PresentDetailViewController.h"
 #import "IQKeyboardManager.h"
 #import "PetInfoModel.h"
+#import "ToolTipsViewController.h"
 @interface PicDetailViewController ()
 
 @end
@@ -62,20 +63,25 @@
     //Resign textField if touched outside of UITextField/UITextView.
     [[IQKeyboardManager sharedManager] setShouldResignOnTouchOutside:YES];
 }
-#pragma mark -数据加载
+#pragma mark -照片数据加载
 -(void)loadData
 {
     //Loading界面开始启动
     StartLoading;
-    
-    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", IMAGEINFOAPI, self.img_id, sig, [ControllerManager getSID]];
+    if (![ControllerManager getIsSuccess]) {
+        [USER setObject:@"" forKey:@"usr_id"];
+    }
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@&usr_id=%@dog&cat", self.img_id, [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&usr_id=%@&sig=%@&SID=%@", IMAGEINFOAPI, self.img_id, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
     NSLog(@"imageInfoAPI:%@", url);
     
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
-            
+            self.is_follow = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_follow"] intValue];
+            if (self.is_follow) {
+                self.attentionBtn.selected = YES;
+            }
             NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
             self.aid = [dict objectForKey:@"aid"];
             self.cmt = [dict objectForKey:@"cmt"];
@@ -88,6 +94,19 @@
             self.likerTxArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"liker_tx"];
             
             self.createTime = [dict objectForKey:@"create_time"];
+            
+            //解析数据
+            if (![self.likers isKindOfClass:[NSNull class]]) {
+                self.likersArray = [self.likers componentsSeparatedByString:@","];
+                NSLog(@"%@--", self.likersArray);
+                for(NSString * str in self.likersArray){
+                    if ([str isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                        isLike = YES;
+                        break;
+                    }
+                }
+            }
+            
             //
             [self loadPetData];
             //
@@ -151,6 +170,7 @@
                 self.sex.image = [UIImage imageNamed:@"woman.png"];
             }
             self.cateName = [ControllerManager returnCateNameWithType:[dic objectForKey:@"type"]];
+            NSLog(@"%@--%@", [dic objectForKey:@"type"], [ControllerManager returnCateNameWithType:[dic objectForKey:@"type"]]);
             self.headImageURL = [dic objectForKey:@"tx"];
             //
             [self downloadHeadImage];
@@ -377,6 +397,11 @@
     UIButton * zanBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 50, 20) ImageName:@"" Target:self Action:@selector(zanBtnClick:) Title:nil];
     [zanBgView addSubview:zanBtn];
     
+    if (isLike) {
+        fish.image = [UIImage imageNamed:@"fish1.png"];
+        zanBtn.selected = YES;
+    }
+    
     //礼物盒、工具条
     UIView * giftBgView = [MyControl createViewWithFrame:CGRectMake(0, bigImageView.frame.origin.y+bigImageView.frame.size.height, 320, 35)];
     giftBgView.backgroundColor = [UIColor whiteColor];
@@ -569,6 +594,14 @@
 -(void)sendGiftClick
 {
     NSLog(@"赠送礼物");
+    if (![ControllerManager getIsSuccess]) {
+        //提示注册
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+        return;
+    }
     PresentDetailViewController * vc = [[PresentDetailViewController alloc] init];
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
@@ -576,6 +609,14 @@
 -(void)commentClick
 {
     NSLog(@"comment");
+    if (![ControllerManager getIsSuccess]) {
+        //提示注册
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+        return;
+    }
 //    buttonRight.userInteractionEnabled = NO;
     
 //    NSLog(@"Comment");
@@ -592,6 +633,121 @@
 -(void)shareClick
 {
     NSLog(@"share");
+    if (![ControllerManager getIsSuccess]) {
+        //提示注册
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+        return;
+    }else{
+        if (!isMoreCreated) {
+            //create more
+            [self createMore];
+        }
+        //show more
+        menuBgBtn.hidden = NO;
+        CGRect rect = moreView.frame;
+        rect.origin.y -= rect.size.height;
+        [UIView animateWithDuration:0.3 animations:^{
+            moreView.frame = rect;
+            menuBgBtn.alpha = 0.5;
+        }];
+    }
+}
+#pragma mark - 创建更多视图
+-(void)createMore
+{
+    menuBgBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(cancelBtnClick) Title:nil];
+    menuBgBtn.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:menuBgBtn];
+    menuBgBtn.alpha = 0;
+    menuBgBtn.hidden = YES;
+    
+    // 318*234
+    moreView = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height, 320, 120)];
+    moreView.backgroundColor = [ControllerManager colorWithHexString:@"efefef"];
+    [self.view addSubview:moreView];
+    
+    //orange line
+    UIView * orangeLine = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 4)];
+    orangeLine.backgroundColor = [ControllerManager colorWithHexString:@"fc7b51"];
+    [moreView addSubview:orangeLine];
+    //label
+    UILabel * shareLabel = [MyControl createLabelWithFrame:CGRectMake(15, 10, 80, 15) Font:13 Text:@"分享到"];
+    shareLabel.textColor = [UIColor blackColor];
+    [moreView addSubview:shareLabel];
+    //3个按钮
+    NSArray * arr = @[@"more_weixin.png", @"more_friend.png", @"more_sina.png"];
+    NSArray * arr2 = @[@"微信好友", @"朋友圈", @"微博"];
+    for(int i=0;i<3;i++){
+        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(40+i*92, 33, 42, 42) ImageName:arr[i] Target:self Action:@selector(shareClick:) Title:nil];
+        button.tag = 200+i;
+        [moreView addSubview:button];
+        
+        CGRect rect = button.frame;
+        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(rect.origin.x-10, rect.origin.y+rect.size.height+5, rect.size.width+20, 15) Font:12 Text:arr2[i]];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor blackColor];
+        //        label.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        [moreView addSubview:label];
+    }
+}
+-(void)shareClick:(UIButton *)button
+{
+//    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//    [MMProgressHUD showWithStatus:@"正在分享..."];
+    if (button.tag == 200) {
+        NSLog(@"微信");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:self.cmt image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [self cancelBtnClick];
+            }else{
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+        }];
+    }else if(button.tag == 201){
+        NSLog(@"朋友圈");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:self.cmt image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [self cancelBtnClick];
+            }else{
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+        }];
+    }else{
+        NSLog(@"微博");
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:@"ha哈哈哈" image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [self cancelBtnClick];
+            }else{
+                NSLog(@"失败原因：%@", response);
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+        }];
+    }
+}
+-(void)cancelBtnClick
+{
+    NSLog(@"cancel");
+    CGRect rect = moreView.frame;
+    rect.origin.y += rect.size.height;
+    [UIView animateWithDuration:0.3 animations:^{
+        moreView.frame = rect;
+        menuBgBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        menuBgBtn.hidden = YES;
+    }];
 }
 -(void)usersBtnClick
 {
@@ -611,27 +767,107 @@
 
 -(void)zanBtnClick:(UIButton *)btn
 {
-    btn.selected = !btn.selected;
-    if (btn.selected) {
-        fish.image = [UIImage imageNamed:@"fish1.png"];
-        zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
-        [UIView animateWithDuration:0.5 animations:^{
-            fish.frame = CGRectMake(0-15, 4-12, 30*2, 12*2);
-        } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.5 animations:^{
-                fish.frame = CGRectMake(0, 4, 30, 12);
-            }];
-        }];
-    }else{
-        fish.image = [UIImage imageNamed:@"fish.png"];
-        zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]-1];
+    if (![ControllerManager getIsSuccess]) {
+        //提示注册
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+        return;
     }
+    //
+    if (!btn.selected) {
+        /*================================*/
+        NSString * code = [NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id];
+        NSString * sig = [MyMD5 md5:code];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKEAPI, self.img_id, sig, [ControllerManager getSID]];
+        NSLog(@"likeURL:%@", url);
+        StartLoading;
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+//                NSLog(@"%@", load.dataDict);
+                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+                    [MMProgressHUD dismissWithError:@"点赞失败" afterDelay:1];
+                }else{
+                    btn.selected = YES;
+                    fish.image = [UIImage imageNamed:@"fish1.png"];
+                    zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
+                    [UIView animateWithDuration:0.5 animations:^{
+                        fish.frame = CGRectMake(0-15, 4-12, 30*2, 12*2);
+                    } completion:^(BOOL finished) {
+                        [UIView animateWithDuration:0.5 animations:^{
+                            fish.frame = CGRectMake(0, 4, 30, 12);
+                        }];
+                    }];
+                    [MMProgressHUD dismissWithSuccess:@"点赞成功" title:nil afterDelay:0.5];
+                }
+            }else{
+                [MMProgressHUD dismissWithError:@"点赞请求失败" afterDelay:1];
+                NSLog(@"数据请求失败");
+            }
+        }];
+        [request release];
+    }else{
+        StartLoading;
+        [MMProgressHUD dismissWithError:@"您已经点过赞了" afterDelay:1];
+    }
+    
+//    btn.selected = !btn.selected;
+//    if (btn.selected) {
+//        fish.image = [UIImage imageNamed:@"fish1.png"];
+//        zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
+//        [UIView animateWithDuration:0.5 animations:^{
+//            fish.frame = CGRectMake(0-15, 4-12, 30*2, 12*2);
+//        } completion:^(BOOL finished) {
+//            [UIView animateWithDuration:0.5 animations:^{
+//                fish.frame = CGRectMake(0, 4, 30, 12);
+//            }];
+//        }];
+//    }else{
+//        fish.image = [UIImage imageNamed:@"fish.png"];
+//        zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]-1];
+//    }
 }
 - (IBAction)headBtnClick:(id)sender {
     NSLog(@"进入王国");
+    if (![ControllerManager getIsSuccess]) {
+        //提示注册
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+    }
 }
 - (IBAction)attentionBtnClick:(id)sender {
-    self.attentionBtn.selected = !self.attentionBtn.selected;
+    if (![ControllerManager getIsSuccess]) {
+        //提示注册
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+        return;
+    }
+    if (!self.attentionBtn.selected) {
+        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
+        NSString * sig = [MyMD5 md5:code];
+        NSString * url = nil;
+        url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", FOLLOWAPI, self.aid, sig, [ControllerManager getSID]];
+        NSLog(@"url:%@", url);
+        StartLoading;
+        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                [MMProgressHUD dismissWithSuccess:@"关注成功" title:nil afterDelay:0.5];
+                self.attentionBtn.selected = YES;
+            }else{
+                [MMProgressHUD dismissWithError:@"关注失败" afterDelay:1];
+            }
+        }];
+//        self.attentionBtn.selected = YES;
+    }else{
+        StartLoading;
+        [MMProgressHUD dismissWithError:@"您已关注该宠" afterDelay:1];
+    }
 }
 
 -(void)backBtnClick

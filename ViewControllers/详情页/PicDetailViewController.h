@@ -26,6 +26,11 @@
     
     UILabel * shareNum;
     UILabel * commentNum;
+    
+    BOOL isLike;
+    BOOL isMoreCreated;
+    UIButton * menuBgBtn;
+    UIView * moreView;
 }
 @property (retain, nonatomic) UIImageView * bgImageView;
 @property (retain, nonatomic) IBOutlet UIScrollView *sv;
@@ -43,6 +48,7 @@
 @property (nonatomic,retain)NSMutableArray * bodyArray;
 @property (nonatomic,retain)NSMutableArray * createTimeArray;
 //
+@property (nonatomic,retain)NSArray * likersArray;
 @property (nonatomic,retain)NSMutableArray * likerTxArray;
 @property (nonatomic,copy)NSString * createTime;
 //上一个界面传过来的img_id,usr_id
@@ -70,6 +76,8 @@
 @property (nonatomic,copy)NSString * shares;
 //送礼物的人的usr_id,用逗号隔开
 @property (nonatomic,copy)NSString * senders;
+
+@property (nonatomic)BOOL is_follow;
 
 //@property (nonatomic,retain)NSMutableArray * petInfoArray;
 @end

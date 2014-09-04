@@ -137,6 +137,7 @@
     if (tf.text == nil || [tf.text isEqualToString:@""]) {
         UIAlertView * alert = [MyControl createAlertViewWithTitle:@"话题为空!"];
     }else{
+        [USER setObject:@"1" forKey:@"selectTopic"];
         [USER setObject:tf.text forKey:@"topic"];
         [tf resignFirstResponder];
         [self dismissViewControllerAnimated:YES completion:nil];

@@ -21,7 +21,7 @@
     UIView * toolBgView;
     UIView * bottom;
     UIView * bgView;
-    BOOL isCreated[3];
+    BOOL isCreated[4];
     UIImageView * bgImageView1;
     BOOL isPhotoDownload;
     

@@ -22,6 +22,7 @@
     
     UIView * commentsBgView;
     int prepareCreateUINum;
+    UILabel * topicUser;
     UIView * usersBgView;
     
     UILabel * shareNum;
@@ -31,6 +32,9 @@
     BOOL isMoreCreated;
     UIButton * menuBgBtn;
     UIView * moreView;
+    int txCount;
+    //判断改宠物是猫还是狗
+    BOOL isMi;
 }
 @property (retain, nonatomic) UIImageView * bgImageView;
 @property (retain, nonatomic) IBOutlet UIScrollView *sv;
@@ -50,6 +54,11 @@
 //
 @property (nonatomic,retain)NSArray * likersArray;
 @property (nonatomic,retain)NSMutableArray * likerTxArray;
+@property (nonatomic,retain)NSMutableArray * senderTxArray;
+//
+@property (nonatomic,retain)NSMutableArray * txTotalArray;
+@property (nonatomic,retain)NSMutableArray * txTypeTotalArray;
+
 @property (nonatomic,copy)NSString * createTime;
 //上一个界面传过来的img_id,usr_id
 @property (nonatomic,copy)NSString * img_id;

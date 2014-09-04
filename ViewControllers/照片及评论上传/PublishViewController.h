@@ -13,18 +13,19 @@
 @interface PublishViewController : UIViewController
 {
     ASIFormDataRequest * _request;
+    UIImageView * bgImageView;
     UIImageView * bigImageView;
     
     UIView * textBgView;
     UIView * navView;
-    UIScrollView * bgImageView;
+    UIScrollView * sv;
     UILabel * sinaLabel;
     UILabel * weChatLabel;
     
     UIButton * topic;
     UIButton * users;
 }
-@property (nonatomic,retain)UIImageView * bgImageView;
+//@property (nonatomic,retain)UIImageView * bgImageView;
 @property (nonatomic,retain)UIImage * oriImage;
 //@property (nonatomic,retain)AFPhotoEditorController * af;
 

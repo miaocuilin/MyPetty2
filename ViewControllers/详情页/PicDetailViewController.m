@@ -11,6 +11,7 @@
 #import "IQKeyboardManager.h"
 #import "PetInfoModel.h"
 #import "ToolTipsViewController.h"
+#import "MassWatchViewController.h"
 @interface PicDetailViewController ()
 
 @end
@@ -32,12 +33,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view from its nib.
     self.usrIdArray = [NSMutableArray arrayWithCapacity:0];
     self.nameArray = [NSMutableArray arrayWithCapacity:0];
     self.bodyArray = [NSMutableArray arrayWithCapacity:0];
     self.createTimeArray = [NSMutableArray arrayWithCapacity:0];
 //    self.petInfoArray = [NSMutableArray arrayWithCapacity:0];
+    self.senderTxArray = [NSMutableArray arrayWithCapacity:0];
+    self.txTotalArray = [NSMutableArray arrayWithCapacity:0];
+    self.txTypeTotalArray = [NSMutableArray arrayWithCapacity:0];
     
     [self createIQ];
     [self loadData];
@@ -77,7 +82,7 @@
     
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"%@", load.dataDict);
+            NSLog(@"imageInfo:%@", load.dataDict);
             self.is_follow = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_follow"] intValue];
             if (self.is_follow) {
                 self.attentionBtn.selected = YES;
@@ -92,13 +97,14 @@
             self.comments = [dict objectForKey:@"comments"];
             
             self.likerTxArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"liker_tx"];
+            self.senderTxArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"sender_tx"];
             
             self.createTime = [dict objectForKey:@"create_time"];
             
             //解析数据
             if (![self.likers isKindOfClass:[NSNull class]]) {
                 self.likersArray = [self.likers componentsSeparatedByString:@","];
-                NSLog(@"%@--", self.likersArray);
+                NSLog(@"self.lisersArray:%@--", self.likersArray);
                 for(NSString * str in self.likersArray){
                     if ([str isEqualToString:[USER objectForKey:@"usr_id"]]) {
                         isLike = YES;
@@ -142,14 +148,14 @@
             [self.createTimeArray addObject:createTime];
             //            [createTime release];
         }
-        NSLog(@"%@\n%@\n%@\n%@", self.usrIdArray, self.nameArray, self.bodyArray, self.createTimeArray);
+//        NSLog(@"评论分析结果:%@\n%@\n%@\n%@", self.usrIdArray, self.nameArray, self.bodyArray, self.createTimeArray);
 //        if (++prepareCreateUINum == 2) {
 //            [self createUI];
 //        }
     }
-    if (++prepareCreateUINum == 2) {
-        [self createUI];
-    }
+//    if (++prepareCreateUINum == 2) {
+//        [self createUI];
+//    }
 }
 -(void)loadPetData
 {
@@ -169,6 +175,9 @@
             if ([[dic objectForKey:@"gender"] intValue] == 1) {
                 self.sex.image = [UIImage imageNamed:@"woman.png"];
             }
+            if ([[dic objectForKey:@"type"] intValue]/100 == 1) {
+                isMi = YES;
+            }
             self.cateName = [ControllerManager returnCateNameWithType:[dic objectForKey:@"type"]];
             NSLog(@"%@--%@", [dic objectForKey:@"type"], [ControllerManager returnCateNameWithType:[dic objectForKey:@"type"]]);
             self.headImageURL = [dic objectForKey:@"tx"];
@@ -176,6 +185,11 @@
             [self downloadHeadImage];
             
             self.cate.text = [NSString stringWithFormat:@"%@ | %@岁", self.cateName, [dic objectForKey:@"age"]];
+            
+            /********************/
+            if (++prepareCreateUINum == 2) {
+                [self createUI];
+            }
         }else{
             LoadingFailed;
             NSLog(@"请求宠物数据失败");
@@ -293,7 +307,7 @@
 {
     float width = imageView.image.size.width;
     float height = imageView.image.size.height;
-    NSLog(@"%f--%f", width, height);
+    NSLog(@"图片大小:%f--%f", width, height);
     if (width>320) {
         float w = 320/width;
         width *= w;
@@ -391,14 +405,27 @@
     zanLabel.textAlignment = NSTextAlignmentRight;
     [zanBgView addSubview:zanLabel];
     
-    fish = [MyControl createImageViewWithFrame:CGRectMake(0, 4, 30, 12) ImageName:@"fish.png"];
+    fish = [MyControl createImageViewWithFrame:CGRectMake(0, 4, 30, 12) ImageName:@""];
+    if (isMi) {
+        //48*23
+        fish.frame = CGRectMake(3, 3, 30, 14);
+        fish.image = [UIImage imageNamed:@"fish.png"];
+    }else{
+        //41*34
+        fish.frame = CGRectMake(8, 3, 20, 16);
+        fish.image = [UIImage imageNamed:@"bone.png"];
+    }
     [zanBgView addSubview:fish];
     
     UIButton * zanBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 50, 20) ImageName:@"" Target:self Action:@selector(zanBtnClick:) Title:nil];
     [zanBgView addSubview:zanBtn];
     
     if (isLike) {
-        fish.image = [UIImage imageNamed:@"fish1.png"];
+        if (isMi) {
+            fish.image = [UIImage imageNamed:@"fish1.png"];
+        }else{
+            fish.image = [UIImage imageNamed:@"bone1.png"];
+        }
         zanBtn.selected = YES;
     }
     
@@ -425,18 +452,22 @@
     [giftBgView addSubview:giftNum];
     
     //评论和分享
-    UIButton * comment = [MyControl createButtonWithFrame:CGRectMake(435/2, 9, 35*0.75, 18) ImageName:@"detail_comment.png" Target:self Action:@selector(commentClick) Title:nil];
-    [giftBgView addSubview:comment];
+    UIImageView * commentImageView = [MyControl createImageViewWithFrame:CGRectMake(435/2, 9, 35*0.75, 18) ImageName:@"detail_comment.png"];
+    [giftBgView addSubview:commentImageView];
     
-    commentNum = [MyControl createLabelWithFrame:CGRectMake(comment.frame.origin.x+comment.frame.size.width, 7.5, 30, 20) Font:10 Text:[NSString stringWithFormat:@"%d", self.nameArray.count]];
+    commentNum = [MyControl createLabelWithFrame:CGRectMake(commentImageView.frame.origin.x+commentImageView.frame.size.width, 7.5, 30, 20) Font:10 Text:[NSString stringWithFormat:@"%d", self.nameArray.count]];
     commentNum.textAlignment = NSTextAlignmentCenter;
     commentNum.textColor = [UIColor lightGrayColor];
     [giftBgView addSubview:commentNum];
     
-    UIButton * share = [MyControl createButtonWithFrame:CGRectMake(546/2, 9, 32*(18/30.0), 18) ImageName:@"detail_share.png" Target:self Action:@selector(shareClick) Title:nil];
-    [giftBgView addSubview:share];
+    UIButton * comment = [MyControl createButtonWithFrame:CGRectMake(435/2, 0, 45, 35) ImageName:@"" Target:self Action:@selector(commentClick) Title:nil];
+//    comment.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    [giftBgView addSubview:comment];
+    /*******************************/
+    UIImageView * shareImageView = [MyControl createImageViewWithFrame:CGRectMake(546/2, 9, 32*(18/30.0), 18) ImageName:@"detail_share.png"];
+    [giftBgView addSubview:shareImageView];
     
-    shareNum = [MyControl createLabelWithFrame:CGRectMake(share.frame.origin.x+share.frame.size.width, 7.5, 20, 20) Font:10 Text:nil];
+    shareNum = [MyControl createLabelWithFrame:CGRectMake(shareImageView.frame.origin.x+shareImageView.frame.size.width, 7.5, 20, 20) Font:10 Text:nil];
     if (self.shares) {
         shareNum.text = [NSString stringWithFormat:@"%@", self.shares];
     }else{
@@ -446,23 +477,28 @@
     shareNum.textColor = [UIColor lightGrayColor];
     [giftBgView addSubview:shareNum];
     
+    UIButton * share = [MyControl createButtonWithFrame:CGRectMake(546/2, 0, 45, 35) ImageName:@"" Target:self Action:@selector(shareClick) Title:nil];
+//    share.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    [giftBgView addSubview:share];
+    
     //话题
     UILabel * topic = [MyControl createLabelWithFrame:CGRectMake(15, giftBgView.frame.origin.y+giftBgView.frame.size.height+10, 200, 20) Font:14 Text:@"#一起来看超级月亮#"];
     topic.textColor = BGCOLOR;
     [self.sv addSubview:topic];
     
-    NSString * string = @"她渐渐的让我明白了感情的戏，戏总归是戏，再美也是暂时的假象，无论投入多深多真，结局总是如此。";
+//    NSString * string = @"她渐渐的让我明白了感情的戏，戏总归是戏，再美也是暂时的假象，无论投入多深多真，结局总是如此。";
+    NSString * string = self.cmt;
     CGSize topicSize = [string sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(290, 100) lineBreakMode:1];
     
     UILabel * topicDetail = [MyControl createLabelWithFrame:CGRectMake(15, topic.frame.origin.y+topic.frame.size.height+10, 290, topicSize.height) Font:14 Text:string];
     topicDetail.textColor = [UIColor darkGrayColor];
     [self.sv addSubview:topicDetail];
-    
-    UILabel * topicUser = [MyControl createLabelWithFrame:CGRectMake(15, topicDetail.frame.origin.y+topicDetail.frame.size.height+10, 200, 20) Font:14 Text:@"@一起来看流星雨 等小伙伴"];
+
+    topicUser = [MyControl createLabelWithFrame:CGRectMake(15, topicDetail.frame.origin.y+topicDetail.frame.size.height+10, 200, 20) Font:14 Text:@"@一起来看流星雨 等小伙伴"];
     topicUser.textColor = BGCOLOR;
     [self.sv addSubview:topicUser];
     
-    NSDate * date = [NSDate date];
+    NSDate * date = [NSDate dateWithTimeIntervalSince1970:[self.createTime intValue]];
     NSDateFormatter * format = [[NSDateFormatter alloc] init];
     [format setDateFormat:@"yyyy-MM-dd HH:mm"];
     UILabel * topicTime = [MyControl createLabelWithFrame:CGRectMake(320-10-150, topicUser.frame.origin.y+3, 150, 15) Font:12 Text:[format stringFromDate:date]];
@@ -471,33 +507,9 @@
     [self.sv addSubview:topicTime];
     [format release];
     
-    //用户头像
-    usersBgView = [MyControl createViewWithFrame:CGRectMake(0, topicUser.frame.origin.y+topicUser.frame.size.height+10, 320, 50)];
-    usersBgView.backgroundColor = [UIColor whiteColor];
-    [self.sv addSubview:usersBgView];
-    
-    for (int i=0; i<7; i++) {
-        UIImageView * header = [MyControl createImageViewWithFrame:CGRectMake(15+i*(76/2), 10, 30, 30) ImageName:@""];
-        header.layer.cornerRadius = 15;
-        header.layer.masksToBounds = YES;
-        if (i%2 == 0) {
-            header.image = [UIImage imageNamed:@"cat1.jpg"];
-        }else{
-            header.image = [UIImage imageNamed:@"cat2.jpg"];
-        }
-        [usersBgView addSubview:header];
-        
-        UIImageView * giftSymbol = [MyControl createImageViewWithFrame:CGRectMake(header.frame.origin.x+18, header.frame.origin.y+20, 14, 14) ImageName:@"detail_symbol_fish.png"];
-        [usersBgView addSubview:giftSymbol];
-    }
-    UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(320-20-10, 15, 20, 20) ImageName:@"arrow_right.png"];
-    [usersBgView addSubview:arrow];
-    
-    UIButton * usersBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, 50) ImageName:nil Target:self Action:@selector(usersBtnClick) Title:nil];
-    [usersBgView addSubview:usersBtn];
+    [self createUsersTx];
     
     [self createCmt];
-    
     
     //创建评论框
     [self createComment];
@@ -506,10 +518,99 @@
     [self.view bringSubviewToFront:self.menuBgBtn];
     [self.view bringSubviewToFront:self.menuBgView];
 }
+-(void)createUsersTx
+{
+    //用户头像
+    usersBgView = [MyControl createViewWithFrame:CGRectMake(0, topicUser.frame.origin.y+topicUser.frame.size.height+10, 320, 50)];
+    usersBgView.backgroundColor = [UIColor whiteColor];
+    [self.sv addSubview:usersBgView];
+    
+    /*
+     设置一个总的数组用来存储头像，送礼在前，点赞在后，详情页只能容下8个头像。
+     再开一个数组存储这些人的行为是送礼还是点赞，与前面数组对应。
+     当我新点赞或送礼之后，我的头像出现在下方最前端。也就是添加在数组的最前端--
+     但是退出再近排布顺序还是送礼在前，点赞在后。所以我点赞之后退出再进第一个可能不是我。
+     */
+    if (![self.senderTxArray isKindOfClass:[NSNull class]]) {
+        [self.txTotalArray addObjectsFromArray:self.senderTxArray];
+        for (int i=0; i<self.senderTxArray.count; i++) {
+            [self.txTypeTotalArray addObject:@"sender"];
+        }
+    }
+    if (![self.likerTxArray isKindOfClass:[NSNull class]]) {
+        [self.txTotalArray addObjectsFromArray:self.likerTxArray];
+        for (int i=0; i<self.likerTxArray.count; i++) {
+            [self.txTypeTotalArray addObject:@"liker"];
+        }
+    }
+    
+    //txCount最大限制为8
+    if (self.txTotalArray.count > 8) {
+        txCount = 8;
+    }else{
+        txCount = self.txTotalArray.count;
+    }
+    for (int i=0; i<txCount; i++) {
+        UIImageView * header = [MyControl createImageViewWithFrame:CGRectMake(15+i*(76/2), 10, 30, 30) ImageName:@""];
+        header.layer.cornerRadius = 15;
+        header.layer.masksToBounds = YES;
+        [usersBgView addSubview:header];
+        NSLog(@"self.txTotalArray:%@", self.txTotalArray);
+        if ([self.txTotalArray[i] isEqualToString:@""]) {
+            header.image = [UIImage imageNamed:@"defaultUserHead.png"];
+        }else{
+            //下载头像图片
+            NSString * docDir = DOCDIR;
+            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.txTotalArray[i]]];
+            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+            if (image) {
+                header.image = image;
+            }else{
+                //下载头像
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, self.headImageURL] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        header.image = load.dataImage;
+                        NSString * docDir = DOCDIR;
+                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.txTotalArray[i]]];
+                        [load.data writeToFile:txFilePath atomically:YES];
+                    }else{
+                        NSLog(@"头像下载失败");
+                    }
+                }];
+                [request release];
+            }
+        }
+        
+        UIImageView * giftSymbol = [MyControl createImageViewWithFrame:CGRectMake(header.frame.origin.x+18, header.frame.origin.y+20, 14, 14) ImageName:@"detail_symbol_fish.png"];
+        if ([self.txTypeTotalArray[i] isEqualToString:@"sender"]) {
+            giftSymbol.image = [UIImage imageNamed:@"zan_gift.png"];
+        }else{
+            if (isMi) {
+                giftSymbol.image = [UIImage imageNamed:@"zan_fish.png"];
+            }else{
+                giftSymbol.image = [UIImage imageNamed:@"zan_bone.png"];
+            }
+        }
+        [usersBgView addSubview:giftSymbol];
+    }
+    UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(320-20-10, 15, 20, 20) ImageName:@"arrow_right.png"];
+    [usersBgView addSubview:arrow];
+    
+    UIButton * usersBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, 50) ImageName:nil Target:self Action:@selector(usersBtnClick) Title:nil];
+    [usersBgView addSubview:usersBtn];
+    
+
+}
 -(void)createCmt
 {
+    int height = 0;
+    usersBgView.hidden = YES;
+    if (txCount) {
+        height = usersBgView.frame.size.height;
+        usersBgView.hidden = NO;
+    }
     //创建评论
-    commentsBgView = [MyControl createViewWithFrame:CGRectMake(0, usersBgView.frame.origin.y+usersBgView.frame.size.height, 320, 100)];
+    commentsBgView = [MyControl createViewWithFrame:CGRectMake(0, usersBgView.frame.origin.y+height, 320, 100)];
     [self.sv addSubview:commentsBgView];
     
     int commentsBgViewHeight = 0;
@@ -752,6 +853,9 @@
 -(void)usersBtnClick
 {
     NSLog(@"跳转到用户详情页");
+    MassWatchViewController * vc = [[MassWatchViewController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 }
 -(void)bgButtonClick
 {
@@ -790,15 +894,49 @@
                     [MMProgressHUD dismissWithError:@"点赞失败" afterDelay:1];
                 }else{
                     btn.selected = YES;
-                    fish.image = [UIImage imageNamed:@"fish1.png"];
+                    if (isMi) {
+                        fish.image = [UIImage imageNamed:@"fish1.png"];
+                    }else{
+                        fish.image = [UIImage imageNamed:@"bone1.png"];
+                    }
                     zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
                     [UIView animateWithDuration:0.5 animations:^{
-                        fish.frame = CGRectMake(0-15, 4-12, 30*2, 12*2);
+                        if (isMi) {
+                            //48*23
+                            fish.frame = CGRectMake(0-15, 4-12, 30*2, 14*2);
+                        }else{
+                            //41*34
+                            fish.frame = CGRectMake(0-15, 4-12, 20*2, 16*2);
+                        }
+                        
                     } completion:^(BOOL finished) {
                         [UIView animateWithDuration:0.5 animations:^{
-                            fish.frame = CGRectMake(0, 4, 30, 12);
+                            if (isMi) {
+                                //48*23
+                                fish.frame = CGRectMake(3, 3, 30, 14);
+                            }else{
+                                //41*34
+                                fish.frame = CGRectMake(8, 3, 20, 16);
+                            }
                         }];
                     }];
+                    //在头像横条中显示
+                    [self.txTotalArray removeAllObjects];
+                    [self.txTypeTotalArray removeAllObjects];
+                    
+                    if ([USER objectForKey:@"tx"] == nil || [[USER objectForKey:@"tx"] isEqualToString:@""]) {
+                        [self.txTotalArray addObject:@""];
+                    }else{
+                        [self.txTotalArray addObject:[USER objectForKey:@"tx"]];
+                    }
+                    [self.txTypeTotalArray addObject:@"liker"];
+                    
+                    [usersBgView removeFromSuperview];
+                    //【注意】这里是commentsBgView，不是commentBgView
+                    [commentsBgView removeFromSuperview];
+                    [self createUsersTx];
+                    [self createCmt];
+                    
                     [MMProgressHUD dismissWithSuccess:@"点赞成功" title:nil afterDelay:0.5];
                 }
             }else{
@@ -857,7 +995,7 @@
         [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 NSLog(@"%@", load.dataDict);
-                [MMProgressHUD dismissWithSuccess:@"关注成功" title:nil afterDelay:0.5];
+                [MMProgressHUD dismissWithSuccess:@"关注成功" title:nil afterDelay:1];
                 self.attentionBtn.selected = YES;
             }else{
                 [MMProgressHUD dismissWithError:@"关注失败" afterDelay:1];

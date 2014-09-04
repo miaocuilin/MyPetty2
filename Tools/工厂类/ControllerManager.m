@@ -345,7 +345,9 @@ MBProgressHUD *HUD;
 {
     NSString * str = nil;
     int a = [type intValue];
-    NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"%@/CateNameList.plist", DOCDIR]];
+    NSString * path = [[NSBundle mainBundle] pathForResource:@"CateNameList" ofType:@"plist"];
+    NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:path];
+//    NSLog(@"%@", dict);
     if (a/100 == 1) {
         str = [[dict objectForKey:@"1"] objectForKey:type];
     }else if(a/100 == 2){
@@ -356,5 +358,27 @@ MBProgressHUD *HUD;
         str = @"苏格兰折耳猫";
     }
     return str;
+}
+
++(NSString *)returnProvinceAndCityWithCityNum:(NSString *)cityNum
+{
+    NSString * province = nil;
+    NSString * city = nil;
+    int code = [cityNum intValue];
+    int pro = code/100-10;
+    int cit = code%100;
+    NSString * path = [[NSBundle mainBundle] pathForResource:@"area" ofType:@"plist"];
+    NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:path];
+//    NSLog(@"%@", dict);
+    NSDictionary * dictPro = [dict objectForKey:[NSString stringWithFormat:@"%d", pro]];
+    province = [[dictPro allKeys] objectAtIndex:0];
+    
+    NSDictionary * dictCit = [[dictPro objectForKey:province] objectForKey:[NSString stringWithFormat:@"%d", cit]];;
+    city = [[dictCit allKeys] objectAtIndex:0];
+    if ([province isEqualToString:city]) {
+        return province;
+    }else{
+        return [NSString stringWithFormat:@"%@ | %@", province, city];
+    }
 }
 @end

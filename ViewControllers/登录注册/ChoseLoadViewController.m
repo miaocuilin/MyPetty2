@@ -290,23 +290,23 @@
             }else{
                 //SID未过期，直接获取用户数据
                 NSLog(@"用户数据：%@", load.dataDict);
-//                NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-//                
-//                [USER setObject:[dict objectForKey:@"a_name"] forKey:@"a_name"];
-//                if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
-//                    [USER setObject:[dict objectForKey:@"a_tx"] forKey:@"a_tx"];
-//                }
-//                [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
-//                [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
-//                [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
-//                [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
-//                [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];
-//                [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
-//                [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
-//                
-//                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
-//                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
-//                }
+                NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                
+                [USER setObject:[dict objectForKey:@"a_name"] forKey:@"a_name"];
+                if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
+                    [USER setObject:[dict objectForKey:@"a_tx"] forKey:@"a_tx"];
+                }
+                [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
+                [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
+                [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
+                [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
+                [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];
+                [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
+                [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
+                
+                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
+                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
+                }
                 JDSideMenu * menu = [ControllerManager shareJDSideMenu];
                 menu.modalTransitionStyle = 1;
                 [self presentViewController:menu animated:YES completion:nil];

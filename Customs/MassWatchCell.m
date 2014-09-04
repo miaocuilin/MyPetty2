@@ -23,50 +23,54 @@
 }
 - (void)initUI
 {
-    UIView *cellBody = [[UIView alloc] initWithFrame:self.bounds];
-    [self.contentView addSubview:cellBody];
-    [cellBody release];
-    self.headButton = [MyControl createButtonWithFrame:CGRectMake(15, 12, 50, 50) ImageName:@"cat1.jpg" Target:self Action:@selector(otherHome:) Title:nil];
+    self.headButton = [MyControl createButtonWithFrame:CGRectMake(15, 10, 50, 50) ImageName:@"defaultUserHead.png" Target:self Action:@selector(otherHome:) Title:nil];
     self.headButton.layer.masksToBounds = YES;
     self.headButton.layer.cornerRadius = 25;
-    [cellBody addSubview:self.headButton];
+    [self.contentView addSubview:self.headButton];
     
     
-    UIView *giftBG = [[UIView alloc] initWithFrame:CGRectMake(50, 35, 22, 22)];
-    giftBG.layer.cornerRadius = 11;
-    giftBG.layer.masksToBounds = YES;
-    giftBG.backgroundColor = BGCOLOR2;
-    [cellBody addSubview:giftBG];
-    [giftBG release];
-    self.giftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bcat6_2.png"]];
-    self.giftView.frame = CGRectMake(2, 2, 18, 18);
-    [giftBG addSubview:self.giftView];
-    [self.giftView release];
+//    UIView *giftBG = [MyControl createViewWithFrame:CGRectMake(50, 35, 24, 24)];
+////    [[UIView alloc] initWithFrame:CGRectMake(50, 35, 24, 24)];
+//    giftBG.layer.cornerRadius = 12;
+//    giftBG.layer.masksToBounds = YES;
+//    giftBG.backgroundColor = BGCOLOR2;
+//    [cellBody addSubview:giftBG];
+//    [giftBG release];
     
-    self.sexView = [[UIImageView alloc] initWithFrame:CGRectMake(80, 20, 14, 17)];
-    self.sexView.image = [UIImage imageNamed:@"man.png"];
-    [cellBody addSubview:self.sexView];
+    self.giftView = [MyControl createImageViewWithFrame:CGRectMake(50, 35, 24, 24) ImageName:@"zan_gift.png"];
+    [self.contentView addSubview:self.giftView];
     
-    self.watcherName = [MyControl createLabelWithFrame:CGRectMake(103, 15, 100, 30) Font:16 Text:@"羊驼"];
+    self.sexView = [MyControl createImageViewWithFrame:CGRectMake(80, 15, 14, 17) ImageName:@"man.png"];
+    [self.contentView addSubview:self.sexView];
+    
+    self.watcherName = [MyControl createLabelWithFrame:CGRectMake(103, 15, 100, 20) Font:16 Text:@"羊驼"];
     self.watcherName.textColor = BGCOLOR;
-    [cellBody addSubview:self.watcherName];
+    [self.contentView addSubview:self.watcherName];
     
-    self.ProvinceAndCity = [MyControl createLabelWithFrame:CGRectMake(80, 45, 120, 20) Font:14 Text:[NSString stringWithFormat:@"%@ | %@",@"北京市",@"朝阳区"]];
+    self.ProvinceAndCity = [MyControl createLabelWithFrame:CGRectMake(80, 40, 120, 20) Font:14 Text:[NSString stringWithFormat:@"%@ | %@",@"北京市",@"朝阳区"]];
     self.ProvinceAndCity.textColor = [UIColor blackColor];
-    [cellBody addSubview:self.ProvinceAndCity];
+    [self.contentView addSubview:self.ProvinceAndCity];
     
-    UIView *mailView = [MyControl createViewWithFrame:CGRectMake(250, 23, 50, 30)];
-    mailView.backgroundColor = [UIColor colorWithRed:147/255.0 green:204/255.0 blue:172/255.0 alpha:1];
-    mailView.layer.cornerRadius = 5;
-    mailView.layer.masksToBounds = YES;
-    [cellBody addSubview:mailView];
     
-    UIImageView * mail = [MyControl createImageViewWithFrame:CGRectMake(10, 5, 30, 20) ImageName:@"mail.png"];
-    [mailView addSubview:mail];
+    UIImageView * mailBgView = [MyControl createImageViewWithFrame:CGRectMake(523/2, 23, 50, 30) ImageName:@"greenBtnBg.png"];
+    [self.contentView addSubview:mailBgView];
+    
+//    UIView *mailView = [MyControl createViewWithFrame:CGRectMake(250, 23, 50, 30)];
+//    mailView.backgroundColor = [UIColor colorWithRed:147/255.0 green:204/255.0 blue:172/255.0 alpha:1];
+//    mailView.layer.cornerRadius = 5;
+//    mailView.layer.masksToBounds = YES;
+//    [self.contentView addSubview:mailView];
+    
+    UIImageView * mail = [MyControl createImageViewWithFrame:CGRectMake(12, 5, 26, 18) ImageName:@"mail.png"];
+    [mailBgView addSubview:mail];
     
     talkButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 50, 30) ImageName:@"" Target:self Action:@selector(TalkAction:) Title:nil];
-    [mailView addSubview:talkButton];
+    talkButton.showsTouchWhenHighlighted = YES;
+    [mailBgView addSubview:talkButton];
 
+    UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 69, 320, 1)];
+    line.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:line];
 }
 
 - (void)otherHome:(UIButton *)sender

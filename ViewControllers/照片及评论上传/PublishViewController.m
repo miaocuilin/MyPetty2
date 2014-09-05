@@ -482,27 +482,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark
 #pragma mark -ASI
 
-- (void)postUpload:(UIImage *)image
-{
-    NSString *imageUploadSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",IMAGEAPI,[USER objectForKey:@"aid"],imageUploadSig,[ControllerManager getSID]];
-    NSMutableURLRequest *mutableRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
-    [mutableRequest setHTTPMethod:@"POST"];
-    
-    NSData * data = UIImageJPEGRepresentation(image, 0.1);
-    NSTimeInterval  timeInterval = [[NSDate date] timeIntervalSince1970];
-    [mutableRequest setHTTPBody:data];
-//    [mutableRequest setValue:@"" forKey:@"comment"];
-    [mutableRequest setValue:@"" forHTTPHeaderField:@"comment"];
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [NSURLConnection sendAsynchronousRequest:mutableRequest queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-        NSLog(@"response:%@",response);
-    }];
-    
-//    mutableRequest
-
-    
-}
 -(void)postData:(UIImage *)image
 {
     NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]];
@@ -526,7 +505,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [_request setPostValue:@"" forKey:@"comments"];
 //
     [_request setPostValue:@"" forKey:@"topic_id"];
-    [_request setPostValue:@"" forKey:@"topic_name"];
+    NSLog(@"topic:%@", [USER objectForKey:@"topic"]);
+    if ([[USER objectForKey:@"topic"] isEqualToString:@"点击添加话题"]) {
+        [_request setPostValue:@"" forKey:@"topic_name"];
+    }else{
+        [_request setPostValue:[USER objectForKey:@"topic"] forKey:@"topic_name"];
+    }
+    
     [_request setPostValue:@"" forKey:@"relates"];
 //    NSLog(@"%@", _textView.text);
     _request.delegate = self;
@@ -540,7 +525,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     [USER setObject:@"1" forKey:@"needRefresh"];
     NSLog(@"success");
-    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传成功"];
+    StartLoading;
+    [MMProgressHUD dismissWithSuccess:@"上传成功" title:nil afterDelay:0.5];
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     
     //分享到微博

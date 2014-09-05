@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ClickImage.h"
+
 @interface JDMenuViewController : UIViewController <UITextFieldDelegate,UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     UIScrollView * sv;
@@ -29,6 +31,8 @@
     UITextField * tfSearch;
     UIButton * searchBtn;
     UITableView * tv;
+    
+    ClickImage * headImageView;
 }
 @property (nonatomic,copy)NSString * tfString;
 

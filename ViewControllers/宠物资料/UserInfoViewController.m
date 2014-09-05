@@ -9,6 +9,9 @@
 #import "UserInfoViewController.h"
 #import "UserInfoActivityCell.h"
 #import "UserInfoRankCell.h"
+#import "UserPetListModel.h"
+#import "PetInfoModel.h"
+#import "ChooseFamilyViewController.h"
 @interface UserInfoViewController ()
 {
     NSDictionary *headerDict;
@@ -21,33 +24,93 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
+    self.userAttentionListArray = [NSMutableArray arrayWithCapacity:0];
+    
     cellNum = 15;
 //    isOwner = YES;
+    [self loadUserInfoData];
+    [self loadMyCountryInfoData];
     
     [self createScrollView];
     [self createFakeNavigation];
 //    [self createHeader];
-    [self createTableView];
-    [self loadUserInfoData];
+    [self createTableView1];
     
 }
 
 #pragma mark - 用户信息
 - (void)loadUserInfoData
 {
+    StartLoading;
 //    user/infoApi&usr_id=
-    NSString *userInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat",[USER objectForKey:@"usr_id"]]];
-    NSString *userInfoString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",USERINFOAPI,[USER objectForKey:@"usr_id"],userInfoSig,[ControllerManager getSID]];
+    NSString *userInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
+    NSString *userInfoString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",USERINFOAPI, self.usr_id, userInfoSig,[ControllerManager getSID]];
     NSLog(@"用户信息API:%@",userInfoString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:userInfoString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
             NSLog(@"用户信息数据：%@",load.dataDict);
            headerDict=  [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            if ([[headerDict objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                isOwner = YES;
+            }
+            LoadingSuccess;
             [self createHeader];
+            
+        }else{
+            LoadingFailed;
         }
+        
     }];
     [request release];
 
+}
+-(void)loadMyCountryInfoData
+{
+//    user/petsApi&usr_id=(若用户为自己则留空不填)
+    NSString * code = [NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERPETLISTAPI, self.usr_id, [MyMD5 md5:code], [ControllerManager getSID]];
+//    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+//            NSLog(@"%@", load.dataDict);
+            [self.userPetListArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for (NSDictionary * dict in array) {
+                UserPetListModel * model = [[UserPetListModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.userPetListArray addObject:model];
+                [model release];
+            }
+            [tv reloadData];
+        }else{
+        
+        }
+    }];
+    [request release];
+}
+-(void)loadMyAttentionCountryData
+{
+    NSString * code = [NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERATTENTIONLISTAPI, self.usr_id, [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+//            NSLog(@"%@", load.dataDict);
+            [self.userAttentionListArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for (NSDictionary * dict in array) {
+                PetInfoModel * model = [[PetInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.userAttentionListArray addObject:model];
+                [model release];
+            }
+            [tv2 reloadData];
+        }else{
+            
+        }
+    }];
+    [request release];
 }
 #pragma mark - 用户列表
 
@@ -96,7 +159,11 @@
     if (!isMoreCreated) {
         //create more
         [self createMore];
+        isMoreCreated = YES;
     }
+    [self.view bringSubviewToFront:menuBgBtn];
+    [self.view bringSubviewToFront:moreView];
+    
     //show more
     menuBgBtn.hidden = NO;
     CGRect rect = moreView.frame;
@@ -211,9 +278,11 @@
     bgView = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, 200)];
     [self.view addSubview:bgView];
     
+    [self.view bringSubviewToFront:navView];
+    [self.view bringSubviewToFront:toolBgView];
     //
     bgImageView1 = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
-    UIImage * image = [UIImage imageNamed:@"cat1.jpg"];
+    UIImage * image = [UIImage imageNamed:@"defaultUserHead.png"];
     bgImageView1.image = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
     [bgView addSubview:bgImageView1];
     [bgImageView1 release];
@@ -226,18 +295,43 @@
     
     //头像
     
-    UIImageView * headerView = [MyControl createImageViewWithFrame:CGRectMake(10, 25, 70, 70) ImageName:@"cat1.jpg"];
-    if ([headerDict objectForKey:@"tx"]) {
-        NSLog(@"111");
-    }else{
-        headerView.image = [UIImage imageNamed:@"20-1.png"];
-    }
-    headerView.layer.cornerRadius = 70/2;
-    headerView.layer.masksToBounds = YES;
-    [bgView addSubview:headerView];
+    headImageView = [[ClickImage alloc] initWithFrame:CGRectMake(10, 25, 70, 70)];
+    headImageView.canClick = YES;
+    headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+    headImageView.layer.cornerRadius = 70/2;
+    headImageView.layer.masksToBounds = YES;
+    [bgView addSubview:headImageView];
+    [headImageView release];
 
+    /**************************/
+    if (!([[headerDict objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[headerDict objectForKey:@"tx"] length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"tx"]]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            headImageView.image = image;
+            bgImageView1.image = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [headerDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    headImageView.image = load.dataImage;
+                    bgImageView1.image = [load.dataImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"tx"]]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+    /**************************/
+    
     //等级
-    UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headerView.frame.origin.x+70-20, headerView.frame.origin.y+70-16, 30, 16) Font:10 Text:[NSString stringWithFormat:@"Lv.%@",[headerDict objectForKey:@"lv"]]];
+    UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headImageView.frame.origin.x+70-20, headImageView.frame.origin.y+70-16, 30, 16) Font:10 Text:[NSString stringWithFormat:@"Lv.%@",[headerDict objectForKey:@"lv"]]];
     exp.textAlignment = NSTextAlignmentCenter;
     exp.backgroundColor = [UIColor colorWithRed:249/255.0 green:135/255.0 blue:88/255.0 alpha:1];
     exp.textColor = [UIColor colorWithRed:229/255.0 green:79/255.0 blue:36/255.0 alpha:1];
@@ -260,27 +354,29 @@
     UILabel * name = [MyControl createLabelWithFrame:CGRectMake(105, 25, size.width+5, 20) Font:15 Text:str];
     [bgView addSubview:name];
     
-    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 14, 17) ImageName:@"woman"];
-    if ((int)[headerDict objectForKey:@"gender"]==1) {
-        sex.image = [UIImage imageNamed:@"men"];
+    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 14, 17) ImageName:@"man.png"];
+    if ([[headerDict objectForKey:@"gender"] intValue] == 2) {
+        sex.image = [UIImage imageNamed:@"woman.png"];
     }
     [bgView addSubview:sex];
     
     //
-    UILabel * cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, 130, 20) Font:14 Text:@"北京市 | 朝阳区"];
+    UILabel * cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, 130, 20) Font:14 Text:[ControllerManager returnProvinceAndCityWithCityNum:[headerDict objectForKey:@"city"]]];
     cateNameLabel.font = [UIFont boldSystemFontOfSize:14];
 //    cateNameLabel.alpha = 0.65;
     [bgView addSubview:cateNameLabel];
     
     //
-    NSString * str2= @"祭司 — 猫君国";
+    
+    NSString * str2= [NSString stringWithFormat:@"祭司 — %@国", [headerDict objectForKey:@"a_name"]];
     CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:15 Text:str2];
     //    positionAndUserName.font = [UIFont boldSystemFontOfSize:15];
     [bgView addSubview:positionAndUserName];
     
     //用户头像，点击进入个人中心
-    UIButton * userImageBtn = [MyControl createButtonWithFrame:CGRectMake(positionAndUserName.frame.origin.x+positionAndUserName.frame.size.width+5, 160/2, 30, 30) ImageName:@"cat2.jpg" Target:self Action:@selector(jumpToUserInfo) Title:nil];
+    UIButton * userImageBtn = [MyControl createButtonWithFrame:CGRectMake(positionAndUserName.frame.origin.x+positionAndUserName.frame.size.width+5, 160/2, 30, 30) ImageName:@"" Target:self Action:@selector(jumpToUserInfo) Title:nil];
+    [userImageBtn setBackgroundImage:self.petHeadImage forState:UIControlStateNormal];
     userImageBtn.layer.cornerRadius = 15;
     userImageBtn.layer.masksToBounds = YES;
     [bgView addSubview:userImageBtn];
@@ -313,14 +409,14 @@
     RQBgImageView.layer.masksToBounds = YES;
     [bgView addSubview:RQBgImageView];
     
-    int length = arc4random()%(350/2);
+    int length = [[headerDict objectForKey:@"exp"] intValue]/100.0*175;
     //    float length = 3.5/2*70;
-    NSLog(@"%f", length/(350.0/2)*100.0);
+    NSLog(@"%d", length);
     UIImageView * RQImageView = [MyControl createImageViewWithFrame:CGRectMake(1, 1, length, 11) ImageName:@""];
     RQImageView.image = [[UIImage imageNamed:@"RQImage.png"] stretchableImageWithLeftCapWidth:26/2 topCapHeight:30/2];
     [RQBgImageView addSubview:RQImageView];
     
-    UILabel * RQNumLabel = [MyControl createLabelWithFrame:CGRectMake(50, 0, 75, 13) Font:12 Text:[NSString stringWithFormat:@"%d/100", (int)(length/(350.0/2)*100.0)]];
+    UILabel * RQNumLabel = [MyControl createLabelWithFrame:CGRectMake(50, 0, 75, 13) Font:12 Text:[NSString stringWithFormat:@"%d/100", [[headerDict objectForKey:@"exp"] intValue]]];
     RQNumLabel.textAlignment = NSTextAlignmentCenter;
     [RQBgImageView addSubview:RQNumLabel];
     
@@ -357,7 +453,7 @@
 }
 
 #pragma mark - 创建tableView
--(void)createTableView
+-(void)createTableView1
 {
     tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv.delegate = self;
@@ -367,33 +463,8 @@
     
     UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
     tv.tableHeaderView = tvHeaderView;
-    
-    //
-    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(320, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
-    tv2.delegate = self;
-    tv2.dataSource = self;
-    [sv addSubview:tv2];
-    
-    UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
-    tv2.tableHeaderView = tvHeaderView2;
-    
-    //
-    tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
-    tv3.delegate = self;
-    tv3.dataSource = self;
-    [sv addSubview:tv3];
-    
-    UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
-    tv3.tableHeaderView = tvHeaderView3;
-    
-    //
-    tv4 = [[UITableView alloc] initWithFrame:CGRectMake(320*3, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
-    tv4.delegate = self;
-    tv4.dataSource = self;
-    [sv addSubview:tv4];
-    
-    UIView * tvHeaderView4 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
-    tv4.tableHeaderView = tvHeaderView4;
+
+    isCreated[0] = 1;
     
     [self.view bringSubviewToFront:bgView];
     [self.view bringSubviewToFront:navView];
@@ -427,9 +498,62 @@
     bottom.backgroundColor = BGCOLOR;
     [toolBgView addSubview:bottom];
     
+    [self.view bringSubviewToFront:toolBgView];
+    
     //加入从商店跳背包偏移量设置320*3 这里将直接偏移
     sv.contentOffset = CGPointMake(self.offset, 0);
 }
+-(void)createTableView2
+{
+    //
+    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(320, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv2.delegate = self;
+    tv2.dataSource = self;
+    [sv addSubview:tv2];
+    
+    UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
+    tv2.tableHeaderView = tvHeaderView2;
+    
+    [self.view bringSubviewToFront:bgView];
+    [self.view bringSubviewToFront:navView];
+    [self.view bringSubviewToFront:toolBgView];
+    isCreated[1] = 1;
+}
+-(void)createTableView3
+{
+    //
+    tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv3.delegate = self;
+    tv3.dataSource = self;
+    [sv addSubview:tv3];
+    
+    UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
+    tv3.tableHeaderView = tvHeaderView3;
+    
+    [self.view bringSubviewToFront:bgView];
+    [self.view bringSubviewToFront:navView];
+    [self.view bringSubviewToFront:toolBgView];
+    isCreated[2] = 1;
+}
+-(void)createTableView4
+{
+    //
+    tv4 = [[UITableView alloc] initWithFrame:CGRectMake(320*3, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv4.delegate = self;
+    tv4.dataSource = self;
+    [sv addSubview:tv4];
+    
+    UIView * tvHeaderView4 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
+    tv4.tableHeaderView = tvHeaderView4;
+    
+    [self.view bringSubviewToFront:bgView];
+    [self.view bringSubviewToFront:navView];
+    [self.view bringSubviewToFront:toolBgView];
+    isCreated[3] = 1;
+}
+
+
+
 -(void)imageButtonClick
 {
     
@@ -450,16 +574,23 @@
         sv.contentOffset = CGPointMake(320*(a-200), 0);
     }];
     
-    
-    
     if (a == 200) {
-        //        sv.contentOffset = CGPointMake(0, 0);
+        if (!isCreated[a-200]) {
+            [self createTableView1];
+        }
     }else if(a == 201) {
-        //        sv.contentOffset = CGPointMake(320, 0);
+        if (!isCreated[a-200]) {
+            [self createTableView2];
+            [self loadMyAttentionCountryData];
+        }
     }else if(a == 202) {
-        //        sv.contentOffset = CGPointMake(320*2, 0);
+        if (!isCreated[a-200]) {
+            [self createTableView3];
+        }
     }else{
-        //        sv.contentOffset = CGPointMake(320*3, 0);
+        if (!isCreated[a-200]) {
+            [self createTableView4];
+        }
     }
 }
 
@@ -513,6 +644,11 @@
 {
     if (tableView == tv4) {
         return 1;
+    }else if(tableView == tv){
+        //+的这个1是添加王国的按钮
+        return self.userPetListArray.count+1;
+    }else if(tableView == tv2){
+        return self.userAttentionListArray.count;
     }else{
         return cellNum;
     }
@@ -520,7 +656,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == tv) {
-        if (indexPath.row == cellNum-1) {
+        if (indexPath.row == self.userPetListArray.count) {
             static NSString * cellID0 = @"ID0";
             UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID0];
             if (!cell) {
@@ -552,6 +688,7 @@
         }
         
         [cell modify:indexPath.row];
+        [cell configUI:self.userPetListArray[indexPath.row]];
         return cell;
     }else if (tableView == tv2) {
         static NSString * cellID2 = @"ID2";
@@ -560,7 +697,7 @@
             cell = [[[NSBundle mainBundle] loadNibNamed:@"UserInfoRankCell" owner:self options:nil] objectAtIndex:0];
         }
         cell.selectionStyle = 0;
-        [cell modifyWithName:@"吃了么吃了么" sex:2 cate:@"107" age:@"3" position:@"祭司" userName:@"韩梅梅" rank:@"70"];
+        [cell configUI:self.userAttentionListArray[indexPath.row]];
         return cell;
     }else if (tableView == tv3) {
         static NSString * cellID3 = @"ID3";
@@ -663,6 +800,9 @@
 -(void)addCountry
 {
     NSLog(@"加入国家");
+    ChooseFamilyViewController * vc = [[ChooseFamilyViewController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 }
 - (void)didReceiveMemoryWarning
 {

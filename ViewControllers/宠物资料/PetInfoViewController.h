@@ -8,7 +8,7 @@
 
 //#import <UIKit/UIKit.h>
 #import "BottomMenuRootViewController.h"
-
+#import "ClickImage.h"
 @interface PetInfoViewController : BottomMenuRootViewController <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate>
 {
     UIScrollView * sv;
@@ -30,7 +30,7 @@
     UIButton * alphaBtn;
     MBProgressHUD *alertView;
 
-
+    ClickImage * headerImageView;
 }
 @property (nonatomic,copy)NSString * lastImg_id;
 @property (nonatomic,copy)NSString * lastUsr_id;

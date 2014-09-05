@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "PetInfoModel.h"
 @interface UserInfoRankCell : UITableViewCell
 {
     NSString * cateName;
@@ -23,5 +23,6 @@
 @property (retain, nonatomic) IBOutlet UIButton *gotoKing;
 @property (retain, nonatomic) IBOutlet UIButton *gotoOwner;
 
--(void)modifyWithName:(NSString *)name sex:(int)sex cate:(NSString *)cate age:(NSString *)age position:(NSString *)position userName:(NSString *)userName rank:(NSString *)rank;
+//-(void)modifyWithName:(NSString *)name sex:(int)sex cate:(NSString *)cate age:(NSString *)age position:(NSString *)position userName:(NSString *)userName rank:(NSString *)rank;
+-(void)configUI:(PetInfoModel *)model;
 @end

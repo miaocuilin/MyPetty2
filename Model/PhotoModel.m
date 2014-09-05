@@ -25,6 +25,10 @@
     [_headImage release];
     [_title release];
     [_detail release];
+    
+    [_name release];
+    [_tx release];
+    [_aid release];
     [super dealloc];
 }
 

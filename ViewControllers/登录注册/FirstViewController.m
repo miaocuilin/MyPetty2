@@ -115,7 +115,7 @@
         bgImageView.frame = CGRectMake(0, 0, width*0.9, height*0.9);
         bgImageView.center = self.view.center;
         [self setAnimation:bgImageView];
-//        [self performSelector:@selector(jumpToRandom) withObject:nil afterDelay:2];
+//        [self performSelector:@selector(jumpToChoose) withObject:nil afterDelay:2];
     }else{
         [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, self.launchImageName] Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
@@ -137,10 +137,13 @@
                 NSString * docDir = DOCDIR;
                 NSString * FilePath = [docDir stringByAppendingPathComponent:self.launchImageName];
                 [load.data writeToFile:FilePath atomically:YES];
+                [self setAnimation:bgImageView];
+//                [self performSelector:@selector(jumpToChoose) withObject:nil afterDelay:2];
             }else{
+                [self setAnimation:bgImageView];
+//                [self performSelector:@selector(jumpToChoose) withObject:nil afterDelay:2];
                 UIAlertView * alert = [MyControl createAlertViewWithTitle:@"图片加载失败"];
             }
-            [self setAnimation:bgImageView];
 //            [self performSelector:@selector(jumpToRandom) withObject:nil afterDelay:2];
         }];
     }
@@ -319,7 +322,10 @@
          
      }completion:^(BOOL finished) {
 //         if (isLogined) {
-             [self performSelector:@selector(jumpToChoose) withObject:nil];
+         if (finished) {
+            [self performSelector:@selector(jumpToChoose) withObject:nil];
+         }
+         
 //         }else{
 //             isAnimation = 1;
 //         }

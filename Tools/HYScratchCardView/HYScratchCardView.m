@@ -29,6 +29,7 @@
     if (self.path) {
         CGPathRelease(self.path);
     }
+    [super dealloc];
 }
 
 - (id)initWithFrame:(CGRect)frame

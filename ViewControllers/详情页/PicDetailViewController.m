@@ -96,7 +96,7 @@
             self.usr_id = [dict objectForKey:@"usr_id"];
             self.likers = [dict objectForKey:@"likers"];
             self.comments = [dict objectForKey:@"comments"];
-            
+            self.topic_name = [dict objectForKey:@"topic_name"];
             self.likerTxArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"liker_tx"];
             self.senderTxArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"sender_tx"];
             
@@ -173,7 +173,7 @@
             LoadingSuccess;
             //改变header数据
             self.name.text = [dic objectForKey:@"name"];
-            if ([[dic objectForKey:@"gender"] intValue] == 1) {
+            if ([[dic objectForKey:@"gender"] intValue] == 2) {
                 self.sex.image = [UIImage imageNamed:@"woman.png"];
             }
             if ([[dic objectForKey:@"type"] intValue]/100 == 1) {
@@ -378,7 +378,7 @@
 }
 -(void)createHeader
 {
-    [self.headBtn setBackgroundImage:[UIImage imageNamed:@"cat2.jpg"] forState:UIControlStateNormal];
+    [self.headBtn setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.jpg"] forState:UIControlStateNormal];
     self.headBtn.layer.cornerRadius = self.headBtn.frame.size.height/2;
     self.headBtn.layer.masksToBounds = YES;
     
@@ -484,6 +484,9 @@
     
     //话题
     UILabel * topic = [MyControl createLabelWithFrame:CGRectMake(15, giftBgView.frame.origin.y+giftBgView.frame.size.height+10, 200, 20) Font:14 Text:@"#一起来看超级月亮#"];
+    if (self.topic_name.length != 0) {
+        topic.text = [NSString stringWithFormat:@"#%@#", self.topic_name];
+    }
     topic.textColor = BGCOLOR;
     [self.sv addSubview:topic];
     
@@ -568,7 +571,7 @@
                 header.image = image;
             }else{
                 //下载头像
-                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, self.headImageURL] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, self.txTotalArray[i]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
                         header.image = load.dataImage;
                         NSString * docDir = DOCDIR;
@@ -806,10 +809,13 @@
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:self.cmt image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
                 [self cancelBtnClick];
             }else{
-//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
         }];
     }else if(button.tag == 201){
@@ -819,10 +825,13 @@
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:self.cmt image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
                 [self cancelBtnClick];
             }else{
-//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
         }];
     }else{
@@ -830,11 +839,14 @@
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:@"ha哈哈哈" image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
                 [self cancelBtnClick];
             }else{
                 NSLog(@"失败原因：%@", response);
-//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
         }];
     }
@@ -855,6 +867,10 @@
 {
     NSLog(@"跳转到用户详情页");
     MassWatchViewController * vc = [[MassWatchViewController alloc] init];
+    vc.usr_ids = self.likers;
+    vc.txTypesArray = self.txTypeTotalArray;
+    vc.isMi = isMi;
+    vc.modalTransitionStyle = 2;
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
@@ -931,7 +947,11 @@
                         [self.txTotalArray addObject:[USER objectForKey:@"tx"]];
                     }
                     [self.txTypeTotalArray addObject:@"liker"];
-                    
+                    if ([self.likers isKindOfClass:[NSNull class]] || self.likers.length == 0) {
+                        self.likers = [NSString stringWithFormat:@"%@", [USER objectForKey:@"usr_id"]];
+                    }else{
+                        self.likers = [NSString stringWithFormat:@"%@,%@", self.likers, [USER objectForKey:@"usr_id"]];
+                    }
                     [usersBgView removeFromSuperview];
                     //【注意】这里是commentsBgView，不是commentBgView
                     [commentsBgView removeFromSuperview];

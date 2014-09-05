@@ -8,7 +8,7 @@
 
 #import "MassWatchViewController.h"
 #import "MassWatchCell.h"
-
+#import "UserInfoModel.h"
 @interface MassWatchViewController ()
 
 @end
@@ -19,12 +19,40 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+    
     [self createBg];
-    [self createTableView];
+    [self loadData];
+//    [self createTableView];
     [self createNavgation];
     
 }
+-(void)loadData
+{
+    StartLoading;
+    NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", self.usr_ids];
+    NSString * code = [MyMD5 md5:str];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKERSAPI, self.usr_ids, code, [ControllerManager getSID]];
+    NSLog(@"赞列表：%@", url);
+    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
 
+            [self.dataArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"] ;
+            for (NSDictionary * dict in array) {
+                UserInfoModel * model = [[UserInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.dataArray addObject:model];
+                [model release];
+            }
+            [self createTableView];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+            NSLog(@"请求赞列表失败");
+        }
+    }];
+}
 - (void)createNavgation
 {
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
@@ -65,11 +93,13 @@
     
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
     tv.tableHeaderView = tempView;
+    
+    [self.view bringSubviewToFront:navView];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return self.dataArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -80,6 +110,9 @@
     if (!cell) {
         cell = [[[MassWatchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:normalCell] autorelease];
     }
+    cell.txType = self.txTypesArray[indexPath.row];
+    cell.isMi = self.isMi;
+    [cell configUI:self.dataArray[indexPath.row]];
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
     return cell;

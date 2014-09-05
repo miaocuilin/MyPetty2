@@ -15,5 +15,8 @@
     
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
-
+@property(nonatomic,retain)NSArray * txTypesArray;
+@property(nonatomic,retain)NSMutableArray * dataArray;
+@property(nonatomic,copy)NSString * usr_ids;
+@property(nonatomic)BOOL isMi;
 @end

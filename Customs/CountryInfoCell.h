@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UserPetListModel.h"
 @class CountryInfoCell;
 
 @protocol CountryInfoCellDelegate <NSObject>
@@ -17,7 +18,7 @@
 
 @interface CountryInfoCell : UITableViewCell
 {
-    UIImageView * expImageView;
+    
 }
 @property (nonatomic,assign)id <CountryInfoCellDelegate>delegate;
 
@@ -31,5 +32,7 @@
 @property (retain, nonatomic) IBOutlet UILabel *switchLabel1;
 @property (retain, nonatomic) IBOutlet UILabel *switchLabel2;
 
+@property (retain,nonatomic) UIImageView * expImageView;
 -(void)modify:(int)row;
+-(void)configUI:(UserPetListModel *)model;
 @end

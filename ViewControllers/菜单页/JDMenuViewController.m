@@ -102,6 +102,7 @@
     
     searchBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 37, 38, 20) ImageName:@"" Target:self Action:@selector(searchBtnClick) Title:@"取消"];
     searchBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+//    searchBtn.hidden = YES;
     [self.view addSubview:searchBtn];
     
     //消息
@@ -137,10 +138,35 @@
     headBg2.backgroundColor = [UIColor whiteColor];
     [sv addSubview:headBg2];
     
-    UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(4, 4, 62, 62) ImageName:@"cat2.jpg"];
+    headImageView = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
+    headImageView.canClick = YES;
+    headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
     headImageView.layer.cornerRadius = 31;
     headImageView.layer.masksToBounds = YES;
     [headBg2 addSubview:headImageView];
+    /**************************/
+    if (!([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            headImageView.image = image;
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    headImageView.image = load.dataImage;
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
     
     
     NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
@@ -733,6 +759,7 @@
 #pragma mark - textField代理
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
+//    searchBtn.hidden = NO;
     [UIView animateWithDuration:0.3 animations:^{
         sv.contentOffset = CGPointMake(225, 0);
     }];
@@ -740,6 +767,7 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+//    searchBtn.hidden = YES;
     [textField resignFirstResponder];
     if (self.tfString != nil) {
         [self.searchArray addObject:@"11"];
@@ -749,6 +777,7 @@
 }
 -(BOOL)textFieldShouldClear:(UITextField *)textField
 {
+//    searchBtn.hidden = YES;
     [searchBtn setTitle:@"取消" forState:UIControlStateNormal];
     self.tfString = nil;
     return YES;

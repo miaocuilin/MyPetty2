@@ -270,6 +270,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
             [self.view bringSubviewToFront:self.menuBgBtn];
             [self.view bringSubviewToFront:self.menuBgView];
+            [self.view bringSubviewToFront:self.alphaBtn];
         }
     }else if(scrollView.contentOffset.x == 320*2){
         if (![ControllerManager getIsSuccess]) {
@@ -291,6 +292,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
             [self.view bringSubviewToFront:self.menuBgBtn];
             [self.view bringSubviewToFront:self.menuBgView];
+            [self.view bringSubviewToFront:self.alphaBtn];
         }
     }
 }

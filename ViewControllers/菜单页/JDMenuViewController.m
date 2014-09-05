@@ -233,7 +233,7 @@
 //    [self.view addSubview:shopBtn];
     
     //下半段的20%透明黑背景
-    UIView * blackView = [MyControl createViewWithFrame:CGRectMake(0, position.frame.origin.y+30+10, OFFSET, sv.contentSize.height-(position.frame.origin.y+20+10))];
+    UIView * blackView = [MyControl createViewWithFrame:CGRectMake(0, position.frame.origin.y+20+10, OFFSET, sv.contentSize.height-(position.frame.origin.y+20+10))];
     blackView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
     [sv addSubview:blackView];
     

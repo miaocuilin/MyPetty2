@@ -37,7 +37,7 @@
 //    [cellBody addSubview:giftBG];
 //    [giftBG release];
     
-    self.giftView = [MyControl createImageViewWithFrame:CGRectMake(50, 35, 24, 24) ImageName:@"zan_gift.png"];
+    self.giftView = [MyControl createImageViewWithFrame:CGRectMake(50, 37, 24, 24) ImageName:@"zan_gift.png"];
     [self.contentView addSubview:self.giftView];
     
     self.sexView = [MyControl createImageViewWithFrame:CGRectMake(80, 15, 14, 17) ImageName:@"man.png"];
@@ -72,7 +72,44 @@
     line.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:line];
 }
-
+-(void)configUI:(UserInfoModel *)model
+{
+    if ([model.gender intValue] == 2) {
+        self.sexView.image = [UIImage imageNamed:@"woman.png"];
+    }
+    self.watcherName.text = model.name;
+    self.ProvinceAndCity.text = [ControllerManager returnProvinceAndCityWithCityNum:model.city];
+    if ([self.txType isEqualToString:@"liker"]) {
+        if (self.isMi) {
+            self.giftView.image = [UIImage imageNamed:@"zan_fish.png"];
+        }else{
+            self.giftView.image = [UIImage imageNamed:@"zan_bone.png"];
+        }
+    }
+    
+    if (!([model.tx isKindOfClass:[NSNull class]] || model.tx.length==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+}
 - (void)otherHome:(UIButton *)sender
 {
     NSLog(@"跳转到其他人的主页");

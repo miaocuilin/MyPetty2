@@ -58,11 +58,13 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor lightGrayColor];
+    
     [USER setObject:@"1" forKey:@"isFavoriteLoaded"];
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
     self.userDataArray = [NSMutableArray arrayWithCapacity:0];
     
-    [self loadData];
+//    [self loadData];
 //    [self createTableView];
 //    [self createHeaderView];
 //	[self performSelector:@selector(testFinishedLoadData) withObject:nil afterDelay:0.0f];
@@ -88,7 +90,7 @@
 //    [self.view addSubview:indicatorView];
 //    [indicatorView startAnimating];
     
-    NET = YES;
+//    NET = YES;
     NSString * url = [NSString stringWithFormat:@"%@%@", FAVORITEAPI, [ControllerManager getSID]];
     NSLog(@"关注页面的url :%@", url);
     
@@ -120,17 +122,17 @@
                 [self loadUserData:[NSString stringWithFormat:@"%d", uid[count++]]];
             }else{
                 LoadingSuccess;
-                NET = NO;
+//                NET = NO;
 //                [self alertNull];
-                [indicatorView stopAnimating];
+//                [indicatorView stopAnimating];
             }
             NSLog(@"%d", count);
 //            [tv reloadData];
         }else{
             LoadingFailed;
-            [indicatorView stopAnimating];
+//            [indicatorView stopAnimating];
             NSLog(@"数据加载失败。");
-            NET = NO;
+//            NET = NO;
         }
     }];
 }

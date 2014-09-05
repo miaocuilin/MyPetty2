@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CountryInfoCell.h"
-
+#import "ClickImage.h"
 @class PetInfoViewController;
 
 @interface UserInfoViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,CountryInfoCellDelegate>
@@ -23,7 +23,7 @@
     UIView * toolBgView;
     UIView * bottom;
     UIView * bgView;
-    BOOL isCreated[3];
+    BOOL isCreated[4];
     UIImageView * bgImageView1;
     
     int cellNum;
@@ -34,8 +34,15 @@
     UIButton * menuBgBtn;
     
     BOOL isOwner;
+    
+    ClickImage * headImageView;
 }
 
 @property(nonatomic)int offset;
 @property(nonatomic)BOOL isFromPetInfo;
+
+@property(nonatomic,retain)UIImage * petHeadImage;
+@property(nonatomic,copy)NSString * usr_id;
+@property(nonatomic,retain)NSMutableArray * userPetListArray;
+@property(nonatomic,retain)NSMutableArray * userAttentionListArray;
 @end

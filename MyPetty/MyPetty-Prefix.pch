@@ -66,7 +66,6 @@
     #define PETIMAGEAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
 //图片、头像上传API
     #define IMAGEAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
-    #define TXAPI @"http://54.199.161.210/dc/index.php?r=user/txApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
     #define IMAGEUPLOADAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
     //IMAGEUPLOAD需要POST的数据：comment topic_id(可留空), topic_name, relates(usr_id1,usr_id2...)"
@@ -82,6 +81,16 @@
     //其它用户信息
     #define USERINFOAPI @"http://54.199.161.210:8001/index.php?r=user/infoApi&usr_id="
 
+    /***************************/
+    //用户宠物列表：
+    #define USERPETLISTAPI @"http://54.199.161.210:8001/index.php?r=user/petsApi&usr_id="
+    //用户关注列表：
+    #define USERATTENTIONLISTAPI @"http://54.199.161.210:8001/index.php?r=user/followingApi&usr_id="
+    //用户活动列表：
+    #define USERACTIVITYLISTAPI @"http://54.199.161.210:8001/index.php?r=user/topicApi&usr_id="
+    //用户物品列表：
+    #define USERGOODSLISTAPI @"http://54.199.161.210:8001/index.php?r=user/itemsApi&usr_id="
+    /***************************/
     //获取宠物信息API
     #define PETINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/infoApi&aid="
 
@@ -132,10 +141,10 @@
     #define TYPEAPI @"http://54.199.161.210/dc/index.php?r=user/typeApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
     //封面照片
-    #define WELCOMEAPI @"http://54.199.161.210/dc/index.php?r=user/welcomeApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define WELCOMEAPI @"http://54.199.161.210:8001/index.php?r=user/welcomeApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
     //照片点赞的人的列表
-    #define LIKERSAPI @"http://54.199.161.210/dc/index.php?r=user/othersApi&usr_ids="
+    #define LIKERSAPI @"http://54.199.161.210:8001/index.php?r=user/othersApi&usr_ids="
 
     //用户是否绑定微博或微信
     #define ISBINDEDAPI @"http://54.199.161.210/dc/index.php?r=user/bindApi&wechat=&weibo="
@@ -178,9 +187,8 @@
 
     //注销API
     #define DELETEAPI @"http://54.199.161.210:8001/index.php?r=site/clearUser&name="
-    #define DELETEAPI @"http://54.199.161.210/dc/index.php?r=site/clearUser&name="
-    //用户信息API
-    #define USERINFOAPI @"http://54.199.161.210:8001/index.php?r=user/infoApi&usr_id="
+
+
 #pragma mark - 张景瑞API
     //宠物礼物API
     #define PETPRESENTSAPI @"http://54.199.161.210:8001/index.php?r=animal/itemsApi&aid="

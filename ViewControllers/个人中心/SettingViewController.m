@@ -307,7 +307,11 @@
     for (NSString *p in files) {
         NSError *error;
         NSString *path = [cachPath stringByAppendingPathComponent:p];
+        NSLog(@"%@", path);
         if (!([path hasSuffix:@".png"] || [path hasSuffix:@".jpg"] || [path hasSuffix:@".jpeg"] || [path hasSuffix:@".bmp"])) {
+            continue;
+        }
+        if ([path rangeOfString:@"blurBg.png"].location != NSNotFound) {
             continue;
         }
         if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {

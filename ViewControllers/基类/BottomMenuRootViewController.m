@@ -219,6 +219,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         NSLog(@"跳到王国");
         [self hideAll];
         PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+        vc.aid = [USER objectForKey:@"aid"];
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
         

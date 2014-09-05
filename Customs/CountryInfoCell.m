@@ -25,23 +25,24 @@
     self.expBgImageView.layer.masksToBounds = YES;
     
     
-    int length = arc4random()%160;
-    int exp = length/160.0*100;
+//    int length = arc4random()%160;
+//    int exp = length/160.0*100;
     
-    expImageView = [MyControl createImageViewWithFrame:CGRectMake(1, 1, length, 11) ImageName:@""];
-    expImageView.image = [[UIImage imageNamed:@"RQImage.png"] stretchableImageWithLeftCapWidth:26/2 topCapHeight:30/2];
+    self.expImageView = [MyControl createImageViewWithFrame:CGRectMake(1, 1, 11, 11) ImageName:@""];
+    self.expImageView.image = [[UIImage imageNamed:@"RQImage.png"] stretchableImageWithLeftCapWidth:26/2 topCapHeight:30/2];
 //    expImageView.layer.cornerRadius = 7;
 //    expImageView.layer.masksToBounds = YES;
-    [self.expBgImageView addSubview:expImageView];
+    [self.expBgImageView addSubview:self.expImageView];
     
     [self.contentView bringSubviewToFront:self.expLabel];
-    self.expLabel.text = [NSString stringWithFormat:@"%d/100", exp];
+    self.expLabel.text = [NSString stringWithFormat:@"%d/100", 11];
     
     NSArray * array = @[@"今日人气", @"最新动态", @"王国成员"];
     for(int i=0;i<3;i++){
         UILabel * numLabel = [MyControl createLabelWithFrame:CGRectMake(90+i*60, 60, 50, 15) Font:12 Text:@"100"];
         numLabel.textColor = BGCOLOR;
         numLabel.textAlignment = NSTextAlignmentCenter;
+        numLabel.tag = 100+i;
         [self.contentView addSubview:numLabel];
         
         UILabel * nameLabel = [MyControl createLabelWithFrame:CGRectMake(90+i*60, 75, 50, 15) Font:11 Text:array[i]];
@@ -105,7 +106,51 @@
         [self.delegate swipeTableViewCell:self didClickButtonWithIndex:2];
     }
 }
-
+#pragma mark -
+-(void)configUI:(UserPetListModel *)model
+{
+    self.nameLabel.text = [NSString stringWithFormat:@"祭司 — %@国", model.name];
+    for(int i=0;i<3;i++){
+        UILabel * numLabel = (UILabel *)[self.contentView viewWithTag:100+i];
+        if (i == 0) {
+            numLabel.text = model.d_rq;
+        }else if(i == 1){
+            numLabel.text = model.news_count;
+        }else{
+            numLabel.text = model.fans_count;
+        }
+    }
+    //
+    int length = [model.t_contri intValue]/100.0*160;
+    self.expImageView.frame = CGRectMake(1, 1, length, 11);
+    self.expImageView.image = [[UIImage imageNamed:@"RQImage.png"] stretchableImageWithLeftCapWidth:23/2 topCapHeight:30/2];
+    self.expLabel.text = [NSString stringWithFormat:@"%@/100", model.t_contri];
+    /**************************/
+    if (!([model.tx isKindOfClass:[NSNull class]] || model.tx.length==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            self.headImageView.image = image;
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    self.headImageView.image = load.dataImage;
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+    
+    /**************************/
+}
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {

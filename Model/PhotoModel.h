@@ -23,4 +23,8 @@
 @property(nonatomic,copy)NSString * headImage;
 @property(nonatomic,copy)NSString * title;
 @property(nonatomic,copy)NSString * detail;
+
+@property(nonatomic,copy)NSString * name;
+@property(nonatomic,copy)NSString * tx;
+@property(nonatomic,copy)NSString * aid;
 @end

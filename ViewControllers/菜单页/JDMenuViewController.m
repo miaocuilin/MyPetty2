@@ -102,6 +102,7 @@
     
     searchBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 37, 38, 20) ImageName:@"" Target:self Action:@selector(searchBtnClick) Title:@"取消"];
     searchBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+//    searchBtn.hidden = YES;
     [self.view addSubview:searchBtn];
     
     //消息
@@ -137,13 +138,39 @@
     headBg2.backgroundColor = [UIColor whiteColor];
     [sv addSubview:headBg2];
     
-    UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(4, 4, 62, 62) ImageName:@"cat2.jpg"];
+    headImageView = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
+    headImageView.canClick = YES;
+    headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
     headImageView.layer.cornerRadius = 31;
     headImageView.layer.masksToBounds = YES;
     [headBg2 addSubview:headImageView];
+    /**************************/
+    if (!([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            headImageView.image = image;
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    headImageView.image = load.dataImage;
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
     
+    /**************************/
     //等级
-    UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headBg2.frame.origin.x+4+48, headBg2.frame.origin.y+4+50, 30, 16) Font:10 Text:@"Lv.11"];
+    UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headBg2.frame.origin.x+4+48, headBg2.frame.origin.y+4+50, 30, 16) Font:10 Text:[NSString stringWithFormat:@"Lv.%@", [USER objectForKey:@"lv"]]];
     exp.textAlignment = NSTextAlignmentCenter;
     exp.backgroundColor = [UIColor colorWithRed:249/255.0 green:135/255.0 blue:88/255.0 alpha:1];
     exp.textColor = [UIColor colorWithRed:229/255.0 green:79/255.0 blue:36/255.0 alpha:1];
@@ -153,22 +180,29 @@
     [sv addSubview:exp];
     
     //性别，姓名，官职
-    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(25, 140, 28/2, 34/2) ImageName:@"woman.png"];
+    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(25, 140, 28/2, 34/2) ImageName:@"man.png"];
+    if ([[USER objectForKey:@"gender"] intValue] == 2) {
+        sex.image = [UIImage imageNamed:@"woman.png"];
+    }
     [sv addSubview:sex];
     
-    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+14+5, sex.frame.origin.y, 100, 20) Font:17 Text:@"Anna"];
+    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+14+5, sex.frame.origin.y, 100, 20) Font:17 Text:[USER objectForKey:@"name"]];
     [sv addSubview:name];
     
     //官职  225menu总宽
-    UILabel * position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:@"猫君国大祭司"];
+    UILabel * kingName = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:[NSString stringWithFormat:@"%@的王国", [USER objectForKey:@"a_name"]]];
+    [sv addSubview:kingName];
+    
+    UILabel * position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20+20, 125, 20) Font:14 Text:@"--祭司"];
     [sv addSubview:position];
     
     //金币
     UIImageView * gold = [MyControl createImageViewWithFrame:CGRectMake(170, sex.frame.origin.y-3, 22, 22) ImageName:@"gold.png"];
     [sv addSubview:gold];
     
-    UILabel * goldLabel = [MyControl createLabelWithFrame:CGRectMake(160, gold.frame.origin.y+23, 60, 20) Font:14 Text:@"20000"];
-    //    goldLabel.textAlignment = NSTextAlignmentCenter;
+    UILabel * goldLabel = [MyControl createLabelWithFrame:CGRectMake(151, gold.frame.origin.y+23, 60, 20) Font:14 Text:[USER objectForKey:@"gold"]];
+//    goldLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    goldLabel.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:goldLabel];
     
     
@@ -702,6 +736,7 @@
 #pragma mark - textField代理
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
+//    searchBtn.hidden = NO;
     [UIView animateWithDuration:0.3 animations:^{
         sv.contentOffset = CGPointMake(225, 0);
     }];
@@ -709,6 +744,7 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+//    searchBtn.hidden = YES;
     [textField resignFirstResponder];
     if (self.tfString != nil) {
         [self.searchArray addObject:@"11"];
@@ -718,6 +754,7 @@
 }
 -(BOOL)textFieldShouldClear:(UITextField *)textField
 {
+//    searchBtn.hidden = YES;
     [searchBtn setTitle:@"取消" forState:UIControlStateNormal];
     self.tfString = nil;
     return YES;

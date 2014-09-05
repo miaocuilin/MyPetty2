@@ -314,7 +314,6 @@
 		493DEF6719AED166009D0027 /* UIWindow+MotionEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 493DEF6619AED166009D0027 /* UIWindow+MotionEvent.m */; };
 		493DEF6919AF05C7009D0027 /* nochance.png in Resources */ = {isa = PBXBuildFile; fileRef = 493DEF6819AF05C7009D0027 /* nochance.png */; };
 		493DEF6C19AF1A32009D0027 /* ShoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 493DEF6B19AF1A32009D0027 /* ShoutViewController.m */; };
-		4945EF6A19B73D760041E8F3 /* CatNomenklatura.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4945EF6919B73D760041E8F3 /* CatNomenklatura.plist */; };
 		49500A2919AD85F700D175D8 /* TouchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49500A2819AD85F700D175D8 /* TouchViewController.m */; };
 		49500A2D19ADA1AC00D175D8 /* HYScratchCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 49500A2C19ADA1AC00D175D8 /* HYScratchCardView.m */; };
 		49500A3119ADA51D00D175D8 /* product_bg1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49500A2E19ADA51D00D175D8 /* product_bg1.png */; };
@@ -451,6 +450,8 @@
 		602EB10119B8626100B4110B /* zan_bone.png in Resources */ = {isa = PBXBuildFile; fileRef = 602EB0FA19B8626100B4110B /* zan_bone.png */; };
 		602EB10219B8626100B4110B /* zan_fish.png in Resources */ = {isa = PBXBuildFile; fileRef = 602EB0FB19B8626100B4110B /* zan_fish.png */; };
 		602EB10319B8626100B4110B /* zan_gift.png in Resources */ = {isa = PBXBuildFile; fileRef = 602EB0FC19B8626100B4110B /* zan_gift.png */; };
+		60320BB319B95E190094A6E0 /* UserInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60320BB219B95E190094A6E0 /* UserInfoModel.m */; };
+		60320BB619B994F40094A6E0 /* UserPetListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60320BB519B994F40094A6E0 /* UserPetListModel.m */; };
 		6038617719A6ED3500B1312A /* through.png in Resources */ = {isa = PBXBuildFile; fileRef = 6038617619A6ED3500B1312A /* through.png */; };
 		6038617919A6EDB600B1312A /* greenBall.png in Resources */ = {isa = PBXBuildFile; fileRef = 6038617819A6EDB600B1312A /* greenBall.png */; };
 		6038617C19A6EE0A00B1312A /* menu_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 6038617A19A6EE0A00B1312A /* menu_left.png */; };
@@ -987,7 +988,6 @@
 		493DEF6819AF05C7009D0027 /* nochance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nochance.png; sourceTree = "<group>"; };
 		493DEF6A19AF1A32009D0027 /* ShoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShoutViewController.h; sourceTree = "<group>"; };
 		493DEF6B19AF1A32009D0027 /* ShoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShoutViewController.m; sourceTree = "<group>"; };
-		4945EF6919B73D760041E8F3 /* CatNomenklatura.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CatNomenklatura.plist; sourceTree = "<group>"; };
 		49500A2719AD85F700D175D8 /* TouchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchViewController.h; sourceTree = "<group>"; };
 		49500A2819AD85F700D175D8 /* TouchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchViewController.m; sourceTree = "<group>"; };
 		49500A2B19ADA1AC00D175D8 /* HYScratchCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYScratchCardView.h; sourceTree = "<group>"; };
@@ -1157,6 +1157,10 @@
 		602EB0FA19B8626100B4110B /* zan_bone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zan_bone.png; sourceTree = "<group>"; };
 		602EB0FB19B8626100B4110B /* zan_fish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zan_fish.png; sourceTree = "<group>"; };
 		602EB0FC19B8626100B4110B /* zan_gift.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zan_gift.png; sourceTree = "<group>"; };
+		60320BB119B95E190094A6E0 /* UserInfoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoModel.h; sourceTree = "<group>"; };
+		60320BB219B95E190094A6E0 /* UserInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoModel.m; sourceTree = "<group>"; };
+		60320BB419B994F40094A6E0 /* UserPetListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPetListModel.h; sourceTree = "<group>"; };
+		60320BB519B994F40094A6E0 /* UserPetListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserPetListModel.m; sourceTree = "<group>"; };
 		6038617619A6ED3500B1312A /* through.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = through.png; sourceTree = "<group>"; };
 		6038617819A6EDB600B1312A /* greenBall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenBall.png; sourceTree = "<group>"; };
 		6038617A19A6EE0A00B1312A /* menu_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_left.png; sourceTree = "<group>"; };
@@ -1683,6 +1687,10 @@
 				60EE6BE419B714CC0055ABEA /* PetInfoModel.m */,
 				492FB46C19B847B900B4DEF1 /* CountryMembersModel.h */,
 				492FB46D19B847B900B4DEF1 /* CountryMembersModel.m */,
+				60320BB119B95E190094A6E0 /* UserInfoModel.h */,
+				60320BB219B95E190094A6E0 /* UserInfoModel.m */,
+				60320BB419B994F40094A6E0 /* UserPetListModel.h */,
+				60320BB519B994F40094A6E0 /* UserPetListModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2443,7 +2451,6 @@
 				6020BD6719987DC3002C74FA /* PetInfoViewController.m */,
 				6020BD6F1998A442002C74FA /* UserInfoViewController.h */,
 				6020BD701998A442002C74FA /* UserInfoViewController.m */,
-				4945EF6919B73D760041E8F3 /* CatNomenklatura.plist */,
 			);
 			path = "宠物资料";
 			sourceTree = "<group>";
@@ -2812,7 +2819,6 @@
 				602EB10119B8626100B4110B /* zan_bone.png in Resources */,
 				091EAD79194ECEA200B0DE41 /* bother3_2.png in Resources */,
 				09D98A6E1935D4E900C83C4B /* 1-3.png in Resources */,
-				4945EF6A19B73D760041E8F3 /* CatNomenklatura.plist in Resources */,
 				096520D91964388700A8186D /* DoneDown.png in Resources */,
 				09D98A821935D4E900C83C4B /* 14-9.png in Resources */,
 				600376691990AB2500F3107F /* menu-11.png in Resources */,
@@ -3063,6 +3069,7 @@
 			files = (
 				09E2C89F193740CE002D9E65 /* Reachability.m in Sources */,
 				091E141A1989E5DD009FAA80 /* SquareViewController.m in Sources */,
+				60320BB319B95E190094A6E0 /* UserInfoModel.m in Sources */,
 				493DEF6C19AF1A32009D0027 /* ShoutViewController.m in Sources */,
 				49A7240319B484FC000D7826 /* ColllectionViewCell.m in Sources */,
 				0914B6D7196E3F410056CFB0 /* MMVectorImage.m in Sources */,
@@ -3190,6 +3197,7 @@
 				09D1A100198652B70023E257 /* UIViewController+JDSideMenu.m in Sources */,
 				09E2C89D193740CE002D9E65 /* ASIInputStream.m in Sources */,
 				09F46AC7196A382900209749 /* FTAnimation+UIView.m in Sources */,
+				60320BB619B994F40094A6E0 /* UserPetListModel.m in Sources */,
 				0914B6D0196E3F410056CFB0 /* MMProgressHUD+Animations.m in Sources */,
 				602A881319ADFC03004F368C /* AtUsersCell.m in Sources */,
 				0979B7571941C294007C36A7 /* InfoModel.m in Sources */,

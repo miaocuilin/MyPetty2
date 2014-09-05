@@ -15,7 +15,7 @@
 #import "PicDetailViewController.h"
 #import "PopularityListViewController.h"
 #import "ContributionViewController.h"
-#import "ClickImage.h"
+
 #import "CountryMembersModel.h"
 #import "ToolTipsViewController.h"
 #import "MJRefresh.h"
@@ -66,6 +66,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor whiteColor];
     
     // Allocate Asset Library
     ALAssetsLibrary * assetLibrary = [[ALAssetsLibrary alloc] init];
@@ -143,7 +144,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isFinish) {
             NSLog(@"国王成员数据：%@",load.dataDict);
             [self.countryMembersDataArray removeAllObjects];
-            NSArray *array = [load.dataDict objectForKey:@"data"];
+            NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             
             for (int i = 0; i<array.count; i++) {
                 NSDictionary * dict = array[i];
@@ -208,7 +209,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - 请求国王数据
 -(void)loadKingData
 {
-    NET = YES;
+    StartLoading;
     NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
     NSString *animalInfoAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ANIMALINFOAPI,self.aid,animalInfoSig, [ControllerManager getSID]];
     NSLog(@"国王信息API:%@", animalInfoAPI);
@@ -228,10 +229,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.view bringSubviewToFront:self.menuBgBtn];
             [self.view bringSubviewToFront:self.menuBgView];
             
-            NET = NO;
+            LoadingSuccess;
         }else{
             NSLog(@"用户数据加载失败。");
-            NET = NO;
+            LoadingFailed;
         }
     }];
 }
@@ -266,6 +267,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            [self loadKingMembersData];
             [self createPhotosTableView];
 //            self.view.userInteractionEnabled = YES;
+            NET = NO;
         }else{
             [tv2 headerEndRefreshing];
 //            self.view.userInteractionEnabled = YES;
@@ -302,6 +304,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [tv2 reloadData];
             [tv2 footerEndRefreshing];
             //            self.view.userInteractionEnabled = YES;
+            NET = NO;
         }else{
             [tv2 headerEndRefreshing];
             //            self.view.userInteractionEnabled = YES;
@@ -748,26 +751,26 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     alphaView.backgroundColor = [ControllerManager colorWithHexString:@"a85848"];
     [bgView addSubview:alphaView];
 //    ClickImage * headerView = [MyControl createImageViewWithFrame:CGRectMake(10, 25, 70, 70) ImageName:@""];
-    ClickImage *headerView = [[ClickImage alloc]initWithFrame:CGRectMake(10, 25, 70, 70)];
-    headerView.canClick = YES;
-    headerView.layer.cornerRadius = 70/2;
-    headerView.layer.masksToBounds = YES;
-    [bgView addSubview:headerView];
+    headerImageView = [[ClickImage alloc]initWithFrame:CGRectMake(10, 25, 70, 70)];
+    headerImageView.canClick = YES;
+    headerImageView.layer.cornerRadius = 70/2;
+    headerImageView.layer.masksToBounds = YES;
+    [bgView addSubview:headerImageView];
     if (image) {
-        headerView.image = image;
+        headerImageView.image = image;
     }else{
         [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 //本地目录，用于存放favorite下载的原图
                 NSLog(@"宠物头像：%@",load.dataImage);
                 if (load.dataImage == NULL) {
-                    headerView.image = [UIImage imageNamed:@"20-1.png"];
+                    headerImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
                 }else{
                     NSString * docDir = DOCDIR;
                     NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
                     //将下载的图片存放到本地
                     [load.data writeToFile:txFilePath atomically:YES];
-                    headerView.image = load.dataImage;
+                    headerImageView.image = load.dataImage;
                 }
                 
             }else{
@@ -872,7 +875,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             if (isFinish) {
                 NSLog(@"load.dataImage:%@",load.dataImage);
                 if (load.dataImage == NULL) {
-                    [userImageBtn setBackgroundImage:[UIImage imageNamed:@"20-1.png"] forState:UIControlStateNormal];
+                    [userImageBtn setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
                 }else{
                     //本地目录，用于存放favorite下载的原图
                     NSString * docDir = DOCDIR;
@@ -918,8 +921,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)jumpToUserInfo
 {
     UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+//    NSLog(@"%@", petInfoDict);
+    vc.usr_id = [petInfoDict objectForKey:@"master_id"];
     vc.modalTransitionStyle = 2;
     vc.isFromPetInfo = YES;
+    vc.petHeadImage = headerImageView.image;
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
@@ -1202,21 +1208,31 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                                 
                                 float width = load.dataImage.size.width;
                                 float height = load.dataImage.size.height;
-                                if (width>320) {
-                                    float w = 320/width;
-                                    width *= w;
-                                    height *= w;
-                                }
+//                                if (width>320) {
+//                                    float w = 320/width;
+//                                    width *= w;
+//                                    height *= w;
+//                                }
+//                                NSLog(@"%f--%f", width, height);
                                 if (width<320) {
+                                    height = (320.0/width)*height;
                                     width = 320;
-                                    height = 320/width*height;
                                 }
-                                UIImage * image = [load.dataImage imageByScalingToSize:CGSizeMake(width, height)];
-                                
-                                if (image.size.height>200) {
-                                    image = [MyControl imageFromImage:image inRect:CGRectMake(0, height/2-100, width, 200)];
+//                                NSLog(@"%f--%f", width, height);
+                                if (height<200) {
+                                    width = (200.0/height)*width;
                                     height = 200;
                                 }
+                                UIImage * image = nil;
+//                                NSLog(@"%f--%f", width, height);
+                                //改变照片大小
+                                image = [load.dataImage imageByScalingToSize:CGSizeMake(width, height)];
+//                                NSLog(@"%f--%f", image.size.width, image.size.height);
+//                                if (image.size.height>200) {
+                                image = [MyControl imageFromImage:image inRect:CGRectMake(width/2-160, height/2-100, 320, 200)];
+//                                }
+//                                NSLog(@"%f--%f", image.size.width, image.size.height);
+                                
                                 cell.bigImageView.image = image;
                                 
                                 NSData * smallImageData = UIImagePNGRepresentation(image);

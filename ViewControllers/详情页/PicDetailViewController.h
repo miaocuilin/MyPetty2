@@ -83,6 +83,8 @@
 @property (nonatomic,copy)NSString * aid;
 @property (nonatomic,copy)NSString * gifts;
 @property (nonatomic,copy)NSString * shares;
+@property (nonatomic,copy)NSString * topic_name;
+@property (nonatomic,copy)NSString * topic_id;
 //送礼物的人的usr_id,用逗号隔开
 @property (nonatomic,copy)NSString * senders;
 

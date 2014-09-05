@@ -53,20 +53,43 @@
     NSLog(@"跳转主人页面");
 }
 
--(void)modifyWithName:(NSString *)name sex:(int)sex cate:(NSString *)cate age:(NSString *)age position:(NSString *)position userName:(NSString *)userName rank:(NSString *)rank
+-(void)configUI:(PetInfoModel *)model
 {
     //
-    [self.headBtn setBackgroundImage:[UIImage imageNamed:@"cat2.jpg"] forState:UIControlStateNormal];
+    [self.headBtn setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
+    /**************************/
+    if (!([model.tx isKindOfClass:[NSNull class]] || model.tx.length == 0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            [self.headBtn setBackgroundImage:image forState:UIControlStateNormal];
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    [self.headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
     
     //
-    self.kingName.text = name;
-    CGSize size = [name sizeWithFont:[UIFont boldSystemFontOfSize:15] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
+    self.kingName.text = model.name;
+    CGSize size = [model.name sizeWithFont:[UIFont boldSystemFontOfSize:15] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
     CGRect rect = self.kingName.frame;
     rect.size.width = size.width;
     self.kingName.frame = rect;
     
     //
-    if (sex == 2) {
+    if ([model.gender intValue] == 2) {
         self.sex.image = [UIImage imageNamed:@"woman.png"];
     }
     CGRect rect2 = self.sex.frame;
@@ -74,19 +97,10 @@
     self.sex.frame = rect2;
     
     //
-    if ([cate intValue]/100 == 1) {
-        cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"1"] objectForKey:cate];
-    }else if([cate intValue]/100 == 2){
-        cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"2"] objectForKey:cate];
-    }else if([cate intValue]/100 == 3){
-        cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"3"] objectForKey:cate];
-    }else{
-        cateName = @"苏格兰折耳猫";
-    }
-    self.cateNameAndAge.text = [NSString stringWithFormat:@"%@ | %@岁", cateName, age];
+    self.cateNameAndAge.text = [NSString stringWithFormat:@"%@ | %@岁", [ControllerManager returnCateNameWithType:model.type], model.age];
     
     //
-    NSString * str = [NSString stringWithFormat:@"%@ — ", position];
+    NSString * str = [NSString stringWithFormat:@"%@ — ", @"祭司"];
     CGSize size2 = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
     CGRect rect3 = self.position.frame;
     rect3.size.width = size2.width;
@@ -97,13 +111,19 @@
     CGRect rect4 = self.userName.frame;
     rect4.origin.x = rect3.origin.x+size2.width;
     self.userName.frame = rect4;
-    self.userName.text = userName;
+    self.userName.text = model.u_name;
     
     //
-    self.rankNum.text = rank;
+    self.rankNum.text = model.t_rq;
     
     //
-    self.planet.text = @"喵星排名";
+    if ([model.type intValue]/100 == 1) {
+        self.planet.text = @"王国人气";
+    }else{
+        self.position.text = [NSString stringWithFormat:@"%@ — ", @"族长"];
+        self.planet.text = @"家族人气";
+    }
+    
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {

@@ -201,7 +201,13 @@
     //关注宠物圈子
     #define PETATTENTIONAPI @"http://54.199.161.210:8001/index.php?r=animal/followApi&aid="
     //取消关注宠物圈子
-    #define PETATTENTIONCANCELAPI @"http://54.199.161.210:8001/index.php?r=animal/followApi&aid="
+    #define PETATTENTIONCANCELAPI @"http://54.199.161.210:8001/index.php?r=animal/unFollowApi&aid="
     //关注关系
     #define RELATIONAPI @"http://54.199.161.210:8001/index.php?r=animal/relationApi&aid="
+    //上传录音
+    #define RECORDUPLOADAPI @"http://54.199.161.210:8001/index.php?r=animal/voiceUpApi&aid="
+    //下载录音
+    #define RECORDDOWNLOADAPI @"http://54.199.161.210:8001/index.php?r=animal/voiceDownApi&aid="
+    //地址
+    #define ADDRESSAPI @"http://54.199.161.210:8001/index.php?r=animal/addressApi&aid="
 #endif

@@ -50,6 +50,8 @@
 #import "CallViewController.h"
 #import "AboutViewController.h"
 #import "WaterViewController.h"
+#import "UserBagViewController.h"
+
 @implementation AppDelegate
 -(void)dealloc
 {
@@ -136,7 +138,7 @@
 //    RecordViewController * info = [[RecordViewController alloc] init];
 //    CallViewController *call = [[CallViewController alloc] init];
 //    WaterFlowLayout *layout = [[WaterFlowLayout alloc]init];
-
+//    UserBagViewController *userBag = [[UserBagViewController alloc] init];
     self.window.rootViewController = info;
 //    [menu release];
 //    [fvc release];

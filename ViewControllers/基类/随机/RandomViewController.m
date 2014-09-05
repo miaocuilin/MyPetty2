@@ -35,7 +35,13 @@
     }
     return self;
 }
-
+//animal/recommendApi[&type=][&aid=]
+- (void)animal
+{
+    NSString *sig = [NSString stringWithFormat:@"dog&cat"];
+    NSString *string = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=animal/recommendApi&sig=%@&SID=%@",sig,[ControllerManager getSID]];
+    NSLog(@"string:%@",string);
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];

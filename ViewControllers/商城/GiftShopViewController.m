@@ -8,6 +8,7 @@
 
 #import "GiftShopViewController.h"
 #import "UserInfoViewController.h"
+#import "UserBagViewController.h"
 @interface GiftShopViewController ()
 
 @end
@@ -161,10 +162,14 @@
 -(void)giftBagBtnClick
 {
     NSLog(@"跳转到背包");
-    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
-    vc.offset = 320*3;
-    [self presentViewController:vc animated:YES completion:nil];
-    [vc release];
+//    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+//    vc.offset = 320*3;
+//    [self presentViewController:vc animated:YES completion:nil];
+//    [vc release];
+    UserBagViewController *userBagVC = [[UserBagViewController alloc] init];
+    [self presentViewController:userBagVC animated:YES completion:^{
+        [userBagVC release];
+    }];
 }
 -(void)createHeader
 {

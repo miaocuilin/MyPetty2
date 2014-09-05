@@ -11,6 +11,7 @@
 @interface MyCountryContributeCell : UITableViewCell
 {
     UIImageView * sex;
+    NSString *usr_id;
 }
 @property (retain, nonatomic) IBOutlet UIImageView *circleBg;
 @property (retain, nonatomic) IBOutlet UIButton *headBtn;

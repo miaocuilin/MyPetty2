@@ -78,6 +78,7 @@
     //如果是图片，返回nil，即解析失败 这样写会略微影响效率
 //    [self.alert setTitle:@"正在解析数据"];
     id result=[NSJSONSerialization JSONObjectWithData:self.data options:NSJSONReadingMutableContainers error:nil];
+//    NSLog(@"result:%@",result);
     //判断解析后是数组，赋值给self.dataArray
     //判断解析后是字典，赋值给self.dataDict
     if ([result isKindOfClass:[NSArray class]]) {

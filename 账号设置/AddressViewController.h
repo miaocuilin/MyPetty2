@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ASIFormDataRequest.h"
+
 #define PROVINCE_COMPONENT  0
 #define CITY_COMPONENT      1
 #define DISTRICT_COMPONENT  2
@@ -26,5 +28,7 @@
     //完成按钮
     UIButton *doneButton;
     UIView * navView;
+    ASIFormDataRequest * _request;
+
 }
 @end

@@ -125,7 +125,7 @@
 //    [sv addSubview:question];
     
     //头像
-    UIView * headBg1 = [MyControl createViewWithFrame:CGRectMake(150/2, 55, 80, 80)];
+    UIView * headBg1 = [MyControl createViewWithFrame:CGRectMake(150/2, 60, 80, 80)];
     headBg1.layer.cornerRadius = 40;
     headBg1.layer.masksToBounds = YES;
     headBg1.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2];
@@ -142,8 +142,36 @@
     headImageView.layer.masksToBounds = YES;
     [headBg2 addSubview:headImageView];
     
+    
+    NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+    NSLog(@"本地用户头像路径：%@", txUserFilePath);
+    UIImage *User_image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txUserFilePath]];
+    if (User_image) {
+        headImageView.image = [UIImage imageWithContentsOfFile:txUserFilePath];
+    }else{
+        
+        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL,[USER objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"load.dataImage:%@",load.dataImage);
+                if (load.dataImage == NULL) {
+                    headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+                }else{
+                    //本地目录，用于存放favorite下载的原图
+                    NSString * docDir = DOCDIR;
+                    NSString * txUserFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+                    //将下载的图片存放到本地
+                    [load.data writeToFile:txUserFilePath atomically:YES];
+                    headImageView.image = [UIImage imageWithContentsOfFile:txUserFilePath];
+                }
+            }else{
+                NSLog(@"download failed");
+            }
+        }];
+    }
+
+    
     //等级
-    UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headBg2.frame.origin.x+4+48, headBg2.frame.origin.y+4+50, 30, 16) Font:10 Text:@"Lv.11"];
+    UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headBg2.frame.origin.x+4+48, headBg2.frame.origin.y+4+50, 30, 16) Font:10 Text:[NSString stringWithFormat:@"Lv.%@",[USER objectForKey:@"lv"]]];
     exp.textAlignment = NSTextAlignmentCenter;
     exp.backgroundColor = [UIColor colorWithRed:249/255.0 green:135/255.0 blue:88/255.0 alpha:1];
     exp.textColor = [UIColor colorWithRed:229/255.0 green:79/255.0 blue:36/255.0 alpha:1];
@@ -153,24 +181,27 @@
     [sv addSubview:exp];
     
     //性别，姓名，官职
-    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(25, 140, 28/2, 34/2) ImageName:@"woman.png"];
+    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(10, 140, 28/2, 34/2) ImageName:@"woman.png"];
+    if ([[USER objectForKey:@"gener"] intValue]==1) {
+        sex.image = [UIImage imageNamed:@"man.png"];
+    }
     [sv addSubview:sex];
     
-    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+14+5, sex.frame.origin.y, 100, 20) Font:17 Text:@"Anna"];
+    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+14+5, sex.frame.origin.y, 100, 20) Font:17 Text:[NSString stringWithFormat:@"%@",[USER objectForKey:@"name"]]];
     [sv addSubview:name];
     
     //官职  225menu总宽
-    UILabel * position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:@"猫君国大祭司"];
+    UILabel * position = [MyControl createLabelWithFrame:CGRectMake(15, sex.frame.origin.y+15, 115, 40) Font:12 Text:[NSString stringWithFormat:@"%@的王国\n-大祭司",[USER objectForKey:@"a_name"]]];
     [sv addSubview:position];
     
     //金币
-    UIImageView * gold = [MyControl createImageViewWithFrame:CGRectMake(170, sex.frame.origin.y-3, 22, 22) ImageName:@"gold.png"];
+    UIImageView * gold = [MyControl createImageViewWithFrame:CGRectMake(170, sex.frame.origin.y, 22, 22) ImageName:@"gold.png"];
     [sv addSubview:gold];
     
-    UILabel * goldLabel = [MyControl createLabelWithFrame:CGRectMake(160, gold.frame.origin.y+23, 60, 20) Font:14 Text:@"20000"];
-    //    goldLabel.textAlignment = NSTextAlignmentCenter;
+    UILabel * goldLabel = [MyControl createLabelWithFrame:CGRectMake(160, gold.frame.origin.y+23, 60, 20) Font:14 Text:[NSString stringWithFormat:@"%@",[USER objectForKey:@"gold"]]];
+    goldLabel.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:goldLabel];
-    
+    goldLabel.center = CGPointMake(gold.center.x, gold.center.y+gold.frame.size.height);
     
     //金币及商店
 //    UIImageView * goldBgImageView = [MyControl createImageViewWithFrame:CGRectMake(10, position.frame.origin.y+30, 205, 35) ImageName:@""];
@@ -199,7 +230,7 @@
 //    [self.view addSubview:shopBtn];
     
     //下半段的20%透明黑背景
-    UIView * blackView = [MyControl createViewWithFrame:CGRectMake(0, position.frame.origin.y+20+10, OFFSET, sv.contentSize.height-(position.frame.origin.y+20+10))];
+    UIView * blackView = [MyControl createViewWithFrame:CGRectMake(0, position.frame.origin.y+30+10, OFFSET, sv.contentSize.height-(position.frame.origin.y+20+10))];
     blackView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
     [sv addSubview:blackView];
     

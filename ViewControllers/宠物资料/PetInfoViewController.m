@@ -52,16 +52,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     return _aid;
 }
-- (void)buttonAction
-{
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",@"1000000220"]];
-    NSString *string = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,@"1000000220",sig,[ControllerManager getSID]];
-    NSLog(@"string:%@",string);
-    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:string Block:^(BOOL isFinish, httpDownloadBlock *load) {
-        NSLog(@"load.data:%@",load.dataDict);
-    }];
-    [request release];
-}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -89,7 +79,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self createScrollView];
     [self createFakeNavigation];
     [self createTableView];
-    [self loadAttentionAPI];
+//    [self loadAttentionAPI];
 //    [self.view bringSubviewToFront:self.menuBgBtn];
 //    [self.view bringSubviewToFront:self.menuBgView];
 
@@ -106,7 +96,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [load.dataDict objectForKey:@"data"];
             isFans = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_fan"] intValue];
             isFollow = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_follow"] intValue];
+            NSLog(@"%d",isFollow);
+
             [self createMore];
+            //show more
+            alphaBtn.hidden = NO;
+            [UIView animateWithDuration:0.3 animations:^{
+                moreView.frame = CGRectMake(0, self.view.frame.size.height-234, 320, 234);
+                alphaBtn.alpha = 0.5;
+            }];
         }
     }];
     [request release];
@@ -137,7 +135,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isFinish) {
             NSLog(@"国王成员数据：%@",load.dataDict);
             [self.countryMembersDataArray removeAllObjects];
-            NSArray *array = [load.dataDict objectForKey:@"data"];
+            NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             
             for (int i = 0; i<array.count; i++) {
                 NSDictionary * dict = array[i];
@@ -146,6 +144,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [self.countryMembersDataArray addObject:model];
                 if (i == array.count-1) {
                     self.lastUsr_id = model.usr_id;
+                    self.lastRank = model.rank;
                 }
                 [model release];
             }
@@ -158,8 +157,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 - (void)loadKingMembersDataMore
 {
-    NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@usr_id=%@dog&cat",self.aid,self.lastUsr_id]];
-    NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&usr_id=%@&sig=%@&SID=%@", PETMEMBERSAPI,self.aid,self.lastUsr_id,animalMembersSig, [ControllerManager getSID]];
+    NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&rank=%@&usr_id=%@dog&cat",self.aid,self.lastRank,self.lastUsr_id]];
+    NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&rank=%@&usr_id=%@&sig=%@&SID=%@", PETMEMBERSAPI,self.aid,self.lastRank,self.lastUsr_id,animalMembersSig, [ControllerManager getSID]];
     NSLog(@"更多国王成员API:%@",animalMembersString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalMembersString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
@@ -257,9 +256,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [model release];
             }
             isPhotoDownload = YES;
-//            [self loadKingMembersData];
             [self createPhotosTableView];
 //            self.view.userInteractionEnabled = YES;
+            NET = NO;
         }else{
             [tv2 headerEndRefreshing];
 //            self.view.userInteractionEnabled = YES;
@@ -296,6 +295,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [tv2 reloadData];
             [tv2 footerEndRefreshing];
             //            self.view.userInteractionEnabled = YES;
+            NET = NO;
         }else{
             [tv2 headerEndRefreshing];
             //            self.view.userInteractionEnabled = YES;
@@ -350,12 +350,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         //create more
         [self loadAttentionAPI];
     }
-    //show more
-    alphaBtn.hidden = NO;
-    [UIView animateWithDuration:0.3 animations:^{
-        moreView.frame = CGRectMake(0, self.view.frame.size.height-234, 320, 234);
-        alphaBtn.alpha = 0.5;
-    }];
+    
 
 }
 #pragma mark - 创建更多视图
@@ -414,10 +409,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         addBtn.selected = isFans;
         attentionBtn = [MyControl createButtonWithFrame:CGRectMake(354/2, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(attentionBtnClick:) Title:@"关注"];
         [attentionBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
+        NSLog(@"isFollow:%d",isFollow);
+        attentionBtn.selected = isFollow;
+        NSLog(@"attentionBtn:%d",attentionBtn.selected);
         [attentionBtn setTitle:@"已关注" forState:UIControlStateSelected];
         attentionBtn.titleLabel.font = [UIFont systemFontOfSize:15];
         [strangerAndFakeOwnerView addSubview:attentionBtn];
-        attentionBtn.selected = isFollow;
         //    strangerAndFakeOwnerView.hidden = YES;
         
     }else{
@@ -585,10 +582,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }else{
             NSString *petAttentionSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
             NSString *petAttentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETATTENTIONCANCELAPI,self.aid,petAttentionSig,[ControllerManager getSID]];
-            NSLog(@"关注宠物：%@",petAttentionString);
+            NSLog(@"取消关注宠物：%@",petAttentionString);
             httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:petAttentionString Block:^(BOOL isFinish, httpDownloadBlock *load) {
                 if (isFinish) {
-                    NSLog(@"关注成功数据：%@",load.dataDict);
+                    NSLog(@"取消关注成功数据：%@",load.dataDict);
                     if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                         attentionBtn.selected = NO;
                         [alertView hide:YES];
@@ -1303,6 +1300,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         vc.usr_id = model.usr_id;
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
+    }
+    if (tableView == tv3) {
+        CountryMembersModel *model = self.countryMembersDataArray[indexPath.row];
+        //跳转到用户页面
+        UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] init];
+        [self presentViewController:userInfoVC animated:YES completion:^{
+            [userInfoVC release];
+        }];
     }
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

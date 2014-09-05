@@ -29,7 +29,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self loadAnimalInfoData];
+    if ([ControllerManager getIsSuccess]) {
+        [self loadAnimalInfoData];
+    }
     [self createMenu];
 }
 

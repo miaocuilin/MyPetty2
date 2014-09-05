@@ -107,7 +107,7 @@
                 self.likersArray = [self.likers componentsSeparatedByString:@","];
                 NSLog(@"self.lisersArray:%@--", self.likersArray);
                 for(NSString * str in self.likersArray){
-                    if ([str isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                    if (![str isEqualToString:@""] && str != nil && [str isEqualToString:[USER objectForKey:@"usr_id"]]) {
                         isLike = YES;
                         break;
                     }

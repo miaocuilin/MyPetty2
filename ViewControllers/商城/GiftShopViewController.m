@@ -161,7 +161,7 @@
 }
 -(void)giftBagBtnClick
 {
-    NSLog(@"跳转到背包");
+    NSLog(@"跳转到我的背包");
 //    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
 //    vc.offset = 320*3;
 //    [self presentViewController:vc animated:YES completion:nil];

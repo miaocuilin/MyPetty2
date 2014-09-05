@@ -9,7 +9,7 @@
 #import "ShoutViewController.h"
 #define GRAYBLUECOLOR [UIColor colorWithRed:127/255.0 green:151/255.0 blue:179/255.0 alpha:1]
 #define LIGHTORANGECOLOR [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1]
-@interface ShoutViewController ()
+@interface ShoutViewController ()<ASIHTTPRequestDelegate, ASIProgressDelegate>
 {
     UIView *bodyView;
     int count;
@@ -33,6 +33,73 @@
 @end
 
 @implementation ShoutViewController
+
+#pragma mark - 控制器生命周期
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self backgroundView];
+    
+    // Do any additional setup after loading the view.
+}
+- (void)backgroundView
+{
+    UIView *bgView = [MyControl createViewWithFrame:self.view.frame];
+    [self.view addSubview:bgView];
+    bgView.backgroundColor = [UIColor blackColor];
+    bgView.alpha = 0.5;
+}
+#pragma mark - 上传声音
+- (NSString *)aid
+{
+    if (!_aid) {
+        _aid = [USER objectForKey:@"aid"];
+    }
+    return _aid;
+}
+- (void)uploadRecordData
+{
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+    NSString *uploadRecordString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RECORDUPLOADAPI,self.aid,sig,[ControllerManager getSID]];
+    //网络上传
+    NSLog(@"postUrl:%@", uploadRecordString);
+    _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:uploadRecordString]];
+    _request.requestMethod = @"POST";
+    _request.timeOutSeconds = 20;
+    NSString *string = [NSString stringWithFormat:@"%@",_recordedFile];
+//    NSData *data = [NSData dataWithContentsOfURL:_recordedFile];
+    NSData *data = [NSData dataWithContentsOfFile:string];
+    NSTimeInterval  timeInterval = [[NSDate date] timeIntervalSince1970];
+    [_request setData:data withFileName:[NSString stringWithFormat:@"%f.acc", timeInterval]
+ andContentType:@"audio/MPEG4AAC" forKey:@"voice"];
+    [_request setUploadProgressDelegate:self];
+    _request.queue = self;
+    [_request startAsynchronous];
+    
+}
+-(void)setProgress:(float)newProgress
+{
+    NSLog(@"上传进度:%f",newProgress);
+    [UIView animateWithDuration:0.3 animations:^{
+        barUpload.progress = newProgress;
+
+    }];
+}
+-(void)requestFinished:(ASIHTTPRequest *)request
+{
+    NSLog(@"上传录音结束");
+    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传成功"];
+    NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
+    upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width*2, 0);
+
+    
+}
+-(void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSLog(@"上传录音失败");
+    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
+}
 
 #pragma mark - 初始界面
 - (void)createRecordOne
@@ -157,10 +224,11 @@
                               [NSNumber numberWithInt: 2],                              AVNumberOfChannelsKey,
                               [NSNumber numberWithInt: AVAudioQualityLow],                       AVEncoderAudioQualityKey,
                               nil];
-    //    CFUUIDRef cfuuid = CFUUIDCreate(kCFAllocatorDefault);
-    //    NSString *cfuuidString = (NSString*)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, cfuuid));
-    _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
-    //    _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@.aac", cfuuidString]]] retain];
+    CFUUIDRef cfuuid = CFUUIDCreate(kCFAllocatorDefault);
+    NSString *cfuuidString = (NSString*)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, cfuuid));
+    _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@.aac", cfuuidString]]] retain];
+//    _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
+
     NSLog(@"_recordedFile :%@",_recordedFile);
     NSError* error;
     _recorder = [[AVAudioRecorder alloc] initWithURL:_recordedFile settings:settings error:&error];
@@ -329,24 +397,28 @@
     uploadingImageView.hidden = NO;
     [recordUploadingButton setHidden:YES];
     [rerecordingButton setHidden:YES];
-    _timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(barUploadProgress) userInfo:nil repeats:YES];
+    [self barUploadProgress];
+//    _timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(barUploadProgress) userInfo:nil repeats:YES];
 }
 //上传进度
 - (void)barUploadProgress
 {
-    if ((int)barUpload.progress != 1) {
-        barUpload.progress+=0.1;
-    }else{
-        [_timer invalidate];
-        _timer = nil;
-        upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width*2, 0);
-    }
+//    if ((int)barUpload.progress != 1) {
+//        barUpload.progress+=0.1;
+//    }else{
+//        [_timer invalidate];
+//        _timer = nil;
+//        upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width*2, 0);
+//    }
+    [self uploadRecordData];
+//    [self upload];
 }
 //播放录音
 - (void)playingAction:(UIButton *)sender
 {
     
     if (!_playing) {
+        _playing = YES;
         recordUploadingButton.enabled = NO;
         playAndPauseImageView.image = [UIImage imageNamed:@"record_pause.png"];
         if (_hasCAFFile)
@@ -362,7 +434,6 @@
                 }
                 _player.delegate = self;
             }
-            _playing = YES;
             [_player play];
             _timer = [NSTimer scheduledTimerWithTimeInterval:.1
                                                       target:self
@@ -380,10 +451,10 @@
             [alert show];
             [alert release];                   }
     }else{
+        _playing = NO;
         recordUploadingButton.enabled = YES;
         [_timer invalidate];
         _timer = nil;
-        _playing = NO;
         [_player pause];
         [playAndPauseImageView setImage:[UIImage imageNamed:@"record_play.png"]];
         
@@ -453,22 +524,7 @@
     UIImageView *recordedEndImageView = [MyControl createImageViewWithFrame:CGRectMake(upScrollView.frame.size.width*3+upScrollView.frame.size.width/2 - 96/2, 90,96, 110) ImageName:@"nochance.png"];
     [upScrollView addSubview:recordedEndImageView];
 }
-#pragma mark - 控制器生命周期
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    [self backgroundView];
-    
-    // Do any additional setup after loading the view.
-}
-- (void)backgroundView
-{
-    UIView *bgView = [MyControl createViewWithFrame:self.view.frame];
-    [self.view addSubview:bgView];
-    bgView.backgroundColor = [UIColor blackColor];
-    bgView.alpha = 0.5;
-}
 #pragma mark - Record
 //更新
 - (void) timerUpdate
@@ -494,7 +550,7 @@
     }
     if (_playing)
     {
-         _player.currentTime=fabsf(_player.currentTime);
+//         _player.currentTime=fabsf(_player.currentTime);
         NSLog(@"播放的当前时间：%f",_player.currentTime);
         playProgress.progress = _player.currentTime/_player.duration;
         playingTimerLabel.text =[NSString stringWithFormat:@"0:%0.2d/0:%.2d",(int)_player.currentTime%60, (int)_player.duration];

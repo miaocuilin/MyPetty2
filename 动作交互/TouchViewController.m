@@ -27,6 +27,7 @@
     // Do any additional setup after loading the view.
 //    [self createButton];
     _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
+//    [self loadRecordData];
 }
 
 
@@ -46,6 +47,20 @@
     [self.view addSubview:bgView];
     bgView.backgroundColor = [UIColor blackColor];
     bgView.alpha = 0.5;
+}
+#pragma mark - 下载声音
+- (void)loadRecordData
+{
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *downloadRecord = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RECORDDOWNLOADAPI,[USER objectForKey:@"aid" ],sig,[ControllerManager getSID]];
+    NSString *downloadRecordString = [DOCDIR stringByAppendingString:@"record.aac"];
+    NSLog(@"下载API:%@",downloadRecord);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:downloadRecord Block:^(BOOL isFinsh, httpDownloadBlock *load) {
+        if (isFinsh) {
+            NSLog(@"下载的录音：%@",load.data);
+            _player = [[AVAudioPlayer alloc]initWithData:load.data error:nil];
+        }
+    }];
 }
 #pragma mark - 摸一摸界面
 - (void)createAlertView
@@ -163,7 +178,7 @@
 - (void)audioPlayerCreate
 {
     NSError *playerError;
-    _player = [[AVAudioPlayer alloc] initWithContentsOfURL:_recordedFile error:&playerError];
+//    _player = [[AVAudioPlayer alloc] initWithContentsOfURL:_recordedFile error:&playerError];
     _player.meteringEnabled = YES;
     if (_player == nil)
     {

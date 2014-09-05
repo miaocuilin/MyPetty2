@@ -7,7 +7,7 @@
 //
 
 #import "MyCountryContributeCell.h"
-
+#import "UserInfoViewController.h"
 @implementation MyCountryContributeCell
 
 - (void)awakeFromNib
@@ -58,6 +58,7 @@
 }
 -(void)configUI:(CountryMembersModel *)model
 {
+    model.usr_id = usr_id;
     self.name.text = model.name;
     self.location.text =[ControllerManager returnProvinceAndCityWithCityNum:model.city];
     self.contribution.text = model.t_contri;
@@ -66,7 +67,6 @@
     }else{
         sex.image = [UIImage imageNamed:@"woman.png"];
     }
-    
     NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
     NSLog(@"本地用户头像路径：%@", txUserFilePath);
     UIImage *User_image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txUserFilePath]];
@@ -78,7 +78,7 @@
             if (isFinish) {
                 NSLog(@"load.dataImage:%@",load.dataImage);
                 if (load.dataImage == NULL) {
-                    [self.headBtn setBackgroundImage:[UIImage imageNamed:@"20-1.png"] forState:UIControlStateNormal];
+                    [self.headBtn setBackgroundImage:[UIImage imageNamed:@"defaultUserHead.png"] forState:UIControlStateNormal];
                 }else{
                     //本地目录，用于存放favorite下载的原图
                     NSString * docDir = DOCDIR;
@@ -95,6 +95,7 @@
 }
 - (IBAction)headBtnClick:(id)sender {
     NSLog(@"点击头像--%d", self.headBtn.tag-10000);
+    NSLog(@"usr_id:%@",usr_id);
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {

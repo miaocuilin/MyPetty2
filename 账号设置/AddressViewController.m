@@ -13,7 +13,7 @@
 //static NSString *codeNumber;
 //static NSString *area;
 //static NSString *detailarea;
-@interface AddressViewController ()
+@interface AddressViewController ()<ASIHTTPRequestDelegate>
 
 @property(nonatomic,retain)UIImageView * bgImageView;
 
@@ -32,7 +32,36 @@
     [self createBody];
     [self performSelector:@selector(createNavgation) withObject:nil afterDelay:0.1f];
 //    [self createNavgation];
+//    [self loadData];
 
+}
+- (void)loadData
+{
+//    宠物地址：animal/addressApi&aid=
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *addressAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ADDRESSAPI,[USER objectForKey:@"aid" ],sig,[ControllerManager getSID]];
+    NSLog(@"%@",addressAPI);
+    
+    _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:addressAPI]];
+    _request.requestMethod = @"POST";
+    _request.timeOutSeconds = 20;
+    [_request setValue:@"" forKey:@"telephone"];
+    [_request setValue:@"" forKey:@"name"];
+    [_request setValue:@"" forKey:@"zipcode"];
+    [_request setValue:@"" forKey:@"region"];
+    [_request setValue:@"" forKey:@"building"];
+    _request.delegate = self;
+    [_request startAsynchronous];
+}
+- (void)loadDataAPI
+{
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aids=dog&cat"]];
+    NSString *string = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=animal/othersApi&aids=&sig=%@&SID=%@",sig,[ControllerManager getSID]];
+    NSLog(@"string:%@",string);
+    
+    NSString *sigRecommed = [MyMD5 md5:@"dog&cat"];
+    NSString *recommen = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=animal/recommendApi&sig=%@&SID=%@",sigRecommed,[ControllerManager getSID]];
+    NSLog(@"recommend:%@",recommen);
 }
 
 - (void)createIQ

@@ -142,6 +142,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 NSDictionary * dict = array[i];
                 CountryMembersModel *model = [[CountryMembersModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
+                NSLog(@"model.usr_id:%@",model.usr_id);
                 [self.countryMembersDataArray addObject:model];
                 if (i == array.count-1) {
                     self.lastUsr_id = model.usr_id;
@@ -295,7 +296,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             isPhotoDownload = YES;
             [tv2 reloadData];
             [tv2 footerEndRefreshing];
-            //            self.view.userInteractionEnabled = YES;
+//            self.view.userInteractionEnabled = YES;
             NET = NO;
         }else{
             [tv2 headerEndRefreshing];
@@ -1320,6 +1321,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         CountryMembersModel * model = self.countryMembersDataArray[indexPath.row];
         NSLog(@"%d--%@--%@", self.countryMembersDataArray.count, model.tx, model.usr_id);
         //跳转到用户页面
+        NSLog(@"model.usr_id:%@--%@---%@",model.usr_id,model.city,model.gender);
         UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] init];
         NSLog(@"%@", model.usr_id);
         userInfoVC.usr_id = model.usr_id;

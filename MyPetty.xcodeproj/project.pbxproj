@@ -323,6 +323,7 @@
 		4927D99219AB53A200EBDC88 /* 11.png in Resources */ = {isa = PBXBuildFile; fileRef = 4927D99119AB53A200EBDC88 /* 11.png */; };
 		4927D99419AB53B200EBDC88 /* giftIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4927D99319AB53B200EBDC88 /* giftIcon.png */; };
 		492FB46E19B847B900B4DEF1 /* CountryMembersModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 492FB46D19B847B900B4DEF1 /* CountryMembersModel.m */; };
+		493BE6AB19BEF4F700D599CA /* popularityListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 493BE6AA19BEF4F700D599CA /* popularityListModel.m */; };
 		493DEF6719AED166009D0027 /* UIWindow+MotionEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 493DEF6619AED166009D0027 /* UIWindow+MotionEvent.m */; };
 		493DEF6919AF05C7009D0027 /* nochance.png in Resources */ = {isa = PBXBuildFile; fileRef = 493DEF6819AF05C7009D0027 /* nochance.png */; };
 		493DEF6C19AF1A32009D0027 /* ShoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 493DEF6B19AF1A32009D0027 /* ShoutViewController.m */; };
@@ -1020,6 +1021,8 @@
 		4927D99319AB53B200EBDC88 /* giftIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = giftIcon.png; sourceTree = "<group>"; };
 		492FB46C19B847B900B4DEF1 /* CountryMembersModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CountryMembersModel.h; sourceTree = "<group>"; };
 		492FB46D19B847B900B4DEF1 /* CountryMembersModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CountryMembersModel.m; sourceTree = "<group>"; };
+		493BE6A919BEF4F700D599CA /* popularityListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = popularityListModel.h; sourceTree = "<group>"; };
+		493BE6AA19BEF4F700D599CA /* popularityListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = popularityListModel.m; sourceTree = "<group>"; };
 		493DEF6519AED166009D0027 /* UIWindow+MotionEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+MotionEvent.h"; sourceTree = "<group>"; };
 		493DEF6619AED166009D0027 /* UIWindow+MotionEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+MotionEvent.m"; sourceTree = "<group>"; };
 		493DEF6819AF05C7009D0027 /* nochance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nochance.png; sourceTree = "<group>"; };
@@ -1730,6 +1733,8 @@
 				60320BB219B95E190094A6E0 /* UserInfoModel.m */,
 				60320BB419B994F40094A6E0 /* UserPetListModel.h */,
 				60320BB519B994F40094A6E0 /* UserPetListModel.m */,
+				493BE6A919BEF4F700D599CA /* popularityListModel.h */,
+				493BE6AA19BEF4F700D599CA /* popularityListModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3273,6 +3278,7 @@
 				0957F6721981F4A000F3DC5C /* ShakeViewController.m in Sources */,
 				493DEF6719AED166009D0027 /* UIWindow+MotionEvent.m in Sources */,
 				49A1A1E119A9D76F00213C04 /* SAStepperControl.m in Sources */,
+				493BE6AB19BEF4F700D599CA /* popularityListModel.m in Sources */,
 				09D1A100198652B70023E257 /* UIViewController+JDSideMenu.m in Sources */,
 				09E2C89D193740CE002D9E65 /* ASIInputStream.m in Sources */,
 				09F46AC7196A382900209749 /* FTAnimation+UIView.m in Sources */,

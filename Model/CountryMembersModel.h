@@ -17,4 +17,5 @@
 @property(nonatomic,copy)NSString * t_contri;
 @property(nonatomic,copy)NSString * tx;
 @property(nonatomic,copy)NSString * usr_id;
+//@property (nonatomic,assign)NSInteger usr_id;
 @end

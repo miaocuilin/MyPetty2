@@ -223,4 +223,8 @@
     #define RECORDDOWNLOADAPI @"http://54.199.161.210:8001/index.php?r=animal/voiceDownApi&aid="
     //地址
     #define ADDRESSAPI @"http://54.199.161.210:8001/index.php?r=animal/addressApi&aid="
+    //人气排行榜
+    #define POPULARRANKAPI @"http://54.199.161.210:8001/index.php?r=rank/rqRankApi&category="
+    //
+    #define SHOPITEMSAPI @"http://54.199.161.210:8001/index.php?r=item/listApi&code="
 #endif

@@ -39,6 +39,13 @@
     [self createBottom];
     
     [self createAlphaBtn];
+    [self loadData];
+}
+- (void)loadData
+{
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"code=dog&cat"]];
+    NSString *itemsString = [NSString stringWithFormat:@"%@&sig=%@&SID=%@",SHOPITEMSAPI,sig,[ControllerManager getSID]];
+    NSLog(@"itemsString:%@",itemsString);
 }
 /****************/
 -(void)createAlphaBtn

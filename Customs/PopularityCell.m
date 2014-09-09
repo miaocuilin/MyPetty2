@@ -30,7 +30,7 @@
     num = rank;
     self.medal.hidden = YES;
     
-    self.headImageView.image = [UIImage imageNamed:@"cat2.jpg"];
+    self.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
     self.name.text = Name;
     self.rqNum.text = Rq;
     

@@ -14,9 +14,15 @@
 //static NSString *area;
 //static NSString *detailarea;
 @interface AddressViewController ()<ASIHTTPRequestDelegate>
-
+{
+    NSString *receiveName;
+    NSString *telphone;
+    NSString *codeNumber;
+    NSString *area;
+    NSString *detailarea;
+    NSDictionary *dataDict;
+}
 @property(nonatomic,retain)UIImageView * bgImageView;
-
 @end
 
 @implementation AddressViewController
@@ -29,15 +35,53 @@
     [self getCityData];
     [self createIQ];
     [self createBg];
-    [self createBody];
     [self performSelector:@selector(createNavgation) withObject:nil afterDelay:0.1f];
 //    [self createNavgation];
-//    [self loadData];
+    [self loadData];
+    [self loadDataAPI];
 
 }
 - (void)loadData
 {
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *addressAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ADDRESSAPI,[USER objectForKey:@"aid" ],sig,[ControllerManager getSID]];
+    NSLog(@"获取地址信息：%@",addressAPI);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:addressAPI Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        if (isFinish) {
+            NSLog(@"收货地址信息数据：%@",load.dataDict);
+            dataDict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            receiveName = [dataDict objectForKey:@"name"];
+            telphone = [dataDict objectForKey:@"telephone"];
+            codeNumber = [dataDict objectForKey:@"zipcode"];
+            area = [dataDict objectForKey:@"region"];
+            detailarea = [dataDict objectForKey:@"building"];
+            [self createBody];
+
+        }
+    }];
+    [request release];
+}
+- (void)postData
+{
+    for (int i = 100; i<105; i++) {
+         UITextField *textField= (UITextField *)[self.view viewWithTag:i];
+        if (textField.tag == 100) {
+            receiveName=textField.text;
+        }else if (textField.tag == 101){
+            telphone = textField.text;
+        }else if (textField.tag == 102){
+            codeNumber = textField.text;
+        }else if (textField.tag ==103){
+            area = textField.text;
+        }else{
+            detailarea = textField.text;
+        }
+
+    }
+    
+    
 //    宠物地址：animal/addressApi&aid=
+    NSLog(@"%@-%@-%@-%@-%@",receiveName,telphone,codeNumber,area,detailarea);
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
     NSString *addressAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ADDRESSAPI,[USER objectForKey:@"aid" ],sig,[ControllerManager getSID]];
     NSLog(@"%@",addressAPI);
@@ -45,23 +89,40 @@
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:addressAPI]];
     _request.requestMethod = @"POST";
     _request.timeOutSeconds = 20;
-    [_request setValue:@"" forKey:@"telephone"];
-    [_request setValue:@"" forKey:@"name"];
-    [_request setValue:@"" forKey:@"zipcode"];
-    [_request setValue:@"" forKey:@"region"];
-    [_request setValue:@"" forKey:@"building"];
+    [_request setPostValue:receiveName forKey:@"name"];
+    [_request setPostValue:telphone forKey:@"telephone"];
+    [_request setPostValue:codeNumber forKey:@"zipcode"];
+    [_request setPostValue:area forKey:@"region"];
+    [_request setPostValue:detailarea forKey:@"building"];
     _request.delegate = self;
     [_request startAsynchronous];
+    StartLoading;
+
+}
+-(void)requestFinished:(ASIHTTPRequest *)request
+{
+    NSLog(@"success");
+    [MMProgressHUD dismissWithSuccess:@"保存成功" title:nil afterDelay:0.5];
+    NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
+}
+-(void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSLog(@"failed");
+    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)loadDataAPI
 {
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aids=dog&cat"]];
-    NSString *string = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=animal/othersApi&aids=&sig=%@&SID=%@",sig,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aids=%@dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *string = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=animal/othersApi&aids=%@&sig=%@&SID=%@",[USER objectForKey:@"aid"],sig,[ControllerManager getSID]];
     NSLog(@"string:%@",string);
     
     NSString *sigRecommed = [MyMD5 md5:@"dog&cat"];
     NSString *recommen = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=animal/recommendApi&sig=%@&SID=%@",sigRecommed,[ControllerManager getSID]];
     NSLog(@"recommend:%@",recommen);
+    
+    //    rank/rqApi&category=  rank/contributionApi&aid=&category=
+    
 }
 
 - (void)createIQ
@@ -111,9 +172,6 @@
 
 - (void)createBody
 {
-    //增加两个键盘通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     UIView * keyboardBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 40)];
     keyboardBgView.backgroundColor = [UIColor colorWithRed:220/255.0 green:220/255.0 blue:220/255.0 alpha:1];
     UIButton * finishButton = [MyControl createButtonWithFrame:CGRectMake(320-70, 5, 50, 30) ImageName:@"" Target:self Action:@selector(keyBoardFinishButtonClick) Title:@"完成"];
@@ -125,6 +183,7 @@
     [self.view addSubview:bodyView];
     NSArray *arrayContent = @[@"收货人姓名:",@"手机号码:",@"邮政编码:",@"所在地区:",@"详细地址:"];
     NSArray *arrayInput = @[@"姓名",@"手机号码",@"邮政编码",@"省市直辖市",@"详细地址"];
+    
     for (int i = 0; i<5; i++) {
         UILabel *label = [MyControl createLabelWithFrame:CGRectMake(10, i*(bodyView.bounds.size.height/5), 100, bodyView.bounds.size.height/5) Font:15 Text:arrayContent[i]];
         label.textColor = [UIColor blackColor];
@@ -142,6 +201,17 @@
         if (textFieldContent.tag == 101 ||textFieldContent.tag == 102) {
             textFieldContent.keyboardType = UIKeyboardTypeNumberPad;
             textFieldContent.inputAccessoryView = keyboardBgView;
+        }
+        if (textFieldContent.tag == 100) {
+            textFieldContent.text=receiveName;
+        }else if (textFieldContent.tag == 101){
+            textFieldContent.text=telphone;
+        }else if (textFieldContent.tag == 102){
+            textFieldContent.text=codeNumber;
+        }else if (textFieldContent.tag ==103){
+            textFieldContent.text=area;
+        }else{
+             textFieldContent.text=detailarea;
         }
         [bodyView addSubview:textFieldContent];
     }
@@ -169,14 +239,6 @@
     [keyBoardFinish resignFirstResponder];
     UITextField *keyBoardFinish1 = (UITextField *)[bodyView viewWithTag:102];
     [keyBoardFinish1 resignFirstResponder];
-}
-- (void)keyboardWillShow:(NSNotification *)notification
-{
-    
-}
-- (void)keyboardWillHide:(NSNotification *)notification
-{
-    
 }
 #pragma mark - 获取省市直辖市的plist文件信息
 -(void)getCityData
@@ -285,12 +347,10 @@
     return YES;
 }
 
-- (void) textFieldDidBeginEditing:(UITextField *)textField {
-    
-}
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+
     return YES;
 }
 
@@ -390,20 +450,7 @@
 - (void)buttonAction:(UIButton *)sender
 {
     NSLog(@"%@",sender.currentTitle);
-//    if ([sender.currentTitle isEqualToString:@"保存"]) {
-//        for (int i = 0; i < 5; i++) {
-//            UITextField *textField = (UITextField *)[bodyView viewWithTag:100+i];
-//            textField.enabled = NO;
-//        }
-//        [sender setTitle:@"修改" forState:UIControlStateNormal];
-//    }else{
-//        for (int i = 0; i < 5; i++) {
-//            UITextField *textField = (UITextField *)[bodyView viewWithTag:100+i];
-//            textField.enabled = YES;
-//        }
-//        [sender setTitle:@"保存" forState:UIControlStateNormal];
-//    }
-    
+    [self postData];
 }
 
 - (void)didReceiveMemoryWarning

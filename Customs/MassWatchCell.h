@@ -24,5 +24,7 @@
 //
 @property(nonatomic)BOOL isMi;
 @property(nonatomic,copy)NSString * txType;
+@property(nonatomic,copy)void (^cellClick)(int);
+@property (nonatomic,assign)NSInteger num;
 -(void)configUI:(UserInfoModel *)model;
 @end

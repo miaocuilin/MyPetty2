@@ -9,6 +9,7 @@
 #import "MassWatchViewController.h"
 #import "MassWatchCell.h"
 #import "UserInfoModel.h"
+#import "TalkViewController.h"
 @interface MassWatchViewController ()
 
 @end
@@ -110,11 +111,17 @@
     if (!cell) {
         cell = [[[MassWatchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:normalCell] autorelease];
     }
+    cell.num = indexPath.row;
     cell.txType = self.txTypesArray[indexPath.row];
     cell.isMi = self.isMi;
     [cell configUI:self.dataArray[indexPath.row]];
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
+    cell.cellClick = ^(int num){
+        NSLog(@"跳转到第%d个国家", num);
+        TalkViewController *talk = [[TalkViewController alloc] init];
+        [self presentViewController:talk animated:YES completion:nil];
+    };
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

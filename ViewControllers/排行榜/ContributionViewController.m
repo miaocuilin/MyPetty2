@@ -40,6 +40,13 @@
     [self createArrow];
     
     [self findMeBtnClick];
+    [self loadData];
+}
+- (void)loadData
+{
+    NSString *contributionSig  =[MyMD5 md5:[NSString stringWithFormat:@"aid=%@&category=1dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *contribution = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=rank/contributionRankApi&aid=%@&category=1&sig=%@&SID=%@",[USER objectForKey:@"aid"],contributionSig,[ControllerManager getSID]];
+    NSLog(@"contribution:%@",contribution);
 }
 -(void)createBg
 {

@@ -9,12 +9,21 @@
 #import "PopularityListViewController.h"
 #define YELLOW [UIColor colorWithRed:250/255.0 green:230/255.0 blue:180/255.0 alpha:1]
 #import "PopularityCell.h"
+#import "popularityListModel.h"
 @interface PopularityListViewController ()
 
+@property (nonatomic,assign)NSInteger category;
 @end
 
 @implementation PopularityListViewController
 
+- (NSInteger)category
+{
+    if (!_category) {
+        _category = 0;
+    }
+    return _category;
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -32,9 +41,9 @@
     self.dogArray = [NSMutableArray arrayWithCapacity:0];
     self.otherArray = [NSMutableArray arrayWithCapacity:0];
     self.totalArray = [NSMutableArray arrayWithCapacity:0];
-    self.titleArray = [NSMutableArray arrayWithObjects:@"人气日榜", @"人气周榜", @"人气月榜", @"总人气榜", nil];
+    self.titleArray = [NSMutableArray arrayWithObjects:@"总人气榜",@"人气日榜", @"人气周榜", @"人气月榜",  nil];
     self.myCountryRankArray = [NSMutableArray arrayWithObjects:@"10", @"38", @"66", @"88", nil];
-    
+    self.rankData = [NSMutableArray arrayWithCapacity:0];
     [self getListData];
     [self createBg];
     [self createTableView];
@@ -43,8 +52,34 @@
     [self createFakeNavigation];
     
     [self createArrow];
-    
     [self findMeBtnClick];
+    [self loadData];
+
+}
+- (void)loadData
+{
+    NSString *rankSig = [MyMD5 md5:[NSString stringWithFormat:@"category=%ddog&cat",self.category]];
+    NSString *rank = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@",POPULARRANKAPI,self.category,rankSig,[ControllerManager getSID]];
+    NSLog(@"rank:%@",rank);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:rank Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"人气排行数据：%@",load.dataDict);
+        if (isFinish) {
+            arrow.hidden = NO;
+            [self.rankData removeAllObjects];
+            NSArray *array = [load.dataDict objectForKey:@"data"];
+            for (int i = 0; i<array.count; i++) {
+                NSDictionary *dict = array[i];
+                popularityListModel *model = [[popularityListModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.rankData addObject:model];
+                [model release];
+            }
+//            [self createTableView];
+            [tv reloadData];
+            [tv2 reloadData];
+        }
+    }];
+    [request release];
 }
 -(void)getListData
 {
@@ -118,6 +153,7 @@
 -(void)createArrow
 {
     arrow = [MyControl createButtonWithFrame:CGRectMake(150, self.view.frame.size.height-50*4+13.5, 20, 34) ImageName:@"list_moreArrow.png" Target:self Action:@selector(showEntireList) Title:nil];
+    arrow.hidden = YES;
     [self.view addSubview:arrow];
 //    arrow = [MyControl createImageViewWithFrame:CGRectMake(150, self.view.frame.size.height-50*4+13.5, 20, 34) ImageName:@"list_moreArrow.png"];
 //    [self.view addSubview:arrow];
@@ -139,7 +175,7 @@
 #pragma mark - tableViewDelegate
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 100;
+    return self.rankData.count;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -148,7 +184,8 @@
     if (!cell) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"PopularityCell" owner:self options:nil] objectAtIndex:0];
     }
-    [cell configUIWithName:@"白天不懂夜的黑" rq:@"1234" rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
+    popularityListModel *model = [self.rankData objectAtIndex:indexPath.row];
+    [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
     cell.cellClick = ^(int num){
         NSLog(@"跳转到第%d个国家", num);
     };
@@ -157,9 +194,41 @@
     
     if (tableView == tv2 && indexPath.row == myCurrentCountNum-1) {
         cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
-        [cell configUIWithName:@"白天不懂夜的黑" rq:@"1234" rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:YES];
+        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:YES];
     }else{
-        [cell configUIWithName:@"白天不懂夜的黑" rq:@"1234" rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
+        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
+    }
+    NSLog(@"model.tx:%@",model.tx);
+    if ([model.tx isEqualToString:@""]) {
+        cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+    }else{
+        NSString *headImagePath = [DOCDIR stringByAppendingString:model.tx];
+        UIImage *image = [UIImage imageWithContentsOfFile:headImagePath];
+        if (image) {
+            cell.headImageView.image = image;
+        }else{
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                NSLog(@"load.image:%@",load.dataImage);
+                if (isFinish) {
+                    if (load.dataImage == NULL) {
+                        cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+                    }else{
+                        cell.headImageView.image =load.dataImage;
+                    }
+                }
+            }];
+            [request release];
+        }
+    }
+//    NSLog(@"titleBtn.currentTitle:%@",titleBtn.currentTitle);
+    if ([titleBtn.currentTitle isEqualToString:@"总人气榜"]) {
+        cell.rqNum.text = model.t_rq;
+    }else if ([titleBtn.currentTitle isEqualToString:@"人气日榜"]){
+        cell.rqNum.text = model.d_rq;
+    }else if ([titleBtn.currentTitle isEqualToString:@"人气周榜"]){
+        cell.rqNum.text = model.w_rq;
+    }else{
+        cell.rqNum.text = model.m_rq;
     }
     return cell;
 }
@@ -229,7 +298,7 @@
 //    [navView addSubview:titleBtn];
     /*****************************/
     
-    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"人气日榜"];
+    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"总人气榜"];
     titleBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     [titleBtn setTitleColor:YELLOW forState:UIControlStateNormal];
     [navView addSubview:titleBtn];
@@ -379,6 +448,14 @@
     }else{
         [self rel2];
     }
+    NSLog(@"%@",titleBtn.currentTitle);
+  
+    for (int i =0; i<self.titleArray.count; i++) {
+        if ([titleBtn.currentTitle isEqualToString:self.titleArray[i]]) {
+            self.category = i;
+        }
+    }
+    [self loadData];
 }
 -(void)rel
 {

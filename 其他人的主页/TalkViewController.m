@@ -40,8 +40,23 @@
 //    [self createHeader];
     [self createNavigation];
     [self createTableView];
+    [self talkListData];
 }
-
+- (void)talkListData
+{
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
+    NSString *listString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=talk/listApi&sig=%@&SID=%@",sig,[ControllerManager getSID]];
+    NSLog(@"listString:%@",listString);
+}
+- (void)talkSendMessageData
+{
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
+    NSString *sendString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=talk/sendMsgApi&sig=%@&SID=%@",sig,[ControllerManager getSID]];
+    _requestSend = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:sendString]];
+    _requestSend.requestMethod=@"POST";
+    _requestSend.timeOutSeconds = 20;
+    [_requestSend setPostValue:@"" forKey:@""];
+}
 -(void)createNavigation
 {
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"talkHeader" ofType:@"png"]] forBarMetrics:UIBarMetricsDefault];

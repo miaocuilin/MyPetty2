@@ -23,6 +23,6 @@
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key
 {
-    //    NSLog(@"key:%@未赋值", key);
+    NSLog(@"key:%@未赋值", key);
 }
 @end

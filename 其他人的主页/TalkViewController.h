@@ -17,6 +17,7 @@
     UIView * commentBgView;
     
     ASIFormDataRequest * _request;
+    ASIFormDataRequest * _requestSend;
 }
 @property (nonatomic,retain)NSMutableArray * dataArray;
 @property (nonatomic,retain)NSMutableArray * userDataArray;

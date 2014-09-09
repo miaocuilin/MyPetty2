@@ -118,6 +118,8 @@
 - (void)TalkAction:(UIButton *)sender
 {
     NSLog(@"跳转到聊天");
+    self.cellClick(self.num);
+
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {

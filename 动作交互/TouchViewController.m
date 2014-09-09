@@ -58,7 +58,18 @@
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:downloadRecord Block:^(BOOL isFinsh, httpDownloadBlock *load) {
         if (isFinsh) {
             NSLog(@"下载的录音：%@",load.data);
-            _player = [[AVAudioPlayer alloc]initWithData:load.data error:nil];
+            NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+            NSString *filePath = [NSString stringWithFormat:@"%@/zhang.aac", docDirPath];
+            NSLog(@"filePath:%@",filePath);
+            [load.data writeToFile:filePath atomically:YES];
+            NSError *playerError;
+            _player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:filePath] error:&playerError];
+            if (_player == nil)
+            {
+                NSLog(@"ERror creating player: %@", [playerError description]);
+            }
+            [self audioPlayerCreate];
+
         }
     }];
 }
@@ -90,7 +101,8 @@
         NSLog(@"%d",self.scratchCardView.isOpen);
         [ControllerManager HUDImageIcon:@"gold.png" showView:bodyView yOffset:-50.0 Number:100];
         [self shareViewCreate];
-        [self audioPlayerCreate];
+//        [self audioPlayerCreate];
+        [self loadRecordData];
 
         NSUserDefaults *userdef = [NSUserDefaults standardUserDefaults];
         [userdef setObject:@"1" forKey:@"touch"];

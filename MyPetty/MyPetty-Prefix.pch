@@ -91,6 +91,11 @@
     //用户物品列表：
     #define USERGOODSLISTAPI @"http://54.199.161.210:8001/index.php?r=user/itemsApi&usr_id="
     /***************************/
+    //注册王国推荐列表
+    #define RECOMMANDCOUNTRYLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    //宠物名片
+    #define PETCARDAPI @"http://54.199.161.210:8001/index.php?r=animal/cardApi&aid="
+    /***************************/
     //获取宠物信息API
     #define PETINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/infoApi&aid="
 

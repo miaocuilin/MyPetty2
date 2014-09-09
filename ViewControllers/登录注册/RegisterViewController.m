@@ -286,6 +286,32 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     photoButton.layer.masksToBounds = YES;
     [sv addSubview:photoButton];
     
+    /**************************/
+    if (!([self.petInfoModel.tx isKindOfClass:[NSNull class]] || [self.petInfoModel.tx length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.petInfoModel.tx]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            [photoButton setBackgroundImage:image forState:UIControlStateNormal];
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, self.petInfoModel.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    [photoButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.petInfoModel.tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+    
+    /**************************/
+    
     UILabel * miTitle = [MyControl createLabelWithFrame:CGRectMake(100, 205, 120, 20) Font:18 Text:@"宠物信息"];
     miTitle.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:miTitle];
@@ -299,6 +325,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     boy = [MyControl createButtonWithFrame:CGRectMake(180, miBgView.frame.origin.y+205, 30, 30) ImageName:@"3-7.png" Target:self Action:@selector(boyButtonClick) Title:nil];
     [boy setBackgroundImage:[UIImage imageNamed:@"3-6.png"] forState:UIControlStateSelected];
     [sv addSubview:boy];
+    
+    /*******/
+    if (self.isAdoption && [self.petInfoModel.gender intValue] == 1) {
+        girl.selected = NO;
+        boy.selected = YES;
+    }
+    
+    /*******/
     
     bgView2 = [MyControl createViewWithFrame:CGRectMake(0, 75, 280, 120)];
     [miBgView addSubview:bgView2];
@@ -322,6 +356,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             tf.backgroundColor = [UIColor clearColor];
             [bgImageView addSubview:tf];
             
+            if (self.isAdoption) {
+                tf.text = self.petInfoModel.name;
+            }
+            
             UIImageView * keyboard = [MyControl createImageViewWithFrame:CGRectMake(180, 6, 25, 17) ImageName:@"3-2-2.png"];
             [bgImageView addSubview:keyboard];
         }else if(i == 1){
@@ -330,6 +368,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             fromTF.borderStyle = 0;
             fromTF.backgroundColor = [UIColor clearColor];
             [bgImageView addSubview:fromTF];
+            
+            if (self.isAdoption) {
+                fromTF.text = [ControllerManager returnCateNameWithType:self.petInfoModel.type];
+            }
             
             UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(185, 5, 15, 20) ImageName:@"扩展更多图标.png"];
             [bgImageView addSubview:arrow];
@@ -347,6 +389,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             ageTextField.inputAccessoryView = keyboardBgView;
             [bgImageView addSubview:ageTextField];
             
+            if (self.isAdoption) {
+                ageTextField.text = self.petInfoModel.age;
+            }
             UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(185, 5, 15, 20) ImageName:@"扩展更多图标.png"];
             [bgImageView addSubview:arrow];
         }
@@ -908,6 +953,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else{
         type = 300+num+1;
     }
+    /*******************/
+    if (self.isAdoption) {
+        type = [self.petInfoModel.type intValue];
+    }
+    /*******************/
     [USER setObject:self.detailName forKey:@"detailName"];
     self.u_name = tfUserName.text;
     if (isMan) {
@@ -946,7 +996,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         
         str = [NSString stringWithFormat:@"age=%d&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, gender, type, self.u_city, self.u_gender];
+    /****************/
+    if (self.isAdoption) {
+        str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender];
+    }
+    /****************/
         sig = [MyMD5 md5:str2];
+    
 //    }
     //访问注册API
     NSString * message = [NSString stringWithFormat:@"%@?r=user/registerApi&%@&sig=%@&SID=%@", IPURL2, str, sig, [ControllerManager getSID]];

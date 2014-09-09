@@ -27,6 +27,7 @@
     BOOL isSystemShow;
 }
 @property(nonatomic,retain)NSMutableArray * dataArray;
+@property(nonatomic,retain)NSMutableArray * limitDataArray;
 
 @property (nonatomic,retain)NSMutableArray * catArray;
 @property (nonatomic,retain)NSMutableArray * dogArray;
@@ -35,4 +36,8 @@
 @property (nonatomic,retain)NSMutableArray * systemListArray;
 
 @property(nonatomic,retain)UIImageView * bgImageView;
+
+@property(nonatomic,copy)NSString * limitTypeName;
+
+@property(nonatomic,retain)NSMutableDictionary * detailDict;
 @end

@@ -10,6 +10,7 @@
 #define PROVINCE_COMPONENT  0
 #define CITY_COMPONENT      1
 #define DISTRICT_COMPONENT  2
+#import "PetInfoModel.h"
 @interface RegisterViewController : UIViewController
 {
     UIScrollView * sv;
@@ -93,5 +94,10 @@
 @property (nonatomic)int u_city;
 
 //@property (nonatomic,copy)void (^dismiss)(void);
+
+//认养宠物的信息
+@property (nonatomic,retain)PetInfoModel * petInfoModel;
+//是否是认养
+@property (nonatomic)BOOL isAdoption;
 @end
 

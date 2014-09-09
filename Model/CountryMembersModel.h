@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface CountryMembersModel : NSObject
+
 @property(nonatomic,copy)NSString * city;
 @property(nonatomic,copy)NSString * gender;
 @property(nonatomic,copy)NSString * name;

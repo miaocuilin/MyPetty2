@@ -10,6 +10,7 @@
 
 @class NIDropDown;
 @protocol NIDropDownDelegate
+- (void) didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words;
 - (void) niDropDownDelegateMethod: (NIDropDown *) sender;
 @end 
 

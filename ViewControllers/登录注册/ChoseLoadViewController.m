@@ -8,6 +8,7 @@
 
 #import "ChoseLoadViewController.h"
 #import "ChooseInViewController.h"
+#import "ChooseFamilyViewController.h"
 //#import "DropitBehavior.h"
 @interface ChoseLoadViewController ()
 {
@@ -258,7 +259,8 @@
             }else{
                 LoadingSuccess;
                 //跳转到主页
-                JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+//                JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+                ChooseFamilyViewController * sideMenu = [[ChooseFamilyViewController alloc] init];
                 sideMenu.modalTransitionStyle = 1;
                 [self presentViewController:sideMenu animated:YES completion:nil];
             }
@@ -308,7 +310,10 @@
                 if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
                     [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
                 }
+                LoadingSuccess;
+                
                 JDSideMenu * menu = [ControllerManager shareJDSideMenu];
+//                ChooseFamilyViewController * menu = [[ChooseFamilyViewController alloc] init];
                 menu.modalTransitionStyle = 1;
                 [self presentViewController:menu animated:YES completion:nil];
             }

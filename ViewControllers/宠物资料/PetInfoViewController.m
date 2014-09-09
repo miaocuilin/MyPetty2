@@ -73,7 +73,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     self.photosDataArray = [NSMutableArray arrayWithCapacity:0];
 //    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
-    self.countryMembersDataArray = [NSMutableArray array];
+    self.countryMembersDataArray = [NSMutableArray arrayWithCapacity:0];
     
     [self loadKingData];
     [self createFakeNavigation];
@@ -134,8 +134,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSLog(@"国王成员API:%@",animalMembersString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalMembersString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
-            NSLog(@"国王成员数据：%@",load.dataDict);
             [self.countryMembersDataArray removeAllObjects];
+            NSLog(@"国王成员数据：%@",load.dataDict);
             NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             
             for (int i = 0; i<array.count; i++) {
@@ -164,7 +164,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalMembersString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
             NSLog(@"更多国王成员数据：%@",load.dataDict);
-            [self.countryMembersDataArray removeAllObjects];
+//            [self.countryMembersDataArray removeAllObjects];
             NSArray *array = [load.dataDict objectForKey:@"data"];
             
             for (int i = 0; i<array.count; i++) {
@@ -1317,9 +1317,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [vc release];
     }
     if (tableView == tv3) {
-        CountryMembersModel *model = self.countryMembersDataArray[indexPath.row];
+        CountryMembersModel * model = self.countryMembersDataArray[indexPath.row];
+        NSLog(@"%d--%@--%@", self.countryMembersDataArray.count, model.tx, model.usr_id);
         //跳转到用户页面
         UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] init];
+        NSLog(@"%@", model.usr_id);
+        userInfoVC.usr_id = model.usr_id;
         [self presentViewController:userInfoVC animated:YES completion:^{
             [userInfoVC release];
         }];

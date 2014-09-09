@@ -490,7 +490,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSLog(@"postUrl:%@", url);
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:url]];
     _request.requestMethod = @"POST";
-    _request.timeOutSeconds = 20;
+    _request.timeOutSeconds = 60.0;
     
     NSData * data = UIImageJPEGRepresentation(image, 0.1);
     NSTimeInterval  timeInterval = [[NSDate date] timeIntervalSince1970];

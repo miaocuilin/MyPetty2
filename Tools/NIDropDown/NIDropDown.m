@@ -126,10 +126,18 @@
     [self hideDropDown:btnSender];
     UITableViewCell *c = [tableView cellForRowAtIndexPath:indexPath];
     [btnSender setTitle:c.textLabel.text forState:UIControlStateNormal];
-    [self myDelegate];
+    [self myDelegateWithLine:indexPath.row Words:c.textLabel.text];
+    //
+//    NSLog(@"点击了下拉菜单第%d行", indexPath.row);
+//    if ([self.delegate respondsToSelector:@selector(didSelectedLine:Words:)]) {
+//        <#statements#>
+//    }
+
+    
 }
 
-- (void) myDelegate {
+- (void) myDelegateWithLine:(int)Line Words:(NSString *)Words {
+    [self.delegate didSelected:self Line:Line Words:Words];
     [self.delegate niDropDownDelegateMethod:self];   
 }
 

@@ -12,7 +12,7 @@
 #import "SearchFamilyViewController.h"
 #import "ChooseFamilyDetailCell.h"
 #import "RegisterViewController.h"
-
+#import "PetInfoModel.h"
 @interface ChooseFamilyViewController ()
 
 @end
@@ -35,21 +35,53 @@
     
     didSelected = -1;
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
+    self.limitDataArray = [NSMutableArray arrayWithCapacity:0];
+    
     self.catArray = [NSMutableArray arrayWithCapacity:0];
     self.dogArray = [NSMutableArray arrayWithCapacity:0];
     self.otherArray = [NSMutableArray arrayWithCapacity:0];
     self.totalArray = [NSMutableArray arrayWithCapacity:0];
+    self.detailDict = [NSMutableDictionary dictionaryWithCapacity:0];
+    
     self.systemListArray = [NSMutableArray arrayWithObjects:@"按系统推荐", @"按人气排列", @"按人数排列", nil];
     [UIApplication sharedApplication].statusBarHidden = NO;
     
+    
+    [self loadRecommandListData];
     [self createBg];
-    [self createTableView];
+//    [self createTableView];
     [self createFakeNavigation];
     [self createHeader];
     [self getListData];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hidden) name:@"af" object:nil];
 }
+-(void)loadRecommandListData
+{
+    StartLoading;
+    NSString * url = [NSString stringWithFormat:@"%@%@", RECOMMANDCOUNTRYLISTAPI, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            [self.dataArray removeAllObjects];
+            //        NSLog(@"%@", load.dataDict);
+            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary * dict in array) {
+                PetInfoModel * model = [[PetInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.dataArray addObject:model];
+                [model release];
+            }
+            [self.limitDataArray addObjectsFromArray:self.dataArray];
+            [self createTableView];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+
 -(void)createBg
 {
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
@@ -156,13 +188,13 @@
      会不受控制，所以当出现二级菜单时要把透明层headerView拉长到200+35高，二级菜单
      消失后再设置回来。
     */
-    UIView * headerBgView = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, 35)];
-    headerBgView.backgroundColor = BGCOLOR;
-    headerBgView.alpha = 0.85;
-    [self.view addSubview:headerBgView];
-    
     headerView = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, 35)];
     [self.view addSubview:headerView];
+    
+    UIView * headerBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 35)];
+    headerBgView.backgroundColor = BGCOLOR;
+    headerBgView.alpha = 0.85;
+    [headerView addSubview:headerBgView];
     
     raceBtn = [MyControl createButtonWithFrame:CGRectMake(30, 5, 120, 25) ImageName:@"" Target:self Action:@selector(raceBtnClick) Title:@"所有种族"];
     raceBtn.layer.cornerRadius = 5;
@@ -194,7 +226,11 @@
     tv.delegate = self;
     tv.dataSource = self;
     tv.backgroundColor = [UIColor clearColor];
+    tv.separatorStyle = 0;
     [self.view addSubview:tv];
+    
+    [self.view bringSubviewToFront:navView];
+    [self.view bringSubviewToFront:headerView];
     
     UIView * tempView1 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64+35)];
     tv.tableHeaderView = tempView1;
@@ -215,7 +251,7 @@
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 30;
+    return self.limitDataArray.count;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -235,30 +271,66 @@
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
+    PetInfoModel * model = self.limitDataArray[section];
     UIView * headerBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 70)];
 //    headerBgView.backgroundColor = [UIColor whiteColor];
     
-    UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(20, 10, 50, 50) ImageName:@"cat2.jpg"];
+    UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(20, 10, 50, 50) ImageName:@"defaultPetHead.png"];
     headImageView.layer.cornerRadius = headImageView.frame.size.width/2;
     headImageView.layer.masksToBounds = YES;
     [headerBgView addSubview:headImageView];
+    /**************************/
+//    NSLog(@"--%@", model.tx);
+    if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            headImageView.image = image;
+        }else{
+            //下载头像
+            NSLog(@"%@", [NSString stringWithFormat:@"%@%@", USERTXURL, model.tx]);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    headImageView.image = load.dataImage;
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+    
+    /**************************/
+    
     
     UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(80, 10, 28/2, 34/2) ImageName:@"man.png"];
+    if ([model.gender intValue] == 2) {
+        sex.image = [UIImage imageNamed:@"woman.png"];
+    }
     [headerBgView addSubview:sex];
     
     UILabel * name = [MyControl createLabelWithFrame:CGRectMake(100, 10, 150, 20) Font:15 Text:@"毛毛"];
     name.textColor = BGCOLOR;
+    name.text = model.name;
     [headerBgView addSubview:name];
     
     UILabel * nameAndAgeLabel = [MyControl createLabelWithFrame:CGRectMake(80, 30, 150, 15) Font:13 Text:@"索马利猫 | 3岁"];
     nameAndAgeLabel.textColor = [UIColor blackColor];
+    nameAndAgeLabel.text = [NSString stringWithFormat:@"%@ | %@岁", [ControllerManager returnCateNameWithType:model.type], model.age];
     [headerBgView addSubview:nameAndAgeLabel];
     
     UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(80, 52, 70, 15) Font:12 Text:@"总人气 500"];
+    rq.text = [NSString stringWithFormat:@"总人气 %@", model.t_rq];
     rq.textColor = [UIColor lightGrayColor];
     [headerBgView addSubview:rq];
     
     UILabel * memberNum = [MyControl createLabelWithFrame:CGRectMake(155, 52, 70, 15) Font:12 Text:@"|    成员 188"];
+    memberNum.text = [NSString stringWithFormat:@"|    成员 %@", model.fans];
     memberNum.textColor = [UIColor lightGrayColor];
     [headerBgView addSubview:memberNum];
     
@@ -303,14 +375,35 @@
         didSelected = -1;
     }else{
         didSelected = button.tag-100;
+//        [self loadCardDataWithTag:didSelected];
     }
     [tv reloadData];
 //    [tv scrollToNearestSelectedRowAtScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
+-(void)loadCardDataWithTag:(int)Tag
+{
+    if ([self.detailDict objectForKey:[self.limitDataArray[didSelected] aid]]) {
+        
+    }else{
+        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [self.limitDataArray[didSelected] aid]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETCARDAPI, [self.limitDataArray[didSelected] aid], [MyMD5 md5:code], [ControllerManager getSID]];
+        NSLog(@"%@", url);
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                [self.detailDict setObject:[load.dataDict objectForKey:@"data"] forKey:[self.limitDataArray[didSelected] aid]];
+            }
+        }];
+        [request release];
+    }
+}
 -(void)joinClick:(UIButton *)button
 {
-    NSLog(@"join-%d", button.tag);
+    NSLog(@"join-%d", button.tag-200);
+    
     RegisterViewController * vc = [[RegisterViewController alloc] init];
+    vc.isAdoption = YES;
+    vc.petInfoModel = self.limitDataArray[button.tag-200];
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
@@ -335,11 +428,15 @@
         dropDown.delegate = self;
         headerView.frame = CGRectMake(0, 64, 320, 35+200);
         isRaceShow = YES;
+        //
+        [self.limitDataArray removeAllObjects];
+        [self.limitDataArray addObjectsFromArray:self.dataArray];
     }else{
         [dropDown hideDropDown:raceBtn];
         isRaceShow = NO;
         [self rel];
     }
+
 }
 -(void)systemBtnClick
 {
@@ -359,6 +456,8 @@
         [self rel2];
     }
 }
+
+#pragma mark - niDrop代理
 -(void)niDropDownDelegateMethod:(NIDropDown *)sender
 {
     if (sender == dropDown) {
@@ -369,6 +468,29 @@
         [self rel2];
     }
     
+}
+-(void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
+{
+    NSLog(@"%d--%@", Line, Words);
+    if (sender == dropDown) {
+        self.limitTypeName = Words;
+        if ([Words isEqualToString:@"所有种族"]) {
+            [self.limitDataArray removeAllObjects];
+            [self.limitDataArray addObjectsFromArray:self.dataArray];
+        }else{
+            for (int i=0; i<self.limitDataArray.count; i++) {
+                PetInfoModel * model = self.limitDataArray[i];
+                if (![[ControllerManager returnCateNameWithType:model.type] isEqualToString:self.limitTypeName]) {
+                    [self.limitDataArray removeObjectAtIndex:i];
+                    i--;
+                }
+            }
+        }
+        
+        [tv reloadData];
+    }else if(sender == dropDown2){
+        NSLog(@"22222222");
+    }
 }
 -(void)rel
 {

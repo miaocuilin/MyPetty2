@@ -266,7 +266,10 @@
     }
     cell.selectionStyle = 0;
     cell.backgroundColor = [ControllerManager colorWithHexString:@"f4c6a2"];
-
+    /**************/
+//    NSLog(@"--%@", self.cardDict);
+    [cell configUI:self.cardDict];
+    
     return cell;
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -373,17 +376,20 @@
     NSLog(@"%d", button.tag);
     if (didSelected == button.tag-100) {
         didSelected = -1;
+        [tv reloadData];
     }else{
         didSelected = button.tag-100;
-//        [self loadCardDataWithTag:didSelected];
+        [self loadCardDataWithTag:didSelected];
     }
-    [tv reloadData];
+    
 //    [tv scrollToNearestSelectedRowAtScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 -(void)loadCardDataWithTag:(int)Tag
 {
-    if ([self.detailDict objectForKey:[self.limitDataArray[didSelected] aid]]) {
-        
+    NSDictionary * dic = [self.detailDict objectForKey:[self.limitDataArray[didSelected] aid]];
+    if (dic) {
+        self.cardDict = dic;
+        [tv reloadData];
     }else{
         NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [self.limitDataArray[didSelected] aid]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETCARDAPI, [self.limitDataArray[didSelected] aid], [MyMD5 md5:code], [ControllerManager getSID]];
@@ -392,6 +398,9 @@
             if (isFinish) {
                 NSLog(@"%@", load.dataDict);
                 [self.detailDict setObject:[load.dataDict objectForKey:@"data"] forKey:[self.limitDataArray[didSelected] aid]];
+                //
+                self.cardDict = [load.dataDict objectForKey:@"data"];
+                [tv reloadData];
             }
         }];
         [request release];
@@ -401,11 +410,31 @@
 {
     NSLog(@"join-%d", button.tag-200);
     
-    RegisterViewController * vc = [[RegisterViewController alloc] init];
-    vc.isAdoption = YES;
-    vc.petInfoModel = self.limitDataArray[button.tag-200];
-    [self presentViewController:vc animated:YES completion:nil];
-    [vc release];
+    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+    [MMProgressHUD showWithStatus:@"加入中..."];
+    
+    if ([ControllerManager getSID]) {
+        PetInfoModel * model = self.limitDataArray[button.tag-200];
+        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", model.aid];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", JOINFAMILYAPI, model.aid, [MyMD5 md5:code], [ControllerManager getSID]];
+        NSLog(@"%@", url);
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"--%@", load.dataDict);
+                [MMProgressHUD dismissWithSuccess:@"加入成功^_^" title:nil afterDelay:0.5];
+            }else{
+                [MMProgressHUD dismissWithError:@"加入失败-_-!" afterDelay:0.5];
+            }
+        }];
+        [request release];
+    }else{
+        RegisterViewController * vc = [[RegisterViewController alloc] init];
+        vc.isAdoption = YES;
+        vc.petInfoModel = self.limitDataArray[button.tag-200];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    }
+    
 }
 -(void)headBtnClick
 {
@@ -478,6 +507,9 @@
             [self.limitDataArray removeAllObjects];
             [self.limitDataArray addObjectsFromArray:self.dataArray];
         }else{
+//            NSLog(@"--%d", self.limitDataArray.count);
+            //在下拉列表初始化时limitDataArray数组就已经重置了
+            
             for (int i=0; i<self.limitDataArray.count; i++) {
                 PetInfoModel * model = self.limitDataArray[i];
                 if (![[ControllerManager returnCateNameWithType:model.type] isEqualToString:self.limitTypeName]) {

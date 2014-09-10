@@ -83,6 +83,11 @@
     sv.scrollEnabled = NO;
     [self.view addSubview:sv];
     
+    sv3 = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 225, self.view.frame.size.height-20)];
+    sv3.contentSize = CGSizeMake(225, 568-20);
+    sv3.showsVerticalScrollIndicator = NO;
+    [sv addSubview:sv3];
+    
     //搜索框
     UIView * searchBgView = [MyControl createViewWithFrame:CGRectMake(15, 15+20, 340/2, 25)];
     searchBgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
@@ -107,7 +112,7 @@
     
     //消息
     UIButton * messageBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 50, 25, 25) ImageName:@"menu_message.png" Target:self Action:@selector(messageBtnClick) Title:nil];
-    [sv addSubview:messageBtn];
+    [sv3 addSubview:messageBtn];
     
     UIImageView * messageNum = [MyControl  createImageViewWithFrame:CGRectMake(17, -7., 15, 15) ImageName:@"greenBall.png"];
     messageNum.tag = 49;
@@ -130,13 +135,13 @@
     headBg1.layer.cornerRadius = 40;
     headBg1.layer.masksToBounds = YES;
     headBg1.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2];
-    [sv addSubview:headBg1];
+    [sv3 addSubview:headBg1];
     
     UIView * headBg2 = [MyControl createViewWithFrame:CGRectMake(headBg1.frame.origin.x+5, headBg1.frame.origin.y+5, 70, 70)];
     headBg2.layer.cornerRadius = 35;
     headBg2.layer.masksToBounds = YES;
     headBg2.backgroundColor = [UIColor whiteColor];
-    [sv addSubview:headBg2];
+    [sv3 addSubview:headBg2];
     
     headImageView = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
     headImageView.canClick = YES;
@@ -177,33 +182,33 @@
     exp.layer.cornerRadius = 3;
     exp.layer.masksToBounds = YES;
     exp.font = [UIFont boldSystemFontOfSize:10];
-    [sv addSubview:exp];
+    [sv3 addSubview:exp];
     
     //性别，姓名，官职
     UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(25, 140, 28/2, 34/2) ImageName:@"man.png"];
     if ([[USER objectForKey:@"gender"] intValue] == 2) {
         sex.image = [UIImage imageNamed:@"woman.png"];
     }
-    [sv addSubview:sex];
+    [sv3 addSubview:sex];
     
     UILabel * name = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+14+5, sex.frame.origin.y, 100, 20) Font:17 Text:[USER objectForKey:@"name"]];
-    [sv addSubview:name];
+    [sv3 addSubview:name];
     
     //官职  225menu总宽
     UILabel * kingName = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:[NSString stringWithFormat:@"%@的王国", [USER objectForKey:@"a_name"]]];
-    [sv addSubview:kingName];
+    [sv3 addSubview:kingName];
     
     UILabel * position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20+20, 125, 20) Font:14 Text:@"--祭司"];
-    [sv addSubview:position];
+    [sv3 addSubview:position];
     
     //金币
     UIImageView * gold = [MyControl createImageViewWithFrame:CGRectMake(170, sex.frame.origin.y, 22, 22) ImageName:@"gold.png"];
-    [sv addSubview:gold];
+    [sv3 addSubview:gold];
     
     UILabel * goldLabel = [MyControl createLabelWithFrame:CGRectMake(151, gold.frame.origin.y+23, 60, 20) Font:14 Text:[USER objectForKey:@"gold"]];
 //    goldLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     goldLabel.textAlignment = NSTextAlignmentCenter;
-    [sv addSubview:goldLabel];
+    [sv3 addSubview:goldLabel];
     goldLabel.center = CGPointMake(gold.center.x, gold.center.y+gold.frame.size.height);
     
     //金币及商店
@@ -235,13 +240,13 @@
     //下半段的20%透明黑背景
     UIView * blackView = [MyControl createViewWithFrame:CGRectMake(0, position.frame.origin.y+20+10, OFFSET, sv.contentSize.height-(position.frame.origin.y+20+10))];
     blackView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
-    [sv addSubview:blackView];
+    [sv3 addSubview:blackView];
     
     //当前国家和其他国家
     
     //一个透明一个不透明
     UIView * countryBg = [MyControl createViewWithFrame:CGRectMake(0, blackView.frame.origin.y, OFFSET, 65)];
-    [sv addSubview:countryBg];
+    [sv3 addSubview:countryBg];
     
     UIView * countryBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, OFFSET, 65)];
     countryBgView.backgroundColor = [ControllerManager colorWithHexString:@"8e2918"];
@@ -361,7 +366,7 @@
     //首页，商城，消息，活动，设置
     noticeBgView = [MyControl createViewWithFrame:CGRectMake(0, countryBg.frame.origin.y+65+20, 320, 230)];
 //    noticeBgView.backgroundColor = [UIColor purpleColor];
-    [sv addSubview:noticeBgView];
+    [sv3 addSubview:noticeBgView];
     
     /*******************/
     NSArray * array = @[@"menu-13.png", @"menu-14.png", @"menu-8.png", @"menu-10.png", @"through.png"];

@@ -95,6 +95,9 @@
     #define RECOMMANDCOUNTRYLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     //宠物名片
     #define PETCARDAPI @"http://54.199.161.210:8001/index.php?r=animal/cardApi&aid="
+
+    //join家族API
+    #define JOINFAMILYAPI @"http://54.199.161.210:8001/index.php?r=animal/joinApi&aid="
     /***************************/
     //获取宠物信息API
     #define PETINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/infoApi&aid="

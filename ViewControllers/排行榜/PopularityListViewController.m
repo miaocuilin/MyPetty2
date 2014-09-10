@@ -41,9 +41,14 @@
     self.dogArray = [NSMutableArray arrayWithCapacity:0];
     self.otherArray = [NSMutableArray arrayWithCapacity:0];
     self.totalArray = [NSMutableArray arrayWithCapacity:0];
+    self.rankDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.limitRankDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.aidsArray = [NSMutableArray arrayWithCapacity:0];
+    self.myCountryArray = [NSMutableArray arrayWithCapacity:0];
+    
     self.titleArray = [NSMutableArray arrayWithObjects:@"总人气榜",@"人气日榜", @"人气周榜", @"人气月榜",  nil];
     self.myCountryRankArray = [NSMutableArray arrayWithObjects:@"10", @"38", @"66", @"88", nil];
-    self.rankData = [NSMutableArray arrayWithCapacity:0];
+    
     [self getListData];
     [self createBg];
     [self createTableView];
@@ -54,10 +59,12 @@
     [self createArrow];
     [self findMeBtnClick];
     [self loadData];
+    
 
 }
 - (void)loadData
 {
+    StartLoading;
     NSString *rankSig = [MyMD5 md5:[NSString stringWithFormat:@"category=%ddog&cat",self.category]];
     NSString *rank = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@",POPULARRANKAPI,self.category,rankSig,[ControllerManager getSID]];
     NSLog(@"rank:%@",rank);
@@ -65,22 +72,63 @@
         NSLog(@"人气排行数据：%@",load.dataDict);
         if (isFinish) {
             arrow.hidden = NO;
-            [self.rankData removeAllObjects];
+            [self.rankDataArray removeAllObjects];
             NSArray *array = [load.dataDict objectForKey:@"data"];
             for (int i = 0; i<array.count; i++) {
                 NSDictionary *dict = array[i];
                 popularityListModel *model = [[popularityListModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.rankData addObject:model];
+                [self.rankDataArray addObject:model];
                 [model release];
             }
+            [self.limitRankDataArray addObjectsFromArray:self.rankDataArray];
 //            [self createTableView];
+            [self loadUserPetsInfo];
             [tv reloadData];
-            [tv2 reloadData];
+            
+//            [tv2 reloadData];
+        }else{
+            LoadingFailed;
         }
     }];
     [request release];
 }
+-(void)loadUserPetsInfo
+{
+    NSString * code = [NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERPETLISTAPI, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"--%@", load.dataDict);
+            [self.aidsArray removeAllObjects];
+            [self.myCountryArray removeAllObjects];
+            
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for (int i=0; i<array.count; i++) {
+                [self.aidsArray addObject:[array[i] objectForKey:@"aid"]];
+            }
+            //筛选出我的国家在数组中的位置
+            for (int i=0; i<self.rankDataArray.count; i++) {
+                for (int j=0; j<self.aidsArray.count; j++) {
+                    if ([[self.rankDataArray[i] aid] isEqualToString:self.aidsArray[j]]) {
+                        [self.myCountryArray addObject:[NSString stringWithFormat:@"%d", i+1]];
+                        break;
+                    }
+                }
+                
+            }
+            NSLog(@"-----%@", self.myCountryArray);
+            count = 0;
+            [self findMeBtnClick];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+
 -(void)getListData
 {
     NSDictionary * oriDict = [USER objectForKey:@"CateNameList"];
@@ -175,7 +223,7 @@
 #pragma mark - tableViewDelegate
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.rankData.count;
+    return self.limitRankDataArray.count;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -184,7 +232,7 @@
     if (!cell) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"PopularityCell" owner:self options:nil] objectAtIndex:0];
     }
-    popularityListModel *model = [self.rankData objectAtIndex:indexPath.row];
+    popularityListModel *model = [self.limitRankDataArray objectAtIndex:indexPath.row];
     [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
     cell.cellClick = ^(int num){
         NSLog(@"跳转到第%d个国家", num);
@@ -198,7 +246,7 @@
     }else{
         [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
     }
-    NSLog(@"model.tx:%@",model.tx);
+//    NSLog(@"model.tx:%@",model.tx);
     if ([model.tx isEqualToString:@""]) {
         cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
     }else{
@@ -208,7 +256,7 @@
             cell.headImageView.image = image;
         }else{
             httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                NSLog(@"load.image:%@",load.dataImage);
+//                NSLog(@"load.image:%@",load.dataImage);
                 if (isFinish) {
                     if (load.dataImage == NULL) {
                         cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
@@ -347,11 +395,22 @@
 }
 -(void)findMeBtnClick
 {
-    if (self.myCountryRankArray.count) {
-        if (count == self.myCountryRankArray.count) {
+    NSLog(@"findMe");
+    if (self.limitRankDataArray.count == 0) {
+        NSLog(@"没有数据");
+        return;
+    }
+    if (self.myCountryArray.count == 0) {
+        NSLog(@"排行榜中没有您的王国");
+        return;
+    }
+    
+    
+    if (self.myCountryArray.count) {
+        if (count == self.myCountryArray.count) {
             count = 0;
         }
-        myCurrentCountNum = [self.myCountryRankArray[count++] intValue];
+        myCurrentCountNum = [self.myCountryArray[count++] intValue];
         
         NSLog(@"%d", myCurrentCountNum);
         tv2.contentOffset = CGPointMake(0, myCurrentCountNum*50-50*2);
@@ -359,7 +418,7 @@
         [tv2 reloadData];
     }
     
-    NSLog(@"findMe");
+    
     arrow.hidden = NO;
     tv.scrollEnabled = NO;
     [UIView animateWithDuration:0.3 animations:^{
@@ -440,7 +499,7 @@
         [self rel];
     }
 }
-
+#pragma mark -
 -(void)niDropDownDelegateMethod:(NIDropDown *)sender
 {
     if (sender == dropDown) {
@@ -448,15 +507,42 @@
     }else{
         [self rel2];
     }
-    NSLog(@"%@",titleBtn.currentTitle);
+//    NSLog(@"%@",titleBtn.currentTitle);
   
-    for (int i =0; i<self.titleArray.count; i++) {
-        if ([titleBtn.currentTitle isEqualToString:self.titleArray[i]]) {
-            self.category = i;
-        }
-    }
-    [self loadData];
+//    [self loadData];
 }
+-(void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
+{
+    NSLog(@"line:%d--words:%@", Line, Words);
+    if (sender == dropDown) {
+        //打开所有排行
+        [self showEntireList];
+        
+        [self.limitRankDataArray removeAllObjects];
+        if ([Words isEqualToString:@"所有种族"]) {
+            [self.limitRankDataArray addObjectsFromArray:self.rankDataArray];
+        }else{
+            for (int i=0; i<self.rankDataArray.count; i++) {
+                popularityListModel * model = self.rankDataArray[i];
+                if ([[ControllerManager returnCateNameWithType:[model type]] isEqualToString:Words]) {
+                    [self.limitRankDataArray addObject:self.rankDataArray[i]];
+                }
+            }
+        }
+        
+        [tv reloadData];
+    }else{
+        for (int i =0; i<self.titleArray.count; i++) {
+            if ([titleBtn.currentTitle isEqualToString:self.titleArray[i]]) {
+                self.category = i;
+                break;
+            }
+        }
+//        [raceBtn setTitle:@"所有种族" forState:UIControlStateNormal];
+        [self loadData];
+    }
+}
+
 -(void)rel
 {
 

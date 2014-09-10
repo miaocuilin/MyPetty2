@@ -39,5 +39,10 @@
 @property (nonatomic,retain)NSMutableArray * titleArray;
 
 @property (nonatomic,retain)NSMutableArray * myCountryRankArray;
-@property (nonatomic,retain)NSMutableArray * rankData;
+@property (nonatomic,retain)NSMutableArray * rankDataArray;
+@property (nonatomic,retain)NSMutableArray * limitRankDataArray;
+
+@property (nonatomic,retain)NSMutableArray * aidsArray;
+//记录我的国家在排行榜中的排名，只存储排名
+@property (nonatomic,retain)NSMutableArray * myCountryArray;
 @end

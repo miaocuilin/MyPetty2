@@ -40,4 +40,5 @@
 @property(nonatomic,copy)NSString * limitTypeName;
 
 @property(nonatomic,retain)NSMutableDictionary * detailDict;
+@property(nonatomic,retain)NSDictionary * cardDict;
 @end

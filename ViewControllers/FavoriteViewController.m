@@ -102,7 +102,7 @@
             for (NSDictionary * dict in array) {
                 PhotoModel * model = [[PhotoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                if ([model.usr_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                if ([model.aid isEqualToString:[USER objectForKey:@"aid"]]) {
                     [model release];
                     continue;
                 }

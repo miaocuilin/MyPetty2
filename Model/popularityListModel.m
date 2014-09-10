@@ -18,12 +18,13 @@
     [_w_rq release],_w_rq = nil;
     [_m_rq release],_m_rq = nil;
     [_t_rq release],_t_rq = nil;
-
+    [_type release];
+    
     [_change release],_change = nil;
     [super dealloc];
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key
 {
-    NSLog(@"key:%@未赋值", key);
+//    NSLog(@"key:%@未赋值", key);
 }
 @end

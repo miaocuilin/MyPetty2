@@ -14,6 +14,7 @@
 @property (nonatomic,copy)NSString *d_rq;
 @property (nonatomic,copy)NSString *w_rq;
 @property (nonatomic,copy)NSString *m_rq;
+@property (nonatomic,copy)NSString *type;
 
 @property (nonatomic,copy)NSString *name;
 @property (nonatomic,copy)NSString *tx;

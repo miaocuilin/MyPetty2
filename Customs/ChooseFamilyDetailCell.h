@@ -14,5 +14,13 @@
     UIScrollView * sv;
     BOOL isAdded;
     int height[4];
+    
+    UIImageView * sex;
+    UILabel * name;
+    UILabel * location;
+    UIImageView * headImageView;
 }
+@property (nonatomic,retain)NSArray * imagesArray;
+
+-(void)configUI:(NSDictionary *)dic;
 @end

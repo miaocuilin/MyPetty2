@@ -13,6 +13,8 @@
 {
     UIScrollView * sv;
     UIScrollView * sv2;
+    //侧边栏底层sv上的sv3，用来解决关闭sv的滑动后的屏幕适配问题
+    UIScrollView * sv3;
     
     UILabel * activityNumLabel;
     UILabel * noticeNumLabel;

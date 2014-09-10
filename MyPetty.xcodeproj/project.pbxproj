@@ -479,6 +479,9 @@
 		6038618C19A7351500B1312A /* didAttention.png in Resources */ = {isa = PBXBuildFile; fileRef = 6038618A19A7351500B1312A /* didAttention.png */; };
 		6038619619A74DC600B1312A /* zanBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6038619519A74DC600B1312A /* zanBg.png */; };
 		6038619919A75E1100B1312A /* UIImage+ImageBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = 6038619819A75E1100B1312A /* UIImage+ImageBlur.m */; };
+		603A367A19C07F680000E0AD /* PlanetAttentionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 603A367919C07F680000E0AD /* PlanetAttentionViewController.m */; };
+		603A367E19C080FC0000E0AD /* PlanetAttentionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 603A367C19C080FC0000E0AD /* PlanetAttentionCell.m */; };
+		603A367F19C080FC0000E0AD /* PlanetAttentionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 603A367D19C080FC0000E0AD /* PlanetAttentionCell.xib */; };
 		603B021D1991E68B005A6D30 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 603B021C1991E68B005A6D30 /* area.plist */; };
 		6042F59E1994D4B100CA2A0E /* menu-13.png in Resources */ = {isa = PBXBuildFile; fileRef = 6042F59D1994D4B100CA2A0E /* menu-13.png */; };
 		6042F5A01994D62800CA2A0E /* menu-14.png in Resources */ = {isa = PBXBuildFile; fileRef = 6042F59F1994D62800CA2A0E /* menu-14.png */; };
@@ -1222,6 +1225,11 @@
 		6038619519A74DC600B1312A /* zanBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zanBg.png; sourceTree = "<group>"; };
 		6038619719A75E1100B1312A /* UIImage+ImageBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageBlur.h"; sourceTree = "<group>"; };
 		6038619819A75E1100B1312A /* UIImage+ImageBlur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageBlur.m"; sourceTree = "<group>"; };
+		603A367819C07F680000E0AD /* PlanetAttentionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanetAttentionViewController.h; sourceTree = "<group>"; };
+		603A367919C07F680000E0AD /* PlanetAttentionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanetAttentionViewController.m; sourceTree = "<group>"; };
+		603A367B19C080FC0000E0AD /* PlanetAttentionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanetAttentionCell.h; sourceTree = "<group>"; };
+		603A367C19C080FC0000E0AD /* PlanetAttentionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanetAttentionCell.m; sourceTree = "<group>"; };
+		603A367D19C080FC0000E0AD /* PlanetAttentionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlanetAttentionCell.xib; sourceTree = "<group>"; };
 		603B021C1991E68B005A6D30 /* area.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = area.plist; sourceTree = "<group>"; };
 		6042F59D1994D4B100CA2A0E /* menu-13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-13.png"; sourceTree = "<group>"; };
 		6042F59F1994D62800CA2A0E /* menu-14.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-14.png"; sourceTree = "<group>"; };
@@ -1612,6 +1620,8 @@
 				09D98AC51935EC3D00C83C4B /* FavoriteViewController.m */,
 				091E14181989E5DD009FAA80 /* SquareViewController.h */,
 				091E14191989E5DD009FAA80 /* SquareViewController.m */,
+				603A367819C07F680000E0AD /* PlanetAttentionViewController.h */,
+				603A367919C07F680000E0AD /* PlanetAttentionViewController.m */,
 			);
 			path = "喜爱";
 			sourceTree = "<group>";
@@ -2160,6 +2170,9 @@
 				606181AF19B1856C009AF63D /* DefaultPetCell.h */,
 				606181B019B1856C009AF63D /* DefaultPetCell.m */,
 				606181B119B1856C009AF63D /* DefaultPetCell.xib */,
+				603A367B19C080FC0000E0AD /* PlanetAttentionCell.h */,
+				603A367C19C080FC0000E0AD /* PlanetAttentionCell.m */,
+				603A367D19C080FC0000E0AD /* PlanetAttentionCell.xib */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -3023,6 +3036,7 @@
 				60BFBC6C19B0271300EE3746 /* copperMedal.png in Resources */,
 				49500A4619ADD5C800D175D8 /* rock_xinlang.png in Resources */,
 				4927D98D19AB173300EBDC88 /* governmentLevel.png in Resources */,
+				603A367F19C080FC0000E0AD /* PlanetAttentionCell.xib in Resources */,
 				60EC8FB9198B6B2300F1781A /* 2-c.png in Resources */,
 				09C87C811951B0A500F41C6A /* 20-灰色线.png in Resources */,
 				49500A4519ADD5C800D175D8 /* rock_weixin.png in Resources */,
@@ -3167,6 +3181,7 @@
 				496CF22019A44F570081BF5E /* AddressViewController.m in Sources */,
 				09D989531935C08E00C83C4B /* AppDelegate.m in Sources */,
 				6024A61B19A18DE0005ED3D3 /* BottomMenuRootViewController.m in Sources */,
+				603A367A19C07F680000E0AD /* PlanetAttentionViewController.m in Sources */,
 				09D989F41935C1FE00C83C4B /* TMQuiltViewController.m in Sources */,
 				6024A61E19A1D79E005ED3D3 /* SettingViewController.m in Sources */,
 				09D989F21935C1FE00C83C4B /* TMQuiltView.m in Sources */,
@@ -3229,6 +3244,7 @@
 				602A880819AD9583004F368C /* UserInfoRankCell.m in Sources */,
 				602A880319AD80AA004F368C /* UserInfoActivityCell.m in Sources */,
 				49590B5219B0447A0090E697 /* DACircularProgressView.m in Sources */,
+				603A367E19C080FC0000E0AD /* PlanetAttentionCell.m in Sources */,
 				601BB36019AB4CAD0076E051 /* NIDropDown.m in Sources */,
 				60BFBC6319B00FCE00EE3746 /* PopularityListViewController.m in Sources */,
 				60DDF25119AF25D700CB3042 /* GiftShopViewController.m in Sources */,

@@ -31,4 +31,5 @@
 @property (nonatomic,retain)NSMutableArray * titleArray;
 
 @property (nonatomic,retain)NSMutableArray * myCountryRankArray;
+@property (nonatomic,retain)NSMutableArray * contributionDataArray;
 @end

@@ -20,5 +20,5 @@
 @property (retain, nonatomic) IBOutlet UILabel *rank;
 @property (retain, nonatomic) IBOutlet UIImageView *upDown;
 @property(nonatomic,copy)void (^cellClick)(int);
--(void)configUIWithName:(NSString *)Name rq:(NSString *)Rq rank:(int)rank upOrDown:(BOOL)isUp shouldLarge:(BOOL)large;
+-(void)configUIWithName:(NSString *)Name rq:(NSString *)Rq rank:(int)rank upOrDown:(NSInteger)isUp shouldLarge:(BOOL)large;
 @end

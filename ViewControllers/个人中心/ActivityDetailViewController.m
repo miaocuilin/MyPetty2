@@ -15,26 +15,20 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
 #import <AviarySDK/AviarySDK.h>
-
-
+#import "PSCollectionView.h"
+#import "PSCollectionViewCell.h"
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
-@interface ActivityDetailViewController () <AFPhotoEditorControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIActionSheetDelegate>
+
+@interface ActivityDetailViewController () <AFPhotoEditorControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIActionSheetDelegate,PSCollectionViewDelegate,PSCollectionViewDataSource,UIScrollViewDelegate>
 
 @property (nonatomic, strong) ALAssetsLibrary * assetLibrary;
 @property (nonatomic, strong) NSMutableArray * sessions;
+@property (nonatomic, strong) NSMutableArray *cellSizes;
+
 @end
 
 @implementation ActivityDetailViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -52,14 +46,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     // Start the Aviary Editor OpenGL Load
     [AFOpenGLManager beginOpenGLLoad];
     
-    self.dataArray = [NSMutableArray arrayWithCapacity:0];
-    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
     self.view.backgroundColor = [UIColor whiteColor];
     
     [self createBg];
     [self makeNavgation];
-    [self loadData];
-//    [self makeUI];
+//    [self loadData];
+    [self makeUI];
 }
 
 #pragma mark - 视图的创建
@@ -114,6 +108,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TOPICINFOAPI, [self.listModel topic_id], sig, [ControllerManager getSID]];
     NSLog(@"url:%@", url);
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        NSLog(@"活动详情数据：%@",load.dataDict);
         if (isFinish) {
             NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             TopicDetailModel * model = [[TopicDetailModel alloc] init];
@@ -121,8 +116,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             model.txsArray = [dict objectForKey:@"txs"];
             [self.dataArray addObject:model];
             [model release];
+            NSLog(@"%d",model.txsArray.count);
+            if (!model.txsArray.count) {
+                [self makeUI];
+                LoadingSuccess
+            }else{
+                [self loadTxData];
+            }
             
-            [self loadTxData];
         }else{
             LoadingFailed;
             UIAlertView * alert = [MyControl createAlertViewWithTitle:@"活动详情数据加载失败"];
@@ -169,14 +170,16 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - tableView创建
 -(void)makeUI
 {
-    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
-    sv.contentSize = CGSizeMake(320, 865/2+64+self.view.frame.size.height-40);
-    [self.view addSubview:sv];
+//    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
+//    sv.contentSize = CGSizeMake(320, 865/2+64+self.view.frame.size.height-40);
+//    [self.view addSubview:sv];
+    
+    
 //    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-40-64) style:UITableViewStylePlain];
 //    [self.view addSubview:tv];
     
     UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, 865/2)];
-    [sv addSubview:bgView];
+//    [sv addSubview:bgView];
 //    tv.tableHeaderView = bgView;
     
     [self.view bringSubviewToFront:navView];
@@ -253,7 +256,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UILabel * desLabel = (UILabel *)[self.view viewWithTag:102];
     
 //    self.userDataArray.count
-    for (int i=0; i<8; i++) {
+    for (int i=0; i<self.userDataArray.count; i++) {
         UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(13+i*35, desLabel.frame.origin.y+desLabel.frame.size.height+10, 30, 30) ImageName:@"cat2.jpg"];
         headImageView.layer.cornerRadius = 15;
         headImageView.layer.masksToBounds = YES;
@@ -299,6 +302,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }
         }
     }
+    
+    
+    cv = [[PSCollectionView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
+    cv.delegate = self;
+    cv.collectionViewDelegate = self;
+    cv.collectionViewDataSource = self;
+    cv.backgroundColor = [UIColor whiteColor];
+    cv.autoresizingMask = UIViewAutoresizingNone;
+    cv.numColsPortrait = 1;
+    cv.numColsLandscape = 2;
+    cv.headerView = bgView;
+    [self.view addSubview:cv];
     
     NSDate * endDate = [NSDate dateWithTimeIntervalSince1970:[self.listModel.end_time intValue]];
     NSTimeInterval  timeInterval = [endDate timeIntervalSinceNow];
@@ -354,6 +369,36 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+#pragma mark - collectionView
+- (NSMutableArray *)cellSizes {
+    if (!_cellSizes) {
+        _cellSizes = [NSMutableArray array];
+        for (NSInteger i = 0; i < 30; i++) {
+            CGSize size = CGSizeMake(120, arc4random() % 50 + 100);
+            _cellSizes[i] = [NSValue valueWithCGSize:size];
+        }
+    }
+    return _cellSizes;
+}
+
+- (Class)collectionView:(PSCollectionView *)collectionView cellClassForRowAtIndex:(NSInteger)index {
+    return [PSCollectionViewCell class];
+}
+
+- (NSInteger)numberOfRowsInCollectionView:(PSCollectionView *)collectionView {
+    return 20;
+}
+
+- (UIView *)collectionView:(PSCollectionView *)collectionView cellForRowAtIndex:(NSInteger)index {
+    PSCollectionViewCell *cell = [collectionView dequeueReusableViewForClass:[PSCollectionView class]];
+    
+    return cell;
+}
+
+- (CGFloat)collectionView:(PSCollectionView *)collectionView heightForRowAtIndex:(NSInteger)index {
+    return 100;
+}
+
 
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {

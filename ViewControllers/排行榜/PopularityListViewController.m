@@ -10,6 +10,7 @@
 #define YELLOW [UIColor colorWithRed:250/255.0 green:230/255.0 blue:180/255.0 alpha:1]
 #import "PopularityCell.h"
 #import "popularityListModel.h"
+#import "PetInfoViewController.h"
 @interface PopularityListViewController ()
 
 @property (nonatomic,assign)NSInteger category;
@@ -71,6 +72,7 @@
                 NSDictionary *dict = array[i];
                 popularityListModel *model = [[popularityListModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
+                
                 [self.rankData addObject:model];
                 [model release];
             }
@@ -185,20 +187,25 @@
         cell = [[[NSBundle mainBundle] loadNibNamed:@"PopularityCell" owner:self options:nil] objectAtIndex:0];
     }
     popularityListModel *model = [self.rankData objectAtIndex:indexPath.row];
-    [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
+
+    [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:NO];
     cell.cellClick = ^(int num){
         NSLog(@"跳转到第%d个国家", num);
+        PetInfoViewController *petInfoVC = [[PetInfoViewController alloc] init];
+        petInfoVC.aid = model.aid;
+        [self presentViewController:petInfoVC animated:YES completion:nil];
+        [petInfoVC release];
     };
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
     
     if (tableView == tv2 && indexPath.row == myCurrentCountNum-1) {
         cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
-        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:YES];
+        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:YES];
     }else{
-        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
+        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:NO];
     }
-    NSLog(@"model.tx:%@",model.tx);
+//    NSLog(@"model.tx:%@",model.tx);
     if ([model.tx isEqualToString:@""]) {
         cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
     }else{
@@ -456,6 +463,10 @@
         }
     }
     [self loadData];
+}
+- (void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
+{
+    NSLog(@"nil");
 }
 -(void)rel
 {

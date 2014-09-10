@@ -10,13 +10,20 @@
 
 @interface popularityListModel : NSObject
 @property (nonatomic,copy)NSString *aid;
-@property (nonatomic,copy)NSString *name;
-@property (nonatomic,copy)NSString *tx;
 @property (nonatomic,copy)NSString *t_rq;
 @property (nonatomic,copy)NSString *d_rq;
 @property (nonatomic,copy)NSString *w_rq;
 @property (nonatomic,copy)NSString *m_rq;
 
-@property (nonatomic,copy)NSString *change;
+@property (nonatomic,copy)NSString *name;
+@property (nonatomic,copy)NSString *tx;
+@property (nonatomic,assign)NSInteger change;
+
+@property (nonatomic,copy)NSString *usr_id;
+@property (nonatomic,copy)NSString *t_contri;
+@property (nonatomic,copy)NSString *d_contri;
+@property (nonatomic,copy)NSString *w_contri;
+@property (nonatomic,copy)NSString *m_contri;
+
 
 @end

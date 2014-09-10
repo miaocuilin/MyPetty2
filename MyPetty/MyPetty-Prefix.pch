@@ -155,13 +155,14 @@
     #define ISBINDEDAPI @"http://54.199.161.210/dc/index.php?r=user/bindApi&wechat=&weibo="
 
     //活动页面API
-    #define TOPICLISTAPI @"http://54.199.161.210/dc/index.php?r=topic/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define TOPICLISTAPI @"http://54.199.161.210:8001/index.php?r=topic/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define USERTOPICLISTAPI @""
 
     //活动图片请求API
     #define TOPICIMAGEAPI @"http://54.199.161.210/dc/images/topic/"
 
     //活动详情API
-    #define TOPICINFOAPI @"http://54.199.161.210/dc/index.php?r=topic/infoApi&topic_id="
+    #define TOPICINFOAPI @"http://54.199.161.210:8001/index.php?r=topic/infoApi&topic_id="
 
     //最热
     #define POPULARAPI @"http://54.199.161.210/dc/index.php?r=topic/popularApi&topic_id="
@@ -225,6 +226,8 @@
     #define ADDRESSAPI @"http://54.199.161.210:8001/index.php?r=animal/addressApi&aid="
     //人气排行榜
     #define POPULARRANKAPI @"http://54.199.161.210:8001/index.php?r=rank/rqRankApi&category="
+    //国家贡献排行榜
+    #define CONTRIBUTIONAPI @"http://54.199.161.210:8001/index.php?r=rank/contributionRankApi&aid="
     //
     #define SHOPITEMSAPI @"http://54.199.161.210:8001/index.php?r=item/listApi&code="
 #endif

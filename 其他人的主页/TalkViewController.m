@@ -38,9 +38,11 @@
 //    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
     
 //    [self createHeader];
-    [self createNavigation];
     [self createTableView];
+    [self createFakeNavigation];
+
     [self talkListData];
+    [self talkSendMessageData];
 }
 - (void)talkListData
 {
@@ -50,23 +52,61 @@
 }
 - (void)talkSendMessageData
 {
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
-    NSString *sendString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=talk/sendMsgApi&sig=%@&SID=%@",sig,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat",[USER objectForKey:@"usr_id"]]];
+    NSString *sendString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=talk/sendMsgApi&usr_id=%@&sig=%@&SID=%@",[USER objectForKey:@"usr_id"],sig,[ControllerManager getSID]];
     _requestSend = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:sendString]];
     _requestSend.requestMethod=@"POST";
     _requestSend.timeOutSeconds = 20;
-    [_requestSend setPostValue:@"" forKey:@""];
+
+    [_requestSend setPostValue:@"11111" forKey:@"msg"];
+    [_requestSend setDelegate:self];
+    [_requestSend startAsynchronous];
 }
--(void)createNavigation
+
+-(void)createFakeNavigation
 {
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"talkHeader" ofType:@"png"]] forBarMetrics:UIBarMetricsDefault];
-    UIButton * leftButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 30, 30) ImageName:@"14-6.png" Target:self Action:@selector(leftButtonClick) Title:nil];
-    UIBarButtonItem * leftBarButton = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
-    self.navigationItem.leftBarButtonItem = leftBarButton;
-    [leftBarButton release];
+    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    [self.view addSubview:navView];
     
-    self.navigationItem.title = [self.userDataArray[0] name];
+    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    alphaView.alpha = 0.85;
+    alphaView.backgroundColor = BGCOLOR;
+    [navView addSubview:alphaView];
+    
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+    [navView addSubview:backImageView];
+    
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    backBtn.showsTouchWhenHighlighted = YES;
+    //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    [navView addSubview:backBtn];
+    
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"对话"];
+    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [navView addSubview:titleLabel];
+    
+    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(320-31, 33, 18, 16) ImageName:@"5-5.png"];
+    [navView addSubview:searchImageView];
+    
+    UIView * line0 = [MyControl createViewWithFrame:CGRectMake(0, 63, 320, 1)];
+    line0.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.1];
+    [navView addSubview:line0];
 }
+- (void)backBtnClick
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+//-(void)createNavigation
+//{
+//    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"talkHeader" ofType:@"png"]] forBarMetrics:UIBarMetricsDefault];
+//    UIButton * leftButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 30, 30) ImageName:@"14-6.png" Target:self Action:@selector(leftButtonClick) Title:nil];
+//    UIBarButtonItem * leftBarButton = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+//    self.navigationItem.leftBarButtonItem = leftBarButton;
+//    [leftBarButton release];
+//    
+//    self.navigationItem.title = [self.userDataArray[0] name];
+//}
 //-(void)createHeader
 //{
 //    UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, [MyControl isIOS7]) ImageName:@""];
@@ -83,12 +123,12 @@
 //    [headImageView addSubview:nameLabel];
 //    
 //}
--(void)leftButtonClick
-{
-    [UIApplication sharedApplication].statusBarStyle = 1;
-//    [self dismissViewControllerAnimated:YES completion:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"af" object:nil];
-}
+//-(void)leftButtonClick
+//{
+//    [UIApplication sharedApplication].statusBarStyle = 1;
+////    [self dismissViewControllerAnimated:YES completion:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"af" object:nil];
+//}
 
 #pragma mark - tableView
 -(void)createTableView
@@ -271,6 +311,10 @@
 -(void)requestFinished:(ASIHTTPRequest *)request
 {
     [ControllerManager loadingSuccess:@"发送成功"];
+//    [request.responseData]
+    NSError *error;
+    id responseData = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:&error];
+    NSLog(@"data:%@",responseData);
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {

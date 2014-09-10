@@ -9,29 +9,30 @@
 #import "ContributionViewController.h"
 #define YELLOW [UIColor colorWithRed:250/255.0 green:230/255.0 blue:180/255.0 alpha:1]
 #import "PopularityCell.h"
+#import "popularityListModel.h"
+#import "UserInfoViewController.h"
 
 @interface ContributionViewController ()
-
+@property (nonatomic)NSInteger category;
 @end
 
 @implementation ContributionViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (NSInteger)category
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
+    if (!_category) {
+        _category = 0;
     }
-    return self;
+    return _category;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.titleArray = [NSMutableArray arrayWithObjects:@"贡献日榜", @"贡献周榜", @"贡献月榜", @"总贡献榜", nil];
+    self.titleArray = [NSMutableArray arrayWithObjects:@"总贡献榜",@"贡献日榜", @"贡献周榜", @"贡献月榜", nil];
     self.myCountryRankArray = [NSMutableArray arrayWithObjects:@"10", @"38", @"66", @"88", nil];
-    
+    self.contributionDataArray = [NSMutableArray arrayWithCapacity:0];
     [self createBg];
     [self createTableView];
     [self createHeader2];
@@ -44,9 +45,27 @@
 }
 - (void)loadData
 {
-    NSString *contributionSig  =[MyMD5 md5:[NSString stringWithFormat:@"aid=%@&category=1dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *contribution = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=rank/contributionRankApi&aid=%@&category=1&sig=%@&SID=%@",[USER objectForKey:@"aid"],contributionSig,[ControllerManager getSID]];
-    NSLog(@"contribution:%@",contribution);
+    NSString *contributionSig  =[MyMD5 md5:[NSString stringWithFormat:@"aid=%@&category=%ddog&cat",[USER objectForKey:@"aid"],self.category]];
+    NSString *contribution = [NSString stringWithFormat:@"%@%@&category=%d&sig=%@&SID=%@",CONTRIBUTIONAPI,[USER objectForKey:@"aid"],self.category,contributionSig,[ControllerManager getSID]];
+    NSLog(@"国家贡献排行榜API:%@",contribution);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:contribution Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"国家贡献排行榜数据：%@",load.dataDict);
+        if (isFinish) {
+            [self.contributionDataArray removeAllObjects];
+            NSArray *array = [load.dataDict objectForKey:@"data"];
+            for (int i=0; i< array.count; i++) {
+                NSDictionary *dict = array[i];
+                popularityListModel *model = [[popularityListModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.contributionDataArray addObject:model];
+                [model release];
+            }
+            [tv reloadData];
+            [tv2 reloadData];
+        }
+    }];
+    [request release];
+    
 }
 -(void)createBg
 {
@@ -113,7 +132,7 @@
 #pragma mark - tableViewDelegate
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 100;
+    return self.contributionDataArray.count;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -122,17 +141,53 @@
     if (!cell) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"PopularityCell" owner:self options:nil] objectAtIndex:0];
     }
-
+    popularityListModel *model = self.contributionDataArray[indexPath.row];
     cell.cellClick = ^(int num){
         NSLog(@"跳转到第%d个国家", num);
+        UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] init];
+        userInfoVC.usr_id = model.usr_id;
+        [self presentViewController:userInfoVC animated:YES completion:nil];
+        [userInfoVC release];
     };
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
     if (tableView == tv2 && indexPath.row == myCurrentCountNum-1) {
         cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
-        [cell configUIWithName:@"白天不懂夜的黑" rq:@"1234" rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:YES];
+        [cell configUIWithName:model.name rq:model.t_contri rank:indexPath.row+1 upOrDown:model.change shouldLarge:YES];
     }else{
-        [cell configUIWithName:@"白天不懂夜的黑" rq:@"1234" rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
+        [cell configUIWithName:model.name rq:model.t_contri rank:indexPath.row+1 upOrDown:model.change shouldLarge:NO];
+    }
+    
+    if ([model.tx isEqualToString:@""]) {
+        cell.headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+    }else{
+        NSString *headImagePath = [DOCDIR stringByAppendingString:model.tx];
+        UIImage *image = [UIImage imageWithContentsOfFile:headImagePath];
+        if (image) {
+            cell.headImageView.image = image;
+        }else{
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",USERTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                NSLog(@"load.image:%@",load.dataImage);
+                if (isFinish) {
+                    if (load.dataImage == NULL) {
+                        cell.headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+                    }else{
+                        cell.headImageView.image =load.dataImage;
+                    }
+                }
+            }];
+            [request release];
+        }
+    }
+    
+    if ([titleBtn.currentTitle isEqualToString:@"总人气榜"]) {
+        cell.rqNum.text = model.t_rq;
+    }else if ([titleBtn.currentTitle isEqualToString:@"人气日榜"]){
+        cell.rqNum.text = model.d_rq;
+    }else if ([titleBtn.currentTitle isEqualToString:@"人气周榜"]){
+        cell.rqNum.text = model.w_rq;
+    }else{
+        cell.rqNum.text = model.m_rq;
     }
     return cell;
 }
@@ -197,7 +252,7 @@
 
     /*****************************/
     
-    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"贡献日榜"];
+    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"总贡献榜"];
     titleBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     [titleBtn setTitleColor:YELLOW forState:UIControlStateNormal];
     [navView addSubview:titleBtn];
@@ -305,7 +360,12 @@
 {
     [self rel2];
 }
-
+- (void) didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
+{
+    NSLog(@"words:%@--line:%d",Words,Line);
+    self.category = Line;
+    [self loadData];
+}
 -(void)rel2
 {
     navView.frame = CGRectMake(0, 0, 320, 64);

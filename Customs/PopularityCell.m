@@ -25,7 +25,7 @@
     btn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, 50) ImageName:@"" Target:self Action:@selector(click) Title:nil];
     [self.contentView addSubview:btn];
 }
--(void)configUIWithName:(NSString *)Name rq:(NSString *)Rq rank:(int)rank upOrDown:(BOOL)isUp shouldLarge:(BOOL)large
+-(void)configUIWithName:(NSString *)Name rq:(NSString *)Rq rank:(int)rank upOrDown:(NSInteger)isUp shouldLarge:(BOOL)large
 {
     num = rank;
     self.medal.hidden = YES;
@@ -46,11 +46,13 @@
     }
     
     self.rank.text = [NSString stringWithFormat:@"%d", rank];
-    
-    if (isUp) {
+    NSLog(@"isup:%d",isUp);
+    if (isUp == 1) {
         self.upDown.image = [UIImage imageNamed:@"list_up.png"];
-    }else{
+    }else if(isUp == -1){
         self.upDown.image = [UIImage imageNamed:@"list_down.png"];
+    }else{
+        self.upDown.image = [UIImage imageNamed:@"list_equal.png"];
     }
     
     if (large) {

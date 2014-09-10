@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "TopicListModel.h"
-
+@class PSCollectionView;
 @interface ActivityDetailViewController : UIViewController
 {
     UIScrollView * sv;
+    PSCollectionView *cv;
     BOOL isCamara;
 //    UITableView * tv;
     UIView * navView;

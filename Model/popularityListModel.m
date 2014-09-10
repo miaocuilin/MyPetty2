@@ -18,8 +18,13 @@
     [_w_rq release],_w_rq = nil;
     [_m_rq release],_m_rq = nil;
     [_t_rq release],_t_rq = nil;
+    [_t_contri release],_t_contri=nil;
+    [_d_contri release],_d_contri=nil;
+    [_w_contri release],_w_contri=nil;
+    [_m_contri release],_m_contri=nil;
 
-    [_change release],_change = nil;
+
+//    [_change release],_change = nil;
     [super dealloc];
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key

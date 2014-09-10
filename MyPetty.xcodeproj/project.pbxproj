@@ -373,6 +373,9 @@
 		49A799AA19B566E3002411FC /* WaterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799A919B566E3002411FC /* WaterViewController.m */; };
 		49A799FE19B5A075002411FC /* MyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799FB19B5A075002411FC /* MyCollectionViewCell.m */; };
 		49A799FF19B5A075002411FC /* MyCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799FD19B5A075002411FC /* MyCollectionViewLayout.m */; };
+		49B1880D19BFF9DC0055CF54 /* list_equal.png in Resources */ = {isa = PBXBuildFile; fileRef = 49B1880C19BFF9DC0055CF54 /* list_equal.png */; };
+		49B1882119C084990055CF54 /* PSCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B1881E19C084990055CF54 /* PSCollectionView.m */; };
+		49B1882219C084990055CF54 /* PSCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B1882019C084990055CF54 /* PSCollectionViewCell.m */; };
 		49CE193319A9AC14005F21EE /* PresentDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CE193219A9AC14005F21EE /* PresentDetailViewController.m */; };
 		49E75C6E19B1B0F500F42FE5 /* button_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 49E75C6D19B1B0F500F42FE5 /* button_close.png */; };
 		49FA203019AF3DF50077897D /* recordButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 49FA202F19AF3DF50077897D /* recordButton.png */; };
@@ -1089,6 +1092,11 @@
 		49A799FB19B5A075002411FC /* MyCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyCollectionViewCell.m; path = ../MyCollectionViewCell.m; sourceTree = "<group>"; };
 		49A799FC19B5A075002411FC /* MyCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyCollectionViewLayout.h; path = ../MyCollectionViewLayout.h; sourceTree = "<group>"; };
 		49A799FD19B5A075002411FC /* MyCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyCollectionViewLayout.m; path = ../MyCollectionViewLayout.m; sourceTree = "<group>"; };
+		49B1880C19BFF9DC0055CF54 /* list_equal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_equal.png; sourceTree = "<group>"; };
+		49B1881D19C084990055CF54 /* PSCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSCollectionView.h; sourceTree = "<group>"; };
+		49B1881E19C084990055CF54 /* PSCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSCollectionView.m; sourceTree = "<group>"; };
+		49B1881F19C084990055CF54 /* PSCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSCollectionViewCell.h; sourceTree = "<group>"; };
+		49B1882019C084990055CF54 /* PSCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSCollectionViewCell.m; sourceTree = "<group>"; };
 		49CE193119A9AC14005F21EE /* PresentDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PresentDetailViewController.h; sourceTree = "<group>"; };
 		49CE193219A9AC14005F21EE /* PresentDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PresentDetailViewController.m; sourceTree = "<group>"; };
 		49E75C6D19B1B0F500F42FE5 /* button_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_close.png; sourceTree = "<group>"; };
@@ -2500,6 +2508,10 @@
 		49A723F719B484DF000D7826 /* FullyLoaded */ = {
 			isa = PBXGroup;
 			children = (
+				49B1881D19C084990055CF54 /* PSCollectionView.h */,
+				49B1881E19C084990055CF54 /* PSCollectionView.m */,
+				49B1881F19C084990055CF54 /* PSCollectionViewCell.h */,
+				49B1882019C084990055CF54 /* PSCollectionViewCell.m */,
 				49A799FA19B5A075002411FC /* MyCollectionViewCell.h */,
 				49A799FB19B5A075002411FC /* MyCollectionViewCell.m */,
 				49A799FC19B5A075002411FC /* MyCollectionViewLayout.h */,
@@ -2544,6 +2556,7 @@
 		60BFBC6419B0270900EE3746 /* 榜单 */ = {
 			isa = PBXGroup;
 			children = (
+				49B1880C19BFF9DC0055CF54 /* list_equal.png */,
 				60BFBC6519B0271300EE3746 /* copperMedal.png */,
 				60BFBC6619B0271300EE3746 /* findMe.png */,
 				60BFBC6719B0271300EE3746 /* goldMedal.png */,
@@ -2969,6 +2982,7 @@
 				091EAD5F194ECEA200B0DE41 /* bcat2_2.png in Resources */,
 				09D98A811935D4E900C83C4B /* 14-8.png in Resources */,
 				60D62A7319A4854200224976 /* noDog.png in Resources */,
+				49B1880D19BFF9DC0055CF54 /* list_equal.png in Resources */,
 				495FFFE119AAD1BD00976F18 /* button_white.png in Resources */,
 				09D98A861935D4E900C83C4B /* 2-1.png in Resources */,
 				601BB35119AB18FD0076E051 /* myCountry_join.png in Resources */,
@@ -3242,8 +3256,10 @@
 				491C1FB719B9969C00CA833E /* AFURLConnectionOperation.m in Sources */,
 				601BB34719AB11C80076E051 /* MyCountryMessageCell.m in Sources */,
 				09D98ACC1935EC3D00C83C4B /* RandombViewController.m in Sources */,
+				49B1882119C084990055CF54 /* PSCollectionView.m in Sources */,
 				09D98ACA1935EC3D00C83C4B /* DetailViewController.m in Sources */,
 				60EC8FB1198B650A00F1781A /* ChooseInViewController.m in Sources */,
+				49B1882219C084990055CF54 /* PSCollectionViewCell.m in Sources */,
 				098FC7EA194053320064A004 /* HttpDownLoad.m in Sources */,
 				606181B219B1856C009AF63D /* DefaultPetCell.m in Sources */,
 				4922D5EB19A754970018160A /* GiftDetialViewController.m in Sources */,

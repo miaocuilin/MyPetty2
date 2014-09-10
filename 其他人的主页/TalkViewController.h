@@ -18,6 +18,8 @@
     
     ASIFormDataRequest * _request;
     ASIFormDataRequest * _requestSend;
+    UIView * navView;
+
 }
 @property (nonatomic,retain)NSMutableArray * dataArray;
 @property (nonatomic,retain)NSMutableArray * userDataArray;

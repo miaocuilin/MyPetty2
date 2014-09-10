@@ -103,6 +103,7 @@
 
 -(void)loadData
 {
+    NSLog(@"%@%@",TOPICLISTAPI,[ControllerManager getSID]);
     [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TOPICLISTAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"topicList:%@", load.dataDict);

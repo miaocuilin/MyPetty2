@@ -25,6 +25,9 @@
 
 
 //    [_change release],_change = nil;
+    [_type release];
+    
+    [_change release],_change = nil;
     [super dealloc];
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key

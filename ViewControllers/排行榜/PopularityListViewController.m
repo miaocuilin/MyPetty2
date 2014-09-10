@@ -79,8 +79,7 @@
                 NSDictionary *dict = array[i];
                 popularityListModel *model = [[popularityListModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                
-                [self.rankData addObject:model];
+                [self.rankDataArray addObject:model];
                 [model release];
             }
             [self.limitRankDataArray addObjectsFromArray:self.rankDataArray];
@@ -234,9 +233,8 @@
     if (!cell) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"PopularityCell" owner:self options:nil] objectAtIndex:0];
     }
-    popularityListModel *model = [self.rankData objectAtIndex:indexPath.row];
-
-    [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:NO];
+    popularityListModel *model = [self.limitRankDataArray objectAtIndex:indexPath.row];
+    [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
     cell.cellClick = ^(int num){
         NSLog(@"跳转到第%d个国家", num);
         PetInfoViewController *petInfoVC = [[PetInfoViewController alloc] init];
@@ -548,10 +546,10 @@
 //        [raceBtn setTitle:@"所有种族" forState:UIControlStateNormal];
         [self loadData];
     }
-}
 - (void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
 {
     NSLog(@"nil");
+}
 }
 -(void)rel
 {

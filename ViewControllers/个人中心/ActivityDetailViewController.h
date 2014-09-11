@@ -17,6 +17,8 @@
 //    UITableView * tv;
     UIView * navView;
     UIImageView * bgImageView;
+    float Height[1000];
+
 }
 @property(nonatomic,retain)NSMutableString * txs;
 @property(nonatomic,retain)TopicListModel * listModel;
@@ -24,4 +26,6 @@
 @property(nonatomic,retain)NSMutableArray * userDataArray;
 
 @property(nonatomic,retain)UIImage * tempImage;
+@property(nonatomic,copy)NSString *lastImg_id;
+@property(nonatomic,retain)NSMutableArray * randomDataArray;
 @end

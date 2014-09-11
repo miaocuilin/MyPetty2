@@ -172,6 +172,7 @@ static inline NSInteger PSCollectionIndexForKey(NSString *key) {
     self.delegate = nil;
     self.collectionViewDataSource = nil;
     self.collectionViewDelegate = nil;
+    [super dealloc];
 }
 
 #pragma mark - DataSource

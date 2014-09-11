@@ -30,6 +30,7 @@
 @property (nonatomic, strong) id object;
 @property (nonatomic, assign) PSCollectionView *collectionView;
 @property (nonatomic, assign) NSInteger index;
+@property (nonatomic, strong) UIImageView *imageView;
 
 - (void)prepareForReuse;
 - (void)collectionView:(PSCollectionView *)collectionView fillCellWithObject:(id)object atIndex:(NSInteger)index;

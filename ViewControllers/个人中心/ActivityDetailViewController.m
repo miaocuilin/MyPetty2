@@ -17,14 +17,18 @@
 #import <AviarySDK/AviarySDK.h>
 #import "PSCollectionView.h"
 #import "PSCollectionViewCell.h"
+#import "PhotoModel.h"
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 
 @interface ActivityDetailViewController () <AFPhotoEditorControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIActionSheetDelegate,PSCollectionViewDelegate,PSCollectionViewDataSource,UIScrollViewDelegate>
+{
+    UIView *segmentView;
+    UIView *segmentView2;
+}
 
 @property (nonatomic, strong) ALAssetsLibrary * assetLibrary;
 @property (nonatomic, strong) NSMutableArray * sessions;
-@property (nonatomic, strong) NSMutableArray *cellSizes;
 
 @end
 
@@ -46,14 +50,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     // Start the Aviary Editor OpenGL Load
     [AFOpenGLManager beginOpenGLLoad];
     
-//    self.dataArray = [NSMutableArray arrayWithCapacity:0];
-//    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.randomDataArray = [NSMutableArray arrayWithCapacity:0];
     self.view.backgroundColor = [UIColor whiteColor];
     
     [self createBg];
-    [self makeNavgation];
-//    [self loadData];
-    [self makeUI];
+    [self loadData];
+    [self loadRandomData];
+//    [self makeUI];
+//    [self makeNavgation];
+
 }
 
 #pragma mark - 视图的创建
@@ -97,6 +104,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     titleLabel.textAlignment = NSTextAlignmentCenter;
     //    titleLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:titleLabel];
+    
+    segmentView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 40)];
+    //    segmentView.backgroundColor = [UIColor redColor];
+    [self.view addSubview:segmentView2];
+    UIButton *newButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, segmentView2.frame.size.width/2, 40) ImageName:nil Target:self Action:@selector(newPicAction) Title:@"最新"];
+    [newButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [segmentView2 addSubview:newButton];
+    UIButton *hotButton = [MyControl createButtonWithFrame:CGRectMake(segmentView2.frame.size.width/2, 0, segmentView2.frame.size.width/2, 40) ImageName:nil Target:self Action:@selector(hotPicAction) Title:@"最热"];
+    [hotButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [segmentView2 addSubview:hotButton];
+    segmentView2.backgroundColor = [UIColor whiteColor];
+    segmentView2.hidden = YES;
 }
 
 #pragma mark - 下载数据
@@ -115,7 +134,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [model setValuesForKeysWithDictionary:dict];
             model.txsArray = [dict objectForKey:@"txs"];
             [self.dataArray addObject:model];
-            [model release];
             NSLog(@"%d",model.txsArray.count);
             if (!model.txsArray.count) {
                 [self makeUI];
@@ -123,6 +141,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }else{
                 [self loadTxData];
             }
+            [model release];
+
             
         }else{
             LoadingFailed;
@@ -166,7 +186,63 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
     }];
 }
-
+-(void)loadRandomData
+{
+    StartLoading;
+    NSLog(@"randomAPI:%@",[NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]]);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            //只包含img_id和图片的url
+            NSLog(@"宇宙广场数据:%@", load.dataDict);
+            [self.randomDataArray removeAllObjects];
+            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary * dict in array) {
+                PhotoModel * model = [[PhotoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.randomDataArray addObject:model];
+                
+                [model release];
+            }
+            
+            self.lastImg_id = [self.randomDataArray[self.randomDataArray.count-1] img_id];
+            [cv reloadData];
+            
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+            NSLog(@"数据加载失败");
+        }
+    }];
+    [request release];
+}
+-(void)loadRandomNextData
+{
+//    if (self.dataArray.count % 10 != 0) {
+//        [cv footerEndRefreshing];
+//        return;
+//    }
+    NSString * str = [NSString stringWithFormat:@"img_id=%@dog&cat", self.lastImg_id];
+    NSString * sig = [MyMD5 md5:str];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RANDOMAPI2, self.lastImg_id, sig, [ControllerManager getSID]];
+    NSLog(@"next-url:%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary * dict in array) {
+                PhotoModel * model = [[PhotoModel alloc] init];
+                [model setValuesForKeysWithDictionary: dict];
+                [self.randomDataArray addObject:model];
+                [model release];
+            }
+            self.lastImg_id = [self.randomDataArray[self.randomDataArray.count-1] img_id];
+            [cv reloadData];
+            [cv footerEndRefreshing];
+        }else{
+            NSLog(@"数据加载失败");
+        }
+    }];
+    [request release];
+}
 #pragma mark - tableView创建
 -(void)makeUI
 {
@@ -302,7 +378,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }
         }
     }
-    
+    segmentView = [[UIView alloc] initWithFrame:CGRectMake(0, 400, bgView.frame.size.width, 40)];
+    segmentView.backgroundColor = [UIColor whiteColor];
+    [bgView addSubview:segmentView];
+    UIButton *newButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, segmentView.frame.size.width/2, 40) ImageName:nil Target:self Action:@selector(newPicAction) Title:@"最新"];
+    [newButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [segmentView addSubview:newButton];
+    UIButton *hotButton = [MyControl createButtonWithFrame:CGRectMake(segmentView.frame.size.width/2, 0, segmentView.frame.size.width/2, 40) ImageName:nil Target:self Action:@selector(hotPicAction) Title:@"最热"];
+    [hotButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [segmentView addSubview:hotButton];
     
     cv = [[PSCollectionView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
     cv.delegate = self;
@@ -310,9 +394,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     cv.collectionViewDataSource = self;
     cv.backgroundColor = [UIColor whiteColor];
     cv.autoresizingMask = UIViewAutoresizingNone;
-    cv.numColsPortrait = 1;
-    cv.numColsLandscape = 2;
+    cv.numColsPortrait = 2;
+//    cv.numColsLandscape = 1;
     cv.headerView = bgView;
+    [cv addFooterWithTarget:self action:@selector(loadRandomNextData)];
     [self.view addSubview:cv];
     
     NSDate * endDate = [NSDate dateWithTimeIntervalSince1970:[self.listModel.end_time intValue]];
@@ -328,6 +413,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
 //    joinButton.backgroundColor = BGCOLOR;
     [self.view addSubview:joinButton];
+//最后加载自定义导航栏
+    [self makeNavgation];
+
+}
+- (void)newPicAction
+{
+    NSLog(@"最新");
+}
+- (void)hotPicAction
+{
+    NSLog(@"最热");
 }
 -(void)joinButtonClick
 {
@@ -370,15 +466,26 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark - collectionView
-- (NSMutableArray *)cellSizes {
-    if (!_cellSizes) {
-        _cellSizes = [NSMutableArray array];
-        for (NSInteger i = 0; i < 30; i++) {
-            CGSize size = CGSizeMake(120, arc4random() % 50 + 100);
-            _cellSizes[i] = [NSValue valueWithCGSize:size];
-        }
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSLog(@"%f",scrollView.contentOffset.y);
+    int offset = (int)scrollView.contentOffset.y;
+//    if (offset >= 400) {
+//        segmentView2.hidden = NO;
+//        segmentView.hidden = YES;
+//    }else{
+//        segmentView2.hidden = YES;
+//        segmentView.hidden = NO;
+//    }
+    if (offset < 400) {
+
+        [segmentView removeFromSuperview];
+        [cv.headerView addSubview:segmentView];
+        segmentView.frame = CGRectMake(0, 400, self.view.frame.size.width, 40);    }else{
+        [segmentView removeFromSuperview];
+        [self.view addSubview:segmentView];
+        segmentView.frame = CGRectMake(0, 64, self.view.frame.size.width, 40);
     }
-    return _cellSizes;
 }
 
 - (Class)collectionView:(PSCollectionView *)collectionView cellClassForRowAtIndex:(NSInteger)index {
@@ -386,17 +493,106 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 
 - (NSInteger)numberOfRowsInCollectionView:(PSCollectionView *)collectionView {
-    return 20;
+    return self.randomDataArray.count;
+//    return 20;
 }
 
 - (UIView *)collectionView:(PSCollectionView *)collectionView cellForRowAtIndex:(NSInteger)index {
     PSCollectionViewCell *cell = [collectionView dequeueReusableViewForClass:[PSCollectionView class]];
+    if (!cell) {
+        cell = [[PSCollectionViewCell alloc] initWithFrame:CGRectZero];
+    }
+    UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectZero];
+    imageview.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+//    imageview.image = [UIImage imageNamed:@"cat2.jpg"];
+//    [cell addSubview:imageview];
     
+    PhotoModel * model = self.randomDataArray[index];
+    
+    //图片存放到本地，从本地取
+    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    if (!docDir) {
+        NSLog(@"Documents 目录未找到");
+    }else{
+        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+        //        NSLog(@"randomFilePath:%@", randomFilePath);
+        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
+        if (image) {
+            imageview.image = image;
+        }else{
+
+            imageview.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"20-1" ofType:@"png"]];
+            
+            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    //本地目录，用于存放favorite下载的原图
+                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                    if (!docDir) {
+                        NSLog(@"Documents 目录未找到");
+                    }else{
+                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+                        //将下载的图片存放到本地
+                        [load.data writeToFile:randomFilePath atomically:YES];
+                        imageview.image = load.dataImage;
+                        [cv reloadData];
+                    }
+
+                }
+            }];
+        }
+    }
+    
+//    if (indexPath.row == self.dataArray.count-1) {
+//        [quiltView footerBeginRefreshing];
+//    }
+    imageview.contentMode = UIViewContentModeScaleAspectFill;
+//    [cell addSubview:imageview];
+
     return cell;
 }
 
 - (CGFloat)collectionView:(PSCollectionView *)collectionView heightForRowAtIndex:(NSInteger)index {
-    return 100;
+//    return 100;
+    PhotoModel * model = self.randomDataArray[index];
+    //图片存放到本地，从本地取
+    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    if (!docDir) {
+        NSLog(@"Documents 目录未找到");
+    }else{
+        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+        UIImage * image = [UIImage imageWithContentsOfFile:randomFilePath];
+        if (image) {
+            Height[index] = image.size.height;
+        }else{
+            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    //本地目录，用于存放favorite下载的原图
+                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                    if (!docDir) {
+                        NSLog(@"Documents 目录未找到");
+                    }else{
+                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+                        //将下载的图片存放到本地
+                        [load.data writeToFile:randomFilePath atomically:YES];
+                        Height[index] = load.dataImage.size.height;
+                        
+                    }
+                }
+            }];
+        }
+    }
+    if (Height[index] == 0) {
+        return 100;
+    }else if(Height[index] < 100){
+        return 100;
+    }else if(Height[index] < 300){
+        return Height[index]/1.3;
+    }else{
+        if (Height[index]/4 < 100) {
+            return 100;
+        }
+        return Height[index]/4;
+    }
 }
 
 

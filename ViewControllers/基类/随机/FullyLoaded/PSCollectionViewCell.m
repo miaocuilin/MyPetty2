@@ -32,6 +32,13 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        self.imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+        self.imageView.image = [UIImage imageNamed:@"cat1.jpg"];
+        self.imageView.autoresizingMask =UIViewAutoresizingFlexibleHeight| UIViewAutoresizingFlexibleWidth;
+        self.clipsToBounds = YES;
+        self.imageView.contentMode =UIViewContentModeScaleAspectFit;
+        [self addSubview:self.imageView];
+
     }
     return self;
 }

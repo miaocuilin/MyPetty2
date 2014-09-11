@@ -546,10 +546,6 @@
 //        [raceBtn setTitle:@"所有种族" forState:UIControlStateNormal];
         [self loadData];
     }
-- (void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
-{
-    NSLog(@"nil");
-}
 }
 -(void)rel
 {

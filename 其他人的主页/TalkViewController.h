@@ -10,15 +10,19 @@
 #import "ASIFormDataRequest.h"
 @interface TalkViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
+    UIImageView * bgImageView;
+    UIView * navView;
     UITableView * tv;
     UITextField * tf;
     UIButton * sendButton;
     
-    UIView * commentBgView;
+    UIView * commentBgView2;
     
     ASIFormDataRequest * _request;
     ASIFormDataRequest * _requestSend;
 }
+@property (nonatomic,copy)NSString * friendName;
+
 @property (nonatomic,retain)NSMutableArray * dataArray;
 @property (nonatomic,retain)NSMutableArray * userDataArray;
 @end

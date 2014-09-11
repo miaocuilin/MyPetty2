@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x8be6;&#x60c5;&#x9875;/PicDetailViewController.m"
-            timestampString = "431637958.095288"
+            timestampString = "432112345.303399"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
+            startingLineNumber = "176"
+            endingLineNumber = "176"
             landmarkName = "-loadPetData"
             landmarkType = "5">
          </BreakpointContent>
@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x8be6;&#x60c5;&#x9875;/PicDetailViewController.m"
-            timestampString = "431524475.246899"
+            timestampString = "432112345.303399"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "81"
-            endingLineNumber = "81"
+            startingLineNumber = "90"
+            endingLineNumber = "90"
             landmarkName = "-loadData"
             landmarkType = "5">
          </BreakpointContent>
@@ -202,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x8be6;&#x60c5;&#x9875;/PicDetailViewController.m"
-            timestampString = "431637958.095288"
+            timestampString = "432112345.303399"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "182"
-            endingLineNumber = "182"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
             landmarkName = "-loadPetData"
             landmarkType = "5">
          </BreakpointContent>
@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x8be6;&#x60c5;&#x9875;/PicDetailViewController.m"
-            timestampString = "431637958.095288"
+            timestampString = "432112345.303399"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1017"
-            endingLineNumber = "1017"
+            startingLineNumber = "1029"
+            endingLineNumber = "1029"
             landmarkName = "-attentionBtnClick:"
             landmarkType = "5">
          </BreakpointContent>
@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x8be6;&#x60c5;&#x9875;/PicDetailViewController.m"
-            timestampString = "431637958.095288"
+            timestampString = "432112345.303399"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1013"
-            endingLineNumber = "1013"
+            startingLineNumber = "1025"
+            endingLineNumber = "1025"
             landmarkName = "-attentionBtnClick:"
             landmarkType = "5">
          </BreakpointContent>
@@ -250,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x8be6;&#x60c5;&#x9875;/PicDetailViewController.m"
-            timestampString = "431637958.095288"
+            timestampString = "432112345.303399"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1021"
-            endingLineNumber = "1021"
+            startingLineNumber = "1033"
+            endingLineNumber = "1033"
             landmarkName = "-attentionBtnClick:"
             landmarkType = "5">
          </BreakpointContent>
@@ -266,11 +266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x8be6;&#x60c5;&#x9875;/PicDetailViewController.m"
-            timestampString = "431637958.095288"
+            timestampString = "432112345.303399"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "178"
-            endingLineNumber = "178"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
             landmarkName = "-loadPetData"
             landmarkType = "5">
          </BreakpointContent>
@@ -314,11 +314,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x5ba0;&#x7269;&#x8d44;&#x6599;/UserInfoViewController.m"
-            timestampString = "431610631.979618"
+            timestampString = "432098952.305703"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "-loadMyCountryInfoData"
             landmarkType = "5">
          </BreakpointContent>
@@ -330,11 +330,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x5ba0;&#x7269;&#x8d44;&#x6599;/UserInfoViewController.m"
-            timestampString = "431610631.979618"
+            timestampString = "432098952.305703"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
             landmarkName = "-loadMyCountryInfoData"
             landmarkType = "5">
          </BreakpointContent>
@@ -528,6 +528,38 @@
             startingLineNumber = "95"
             endingLineNumber = "95"
             landmarkName = "-loadData"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ViewControllers/&#x559c;&#x7231;/PlanetAttentionViewController.m"
+            timestampString = "432098804.268305"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "-loadData"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ViewControllers/&#x8be6;&#x60c5;&#x9875;/PicDetailViewController.m"
+            timestampString = "432112345.303399"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "693"
+            endingLineNumber = "693"
+            landmarkName = "-keyboardWasChange:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

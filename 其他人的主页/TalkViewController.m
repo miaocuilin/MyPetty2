@@ -37,7 +37,8 @@
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
 //    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
     
-//    [self createHeader];
+    
+    [self createBg];
     [self createTableView];
     [self createFakeNavigation];
 

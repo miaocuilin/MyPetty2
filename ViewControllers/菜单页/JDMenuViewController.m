@@ -21,20 +21,14 @@
 #import "MainViewController.h"
 #import "ToolTipsViewController.h"
 #import "GiftShopViewController.h"
+#import "SearchResultModel.h"
+#import "PetInfoViewController.h"
 @interface JDMenuViewController ()
 
 @end
 
 @implementation JDMenuViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -45,6 +39,30 @@
     
     [self createBg];
     [self createUI];
+//    [self loadSearchData:@"22"];
+}
+#pragma mark - 加载数据
+//参数name不需要加密
+- (void)loadSearchData:(NSString *)name
+{
+    NSString *searchSig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
+    NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@",SEARCHAPI,name,searchSig,[ControllerManager getSID]];
+    NSLog(@"搜索API:%@",searchString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:searchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        [self.searchArray removeAllObjects];
+        NSLog(@"搜索结果：%@",load.dataDict);
+        if (isFinish) {
+            NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary *dict in array) {
+                SearchResultModel *model = [[SearchResultModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.searchArray addObject:model];
+                [model release];
+            }
+            [tv reloadData];
+        }
+    }];
+    [request release];
 }
 #pragma mark - 界面搭建
 -(void)createBg
@@ -451,8 +469,10 @@
         [tv reloadData];
     }else{
         NSLog(@"搜索用户~~~");
-        [self.searchArray addObject:@"11"];
-        [tv reloadData];
+        [self loadSearchData:tfSearch.text];
+        [tfSearch resignFirstResponder];
+//        [self.searchArray addObject:@"11"];
+//        [tv reloadData];
     }
     
 }
@@ -721,10 +741,29 @@
         label.textColor = [UIColor blackColor];
         [cell addSubview:label];
     }
-    [btn setBackgroundImage:[UIImage imageNamed:@"cat2.jpg"] forState:UIControlStateNormal];
+    SearchResultModel *model = self.searchArray[indexPath.row];
+    NSString *headPath = [DOCDIR stringByAppendingString:model.tx];
+    UIImage *headImage = [UIImage imageWithContentsOfFile:headPath];
+    if (headImage) {
+        [btn setBackgroundImage:headImage forState:UIControlStateNormal];
+    }else{
+        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+            if (isFinish) {
+                if (load.dataImage == NULL) {
+                    [btn setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
+
+                }else{
+                    [load.data writeToFile:[DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",model.tx]] atomically:YES];
+                    [btn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                }
+            }
+        }];
+        [request release];
+    }
+    
     btn.tag = indexPath.row;
     
-    label.text = @"白天不懂夜的黑";
+    label.text = model.name;
 
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
@@ -733,6 +772,14 @@
 -(void)btnClick:(UIButton *)btn
 {
     NSLog(@"点击了第%d个", btn.tag);
+    SearchResultModel *model = self.searchArray[btn.tag];
+    PetInfoViewController *petInfoVC = [[PetInfoViewController alloc] init];
+    petInfoVC.aid = model.aid;
+
+    [self presentViewController:petInfoVC animated:YES completion:^{
+        [petInfoVC release];
+    }];
+    
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -753,8 +800,9 @@
 //    searchBtn.hidden = YES;
     [textField resignFirstResponder];
     if (self.tfString != nil) {
-        [self.searchArray addObject:@"11"];
-        [tv reloadData];
+        [self loadSearchData:textField.text];
+//        [self.searchArray addObject:@"11"];
+//        [tv reloadData];
     }
     return YES;
 }

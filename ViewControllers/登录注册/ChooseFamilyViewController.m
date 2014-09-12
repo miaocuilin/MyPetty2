@@ -55,6 +55,7 @@
     [self getListData];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hidden) name:@"af" object:nil];
+    [USER setObject:@"1" forKey:@"isAdopt"];
 }
 -(void)loadRecommandListData
 {
@@ -411,9 +412,10 @@
     NSLog(@"join-%d", button.tag-200);
     
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithStatus:@"加入中..."];
     
-    if ([ControllerManager getSID]) {
+    if ([ControllerManager getIsSuccess]) {
+        [MMProgressHUD showWithStatus:@"加入中..."];
+
         PetInfoModel * model = self.limitDataArray[button.tag-200];
         NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", model.aid];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", JOINFAMILYAPI, model.aid, [MyMD5 md5:code], [ControllerManager getSID]];

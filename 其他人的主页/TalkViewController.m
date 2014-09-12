@@ -110,40 +110,40 @@
     [_requestSend startAsynchronous];
 }
 
--(void)createFakeNavigation
-{
-    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    [self.view addSubview:navView];
-    
-    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    alphaView.alpha = 0.85;
-    alphaView.backgroundColor = BGCOLOR;
-    [navView addSubview:alphaView];
-    
-    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
-    [navView addSubview:backImageView];
-    
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
-    backBtn.showsTouchWhenHighlighted = YES;
-    //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
-    [navView addSubview:backBtn];
-    
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"对话"];
-    titleLabel.font = [UIFont boldSystemFontOfSize:17];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    [navView addSubview:titleLabel];
-    
-    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(320-31, 33, 18, 16) ImageName:@"5-5.png"];
-    [navView addSubview:searchImageView];
-    
-    UIView * line0 = [MyControl createViewWithFrame:CGRectMake(0, 63, 320, 1)];
-    line0.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.1];
-    [navView addSubview:line0];
-}
-- (void)backBtnClick
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
+//-(void)createFakeNavigation
+//{
+//    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+//    [self.view addSubview:navView];
+//    
+//    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+//    alphaView.alpha = 0.85;
+//    alphaView.backgroundColor = BGCOLOR;
+//    [navView addSubview:alphaView];
+//    
+//    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+//    [navView addSubview:backImageView];
+//    
+//    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+//    backBtn.showsTouchWhenHighlighted = YES;
+//    //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+//    [navView addSubview:backBtn];
+//    
+//    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"对话"];
+//    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+//    titleLabel.textAlignment = NSTextAlignmentCenter;
+//    [navView addSubview:titleLabel];
+//    
+//    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(320-31, 33, 18, 16) ImageName:@"5-5.png"];
+//    [navView addSubview:searchImageView];
+//    
+//    UIView * line0 = [MyControl createViewWithFrame:CGRectMake(0, 63, 320, 1)];
+//    line0.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.1];
+//    [navView addSubview:line0];
+//}
+//- (void)backBtnClick
+//{
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
 //-(void)createNavigation
 //{
 //    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"talkHeader" ofType:@"png"]] forBarMetrics:UIBarMetricsDefault];

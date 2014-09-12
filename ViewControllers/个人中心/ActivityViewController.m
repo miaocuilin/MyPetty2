@@ -168,6 +168,7 @@
     //跳转到活动详情页
     ActivityDetailViewController * vc = [[ActivityDetailViewController alloc] init];
     vc.listModel = self.dataArray[indexPath.row];
+    
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }

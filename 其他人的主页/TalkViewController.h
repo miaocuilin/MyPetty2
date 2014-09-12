@@ -20,7 +20,6 @@
     
     ASIFormDataRequest * _request;
     ASIFormDataRequest * _requestSend;
-    UIView * navView;
 
 }
 @property (nonatomic,copy)NSString * friendName;

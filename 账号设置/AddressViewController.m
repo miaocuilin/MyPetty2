@@ -47,14 +47,19 @@
     NSString *addressAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ADDRESSAPI,[USER objectForKey:@"aid" ],sig,[ControllerManager getSID]];
     NSLog(@"获取地址信息：%@",addressAPI);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:addressAPI Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"收货地址信息数据：%@",load.dataDict);
+        NSLog(@"data:%@",[[[load.dataDict objectForKey:@"data"] objectAtIndex:0] class]);
         if (isFinish) {
-            NSLog(@"收货地址信息数据：%@",load.dataDict);
-            dataDict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-            receiveName = [dataDict objectForKey:@"name"];
-            telphone = [dataDict objectForKey:@"telephone"];
-            codeNumber = [dataDict objectForKey:@"zipcode"];
-            area = [dataDict objectForKey:@"region"];
-            detailarea = [dataDict objectForKey:@"building"];
+            if ([[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSDictionary class]]) {
+                dataDict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                receiveName = [dataDict objectForKey:@"name"];
+                telphone = [dataDict objectForKey:@"telephone"];
+                codeNumber = [dataDict objectForKey:@"zipcode"];
+                area = [dataDict objectForKey:@"region"];
+                detailarea = [dataDict objectForKey:@"building"];
+                NSLog(@"111");
+            }
+            
             [self createBody];
 
         }
@@ -78,8 +83,6 @@
         }
 
     }
-    
-    
 //    宠物地址：animal/addressApi&aid=
     NSLog(@"%@-%@-%@-%@-%@",receiveName,telphone,codeNumber,area,detailarea);
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
@@ -131,11 +134,9 @@
     [[IQKeyboardManager sharedManager] setEnable:YES];
     [[IQKeyboardManager sharedManager] setKeyboardDistanceFromTextField:20];
 	//Enabling autoToolbar behaviour. If It is set to NO. You have to manually create UIToolbar for keyboard.
-	[[IQKeyboardManager sharedManager] setEnableAutoToolbar:NO];
-    
+	[[IQKeyboardManager sharedManager] setEnableAutoToolbar:NO];    
 	//Setting toolbar behavious to IQAutoToolbarBySubviews. Set it to IQAutoToolbarByTag to manage previous/next according to UITextField's tag property in increasing order.
 	[[IQKeyboardManager sharedManager] setToolbarManageBehaviour:IQAutoToolbarBySubviews];
-    
     //Resign textField if touched outside of UITextField/UITextView.
     [[IQKeyboardManager sharedManager] setShouldResignOnTouchOutside:YES];
 }

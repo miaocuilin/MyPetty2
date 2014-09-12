@@ -168,8 +168,8 @@
     #define TOPICINFOAPI @"http://54.199.161.210:8001/index.php?r=topic/infoApi&topic_id="
 
     //最热
-    #define POPULARAPI @"http://54.199.161.210/dc/index.php?r=topic/popularApi&topic_id="
-    #define POPULARAPI2 @"http://54.199.161.210/dc/index.php?r=topic/popularApi&topic_id=%@&img_id="
+    #define POPULARAPI @"http://54.199.161.210:8001/index.php?r=topic/popularApi&topic_id="
+    #define POPULARAPI2 @"http://54.199.161.210:8001/index.php?r=topic/popularApi&topic_id=%@&img_id="
 
     //最新
     #define NEWESTAPI @"http://54.199.161.210/dc/index.php?r=topic/newestApi&topic_id="
@@ -233,4 +233,6 @@
     #define CONTRIBUTIONAPI @"http://54.199.161.210:8001/index.php?r=rank/contributionRankApi&aid="
     //
     #define SHOPITEMSAPI @"http://54.199.161.210:8001/index.php?r=item/listApi&code="
+    //搜索  animal/searchApi&name=[&aid=]
+#define SEARCHAPI @"http://54.199.161.210:8001/index.php?r=animal/searchApi"
 #endif

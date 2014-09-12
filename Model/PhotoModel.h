@@ -27,4 +27,5 @@
 @property(nonatomic,copy)NSString * name;
 @property(nonatomic,copy)NSString * tx;
 @property(nonatomic,copy)NSString * aid;
+@property(nonatomic,copy)NSString * type;
 @end

@@ -468,6 +468,10 @@
 		602EB10319B8626100B4110B /* zan_gift.png in Resources */ = {isa = PBXBuildFile; fileRef = 602EB0FC19B8626100B4110B /* zan_gift.png */; };
 		60320BB319B95E190094A6E0 /* UserInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60320BB219B95E190094A6E0 /* UserInfoModel.m */; };
 		60320BB619B994F40094A6E0 /* UserPetListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60320BB519B994F40094A6E0 /* UserPetListModel.m */; };
+		6032630419C1A35A0013A6AA /* FAQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6032630319C1A35A0013A6AA /* FAQViewController.m */; };
+		6032630619C1AE750013A6AA /* FAQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6032630519C1AE750013A6AA /* FAQ.plist */; };
+		6032630919C1C94C0013A6AA /* FAQCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6032630819C1C94C0013A6AA /* FAQCell.m */; };
+		6032630B19C1CAD50013A6AA /* question.png in Resources */ = {isa = PBXBuildFile; fileRef = 6032630A19C1CAD50013A6AA /* question.png */; };
 		6038617719A6ED3500B1312A /* through.png in Resources */ = {isa = PBXBuildFile; fileRef = 6038617619A6ED3500B1312A /* through.png */; };
 		6038617919A6EDB600B1312A /* greenBall.png in Resources */ = {isa = PBXBuildFile; fileRef = 6038617819A6EDB600B1312A /* greenBall.png */; };
 		6038617C19A6EE0A00B1312A /* menu_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 6038617A19A6EE0A00B1312A /* menu_left.png */; };
@@ -1212,6 +1216,12 @@
 		60320BB219B95E190094A6E0 /* UserInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoModel.m; sourceTree = "<group>"; };
 		60320BB419B994F40094A6E0 /* UserPetListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPetListModel.h; sourceTree = "<group>"; };
 		60320BB519B994F40094A6E0 /* UserPetListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserPetListModel.m; sourceTree = "<group>"; };
+		6032630219C1A35A0013A6AA /* FAQViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQViewController.h; sourceTree = "<group>"; };
+		6032630319C1A35A0013A6AA /* FAQViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQViewController.m; sourceTree = "<group>"; };
+		6032630519C1AE750013A6AA /* FAQ.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FAQ.plist; sourceTree = "<group>"; };
+		6032630719C1C94C0013A6AA /* FAQCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQCell.h; sourceTree = "<group>"; };
+		6032630819C1C94C0013A6AA /* FAQCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQCell.m; sourceTree = "<group>"; };
+		6032630A19C1CAD50013A6AA /* question.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = question.png; sourceTree = "<group>"; };
 		6038617619A6ED3500B1312A /* through.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = through.png; sourceTree = "<group>"; };
 		6038617819A6EDB600B1312A /* greenBall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenBall.png; sourceTree = "<group>"; };
 		6038617A19A6EE0A00B1312A /* menu_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_left.png; sourceTree = "<group>"; };
@@ -1848,6 +1858,8 @@
 				606181AD19B1819A009AF63D /* SetDefaultPetViewController.m */,
 				605195CB19B484B3005E9E2C /* AboutViewController.h */,
 				605195CC19B484B3005E9E2C /* AboutViewController.m */,
+				6032630219C1A35A0013A6AA /* FAQViewController.h */,
+				6032630319C1A35A0013A6AA /* FAQViewController.m */,
 			);
 			name = "账号设置";
 			path = "../账号设置";
@@ -1975,6 +1987,7 @@
 				09D9894B1935C08E00C83C4B /* InfoPlist.strings */,
 				09D9894E1935C08E00C83C4B /* main.m */,
 				09D989501935C08E00C83C4B /* MyPetty-Prefix.pch */,
+				6032630519C1AE750013A6AA /* FAQ.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -2173,6 +2186,8 @@
 				603A367B19C080FC0000E0AD /* PlanetAttentionCell.h */,
 				603A367C19C080FC0000E0AD /* PlanetAttentionCell.m */,
 				603A367D19C080FC0000E0AD /* PlanetAttentionCell.xib */,
+				6032630719C1C94C0013A6AA /* FAQCell.h */,
+				6032630819C1C94C0013A6AA /* FAQCell.m */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -2584,6 +2599,7 @@
 		60EC8FA0198B442F00F1781A /* 2014-08-01 */ = {
 			isa = PBXGroup;
 			children = (
+				6032630A19C1CAD50013A6AA /* question.png */,
 				60186DD819B5730C00207ED6 /* defaultPetHead.png */,
 				60186DD919B5730C00207ED6 /* defaultUserHead.png */,
 				605195C419B47038005E9E2C /* about.png */,
@@ -2848,6 +2864,7 @@
 				09D98A8E1935D4E900C83C4B /* 3-6.png in Resources */,
 				091EAD2D194EBCA900B0DE41 /* 19-3.png in Resources */,
 				0979B76E1941C6BF007C36A7 /* README.md in Resources */,
+				6032630B19C1CAD50013A6AA /* question.png in Resources */,
 				096826391936D5A000B0D7A2 /* cat1.jpg in Resources */,
 				6020BD811998B8D5002C74FA /* tool3.png in Resources */,
 				091EAD6F194ECEA200B0DE41 /* bdog4_2.png in Resources */,
@@ -2959,6 +2976,7 @@
 				09F88497195060500053A6D0 /* UMSnsAccountViewController.xib in Resources */,
 				601BB34419AB02050076E051 /* flag.png in Resources */,
 				09C87C801951B0A500F41C6A /* 20-4.png in Resources */,
+				6032630619C1AE750013A6AA /* FAQ.plist in Resources */,
 				60DDF24519AF135100CB3042 /* topic_tfBg.png in Resources */,
 				090872D119739B33004276EF /* talkRight.png in Resources */,
 				0908737F1973B2F2004276EF /* talkLeft.png in Resources */,
@@ -3198,6 +3216,7 @@
 				09176FFF19625E3B002F8502 /* TopicDetailModel.m in Sources */,
 				495FFFEE19AAD38F00976F18 /* ToolTipsViewController.m in Sources */,
 				0908736B1973B2F2004276EF /* MessageCell.m in Sources */,
+				6032630919C1C94C0013A6AA /* FAQCell.m in Sources */,
 				09E2C898193740CE002D9E65 /* ASIDataCompressor.m in Sources */,
 				601716EB198F5ACD001E6DE6 /* SearchFamilyViewController.m in Sources */,
 				09A0B23E195FB4B40085A39B /* ActiveCell.m in Sources */,
@@ -3240,6 +3259,7 @@
 				099D0F001945D246002137CB /* VisibleViewController.m in Sources */,
 				0979B7701941C6BF007C36A7 /* SDWebImageDecoder.m in Sources */,
 				6038618319A71A5600B1312A /* PicDetailViewController.m in Sources */,
+				6032630419C1A35A0013A6AA /* FAQViewController.m in Sources */,
 				091770021962A67D002F8502 /* PublishViewController.m in Sources */,
 				602A880819AD9583004F368C /* UserInfoRankCell.m in Sources */,
 				602A880319AD80AA004F368C /* UserInfoActivityCell.m in Sources */,

@@ -289,6 +289,7 @@
     
     countryCount = 6;
     selectedNum = 2;
+
     /*****************国家循环*******************/
     UIView * view = [[UIView alloc] initWithFrame:CGRectMake(25-3, 0, 176+6, 65)];
 //    view.backgroundColor = [UIColor lightGrayColor];

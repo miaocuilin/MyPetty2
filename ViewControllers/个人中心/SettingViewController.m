@@ -11,6 +11,7 @@
 #import "FeedbackViewController.h"
 #import "SetDefaultPetViewController.h"
 #import "AboutViewController.h"
+#import "FAQViewController.h"
 @interface SettingViewController ()
 
 @end
@@ -243,6 +244,10 @@
     }else if (indexPath.section == 2){
         if (indexPath.row == 0) {
             [self clearData];
+        }else if(indexPath.row == 2){
+            FAQViewController * vc = [[FAQViewController alloc] init];
+            [self presentViewController:vc animated:YES completion:nil];
+            [vc release];
         }else if (indexPath.row == 3) {
             FeedbackViewController *feedBackVC = [[FeedbackViewController alloc] init];
             [self presentViewController:feedBackVC animated:YES completion:^{

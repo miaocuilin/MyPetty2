@@ -10,6 +10,8 @@
 #import "RandomViewController.h"
 #import "FavoriteViewController.h"
 #import "SquareViewController.h"
+#import "PlanetAttentionViewController.h"
+
 #import "PublishViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
@@ -284,7 +286,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         if (isCreated[2] == NO) {
             isCreated[2] = YES;
-            FavoriteViewController * fvc = [[FavoriteViewController alloc] init];
+//            FavoriteViewController * fvc = [[FavoriteViewController alloc] init];
+            PlanetAttentionViewController * fvc = [[PlanetAttentionViewController alloc] init];
             [self addChildViewController:fvc];
             [fvc.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
             [sv addSubview:fvc.view];

@@ -31,6 +31,15 @@
 //{
 //    self.sv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
 //}
+-(void)viewDidAppear:(BOOL)animated
+{
+    isInThisController = YES;
+//    NSLog(@"%f--%f--%f", commentTextView.frame.origin.x, commentBgView.frame.origin.x, commentBgView.frame.origin.y);
+}
+-(void)viewDidDisappear:(BOOL)animated
+{
+    isInThisController = NO;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -45,7 +54,7 @@
     self.txTotalArray = [NSMutableArray arrayWithCapacity:0];
     self.txTypeTotalArray = [NSMutableArray arrayWithCapacity:0];
     
-    [self createIQ];
+//    [self createIQ];
     [self loadData];
     [self createBg];
     [self.view bringSubviewToFront:self.sv];
@@ -67,7 +76,7 @@
 	[[IQKeyboardManager sharedManager] setToolbarManageBehaviour:IQAutoToolbarBySubviews];
     
     //Resign textField if touched outside of UITextField/UITextView.
-    [[IQKeyboardManager sharedManager] setShouldResignOnTouchOutside:YES];
+    [[IQKeyboardManager sharedManager] setShouldResignOnTouchOutside:NO];
 }
 #pragma mark -照片数据加载
 -(void)loadData
@@ -678,6 +687,9 @@
 #pragma mark -键盘监听
 -(void)keyboardWasChange:(NSNotification *)notification
 {
+    if (!isInThisController) {
+        return;
+    }
     float y = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.y;
     if (y == self.view.frame.size.height) {
         return;

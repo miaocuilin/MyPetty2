@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PlanetAttentionViewController : UIViewController
+@interface PlanetAttentionViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+{
+    UIImageView * bgImageView;
+    UITableView * tv;
 
+}
+@property(nonatomic,retain)NSMutableArray * dataArray;
 @end

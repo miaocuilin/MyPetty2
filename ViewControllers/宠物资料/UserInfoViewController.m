@@ -12,6 +12,7 @@
 #import "UserPetListModel.h"
 #import "PetInfoModel.h"
 #import "ChooseFamilyViewController.h"
+#import "TalkViewController.h"
 @interface UserInfoViewController ()
 {
     NSDictionary *headerDict;
@@ -258,7 +259,12 @@
 }
 -(void)sendMessage
 {
-    NSLog(@"sendMessage");
+    NSLog(@"发私信");
+    TalkViewController * vc = [[TalkViewController alloc] init];
+    [self cancelBtnClick];
+    vc.friendName = [headerDict objectForKey:@"name"];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 }
 -(void)cancelBtnClick
 {

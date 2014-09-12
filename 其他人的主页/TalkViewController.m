@@ -24,10 +24,10 @@
     }
     return self;
 }
--(void)viewWillAppear:(BOOL)animated
-{
-    [UIApplication sharedApplication].statusBarStyle = 0;
-}
+//-(void)viewWillAppear:(BOOL)animated
+//{
+//    [UIApplication sharedApplication].statusBarStyle = 0;
+//}
 
 - (void)viewDidLoad
 {
@@ -44,6 +44,52 @@
     [self talkListData];
     [self talkSendMessageData];
 }
+-(void)createBg
+{
+    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    [self.view addSubview:bgImageView];
+    //    self.bgImageView.backgroundColor = [UIColor redColor];
+    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+    NSLog(@"%@", filePath);
+    NSData * data = [NSData dataWithContentsOfFile:filePath];
+    //    NSLog(@"%@", data);
+    UIImage * image = [UIImage imageWithData:data];
+    bgImageView.image = image;
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+    [self.view addSubview:tempView];
+}
+-(void)createFakeNavigation
+{
+    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    [self.view addSubview:navView];
+    
+    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    alphaView.alpha = 0.85;
+    alphaView.backgroundColor = BGCOLOR;
+    [navView addSubview:alphaView];
+    
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+    [navView addSubview:backImageView];
+    
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    backBtn.showsTouchWhenHighlighted = YES;
+    [navView addSubview:backBtn];
+    
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"喵喵咪咪"];
+    if (!([self.friendName isEqualToString:@""] || self.friendName == nil)) {
+        titleLabel.text = self.friendName;
+    }
+    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [navView addSubview:titleLabel];
+}
+-(void)backBtnClick
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)talkListData
 {
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
@@ -133,7 +179,7 @@
 #pragma mark - tableView
 -(void)createTableView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-[MyControl isIOS7]-40) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40) style:UITableViewStylePlain];
     tv.separatorStyle = UITableViewCellSeparatorStyleNone;
     tv.allowsSelection = NO;
 //    UIImageView * backImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chat_bg_default.jpg"]];
@@ -144,24 +190,27 @@
     tv.dataSource = self;
     [self.view addSubview:tv];
     
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    tv.tableHeaderView = tempView;
+    
     UIButton * tvBgButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, tv.frame.size.width, tv.frame.size.height) ImageName:@"" Target:self Action:@selector(hideKeyboard) Title:nil];
     [tv addSubview:tvBgButton];
     
     //发送栏
-    commentBgView = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height-[MyControl isIOS7]-40, 320, 40)];
-    commentBgView.backgroundColor = [UIColor colorWithRed:248/255.0 green:248/255.0 blue:248/255.0 alpha:1];
-    [self.view addSubview:commentBgView];
+    commentBgView2 = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height-40, 320, 40)];
+    commentBgView2.backgroundColor = [UIColor colorWithRed:248/255.0 green:248/255.0 blue:248/255.0 alpha:1];
+    [self.view addSubview:commentBgView2];
     
     tf = [MyControl createTextFieldWithFrame:CGRectMake(5, 5, 250, 30) placeholder:@"发私信" passWord:NO leftImageView:nil rightImageView:nil Font:15];
     tf.returnKeyType = UIReturnKeySend;
     tf.delegate = self;
     tf.layer.cornerRadius = 5;
     tf.layer.masksToBounds = YES;
-    [commentBgView addSubview:tf];
+    [commentBgView2 addSubview:tf];
     
     sendButton = [MyControl createButtonWithFrame:CGRectMake(260, 10, 55, 20) ImageName:@"" Target:self Action:@selector(sendButtonClick) Title:@"发送"];
     [sendButton setTitleColor:BGCOLOR forState:UIControlStateNormal];
-    [commentBgView addSubview:sendButton];
+    [commentBgView2 addSubview:sendButton];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     
@@ -220,7 +269,7 @@
     [UIView animateWithDuration:[note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
 //        self.view.transform = CGAffineTransformMakeTranslation(0, ty);
         tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height-40+ty);
-        commentBgView.frame = CGRectMake(0, self.view.frame.size.height-40+ty, 320, 40);
+        commentBgView2.frame = CGRectMake(0, self.view.frame.size.height-40+ty, 320, 40);
         if (tv.contentSize.height>tv.frame.size.height) {
             tv.contentOffset = CGPointMake(0, tv.contentSize.height-tv.frame.size.height);
         }
@@ -234,7 +283,7 @@
 //        self.view.transform = CGAffineTransformIdentity;
         NSLog(@"%f", self.view.frame.size.height);
         tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height-40);
-        commentBgView.frame = CGRectMake(0, self.view.frame.size.height-40, 320, 40);
+        commentBgView2.frame = CGRectMake(0, self.view.frame.size.height-40, 320, 40);
         if (tv.contentSize.height>tv.frame.size.height) {
             tv.contentOffset = CGPointMake(0, tv.contentSize.height-tv.frame.size.height);
         }

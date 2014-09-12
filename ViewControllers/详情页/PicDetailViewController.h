@@ -35,6 +35,9 @@
     int txCount;
     //判断改宠物是猫还是狗
     BOOL isMi;
+    
+    //判断是否在当前控制器，来限制键盘变化通知
+    BOOL isInThisController;
 }
 @property (retain, nonatomic) UIImageView * bgImageView;
 @property (retain, nonatomic) IBOutlet UIScrollView *sv;

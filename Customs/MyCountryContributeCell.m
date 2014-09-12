@@ -63,9 +63,9 @@
     self.location.text =[ControllerManager returnProvinceAndCityWithCityNum:model.city];
     self.contribution.text = model.t_contri;
     if ([model.gender intValue]==1) {
-        sex.image = [UIImage imageNamed:@"man.png"];
+        self.sex.image = [UIImage imageNamed:@"man.png"];
     }else{
-        sex.image = [UIImage imageNamed:@"woman.png"];
+        self.sex.image = [UIImage imageNamed:@"woman.png"];
     }
     NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
     NSLog(@"本地用户头像路径：%@", txUserFilePath);

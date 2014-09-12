@@ -20,10 +20,10 @@
     
     ASIFormDataRequest * _request;
     ASIFormDataRequest * _requestSend;
-    UIView * navView;
 
 }
 @property (nonatomic,copy)NSString * friendName;
+@property (nonatomic,copy)NSString * usr_id;
 
 @property (nonatomic,retain)NSMutableArray * dataArray;
 @property (nonatomic,retain)NSMutableArray * userDataArray;

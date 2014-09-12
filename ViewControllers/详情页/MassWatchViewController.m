@@ -10,6 +10,7 @@
 #import "MassWatchCell.h"
 #import "UserInfoModel.h"
 #import "TalkViewController.h"
+#import "UserInfoViewController.h"
 @interface MassWatchViewController ()
 
 @end
@@ -117,9 +118,21 @@
     [cell configUI:self.dataArray[indexPath.row]];
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
+    
+    cell.jumpToUserInfo = ^(UIImage * image, NSString * usr_id){
+        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+        vc.usr_id = usr_id;
+        vc.modalTransitionStyle = 2;
+        vc.petHeadImage = image;
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    };
+    
     cell.cellClick = ^(int num){
         NSLog(@"跳转到第%d个国家", num);
         TalkViewController *talk = [[TalkViewController alloc] init];
+        talk.friendName = [self.dataArray[num] name];
+        talk.usr_id = [self.dataArray[num] usr_id];
         [self presentViewController:talk animated:YES completion:nil];
     };
     return cell;

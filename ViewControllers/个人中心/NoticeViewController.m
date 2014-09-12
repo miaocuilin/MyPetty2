@@ -42,9 +42,9 @@
     [self createNavgation];
     [self createDivision];
     
-
-    [self loadMessageData];
-    [self loadSystemData];
+    [self loadData];
+//    [self loadMessageData];
+//    [self loadSystemData];
     [self createAlphaBtn];
 }
 /****************************/
@@ -69,6 +69,17 @@
 }
 
 #pragma mark -
+-(void)loadData
+{
+    NSString * url = [NSString stringWithFormat:@"%@%@", NOTIFYAPI, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+        }
+    }];
+    [request release];
+}
 -(void)loadMessageData
 {
     NSString * code = [NSString stringWithFormat:@"is_system=%ddog&cat", 0];

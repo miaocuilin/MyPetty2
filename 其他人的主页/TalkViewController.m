@@ -41,9 +41,16 @@
     [self createBg];
     [self createTableView];
     [self createFakeNavigation];
-
-    [self talkListData];
-    [self talkSendMessageData];
+    
+    [self loadNewMessageData];
+//    [self talkListData];
+//    [self talkSendMessageData];
+}
+#pragma mark -
+-(void)loadNewMessageData
+{
+    //请求一个API，传usr_id，获取talk_id，根据talk_id去获取本地历史记录以及新的消息存到本地。
+    //聊天里10秒刷一次，侧边栏在侧边栏弹出的时候刷新。
 }
 -(void)createBg
 {
@@ -99,51 +106,61 @@
 }
 - (void)talkSendMessageData
 {
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat",[USER objectForKey:@"usr_id"]]];
-    NSString *sendString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=talk/sendMsgApi&usr_id=%@&sig=%@&SID=%@",[USER objectForKey:@"usr_id"],sig,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat",self.usr_id]];
+    NSString *sendString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=talk/sendMsgApi&usr_id=%@&sig=%@&SID=%@", self.usr_id, sig, [ControllerManager getSID]];
     _requestSend = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:sendString]];
     _requestSend.requestMethod=@"POST";
     _requestSend.timeOutSeconds = 20;
 
-    [_requestSend setPostValue:@"11111" forKey:@"msg"];
+    [_requestSend setPostValue:@"hello,tom." forKey:@"msg"];
     [_requestSend setDelegate:self];
     [_requestSend startAsynchronous];
 }
-
--(void)createFakeNavigation
+-(void)requestFinished:(ASIHTTPRequest *)request
 {
-    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    [self.view addSubview:navView];
-    
-    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    alphaView.alpha = 0.85;
-    alphaView.backgroundColor = BGCOLOR;
-    [navView addSubview:alphaView];
-    
-    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
-    [navView addSubview:backImageView];
-    
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
-    backBtn.showsTouchWhenHighlighted = YES;
-    //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
-    [navView addSubview:backBtn];
-    
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"对话"];
-    titleLabel.font = [UIFont boldSystemFontOfSize:17];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    [navView addSubview:titleLabel];
-    
-    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(320-31, 33, 18, 16) ImageName:@"5-5.png"];
-    [navView addSubview:searchImageView];
-    
-    UIView * line0 = [MyControl createViewWithFrame:CGRectMake(0, 63, 320, 1)];
-    line0.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.1];
-    [navView addSubview:line0];
+    NSLog(@"success");
+    StartLoading;
+    [MMProgressHUD dismissWithSuccess:@"发送成功" title:nil afterDelay:0.5];
+    NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
 }
-- (void)backBtnClick
+-(void)requestFailed:(ASIHTTPRequest *)request
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    NSLog(@"failed");
 }
+//-(void)createFakeNavigation
+//{
+//    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+//    [self.view addSubview:navView];
+//    
+//    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+//    alphaView.alpha = 0.85;
+//    alphaView.backgroundColor = BGCOLOR;
+//    [navView addSubview:alphaView];
+//    
+//    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+//    [navView addSubview:backImageView];
+//    
+//    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+//    backBtn.showsTouchWhenHighlighted = YES;
+//    //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+//    [navView addSubview:backBtn];
+//    
+//    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"对话"];
+//    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+//    titleLabel.textAlignment = NSTextAlignmentCenter;
+//    [navView addSubview:titleLabel];
+//    
+//    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(320-31, 33, 18, 16) ImageName:@"5-5.png"];
+//    [navView addSubview:searchImageView];
+//    
+//    UIView * line0 = [MyControl createViewWithFrame:CGRectMake(0, 63, 320, 1)];
+//    line0.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.1];
+//    [navView addSubview:line0];
+//}
+//- (void)backBtnClick
+//{
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
 //-(void)createNavigation
 //{
 //    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"talkHeader" ofType:@"png"]] forBarMetrics:UIBarMetricsDefault];
@@ -246,7 +263,6 @@
     
     // 设置数据
     cell.messageFrame = self.dataArray[indexPath.row];
-    
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -303,13 +319,14 @@
     [ControllerManager startLoading:@"发送中..."];
     
     // 5、上传信息
-    [self postData];
+//    [self postData];
+    [self talkSendMessageData];
     
     // 1、增加数据源
     NSString *content = textField.text;
     NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
     NSDate *date = [NSDate date];
-    fmt.dateFormat = @"MM-dd"; // @"yyyy-MM-dd HH:mm:ss"
+    fmt.dateFormat = @"yyyy-MM-dd HH:mm"; // @"yyyy-MM-dd HH:mm:ss"
     NSString *time = [fmt stringFromDate:date];
     [fmt release];
     [self addMessageWithContent:content time:time];
@@ -334,6 +351,7 @@
     msg.icon = [USER objectForKey:@"tx"];
     msg.type = MessageTypeMe;
     mf.message = msg;
+//    mf.showTime = YES;
     
     [self.dataArray addObject:mf];
     //这两个不能释放，后面还要用到，都则会崩溃
@@ -358,18 +376,18 @@
     _request.delegate = self;
     [_request startAsynchronous];
 }
--(void)requestFinished:(ASIHTTPRequest *)request
-{
-    [ControllerManager loadingSuccess:@"发送成功"];
-//    [request.responseData]
-    NSError *error;
-    id responseData = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:&error];
-    NSLog(@"data:%@",responseData);
-}
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    [ControllerManager loadingFailed:@"发送失败"];
-}
+//-(void)requestFinished:(ASIHTTPRequest *)request
+//{
+//    [ControllerManager loadingSuccess:@"发送成功"];
+////    [request.responseData]
+//    NSError *error;
+//    id responseData = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:&error];
+//    NSLog(@"data:%@",responseData);
+//}
+//-(void)requestFailed:(ASIHTTPRequest *)request
+//{
+//    [ControllerManager loadingFailed:@"发送失败"];
+//}
 - (void)didReceiveMemoryWarning
 {
     

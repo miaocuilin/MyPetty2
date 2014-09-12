@@ -40,13 +40,13 @@
 }
 -(void)configUIWithQue:(NSString *)que Ans:(NSString *)ans
 {
-    NSLog(@"%@--%@", que, ans);
+//    NSLog(@"%@--%@", que, ans);
     queLabel.text = que;
     
-    if ([ans rangeOfString:@"\n"].location != NSNotFound) {
-        NSArray * array = [ans componentsSeparatedByString:@"\n"];
+    if ([ans rangeOfString:@"&"].location != NSNotFound) {
+        NSArray * array = [ans componentsSeparatedByString:@"&"];
         if (array.count != 0) {
-            ans = [NSString stringWithFormat:@"%@\n%@", array[0], array[1]];
+            ans = [NSString stringWithFormat:@"%@\n%@\n%@", array[0], array[1], array[2]];
         }
     }
     CGRect rect = ansLabel.frame;

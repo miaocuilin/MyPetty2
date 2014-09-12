@@ -10,7 +10,7 @@
 #import "CountryMembersModel.h"
 @interface MyCountryContributeCell : UITableViewCell
 {
-    UIImageView * sex;
+//    UIImageView * sex;
     NSString *usr_id;
 }
 @property (retain, nonatomic) IBOutlet UIImageView *circleBg;

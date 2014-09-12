@@ -186,7 +186,7 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             //只包含img_id和图片的url
-            NSLog(@"宇宙广场数据:%@", load.dataDict);
+//            NSLog(@"宇宙广场数据:%@", load.dataDict);
             [self.dataArray removeAllObjects];
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {

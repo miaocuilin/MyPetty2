@@ -465,10 +465,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 #pragma mark - collectionView
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    NSLog(@"%f",scrollView.contentOffset.y);
+//    NSLog(@"%f",scrollView.contentOffset.y);
     int offset = (int)scrollView.contentOffset.y;
 //    if (offset >= 400) {
 //        segmentView2.hidden = NO;
@@ -546,7 +547,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        [quiltView footerBeginRefreshing];
 //    }
     imageview.contentMode = UIViewContentModeScaleAspectFill;
-//    [cell addSubview:imageview];
+    [cell addSubview:imageview];
 
     return cell;
 }

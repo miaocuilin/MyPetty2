@@ -34,7 +34,7 @@
     UIButton * searchBtn;
     UITableView * tv;
     
-    ClickImage * headImageView;
+    UIButton * headImageBtn;
 }
 @property (nonatomic,copy)NSString * tfString;
 

@@ -20,15 +20,15 @@
     // 0、获取屏幕宽度
     CGFloat screenW = [UIScreen mainScreen].bounds.size.width;
     // 1、计算时间的位置
-    if (_showTime){
-        
+//    if (_showTime){
+    
         CGFloat timeY = kMargin;
 //        CGSize timeSize = [_message.time sizeWithAttributes:@{UIFontDescriptorSizeAttribute: @"16"}];
         CGSize timeSize = [_message.time sizeWithFont:kTimeFont];
         NSLog(@"----%@", NSStringFromCGSize(timeSize));
         CGFloat timeX = (screenW - timeSize.width) / 2;
         _timeF = CGRectMake(timeX, timeY, timeSize.width + kTimeMarginW, timeSize.height + kTimeMarginH);
-    }
+//    }
     // 2、计算头像位置
     CGFloat iconX = kMargin;
     // 2.1 如果是自己发得，头像在右边

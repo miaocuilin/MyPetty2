@@ -74,6 +74,8 @@
 }
 -(void)configUI:(UserInfoModel *)model
 {
+    self.usr_id = model.usr_id;
+    
     if ([model.gender intValue] == 2) {
         self.sexView.image = [UIImage imageNamed:@"woman.png"];
     }
@@ -113,6 +115,7 @@
 - (void)otherHome:(UIButton *)sender
 {
     NSLog(@"跳转到其他人的主页");
+    self.jumpToUserInfo(self.headButton.currentBackgroundImage, self.usr_id);
 }
 
 - (void)TalkAction:(UIButton *)sender

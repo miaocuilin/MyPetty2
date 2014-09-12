@@ -17,6 +17,11 @@
 @property (nonatomic, assign) BOOL tapGestureEnabled;
 @property (nonatomic, assign) BOOL panGestureEnabled;
 
+/****************************/
+@property(nonatomic,retain)NSMutableArray * userPetListArray;
+//下载完宠物列表新数据
+@property(nonatomic,copy)void (^refreshData)(void);
+/****************************/
 - (id)initWithContentController:(UIViewController*)contentController
                  menuController:(UIViewController*)menuController;
 
@@ -34,4 +39,6 @@
 - (void)click;
 
 -(id)returnContentController;
+
+
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "JDMenuViewController.h"
+#import "PetInfoViewController.h"
 #define MENUCOLOR [UIColor colorWithRed:125/255.0 green:60/255.0 blue:45/255.0 alpha:1]
 //各个国家头像之间的间隔 (176-40*3)/2+40
 #define SPACE 68
@@ -21,6 +22,7 @@
 #import "MainViewController.h"
 #import "ToolTipsViewController.h"
 #import "GiftShopViewController.h"
+#import "UserInfoViewController.h"
 @interface JDMenuViewController ()
 
 @end
@@ -45,6 +47,71 @@
     
     [self createBg];
     [self createUI];
+    
+    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+    sideMenu.refreshData = ^(){
+        [self refreshCountryList];
+    };
+}
+-(void)refreshCountryList
+{
+    UIView * view = (UIView *)[self.view viewWithTag:99];
+    for (UIView * subview in view.subviews) {
+        [subview removeFromSuperview];
+    }
+    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+    countryCount = sideMenu.userPetListArray.count;
+    
+    //清空数据
+    [self.countryArray removeAllObjects];
+    for (int i=0; i<sideMenu.userPetListArray.count; i++) {
+        UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = CGRectMake(3+i*SPACE, 12.5, 40, 40);
+        button.layer.cornerRadius = 20;
+        button.layer.masksToBounds = YES;
+        [button setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
+        /**************************/
+        if (!([[sideMenu.userPetListArray[i] tx] isKindOfClass:[NSNull class]] || [[sideMenu.userPetListArray[i] tx] length]==0)) {
+            NSString * docDir = DOCDIR;
+            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [sideMenu.userPetListArray[i] tx]]];
+            //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+            if (image) {
+                [button setBackgroundImage:image forState:UIControlStateNormal];
+                //            headImageView.image = image;
+            }else{
+                //下载头像
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [sideMenu.userPetListArray[i] tx]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        [button setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                        //                    headImageView.image = load.dataImage;
+                        NSString * docDir = DOCDIR;
+                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [sideMenu.userPetListArray[i] tx]]];
+                        [load.data writeToFile:txFilePath atomically:YES];
+                    }else{
+                        NSLog(@"头像下载失败");
+                    }
+                }];
+                [request release];
+            }
+        }
+        
+        /**************************/
+        [button addTarget:self action:@selector(countryButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        button.tag = 100+i;
+        [view addSubview:button];
+        
+        [self.countryArray addObject:button];
+        
+        if ([[sideMenu.userPetListArray[i] aid] isEqualToString:[USER objectForKey:@"aid"]]) {
+            selectedNum = i+1;
+            //王冠
+//            UIButton * button = self.countryArray[selectedNum-1];
+            crown = [MyControl createImageViewWithFrame:CGRectMake(button.frame.origin.x+25, button.frame.origin.y+27, 18, 18) ImageName:@"crown.png"];
+            [view addSubview:crown];
+        }
+    }
+    
 }
 #pragma mark - 界面搭建
 -(void)createBg
@@ -143,12 +210,13 @@
     headBg2.backgroundColor = [UIColor whiteColor];
     [sv3 addSubview:headBg2];
     
-    headImageView = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
-    headImageView.canClick = YES;
-    headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
-    headImageView.layer.cornerRadius = 31;
-    headImageView.layer.masksToBounds = YES;
-    [headBg2 addSubview:headImageView];
+    headImageBtn = [MyControl createButtonWithFrame:CGRectMake(4, 4, 62, 62) ImageName:@"defaultUserHead.png" Target:self Action:@selector(headImageBtnClick) Title:nil];
+//    headImageView = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
+//    headImageView.canClick = YES;
+//    headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+    headImageBtn.layer.cornerRadius = 31;
+    headImageBtn.layer.masksToBounds = YES;
+    [headBg2 addSubview:headImageBtn];
     /**************************/
     if (!([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
         NSString * docDir = DOCDIR;
@@ -156,12 +224,14 @@
         //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
         UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
         if (image) {
-            headImageView.image = image;
+            [headImageBtn setBackgroundImage:image forState:UIControlStateNormal];
+//            headImageView.image = image;
         }else{
             //下载头像
             httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
-                    headImageView.image = load.dataImage;
+                    [headImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                    headImageView.image = load.dataImage;
                     NSString * docDir = DOCDIR;
                     NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
                     [load.data writeToFile:txFilePath atomically:YES];
@@ -185,24 +255,24 @@
     [sv3 addSubview:exp];
     
     //性别，姓名，官职
-    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(25, 140, 28/2, 34/2) ImageName:@"man.png"];
+    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(25, 140+5, 28/2, 34/2) ImageName:@"man.png"];
     if ([[USER objectForKey:@"gender"] intValue] == 2) {
         sex.image = [UIImage imageNamed:@"woman.png"];
     }
     [sv3 addSubview:sex];
     
-    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+14+5, sex.frame.origin.y, 100, 20) Font:17 Text:[USER objectForKey:@"name"]];
+    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+14+10, sex.frame.origin.y, 100, 20) Font:17 Text:[USER objectForKey:@"name"]];
     [sv3 addSubview:name];
     
     //官职  225menu总宽
-    UILabel * kingName = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:[NSString stringWithFormat:@"%@的王国", [USER objectForKey:@"a_name"]]];
-    [sv3 addSubview:kingName];
+//    UILabel * kingName = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:[NSString stringWithFormat:@"%@国", [USER objectForKey:@"a_name"]]];
+//    [sv3 addSubview:kingName];
     
-    UILabel * position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20+20, 125, 20) Font:14 Text:@"--祭司"];
+    UILabel * position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:[NSString stringWithFormat:@"%@国大祭司", [USER objectForKey:@"a_name"]]];
     [sv3 addSubview:position];
     
     //金币
-    UIImageView * gold = [MyControl createImageViewWithFrame:CGRectMake(170, sex.frame.origin.y, 22, 22) ImageName:@"gold.png"];
+    UIImageView * gold = [MyControl createImageViewWithFrame:CGRectMake(170, sex.frame.origin.y-2, 22, 22) ImageName:@"gold.png"];
     [sv3 addSubview:gold];
     
     UILabel * goldLabel = [MyControl createLabelWithFrame:CGRectMake(151, gold.frame.origin.y+23, 60, 20) Font:14 Text:[USER objectForKey:@"gold"]];
@@ -294,6 +364,7 @@
     UIView * view = [[UIView alloc] initWithFrame:CGRectMake(25-3, 0, 176+6, 65)];
 //    view.backgroundColor = [UIColor lightGrayColor];
     view.clipsToBounds = YES;
+    view.tag = 99;
     [countryBg addSubview:view];
     
     for (int i=0; i<countryCount; i++) {
@@ -439,6 +510,15 @@
     tv.separatorStyle = 0;
     [sv addSubview:tv];
 }
+#pragma mark -
+-(void)headImageBtnClick
+{
+    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+    vc.usr_id = [USER objectForKey:@"usr_id"];
+    vc.modalTransitionStyle = 2;
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
+}
 -(void)searchBtnClick
 {
     if ([searchBtn.titleLabel.text isEqualToString:@"取消"]) {
@@ -555,7 +635,13 @@
 }
 -(void)countryButtonClick:(UIButton *)btn
 {
-    NSLog(@"您点击了第%d个国家", btn.tag-100+1);
+    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+    NSLog(@"您点击了第%d个国家,名称是:%@", btn.tag-100+1, [sideMenu.userPetListArray[btn.tag-100] name]);
+    
+    PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+    vc.aid = [sideMenu.userPetListArray[btn.tag-100] aid];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 //    selectedNum = btn.tag-100+1;
 //    UIButton * button = self.countryArray[btn.tag-100];
 //    crown.frame = CGRectMake(button.frame.origin.x+25, button.frame.origin.y+27, 18, 18);

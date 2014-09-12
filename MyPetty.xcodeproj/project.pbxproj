@@ -539,6 +539,7 @@
 		60DDF24C19AF196900CB3042 /* topicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60DDF24B19AF196900CB3042 /* topicCell.m */; };
 		60DDF24E19AF21A300CB3042 /* leftArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 60DDF24D19AF21A300CB3042 /* leftArrow.png */; };
 		60DDF25119AF25D700CB3042 /* GiftShopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60DDF25019AF25D700CB3042 /* GiftShopViewController.m */; };
+		60DFFDB319C2F67A00AE9E78 /* chat_timeline_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 60DFFDB219C2F67A00AE9E78 /* chat_timeline_bg.png */; };
 		60EC8F9F198B429F00F1781A /* ChoseLoadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60EC8F9E198B429F00F1781A /* ChoseLoadViewController.m */; };
 		60EC8FA8198B444300F1781A /* 1-a.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EC8FA1198B444300F1781A /* 1-a.png */; };
 		60EC8FAA198B444300F1781A /* 1-c.png in Resources */ = {isa = PBXBuildFile; fileRef = 60EC8FA3198B444300F1781A /* 1-c.png */; };
@@ -1306,6 +1307,7 @@
 		60DDF24D19AF21A300CB3042 /* leftArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leftArrow.png; sourceTree = "<group>"; };
 		60DDF24F19AF25D700CB3042 /* GiftShopViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftShopViewController.h; sourceTree = "<group>"; };
 		60DDF25019AF25D700CB3042 /* GiftShopViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftShopViewController.m; sourceTree = "<group>"; };
+		60DFFDB219C2F67A00AE9E78 /* chat_timeline_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chat_timeline_bg.png; sourceTree = "<group>"; };
 		60EC8F9D198B429F00F1781A /* ChoseLoadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoseLoadViewController.h; sourceTree = "<group>"; };
 		60EC8F9E198B429F00F1781A /* ChoseLoadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChoseLoadViewController.m; sourceTree = "<group>"; };
 		60EC8FA1198B444300F1781A /* 1-a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1-a.png"; sourceTree = "<group>"; };
@@ -1402,6 +1404,7 @@
 		090873531973B2F2004276EF /* QQ */ = {
 			isa = PBXGroup;
 			children = (
+				60DFFDB219C2F67A00AE9E78 /* chat_timeline_bg.png */,
 				090873641973B2F2004276EF /* icon02.png */,
 				090873671973B2F2004276EF /* talkLeft.png */,
 				090873681973B2F2004276EF /* talkRight.png */,
@@ -3044,6 +3047,7 @@
 				091EAD78194ECEA200B0DE41 /* bother3_1.png in Resources */,
 				09F88491195060500053A6D0 /* UMSCommentDetailController.xib in Resources */,
 				600A5EC319A97A5200FB4358 /* detail_gift.png in Resources */,
+				60DFFDB319C2F67A00AE9E78 /* chat_timeline_bg.png in Resources */,
 				09D98A7A1935D4E900C83C4B /* 14-11.png in Resources */,
 				60D62A8719A4BF6B00224976 /* gold.png in Resources */,
 				6038617D19A6EE0A00B1312A /* menu_right.png in Resources */,

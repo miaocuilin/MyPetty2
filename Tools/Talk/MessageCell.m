@@ -61,8 +61,9 @@
 
     // 1、设置时间
     [_timeBtn setTitle:message.time forState:UIControlStateNormal];
-
+//    _messageFrame.showTime = YES;
     _timeBtn.frame = _messageFrame.timeF;
+//    [_timeBtn setBackgroundImage:[[UIImage imageNamed:@"chat_timeline_bg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:0] forState:UIControlStateNormal];
     
     // 2、设置头像
 //    _iconView.image = [UIImage imageNamed:message.icon];

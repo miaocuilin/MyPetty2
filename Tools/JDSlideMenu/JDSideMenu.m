@@ -8,6 +8,7 @@
 
 #import "JDSideMenu.h"
 #import "MyHomeViewController.h"
+#import "UserPetListModel.h"
 // constants
 const CGFloat JDSideMenuMinimumRelativePanDistanceToOpen = 0.33;
 //原值260.0
@@ -50,6 +51,8 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
     [super viewDidLoad];
     
     // add childcontroller
+    self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
+    
     [self addChildViewController:self.menuController];
     [self.menuController didMoveToParentViewController:self];
     [self addChildViewController:self.contentController];
@@ -209,9 +212,35 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
         else [self.view insertSubview:self.menuController.view atIndex:0];
     }
 }
+#pragma mark -
+-(void)loadCountryList
+{
+    NSString * code = [NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERPETLISTAPI, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            [self.userPetListArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for (NSDictionary * dict in array) {
+                UserPetListModel * model = [[UserPetListModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.userPetListArray addObject:model];
+                [model release];
+            }
+            self.refreshData();
+        }else{
+            
+        }
+    }];
+    [request release];
+}
 
 - (void)showMenuAnimated:(BOOL)animated;
 {
+    //请求国家列表API
+    [self loadCountryList];
+    
     [self showMenuAnimated:animated duration:JDSideMenuDefaultOpenAnimationTime
            initialVelocity:1.0];
 }

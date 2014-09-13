@@ -277,6 +277,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     miBgView.layer.cornerRadius = 5;
     miBgView.layer.masksToBounds = YES;
     [sv addSubview:miBgView];
+  
+    
     
     UIImageView * roundImageView = [MyControl createImageViewWithFrame:CGRectMake(108.5, 326/2-116/2, 217/2, 116/2) ImageName:@"4-3.png"];
     [sv addSubview:roundImageView];
@@ -285,7 +287,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     photoButton.layer.cornerRadius = 40;
     photoButton.layer.masksToBounds = YES;
     [sv addSubview:photoButton];
-    
+   
     /**************************/
     if (!([self.petInfoModel.tx isKindOfClass:[NSNull class]] || [self.petInfoModel.tx length]==0)) {
         NSString * docDir = DOCDIR;
@@ -397,7 +399,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
     }
     
-    
+    if ([[USER objectForKey:@"isAdopt"] isEqualToString:@"1"]) {
+        miBgView.userInteractionEnabled = NO;
+        photoButton.enabled = NO;
+        boy.enabled = NO;
+        girl.enabled = NO;
+    }
     /***************新界面第二页********************/
     UIView * userBgView = [MyControl createViewWithFrame:CGRectMake(320-10, 100+64, 280, 490/2)];
     userBgView.backgroundColor = [ControllerManager colorWithHexString:@"fca283"];

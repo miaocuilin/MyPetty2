@@ -8,6 +8,8 @@
 
 #import "SearchFamilyViewController.h"
 #import "AttentionCell.h"
+#import "SearchResultModel.h"
+#import "PetInfoViewController.h"
 @interface SearchFamilyViewController ()
 
 @end
@@ -27,8 +29,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.dataArray = [NSMutableArray arrayWithObjects:@"1", @"11", @"111", @"2", @"22", @"222", @"3", @"33", @"333", @"你", @"你我", @"你我他", @"12", @"123", @"1234", @"21", @"321", @"4321", nil];
-    self.tempDataArray = [NSMutableArray arrayWithArray:self.dataArray];
+    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.tempDataArray = [NSMutableArray arrayWithArray:self.dataArray];
+    self.tempDataArray =[NSMutableArray arrayWithCapacity:0];
     
     UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
     bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
@@ -40,6 +43,29 @@
     
     //监听中文输入
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldEditChanged:) name:@"UITextFieldTextChangeNotification" object:tf];
+}
+#pragma mark - 加载数据
+//参数name不需要加密
+- (void)loadSearchData:(NSString *)name
+{
+    NSString *searchSig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
+    NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@",SEARCHAPI,name,searchSig,[ControllerManager getSID]];
+    NSLog(@"搜索API:%@",searchString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:searchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"搜索结果：%@",load.dataDict);
+        [self.tempDataArray removeAllObjects];
+        if (isFinish) {
+            NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary *dict in array) {
+                SearchResultModel *model = [[SearchResultModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.tempDataArray addObject:model];
+                [model release];
+            }
+            [tv reloadData];
+        }
+    }];
+    [request release];
 }
 -(void)createFakeNavigation
 {
@@ -139,13 +165,19 @@
         cell = [[[AttentionCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
     }
     cell.backgroundColor = [UIColor clearColor];
-    cell.textLabel.text = self.tempDataArray[indexPath.row];
+    SearchResultModel *model = self.tempDataArray[indexPath.row];
+    cell.textLabel.text = model.name;
     
     return cell;
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 65.0f;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    SearchResultModel *model = self.tempDataArray[indexPath.row];
+    NSLog(@"跳转到注册：%@",model.aid);
 }
 
 -(void)backBtnClick
@@ -160,6 +192,8 @@
        [[NSNotificationCenter defaultCenter] postNotificationName:@"af" object:nil];
     }else{
         NSLog(@"start search!");
+        [self loadSearchData:tf.text];
+        [tf resignFirstResponder];
     }
 }
 
@@ -178,6 +212,7 @@
 {
     //    have = 1;
     //    [tv reloadData];
+    [self loadSearchData:textField.text];
     [tf resignFirstResponder];
     return YES;
 }

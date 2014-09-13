@@ -378,6 +378,7 @@
 		49B1882219C084990055CF54 /* PSCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B1882019C084990055CF54 /* PSCollectionViewCell.m */; };
 		49CE193319A9AC14005F21EE /* PresentDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CE193219A9AC14005F21EE /* PresentDetailViewController.m */; };
 		49E75C6E19B1B0F500F42FE5 /* button_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 49E75C6D19B1B0F500F42FE5 /* button_close.png */; };
+		49F5AEEE19C2D4D3006897EA /* SearchResultModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F5AEED19C2D4D3006897EA /* SearchResultModel.m */; };
 		49FA203019AF3DF50077897D /* recordButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 49FA202F19AF3DF50077897D /* recordButton.png */; };
 		49FA203219AF49250077897D /* record_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 49FA203119AF49250077897D /* record_bg.png */; };
 		60011AD119A8F2AE00349EC2 /* greenBtnBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 60011AD019A8F2AE00349EC2 /* greenBtnBg.png */; };
@@ -1108,6 +1109,8 @@
 		49CE193119A9AC14005F21EE /* PresentDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PresentDetailViewController.h; sourceTree = "<group>"; };
 		49CE193219A9AC14005F21EE /* PresentDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PresentDetailViewController.m; sourceTree = "<group>"; };
 		49E75C6D19B1B0F500F42FE5 /* button_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_close.png; sourceTree = "<group>"; };
+		49F5AEEC19C2D4D3006897EA /* SearchResultModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultModel.h; sourceTree = "<group>"; };
+		49F5AEED19C2D4D3006897EA /* SearchResultModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultModel.m; sourceTree = "<group>"; };
 		49FA202F19AF3DF50077897D /* recordButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recordButton.png; sourceTree = "<group>"; };
 		49FA203119AF49250077897D /* record_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = record_bg.png; path = ../record_bg.png; sourceTree = "<group>"; };
 		60011AD019A8F2AE00349EC2 /* greenBtnBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenBtnBg.png; sourceTree = "<group>"; };
@@ -1766,6 +1769,8 @@
 				60320BB519B994F40094A6E0 /* UserPetListModel.m */,
 				493BE6A919BEF4F700D599CA /* popularityListModel.h */,
 				493BE6AA19BEF4F700D599CA /* popularityListModel.m */,
+				49F5AEEC19C2D4D3006897EA /* SearchResultModel.h */,
+				49F5AEED19C2D4D3006897EA /* SearchResultModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3234,6 +3239,7 @@
 				09E2C89B193740CE002D9E65 /* ASIFormDataRequest.m in Sources */,
 				6003D9F019931EB400AA6558 /* ChooseFamilyDetailCell.m in Sources */,
 				49590B5719B044CC0090E697 /* CircularProgressView.m in Sources */,
+				49F5AEEE19C2D4D3006897EA /* SearchResultModel.m in Sources */,
 				098FC7EC194053320064A004 /* MyMD5.m in Sources */,
 				60EC8F9F198B429F00F1781A /* ChoseLoadViewController.m in Sources */,
 				49A799AA19B566E3002411FC /* WaterViewController.m in Sources */,

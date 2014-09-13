@@ -36,7 +36,7 @@
         self.imageView.image = [UIImage imageNamed:@"cat1.jpg"];
         self.imageView.autoresizingMask =UIViewAutoresizingFlexibleHeight| UIViewAutoresizingFlexibleWidth;
         self.clipsToBounds = YES;
-        self.imageView.contentMode =UIViewContentModeScaleAspectFit;
+//        self.imageView.contentMode =UIViewContentModeScaleAspectFit;
         [self addSubview:self.imageView];
 
     }

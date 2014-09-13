@@ -41,28 +41,7 @@
     [self createUI];
 //    [self loadSearchData:@"22"];
 }
-#pragma mark - 加载数据
-//参数name不需要加密
-- (void)loadSearchData:(NSString *)name{
-    NSString *searchSig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
-    NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@",SEARCHAPI,name,searchSig,[ControllerManager getSID]];
-    NSLog(@"搜索API:%@",searchString);
-    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:searchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-        [self.searchArray removeAllObjects];
-        NSLog(@"搜索结果：%@",load.dataDict);
-        if (isFinish) {
-            NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-            for (NSDictionary *dict in array) {
-                SearchResultModel *model = [[SearchResultModel alloc] init];
-                [model setValuesForKeysWithDictionary:dict];
-                [self.searchArray addObject:model];
-                [model release];
-            }
-            [tv reloadData];
-        }
-    }];
-    [request release];
-}
+
 #pragma mark - 界面搭建
 -(void)createBg
 {
@@ -599,6 +578,28 @@
 //        sv2.contentOffset = CGPointMake(sv2.contentOffset.x+70, 0);
 //    }];
 //}
+#pragma mark - 加载数据
+//参数name不需要加密
+- (void)loadSearchData:(NSString *)name{
+    NSString *searchSig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
+    NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@",SEARCHAPI,name,searchSig,[ControllerManager getSID]];
+    NSLog(@"搜索API:%@",searchString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:searchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        [self.searchArray removeAllObjects];
+        NSLog(@"搜索结果：%@",load.dataDict);
+        if (isFinish) {
+            NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary *dict in array) {
+                SearchResultModel *model = [[SearchResultModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.searchArray addObject:model];
+                [model release];
+            }
+            [tv reloadData];
+        }
+    }];
+    [request release];
+}
 #pragma mark - scrollView代理
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {

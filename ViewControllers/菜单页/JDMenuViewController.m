@@ -23,6 +23,8 @@
 #import "ToolTipsViewController.h"
 #import "GiftShopViewController.h"
 #import "UserInfoViewController.h"
+#import "SearchResultModel.h"
+#import "PetInfoViewController.h"
 @interface JDMenuViewController ()
 
 @end
@@ -105,7 +107,6 @@
     }
     
 }
-
 #pragma mark - 界面搭建
 -(void)createBg
 {

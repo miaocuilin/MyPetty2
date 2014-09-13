@@ -43,8 +43,7 @@
 }
 #pragma mark - 加载数据
 //参数name不需要加密
-- (void)loadSearchData:(NSString *)name
-{
+- (void)loadSearchData:(NSString *)name{
     NSString *searchSig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
     NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@",SEARCHAPI,name,searchSig,[ControllerManager getSID]];
     NSLog(@"搜索API:%@",searchString);

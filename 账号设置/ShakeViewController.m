@@ -28,7 +28,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 //    [self createButton];
-    count = 10;
     [[UIApplication sharedApplication] setApplicationSupportsShakeToEdit:YES];
     [self becomeFirstResponder];
     NSString *path = [[NSBundle mainBundle] pathForResource:@"rocking" ofType:@"wav"];
@@ -36,6 +35,8 @@
     AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path2], &soundID2);
 	AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path], &soundID);
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(ShakingAction) name:@"shake" object:nil];
+    [self loadShakeData];
+    [self sendGiftData];
 }
 - (void)ShakingAction
 {
@@ -114,6 +115,41 @@
 {
     AudioServicesPlaySystemSound (soundID);
 
+}
+#pragma mark - 加载摇一摇数据
+- (void)loadShakeData
+{
+    //animal/shakeApi&aid=
+    NSString *shakeSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *shakeString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=animal/shakeApi&aid=%@&sig=%@&SID=%@",[USER objectForKey:@"aid"],shakeSig,[ControllerManager getSID]];
+    NSLog(@"摇一摇：%@",shakeString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:shakeString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"摇一摇数据：%@",load.dataDict);
+        if (isFinish) {
+           int index = [[[load.dataDict objectForKey:@"data"] objectForKey:@"shake_count"] intValue];
+            count = index;
+            if (count==0) {
+                [self createNoChanceAlertView];
+            }else{
+                [self createAlertView];
+            }
+        }
+    }];
+    [request release];
+}
+#pragma mark - 摇出的奖品送礼
+- (void)sendGiftData
+{
+    //animal/sendGiftApi&item_id=&aid=[&img_id=][&is_buy=(TRUE)][is_shake]
+    NSString *item = @"1101";
+    NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_shake=1&item_id=%@dog&cat",[USER objectForKey:@"aid"],item]];
+    NSString *sendString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=animal/sendGiftApi&aid=%@&is_shake=1&item_id=%@&sig=%@&SID=%@",[USER objectForKey:@"aid"],item,sendSig,[ControllerManager getSID]];
+    NSLog(@"赠送url:%@",sendString);
+    httpDownloadBlock *request  = [[httpDownloadBlock alloc] initWithUrlStr:sendString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"赠送数据：%@",load.dataDict);
+    }];
+    [request release];
+    
 }
 
 #pragma mark - 摇到礼物界面

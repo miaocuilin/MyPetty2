@@ -327,6 +327,8 @@
 		493DEF6719AED166009D0027 /* UIWindow+MotionEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 493DEF6619AED166009D0027 /* UIWindow+MotionEvent.m */; };
 		493DEF6919AF05C7009D0027 /* nochance.png in Resources */ = {isa = PBXBuildFile; fileRef = 493DEF6819AF05C7009D0027 /* nochance.png */; };
 		493DEF6C19AF1A32009D0027 /* ShoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 493DEF6B19AF1A32009D0027 /* ShoutViewController.m */; };
+		4947AFCF19C3F1F50025FABA /* SearchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947AFCE19C3F1F50025FABA /* SearchCell.m */; };
+		4947AFD219C3F4180025FABA /* SearchResultModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4947AFD119C3F4180025FABA /* SearchResultModel.m */; };
 		49500A2919AD85F700D175D8 /* TouchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49500A2819AD85F700D175D8 /* TouchViewController.m */; };
 		49500A2D19ADA1AC00D175D8 /* HYScratchCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 49500A2C19ADA1AC00D175D8 /* HYScratchCardView.m */; };
 		49500A3119ADA51D00D175D8 /* product_bg1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49500A2E19ADA51D00D175D8 /* product_bg1.png */; };
@@ -378,7 +380,6 @@
 		49B1882219C084990055CF54 /* PSCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49B1882019C084990055CF54 /* PSCollectionViewCell.m */; };
 		49CE193319A9AC14005F21EE /* PresentDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49CE193219A9AC14005F21EE /* PresentDetailViewController.m */; };
 		49E75C6E19B1B0F500F42FE5 /* button_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 49E75C6D19B1B0F500F42FE5 /* button_close.png */; };
-		49F5AEEE19C2D4D3006897EA /* SearchResultModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 49F5AEED19C2D4D3006897EA /* SearchResultModel.m */; };
 		49FA203019AF3DF50077897D /* recordButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 49FA202F19AF3DF50077897D /* recordButton.png */; };
 		49FA203219AF49250077897D /* record_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 49FA203119AF49250077897D /* record_bg.png */; };
 		60011AD119A8F2AE00349EC2 /* greenBtnBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 60011AD019A8F2AE00349EC2 /* greenBtnBg.png */; };
@@ -1040,6 +1041,10 @@
 		493DEF6819AF05C7009D0027 /* nochance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nochance.png; sourceTree = "<group>"; };
 		493DEF6A19AF1A32009D0027 /* ShoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShoutViewController.h; sourceTree = "<group>"; };
 		493DEF6B19AF1A32009D0027 /* ShoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShoutViewController.m; sourceTree = "<group>"; };
+		4947AFCD19C3F1F50025FABA /* SearchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchCell.h; sourceTree = "<group>"; };
+		4947AFCE19C3F1F50025FABA /* SearchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchCell.m; sourceTree = "<group>"; };
+		4947AFD019C3F4180025FABA /* SearchResultModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultModel.h; sourceTree = "<group>"; };
+		4947AFD119C3F4180025FABA /* SearchResultModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultModel.m; sourceTree = "<group>"; };
 		49500A2719AD85F700D175D8 /* TouchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchViewController.h; sourceTree = "<group>"; };
 		49500A2819AD85F700D175D8 /* TouchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchViewController.m; sourceTree = "<group>"; };
 		49500A2B19ADA1AC00D175D8 /* HYScratchCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYScratchCardView.h; sourceTree = "<group>"; };
@@ -1109,8 +1114,6 @@
 		49CE193119A9AC14005F21EE /* PresentDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PresentDetailViewController.h; sourceTree = "<group>"; };
 		49CE193219A9AC14005F21EE /* PresentDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PresentDetailViewController.m; sourceTree = "<group>"; };
 		49E75C6D19B1B0F500F42FE5 /* button_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_close.png; sourceTree = "<group>"; };
-		49F5AEEC19C2D4D3006897EA /* SearchResultModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultModel.h; sourceTree = "<group>"; };
-		49F5AEED19C2D4D3006897EA /* SearchResultModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultModel.m; sourceTree = "<group>"; };
 		49FA202F19AF3DF50077897D /* recordButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recordButton.png; sourceTree = "<group>"; };
 		49FA203119AF49250077897D /* record_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = record_bg.png; path = ../record_bg.png; sourceTree = "<group>"; };
 		60011AD019A8F2AE00349EC2 /* greenBtnBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenBtnBg.png; sourceTree = "<group>"; };
@@ -1769,8 +1772,6 @@
 				60320BB519B994F40094A6E0 /* UserPetListModel.m */,
 				493BE6A919BEF4F700D599CA /* popularityListModel.h */,
 				493BE6AA19BEF4F700D599CA /* popularityListModel.m */,
-				49F5AEEC19C2D4D3006897EA /* SearchResultModel.h */,
-				49F5AEED19C2D4D3006897EA /* SearchResultModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2196,6 +2197,10 @@
 				603A367D19C080FC0000E0AD /* PlanetAttentionCell.xib */,
 				6032630719C1C94C0013A6AA /* FAQCell.h */,
 				6032630819C1C94C0013A6AA /* FAQCell.m */,
+				4947AFCD19C3F1F50025FABA /* SearchCell.h */,
+				4947AFCE19C3F1F50025FABA /* SearchCell.m */,
+				4947AFD019C3F4180025FABA /* SearchResultModel.h */,
+				4947AFD119C3F4180025FABA /* SearchResultModel.m */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -3239,13 +3244,13 @@
 				09E2C89B193740CE002D9E65 /* ASIFormDataRequest.m in Sources */,
 				6003D9F019931EB400AA6558 /* ChooseFamilyDetailCell.m in Sources */,
 				49590B5719B044CC0090E697 /* CircularProgressView.m in Sources */,
-				49F5AEEE19C2D4D3006897EA /* SearchResultModel.m in Sources */,
 				098FC7EC194053320064A004 /* MyMD5.m in Sources */,
 				60EC8F9F198B429F00F1781A /* ChoseLoadViewController.m in Sources */,
 				49A799AA19B566E3002411FC /* WaterViewController.m in Sources */,
 				6038619919A75E1100B1312A /* UIImage+ImageBlur.m in Sources */,
 				09E2C899193740CE002D9E65 /* ASIDataDecompressor.m in Sources */,
 				6020BD6819987DC3002C74FA /* PetInfoViewController.m in Sources */,
+				4947AFCF19C3F1F50025FABA /* SearchCell.m in Sources */,
 				49500A2D19ADA1AC00D175D8 /* HYScratchCardView.m in Sources */,
 				0979B7711941C6BF007C36A7 /* SDWebImageDownloader.m in Sources */,
 				0908736A1973B2F2004276EF /* Message.m in Sources */,
@@ -3351,6 +3356,7 @@
 				09D98ACD1935EC3D00C83C4B /* RootViewController.m in Sources */,
 				1818E541195D1CDD001ED167 /* UIScrollView+Extension.m in Sources */,
 				491C1FBA19B9969C00CA833E /* AFURLSessionManager.m in Sources */,
+				4947AFD219C3F4180025FABA /* SearchResultModel.m in Sources */,
 				09F9E93C1946DF3000DB12D9 /* OtherHomeViewController.m in Sources */,
 				491C1FC719B9CC0600CA833E /* HttpRequest.m in Sources */,
 				491C1FB319B9969C00CA833E /* AFHTTPRequestOperationManager.m in Sources */,

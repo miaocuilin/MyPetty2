@@ -14,4 +14,5 @@
     UIView * navView;
     UITableView * tv;
 }
+@property (nonatomic,strong)NSMutableArray *userPetListArray;
 @end

@@ -27,7 +27,7 @@
     // Do any additional setup after loading the view.
 //    [self createButton];
     _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
-//    [self loadRecordData];
+    [self loadRecordData];
 }
 
 
@@ -57,21 +57,36 @@
     NSLog(@"下载API:%@",downloadRecord);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:downloadRecord Block:^(BOOL isFinsh, httpDownloadBlock *load) {
         if (isFinsh) {
-            NSLog(@"下载的录音：%@",load.data);
-            NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-            NSString *filePath = [NSString stringWithFormat:@"%@/zhang.aac", docDirPath];
-            NSLog(@"filePath:%@",filePath);
-            [load.data writeToFile:filePath atomically:YES];
-            NSError *playerError;
-            _player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:filePath] error:&playerError];
-            if (_player == nil)
-            {
-                NSLog(@"ERror creating player: %@", [playerError description]);
-            }
-            [self audioPlayerCreate];
-
+            NSLog(@"下载的录音：%@",load.dataDict);
+            [self loadRecordURL:[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
         }
     }];
+    [request release];
+}
+- (void)loadRecordURL:(NSString *)url
+{
+    NSString *urlString = [NSString stringWithFormat:@"http://54.199.161.210:8001/%@",url];
+    NSLog(@"urlString:%@",urlString);
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
+    NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *filePath = [NSString stringWithFormat:@"%@/record.acc", docDirPath];
+    NSLog(@"data:%@",data);
+    [data writeToFile:filePath atomically:YES];
+    NSError *playerError;
+//    _player = [[AVAudioPlayer alloc] initWithData:data error:&playerError];
+    _player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:filePath] error:&playerError];
+    if (_player == nil)
+    {
+        NSLog(@"ERror creating player: %@", [playerError description]);
+    }
+    [self audioPlayerCreate];
+
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:urlString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"%@",load.data);
+       
+        
+    }];
+    [request release];
 }
 #pragma mark - 摸一摸界面
 - (void)createAlertView

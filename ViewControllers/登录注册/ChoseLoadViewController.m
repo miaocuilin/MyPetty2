@@ -259,8 +259,8 @@
             }else{
                 LoadingSuccess;
                 //跳转到主页
-//                JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
-                ChooseFamilyViewController * sideMenu = [[ChooseFamilyViewController alloc] init];
+                JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+//                ChooseFamilyViewController * sideMenu = [[ChooseFamilyViewController alloc] init];
                 sideMenu.modalTransitionStyle = 1;
                 [self presentViewController:sideMenu animated:YES completion:nil];
             }

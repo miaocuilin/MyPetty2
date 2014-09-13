@@ -7,23 +7,16 @@
 //
 
 #import "SearchFamilyViewController.h"
-#import "AttentionCell.h"
-#import "SearchResultModel.h"
+#import "PetInfoModel.h"
 #import "PetInfoViewController.h"
+#import "RegisterViewController.h"
+#import "SearchCell.h"
+
 @interface SearchFamilyViewController ()
 
 @end
 
 @implementation SearchFamilyViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -57,7 +50,7 @@
         if (isFinish) {
             NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary *dict in array) {
-                SearchResultModel *model = [[SearchResultModel alloc] init];
+                PetInfoModel *model = [[PetInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
                 [self.tempDataArray addObject:model];
                 [model release];
@@ -160,13 +153,14 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString * cellID = @"ID";
-    AttentionCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    SearchCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
-        cell = [[[AttentionCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
+        cell = [[[SearchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
     }
     cell.backgroundColor = [UIColor clearColor];
-    SearchResultModel *model = self.tempDataArray[indexPath.row];
-    cell.textLabel.text = model.name;
+    PetInfoModel *model = self.tempDataArray[indexPath.row];
+    [cell configUI:model];
+    
     
     return cell;
 }
@@ -176,7 +170,15 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SearchResultModel *model = self.tempDataArray[indexPath.row];
+    PetInfoModel *model = self.tempDataArray[indexPath.row];
+    if (![ControllerManager getIsSuccess]) {
+        RegisterViewController *registerVC = [[RegisterViewController alloc] init];
+        registerVC.isAdoption = YES;
+        registerVC.petInfoModel =model;
+        [self presentViewController:registerVC animated:YES completion:^{
+            [registerVC release];
+        }];
+    }
     NSLog(@"跳转到注册：%@",model.aid);
 }
 

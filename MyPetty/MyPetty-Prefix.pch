@@ -234,5 +234,5 @@
     //
     #define SHOPITEMSAPI @"http://54.199.161.210:8001/index.php?r=item/listApi&code="
     //搜索  animal/searchApi&name=[&aid=]
-#define SEARCHAPI @"http://54.199.161.210:8001/index.php?r=animal/searchApi"
+    #define SEARCHAPI @"http://54.199.161.210:8001/index.php?r=animal/searchApi"
 #endif

@@ -399,11 +399,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
     }
     
-    if ([[USER objectForKey:@"isAdopt"] isEqualToString:@"1"]) {
+//    if ([[USER objectForKey:@"isAdopt"] isEqualToString:@"1"]) {
+//       
+//    }
+    if (self.isAdoption) {
         miBgView.userInteractionEnabled = NO;
-        photoButton.enabled = NO;
-        boy.enabled = NO;
-        girl.enabled = NO;
+        photoButton.userInteractionEnabled = NO;
+        boy.userInteractionEnabled = NO;
+        girl.userInteractionEnabled = NO;
     }
     /***************新界面第二页********************/
     UIView * userBgView = [MyControl createViewWithFrame:CGRectMake(320-10, 100+64, 280, 490/2)];

@@ -13,6 +13,7 @@
 {
     UIScrollView * sv;
     PSCollectionView *cv;
+    PSCollectionView *cv2;
     BOOL isCamara;
 //    UITableView * tv;
     UIView * navView;
@@ -28,4 +29,6 @@
 @property(nonatomic,retain)UIImage * tempImage;
 @property(nonatomic,copy)NSString *lastImg_id;
 @property(nonatomic,retain)NSMutableArray * randomDataArray;
+@property(nonatomic,retain)NSMutableArray * newDataArray;
+@property(nonatomic,retain)NSMutableArray * hotDataArray;
 @end

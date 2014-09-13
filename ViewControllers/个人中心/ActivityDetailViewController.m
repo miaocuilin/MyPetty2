@@ -53,6 +53,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
     self.userDataArray = [NSMutableArray arrayWithCapacity:0];
     self.randomDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.newDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.hotDataArray = [NSMutableArray arrayWithCapacity:0];
+    
     self.view.backgroundColor = [UIColor whiteColor];
     
     [self createBg];
@@ -60,6 +63,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self loadRandomData];
 //    [self makeUI];
 //    [self makeNavgation];
+//    [self loadHotData];
+//    [self loadNewData];
 
 }
 
@@ -105,17 +110,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //    titleLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:titleLabel];
     
-    segmentView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 40)];
-    //    segmentView.backgroundColor = [UIColor redColor];
-    [self.view addSubview:segmentView2];
-    UIButton *newButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, segmentView2.frame.size.width/2, 40) ImageName:nil Target:self Action:@selector(newPicAction) Title:@"最新"];
-    [newButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [segmentView2 addSubview:newButton];
-    UIButton *hotButton = [MyControl createButtonWithFrame:CGRectMake(segmentView2.frame.size.width/2, 0, segmentView2.frame.size.width/2, 40) ImageName:nil Target:self Action:@selector(hotPicAction) Title:@"最热"];
-    [hotButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [segmentView2 addSubview:hotButton];
-    segmentView2.backgroundColor = [UIColor whiteColor];
-    segmentView2.hidden = YES;
 }
 
 #pragma mark - 下载数据
@@ -195,15 +189,16 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             //只包含img_id和图片的url
 //            NSLog(@"宇宙广场数据:%@", load.dataDict);
             [self.randomDataArray removeAllObjects];
+            [self.newDataArray removeAllObjects];
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
                 PhotoModel * model = [[PhotoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.randomDataArray addObject:model];
+                [self.newDataArray addObject:model];
                 
                 [model release];
             }
-            
+            [self.randomDataArray addObjectsFromArray:self.newDataArray];
             self.lastImg_id = [self.randomDataArray[self.randomDataArray.count-1] img_id];
             [cv reloadData];
             
@@ -246,23 +241,60 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 - (void)loadHotData
 {
-    NSString *hotSig = [MyMD5 md5:[NSString stringWithFormat:@""]];
+    NSString *hotSig = [MyMD5 md5:[NSString stringWithFormat:@"topic_id=%@dog&cat",self.listModel.topic_id]];
+    NSString *hotString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",POPULARAPI,self.listModel.topic_id,hotSig,[ControllerManager getSID]];
+    NSLog(@"最热活动图片：%@",hotString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:hotString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        [self.randomDataArray removeAllObjects];
+        [self.hotDataArray removeAllObjects];
+        NSLog(@"最热活动图片数据：%@",load.dataDict);
+        [cv reloadData];
+    }];
+    [request release];
+    
+    
+    
+    
+}
+- (void)loadNewData
+{
+    StartLoading;
+    NSString *newSig = [MyMD5 md5:[NSString stringWithFormat:@"topic_id=%@dog&cat",self.listModel.topic_id]];
+    NSString *newString= [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",NEWESTAPI,self.listModel.topic_id,newSig,[ControllerManager getSID]];
+    NSLog(@"最新活动图片：%@",newString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:newString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"最新活动图片数据:%@",load.dataDict);
+        if (isFinish) {
+            //只包含img_id和图片的url
+            //            NSLog(@"宇宙广场数据:%@", load.dataDict);
+            [self.randomDataArray removeAllObjects];
+            [self.newDataArray removeAllObjects];
+            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary * dict in array) {
+                PhotoModel * model = [[PhotoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.newDataArray addObject:model];
+                
+                [model release];
+            }
+            [self.randomDataArray addObjectsFromArray:self.newDataArray];
+            self.lastImg_id = [self.randomDataArray[self.randomDataArray.count-1] img_id];
+            [cv reloadData];
+            
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+            NSLog(@"数据加载失败");
+        }
+    }];
+    [request release];
 }
 #pragma mark - tableView创建
--(void)makeUI
+- (UIView *)createHeaderView:(CGRect)headerFrame ScrollView:(UIScrollView *)scrollView
 {
-//    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
-//    sv.contentSize = CGSizeMake(320, 865/2+64+self.view.frame.size.height-40);
-//    [self.view addSubview:sv];
-    
-    
-//    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-40-64) style:UITableViewStylePlain];
-//    [self.view addSubview:tv];
-    
-    UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, 865/2)];
-//    [sv addSubview:bgView];
-//    tv.tableHeaderView = bgView;
-    
+    //CGRectMake(0, 64, 320, 865/2)
+    UIView *bgView = [MyControl createViewWithFrame:headerFrame];
+    //    [sv addSubview:bgView];
     [self.view bringSubviewToFront:navView];
     
     UIImageView * imageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, 135) ImageName:@"cat1.jpg"];
@@ -277,7 +309,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     titleLabel.textColor = BGCOLOR;
     [bgView addSubview:titleLabel];
     
-//    NSString * str = @"那些年，我们一起追过的狗狗，\n一起怀念狗狗的友情岁月，和你在一起慢慢变老!";
+    //    NSString * str = @"那些年，我们一起追过的狗狗，\n一起怀念狗狗的友情岁月，和你在一起慢慢变老!";
     CGSize size = [[self.dataArray[0] des] sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(320-26, 500) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * introduceLabel = [MyControl createLabelWithFrame:CGRectMake(13, 165, 320-26, size.height) Font:14 Text:[self.dataArray[0] des]];
     introduceLabel.textColor = [UIColor grayColor];
@@ -288,9 +320,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         UIView * lineView = [MyControl createViewWithFrame:CGRectMake(0, 170+size.height+i*35, 320, 1)];
         lineView.backgroundColor = [UIColor whiteColor];
         [bgView addSubview:lineView];
-//        UIImageView * line = [MyControl createImageViewWithFrame:CGRectMake(0, 170+size.height+i*35, 320, 1) ImageName:@""];
-//        line.image = [[UIImage imageNamed:@"20-灰色线.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:1];
-//        [bgView addSubview:line];
+        //        UIImageView * line = [MyControl createImageViewWithFrame:CGRectMake(0, 170+size.height+i*35, 320, 1) ImageName:@""];
+        //        line.image = [[UIImage imageNamed:@"20-灰色线.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:1];
+        //        [bgView addSubview:line];
         
         UIImageView * imageView2 = [MyControl createImageViewWithFrame:CGRectMake(13, 175+size.height+i*35, 25, 25) ImageName:array[i]];
         [bgView addSubview:imageView2];
@@ -314,7 +346,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             desLabel.text = self.listModel.reward;
             
         }else{
-//            desLabel.text = [NSString stringWithFormat:@"%@人", self.listModel.people];
+            //            desLabel.text = [NSString stringWithFormat:@"%@人", self.listModel.people];
             desLabel.text = [NSString stringWithFormat:@"%d人", self.userDataArray.count];
         }
         
@@ -327,8 +359,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [bgView addSubview:arrow];
             
             UIButton * button = [MyControl createButtonWithFrame:CGRectMake(0, lineView.frame.origin.y, 320, 35) ImageName:@"" Target:self Action:@selector(rewardClick) Title:nil];
-//            button.backgroundColor = [UIColor redColor];
-//            button.alpha = 0.5;
+            //            button.backgroundColor = [UIColor redColor];
+            //            button.alpha = 0.5;
             [bgView addSubview:button];
         }
         
@@ -336,7 +368,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     UILabel * desLabel = (UILabel *)[self.view viewWithTag:102];
     
-//    self.userDataArray.count
+    //    self.userDataArray.count
     for (int i=0; i<self.userDataArray.count; i++) {
         UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(13+i*35, desLabel.frame.origin.y+desLabel.frame.size.height+10, 30, 30) ImageName:@"cat2.jpg"];
         headImageView.layer.cornerRadius = 15;
@@ -348,7 +380,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         //参与用户按钮
         UIButton * partButton = [MyControl createButtonWithFrame:CGRectMake(0, headImageView.frame.origin.y, 320, 30) ImageName:@"" Target:self Action:@selector(partButtonClick) Title:nil];
-//        partButton.backgroundColor = [UIColor redColor];
+        //        partButton.backgroundColor = [UIColor redColor];
         [bgView addSubview:partButton];
         
         //头像的下载
@@ -383,16 +415,166 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }
         }
     }
+    
+    UIButton *newButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, segmentView.frame.size.width/2, 40) ImageName:nil Target:self Action:@selector(newPicAction) Title:@"最新"];
+    [newButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    UIButton *hotButton = [MyControl createButtonWithFrame:CGRectMake(segmentView.frame.size.width/2, 0, segmentView.frame.size.width/2, 40) ImageName:nil Target:self Action:@selector(hotPicAction) Title:@"最热"];
+    [hotButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    if (scrollView == cv) {
+        segmentView = [[UIView alloc] initWithFrame:CGRectMake(0, 400, bgView.frame.size.width, 40)];
+        segmentView.backgroundColor = [UIColor whiteColor];
+        [bgView addSubview:segmentView];
+        [segmentView addSubview:newButton];
+        [segmentView addSubview:hotButton];
+    }else{
+        segmentView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 40)];
+        //    segmentView.backgroundColor = [UIColor redColor];
+        [bgView addSubview:segmentView2];
+        segmentView2.backgroundColor = [UIColor whiteColor];
+        [segmentView2 addSubview:newButton];
+        [segmentView2 addSubview:hotButton];
+    }
+    return bgView;
+}
+-(void)makeUI
+{
+    UIView *bgView = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, 865/2)];
+    //    [sv addSubview:bgView];
+    [self.view bringSubviewToFront:navView];
+    
+    UIImageView * imageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, 135) ImageName:@"cat1.jpg"];
+    [bgView addSubview:imageView];
+    
+    UIImageView * statusImageView = [MyControl createImageViewWithFrame:CGRectMake(320-20-142/2, 45, 142/2, 96/2) ImageName:@"24-1.png"];
+    [imageView addSubview:statusImageView];
+    
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(13, 140, 200, 20) Font:17 Text:[self.listModel topic]];
+    titleLabel.textColor = [UIColor darkGrayColor];
+    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    titleLabel.textColor = BGCOLOR;
+    [bgView addSubview:titleLabel];
+    
+    //    NSString * str = @"那些年，我们一起追过的狗狗，\n一起怀念狗狗的友情岁月，和你在一起慢慢变老!";
+    CGSize size = [[self.dataArray[0] des] sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(320-26, 500) lineBreakMode:NSLineBreakByCharWrapping];
+    UILabel * introduceLabel = [MyControl createLabelWithFrame:CGRectMake(13, 165, 320-26, size.height) Font:14 Text:[self.dataArray[0] des]];
+    introduceLabel.textColor = [UIColor grayColor];
+    [bgView addSubview:introduceLabel];
+    
+    NSArray * array = @[@"24-3.png", @"24-4.png", @"24-5.png"];
+    for(int i=0;i<3;i++){
+        UIView * lineView = [MyControl createViewWithFrame:CGRectMake(0, 170+size.height+i*35, 320, 1)];
+        lineView.backgroundColor = [UIColor whiteColor];
+        [bgView addSubview:lineView];
+        //        UIImageView * line = [MyControl createImageViewWithFrame:CGRectMake(0, 170+size.height+i*35, 320, 1) ImageName:@""];
+        //        line.image = [[UIImage imageNamed:@"20-灰色线.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:1];
+        //        [bgView addSubview:line];
+        
+        UIImageView * imageView2 = [MyControl createImageViewWithFrame:CGRectMake(13, 175+size.height+i*35, 25, 25) ImageName:array[i]];
+        [bgView addSubview:imageView2];
+        
+        UILabel * desLabel = [MyControl createLabelWithFrame:CGRectMake(40, imageView2.frame.origin.y, 275, 25) Font:15 Text:@""];
+        if (i == 0) {
+            NSDate * startDate = [NSDate dateWithTimeIntervalSince1970:[self.listModel.start_time intValue]];
+            NSDate * endDate = [NSDate dateWithTimeIntervalSince1970:[self.listModel.end_time intValue]];
+            NSDateFormatter * dateFormat = [[NSDateFormatter alloc] init];
+            [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm"];
+            NSString * startTime = [dateFormat stringFromDate:startDate];
+            NSString * endTime = [dateFormat stringFromDate:endDate];
+            [dateFormat release];
+            
+            desLabel.text = [NSString stringWithFormat:@"%@至%@", startTime, endTime];
+            NSTimeInterval  timeInterval = [endDate timeIntervalSinceNow];
+            if (timeInterval<=0) {
+                statusImageView.image = [UIImage imageNamed:@"24-2.png"];
+            }
+        }else if(i == 1){
+            desLabel.text = self.listModel.reward;
+            
+        }else{
+            //            desLabel.text = [NSString stringWithFormat:@"%@人", self.listModel.people];
+            desLabel.text = [NSString stringWithFormat:@"%d人", self.userDataArray.count];
+        }
+        
+        desLabel.textColor = [UIColor darkGrayColor];
+        [bgView addSubview:desLabel];
+        desLabel.tag = 100+i;
+        
+        if (i == 1) {
+            UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(320-15-10, imageView2.frame.origin.y+5, 15, 20) ImageName:@"扩展更多图标.png"];
+            [bgView addSubview:arrow];
+            
+            UIButton * button = [MyControl createButtonWithFrame:CGRectMake(0, lineView.frame.origin.y, 320, 35) ImageName:@"" Target:self Action:@selector(rewardClick) Title:nil];
+            //            button.backgroundColor = [UIColor redColor];
+            //            button.alpha = 0.5;
+            [bgView addSubview:button];
+        }
+        
+    }
+    
+    UILabel * desLabel = (UILabel *)[self.view viewWithTag:102];
+    
+    //    self.userDataArray.count
+    for (int i=0; i<self.userDataArray.count; i++) {
+        UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(13+i*35, desLabel.frame.origin.y+desLabel.frame.size.height+10, 30, 30) ImageName:@"cat2.jpg"];
+        headImageView.layer.cornerRadius = 15;
+        headImageView.layer.masksToBounds = YES;
+        [bgView addSubview:headImageView];
+        if (i == 0) {
+            UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(320-15-10, headImageView.frame.origin.y+5, 15, 20) ImageName:@"扩展更多图标.png"];
+            [bgView addSubview:arrow];
+        }
+        //参与用户按钮
+        UIButton * partButton = [MyControl createButtonWithFrame:CGRectMake(0, headImageView.frame.origin.y, 320, 30) ImageName:@"" Target:self Action:@selector(partButtonClick) Title:nil];
+        //        partButton.backgroundColor = [UIColor redColor];
+        [bgView addSubview:partButton];
+        
+        //头像的下载
+        NSString * docDir = DOCDIR;
+        if (!docDir) {
+            NSLog(@"Documents 目录未找到");
+        }else{
+            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.userDataArray[i] tx]]];
+            UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txFilePath]];
+            if (image) {
+                headImageView.image = image;
+            }else{
+                [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userDataArray[i] tx]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        //本地目录，用于存放favorite下载的原图
+                        NSString * docDir = DOCDIR;
+                        //                    NSLog(@"docDir:%@", docDir);
+                        if (!docDir) {
+                            NSLog(@"Documents 目录未找到");
+                        }else{
+                            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.userDataArray[i] tx]]];
+                            //将下载的图片存放到本地
+                            [load.data writeToFile:txFilePath atomically:YES];
+                            headImageView.image = load.dataImage;
+                        }
+                    }else{
+                        //            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"图片加载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+                        //            [alert show];
+                        //            [alert release];
+                    }
+                }];
+            }
+        }
+    }
+
     segmentView = [[UIView alloc] initWithFrame:CGRectMake(0, 400, bgView.frame.size.width, 40)];
     segmentView.backgroundColor = [UIColor whiteColor];
     [bgView addSubview:segmentView];
     UIButton *newButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, segmentView.frame.size.width/2, 40) ImageName:nil Target:self Action:@selector(newPicAction) Title:@"最新"];
     [newButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [segmentView addSubview:newButton];
     UIButton *hotButton = [MyControl createButtonWithFrame:CGRectMake(segmentView.frame.size.width/2, 0, segmentView.frame.size.width/2, 40) ImageName:nil Target:self Action:@selector(hotPicAction) Title:@"最热"];
     [hotButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [segmentView addSubview:newButton];
     [segmentView addSubview:hotButton];
     
+//    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
+//    sv.contentSize = CGSizeMake(self.view.frame.size.width*2, self.view.frame.size.height);
+//    sv.scrollEnabled = NO;
+//    [self.view addSubview:sv];
     cv = [[PSCollectionView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
     cv.delegate = self;
     cv.collectionViewDelegate = self;
@@ -425,10 +607,24 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 - (void)newPicAction
 {
     NSLog(@"最新");
+    if (self.newDataArray.count) {
+        [self.randomDataArray removeAllObjects];
+        [self.randomDataArray addObjectsFromArray:self.newDataArray];
+        [cv reloadData];
+    }else{
+        [self loadRandomData];
+    }
 }
 - (void)hotPicAction
 {
     NSLog(@"最热");
+    if (self.hotDataArray.count) {
+        [self.randomDataArray removeAllObjects];
+        [self.randomDataArray addObjectsFromArray:self.hotDataArray];
+        [cv reloadData];
+    }else{
+        [self loadHotData];
+    }
 }
 -(void)joinButtonClick
 {
@@ -500,7 +696,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 - (NSInteger)numberOfRowsInCollectionView:(PSCollectionView *)collectionView {
     return self.randomDataArray.count;
-//    return 20;
 }
 
 - (UIView *)collectionView:(PSCollectionView *)collectionView cellForRowAtIndex:(NSInteger)index {

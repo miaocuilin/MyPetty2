@@ -32,7 +32,7 @@
     if ([ControllerManager getIsSuccess]) {
         [self loadAnimalInfoData];
     }
-    [self createMenu];
+//    [self createMenu];
 }
 
 - (void)loadAnimalInfoData
@@ -45,6 +45,8 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         NSLog(@"宠物信息：%@",load.dataDict);
         if (isFinish) {
             masterID =[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"];
+            [self createMenu];
+
         }
     }];
     [request release];
@@ -93,6 +95,9 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     self.label3 = [MyControl createLabelWithFrame:CGRectMake(90, 140, 40, 15) Font:13 Text:@"叫一叫"];
     self.label3.textAlignment = NSTextAlignmentCenter;
     [self.menuBgView addSubview:self.label3];
+    if ([masterID isEqualToString:[USER objectForKey:@"usr_id"]]){
+        self.label3.text = @"摸一摸";
+    }
     
     self.label4 = [MyControl createLabelWithFrame:CGRectMake(90, 140, 40, 15) Font:13 Text:@"逗一逗"];
     self.label4.textAlignment = NSTextAlignmentCenter;
@@ -126,7 +131,6 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         return;
     }
     
-    NSLog(@"1");
     NSLog(@"摇一摇");
     ShakeViewController *shake = [[ShakeViewController alloc] init];
     [self addChildViewController:shake];
@@ -134,7 +138,6 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     [shake didMoveToParentViewController:self];
     [shake becomeFirstResponder];
     [self.view addSubview:shake.view];
-    [shake createAlertView];
     [self hideAll];
 }
 
@@ -145,7 +148,6 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         return;
     }
     
-    NSLog(@"2");
     NSLog(@"送礼物");
     ToolTipsViewController *tool = [[ToolTipsViewController alloc] init];
     [self addChildViewController:tool];
@@ -162,7 +164,6 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         return;
     }
     
-    NSLog(@"3");
     NSLog(@"录音和摸一摸");
 //    CallViewController *call = [[CallViewController alloc] init];
 //    [self addChildViewController:call];
@@ -179,6 +180,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         [self.view addSubview:shout.view];
         [self hideAll];
     }else{
+        
         TouchViewController *touch = [[TouchViewController alloc] init];
         [self addChildViewController:touch];
         [touch release];

@@ -121,6 +121,11 @@
 - (void)TalkAction:(UIButton *)sender
 {
     NSLog(@"跳转到聊天");
+    if ([self.usr_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+        StartLoading;
+        [MMProgressHUD dismissWithError:@"不能给自己发消息- -" afterDelay:1];
+        return;
+    }
     self.cellClick(self.num);
 
 }

@@ -31,8 +31,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.titleArray = [NSMutableArray arrayWithObjects:@"总贡献榜",@"贡献日榜", @"贡献周榜", @"贡献月榜", nil];
-    self.myCountryRankArray = [NSMutableArray arrayWithObjects:@"10", @"38", @"66", @"88", nil];
+//    self.myCountryRankArray = [NSMutableArray arrayWithObjects:@"10", @"38", @"66", @"88", nil];
     self.contributionDataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.usr_idsArray = [NSMutableArray arrayWithCapacity:0];
+//    self.myCountryArray = [NSMutableArray arrayWithCapacity:0];
+    
     [self createBg];
     [self createTableView];
     [self createHeader2];
@@ -58,8 +61,12 @@
                 popularityListModel *model = [[popularityListModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
                 [self.contributionDataArray addObject:model];
+                if ([model.usr_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                    myRanking = i+1;
+                }
                 [model release];
             }
+//            [self loadUserPetsInfo];
             [tv reloadData];
             [tv2 reloadData];
         }
@@ -67,6 +74,44 @@
     [request release];
     
 }
+//-(void)loadUserPetsInfo
+//{
+//    NSString * code = [NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+//    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERPETLISTAPI, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+//    NSLog(@"%@", url);
+//    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            NSLog(@"--%@", load.dataDict);
+//            [self.usr_idsArray removeAllObjects];
+//            [self.myCountryArray removeAllObjects];
+//            
+//            NSArray * array = [load.dataDict objectForKey:@"data"];
+//            for (int i=0; i<array.count; i++) {
+//                [self.usr_idsArray addObject:[array[i] objectForKey:@"usr_id"]];
+//            }
+//            NSLog(@"%@--%@", self.contributionDataArray, self.aidsArray);
+//            //筛选出我的国家在数组中的位置
+//            for (int i=0; i<self.contributionDataArray.count; i++) {
+//                NSLog(@"aid:%@", [self.contributionDataArray[i] aid]);
+//                for (int j=0; j<self.aidsArray.count; j++) {
+//                    if ([[self.contributionDataArray[i] aid] isEqualToString:self.aidsArray[j]]) {
+//                        [self.myCountryArray addObject:[NSString stringWithFormat:@"%d", i+1]];
+//                        break;
+//                    }
+//                }
+//                
+//            }
+//            NSLog(@"-----%@", self.myCountryArray);
+//            count = 0;
+//            [self findMeBtnClick];
+//            LoadingSuccess;
+//        }else{
+//            LoadingFailed;
+//        }
+//    }];
+//    [request release];
+//}
+
 -(void)createBg
 {
     bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
@@ -151,7 +196,7 @@
     };
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
-    if (tableView == tv2 && indexPath.row == myCurrentCountNum-1) {
+    if (tableView == tv2 && indexPath.row == myRanking-1) {
         cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
         [cell configUIWithName:model.name rq:model.t_contri rank:indexPath.row+1 upOrDown:model.change shouldLarge:YES];
     }else{
@@ -297,17 +342,17 @@
 }
 -(void)findMeBtnClick
 {
-    if (self.myCountryRankArray.count) {
-        if (count == self.myCountryRankArray.count) {
-            count = 0;
-        }
-        myCurrentCountNum = [self.myCountryRankArray[count++] intValue];
+//    if (self.myCountryArray.count) {
+//        if (count == self.myCountryArray.count) {
+//            count = 0;
+//        }
+//        myCurrentCountNum = [self.myCountryArray[count++] intValue];
         
-        NSLog(@"%d", myCurrentCountNum);
-        tv2.contentOffset = CGPointMake(0, myCurrentCountNum*50-50*2);
+//        NSLog(@"%d", myCurrentCountNum);
+        tv2.contentOffset = CGPointMake(0, myRanking*50-50*2);
         
-        [tv2 reloadData];
-    }
+//        [tv2 reloadData];
+//    }
     
     NSLog(@"findMe");
     arrow.hidden = NO;

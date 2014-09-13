@@ -27,9 +27,14 @@
     
     int myCurrentCountNum;
     int count;
+    
+    int myRanking;
 }
 @property (nonatomic,retain)NSMutableArray * titleArray;
 
 @property (nonatomic,retain)NSMutableArray * myCountryRankArray;
 @property (nonatomic,retain)NSMutableArray * contributionDataArray;
+
+//@property (nonatomic,retain)NSMutableArray * usr_idsArray;
+//@property (nonatomic,retain)NSMutableArray * myCountryArray;
 @end

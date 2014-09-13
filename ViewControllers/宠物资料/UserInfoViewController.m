@@ -263,6 +263,7 @@
     TalkViewController * vc = [[TalkViewController alloc] init];
     [self cancelBtnClick];
     vc.friendName = [headerDict objectForKey:@"name"];
+    vc.usr_id = [headerDict objectForKey:@"usr_id"];
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }

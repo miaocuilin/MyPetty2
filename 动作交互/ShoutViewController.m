@@ -226,8 +226,8 @@
                               nil];
     CFUUIDRef cfuuid = CFUUIDCreate(kCFAllocatorDefault);
     NSString *cfuuidString = (NSString*)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, cfuuid));
-    _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@.aac", cfuuidString]]] retain];
-//    _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
+//    _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@.aac", cfuuidString]]] retain];
+    _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
 
     NSLog(@"_recordedFile :%@",_recordedFile);
     NSError* error;
@@ -260,6 +260,25 @@
     [bodyView addSubview:downView];
     
     UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"cat2.jpg"];
+    NSString *animalHeadPath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
+    UIImage *headImage = [UIImage imageWithContentsOfFile:animalHeadPath];
+    if (headImage) {
+        headImageView.image = headImage;
+    }else{
+        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinsh, httpDownloadBlock *load) {
+            if (isFinsh) {
+                
+                if (load.dataImage == NULL) {
+                    headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+                }else{
+                    NSString *headFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
+                    headImageView.image = load.dataImage;
+                    [load.data writeToFile:headFilePath atomically:YES];
+                }
+            }
+        }];
+        [request release];
+    }
     headImageView.layer.cornerRadius = 28;
     headImageView.layer.masksToBounds = YES;
     [downView addSubview:headImageView];
@@ -268,7 +287,7 @@
     [downView addSubview:cricleHeadImageView];
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 5, 200, 20) Font:12 Text:nil];
     
-    NSAttributedString *helpPetString = [self firstString:@"让叫一叫" formatString:@"猫君" insertAtIndex:1];
+    NSAttributedString *helpPetString = [self firstString:@"让叫一叫" formatString:[self.animalInfoDict objectForKey:@"name"] insertAtIndex:1];
     helpPetLabel.attributedText = helpPetString;
     [helpPetString release];
     [downView addSubview:helpPetLabel];

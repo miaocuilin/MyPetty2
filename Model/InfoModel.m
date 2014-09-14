@@ -28,6 +28,7 @@
     [_inviter release];
     [_weichat release];
     [_weibo release];
+    [_aid release];
     [super dealloc];
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key

@@ -245,5 +245,10 @@
     //
     #define SHOPITEMSAPI @"http://54.199.161.210:8001/index.php?r=item/listApi&code="
     //搜索  animal/searchApi&name=[&aid=]
-#define SEARCHAPI @"http://54.199.161.210:8001/index.php?r=animal/searchApi"
+    #define SEARCHAPI @"http://54.199.161.210:8001/index.php?r=animal/searchApi"
+    //摇一摇
+    #define SHAKEAPI @"http://54.199.161.210:8001/index.php?r=animal/shakeApi&aid="
+    //摇一摇物品自动赠送
+    #define SENDSHAKEGIFT @"http://54.199.161.210:8001/index.php?r=animal/sendGiftApi&aid="
+
 #endif

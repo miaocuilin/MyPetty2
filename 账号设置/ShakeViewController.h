@@ -19,5 +19,6 @@
     MBProgressHUD *goodsHUD;
     MBProgressHUD *noChanceHUD;
 }
+@property (nonatomic,strong)NSDictionary *animalInfoDict;
 - (void)createAlertView;
 @end

@@ -8,6 +8,7 @@
 
 #import "SetDefaultPetViewController.h"
 #import "DefaultPetCell.h"
+#import "UserPetListModel.h"
 @interface SetDefaultPetViewController ()
 
 @end
@@ -27,9 +28,36 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
     [self createBg];
     [self createTableView];
     [self createFakeNavigation];
+    [self loadMyCountryInfoData];
+}
+#pragma mark - 用户宠物数据
+-(void)loadMyCountryInfoData
+{
+    //    user/petsApi&usr_id=(若用户为自己则留空不填)
+    NSString * code = [NSString stringWithFormat:@"usr_id=%@dog&cat",[USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERPETLISTAPI, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    //    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"用户宠物数据:%@", load.dataDict);
+            [self.userPetListArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for (NSDictionary * dict in array) {
+                UserPetListModel * model = [[UserPetListModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.userPetListArray addObject:model];
+                [model release];
+            }
+            [tv reloadData];
+        }else{
+            
+        }
+    }];
+    [request release];
 }
 #pragma mark - 创建背景及导航
 -(void)createBg
@@ -92,7 +120,7 @@
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 20;
+    return self.userPetListArray.count;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -101,6 +129,7 @@
     if (!cell) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"DefaultPetCell" owner:self options:nil] objectAtIndex:0];
     }
+    UserPetListModel *model = self.userPetListArray[indexPath.row];
     cell.defaultBtnClick = ^(int a){
         NSLog(@"clickDefaultPet:%d", a);
     };
@@ -108,10 +137,12 @@
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
     if (indexPath.row == 0) {
-        [cell configUIWithSex:2 Name:@"白猫警长" Cate:@"101" Age:@"12" Default:YES row:indexPath.row];
+        [cell configUIWithSex:2 Name:model.name Cate:@"101" Age:@"11" Default:YES row:indexPath.row];
     }else{
-        [cell configUIWithSex:2 Name:@"白猫警长" Cate:@"101" Age:@"12" Default:NO row:indexPath.row];
+        [cell configUIWithSex:2 Name:model.name Cate:@"101" Age:@"12" Default:NO row:indexPath.row];
     }
+//    NSString *string
+//    cell.headImage.image =
     return cell;
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

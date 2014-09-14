@@ -25,6 +25,7 @@
     ASIFormDataRequest * _request;
 
 }
+@property (nonatomic,strong)NSDictionary *animalInfoDict;
 @property (nonatomic,strong)NSString *aid;
 - (void)createRecordOne;
 @end

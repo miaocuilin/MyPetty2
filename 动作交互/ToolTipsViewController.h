@@ -23,12 +23,15 @@
     UIPageControl *giftPageControl;
 }
 @property (nonatomic)NSInteger coinNumber;
+@property (nonatomic)NSInteger nextgold;
+
 @property (nonatomic)NSInteger continuousDay;
 
 @property (nonatomic)NSInteger expLevel;
 @property (nonatomic,strong)NSString *countryName;
 @property (nonatomic,strong)NSString *positionName;
 @property (nonatomic,strong)NSString *headImageName;
+@property (nonatomic,strong)NSDictionary *animalInfoDict;
 //@property (nonatomic)NSInteger expCoinNum;
 //每日登陆
 - (void)createAlertView;

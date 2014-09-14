@@ -26,5 +26,5 @@
 @property(nonatomic,copy)NSString * inviter;
 @property(nonatomic,copy)NSString * weichat;
 @property(nonatomic,copy)NSString * weibo;
-
+@property(nonatomic,copy)NSString * aid;
 @end

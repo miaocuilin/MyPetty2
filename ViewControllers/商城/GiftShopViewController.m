@@ -255,6 +255,10 @@
     }
     
 }
+-(void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
+{
+    NSLog(@"%d--%@", Line, Words);
+}
 -(void)rel
 {
     if (isOrderShow) {

@@ -240,7 +240,7 @@
 {
     StartLoading;
     NSString * code = [NSString stringWithFormat:@"planet=%d&uid=%@dog&cat", planet, [OpenUDID value]];
-    NSString * url = [NSString stringWithFormat:@"%@%d&uid=%@&sig=%@&", LOGINAPI, planet, [OpenUDID value], [MyMD5 md5:code]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&uid=%@&sig=%@", LOGINAPI, planet, [OpenUDID value], [MyMD5 md5:code]];
     NSLog(@"login-url:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){
@@ -259,8 +259,8 @@
             }else{
                 LoadingSuccess;
                 //跳转到主页
-//                JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
-                ChooseFamilyViewController * sideMenu = [[ChooseFamilyViewController alloc] init];
+                JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+//                ChooseFamilyViewController * sideMenu = [[ChooseFamilyViewController alloc] init];
                 sideMenu.modalTransitionStyle = 1;
                 [self presentViewController:sideMenu animated:YES completion:nil];
             }
@@ -282,6 +282,7 @@
 -(void)getUserData
 {
     NSString * url = [NSString stringWithFormat:@"%@%@", INFOAPI,[ControllerManager getSID]];
+    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             if ([[load.dataDict objectForKey:@"errorCode"] intValue] == 2) {

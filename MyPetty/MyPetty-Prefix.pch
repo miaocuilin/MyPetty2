@@ -113,6 +113,11 @@
     #define OTHERIMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&usr_id="
     #define OTHERIMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
 
+    //首页推荐照片API
+    #define RECOMMENDAPI @"http://54.199.161.210:8001/index.php?r=image/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define RECOMMENDAPI2 @"http://54.199.161.210:8001/index.php?r=image/recommendApi&img_id="
+
+
     //随机照片API
     #define RANDOMAPI @"http://54.199.161.210:8001/index.php?r=image/randomApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     #define RANDOMAPI2 @"http://54.199.161.210:8001/index.php?r=image/randomApi&img_id="
@@ -184,6 +189,12 @@
 
     //发送消息 POST方法 参数为msg
     #define POSTMESSAGEAPI @"http://54.199.161.210:8001/index.php?r=talk/sendMsgApi&usr_id="
+
+    //根据usr_id获取talk_id
+    #define GETTALKIDAPI @"http://54.199.161.210:8001/index.php?r=talk/searchApi&usr_id="
+
+    //获取新消息
+    #define GETNEWMSGAPI @"http://54.199.161.210:8001/index.php?r=talk/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
     //删除消息
     #define DELMESSAGEAPI @"http://54.199.161.210/dc/index.php?r=mail/deleteApi&mail_id="

@@ -33,24 +33,143 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.totalDataDict = [NSMutableDictionary dictionaryWithCapacity:0];
+    self.talkDataDict = [NSMutableDictionary dictionaryWithCapacity:0];
+    self.talkDataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.messageDict = [NSMutableDictionary dictionaryWithCapacity:0];
     
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
 //    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
-    
+    self.keysArray = [NSMutableArray arrayWithCapacity:0];
+    self.valuesArray = [NSMutableArray arrayWithCapacity:0];
     
     [self createBg];
     [self createTableView];
     [self createFakeNavigation];
-    
-    [self loadNewMessageData];
+    [self loadTalkID];
+//    [self loadNewMessageData];
 //    [self talkListData];
 //    [self talkSendMessageData];
+    timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(loadNewMessageData) userInfo:nil repeats:YES];
+    [timer setFireDate:[NSDate distantFuture]];
 }
 #pragma mark -
+-(void)loadTalkID
+{
+    StartLoading;
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat",self.usr_id]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", GETTALKIDAPI, self.usr_id, sig, [ControllerManager getSID]];
+//    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+//            NSLog(@"%@", load.dataDict);
+            self.talk_id = [[load.dataDict objectForKey:@"data"] objectForKey:@"talk_id"];
+            //下载完talk_id之后查看本地是否有历史聊天记录，有的话调出来
+            [self loadHistoryTalk];
+            
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+-(void)loadHistoryTalk
+{
+    NSFileManager * manager = [[NSFileManager alloc] init];
+    NSString * docDir = DOCDIR;
+    NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
+    if ([manager fileExistsAtPath:path]) {
+        //文件存在
+        NSLog(@"文件存在");
+        //未读取本地文件
+        isRead = YES;
+        self.totalDataDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
+        if ([self.totalDataDict objectForKey:self.talk_id]) {
+            self.talkDataDict = [self.totalDataDict objectForKey:self.talk_id];
+            self.talkDataArray = [NSMutableArray arrayWithArray:[self.talkDataDict objectForKey:@"data"]];
+            //取出每条信息添加到数组中
+            for (int i=0; i<self.talkDataArray.count; i++) {
+                NSDictionary * dict = self.talkDataArray[i];
+                if ([[dict objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                    [self presentNewMessageWithSend:YES time:[dict objectForKey:@"time"] msg:[dict objectForKey:@"msg"]];
+                }else{
+                    [self presentNewMessageWithSend:NO time:[dict objectForKey:@"time"] msg:[dict objectForKey:@"msg"]];
+                }
+                
+            }
+            
+        }
+    }
+    [self loadNewMessageData];
+    [timer setFireDate:[NSDate distantPast]];
+}
 -(void)loadNewMessageData
 {
     //请求一个API，传usr_id，获取talk_id，根据talk_id去获取本地历史记录以及新的消息存到本地。
     //聊天里10秒刷一次，侧边栏在侧边栏弹出的时候刷新。
+    NSString * url = [NSString stringWithFormat:@"%@%@", GETNEWMSGAPI,[ControllerManager getSID]];
+    //    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"newMsg:%@", load.dataDict);
+            if ([load.dataDict objectForKey:@"data"] && [[load.dataDict objectForKey:@"data"] count] && [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] objectForKey:self.talk_id]) {
+                NSLog(@"有新消息");
+                //分析数据
+                NSDictionary * dict = [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] objectForKey:self.talk_id];
+                [self analysisData:[dict objectForKey:@"msg"]];
+                //self.keysArray里是新消息的时间
+                //self.valuesArray里是新消息的内容
+                
+//                //存储前先清空数组
+//                self.keysArray
+                
+                //存储
+                for (int i=0; i<self.keysArray.count; i++) {
+                    NSLog(@"%@--%@", self.keysArray[i], self.valuesArray[i]);
+                    [self saveTalkDataWithUserID:self.usr_id time:self.keysArray[i] msg:self.valuesArray[i]];
+                }
+                
+                //展示
+                NSLog(@"***************present time:%d", self.keysArray.count);
+                for (int i=0; i<self.keysArray.count; i++) {
+                    [self presentNewMessageWithSend:NO time:self.keysArray[i] msg:self.valuesArray[i]];
+                }
+            }else{
+                NSLog(@"没有新消息");
+            }
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+            NSLog(@"fail");
+        }
+    }];
+    [request release];
+}
+-(void)analysisData:(NSDictionary *)dict
+{
+    [self.keysArray removeAllObjects];
+    [self.valuesArray removeAllObjects];
+    //keysArray赋值
+    for (NSString * key in [dict allKeys]) {
+        [self.keysArray addObject:key];
+    }
+    //key值数组冒泡排序
+    for (int i=0; i<self.keysArray.count; i++) {
+        for (int j=0; j<self.keysArray.count-i-1; j++) {
+            if ([self.keysArray[j] intValue] > [self.keysArray[j+1] intValue]) {
+                NSString * str = [NSString stringWithFormat:@"%@", self.keysArray[j]];
+                NSString * str1 = [NSString stringWithFormat:@"%@", self.keysArray[j+1]];
+                self.keysArray[j] = str1;
+                self.keysArray[j+1] = str;
+            }
+        }
+    }
+    NSLog(@"%@", self.keysArray);
+    for (int i=0;i<self.keysArray.count;i++) {
+        NSLog(@"key:%@--value:%@", self.keysArray[i], [dict objectForKey:self.keysArray[i]]);
+        [self.valuesArray addObject:[dict objectForKey:self.keysArray[i]]];
+    }
+    
 }
 -(void)createBg
 {
@@ -95,6 +214,9 @@
 }
 -(void)backBtnClick
 {
+    //退出时先暂停timer
+    [timer invalidate];
+    timer = nil;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -112,7 +234,7 @@
     _requestSend.requestMethod=@"POST";
     _requestSend.timeOutSeconds = 20;
 
-    [_requestSend setPostValue:@"hello,tom." forKey:@"msg"];
+    [_requestSend setPostValue:self.lastMessage forKey:@"msg"];
     [_requestSend setDelegate:self];
     [_requestSend startAsynchronous];
 }
@@ -120,12 +242,89 @@
 {
     NSLog(@"success");
     StartLoading;
-    [MMProgressHUD dismissWithSuccess:@"发送成功" title:nil afterDelay:0.5];
+    [MMProgressHUD dismissWithSuccess:@"发送成功" title:nil afterDelay:0.2];
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
+    //将消息存储到本地plist文件
+    NSDate * date = [NSDate date];
+    NSString * timeStamp = [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
+    [self saveTalkDataWithUserID:[USER objectForKey:@"usr_id"] time:timeStamp msg:self.lastMessage];
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
+    LoadingFailed;
     NSLog(@"failed");
+}
+#pragma mark - 将消息存储到本地plist文件
+-(void)saveTalkDataWithUserID:(NSString *)usrID  time:(NSString *)timeStamp msg:(NSString *)msg
+{
+//    NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+//    fmt.dateFormat = @"yyyy-MM-dd HH:mm"; // @"yyyy-MM-dd HH:mm:ss"
+//    NSDate * date = [NSDate dateWithTimeIntervalSince1970:[timeStamp intValue]];
+//    NSString *time = [fmt stringFromDate:date];
+    
+    NSFileManager * manager = [[NSFileManager alloc] init];
+    NSString * docDir = DOCDIR;
+    NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
+    if ([manager fileExistsAtPath:path]) {
+        //文件存在
+        NSLog(@"文件存在");
+        if (isNewCreated) {
+            //新创建不读取本地数据
+            //直接存储数据
+            [self saveWithUserID:usrID time:timeStamp msg:msg];
+        }else{
+            //非新创建，读取本地数据
+            if (isRead) {
+                //已经读取本地文件
+            }else{
+                //未读取本地文件
+                isRead = YES;
+                self.totalDataDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
+                if ([self.totalDataDict objectForKey:self.talk_id]) {
+                    self.talkDataDict = [self.totalDataDict objectForKey:self.talk_id];
+                    self.talkDataArray = [NSMutableArray arrayWithArray:[self.talkDataDict objectForKey:@"data"]];
+                }
+//                NSLog(@"%@--%@", self.totalDataDict, self.talkDataDict);
+            }
+            [self saveWithUserID:usrID time:timeStamp msg:msg];
+        }
+    }else{
+        //文件不存在
+        NSLog(@"文件不存在");
+        isNewCreated = YES;
+        
+        NSMutableDictionary * messageDict = [NSMutableDictionary dictionaryWithCapacity:0];
+        [messageDict setObject:timeStamp forKey:@"time"];
+        [messageDict setObject:msg forKey:@"msg"];
+        [messageDict setObject:usrID forKey:@"usr_id"];
+        [self.talkDataArray addObject:messageDict];
+        
+        
+        [self.talkDataDict setObject:self.talkDataArray forKey:@"data"];
+        [self.talkDataDict setObject:self.usr_id forKey:@"usr_id"];
+        
+        [self.totalDataDict setObject:self.talkDataDict forKey:self.talk_id];
+        [self.totalDataDict writeToFile:path atomically:YES];
+        
+//        [messageDict release];
+    }
+}
+-(void)saveWithUserID:(NSString *)usrID time:(NSString *)timeStamp msg:(NSString *)msg
+{
+    NSString * docDir = DOCDIR;
+    NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
+    
+    NSMutableDictionary * messageDict = [NSMutableDictionary dictionaryWithCapacity:0];
+    [messageDict setObject:timeStamp forKey:@"time"];
+    [messageDict setObject:msg forKey:@"msg"];
+    [messageDict setObject:usrID forKey:@"usr_id"];
+    [self.talkDataArray addObject:messageDict];
+    
+    [self.talkDataDict setObject:self.talkDataArray forKey:@"data"];
+    [self.totalDataDict setObject:self.talkDataDict forKey:self.talk_id];
+    [self.totalDataDict writeToFile:path atomically:YES];
+    
+//    [messageDict release];
 }
 //-(void)createFakeNavigation
 //{
@@ -272,10 +471,10 @@
 
 
 #pragma mark - 代理方法
-//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
-//    //滑动让键盘消失，效果同QQ
-//    [self.view endEditing:YES];
-//}
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    //滑动让键盘消失，效果同QQ
+    [self.view endEditing:YES];
+}
 
 #pragma mark - 键盘处理
 #pragma mark 键盘即将显示
@@ -320,36 +519,51 @@
     
     // 5、上传信息
 //    [self postData];
+    NSLog(@"tf.text:%@--%@", tf.text, self.talk_id);
+    self.lastMessage = tf.text;
     [self talkSendMessageData];
     
+    [self presentNewMessageWithSend:YES time:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]] msg:self.lastMessage];
+    
+    return YES;
+}
+#pragma mark - 将新消息展示出来
+-(void)presentNewMessageWithSend:(BOOL)isSend time:(NSString *)timeStamp msg:(NSString *)msg
+{
     // 1、增加数据源
-    NSString *content = textField.text;
+    NSString *content = msg;
     NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
-    NSDate *date = [NSDate date];
     fmt.dateFormat = @"yyyy-MM-dd HH:mm"; // @"yyyy-MM-dd HH:mm:ss"
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[timeStamp intValue]];
     NSString *time = [fmt stringFromDate:date];
+    NSLog(@"date:%@--time:%@", date, time);
     [fmt release];
-    [self addMessageWithContent:content time:time];
+    [self addMessageWithContent:content time:time isSend:isSend];
     // 2、刷新表格
     [tv reloadData];
+    
+    [self.view bringSubviewToFront:navView];
     // 3、滚动至当前行
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.dataArray.count - 1 inSection:0];
     [tv scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     // 4、清空文本框内容
     tf.text = nil;
-    
-    return YES;
 }
 
-#pragma mark 给数据源增加内容
-- (void)addMessageWithContent:(NSString *)content time:(NSString *)time{
+#pragma mark - 给数据源增加内容
+- (void)addMessageWithContent:(NSString *)content time:(NSString *)time isSend:(BOOL)isSend{
     
     MessageFrame *mf = [[MessageFrame alloc] init];
     Message *msg = [[Message alloc] init];
     msg.content = content;
     msg.time = time;
-    msg.icon = [USER objectForKey:@"tx"];
-    msg.type = MessageTypeMe;
+    if (isSend) {
+        msg.icon = [USER objectForKey:@"tx"];
+        msg.type = MessageTypeMe;
+    }else{
+        msg.icon = self.otherTX;
+        msg.type = MessageTypeOther;
+    }
     mf.message = msg;
 //    mf.showTime = YES;
     

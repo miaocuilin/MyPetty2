@@ -25,7 +25,7 @@
         CGFloat timeY = kMargin;
 //        CGSize timeSize = [_message.time sizeWithAttributes:@{UIFontDescriptorSizeAttribute: @"16"}];
         CGSize timeSize = [_message.time sizeWithFont:kTimeFont];
-        NSLog(@"----%@", NSStringFromCGSize(timeSize));
+        NSLog(@"--%@--%@",message.time, NSStringFromCGSize(timeSize));
         CGFloat timeX = (screenW - timeSize.width) / 2;
         _timeF = CGRectMake(timeX, timeY, timeSize.width + kTimeMarginW, timeSize.height + kTimeMarginH);
 //    }

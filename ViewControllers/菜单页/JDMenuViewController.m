@@ -58,6 +58,8 @@
     
     //清空数据
     [self.countryArray removeAllObjects];
+    changeNum = 0;
+    
     for (int i=0; i<sideMenu.userPetListArray.count; i++) {
         UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake(3+i*SPACE, 12.5, 40, 40);
@@ -89,7 +91,6 @@
                 [request release];
             }
         }
-        
         /**************************/
         [button addTarget:self action:@selector(countryButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         button.tag = 100+i;
@@ -105,7 +106,7 @@
             [view addSubview:crown];
         }
     }
-    
+//    NSLog(@"selectedNum:%d", selectedNum);
 }
 #pragma mark - 界面搭建
 -(void)createBg
@@ -351,8 +352,8 @@
     UIView * gestureView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 65)];
     [countryBg addSubview:gestureView];
     
-    countryCount = 6;
-    selectedNum = 2;
+    countryCount = 3;
+    selectedNum = 1;
 
     /*****************国家循环*******************/
     UIView * view = [[UIView alloc] initWithFrame:CGRectMake(25-3, 0, 176+6, 65)];
@@ -366,7 +367,7 @@
         button.frame = CGRectMake(3+i*SPACE, 12.5, 40, 40);
         button.layer.cornerRadius = 20;
         button.layer.masksToBounds = YES;
-        [button setBackgroundImage:[UIImage imageNamed:[NSString stringWithFormat:@"bother%d_2.png", i+1]] forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
         [button addTarget:self action:@selector(countryButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         button.tag = 100+i;
         [view addSubview:button];
@@ -534,6 +535,7 @@
 }
 -(void)swipeLeft
 {
+//    NSLog(@"changeNum:%d", changeNum);
     if (direction) {
         direction = 0;
         changeNum  -= self.countryArray.count-1;
@@ -541,6 +543,7 @@
             changeNum += self.countryArray.count;
         }
     }
+//    NSLog(@"changeNum:%d", changeNum);
     NSLog(@"left");
     CGRect rect = CGRectZero;
     for (int i=0;i<self.countryArray.count;i++) {

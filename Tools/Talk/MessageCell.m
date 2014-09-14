@@ -61,6 +61,7 @@
 
     // 1、设置时间
     [_timeBtn setTitle:message.time forState:UIControlStateNormal];
+    NSLog(@"===============================%@", message.time);
 //    _messageFrame.showTime = YES;
     _timeBtn.frame = _messageFrame.timeF;
 //    [_timeBtn setBackgroundImage:[[UIImage imageNamed:@"chat_timeline_bg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:0] forState:UIControlStateNormal];
@@ -68,7 +69,7 @@
     // 2、设置头像
 //    _iconView.image = [UIImage imageNamed:message.icon];
     if ([message.icon isKindOfClass:[NSNull class]] || message.icon.length==0) {
-        _iconView.image = [UIImage imageNamed:@"20-1.png"];
+        _iconView.image = [UIImage imageNamed:@"defaultUserHead.png"];
     }else{
         NSString * docDir = DOCDIR;
         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", message.icon]];
@@ -91,6 +92,9 @@
         }
     }
     _iconView.frame = _messageFrame.iconF;
+    //将头像削成圆形
+    _iconView.layer.cornerRadius = _iconView.frame.size.width/2;
+    _iconView.layer.masksToBounds = YES;
     
     // 3、设置内容
     [_contentBtn setTitle:message.content forState:UIControlStateNormal];

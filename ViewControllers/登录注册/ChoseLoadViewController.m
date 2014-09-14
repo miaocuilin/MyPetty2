@@ -303,10 +303,13 @@
                 [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
                 [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
                 [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];
+                
+                [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
                 [USER setObject:[dict objectForKey:@"gold"] forKey:@"gold"];
                 [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
                 [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
-                
+                [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
+                [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
                 if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
                     [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
                 }

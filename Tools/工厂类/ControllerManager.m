@@ -279,7 +279,7 @@ MBProgressHUD *HUD;
     UIImage *imageBG = [UIImage imageNamed:iconImageString];
     imageView.image = imageBG;
     [HUD show:YES];
-    [HUD hide:YES afterDelay:2.0];
+    [HUD hide:YES afterDelay:1.5];
     
 }
 

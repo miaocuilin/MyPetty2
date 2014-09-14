@@ -19,8 +19,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.coinNumber = 10;
-    self.continuousDay = 1;
+//    self.coinNumber = 10;
+//    self.continuousDay = 1;
     self.expLevel = 20;
     self.countryName = @"猫国君";
     self.positionName = @"喵骑士";
@@ -120,7 +120,7 @@
     desc1Label.textColor = [UIColor grayColor];
     [bodyView addSubview:desc1Label];
     
-    UILabel *desc2Label = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2-100, 190, 200, 40) Font:13 Text:[NSString stringWithFormat:@"星球提示：已经连续登陆%d天,明日可领取%d",self.continuousDay,(self.coinNumber+100) ]];
+    UILabel *desc2Label = [MyControl createLabelWithFrame:CGRectMake(bodyView.frame.size.width/2-100, 190, 200, 40) Font:13 Text:[NSString stringWithFormat:@"星球提示：已经连续登陆%d天,明日可领取%d",self.continuousDay,self.nextgold ]];
     desc2Label.textColor = [UIColor grayColor];
     [bodyView addSubview:desc2Label];
     

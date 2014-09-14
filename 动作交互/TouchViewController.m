@@ -58,6 +58,7 @@
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:downloadRecord Block:^(BOOL isFinsh, httpDownloadBlock *load) {
         if (isFinsh) {
             NSLog(@"下载的录音：%@",load.dataDict);
+            NSLog(@"load.data:%@",load.data);
             [self loadRecordURL:[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
         }
     }];
@@ -65,28 +66,46 @@
 }
 - (void)loadRecordURL:(NSString *)url
 {
-    NSString *urlString = [NSString stringWithFormat:@"http://54.199.161.210:8001/%@",url];
-    NSLog(@"urlString:%@",urlString);
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
-    NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *filePath = [NSString stringWithFormat:@"%@/record.acc", docDirPath];
-    NSLog(@"data:%@",data);
-    [data writeToFile:filePath atomically:YES];
-    NSError *playerError;
+//    NSString *urlString = [NSString stringWithFormat:@"http://54.199.161.210:8001/%@",url];
+//    NSLog(@"urlString:%@",urlString);
+//    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
+//    NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//    NSString *filePath = [NSString stringWithFormat:@"%@/record.acc", docDirPath];
+//    NSLog(@"data:%@",data);
+//    [data writeToFile:filePath atomically:YES];
+//    NSError *playerError;
 //    _player = [[AVAudioPlayer alloc] initWithData:data error:&playerError];
-    _player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:filePath] error:&playerError];
-    if (_player == nil)
-    {
-        NSLog(@"ERror creating player: %@", [playerError description]);
+//    _player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:filePath] error:&playerError];
+//    if (_player == nil)
+//    {
+//        NSLog(@"ERror creating player: %@", [playerError description]);
+//    }
+//    [self audioPlayerCreate];
+//
+//    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:urlString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//        NSLog(@"%@",load.data);
+//       
+//        
+//    }];
+//    [request release];
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://54.199.161.210:8001/%@",url]]];
+    NSLog(@"data.....%@",data);
+    NSURL *URL=[NSURL URLWithString:[NSString stringWithFormat:@"http://54.199.161.210:8001/%@",url]];
+    //实例化ASIHTTPRequest
+    _request=[ASIHTTPRequest requestWithURL:URL];
+    [_request setDelegate:self];
+    //开始异步下载
+    [_request startAsynchronous];
+}
+- (void)requestFinished:(ASIHTTPRequest *)request{
+    NSError *error=[request error];
+    if (error) {
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"下载出错" message:@"出错了" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
+        [alert release];
     }
-    [self audioPlayerCreate];
-
-    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:urlString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-        NSLog(@"%@",load.data);
-       
-        
-    }];
-    [request release];
+    NSLog(@"%@",request.responseData);
+    
 }
 #pragma mark - 摸一摸界面
 - (void)createAlertView
@@ -131,6 +150,25 @@
     [bodyView addSubview:downView];
     
     UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"cat2.jpg"];
+    NSString *animalHeadPath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
+    UIImage *headImage = [UIImage imageWithContentsOfFile:animalHeadPath];
+    if (headImage) {
+        headImageView.image = headImage;
+    }else{
+        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinsh, httpDownloadBlock *load) {
+            if (isFinsh) {
+                
+                if (load.dataImage == NULL) {
+                    headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+                }else{
+                    NSString *headFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
+                    headImageView.image = load.dataImage;
+                    [load.data writeToFile:headFilePath atomically:YES];
+                }
+            }
+        }];
+        [request release];
+    }
     headImageView.layer.cornerRadius = 28;
     headImageView.layer.masksToBounds = YES;
     [downView addSubview:headImageView];
@@ -139,7 +177,7 @@
     [downView addSubview:cricleHeadImageView];
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 15, 200, 20) Font:12 Text:nil];
     
-    NSAttributedString *helpPetString = [self firstString:@"摸摸~" formatString:@" 猫君 " insertAtIndex:2];
+    NSAttributedString *helpPetString = [self firstString:@"摸摸~" formatString:[NSString stringWithFormat:@" %@ ",[self.animalInfoDict objectForKey:@"name"]] insertAtIndex:2];
     helpPetLabel.attributedText = helpPetString;
     [helpPetString release];
     [downView addSubview:helpPetLabel];

@@ -19,6 +19,7 @@
 @interface BottomMenuRootViewController ()
 {
     NSString *masterID;
+    NSDictionary *animalInfoDict;
 }
 
 @end
@@ -45,6 +46,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         NSLog(@"宠物信息：%@",load.dataDict);
         if (isFinish) {
             masterID =[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"];
+            animalInfoDict = [load.dataDict objectForKey:@"data"];
             [self createMenu];
 
         }
@@ -138,6 +140,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     [shake didMoveToParentViewController:self];
     [shake becomeFirstResponder];
     [self.view addSubview:shake.view];
+    shake.animalInfoDict = animalInfoDict;
     [self hideAll];
 }
 
@@ -174,6 +177,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     if ([masterID isEqualToString:[USER objectForKey:@"usr_id"]]) {
         ShoutViewController *shout = [[ShoutViewController alloc] init];
         [self addChildViewController:shout];
+        shout.animalInfoDict = animalInfoDict;
         [shout release];
         [shout didMoveToParentViewController:self];
         [shout createRecordOne];
@@ -182,6 +186,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }else{
         
         TouchViewController *touch = [[TouchViewController alloc] init];
+        touch.animalInfoDict = animalInfoDict;
         [self addChildViewController:touch];
         [touch release];
         [touch didMoveToParentViewController:self];

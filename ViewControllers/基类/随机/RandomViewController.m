@@ -91,14 +91,24 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     NSLog(@"%f", qtmquitView.frame.origin.y);
+    int oldgold = [[USER objectForKey:@"oldgold"] intValue];
+    int gold = [[USER objectForKey:@"gold"] intValue];
+    if (oldgold != gold) {
+        int index = gold - oldgold;
+        toolTipsVC = [[ToolTipsViewController alloc ]init];
+        [self addChildViewController:toolTipsVC];
+        [toolTipsVC didMoveToParentViewController:self];
+        [self.view addSubview:toolTipsVC.view];
+        toolTipsVC.coinNumber= index;
+        toolTipsVC.nextgold = [[USER objectForKey:@"next_gold"] intValue];
+        toolTipsVC.continuousDay = [[USER objectForKey:@"con_login"] intValue];
+        [toolTipsVC createAlertView];
+    }
 //    if (!isMenuBgViewAppear) {
 ////        [self.view bringSubviewToFront:self.menuBgView];
 //        isMenuBgViewAppear = YES;
 //    }
-//    toolTipsVC = [[ToolTipsViewController alloc ]init];
-//    [self addChildViewController:toolTipsVC];
-//    [toolTipsVC didMoveToParentViewController:self];
-//    [self.view addSubview:toolTipsVC.view];
+
 //    int tt = arc4random()%3;
 //    NSLog(@"tt%d",tt);
 //    if (tt == 0) {

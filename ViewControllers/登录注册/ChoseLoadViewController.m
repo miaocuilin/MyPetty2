@@ -282,6 +282,7 @@
 -(void)getUserData
 {
     NSString * url = [NSString stringWithFormat:@"%@%@", INFOAPI,[ControllerManager getSID]];
+    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             if ([[load.dataDict objectForKey:@"errorCode"] intValue] == 2) {

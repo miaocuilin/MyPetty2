@@ -133,6 +133,7 @@
         TalkViewController *talk = [[TalkViewController alloc] init];
         talk.friendName = [self.dataArray[num] name];
         talk.usr_id = [self.dataArray[num] usr_id];
+        talk.otherTX = [self.dataArray[num] tx];
         [self presentViewController:talk animated:YES completion:nil];
     };
     return cell;

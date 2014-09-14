@@ -264,6 +264,7 @@
     [self cancelBtnClick];
     vc.friendName = [headerDict objectForKey:@"name"];
     vc.usr_id = [headerDict objectForKey:@"usr_id"];
+    vc.otherTX = [headerDict objectForKey:@"tx"];
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }

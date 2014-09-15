@@ -94,11 +94,11 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     self.label2.textAlignment = NSTextAlignmentCenter;
     [self.menuBgView addSubview:self.label2];
     
-    self.label3 = [MyControl createLabelWithFrame:CGRectMake(90, 140, 40, 15) Font:13 Text:@"叫一叫"];
+    self.label3 = [MyControl createLabelWithFrame:CGRectMake(90, 140, 40, 15) Font:13 Text:@"摸一摸"];
     self.label3.textAlignment = NSTextAlignmentCenter;
     [self.menuBgView addSubview:self.label3];
     if ([masterID isEqualToString:[USER objectForKey:@"usr_id"]]){
-        self.label3.text = @"摸一摸";
+        self.label3.text = @"叫一叫";
     }
     
     self.label4 = [MyControl createLabelWithFrame:CGRectMake(90, 140, 40, 15) Font:13 Text:@"逗一逗"];
@@ -180,7 +180,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         shout.animalInfoDict = animalInfoDict;
         [shout release];
         [shout didMoveToParentViewController:self];
-        [shout createRecordOne];
+//        [shout createRecordOne];
         [self.view addSubview:shout.view];
         [self hideAll];
     }else{
@@ -204,13 +204,11 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }
     NSLog(@"遛一遛");
     
-    NSLog(@"4");
     TouchViewController *touch = [[TouchViewController alloc] init];
     [self addChildViewController:touch];
     [touch release];
     [touch didMoveToParentViewController:self];
     [self.view addSubview:touch.view];
-//    [touch createAlertView];
     [self hideAll];
 }
 -(void)headBtnClick

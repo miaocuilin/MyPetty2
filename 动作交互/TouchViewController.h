@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import "ASIFormDataRequest.h"
+@class AudioStreamer;
 
 @interface TouchViewController : UIViewController<AVAudioPlayerDelegate>
 {
@@ -16,9 +16,11 @@
     AVAudioPlayer*                  _player;
     UIImageView *playAndPauseImageView;
     BOOL isplaying;
-    ASIFormDataRequest *_request;
+    AudioStreamer *streamer;
+//    NSString * recordURL;
+
 }
 @property (nonatomic,strong)NSDictionary *animalInfoDict;
-
+@property (nonatomic,strong)NSString *recordURL;
 - (void)createAlertView;
 @end

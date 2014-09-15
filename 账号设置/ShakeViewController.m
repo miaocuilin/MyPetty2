@@ -101,6 +101,8 @@
 //    }
         isGoods = YES;
         [self createGoodsAlertView];
+    
+    
     [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
     [ControllerManager HUDText:@"猫君收到了一个糖果，人气+100" showView:self.view.window yOffset:-60.0];
 }
@@ -171,9 +173,17 @@
     NSLog(@"赠送url:%@",sendString);
     httpDownloadBlock *request  = [[httpDownloadBlock alloc] initWithUrlStr:sendString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"赠送数据：%@",load.dataDict);
-        int index = [[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] intValue];
+        int newexp = [[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] intValue];
+        int exp = [[USER objectForKey:@"exp"] intValue];
+        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
+        if (exp != newexp && (newexp - exp)>0) {
+            int index = newexp - exp;
+            [self soundEnd:index];
+
+        }
+
         
-        [self soundEnd:index];
+        
     }];
     [request release];
     

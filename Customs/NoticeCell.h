@@ -18,4 +18,6 @@
 }
 @property (nonatomic)NSInteger TipsNum;
 -(void)configUI:(SystemMessageListModel *)model;
+
+-(void)configUIWithDict:(NSDictionary *)dic;
 @end

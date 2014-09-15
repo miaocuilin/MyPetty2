@@ -21,7 +21,7 @@
 }
 - (void)MessageUI
 {
-    noticeMessage_tx = [MyControl createImageViewWithFrame:CGRectMake(10, 15, 50, 50) ImageName:@"20-1.png"];
+    noticeMessage_tx = [MyControl createImageViewWithFrame:CGRectMake(10, 15, 50, 50) ImageName:@"defaultUserHead.png"];
     noticeMessage_tx.layer.cornerRadius = 25;
     noticeMessage_tx.layer.masksToBounds = YES;
     [self.contentView addSubview:noticeMessage_tx];
@@ -41,6 +41,7 @@
     NSDate * time = [NSDate date];
     noticeMessage_time = [MyControl createLabelWithFrame:CGRectMake(180, 15, 120, 20) Font:12 Text:[NSString stringWithFormat:@"%@",time]];
     noticeMessage_time.textColor = [UIColor grayColor];
+    noticeMessage_time.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:noticeMessage_time];
     
     desLabel = [MyControl createLabelWithFrame:CGRectMake(70, 40, self.frame.size.width-70-20, 20) Font:14 Text:@"111111111111111"];
@@ -89,6 +90,59 @@
     desLabel.text = model.body;
 }
 
+-(void)configUIWithDict:(NSDictionary *)dic
+{
+    tips.hidden = YES;
+    
+    NSArray * array = [dic objectForKey:@"data"];
+    NSDictionary * dict = array[array.count-1];
+    desLabel.text = [dict objectForKey:@"msg"];
+    //
+    NSDate * date = [NSDate dateWithTimeIntervalSince1970:[[dict objectForKey:@"time"] intValue]];
+    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];
+    noticeMessage_time.text = [formatter stringFromDate:date];
+    [formatter release];
+    //名字和头像
+    NSString * code = [NSString stringWithFormat:@"usr_id=%@dog&cat", [dic objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [dic objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+//    NSLog(@"url--%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"usrdataDict:%@", load.dataDict);
+            NSDictionary * dict1 = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            noticeMessage_name.text = [dict1 objectForKey:@"name"];
+            //下载头像
+            /**************************/
+            if (!([[dict1 objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[dict1 objectForKey:@"tx"] length]==0)) {
+                NSString * docDir = DOCDIR;
+                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict1 objectForKey:@"tx"]]];
+                //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+                UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+                if (image) {
+                    noticeMessage_tx.image = image;
+                }else{
+                    //下载头像
+                    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [dict1 objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                        if (isFinish) {
+                            noticeMessage_tx.image = load.dataImage;
+                            NSString * docDir = DOCDIR;
+                            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict1 objectForKey:@"tx"]]];
+                            [load.data writeToFile:txFilePath atomically:YES];
+                        }else{
+                            NSLog(@"头像下载失败");
+                        }
+                    }];
+                    [request release];
+                }
+            }
+            /**************************/
+        }else{
+            
+        }
+    }];
+    [request release];
+}
 - (void)awakeFromNib
 {
     // Initialization code

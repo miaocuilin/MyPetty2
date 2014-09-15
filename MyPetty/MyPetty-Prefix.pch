@@ -203,7 +203,7 @@
     #define COMMENTAPI @"http://54.199.161.210:8001/index.php?r=image/commentApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
     //获取活动数和消息数
-    #define ACTIVITYANDNOTIFYAPI @"http://54.199.161.210/dc/index.php?r=user/notifyApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define ACTIVITYANDNOTIFYAPI @"http://54.199.161.210:8001/index.php?r=user/notifyApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
     //注销API
     #define DELETEAPI @"http://54.199.161.210:8001/index.php?r=site/clearUser&name="

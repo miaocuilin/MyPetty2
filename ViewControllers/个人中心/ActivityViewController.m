@@ -100,7 +100,7 @@
         backBtn.selected = NO;
     }];
 }
-
+#pragma mark -下载新消息并显示历史记录和最新消息
 -(void)loadData
 {
     NSLog(@"%@%@",TOPICLISTAPI,[ControllerManager getSID]);

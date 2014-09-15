@@ -321,6 +321,7 @@
     [self.talkDataArray addObject:messageDict];
     
     [self.talkDataDict setObject:self.talkDataArray forKey:@"data"];
+    [self.talkDataDict setObject:usrID forKey:@"usr_id"];
     [self.totalDataDict setObject:self.talkDataDict forKey:self.talk_id];
     [self.totalDataDict writeToFile:path atomically:YES];
     

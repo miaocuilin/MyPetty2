@@ -54,6 +54,7 @@
             [self createUI];
         }else{
             UIAlertView * alert = [MyControl createAlertViewWithTitle:@"图片信息加载失败"];
+            [self jumpToChoose];
         }
     }];
 }
@@ -143,6 +144,7 @@
                 [self setAnimation:bgImageView];
 //                [self performSelector:@selector(jumpToChoose) withObject:nil afterDelay:2];
                 UIAlertView * alert = [MyControl createAlertViewWithTitle:@"图片加载失败"];
+                [self jumpToChoose];
             }
 //            [self performSelector:@selector(jumpToRandom) withObject:nil afterDelay:2];
         }];

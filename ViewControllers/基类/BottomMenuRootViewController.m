@@ -30,10 +30,14 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    [self createMenu];
+}
+- (void)viewWillAppear:(BOOL)animated
+{
     if ([ControllerManager getIsSuccess]) {
         [self loadAnimalInfoData];
     }
-//    [self createMenu];
 }
 
 - (void)loadAnimalInfoData
@@ -47,7 +51,32 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         if (isFinish) {
             masterID =[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"];
             animalInfoDict = [load.dataDict objectForKey:@"data"];
-            [self createMenu];
+//            [self createMenu];
+            
+            NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [USER objectForKey:@"aid"]];
+            
+            UIImage *image =[UIImage imageWithContentsOfFile:pngFilePath];
+            if (image) {
+                [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
+            }else{
+                httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[USER objectForKey:@"a_tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                    if (isFinish) {
+                        if (load.dataImage == NULL) {
+                            [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
+                        }else{
+                            [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                            [load.data writeToFile:pngFilePath atomically:YES];
+                        }
+                    }
+                }];
+                [request release];
+            }
+
+            
+            
+            if ([masterID isEqualToString:[USER objectForKey:@"usr_id"]]){
+                self.label3.text = @"叫一叫";
+            }
 
         }
     }];
@@ -97,18 +126,25 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     self.label3 = [MyControl createLabelWithFrame:CGRectMake(90, 140, 40, 15) Font:13 Text:@"摸一摸"];
     self.label3.textAlignment = NSTextAlignmentCenter;
     [self.menuBgView addSubview:self.label3];
-    if ([masterID isEqualToString:[USER objectForKey:@"usr_id"]]){
-        self.label3.text = @"叫一叫";
-    }
+    
     
     self.label4 = [MyControl createLabelWithFrame:CGRectMake(90, 140, 40, 15) Font:13 Text:@"逗一逗"];
+    if ([[USER objectForKey:@"planet"] intValue]==2) {
+        self.label4.text = @"遛一遛";
+    }
     self.label4.textAlignment = NSTextAlignmentCenter;
     [self.menuBgView addSubview:self.label4];
     
     headCircle = [MyControl createImageViewWithFrame:CGRectMake(60+9, self.menuBgView.frame.size.height-circleWidth+5, circleWidth, circleWidth) ImageName:@"headCircle.png"];
     [self.menuBgView addSubview:headCircle];
     
-    self.headButton = [MyControl createButtonWithFrame:CGRectMake(78, self.self.menuBgView.frame.size.height-headBtnWidth, headBtnWidth, headBtnWidth) ImageName:@"cat2.jpg" Target:self Action:@selector(headBtnClick) Title:nil];
+    self.headButton = [MyControl createButtonWithFrame:CGRectMake(78, self.self.menuBgView.frame.size.height-headBtnWidth, headBtnWidth, headBtnWidth) ImageName:@"defaultPetHead.png" Target:self Action:@selector(headBtnClick) Title:nil];
+    if (!([[USER objectForKey:@"a_tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"a_tx"] length]==0)) {
+//        NSString *animalTXPath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[USER objectForKey:@"a_tx"]]];
+        
+
+    }
+    
     self.headButton.layer.cornerRadius = headBtnWidth/2;
     self.headButton.layer.masksToBounds = YES;
     [self.menuBgView addSubview:self.headButton];
@@ -140,6 +176,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     [shake didMoveToParentViewController:self];
     [shake becomeFirstResponder];
     [self.view addSubview:shake.view];
+    shake.titleString = self.label1.text;
     shake.animalInfoDict = animalInfoDict;
     [self hideAll];
 }

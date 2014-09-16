@@ -34,22 +34,17 @@
     NSString *path2 = [[NSBundle mainBundle] pathForResource:@"rocked" ofType:@"wav"];
     AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path2], &soundID2);
 	AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path], &soundID);
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadShakeData) name:@"shake" object:nil];
+
     [self loadShakeDataInit];
-
-
-//    [self sendGiftData];
 }
-//- (void)ShakingAction
-//{
-//    [self loadShakeData];
-//}
 - (void)viewDidAppear:(BOOL)animated{
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadShakeData) name:@"shake" object:nil];
     [self createNoChanceView];
 }
 - (void)viewDidDisappear:(BOOL)animated
 {
     [self resignFirstResponder];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"shake" object:nil];
 }
 - (BOOL)canBecomeFirstResponder
 {
@@ -277,7 +272,7 @@
 {
     noChanceHUD = [self alertViewInit:CGSizeMake(300, 425)];
     UIView *totalView =[self shopGiftTitle];
-    [self unfortunatelyUpView:@"摇一摇，要到外婆桥。猫君今天的摇一摇次数用完啦，换个宠物试试吧~" imageString:@"nochance.png"];
+    [self unfortunatelyUpView:@"摇一摇，摇到外婆桥。猫君今天的摇一摇次数用完啦，换个宠物试试吧~" imageString:@"nochance.png"];
     [self addDownView:[NSString stringWithFormat:@"%d",count]];
     noChanceHUD.customView = totalView;
     noChanceHUD.removeFromSuperViewOnHide = NO;
@@ -494,6 +489,7 @@
     UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
     [totalView addSubview:titleView];
     UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"摇一摇"];
+    titleLabel.text = self.titleString;
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [totalView addSubview:titleLabel];
     UIImageView *closeImageView = [MyControl createImageViewWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png"];

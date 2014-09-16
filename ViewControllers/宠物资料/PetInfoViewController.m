@@ -83,11 +83,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [self loadAttentionAPI];
 //    [self.view bringSubviewToFront:self.menuBgBtn];
 //    [self.view bringSubviewToFront:self.menuBgView];
-
+    [self loadAttentionAPI];
 }
 #pragma mark - 关系API
 - (void)loadAttentionAPI
 {
+    StartLoading;
 //    animal/relationApi&aid=
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
     NSString *attentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RELATIONAPI,self.aid,sig,[ControllerManager getSID]];
@@ -98,14 +99,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             isFans = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_fan"] intValue];
             isFollow = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_follow"] intValue];
             NSLog(@"%d",isFollow);
-
-            [self createMore];
-            //show more
-            alphaBtn.hidden = NO;
-            [UIView animateWithDuration:0.3 animations:^{
-                moreView.frame = CGRectMake(0, self.view.frame.size.height-234, 320, 234);
-                alphaBtn.alpha = 0.5;
-            }];
+            attentionBtn.selected = isFollow;
+            addBtn.selected = isFans;
+            if (!isFans) {
+                super.label1.text =@"捣捣乱";
+            }
+            LoadingSuccess;
         }
     }];
     [request release];
@@ -350,8 +349,22 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSLog(@"more");
     if (!isMoreCreated) {
         //create more
-        [self loadAttentionAPI];
+        [self createMore];
+        isMoreCreated = YES;
     }
+    
+    [self loadAttentionAPI];
+    [self.view bringSubviewToFront:alphaBtn];
+    [self.view bringSubviewToFront:moreView];
+    //show more
+    alphaBtn.hidden = NO;
+    CGRect rect = moreView.frame;
+    rect.origin.y -= rect.size.height;
+    [UIView animateWithDuration:0.3 animations:^{
+        moreView.frame = rect;
+        alphaBtn.alpha = 0.5;
+    }];
+
     
 
 }
@@ -408,11 +421,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [addBtn setTitle:@"已加入" forState:UIControlStateSelected];
         addBtn.titleLabel.font = [UIFont systemFontOfSize:15];
         [strangerAndFakeOwnerView addSubview:addBtn];
-        addBtn.selected = isFans;
         attentionBtn = [MyControl createButtonWithFrame:CGRectMake(354/2, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(attentionBtnClick:) Title:@"关注"];
         [attentionBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
-        NSLog(@"isFollow:%d",isFollow);
-        attentionBtn.selected = isFollow;
         NSLog(@"attentionBtn:%d",attentionBtn.selected);
         [attentionBtn setTitle:@"已关注" forState:UIControlStateSelected];
         attentionBtn.titleLabel.font = [UIFont systemFontOfSize:15];

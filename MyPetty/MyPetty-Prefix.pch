@@ -250,5 +250,8 @@
     #define SHAKEAPI @"http://54.199.161.210:8001/index.php?r=animal/shakeApi&aid="
     //摇一摇物品自动赠送
     #define SENDSHAKEGIFT @"http://54.199.161.210:8001/index.php?r=animal/sendGiftApi&aid="
-
+    //是否已经进行过摸一摸
+    #define ISRECORDERAPI @"http://54.199.161.210:8001/index.php?r=animal/isVoicedApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    //摸一摸api
+    #define TOUCHAPI @"http://54.199.161.210:8001/index.php?r=animal/touchApi&aid="
 #endif

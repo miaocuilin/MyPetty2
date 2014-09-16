@@ -14,6 +14,7 @@ UIView* goBackgroundView;
 UIImageView* goBackImageView;
 UIImageView* goBackFakeImageView;
 UIViewController* goBackViewController;
+UIActionSheet *sheet;
 
 @implementation ClickImage
 
@@ -97,6 +98,9 @@ UIViewController* goBackViewController;
         UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideImage:)];
         [goBackgroundView addGestureRecognizer:tap];
         [tap release];
+        UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(saveImage)];
+        [window addGestureRecognizer:longPress];
+        sheet = [[UIActionSheet alloc] initWithTitle:@"保存到相册" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"保存", nil];
         
         defaultImageView.alpha = 0;
         [UIView animateWithDuration:_duration animations:^{
@@ -143,11 +147,36 @@ UIViewController* goBackViewController;
     }];
 }
 
+
 - (void)setClickToViewController:(UIViewController*)cViewController {
     clickViewController = cViewController;
 }
-
-
+#pragma mark - 保存到相册
+- (void)saveImage
+{
+    [sheet showInView:window];
+}
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        UIImageView * imageView = (UIImageView *)[window viewWithTag:1];
+        UIImageWriteToSavedPhotosAlbum(imageView.image, self, @selector(imageSavedToPhotosAlbum:didFinishSavingWithError:contextInfo:), nil);
+    }
+}
+- (void)imageSavedToPhotosAlbum:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    NSString *message = @"呵呵";
+    if (!error) {
+//        message = @"成功保存到相册";
+        UIAlertView *alert = [MyControl createAlertViewWithTitle:@"已保存至相册"];
+        
+    }else
+    {
+        UIAlertView *alert = [MyControl createAlertViewWithTitle:@"保存失败"];
+        message = [error description];
+    }
+//    NSLog(@"message is %@",message);
+}
 
 @end
 

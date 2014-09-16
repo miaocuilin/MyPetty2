@@ -11,7 +11,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "ASIFormDataRequest.h"
 #import "AFURLSessionManager.h"
-
+#import "lame.h"
 @interface ShoutViewController : UIViewController<AVAudioPlayerDelegate,AVAudioRecorderDelegate>
 {
     AVAudioRecorder*                _recorder;

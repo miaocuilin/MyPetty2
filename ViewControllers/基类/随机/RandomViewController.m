@@ -93,6 +93,7 @@
     NSLog(@"%f", qtmquitView.frame.origin.y);
     int oldgold = [[USER objectForKey:@"oldgold"] intValue];
     int gold = [[USER objectForKey:@"gold"] intValue];
+    [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
     if (oldgold != gold) {
         int index = gold - oldgold;
         toolTipsVC = [[ToolTipsViewController alloc ]init];
@@ -196,7 +197,7 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             //只包含img_id和图片的url
-//            NSLog(@"宇宙广场数据:%@", load.dataDict);
+            NSLog(@"宇宙广场数据:%@", load.dataDict);
             [self.dataArray removeAllObjects];
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
@@ -485,6 +486,9 @@
 //    DetailViewController * vc = [[DetailViewController alloc] init];
     vc.img_id = model.img_id;
     vc.usr_id = model.usr_id;
+//    if ([ControllerManager getIsSuccess]) {
+//        vc.aid = [model.url substringToIndex:10];
+//    }
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }

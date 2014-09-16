@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 //子类型
-@interface ClickImage : UIImageView {
+@interface ClickImage : UIImageView<UIActionSheetDelegate>
+{
     BOOL isChanged;
     CGRect defaultRect;
     UIImageView *Im;

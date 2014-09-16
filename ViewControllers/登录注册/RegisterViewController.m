@@ -292,7 +292,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (!([self.petInfoModel.tx isKindOfClass:[NSNull class]] || [self.petInfoModel.tx length]==0)) {
         NSString * docDir = DOCDIR;
         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.petInfoModel.tx]];
-        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+//        NSLog(@"--%@--", txFilePath);
         UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
         if (image) {
             [photoButton setBackgroundImage:image forState:UIControlStateNormal];

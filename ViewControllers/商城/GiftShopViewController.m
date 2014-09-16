@@ -9,8 +9,10 @@
 #import "GiftShopViewController.h"
 #import "UserInfoViewController.h"
 #import "UserBagViewController.h"
+#import "GiftShopModel.h"
 @interface GiftShopViewController ()
-
+@property (nonatomic,retain)NSMutableArray *goodGiftDataArray;
+@property (nonatomic,retain)NSMutableArray *badGiftDataArray;
 @end
 
 @implementation GiftShopViewController
@@ -31,7 +33,7 @@
     self.cateArray = [NSMutableArray arrayWithObjects:@"全部", @"新品", @"热卖", @"推荐", nil];
     self.cateArray2 = [NSMutableArray arrayWithObjects:@"喵喵专用", @"汪汪专用", nil];
     self.orderArray = [NSMutableArray arrayWithObjects:@"由高到低", @"由低到高", nil];
-    
+    [self addGiftShopData];
     [self createBg];
     [self createFakeNavigation];
     [self createHeader];
@@ -40,6 +42,43 @@
     
     [self createAlphaBtn];
     [self loadData];
+}
+- (void)addGiftShopData
+{
+    self.goodGiftDataArray =[NSMutableArray arrayWithCapacity:0];
+    self.badGiftDataArray = [NSMutableArray arrayWithCapacity:0];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"shopGift" ofType:@"plist"];
+    NSMutableDictionary *DictData = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+    NSArray *level0 = [[DictData objectForKey:@"good"] objectForKey:@"level0"];
+    NSArray *level1 =[[DictData objectForKey:@"good"] objectForKey:@"level1"];
+    NSArray *level2 =[[DictData objectForKey:@"good"] objectForKey:@"level2"];
+    NSArray *level3 =[[DictData objectForKey:@"good"] objectForKey:@"level3"];
+    [self addData:level0 isGood:YES];
+    [self addData:level1 isGood:YES];
+    [self addData:level2 isGood:YES];
+    [self addData:level3 isGood:YES];
+    
+    NSArray *level4 =[[DictData objectForKey:@"bad"] objectForKey:@"level0"];
+    NSArray *level5 =[[DictData objectForKey:@"bad"] objectForKey:@"level1"];
+    NSArray *level6 =[[DictData objectForKey:@"bad"] objectForKey:@"level2"];
+    [self addData:level4 isGood:NO];
+    [self addData:level5 isGood:NO];
+    [self addData:level6 isGood:NO];
+    
+//    NSLog(@"data:%@",DictData);
+}
+- (void)addData:(NSArray *)array isGood:(BOOL)good
+{
+    for (NSDictionary *dict in array) {
+        GiftShopModel *model = [[GiftShopModel alloc] init];
+        [model setValuesForKeysWithDictionary:dict];
+        if (good) {
+            [self.goodGiftDataArray addObject:model];
+        }else{
+            [self.badGiftDataArray addObject:model];
+        }
+        [model release];
+    }
 }
 - (void)loadData
 {
@@ -289,8 +328,9 @@
     
     [self.view bringSubviewToFront:navView];
     [self.view bringSubviewToFront:headerView];
-    
-    for(int i=0;i<3*10;i++){
+    int index = self.badGiftDataArray.count + self.goodGiftDataArray.count-1;
+    NSLog(@"index:%d",index);
+    for(int i=0;i<index;i++){
         CGRect rect = CGRectMake(20+i%3*100, 64+35+15+i/3*100, 85, 90);
         UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"giftBg.png"];
         [sv addSubview:imageView];
@@ -347,7 +387,20 @@
         UIButton * button = [MyControl createButtonWithFrame:rect ImageName:@"" Target:self Action:@selector(buttonClick:) Title:nil];
         [sv addSubview:button];
         button.tag = 1000+i;
+        GiftShopModel *model;
+        if (self.goodGiftDataArray.count>i) {
+            model = self.goodGiftDataArray[i];
+            rqNum.text = [NSString stringWithFormat:@"+%@",model.add_rq];
+        }else{
+            model = self.badGiftDataArray[i-self.goodGiftDataArray.count+1];
+            rqNum.text = [NSString stringWithFormat:@"%@",model.add_rq];
+        }
+        giftNum.text = model.price;
+        giftPic.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
+        giftName.text=model.name;
+
     }
+    
     
     /******************************/
     

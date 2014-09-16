@@ -8,6 +8,10 @@
 
 #import "TouchViewController.h"
 #import "HYScratchCardView.h"
+#import "AudioStreamer.h"
+#import <QuartzCore/CoreAnimation.h>
+#import <MediaPlayer/MediaPlayer.h>
+#import <CFNetwork/CFNetwork.h>
 #define GRAYBLUECOLOR [UIColor colorWithRed:127/255.0 green:151/255.0 blue:179/255.0 alpha:1]
 #define LIGHTORANGECOLOR [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1]
 
@@ -27,19 +31,9 @@
     // Do any additional setup after loading the view.
 //    [self createButton];
     _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
-    [self loadRecordData];
-}
-
-
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    NSString *touchState =  [USER objectForKey:@"touch"];
-    if ([touchState intValue]==1) {
-        [self createTouchEndView];
-    }else{
-        [self createAlertView];
-    }
+//    [self checkIsTouch];
+    [self loadRecordStringData];
+//    [self touchAPIData];
 }
 - (void)backgroundView
 {
@@ -48,64 +42,68 @@
     bgView.backgroundColor = [UIColor blackColor];
     bgView.alpha = 0.5;
 }
+#pragma mark - 是否已经摸一摸
+
+- (void)checkIsTouch
+{
+    NSDate *  senddate=[NSDate date];
+    NSDateFormatter  *dateformatter=[[NSDateFormatter alloc] init];
+    [dateformatter setDateFormat:@"YYYYMMdd"];
+    NSString *  locationString=[dateformatter stringFromDate:senddate];
+    [dateformatter release];
+    NSString * fileString = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@%@.mp3",locationString,[USER objectForKey:@"aid"]]];
+    NSFileManager *manager = [[NSFileManager alloc]init];
+    if ([manager fileExistsAtPath:fileString]) {
+        [self createTouchEndView];
+    }else{
+        [self loadRecordStringData];
+    }
+}
 #pragma mark - 下载声音
-- (void)loadRecordData
+
+- (void)loadRecordStringData
 {
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
     NSString *downloadRecord = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RECORDDOWNLOADAPI,[USER objectForKey:@"aid" ],sig,[ControllerManager getSID]];
-    NSString *downloadRecordString = [DOCDIR stringByAppendingString:@"record.aac"];
     NSLog(@"下载API:%@",downloadRecord);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:downloadRecord Block:^(BOOL isFinsh, httpDownloadBlock *load) {
         if (isFinsh) {
             NSLog(@"下载的录音：%@",load.dataDict);
-            NSLog(@"load.data:%@",load.data);
-            [self loadRecordURL:[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
+            self.recordURL = [NSString stringWithFormat:@"http://54.199.161.210:8001/%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
+            [self loadRecordData];
         }
     }];
     [request release];
 }
-- (void)loadRecordURL:(NSString *)url
+- (void)loadRecordData
 {
-//    NSString *urlString = [NSString stringWithFormat:@"http://54.199.161.210:8001/%@",url];
-//    NSLog(@"urlString:%@",urlString);
-//    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
-//    NSString *docDirPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-//    NSString *filePath = [NSString stringWithFormat:@"%@/record.acc", docDirPath];
-//    NSLog(@"data:%@",data);
-//    [data writeToFile:filePath atomically:YES];
-//    NSError *playerError;
-//    _player = [[AVAudioPlayer alloc] initWithData:data error:&playerError];
-//    _player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:filePath] error:&playerError];
-//    if (_player == nil)
-//    {
-//        NSLog(@"ERror creating player: %@", [playerError description]);
-//    }
-//    [self audioPlayerCreate];
-//
-//    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:urlString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-//        NSLog(@"%@",load.data);
-//       
-//        
-//    }];
-//    [request release];
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://54.199.161.210:8001/%@",url]]];
-    NSLog(@"data.....%@",data);
-    NSURL *URL=[NSURL URLWithString:[NSString stringWithFormat:@"http://54.199.161.210:8001/%@",url]];
-    //实例化ASIHTTPRequest
-    _request=[ASIHTTPRequest requestWithURL:URL];
-    [_request setDelegate:self];
-    //开始异步下载
-    [_request startAsynchronous];
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:self.recordURL Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//        NSLog(@"load.data音频二进制数据:%@",load.data);
+        NSDate *  senddate=[NSDate date];
+        NSDateFormatter  *dateformatter=[[NSDateFormatter alloc] init];
+        [dateformatter setDateFormat:@"YYYYMMdd"];
+        NSString *  locationString=[dateformatter stringFromDate:senddate];
+        [load.data writeToFile:[DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@%@.mp3",locationString,[USER objectForKey:@"aid"]]] atomically:YES];
+        [dateformatter release];
+        _player = [[AVAudioPlayer alloc] initWithData:load.data error:nil];
+        [self createAlertView];
+        
+    }];
+    [request release];
 }
-- (void)requestFinished:(ASIHTTPRequest *)request{
-    NSError *error=[request error];
-    if (error) {
-        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"下载出错" message:@"出错了" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-        [alert release];
-    }
-    NSLog(@"%@",request.responseData);
+#pragma mark - 摸一摸api
+- (void)touchAPIData
+{
     
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
+    NSString *touchString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",TOUCHAPI,[USER objectForKey:@"aid"],sig,[ControllerManager getSID]];
+    NSLog(@"摸一摸api:%@",touchString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:touchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"摸一摸数据：%@",load.dataDict);
+        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] forKey:@"gold"];
+        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] forKey:@"oldgold"];
+    }];
+    [request release];
 }
 #pragma mark - 摸一摸界面
 - (void)createAlertView
@@ -135,11 +133,11 @@
         NSLog(@"%d",self.scratchCardView.isOpen);
         [ControllerManager HUDImageIcon:@"gold.png" showView:bodyView yOffset:-50.0 Number:100];
         [self shareViewCreate];
-//        [self audioPlayerCreate];
-        [self loadRecordData];
-
-        NSUserDefaults *userdef = [NSUserDefaults standardUserDefaults];
-        [userdef setObject:@"1" forKey:@"touch"];
+//        [self createStreamer:nil];
+//        [streamer start];
+//        [self loadRecordData];
+        [self touchAPIData];
+        [self audioPlayerCreate];
     };
     [self addDownView];
 }
@@ -247,7 +245,7 @@
     _player.meteringEnabled = YES;
     if (_player == nil)
     {
-        NSLog(@"ERror creating player: %@", [playerError description]);
+//        NSLog(@"ERror creating player: %@", [playerError description]);
     }
     _player.delegate = self;
     playAndPauseImageView.image = [UIImage imageNamed:@"record_pause.png"];
@@ -298,10 +296,6 @@
     
     bodyView = [MyControl createViewWithFrame:CGRectMake(0, 40, 300, 385)];
     bodyView.backgroundColor = [UIColor whiteColor];
-//    UIView *alphaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 385)];
-//    alphaView.backgroundColor = [UIColor whiteColor];
-//    alphaView.alpha = 0.8;
-//    [bodyView addSubview:alphaView];
     [totalView addSubview:bodyView];
     return bodyView;
 }
@@ -352,33 +346,6 @@
     [USER setObject:@"0" forKey:@"touch"];
     
 }
-#pragma mark - 临时button
-- (void)createButton
-{
-    NSArray *array1 = @[@"每日登陆",@"升级经验",@"官职升级"];
-    for (int i = 0 ; i < 3; i++) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(50, 100+(i*100), 100, 100);
-        [button setTitle:array1[i] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.view addSubview:button];
-    }
-    NSArray *array2 = @[@"加入国家",@"购买成功",@"送礼物"];
-    for (int i = 0; i < array2.count; i++) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(150, 100+(i*100), 100, 100);
-        [button setTitle:array2[i] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.view addSubview:button];
-    }
-    
-}
-- (void)buttonAction:(UIButton *)sender
-{
-    [self createAlertView];
-}
 
 - (void)colseGiftAction
 {
@@ -386,6 +353,64 @@
     [_player release],_player=nil;
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
+}
+#pragma mark - streamer
+- (void)destroyStreamer
+{
+	if (streamer)
+	{
+		[[NSNotificationCenter defaultCenter]
+         removeObserver:self
+         name:ASStatusChangedNotification
+         object:streamer];
+		[streamer stop];
+		[streamer release];
+		streamer = nil;
+	}
+}
+- (void)createStreamer:(NSString *)recordString
+{
+	if (streamer)
+	{
+		return;
+	}
+    
+    //	[self destroyStreamer];
+    NSString *demo = @"http://54.199.161.210:8001/assets/voices/ani/voice_14-09-14_2000000241";
+    NSLog(@"recordURL:%@",self.recordURL);
+    NSString *escapedValue =
+    [(NSString *)CFURLCreateStringByAddingPercentEscapes(
+                                                         nil,
+                                                         (CFStringRef)self.recordURL,
+                                                         NULL,
+                                                         NULL,
+                                                         kCFStringEncodingUTF8)
+     autorelease];
+    NSLog(@"escaped:%@",escapedValue);
+	NSURL *url = [NSURL URLWithString:escapedValue];
+	streamer = [[AudioStreamer alloc] initWithURL:url];
+	[[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(playbackStateChanged:)
+     name:ASStatusChangedNotification
+     object:streamer];
+}
+- (void)playbackStateChanged:(NSNotification *)aNotification
+{
+	if ([streamer isWaiting])
+	{
+        playAndPauseImageView.image = [UIImage imageNamed:@"record_play.png"];
+	}
+	else if ([streamer isPlaying])
+	{
+        playAndPauseImageView.image = [UIImage imageNamed:@"record_pause.png"];
+        
+	}
+	else if ([streamer isIdle])
+	{
+		[self destroyStreamer];
+        playAndPauseImageView.image = [UIImage imageNamed:@"record_play.png"];
+	}
 }
 
 @end

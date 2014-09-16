@@ -40,15 +40,33 @@
 {
     [super viewDidLoad];
     [self backgroundView];
-    
+    [self loadIsRecorderData];
     // Do any additional setup after loading the view.
 }
+
 - (void)backgroundView
 {
     UIView *bgView = [MyControl createViewWithFrame:self.view.frame];
     [self.view addSubview:bgView];
     bgView.backgroundColor = [UIColor blackColor];
     bgView.alpha = 0.5;
+}
+#pragma mark - 是否已经上传录音
+- (void)loadIsRecorderData
+{
+    NSString *isTouchString = [NSString stringWithFormat:@"%@%@",ISRECORDERAPI,[ControllerManager getSID]];
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:isTouchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        if (isFinish) {
+            NSLog(@"isVoiced:%@",load.dataDict);
+            [self shopGiftTitle];
+            [self createRecordOne];
+            if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"is_voiced"] intValue]) {
+                [self createRecordedEndView];
+                upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width*3, 0);
+            }
+        }
+    }];
+    [request release];
 }
 #pragma mark - 上传声音
 - (NSString *)aid
@@ -67,12 +85,11 @@
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:uploadRecordString]];
     _request.requestMethod = @"POST";
     _request.timeOutSeconds = 20;
-    NSString *string = [NSString stringWithFormat:@"%@",_recordedFile];
-//    NSData *data = [NSData dataWithContentsOfURL:_recordedFile];
-    NSData *data = [NSData dataWithContentsOfFile:string];
-    NSTimeInterval  timeInterval = [[NSDate date] timeIntervalSince1970];
-    [_request setData:data withFileName:[NSString stringWithFormat:@"%f.acc", timeInterval]
- andContentType:@"audio/MPEG4AAC" forKey:@"voice"];
+    NSString *mp3FileName = @"Mp3File";
+    mp3FileName = [mp3FileName stringByAppendingString:@".mp3"];
+    NSString *mp3FilePath = [[NSHomeDirectory() stringByAppendingFormat:@"/Documents/"] stringByAppendingPathComponent:mp3FileName];
+    NSData *data = [NSData dataWithContentsOfFile:mp3FilePath];
+    [_request setData:data forKey:@"voice"];
     [_request setUploadProgressDelegate:self];
     _request.queue = self;
     [_request startAsynchronous];
@@ -89,9 +106,16 @@
 -(void)requestFinished:(ASIHTTPRequest *)request
 {
     NSLog(@"上传录音结束");
-    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传成功"];
-    NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width*2, 0);
+    int exp = [[USER objectForKey:@"exp"] intValue];
+    NSDictionary *dict =[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
+    int newexp = [[[dict objectForKey:@"data"] objectForKey:@"exp"] intValue];
+    [USER setObject:[[dict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
+    if (exp != newexp && (newexp - exp)>0) {
+        int index = newexp - exp;
+        [ControllerManager HUDImageIcon:@"Star" showView:self.view yOffset:0 Number:index];
+    }
+    NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
 
     
 }
@@ -104,15 +128,8 @@
 #pragma mark - 初始界面
 - (void)createRecordOne
 {
-    [self shopGiftTitle];
     [self.view addSubview:totalView];
-    //上方视图
-    upScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
     
-    [bodyView addSubview:upScrollView];
-    upScrollView.contentSize = CGSizeMake(upScrollView.frame.size.width*4, upScrollView.frame.size.height);
-    upScrollView.pagingEnabled = YES;
-    upScrollView.scrollEnabled = NO;
     upView = [MyControl createViewWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
     
     [upScrollView addSubview:upView];
@@ -162,11 +179,60 @@
     //下方视图
     [self addDownView:[NSString stringWithFormat:@"%d",count]];
 }
-
+- (void) toMp3
+{
+    NSString *cafFilePath =[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"];
+    
+    NSString *mp3FileName = @"Mp3File";
+    mp3FileName = [mp3FileName stringByAppendingString:@".mp3"];
+    NSString *mp3FilePath = [[NSHomeDirectory() stringByAppendingFormat:@"/Documents/"] stringByAppendingPathComponent:mp3FileName];
+    
+    @try {
+        int read, write;
+        
+        FILE *pcm = fopen([cafFilePath cStringUsingEncoding:1], "rb");  //source
+        fseek(pcm, 4*1024, SEEK_CUR);                                   //skip file header
+        FILE *mp3 = fopen([mp3FilePath cStringUsingEncoding:1], "wb");  //output
+        
+        const int PCM_SIZE = 8192;
+        const int MP3_SIZE = 8192;
+        short int pcm_buffer[PCM_SIZE*2];
+        unsigned char mp3_buffer[MP3_SIZE];
+        
+        lame_t lame = lame_init();
+        lame_set_in_samplerate(lame, 44100);
+        lame_set_VBR(lame, vbr_default);
+        lame_init_params(lame);
+        
+        do {
+            read = fread(pcm_buffer, 2*sizeof(short int), PCM_SIZE, pcm);
+            if (read == 0)
+                write = lame_encode_flush(lame, mp3_buffer, MP3_SIZE);
+            else
+                write = lame_encode_buffer_interleaved(lame, pcm_buffer, read, mp3_buffer, MP3_SIZE);
+            
+            fwrite(mp3_buffer, write, 1, mp3);
+            
+        } while (read != 0);
+        
+        lame_close(lame);
+        fclose(mp3);
+        fclose(pcm);
+    }
+    @catch (NSException *exception) {
+        NSLog(@"%@",[exception description]);
+    }
+    @finally {
+//        [self performSelectorOnMainThread:@selector(convertMp3Finish)
+//                               withObject:nil
+//                            waitUntilDone:YES];
+        NSLog(@"mp3格式转换完成");
+    }
+}
 - (void)recordButtonTouchUp:(UIButton *)sender
 {
     NSLog(@"录音结束");
-    
+    [self toMp3];
     //停止，发送
     if ((int)_recorder.currentTime >=2 ) {
         [_recorder stop];
@@ -220,7 +286,7 @@
         [session setActive:YES error:nil];
     NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:
                               [NSNumber numberWithFloat: 44100],                  AVSampleRateKey,
-                              [NSNumber numberWithInt: kAudioFormatMPEG4AAC],                   AVFormatIDKey,
+                              [NSNumber numberWithInt: kAudioFormatLinearPCM],                   AVFormatIDKey,
                               [NSNumber numberWithInt: 2],                              AVNumberOfChannelsKey,
                               [NSNumber numberWithInt: AVAudioQualityLow],                       AVEncoderAudioQualityKey,
                               nil];
@@ -331,10 +397,19 @@
     bodyView.backgroundColor = [UIColor whiteColor];
     [totalView addSubview:bodyView];
     [self.view addSubview:totalView];
+    
+    //上方视图
+    upScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
+    
+    [bodyView addSubview:upScrollView];
+    upScrollView.contentSize = CGSizeMake(upScrollView.frame.size.width*4, upScrollView.frame.size.height);
+    upScrollView.pagingEnabled = YES;
+    upScrollView.scrollEnabled = NO;
 }
 -(void)colseGiftAction
 {
     //    [totalView removeFromSuperview];
+//    [_request cancel]
     if (_timer) {
         [_timer invalidate];
         _timer = nil;
@@ -590,79 +665,4 @@
         return -1;
     }
 }
-#pragma mark - 临时button
-- (void)createButton
-{
-    NSArray *array1 = @[@"录音",@"播放",@"暂停"];
-    for (int i = 0 ; i < 3; i++) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(50, 100+(i*100), 100, 100);
-        [button setTitle:array1[i] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.view addSubview:button];
-    }
-    NSArray *array2 = @[@"停止录音",@"购买成功",@"送礼物"];
-    for (int i = 0; i < array2.count; i++) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(150, 100+(i*100), 100, 100);
-        [button setTitle:array2[i] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.view addSubview:button];
-    }
-}
-- (void)buttonAction:(UIButton *)sender
-{
-    if ([sender.currentTitle isEqualToString:@"录音"]) {
-        //        [self recordDemo:sender];
-        [_recorder prepareToRecord];
-        _recorder.meteringEnabled = YES;
-        [_recorder record];
-        _hasCAFFile = YES;
-        
-        _timer = [NSTimer scheduledTimerWithTimeInterval:.01f target:self selector:@selector(timerUpdate) userInfo:nil repeats:YES];
-        
-    }else if ([sender.currentTitle isEqualToString:@"播放"]){
-        
-        NSError *playerError;
-        _player = [[AVAudioPlayer alloc] initWithContentsOfURL:_recordedFile error:&playerError];
-        _player.meteringEnabled = YES;
-        if (_player == nil)
-        {
-            NSLog(@"ERror creating player: %@", [playerError description]);
-        }
-        _player.delegate = self;
-        
-        _playing = YES;
-        [_player play];
-        _timer = [NSTimer scheduledTimerWithTimeInterval:.1
-                                                  target:self
-                                                selector:@selector(timerUpdate)
-                                                userInfo:nil
-                                                 repeats:YES];
-        
-    }else if ([sender.currentTitle isEqualToString:@"暂停"]){
-        
-    }else if ([sender.currentTitle isEqualToString:@"停止录音"]){
-        
-        [_timer invalidate];
-        _timer = nil;
-        
-        //停止，发送
-        [_recorder stop];
-        [_recorder release];
-        _recorder = nil;
-    }else if ([sender.currentTitle isEqualToString:@"购买成功"]){
-        [self createRecordOne];
-        
-    }else if ([sender.currentTitle isEqualToString:@"送礼物"]){
-        [self createRecordOne];
-        upScrollView.contentOffset = CGPointMake(upScrollView.frame.size.width*3, 0);
-    }
-    
-}
-
-
-
 @end

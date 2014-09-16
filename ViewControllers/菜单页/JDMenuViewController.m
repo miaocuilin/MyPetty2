@@ -45,6 +45,7 @@
     JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
     sideMenu.refreshData = ^(){
         [self refreshCountryList];
+//        [self createUI];
     };
 }
 -(void)refreshCountryList

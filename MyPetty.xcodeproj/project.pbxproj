@@ -316,8 +316,6 @@
 		491C1FBD19B9A96400CA833E /* UserBagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 491C1FBC19B9A96400CA833E /* UserBagViewController.m */; };
 		491C1FC019B9B4E400CA833E /* UserBagCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 491C1FBF19B9B4E400CA833E /* UserBagCollectionViewCell.m */; };
 		491C1FC719B9CC0600CA833E /* HttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 491C1FC619B9CC0600CA833E /* HttpRequest.m */; };
-		4922D5EB19A754970018160A /* GiftDetialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4922D5E919A754970018160A /* GiftDetialViewController.m */; };
-		4922D5EC19A754970018160A /* GiftDetialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4922D5EA19A754970018160A /* GiftDetialViewController.xib */; };
 		4927D98D19AB173300EBDC88 /* governmentLevel.png in Resources */ = {isa = PBXBuildFile; fileRef = 4927D98C19AB173300EBDC88 /* governmentLevel.png */; };
 		4927D99019AB532800EBDC88 /* product_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 4927D98F19AB532800EBDC88 /* product_bg.png */; };
 		4927D99219AB53A200EBDC88 /* 11.png in Resources */ = {isa = PBXBuildFile; fileRef = 4927D99119AB53A200EBDC88 /* 11.png */; };
@@ -370,6 +368,12 @@
 		496CF22819A4908D0081BF5E /* IQKeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 496CF22519A4908D0081BF5E /* IQKeyboardManager.m */; };
 		496CF22B19A495070081BF5E /* MassWatchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 496CF22A19A495070081BF5E /* MassWatchViewController.m */; };
 		496CF22E19A49ADE0081BF5E /* MassWatchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 496CF22D19A49ADE0081BF5E /* MassWatchCell.m */; };
+		4979751219C68AA700B2CFDE /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4979751119C68AA700B2CFDE /* MediaPlayer.framework */; };
+		4979751619C68B8200B2CFDE /* AudioStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4979751519C68B8200B2CFDE /* AudioStreamer.m */; };
+		4979755919C6B7F400B2CFDE /* libmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4979755819C6B7F400B2CFDE /* libmp3lame.a */; };
+		497E3FCF19C841F100F0F2EC /* shopGift.plist in Resources */ = {isa = PBXBuildFile; fileRef = 497E3FCE19C841F100F0F2EC /* shopGift.plist */; };
+		497E3FD219C850C800F0F2EC /* SuperMarketViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 497E3FD119C850C800F0F2EC /* SuperMarketViewController.m */; };
+		497E3FD519C8525500F0F2EC /* GiftShopModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 497E3FD419C8525500F0F2EC /* GiftShopModel.m */; };
 		49A1A1E119A9D76F00213C04 /* SAStepperControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A1A1E019A9D76F00213C04 /* SAStepperControl.m */; };
 		49A7240319B484FC000D7826 /* ColllectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A7240019B484FC000D7826 /* ColllectionViewCell.m */; };
 		49A799AA19B566E3002411FC /* WaterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799A919B566E3002411FC /* WaterViewController.m */; };
@@ -1051,13 +1055,10 @@
 		491C1FB119B9969C00CA833E /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
 		491C1FBB19B9A96400CA833E /* UserBagViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserBagViewController.h; sourceTree = "<group>"; };
 		491C1FBC19B9A96400CA833E /* UserBagViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserBagViewController.m; sourceTree = "<group>"; };
-		491C1FBE19B9B4E400CA833E /* UserBagCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserBagCollectionViewCell.h; sourceTree = "<group>"; };
-		491C1FBF19B9B4E400CA833E /* UserBagCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserBagCollectionViewCell.m; sourceTree = "<group>"; };
+		491C1FBE19B9B4E400CA833E /* UserBagCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserBagCollectionViewCell.h; path = "../ViewControllers/商城/UserBagCollectionViewCell.h"; sourceTree = "<group>"; };
+		491C1FBF19B9B4E400CA833E /* UserBagCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserBagCollectionViewCell.m; path = "../ViewControllers/商城/UserBagCollectionViewCell.m"; sourceTree = "<group>"; };
 		491C1FC519B9CC0600CA833E /* HttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequest.h; sourceTree = "<group>"; };
 		491C1FC619B9CC0600CA833E /* HttpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpRequest.m; sourceTree = "<group>"; };
-		4922D5E819A754970018160A /* GiftDetialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftDetialViewController.h; sourceTree = "<group>"; };
-		4922D5E919A754970018160A /* GiftDetialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftDetialViewController.m; sourceTree = "<group>"; };
-		4922D5EA19A754970018160A /* GiftDetialViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GiftDetialViewController.xib; sourceTree = "<group>"; };
 		4923C29A19A5E13900FC04F0 /* zhangjr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zhangjr.h; sourceTree = "<group>"; };
 		4927D98C19AB173300EBDC88 /* governmentLevel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = governmentLevel.png; sourceTree = "<group>"; };
 		4927D98F19AB532800EBDC88 /* product_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = product_bg.png; sourceTree = "<group>"; };
@@ -1127,6 +1128,16 @@
 		496CF22A19A495070081BF5E /* MassWatchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MassWatchViewController.m; sourceTree = "<group>"; };
 		496CF22C19A49ADE0081BF5E /* MassWatchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MassWatchCell.h; sourceTree = "<group>"; };
 		496CF22D19A49ADE0081BF5E /* MassWatchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MassWatchCell.m; sourceTree = "<group>"; };
+		4979751119C68AA700B2CFDE /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		4979751419C68B8200B2CFDE /* AudioStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioStreamer.h; sourceTree = "<group>"; };
+		4979751519C68B8200B2CFDE /* AudioStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioStreamer.m; sourceTree = "<group>"; };
+		4979755719C6B7F400B2CFDE /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lame.h; sourceTree = "<group>"; };
+		4979755819C6B7F400B2CFDE /* libmp3lame.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmp3lame.a; sourceTree = "<group>"; };
+		497E3FCE19C841F100F0F2EC /* shopGift.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = shopGift.plist; sourceTree = "<group>"; };
+		497E3FD019C850C800F0F2EC /* SuperMarketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuperMarketViewController.h; sourceTree = "<group>"; };
+		497E3FD119C850C800F0F2EC /* SuperMarketViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuperMarketViewController.m; sourceTree = "<group>"; };
+		497E3FD319C8525500F0F2EC /* GiftShopModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftShopModel.h; sourceTree = "<group>"; };
+		497E3FD419C8525500F0F2EC /* GiftShopModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftShopModel.m; sourceTree = "<group>"; };
 		49A1A1DF19A9D76F00213C04 /* SAStepperControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAStepperControl.h; sourceTree = "<group>"; };
 		49A1A1E019A9D76F00213C04 /* SAStepperControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SAStepperControl.m; sourceTree = "<group>"; };
 		49A723FF19B484FC000D7826 /* ColllectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColllectionViewCell.h; sourceTree = "<group>"; };
@@ -1414,11 +1425,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4979751219C68AA700B2CFDE /* MediaPlayer.framework in Frameworks */,
 				094A17AD19891E2700FEF385 /* CoreLocation.framework in Frameworks */,
 				0957F67A198230D300F3DC5C /* AudioToolbox.framework in Frameworks */,
 				0957F678198230C800F3DC5C /* AVFoundation.framework in Frameworks */,
 				09E2C8A31937414A002D9E65 /* MobileCoreServices.framework in Frameworks */,
 				09E2C8A11937413F002D9E65 /* CFNetwork.framework in Frameworks */,
+				4979755919C6B7F400B2CFDE /* libmp3lame.a in Frameworks */,
 				09D98A1B1935C30B00C83C4B /* SystemConfiguration.framework in Frameworks */,
 				09D98A191935C30300C83C4B /* CoreText.framework in Frameworks */,
 				09D98A171935C2FB00C83C4B /* AssetsLibrary.framework in Frameworks */,
@@ -1835,6 +1848,8 @@
 				60320BB519B994F40094A6E0 /* UserPetListModel.m */,
 				493BE6A919BEF4F700D599CA /* popularityListModel.h */,
 				493BE6AA19BEF4F700D599CA /* popularityListModel.m */,
+				497E3FD319C8525500F0F2EC /* GiftShopModel.h */,
+				497E3FD419C8525500F0F2EC /* GiftShopModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2013,6 +2028,7 @@
 		09D989411935C08E00C83C4B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4979751119C68AA700B2CFDE /* MediaPlayer.framework */,
 				094A17AC19891E2700FEF385 /* CoreLocation.framework */,
 				0957F679198230D300F3DC5C /* AudioToolbox.framework */,
 				0957F677198230C800F3DC5C /* AVFoundation.framework */,
@@ -2060,6 +2076,7 @@
 				09D9894E1935C08E00C83C4B /* main.m */,
 				09D989501935C08E00C83C4B /* MyPetty-Prefix.pch */,
 				6032630519C1AE750013A6AA /* FAQ.plist */,
+				497E3FCE19C841F100F0F2EC /* shopGift.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -2085,6 +2102,7 @@
 		09D989711935C0A800C83C4B /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				4979751319C68B6B00B2CFDE /* AudioStreamer */,
 				49590B5419B044CC0090E697 /* CircularProgressView */,
 				49590B4D19B0447A0090E697 /* DACircularProgress */,
 				49500A2A19ADA1AC00D175D8 /* HYScratchCardView */,
@@ -2264,6 +2282,8 @@
 				4947AFCE19C3F1F50025FABA /* SearchCell.m */,
 				4947AFD019C3F4180025FABA /* SearchResultModel.h */,
 				4947AFD119C3F4180025FABA /* SearchResultModel.m */,
+				491C1FBE19B9B4E400CA833E /* UserBagCollectionViewCell.h */,
+				491C1FBF19B9B4E400CA833E /* UserBagCollectionViewCell.m */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -2487,17 +2507,14 @@
 		4922D5E719A754370018160A /* 商城 */ = {
 			isa = PBXGroup;
 			children = (
-				4922D5E819A754970018160A /* GiftDetialViewController.h */,
-				4922D5E919A754970018160A /* GiftDetialViewController.m */,
-				4922D5EA19A754970018160A /* GiftDetialViewController.xib */,
 				49CE193119A9AC14005F21EE /* PresentDetailViewController.h */,
 				49CE193219A9AC14005F21EE /* PresentDetailViewController.m */,
 				60DDF24F19AF25D700CB3042 /* GiftShopViewController.h */,
 				60DDF25019AF25D700CB3042 /* GiftShopViewController.m */,
 				491C1FBB19B9A96400CA833E /* UserBagViewController.h */,
 				491C1FBC19B9A96400CA833E /* UserBagViewController.m */,
-				491C1FBE19B9B4E400CA833E /* UserBagCollectionViewCell.h */,
-				491C1FBF19B9B4E400CA833E /* UserBagCollectionViewCell.m */,
+				497E3FD019C850C800F0F2EC /* SuperMarketViewController.h */,
+				497E3FD119C850C800F0F2EC /* SuperMarketViewController.m */,
 			);
 			path = "商城";
 			sourceTree = "<group>";
@@ -2598,6 +2615,17 @@
 				496CF22519A4908D0081BF5E /* IQKeyboardManager.m */,
 			);
 			path = IQKeyBoardManager;
+			sourceTree = "<group>";
+		};
+		4979751319C68B6B00B2CFDE /* AudioStreamer */ = {
+			isa = PBXGroup;
+			children = (
+				4979755719C6B7F400B2CFDE /* lame.h */,
+				4979755819C6B7F400B2CFDE /* libmp3lame.a */,
+				4979751419C68B8200B2CFDE /* AudioStreamer.h */,
+				4979751519C68B8200B2CFDE /* AudioStreamer.m */,
+			);
+			path = AudioStreamer;
 			sourceTree = "<group>";
 		};
 		49A1A1DE19A9D76300213C04 /* StepperControl */ = {
@@ -2947,6 +2975,7 @@
 				09C87C691951ADAB00F41C6A /* 23-3.png in Resources */,
 				49500A4419ADD5C800D175D8 /* rock_pengyou.png in Resources */,
 				602EB10019B8626100B4110B /* fish1.png in Resources */,
+				497E3FCF19C841F100F0F2EC /* shopGift.plist in Resources */,
 				60F618051999CBBB003C34F2 /* exp.png in Resources */,
 				495FFFE619AAD1BD00976F18 /* expLevel_1.png in Resources */,
 				600A5EC819A9840700FB4358 /* detail_comment.png in Resources */,
@@ -3043,7 +3072,6 @@
 				60EC8FAC198B444300F1781A /* 1-e.png in Resources */,
 				09D98A6C1935D4E900C83C4B /* 1-1.png in Resources */,
 				601716E7198F33FB001E6DE6 /* 5-3.png in Resources */,
-				4922D5EC19A754970018160A /* GiftDetialViewController.xib in Resources */,
 				09D989E41935C1F100C83C4B /* blueArrow.png in Resources */,
 				091EAD89194F0D2B00B0DE41 /* 对勾.png in Resources */,
 				606181B619B19749009AF63D /* defaultPet.png in Resources */,
@@ -3355,6 +3383,7 @@
 				09D98AC01935E87300C83C4B /* FavoriteCell.m in Sources */,
 				60F6180A1999DCB1003C34F2 /* CountryInfoCell.m in Sources */,
 				49590B5319B0447A0090E697 /* DALabeledCircularProgressView.m in Sources */,
+				497E3FD219C850C800F0F2EC /* SuperMarketViewController.m in Sources */,
 				09D9894F1935C08E00C83C4B /* main.m in Sources */,
 				09DA9DCB1965400200E219A6 /* NoticeViewController.m in Sources */,
 				601BB36319AB4D660076E051 /* MyHomeViewController.m in Sources */,
@@ -3366,11 +3395,13 @@
 				09E2C898193740CE002D9E65 /* ASIDataCompressor.m in Sources */,
 				601716EB198F5ACD001E6DE6 /* SearchFamilyViewController.m in Sources */,
 				09A0B23E195FB4B40085A39B /* ActiveCell.m in Sources */,
+				4979751619C68B8200B2CFDE /* AudioStreamer.m in Sources */,
 				606181AE19B1819A009AF63D /* SetDefaultPetViewController.m in Sources */,
 				1818E53F195D1CDD001ED167 /* MJRefreshFooterView.m in Sources */,
 				49500A2919AD85F700D175D8 /* TouchViewController.m in Sources */,
 				09D989F31935C1FE00C83C4B /* TMQuiltViewCell.m in Sources */,
 				496CF22E19A49ADE0081BF5E /* MassWatchCell.m in Sources */,
+				497E3FD519C8525500F0F2EC /* GiftShopModel.m in Sources */,
 				1818E543195D1CDD001ED167 /* UIView+Extension.m in Sources */,
 				600AF3C5199B46EB00613DCB /* BottomMenuBaseViewController.m in Sources */,
 				09E2C89B193740CE002D9E65 /* ASIFormDataRequest.m in Sources */,
@@ -3445,7 +3476,6 @@
 				49B1882219C084990055CF54 /* PSCollectionViewCell.m in Sources */,
 				098FC7EA194053320064A004 /* HttpDownLoad.m in Sources */,
 				606181B219B1856C009AF63D /* DefaultPetCell.m in Sources */,
-				4922D5EB19A754970018160A /* GiftDetialViewController.m in Sources */,
 				096D40AC193EFA1F003E1545 /* OpenUDID.m in Sources */,
 				09F46ACA196A389600209749 /* FTAnimationManager.m in Sources */,
 				1818E542195D1CDD001ED167 /* UIScrollView+MJRefresh.m in Sources */,
@@ -3654,6 +3684,7 @@
 					"$(PROJECT_DIR)/Tools/UMSocial_Sdk_3.3.8",
 					"$(PROJECT_DIR)/Tools/UMSocial_Sdk_3.3.8/Wechat",
 					"$(PROJECT_DIR)/Tools/UMengFeedback",
+					"$(PROJECT_DIR)/Tools/AudioStreamer",
 				);
 				OTHER_LDFLAGS = (
 					"-Objc",
@@ -3688,6 +3719,7 @@
 					"$(PROJECT_DIR)/Tools/UMSocial_Sdk_3.3.8",
 					"$(PROJECT_DIR)/Tools/UMSocial_Sdk_3.3.8/Wechat",
 					"$(PROJECT_DIR)/Tools/UMengFeedback",
+					"$(PROJECT_DIR)/Tools/AudioStreamer",
 				);
 				OTHER_LDFLAGS = (
 					"-Objc",

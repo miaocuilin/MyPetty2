@@ -61,6 +61,7 @@
     [self.view bringSubviewToFront:self.headerBgView];
     [self createFakeNavigation];
     [self createHeader];
+    
 //    [self createUI];
 //    [self createComment];
 }
@@ -77,6 +78,29 @@
     
     //Resign textField if touched outside of UITextField/UITextView.
     [[IQKeyboardManager sharedManager] setShouldResignOnTouchOutside:NO];
+}
+#pragma mark - 关系API
+
+
+- (void)loadAttentionAPI
+{
+    StartLoading;
+    NSLog(@"aid:%@",self.aid);
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+    NSString *attentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RELATIONAPI,self.aid,sig,[ControllerManager getSID]];
+    NSLog(@"%@",attentionString);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:attentionString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        if (isFinish) {
+            [load.dataDict objectForKey:@"data"];
+//            isFollow = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_follow"] intValue];
+            NSLog(@"%d",[[[load.dataDict objectForKey:@"data"] objectForKey:@"is_fan"] intValue]);
+            if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"is_fan"] intValue]) {
+                super.label1.text =@"捣捣乱";
+            }
+            LoadingSuccess;
+        }
+    }];
+    [request release];
 }
 #pragma mark -照片数据加载
 -(void)loadData
@@ -99,6 +123,10 @@
             }
             NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
             self.aid = [dict objectForKey:@"aid"];
+            //四个动作是摇一摇还是捣捣乱
+            if ([ControllerManager getIsSuccess]) {
+                [self loadAttentionAPI];
+            }
             self.cmt = [dict objectForKey:@"cmt"];
             self.num = [dict objectForKey:@"likes"];
             self.imageURL = [dict objectForKey:@"url"];

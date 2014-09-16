@@ -91,6 +91,13 @@
     //用户物品列表：
     #define USERGOODSLISTAPI @"http://54.199.161.210:8001/index.php?r=user/itemsApi&usr_id="
     /***************************/
+    //宠物动态API
+//1 成为粉丝 2 加入王国 3发图片 4送礼物 5叫一叫 6逗一逗 7捣捣乱
+    #define PETNEWS @"http://54.199.161.210:8001/index.php?r=animal/newsApi&aid="
+
+    //还有一个nid参数用来上拉加载
+    #define PETNEWS2 @"http://54.199.161.210:8001/index.php?r=animal/newsApi&aid="
+    /***************************/
     //注册王国推荐列表
     #define RECOMMANDCOUNTRYLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     //宠物名片

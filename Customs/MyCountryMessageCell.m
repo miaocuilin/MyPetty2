@@ -53,13 +53,15 @@
     touchOne = [MyControl createButtonWithFrame:CGRectZero ImageName:@"" Target:self Action:nil Title:nil];
     [self.contentView addSubview:touchOne];
 }
--(void)modifyWithType:(int)type
+-(void)modifyWithModel:(PetNewsModel *)model
 {
     //隐藏4个控件
     photoImage.hidden = YES;
     sendOne.hidden = YES;
     playOne.hidden = YES;
     touchOne.hidden = YES;
+    
+    int type = [model.type intValue];
     
     if (type == 1) {
         //礼物

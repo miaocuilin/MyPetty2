@@ -15,9 +15,9 @@
     UILabel * noticeMessage_time;
     UILabel * desLabel;
     UIView * tips;
+    UILabel * tipsLabel;
 }
-@property (nonatomic)NSInteger TipsNum;
--(void)configUI:(SystemMessageListModel *)model;
-
--(void)configUIWithDict:(NSDictionary *)dic;
+//-(void)configUI:(SystemMessageListModel *)model;
+//-(void)configUIWithDict:(NSDictionary *)dic;
+-(void)configUIWithTx:(NSString *)tx Name:(NSString *)name Time:(NSString *)time Content:(NSString *)content newMsgNum:(NSString *)newMsgNum;
 @end

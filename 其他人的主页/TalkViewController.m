@@ -246,7 +246,7 @@
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     //将消息存储到本地plist文件
     NSDate * date = [NSDate date];
-    NSString * timeStamp = [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
+    NSString * timeStamp = [NSString stringWithFormat:@"%d", (int)[date timeIntervalSince1970]];
     [self saveTalkDataWithUserID:[USER objectForKey:@"usr_id"] time:timeStamp msg:self.lastMessage];
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
@@ -302,6 +302,8 @@
         
         [self.talkDataDict setObject:self.talkDataArray forKey:@"data"];
         [self.talkDataDict setObject:self.usr_id forKey:@"usr_id"];
+        [self.talkDataDict setObject:self.friendName forKey:@"usr_name"];
+        [self.talkDataDict setObject:self.otherTX forKey:@"usr_tx"];
         
         [self.totalDataDict setObject:self.talkDataDict forKey:self.talk_id];
         [self.totalDataDict writeToFile:path atomically:YES];
@@ -321,7 +323,10 @@
     [self.talkDataArray addObject:messageDict];
     
     [self.talkDataDict setObject:self.talkDataArray forKey:@"data"];
-    [self.talkDataDict setObject:usrID forKey:@"usr_id"];
+    [self.talkDataDict setObject:self.usr_id forKey:@"usr_id"];
+    [self.talkDataDict setObject:self.friendName forKey:@"usr_name"];
+    [self.talkDataDict setObject:self.otherTX forKey:@"usr_tx"];
+    
     [self.totalDataDict setObject:self.talkDataDict forKey:self.talk_id];
     [self.totalDataDict writeToFile:path atomically:YES];
     
@@ -524,7 +529,7 @@
     self.lastMessage = tf.text;
     [self talkSendMessageData];
     
-    [self presentNewMessageWithSend:YES time:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]] msg:self.lastMessage];
+    [self presentNewMessageWithSend:YES time:[NSString stringWithFormat:@"%d", (int)[[NSDate date] timeIntervalSince1970]] msg:self.lastMessage];
     
     return YES;
 }

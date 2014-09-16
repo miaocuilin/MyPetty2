@@ -9,7 +9,7 @@
 #import "MainViewController.h"
 #import "RandomViewController.h"
 #import "FavoriteViewController.h"
-#import "SquareViewController.h"
+#import "RecommendViewController.h"
 #import "PlanetAttentionViewController.h"
 
 #import "PublishViewController.h"
@@ -233,7 +233,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (a == 0) {
         if (isCreated[0] == NO) {
             isCreated[0] = YES;
-            SquareViewController * svc = [[SquareViewController alloc] init];
+            RecommendViewController * svc = [[RecommendViewController alloc] init];
             [self addChildViewController:svc];
             [svc.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
             [sv addSubview:svc.view];
@@ -264,7 +264,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (scrollView.contentOffset.x == 0) {
         if (isCreated[0] == NO) {
             isCreated[0] = YES;
-            SquareViewController * svc = [[SquareViewController alloc] init];
+            RecommendViewController * svc = [[RecommendViewController alloc] init];
             [self addChildViewController:svc];
             [svc.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
             [sv addSubview:svc.view];

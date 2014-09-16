@@ -1226,7 +1226,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //小图片用这种
 //    [_request setPostValue:data forKey:@"tx"];
     //大小图片用这种，比较保险
-    [_request setData:data withFileName:@"headImage.png" andContentType:@"image/jpg" forKey:@"tx"];
+    NSString * fileName = [NSString stringWithFormat:@"%dheadImage.png", (int)[[NSDate date] timeIntervalSince1970]];
+    [_request setData:data withFileName:fileName andContentType:@"image/jpg" forKey:@"tx"];
     
     _request.delegate = self;
     [_request startAsynchronous];
@@ -1247,7 +1248,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //小图片用这种
     //    [_request setPostValue:data forKey:@"tx"];
     //大小图片用这种，比较保险
-    [_requestUser setData:data withFileName:@"userHeadImage.png" andContentType:@"image/jpg" forKey:@"tx"];
+    NSString * fileName = [NSString stringWithFormat:@"%duserHeadImage.png", (int)[[NSDate date] timeIntervalSince1970]];
+    [_requestUser setData:data withFileName:fileName andContentType:@"image/jpg" forKey:@"tx"];
     
     _requestUser.delegate = self;
     [_requestUser startAsynchronous];

@@ -21,6 +21,8 @@
 #import "MJRefresh.h"
 
 #import "PublishViewController.h"
+#import "PetNewsModel.h"
+
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
 #import <AviarySDK/AviarySDK.h>
@@ -70,16 +72,19 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     // Start the Aviary Editor OpenGL Load
     [AFOpenGLManager beginOpenGLLoad];
     
-    
+    self.newsDataArray = [NSMutableArray arrayWithCapacity:0];
     self.photosDataArray = [NSMutableArray arrayWithCapacity:0];
 //    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
     self.countryMembersDataArray = [NSMutableArray arrayWithCapacity:0];
     
     [self loadKingData];
+    [self loadKingDynamicData];
+    
     [self createFakeNavigation];
     [self createScrollView];
 
-    [self createTableView];
+    [self createNewsTableView];
+    [self createToolsView];
 //    [self loadAttentionAPI];
 //    [self.view bringSubviewToFront:self.menuBgBtn];
 //    [self.view bringSubviewToFront:self.menuBgView];
@@ -112,15 +117,25 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - 国王动态数据
 - (void)loadKingDynamicData
 {
-    NSString *animalNewsSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-    NSString *animalNewsString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI,self.aid,animalNewsSig, [ControllerManager getSID]];
-    NSLog(@"国王动态API:%@",animalNewsString);
-    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalNewsString Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    //1 成为粉丝 2 加入王国 3发图片 4送礼物 5叫一叫 6逗一逗 7捣捣乱
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI, self.aid, sig, [ControllerManager getSID]];
+    NSLog(@"国王动态API:%@", url);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"国王动态数据：%@",load.dataDict);
-            [self createNewsTableView];
-//            [self loadPhotoData];
-
+            [self.newsDataArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for (int i=0; i<array.count; i++) {
+                PetNewsModel * model = [[PetNewsModel alloc] init];
+                [model setValuesForKeysWithDictionary:array[i]];
+                model.content = [array[i] objectForKey:@"content"];
+                
+                [self.newsDataArray addObject:model];
+                [model release];
+            }
+            
+            [tv reloadData];
         }
     }];
     [request release];
@@ -212,9 +227,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             petInfoDict = [load.dataDict objectForKey:@"data"];
 
             [self createHeader];
-            
-            [self loadKingDynamicData];
-
 
             [self.view bringSubviewToFront:navView];
             [self.view bringSubviewToFront:toolBgView];
@@ -1015,7 +1027,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     tv4.tableHeaderView = tvHeaderView4;
 
 }
--(void)createTableView
+-(void)createToolsView
 {
     [self.view bringSubviewToFront:bgView];
     [self.view bringSubviewToFront:navView];
@@ -1053,6 +1065,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     NSLog(@"111");
 }
+#pragma mark -
 -(void)toolBtnClick:(UIButton *)button
 {
     for(int i=0;i<4;i++){
@@ -1070,10 +1083,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     int x = a-200;
     if (x == 0) {
         tempTv = tv;
-        if (!isCreated[0]) {
-            [self loadKingDynamicData];
-            isCreated[0] = 1;
-        }
+//        if (!isCreated[0]) {
+//            [self loadKingDynamicData];
+//            isCreated[0] = 1;
+//        }
     }else if(x == 1){
         tempTv = tv2;
         if (!isCreated[1]) {
@@ -1157,7 +1170,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else if(tableView == tv3){
         return self.countryMembersDataArray.count;
     }else{
-        return 20;
+        //tv
+        return self.newsDataArray.count;
     }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1170,7 +1184,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         cell.selectionStyle = 0;
         cell.clipsToBounds = YES;
-        [cell modifyWithType:indexPath.row%7+1];
+        PetNewsModel * model = self.newsDataArray[indexPath.row];
+        [cell modifyWithModel:model];
         return cell;
     }else if (tableView == tv2) {
         static NSString * cellID2 = @"ID2";
@@ -1343,7 +1358,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == tv) {
-        int a = indexPath.row%7+1;
+        PhotoModel * model = self.newsDataArray[indexPath.row];
+        int a = [model.type intValue];
         if (a == 1) {
             return 90.0f;
         }else if (a == 2) {

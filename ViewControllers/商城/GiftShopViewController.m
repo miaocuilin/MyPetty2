@@ -297,6 +297,15 @@
 -(void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
 {
     NSLog(@"%d--%@", Line, Words);
+    int temp = 0;
+//    for (int i=1; i< self.goodGiftDataArray.count; i++) {
+//        GiftShopModel *model = self.goodGiftDataArray[i];
+//        temp = [model.price intValue];
+//        if (model) {
+//            <#statements#>
+//        }
+//    }
+//    [self.goodGiftDataArray exchangeObjectAtIndex:<#(NSUInteger)#> withObjectAtIndex:<#(NSUInteger)#>]
 }
 -(void)rel
 {
@@ -328,7 +337,7 @@
     
     [self.view bringSubviewToFront:navView];
     [self.view bringSubviewToFront:headerView];
-    int index = self.badGiftDataArray.count + self.goodGiftDataArray.count-1;
+    int index = self.badGiftDataArray.count + self.goodGiftDataArray.count;
     NSLog(@"index:%d",index);
     for(int i=0;i<index;i++){
         CGRect rect = CGRectMake(20+i%3*100, 64+35+15+i/3*100, 85, 90);
@@ -391,9 +400,13 @@
         if (self.goodGiftDataArray.count>i) {
             model = self.goodGiftDataArray[i];
             rqNum.text = [NSString stringWithFormat:@"+%@",model.add_rq];
+            NSLog(@"i:%d",i);
+
         }else{
-            model = self.badGiftDataArray[i-self.goodGiftDataArray.count+1];
+            model = self.badGiftDataArray[i-self.goodGiftDataArray.count];
             rqNum.text = [NSString stringWithFormat:@"%@",model.add_rq];
+            NSLog(@"i:%d",i);
+            NSLog(@"i___%d",i-self.goodGiftDataArray.count);
         }
         giftNum.text = model.price;
         giftPic.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];

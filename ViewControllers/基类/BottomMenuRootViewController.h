@@ -24,4 +24,6 @@
 @property(nonatomic,retain)UILabel *label2;
 @property(nonatomic,retain)UILabel *label3;
 @property(nonatomic,retain)UILabel *label4;
+
+
 @end

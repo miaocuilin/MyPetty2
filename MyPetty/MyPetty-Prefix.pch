@@ -142,7 +142,8 @@
     #define FOLLOWAPI @"http://54.199.161.210:8001/index.php?r=animal/followApi&aid="
 
     //取消关注API
-    #define UNFOLLOWAPI @"http://54.199.161.210/dc/index.php?r=user/unfollowApi&usr_id="
+    #define UNFOLLOWAPI @"http://54.199.161.210:8001/index.php?r=animal/unFollowApi&aid="
+
 
     //我关注的API
     #define FOLLOWINGAPI @"http://54.199.161.210/dc/index.php?r=user/followingApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="

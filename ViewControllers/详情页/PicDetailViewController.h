@@ -38,6 +38,9 @@
     
     //判断是否在当前控制器，来限制键盘变化通知
     BOOL isInThisController;
+    
+    BOOL isReply;
+    int replyRow;
 }
 @property (retain, nonatomic) UIImageView * bgImageView;
 @property (retain, nonatomic) IBOutlet UIScrollView *sv;
@@ -94,4 +97,5 @@
 @property (nonatomic)BOOL is_follow;
 
 //@property (nonatomic,retain)NSMutableArray * petInfoArray;
+@property (nonatomic,copy)NSString * replyPlaceHolder;
 @end

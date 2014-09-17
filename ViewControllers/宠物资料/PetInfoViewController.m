@@ -78,7 +78,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.countryMembersDataArray = [NSMutableArray arrayWithCapacity:0];
     
     [self loadKingData];
-    [self loadKingDynamicData];
+    
     
     [self createFakeNavigation];
     [self createScrollView];
@@ -120,10 +120,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //1 成为粉丝 2 加入王国 3发图片 4送礼物 5叫一叫 6逗一逗 7捣捣乱
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI, self.aid, sig, [ControllerManager getSID]];
-    NSLog(@"国王动态API:%@", url);
+//    NSLog(@"国王动态API:%@", url);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"国王动态数据：%@",load.dataDict);
+//            NSLog(@"国王动态数据：%@",load.dataDict);
             [self.newsDataArray removeAllObjects];
             NSArray * array = [load.dataDict objectForKey:@"data"];
             for (int i=0; i<array.count; i++) {
@@ -149,7 +149,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalMembersString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
             [self.countryMembersDataArray removeAllObjects];
-            NSLog(@"国王成员数据：%@",load.dataDict);
+//            NSLog(@"国王成员数据：%@",load.dataDict);
             NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             
             for (int i = 0; i<array.count; i++) {
@@ -207,7 +207,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalPresentsString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
             
-            NSLog(@"国王礼物数据：%@",load.dataDict);
+//            NSLog(@"国王礼物数据：%@",load.dataDict);
             [self createPresentsTableView];
         }
     }];
@@ -220,12 +220,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     StartLoading;
     NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
     NSString *animalInfoAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ANIMALINFOAPI,self.aid,animalInfoSig, [ControllerManager getSID]];
-    NSLog(@"国王信息API:%@", animalInfoAPI);
+//    NSLog(@"国王信息API:%@", animalInfoAPI);
     [[httpDownloadBlock alloc] initWithUrlStr:animalInfoAPI Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"国王信息:%@", load.dataDict);
+//            NSLog(@"国王信息:%@", load.dataDict);
             petInfoDict = [load.dataDict objectForKey:@"data"];
-
+            self.master_id = [petInfoDict objectForKey:@"master_id"];
             [self createHeader];
 
             [self.view bringSubviewToFront:navView];
@@ -234,6 +234,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.view bringSubviewToFront:self.menuBgBtn];
             [self.view bringSubviewToFront:self.menuBgView];
             
+            [self loadKingDynamicData];
             LoadingSuccess;
         }else{
             NSLog(@"用户数据加载失败。");
@@ -250,7 +251,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSLog(@" 国王照片数据API:%@",petImageAPIString);
     [[httpDownloadBlock alloc] initWithUrlStr:petImageAPIString Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"国王照片数据:%@", load.dataDict);
+//            NSLog(@"国王照片数据:%@", load.dataDict);
             [self.photosDataArray removeAllObjects];
             
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
@@ -285,10 +286,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NET = YES;
     NSString *petImagesSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&img_id=%@dog&cat",self.aid,self.lastImg_id]];
     NSString *petImageAPIString = [NSString stringWithFormat:@"%@%@&img_id=%@&sig=%@&SID=%@",PETIMAGESAPI,self.aid,self.lastImg_id,petImagesSig,[ControllerManager getSID]];
-    NSLog(@" 更多国王照片数据API:%@",petImageAPIString);
+//    NSLog(@" 更多国王照片数据API:%@",petImageAPIString);
     [[httpDownloadBlock alloc] initWithUrlStr:petImageAPIString Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"更多国王照片数据:%@", load.dataDict);
+//            NSLog(@"更多国王照片数据:%@", load.dataDict);
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for(int i=0;i<array.count;i++){
                 NSDictionary * dict = array[i];
@@ -364,8 +365,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [self createMore];
         isMoreCreated = YES;
     }
+    //
+    if (![self.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+        [self loadAttentionAPI];
+    }
     
-    [self loadAttentionAPI];
     [self.view bringSubviewToFront:alphaBtn];
     [self.view bringSubviewToFront:moreView];
     //show more
@@ -573,7 +577,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             NSLog(@"退出圈子：%@",exitPetCricleString);
             httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:exitPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
                 if (isFinish) {
-                    NSLog(@"退出成功数据：%@",load.dataDict);
+//                    NSLog(@"退出成功数据：%@",load.dataDict);
                     if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                         addBtn.selected = NO;
                         [alertView hide:YES];
@@ -593,7 +597,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             NSLog(@"关注宠物：%@",petAttentionString);
             httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:petAttentionString Block:^(BOOL isFinish, httpDownloadBlock *load) {
                 if (isFinish) {
-                    NSLog(@"关注成功数据：%@",load.dataDict);
+//                    NSLog(@"关注成功数据：%@",load.dataDict);
                     if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                         attentionBtn.selected = YES;
                         [alertView hide:YES];
@@ -739,7 +743,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     bgImageView1 = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
     /************************/
     NSString * txPetFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
-    NSLog(@"本地宠物头像路径：%@", txPetFilePath);
+//    NSLog(@"本地宠物头像路径：%@", txPetFilePath);
     UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txPetFilePath]];
     if (image) {
         bgImageView1.image = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
@@ -882,7 +886,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [bgView addSubview:userImageBtn];
     
     NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"u_tx"]]];
-    NSLog(@"本地用户头像路径：%@", txUserFilePath);
+//    NSLog(@"本地用户头像路径：%@", txUserFilePath);
     UIImage *User_image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txUserFilePath]];
     if (User_image) {
         [userImageBtn setBackgroundImage:User_image forState:UIControlStateNormal];
@@ -1115,7 +1119,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        toolBgView.frame = CGRectMake(0, 64+200-44, 320, 44);
         sv.contentOffset = CGPointMake(320*x, 0);
     }];
-    
 }
 
 #pragma mark - scrollView代理
@@ -1155,7 +1158,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             toolBgView.frame = CGRectMake(0, 64+200-44-scrollView.contentOffset.y, 320, 44);
         }else{
             toolBgView.frame = CGRectMake(0, 64, 320, 44);
-            
         }
     }
 
@@ -1185,7 +1187,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         cell.selectionStyle = 0;
         cell.clipsToBounds = YES;
         PetNewsModel * model = self.newsDataArray[indexPath.row];
-        [cell modifyWithModel:model];
+        [cell modifyWithModel:model PetName:[petInfoDict objectForKey:@"name"]];
+    
+        cell.clickImage = ^(){
+            PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+            vc.img_id = [[model content] objectForKey:@"img_id"];
+            vc.usr_id = [[model content] objectForKey:@"usr_id"];
+            [self presentViewController:vc animated:YES completion:nil];
+            [vc release];
+        };
         return cell;
     }else if (tableView == tv2) {
         static NSString * cellID2 = @"ID2";
@@ -1383,8 +1393,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else{
         return 15+10*100;
     }
-    //
-    
+ 
 }
 
 //礼物点击事件
@@ -1596,26 +1605,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 - (void) photoEditor:(AFPhotoEditorController *)editor finishedWithImage:(UIImage *)image
 {
     self.oriImage = image;
-    //    [[self imagePreviewView] setImage:image];
-    //    [[self imagePreviewView] setContentMode:UIViewContentModeScaleAspectFit];
-    
-    //跳转到UploadViewController
-    //    UploadViewController * vc = [[UploadViewController alloc] init];
-    //    vc.oriImage = image;
-    //    [self presentViewController:vc animated:YES completion:nil];
-    
-    //    NSLog(@"上传图片");
-    //    [self postData:image];
-    
-    //    UINavigationController * nc = [ControllerManager shareManagerMyPet];
-    //    MyPetViewController * vc = nc.viewControllers[0];
-    //    vc.myBlock();
     
     [self dismissViewControllerAnimated:YES completion:^{
-        //        UploadViewController * vc = [[UploadViewController alloc] init];
         PublishViewController * vc = [[PublishViewController alloc] init];
         vc.oriImage = image;
-        //        vc.af = editor;
+
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
     }];
@@ -1675,35 +1669,5 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     // Pass the selected object to the new view controller.
 }
 */
-//-(void)createNavigation
-//{
-//    self.title = @"猫君王国";
-//    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-//    self.navigationController.navigationBar.translucent = NO;
-//    if (iOS7) {
-//        self.navigationController.navigationBar.barTintColor = BGCOLOR;
-//    }else{
-//        self.navigationController.navigationBar.tintColor = BGCOLOR;
-//    }
-//    
-//    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 28, 28) ImageName:@"7-7.png" Target:self Action:@selector(backBtnClick) Title:nil];
-//    backBtn.tag = 5;
-//    backBtn.showsTouchWhenHighlighted = YES;
-//    
-//    UIBarButtonItem * leftItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
-//    self.navigationItem.leftBarButtonItem = leftItem;
-//    [leftItem release];
-//    
-//    UIButton * joinBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 45, 25) ImageName:@"" Target:self Action:@selector(joinBtnClick) Title:@"加入"];
-//    joinBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-//    joinBtn.backgroundColor = BGCOLOR4;
-//    joinBtn.layer.cornerRadius = 5;
-//    joinBtn.layer.masksToBounds = YES;
-//    joinBtn.showsTouchWhenHighlighted = YES;
-//    
-//    UIBarButtonItem * rightItem = [[UIBarButtonItem alloc] initWithCustomView:joinBtn];
-//    self.navigationItem.rightBarButtonItem = rightItem;
-//    [rightItem release];
-//}
 
 @end

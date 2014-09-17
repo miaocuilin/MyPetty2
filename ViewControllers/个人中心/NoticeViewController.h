@@ -17,6 +17,8 @@
     UIButton * backBtn;
     
     BOOL hasNewMsg;
+    
+    int rowOfTalk;
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 
@@ -37,13 +39,15 @@
 @property(nonatomic,retain)NSMutableArray * userNameArray;
 @property(nonatomic,retain)NSMutableArray * newMsgNumArray;
 /**************************/
-@property (nonatomic,retain)NSMutableArray * keysArray;
-@property (nonatomic,retain)NSMutableArray * valuesArray;
+@property(nonatomic,retain)NSMutableArray * keysArray;
+@property(nonatomic,retain)NSMutableArray * valuesArray;
 //新消息的数组
-@property (nonatomic,retain)NSMutableArray * newDataArray;
+@property(nonatomic,retain)NSMutableArray * newDataArray;
 /**************************/
 //存放每个对话新消息，包含多个字典，每个字典中有两个key
 //key:keysArray
 //value:valuesArray
-@property (nonatomic,retain)NSMutableArray * newMsgArray;
+@property(nonatomic,retain)NSMutableArray * newMsgArray;
+//用于取从聊天页返回时返回的最新一条数据
+@property(nonatomic,copy)NSString * lastMessage;
 @end

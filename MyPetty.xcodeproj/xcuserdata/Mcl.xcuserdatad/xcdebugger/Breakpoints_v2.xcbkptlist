@@ -255,7 +255,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1102"
             endingLineNumber = "1102"
-            landmarkName = "-headBtnClick:"
+            landmarkName = "-zanBtnClick:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -473,12 +473,12 @@
                   symbolName = "-[ChooseFamilyViewController joinClick:]"
                   moduleName = "MyPetty"
                   urlString = "file:///Users/Mcl/Desktop/aidi/MyPetty2/ViewControllers/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/ChooseFamilyViewController.m"
-                  timestampString = "432651575.151658"
+                  timestampString = "432652822.079146"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "423"
                   endingLineNumber = "423"
-                  offsetFromSymbolStart = "602">
+                  offsetFromSymbolStart = "722">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -487,12 +487,12 @@
                   symbolName = "__40-[ChooseFamilyViewController joinClick:]_block_invoke"
                   moduleName = "MyPetty"
                   urlString = "file:///Users/Mcl/Desktop/aidi/MyPetty2/ViewControllers/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/ChooseFamilyViewController.m"
-                  timestampString = "432651575.151946"
+                  timestampString = "432652822.079341"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "424"
                   endingLineNumber = "424"
-                  offsetFromSymbolStart = "35">
+                  offsetFromSymbolStart = "20">
                </Location>
             </Locations>
          </BreakpointContent>

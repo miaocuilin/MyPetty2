@@ -235,11 +235,26 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
     }];
     [request release];
 }
-
+-(void)getMsgAndActivityNum
+{
+    NSString * url = [NSString stringWithFormat:@"%@%@", ACTIVITYANDNOTIFYAPI, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            
+        }else{
+            
+        }
+    }];
+    [request release];
+}
 - (void)showMenuAnimated:(BOOL)animated;
 {
     //请求国家列表API
     [self loadCountryList];
+    //请求消息和活动数API
+    [self getMsgAndActivityNum];
     
     [self showMenuAnimated:animated duration:JDSideMenuDefaultOpenAnimationTime
            initialVelocity:1.0];

@@ -7,7 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TMQuiltView.h"
+#import "TMPhotoQuiltViewCell.h"
+#import "PhotoModel.h"
+#import "PicDetailViewController.h"
+#import "MJRefresh.h"
 
-@interface RecommendViewController : UIViewController 
+@interface RecommendViewController : UIViewController <TMQuiltViewDataSource,TMQuiltViewDelegate>
+{
+    TMQuiltView *qtmquitView;
+    float Height[1000];
+//    BOOL didLoad[1000];
+}
 
+@property(nonatomic,retain)NSMutableArray * dataArray;
+
+@property(nonatomic,copy)NSString * lastImg_id;
 @end

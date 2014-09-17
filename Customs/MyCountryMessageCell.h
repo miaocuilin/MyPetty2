@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ClickImage.h"
+#import "PetNewsModel.h"
 @interface MyCountryMessageCell : UITableViewCell
 {
     UIView * grayLine;
@@ -20,5 +21,5 @@
     UIButton * playOne;
     UIButton * touchOne;
 }
--(void)modifyWithType:(int)type;
+-(void)modifyWithModel:(PetNewsModel *)model;
 @end

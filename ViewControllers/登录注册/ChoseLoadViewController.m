@@ -208,6 +208,17 @@
         cloud0.frame = CGRectMake(-cloud0.frame.size.width, cloud0.frame.origin.y, cloud0.frame.size.width, cloud0.frame.size.height);
     }
 }
+-(void)tempLogin
+{
+    NSLog(@"%@--%@", [USER objectForKey:@"isSuccess"], [USER objectForKey:@"SID"]);
+    if ([[USER objectForKey:@"isSuccess"] intValue] && [USER objectForKey:@"SID"]) {
+        [ControllerManager setIsSuccess:[[USER objectForKey:@"isSuccess"] intValue]];
+        [ControllerManager setSID:[USER objectForKey:@"SID"]];
+        [self getUserData];
+    }else{
+        [self login];
+    }
+}
 -(void)miBtnClick
 {
     NSLog(@"进入喵星");
@@ -216,7 +227,9 @@
 //    [self presentViewController:vc animated:YES completion:nil];
     planet = 1;
     [USER setObject:[NSString stringWithFormat:@"%d", planet] forKey:@"planet"];
-    [self login];
+    
+    [self tempLogin];
+    
     [timer invalidate];
     timer = nil;
 //    [vc release];
@@ -229,7 +242,9 @@
 //    [self presentViewController:vc animated:YES completion:nil];
     planet = 2;
     [USER setObject:[NSString stringWithFormat:@"%d", planet] forKey:@"planet"];
-    [self login];
+    
+    [self tempLogin];
+    
     [timer invalidate];
     timer = nil;
 //    [vc release];
@@ -250,7 +265,8 @@
             }
             [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
             [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
-            
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
             NSLog(@"isSuccess:%d,SID:%@", [ControllerManager getIsSuccess], [ControllerManager getSID]);
             if ([ControllerManager getIsSuccess]) {
                 [self getUserData];
@@ -274,7 +290,7 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex) {
-        [self login];
+        [self tempLogin];
     }
 }
 #pragma mark -获取用户数据
@@ -284,10 +300,10 @@
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            if ([[load.dataDict objectForKey:@"errorCode"] intValue] == 2) {
+            if ([[load.dataDict objectForKey:@"state"] intValue] == 2) {
                 //SID过期,需要重新登录获取SID
                 [self login];
-                [self getUserData];
+//                [self getUserData];
                 return;
             }else{
                 //SID未过期，直接获取用户数据

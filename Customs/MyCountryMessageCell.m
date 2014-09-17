@@ -64,12 +64,13 @@
     
     int type = [model.type intValue];
     //1.成粉 2.加入 3.发图 4.送礼 5.叫一叫 6.逗一逗 7.捣乱
+    time.text = [MyControl timeFromTimeStamp:model.create_time];
     if (type == 1) {
         //成为粉丝
         typeImageView.image = [UIImage imageNamed:@"myCountry_heart.png"];
         
-        NSString * str1 = @"大和尚";
-        NSString * str2 = @"猫君";
+        NSString * str1 = [model.content objectForKey:@"u_name"];
+        NSString * str2 = petName;
         NSString * bodyStr = [NSString stringWithFormat:@"%@ 成为了 %@ 的粉丝", str1, str2];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
@@ -147,10 +148,11 @@
         
         //body
         NSString * str1 = @"喵小二";
-        NSString * str2 = @"大和尚";
-        NSString * str3 = @"猫君";
-        NSString * str4 = @"魔法棒";
-        NSString * bodyStr = [NSString stringWithFormat:@"%@— %@ 送给了 %@ 一个 %@", str1, str2, str3, str4];
+        NSString * str2 = [model.content objectForKey:@"u_name"];
+        NSString * str3 = [model.content objectForKey:@"a_name"];
+        NSString * str4 = [model.content objectForKey:@"item_name"];
+        NSString * str5 = [NSString stringWithFormat:@"+%@", [model.content objectForKey:@"rq"]];
+        NSString * bodyStr = [NSString stringWithFormat:@"%@— %@ 送给了 %@ 一个 %@ 人气 %@", str1, str2, str3, str4, str5];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length + 2, str2.length)];
         

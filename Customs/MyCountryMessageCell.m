@@ -62,33 +62,23 @@
     touchOne.hidden = YES;
     
     int type = [model.type intValue];
-    
+    //1.成粉 2.加入 3.发图 4.送礼 5.叫一叫 6.逗一逗 7.捣乱
     if (type == 1) {
-        //礼物
-        typeImageView.image = [UIImage imageNamed:@"myCountry_gift.png"];
+        //成为粉丝
+        typeImageView.image = [UIImage imageNamed:@"myCountry_heart.png"];
         
-        //body
-        NSString * str1 = @"喵小二";
-        NSString * str2 = @"大和尚";
-        NSString * str3 = @"猫君";
-        NSString * str4 = @"魔法棒";
-        NSString * bodyStr = [NSString stringWithFormat:@"%@— %@ 送给了 %@ 一个 %@", str1, str2, str3, str4];
+        NSString * str1 = @"大和尚";
+        NSString * str2 = @"猫君";
+        NSString * bodyStr = [NSString stringWithFormat:@"%@ 成为了 %@ 的粉丝", str1, str2];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length + 2, str2.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+5, str3.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+5, str2.length)];
         
         CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
         
         body.frame = CGRectMake(60, 30, 240, size.height);
         body.attributedText = str;
-        
-        sendOne.hidden = NO;
-        sendOne.frame = CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20);
-        [sendOne addTarget:self action:@selector(sendOneClick) forControlEvents:UIControlEventTouchUpInside];
-        [sendOne setBackgroundImage:[UIImage imageNamed:@"sendOne.png"] forState:UIControlStateNormal];
-//        sendOne = [MyControl createButtonWithFrame:CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20) ImageName:@"sendOne.png" Target:self Action:@selector(sendOneClick) Title:nil];
-//        [self.contentView addSubview:sendOne];
     }else if (type == 2) {
         //加入
         typeImageView.image = [UIImage imageNamed:@"myCountry_join.png"];
@@ -129,6 +119,50 @@
         photoImage.image = [UIImage imageNamed:@"cat2.jpg"];
         photoImage.canClick = YES;
     }else if (type == 4) {
+        //礼物
+        typeImageView.image = [UIImage imageNamed:@"myCountry_gift.png"];
+        
+        //body
+        NSString * str1 = @"喵小二";
+        NSString * str2 = @"大和尚";
+        NSString * str3 = @"猫君";
+        NSString * str4 = @"魔法棒";
+        NSString * bodyStr = [NSString stringWithFormat:@"%@— %@ 送给了 %@ 一个 %@", str1, str2, str3, str4];
+        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length + 2, str2.length)];
+        
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+5, str3.length)];
+        
+        CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
+        
+        body.frame = CGRectMake(60, 30, 240, size.height);
+        body.attributedText = str;
+        
+        sendOne.hidden = NO;
+        sendOne.frame = CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20);
+        [sendOne addTarget:self action:@selector(sendOneClick) forControlEvents:UIControlEventTouchUpInside];
+        [sendOne setBackgroundImage:[UIImage imageNamed:@"sendOne.png"] forState:UIControlStateNormal];
+        //        sendOne = [MyControl createButtonWithFrame:CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20) ImageName:@"sendOne.png" Target:self Action:@selector(sendOneClick) Title:nil];
+        //        [self.contentView addSubview:sendOne];
+    }else if (type == 5) {
+        //摸一摸 叫一叫
+        typeImageView.image = [UIImage imageNamed:@"myCountry_shout.png"];
+        NSString * str1 = @"猫君";
+        NSString * bodyStr = [NSString stringWithFormat:@"%@ 今天心情很好，开心的叫了叫", str1];
+        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
+        CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
+        
+        body.frame = CGRectMake(60, 30, 240, size.height);
+        body.attributedText = str;
+        
+        touchOne.hidden = NO;
+        touchOne.frame = CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20);
+        [touchOne addTarget:self action:@selector(touchOneClick) forControlEvents:UIControlEventTouchUpInside];
+        [touchOne setBackgroundImage:[UIImage imageNamed:@"touchOne.png"] forState:UIControlStateNormal];
+//        touchOne = [MyControl createButtonWithFrame:CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20) ImageName:@"touchOne.png" Target:self Action:@selector(touchOneClick) Title:nil];
+//        [self.contentView addSubview:touchOne];
+    }else if(type == 6){
         //逗一逗
         typeImageView.image = [UIImage imageNamed:@"myCountry_game.png"];
         
@@ -150,42 +184,8 @@
         playOne.frame = CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20);
         [playOne addTarget:self action:@selector(playOneClick) forControlEvents:UIControlEventTouchUpInside];
         [playOne setBackgroundImage:[UIImage imageNamed:@"playOne.png"] forState:UIControlStateNormal];
-//        playOne = [MyControl createButtonWithFrame:CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20) ImageName:@"playOne.png" Target:self Action:@selector(playOneClick) Title:nil];
-//        [self.contentView addSubview:playOne];
-    }else if (type == 5) {
-        //摸一摸
-        typeImageView.image = [UIImage imageNamed:@"myCountry_shout.png"];
-        NSString * str1 = @"猫君";
-        NSString * bodyStr = [NSString stringWithFormat:@"%@ 今天心情很好，开心的叫了叫", str1];
-        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
-        CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
-        
-        body.frame = CGRectMake(60, 30, 240, size.height);
-        body.attributedText = str;
-        
-        touchOne.hidden = NO;
-        touchOne.frame = CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20);
-        [touchOne addTarget:self action:@selector(touchOneClick) forControlEvents:UIControlEventTouchUpInside];
-        [touchOne setBackgroundImage:[UIImage imageNamed:@"touchOne.png"] forState:UIControlStateNormal];
-//        touchOne = [MyControl createButtonWithFrame:CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20) ImageName:@"touchOne.png" Target:self Action:@selector(touchOneClick) Title:nil];
-//        [self.contentView addSubview:touchOne];
-    }else if(type == 6){
-        //成为粉丝
-        typeImageView.image = [UIImage imageNamed:@"myCountry_heart.png"];
-        
-        NSString * str1 = @"大和尚";
-        NSString * str2 = @"猫君";
-        NSString * bodyStr = [NSString stringWithFormat:@"%@ 成为了 %@ 的粉丝", str1, str2];
-        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
-        
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+5, str2.length)];
-
-        CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
-        
-        body.frame = CGRectMake(60, 30, 240, size.height);
-        body.attributedText = str;
+        //        playOne = [MyControl createButtonWithFrame:CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20) ImageName:@"playOne.png" Target:self Action:@selector(playOneClick) Title:nil];
+        //        [self.contentView addSubview:playOne];
     }else{
         //扔炸弹 -人气
         typeImageView.image = [UIImage imageNamed:@"myCountry_trouble.png"];

@@ -15,11 +15,13 @@
     UILabel * time;
     UILabel * body;
     UIImageView * typeImageView;
-    ClickImage * photoImage;
+    UIButton * photoImage;
     
     UIButton * sendOne;
     UIButton * playOne;
     UIButton * touchOne;
 }
--(void)modifyWithModel:(PetNewsModel *)model;
+
+@property(nonatomic,copy)void (^clickImage)(void);
+-(void)modifyWithModel:(PetNewsModel *)model PetName:(NSString *)petName;
 @end

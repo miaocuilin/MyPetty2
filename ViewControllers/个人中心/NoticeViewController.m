@@ -24,6 +24,16 @@
 
 @implementation NoticeViewController
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    if ([[USER objectForKey:@"isBackToTalk"] intValue]) {
+        [USER setObject:@"0" forKey:@"isBackToTalk"];
+        if (self.lastMessage.length) {
+            self.lastTalkContentArray[rowOfTalk] = self.lastMessage;
+            [messageTableView reloadData];
+        }
+    }
+}
 
 - (void)viewDidLoad
 {
@@ -746,13 +756,18 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"和:%@聊天", self.userNameArray[indexPath.row]);
+    rowOfTalk = indexPath.row;
     self.newMsgNumArray[indexPath.row] = @"0";
     [messageTableView reloadData];
+    
+    self.lastMessage = @"";
+    [USER setObject:@"1" forKey:@"isFromNotice"];
     
     TalkViewController * vc = [[TalkViewController alloc] init];
     vc.friendName = self.userNameArray[indexPath.row];
     vc.usr_id = self.userIDArray[indexPath.row];
     vc.otherTX = self.userTxArray[indexPath.row];
+    vc.noticeVc = self;
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }

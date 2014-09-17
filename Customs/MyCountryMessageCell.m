@@ -7,7 +7,7 @@
 //
 
 #import "MyCountryMessageCell.h"
-
+#import "PicDetailViewController.h"
 @implementation MyCountryMessageCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -40,7 +40,8 @@
     [self.contentView addSubview:body];
     
     //clickImage
-    photoImage = [[ClickImage alloc] init];
+    photoImage = [MyControl createButtonWithFrame:CGRectMake(0, 0, 0, 0) ImageName:@"20-1.png" Target:self Action:@selector(photoImageClick) Title:nil];
+//    photoImage.image = [UIImage imageNamed:@"20-1.png"];
     [self.contentView addSubview:photoImage];
     
     //button
@@ -53,7 +54,7 @@
     touchOne = [MyControl createButtonWithFrame:CGRectZero ImageName:@"" Target:self Action:nil Title:nil];
     [self.contentView addSubview:touchOne];
 }
--(void)modifyWithModel:(PetNewsModel *)model
+-(void)modifyWithModel:(PetNewsModel *)model PetName:(NSString *)petName
 {
     //隐藏4个控件
     photoImage.hidden = YES;
@@ -83,8 +84,8 @@
         //加入
         typeImageView.image = [UIImage imageNamed:@"myCountry_join.png"];
         
-        NSString * str1 = @"大和尚";
-        NSString * str2 = @"猫君国";
+        NSString * str1 = [model.content objectForKey:@"u_name"];
+        NSString * str2 = petName;
         NSString * bodyStr = [NSString stringWithFormat:@"%@ 加入了 %@ 成为了 %@ 平民", str1, str2, str2];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
@@ -101,8 +102,8 @@
         //发照片
         typeImageView.image = [UIImage imageNamed:@"myCountry_photo.png"];
         
-        NSString * str1 = @"Anna";
-        NSString * str2 = @"猫君";
+        NSString * str1 = [model.content objectForKey:@"u_name"];
+        NSString * str2 = petName;
         NSString * bodyStr = [NSString stringWithFormat:@"%@ 发布了一张 %@ 的照片", str1, str2];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
@@ -116,8 +117,30 @@
 //        photoImage = [[ClickImage alloc] initWithFrame:CGRectMake(60, 30+size.height+5, 190/2, 60)];
         photoImage.hidden = NO;
         photoImage.frame = CGRectMake(60, 30+size.height+5, 190/2, 60);
-        photoImage.image = [UIImage imageNamed:@"cat2.jpg"];
-        photoImage.canClick = YES;
+//        photoImage.image = [UIImage imageNamed:@"cat2.jpg"];
+        /**************************/
+        if (!([[model.content objectForKey:@"img_url"] isKindOfClass:[NSNull class]] || [[model.content objectForKey:@"img_url"] length]==0)) {
+            NSString * docDir = DOCDIR;
+            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [model.content objectForKey:@"img_url"]]];
+            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+            if (image) {
+                [photoImage setBackgroundImage:image forState:UIControlStateNormal];
+            }else{
+                //下载头像
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, [model.content objectForKey:@"img_url"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        [photoImage setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                        NSString * docDir = DOCDIR;
+                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [model.content objectForKey:@"img_url"]]];
+                        [load.data writeToFile:txFilePath atomically:YES];
+                    }else{
+                        NSLog(@"照片下载失败");
+                    }
+                }];
+                [request release];
+            }
+        }
+        /**************************/
     }else if (type == 4) {
         //礼物
         typeImageView.image = [UIImage imageNamed:@"myCountry_gift.png"];
@@ -133,6 +156,7 @@
         
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+5, str3.length)];
         
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+5+str3.length+4+str4.length+4, str5.length)];
         CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
         
         body.frame = CGRectMake(60, 30, 240, size.height);
@@ -190,10 +214,10 @@
         //扔炸弹 -人气
         typeImageView.image = [UIImage imageNamed:@"myCountry_trouble.png"];
         
-        NSString * str1 = @"Anna";
-        NSString * str2 = @"猫君";
-        NSString * str3 = @"炸弹";
-        NSString * str4 = @"-10";
+        NSString * str1 = [model.content objectForKey:@"u_name"];
+        NSString * str2 = [model.content objectForKey:@"a_name"];
+        NSString * str3 = [model.content objectForKey:@"item_name"];
+        NSString * str4 = [NSString stringWithFormat:@"-%@", [model.content objectForKey:@"rq"]];
         
         NSString * bodyStr = [NSString stringWithFormat:@"%@ 向 %@ 扔了一个%@ 人气 %@", str1, str2, str3, str4];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
@@ -221,6 +245,11 @@
 {
     NSLog(@"touchOne");
 }
+-(void)photoImageClick
+{
+    self.clickImage();
+}
+
 - (void)awakeFromNib
 {
     // Initialization code

@@ -170,13 +170,23 @@
         NSArray * arr1 = [self.comments componentsSeparatedByString:@";usr"];
         
         for(int i=1;i<arr1.count;i++){
+//            NSLog(@"%@", arr1[i]);
             NSString * usrId = [[[[arr1[i] componentsSeparatedByString:@",name"] objectAtIndex:0] componentsSeparatedByString:@"_id:"] objectAtIndex:1];
             [self.usrIdArray addObject:usrId];
             //            [usrId release];
             
-            NSString * name = [[[[arr1[i] componentsSeparatedByString:@",body"] objectAtIndex:0] componentsSeparatedByString:@"name:"] objectAtIndex:1];
-            [self.nameArray addObject:name];
-            //            [name release];
+            //
+            if ([arr1[i] rangeOfString:@"reply_id"].location == NSNotFound) {
+                NSString * name = [[[[arr1[i] componentsSeparatedByString:@",body"] objectAtIndex:0] componentsSeparatedByString:@"name:"] objectAtIndex:1];
+                [self.nameArray addObject:name];
+                //            [name release];
+            }else{
+                NSString * name = [[[[arr1[i] componentsSeparatedByString:@",reply_id"] objectAtIndex:0] componentsSeparatedByString:@",name:"] objectAtIndex:1];
+                NSString * reply_name = [[[[arr1[i] componentsSeparatedByString:@",body"] objectAtIndex:0] componentsSeparatedByString:@",reply_name:"] objectAtIndex:1];
+                NSString * str = [NSString stringWithFormat:@"%@&%@", name, reply_name];
+                [self.nameArray addObject:str];
+            }
+            
             
             NSString * body = [[[[arr1[i] componentsSeparatedByString:@",create_time"] objectAtIndex:0] componentsSeparatedByString:@"body:"] objectAtIndex:1];
             [self.bodyArray addObject:body];
@@ -660,8 +670,21 @@
     
     int commentsBgViewHeight = 0;
     for(int i=0;i<self.usrIdArray.count;i++){
-        UILabel * cmtUserName = [MyControl createLabelWithFrame:CGRectMake(15, 10+commentsBgViewHeight, 150, 20) Font:15 Text:self.nameArray[i]];
-        cmtUserName.textColor = BGCOLOR;
+        UILabel * cmtUserName = [MyControl createLabelWithFrame:CGRectMake(15, 10+commentsBgViewHeight, 150, 20) Font:15 Text:nil];
+        if ([self.nameArray[i] rangeOfString:@"&"].location == NSNotFound) {
+            cmtUserName.text = self.nameArray[i];
+            cmtUserName.textColor = BGCOLOR;
+        }else{
+            NSString * name = [[self.nameArray[i] componentsSeparatedByString:@"&"] objectAtIndex:0];
+            NSString * reply_name = [[self.nameArray[i] componentsSeparatedByString:@"&"] objectAtIndex:1];
+            NSString * str = [NSString stringWithFormat:@"%@ 回复 %@", name, reply_name];
+            NSMutableAttributedString * attString = [[NSMutableAttributedString alloc] initWithString:str];
+            [attString addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, name.length)];
+            [attString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(name.length, 4)];
+            [attString addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(name.length+4, reply_name.length)];
+            cmtUserName.attributedText = attString;
+        }
+        
         [commentsBgView addSubview:cmtUserName];
         
         UILabel * timeStamp = [MyControl createLabelWithFrame:CGRectMake(320-10-100, cmtUserName.frame.origin.y+3, 100, 15) Font:12 Text:[MyControl timeFromTimeStamp:self.createTimeArray[i]]];
@@ -678,6 +701,11 @@
         UIView * line = [MyControl createViewWithFrame:CGRectMake(0, cmtLabel.frame.origin.y+cmtLabel.frame.size.height+size.height, 320, 1)];
         line.backgroundColor = [UIColor lightGrayColor];
         [commentsBgView addSubview:line];
+        
+        UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(0, cmtUserName.frame.origin.y, self.view.frame.size.width, line.frame.origin.y+line.frame.size.height-cmtUserName.frame.origin.y) ImageName:@"" Target:self Action:@selector(replyBtnClick:) Title:nil];
+//        btn.backgroundColor = [UIColor colorWithRed:arc4random()%256/256.0 green:arc4random()%256/256.0 blue:arc4random()%256/256.0 alpha:0.3];
+        btn.tag = 1000 + i;
+        [commentsBgView addSubview:btn];
         
         commentsBgViewHeight = line.frame.origin.y+1;
     }
@@ -716,7 +744,45 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasChange:) name:UIKeyboardDidChangeFrameNotification object:nil];
 }
-#pragma mark -键盘监听
+#pragma mark - 
+-(void)replyClick:(int)row
+{
+    NSLog(@"replyComment");
+    if (![ControllerManager getIsSuccess]) {
+        //提示注册
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc createLoginAlertView];
+        return;
+    }
+    isReply = YES;
+    replyRow = row;
+    bgButton.hidden = NO;
+    commentTextView.text = self.replyPlaceHolder;
+    [UIView animateWithDuration:0.25 animations:^{
+        bgButton.alpha = 0.3;
+        commentBgView.frame = CGRectMake(0, self.view.frame.size.height-216-40, 320, 40);
+    }];
+    [commentTextView becomeFirstResponder];
+}
+#pragma mark - 回复点击事件监听
+-(void)replyBtnClick:(UIButton *)btn
+{
+    int i = btn.tag-1000;
+    NSLog(@"btn.tag:%d-回复:%@", btn.tag, self.nameArray[i]);
+    if ([self.usrIdArray[i] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+        StartLoading;
+        [MMProgressHUD dismissWithError:@"不能回复自己哦" afterDelay:0.7f];
+        return;
+    }
+
+    self.replyPlaceHolder = [NSString stringWithFormat:@"回复%@", self.nameArray[i]];
+    [self replyClick:i];
+}
+
+
+#pragma mark - 键盘监听
 -(void)keyboardWasChange:(NSNotification *)notification
 {
     if (!isInThisController) {
@@ -778,8 +844,11 @@
 //        [self createComment];
 //        isCommentCreated = 1;
 //    }
+    isReply = NO;
     bgButton.hidden = NO;
+    commentTextView.text = @"写个评论呗";
     [UIView animateWithDuration:0.25 animations:^{
+        bgButton.alpha = 0.3;
         commentBgView.frame = CGRectMake(0, self.view.frame.size.height-216-40, 320, 40);
     }];
     [commentTextView becomeFirstResponder];
@@ -928,6 +997,7 @@
     [commentTextView resignFirstResponder];
     [UIView animateWithDuration:0.3 animations:^{
         commentBgView.frame = CGRectMake(-self.view.frame.size.width, self.view.frame.size.height-216-40, 320, 40);
+        bgButton.alpha = 0;
     } completion:^(BOOL finished) {
         bgButton.hidden = YES;
         commentTextView.text = @"写个评论呗";
@@ -1067,10 +1137,10 @@
     if (!self.attentionBtn.selected) {
         NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
         NSString * sig = [MyMD5 md5:code];
-        NSString * url = nil;
-        url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", FOLLOWAPI, self.aid, sig, [ControllerManager getSID]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", FOLLOWAPI, self.aid, sig, [ControllerManager getSID]];
         NSLog(@"url:%@", url);
-        StartLoading;
+        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+        [MMProgressHUD showWithStatus:@"关注中..."];
         [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 NSLog(@"%@", load.dataDict);
@@ -1080,10 +1150,22 @@
                 [MMProgressHUD dismissWithError:@"关注失败" afterDelay:1];
             }
         }];
-//        self.attentionBtn.selected = YES;
     }else{
-        StartLoading;
-        [MMProgressHUD dismissWithError:@"您已关注该宠" afterDelay:1];
+        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
+        NSString * sig = [MyMD5 md5:code];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNFOLLOWAPI, self.aid, sig, [ControllerManager getSID]];
+        NSLog(@"unfollowApiurl:%@", url);
+        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+        [MMProgressHUD showWithStatus:@"取消关注中..."];
+        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                [MMProgressHUD dismissWithSuccess:@"取消关注成功" title:nil afterDelay:1];
+                self.attentionBtn.selected = NO;
+            }else{
+                [MMProgressHUD dismissWithError:@"取消关注失败" afterDelay:1];
+            }
+        }];
     }
 }
 
@@ -1095,11 +1177,15 @@
 -(void)sendButtonClick
 {
     NSLog(@"发送");
-    if ([commentTextView.text isEqualToString:@"写个评论呗"] || commentTextView.text.length == 0) {
+    if (!isReply && ([commentTextView.text isEqualToString:@"写个评论呗"] || commentTextView.text.length == 0)) {
         //        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"不写评论怎么发 = =。"];
-        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-        [MMProgressHUD showWithStatus:@"评论中..."];
+        StartLoading;
         [MMProgressHUD dismissWithError:@"不写评论怎么发 = =。" afterDelay:1.5];
+        return;
+    }
+    if (isReply && ([commentTextView.text isEqualToString:self.replyPlaceHolder] || commentTextView.text.length == 0)) {
+        StartLoading;
+        [MMProgressHUD dismissWithError:@"不写内容怎么回 = =。" afterDelay:1.5];
         return;
     }
     
@@ -1117,6 +1203,11 @@
     //        [_request setPostValue:@"" forKey:@"body"];
     //    }
     [_request setPostValue:self.img_id forKey:@"img_id"];
+    if (isReply) {
+//        NSLog(@"%@--%@--%@", self.usrIdArray[replyRow],self.nameArray[replyRow],[self.nameArray[replyRow] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
+        [_request setPostValue:self.usrIdArray[replyRow] forKey:@"reply_id"];
+        [_request setPostValue:[self.nameArray[replyRow] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] forKey:@"reply_name"];
+    }
     _request.delegate = self;
     [_request startAsynchronous];
     
@@ -1140,7 +1231,12 @@
     [commentTextView resignFirstResponder];
     //添加评论
     [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];
-    [self.nameArray addObject:[USER objectForKey:@"name"]];
+    if (isReply) {
+        [self.nameArray addObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]]];
+    }else{
+        [self.nameArray addObject:[USER objectForKey:@"name"]];
+    }
+    
     [self.bodyArray addObject:commentTextView.text];
     [self.createTimeArray addObject:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]];
     
@@ -1171,7 +1267,7 @@
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
 //    NSLog(@"%d--%@", commentTextView.text.length, text);
-    if ([commentTextView.text isEqualToString:@"写个评论呗"]) {
+    if ([commentTextView.text isEqualToString:@"写个评论呗"] || [commentTextView.text isEqualToString:self.replyPlaceHolder]) {
         commentTextView.text = @"";
     }
 //    else if(commentTextView.text.length == 1 && text == nil){

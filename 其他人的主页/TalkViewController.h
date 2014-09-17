@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ASIFormDataRequest.h"
+@class NoticeViewController;
 @interface TalkViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
     UIImageView * bgImageView;
@@ -52,4 +53,7 @@
 
 @property (nonatomic,retain)NSMutableArray * keysArray;
 @property (nonatomic,retain)NSMutableArray * valuesArray;
+
+//
+@property (nonatomic,assign)NoticeViewController * noticeVc;
 @end

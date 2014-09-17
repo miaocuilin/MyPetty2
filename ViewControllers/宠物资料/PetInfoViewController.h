@@ -41,5 +41,6 @@
 //@property (nonatomic,retain)NSMutableArray * userDataArray;
 @property (nonatomic,retain)NSMutableArray * countryMembersDataArray;
 @property (nonatomic,copy)NSString *aid;
+@property (nonatomic,copy)NSString *master_id;
 //@property (nonatomic,copy)NSString *usr_id;
 @end

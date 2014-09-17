@@ -552,7 +552,7 @@
 		606181C219B1BA80009AF63D /* more_greenBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181C019B1BA80009AF63D /* more_greenBg.png */; };
 		606181C319B1BA80009AF63D /* more_orangeBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181C119B1BA80009AF63D /* more_orangeBg.png */; };
 		6065A97519A9910300333B0D /* arrow_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 6065A97419A9910300333B0D /* arrow_right.png */; };
-		6080F5BB19C85C650021BA2B /* PetNewsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080F5BA19C85C650021BA2B /* PetNewsModel.m */; };
+		6080F5C119C8631F0021BA2B /* PetNewsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080F5C019C8631F0021BA2B /* PetNewsModel.m */; };
 		60BFBC6319B00FCE00EE3746 /* PopularityListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60BFBC6219B00FCE00EE3746 /* PopularityListViewController.m */; };
 		60BFBC6C19B0271300EE3746 /* copperMedal.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6519B0271300EE3746 /* copperMedal.png */; };
 		60BFBC6D19B0271300EE3746 /* findMe.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6619B0271300EE3746 /* findMe.png */; };
@@ -1356,8 +1356,8 @@
 		606181C019B1BA80009AF63D /* more_greenBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more_greenBg.png; sourceTree = "<group>"; };
 		606181C119B1BA80009AF63D /* more_orangeBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more_orangeBg.png; sourceTree = "<group>"; };
 		6065A97419A9910300333B0D /* arrow_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_right.png; sourceTree = "<group>"; };
-		6080F5B919C85C650021BA2B /* PetNewsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PetNewsModel.h; sourceTree = "<group>"; };
-		6080F5BA19C85C650021BA2B /* PetNewsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetNewsModel.m; sourceTree = "<group>"; };
+		6080F5BF19C8631F0021BA2B /* PetNewsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PetNewsModel.h; sourceTree = "<group>"; };
+		6080F5C019C8631F0021BA2B /* PetNewsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetNewsModel.m; sourceTree = "<group>"; };
 		60BFBC6119B00FCE00EE3746 /* PopularityListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopularityListViewController.h; sourceTree = "<group>"; };
 		60BFBC6219B00FCE00EE3746 /* PopularityListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopularityListViewController.m; sourceTree = "<group>"; };
 		60BFBC6519B0271300EE3746 /* copperMedal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = copperMedal.png; sourceTree = "<group>"; };
@@ -1853,6 +1853,8 @@
 				493BE6AA19BEF4F700D599CA /* popularityListModel.m */,
 				497E3FD319C8525500F0F2EC /* GiftShopModel.h */,
 				497E3FD419C8525500F0F2EC /* GiftShopModel.m */,
+				6080F5BF19C8631F0021BA2B /* PetNewsModel.h */,
+				6080F5C019C8631F0021BA2B /* PetNewsModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -3475,6 +3477,7 @@
 				09D98ACC1935EC3D00C83C4B /* RandombViewController.m in Sources */,
 				49B1882119C084990055CF54 /* PSCollectionView.m in Sources */,
 				09D98ACA1935EC3D00C83C4B /* DetailViewController.m in Sources */,
+				6080F5C119C8631F0021BA2B /* PetNewsModel.m in Sources */,
 				60EC8FB1198B650A00F1781A /* ChooseInViewController.m in Sources */,
 				49B1882219C084990055CF54 /* PSCollectionViewCell.m in Sources */,
 				098FC7EA194053320064A004 /* HttpDownLoad.m in Sources */,
@@ -3522,7 +3525,6 @@
 				1818E541195D1CDD001ED167 /* UIScrollView+Extension.m in Sources */,
 				491C1FBA19B9969C00CA833E /* AFURLSessionManager.m in Sources */,
 				4947AFD219C3F4180025FABA /* SearchResultModel.m in Sources */,
-				6080F5BB19C85C650021BA2B /* PetNewsModel.m in Sources */,
 				09F9E93C1946DF3000DB12D9 /* OtherHomeViewController.m in Sources */,
 				491C1FC719B9CC0600CA833E /* HttpRequest.m in Sources */,
 				491C1FB319B9969C00CA833E /* AFHTTPRequestOperationManager.m in Sources */,

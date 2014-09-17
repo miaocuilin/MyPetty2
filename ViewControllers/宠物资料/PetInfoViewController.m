@@ -1360,8 +1360,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (tableView == tv) {
         PhotoModel * model = self.newsDataArray[indexPath.row];
         int a = [model.type intValue];
+        //1.成粉 2.加入 3.发图 4.送礼 5.叫一叫 6.逗一逗 7.捣乱
         if (a == 1) {
-            return 90.0f;
+            return 70.0f;
         }else if (a == 2) {
             return 70.0f;
         }else if (a == 3) {
@@ -1371,7 +1372,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }else if (a == 5) {
             return 90.0f;
         }else if (a == 6) {
-            return 70.0f;
+            return 90.0f;
         }else{
             return 70.0f;
         }

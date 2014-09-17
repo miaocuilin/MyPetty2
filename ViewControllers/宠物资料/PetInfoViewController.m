@@ -225,7 +225,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isFinish) {
             NSLog(@"国王信息:%@", load.dataDict);
             petInfoDict = [load.dataDict objectForKey:@"data"];
-
+            //宠物父类信息字典
+            self.shakeInfoDict = [load.dataDict objectForKey:@"data"];
             [self createHeader];
 
             [self.view bringSubviewToFront:navView];
@@ -233,7 +234,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
             [self.view bringSubviewToFront:self.menuBgBtn];
             [self.view bringSubviewToFront:self.menuBgView];
-            
             LoadingSuccess;
         }else{
             NSLog(@"用户数据加载失败。");

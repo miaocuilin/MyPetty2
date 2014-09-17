@@ -90,6 +90,7 @@
             //判断errorCode是否为1，为1弹窗提示
             if([[self.dataDict objectForKey:@"errorCode"] intValue] == -1){
                 UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[self.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
+                self.httpRequestBlock(NO,self);
                 return;
             }
             

@@ -7,6 +7,8 @@
 //
 
 #import "ShakeViewController.h"
+#import "GiftShopModel.h"
+
 #define GRAYBLUECOLOR [UIColor colorWithRed:127/255.0 green:151/255.0 blue:179/255.0 alpha:1]
 #define LIGHTORANGECOLOR [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1]
 @interface ShakeViewController ()
@@ -19,6 +21,8 @@
     UIView *noChanceView;
     int count;
 }
+@property (nonatomic,retain)NSMutableArray *goodGiftDataArray;
+@property (nonatomic,retain)NSMutableArray *badGiftDataArray;
 @end
 
 @implementation ShakeViewController
@@ -34,8 +38,13 @@
     NSString *path2 = [[NSBundle mainBundle] pathForResource:@"rocked" ofType:@"wav"];
     AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path2], &soundID2);
 	AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path], &soundID);
+    [self addGiftShopData];
 
+}
+- (void)viewWillAppear:(BOOL)animated
+{
     [self loadShakeDataInit];
+
 }
 - (void)viewDidAppear:(BOOL)animated{
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadShakeData) name:@"shake" object:nil];
@@ -96,10 +105,7 @@
 //    }
         isGoods = YES;
         [self createGoodsAlertView];
-    
-    
     [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
-    [ControllerManager HUDText:@"猫君收到了一个糖果，人气+100" showView:self.view.window yOffset:-60.0];
 }
 - (void)soundAction
 {
@@ -109,9 +115,8 @@
 #pragma mark - 加载摇一摇数据
 - (void)loadShakeDataInit
 {
-    //animal/shakeApi&aid=
-    NSString *shakeSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *shakeString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",SHAKEAPI,[USER objectForKey:@"aid"],shakeSig,[ControllerManager getSID]];
+    NSString *shakeSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[self.animalInfoDict objectForKey:@"aid"]]];
+    NSString *shakeString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",SHAKEAPI,[self.animalInfoDict objectForKey:@"aid"],shakeSig,[ControllerManager getSID]];
     NSLog(@"摇一摇：%@",shakeString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:shakeString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"摇一摇数据：%@",load.dataDict);
@@ -127,8 +132,8 @@
 - (void)loadShakeData
 {
     //animal/shakeApi&aid=
-    NSString *shakeSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *shakeString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",SHAKEAPI,[USER objectForKey:@"aid"],shakeSig,[ControllerManager getSID]];
+    NSString *shakeSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[self.animalInfoDict objectForKey:@"aid"]]];
+    NSString *shakeString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",SHAKEAPI,[self.animalInfoDict objectForKey:@"aid"],shakeSig,[ControllerManager getSID]];
     NSLog(@"摇一摇：%@",shakeString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:shakeString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"摇一摇数据：%@",load.dataDict);
@@ -158,13 +163,50 @@
     [request release];
 }
 #pragma mark - 摇出的奖品送礼
+- (void)addGiftShopData
+{
+    self.goodGiftDataArray =[NSMutableArray arrayWithCapacity:0];
+    self.badGiftDataArray = [NSMutableArray arrayWithCapacity:0];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"shopGift" ofType:@"plist"];
+    NSMutableDictionary *DictData = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+    NSArray *level0 = [[DictData objectForKey:@"good"] objectForKey:@"level0"];
+    NSArray *level1 =[[DictData objectForKey:@"good"] objectForKey:@"level1"];
+    NSArray *level2 =[[DictData objectForKey:@"good"] objectForKey:@"level2"];
+    NSArray *level3 =[[DictData objectForKey:@"good"] objectForKey:@"level3"];
+    [self addData:level0 isGood:YES];
+    [self addData:level1 isGood:YES];
+    [self addData:level2 isGood:YES];
+    [self addData:level3 isGood:YES];
+    
+    NSArray *level4 =[[DictData objectForKey:@"bad"] objectForKey:@"level0"];
+    NSArray *level5 =[[DictData objectForKey:@"bad"] objectForKey:@"level1"];
+    NSArray *level6 =[[DictData objectForKey:@"bad"] objectForKey:@"level2"];
+    [self addData:level4 isGood:NO];
+    [self addData:level5 isGood:NO];
+    [self addData:level6 isGood:NO];
+    
+    //    NSLog(@"data:%@",DictData);
+}
+- (void)addData:(NSArray *)array isGood:(BOOL)good
+{
+    for (NSDictionary *dict in array) {
+        GiftShopModel *model = [[GiftShopModel alloc] init];
+        [model setValuesForKeysWithDictionary:dict];
+        if (good) {
+            [self.goodGiftDataArray addObject:model];
+        }else{
+            [self.badGiftDataArray addObject:model];
+        }
+        [model release];
+    }
+}
 - (void)sendGiftData
 {
     [self soundAction];
     //固定礼物1102
     NSString *item = @"1102";
-    NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_shake=1&item_id=%@dog&cat",[USER objectForKey:@"aid"],item]];
-    NSString *sendString = [NSString stringWithFormat:@"%@%@&is_shake=1&item_id=%@&sig=%@&SID=%@",SENDSHAKEGIFT,[USER objectForKey:@"aid"],item,sendSig,[ControllerManager getSID]];
+    NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_shake=1&item_id=%@dog&cat",[self.animalInfoDict objectForKey:@"aid"],item]];
+    NSString *sendString = [NSString stringWithFormat:@"%@%@&is_shake=1&item_id=%@&sig=%@&SID=%@",SENDSHAKEGIFT,[self.animalInfoDict objectForKey:@"aid"],item,sendSig,[ControllerManager getSID]];
     NSLog(@"赠送url:%@",sendString);
     httpDownloadBlock *request  = [[httpDownloadBlock alloc] initWithUrlStr:sendString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"赠送数据：%@",load.dataDict);
@@ -187,19 +229,33 @@
 #pragma mark - 摇到礼物界面
 - (void)createGoodsAlertView
 {
+    GiftShopModel *model;
+    int index ;
+    NSString * add_rq;
+    if ([self.titleString isEqualToString:@"摇一摇"]) {
+        index = arc4random()%(self.goodGiftDataArray.count);
+        model = self.goodGiftDataArray[index];
+        add_rq = [NSString stringWithFormat:@"+%@",model.add_rq];
+    }else{
+        index = arc4random()%(self.badGiftDataArray.count);
+        model = self.badGiftDataArray[index];
+        add_rq = model.add_rq;
+    }
     goodsHUD = [self alertViewInit:CGSizeMake(300, 425)];
     UIView *totalView = [self shopGiftTitle];
     
-    [self goldAndGiftUpView:[NSString stringWithFormat:@"糖果%d个",1] rewardImage:@"1102.png"];
+    [self goldAndGiftUpView:[NSString stringWithFormat:@"%@1个",model.name] rewardImage:[NSString stringWithFormat:@"%@.png",model.no] isGold:NO];
     UIImageView *descGoodsImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2-65, 190, 130, 25) ImageName:@"reward_desc.png"];
     [bodyView addSubview:descGoodsImageView];
-    UILabel *descGoodsLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, descGoodsImageView.frame.size.width, descGoodsImageView.frame.size.height) Font:14 Text:@"猫君人气 +100"];
+    UILabel *descGoodsLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, descGoodsImageView.frame.size.width, descGoodsImageView.frame.size.height) Font:14 Text:[NSString stringWithFormat:@"%@人气 %@",[self.animalInfoDict objectForKey:@"name"],add_rq]];
     descGoodsLabel.textAlignment = NSTextAlignmentCenter;
     [descGoodsImageView addSubview:descGoodsLabel];
     
     [self addDownView:[NSString stringWithFormat:@"%d",count]];
     goodsHUD.customView = totalView;
     [goodsHUD show:YES];
+    //
+    [ControllerManager HUDText:[NSString stringWithFormat:@"%@收到了一个%@，人气%@",[self.animalInfoDict objectForKey:@"name"],model.name,add_rq] showView:self.view.window yOffset:-60.0];
 }
 
 #pragma mark - 摇到金币界面
@@ -207,12 +263,12 @@
 {
     goldHUD = [self alertViewInit:CGSizeMake(300, 425)];
     UIView *totalView = [self shopGiftTitle];
-    [self goldAndGiftUpView:[NSString stringWithFormat:@"金币%d个",10] rewardImage:@"gold.png"];
+    [self goldAndGiftUpView:[NSString stringWithFormat:@"金币%d个",10] rewardImage:@"gold.png" isGold:YES];
     [self addDownView:[NSString stringWithFormat:@"%d",count]];
     goldHUD.customView = totalView;
     [goldHUD show:YES];
 }
-- (void)goldAndGiftUpView:(NSString *)titleString rewardImage:(NSString *)imageString
+- (void)goldAndGiftUpView:(NSString *)titleString rewardImage:(NSString *)imageString isGold:(BOOL)gold
 {
     UIView *upView = [MyControl createViewWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
     [bodyView addSubview:upView];
@@ -230,7 +286,12 @@
     titleLabel.textAlignment = NSTextAlignmentCenter;
     UIImageView *rewardBGImageView = [MyControl createImageViewWithFrame:CGRectMake(upView.frame.size.width/2-58, 55, 115, 130) ImageName:@"reward_bg.png"];
     [upView addSubview:rewardBGImageView];
-    UIImageView *goldImgeView = [MyControl createImageViewWithFrame:CGRectMake(rewardBGImageView.frame.size.width/2-35, rewardBGImageView.frame.size.height/2-35, 70, 70) ImageName:imageString];
+    UIImageView *goldImgeView = [MyControl createImageViewWithFrame:CGRectZero ImageName:imageString];
+    if (gold) {
+        goldImgeView.frame = CGRectMake(rewardBGImageView.frame.size.width/2-35, rewardBGImageView.frame.size.height/2-35, 70, 70);
+    }else{
+        goldImgeView.frame = CGRectMake(rewardBGImageView.frame.size.width/2-45, rewardBGImageView.frame.size.height/2-30, 90, 60);
+    }
     [rewardBGImageView addSubview:goldImgeView];
     
     
@@ -272,7 +333,7 @@
 {
     noChanceHUD = [self alertViewInit:CGSizeMake(300, 425)];
     UIView *totalView =[self shopGiftTitle];
-    [self unfortunatelyUpView:@"摇一摇，摇到外婆桥。猫君今天的摇一摇次数用完啦，换个宠物试试吧~" imageString:@"nochance.png"];
+    [self unfortunatelyUpView:[NSString stringWithFormat:@"摇一摇，摇到外婆桥。%@今天的摇一摇次数用完啦，换个宠物试试吧~",[self.animalInfoDict objectForKey:@"name"]] imageString:@"nochance.png"];
     [self addDownView:[NSString stringWithFormat:@"%d",count]];
     noChanceHUD.customView = totalView;
     noChanceHUD.removeFromSuperViewOnHide = NO;
@@ -291,6 +352,7 @@
     UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
     [noChanceView addSubview:titleView];
     UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"摇一摇"];
+    titleLabel.text = self.titleString;
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [noChanceView addSubview:titleLabel];
     UIImageView *closeImageView = [MyControl createImageViewWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png"];
@@ -309,7 +371,7 @@
     UIView *upView = [MyControl createViewWithFrame:CGRectMake(0, 0, bodyViewChance.frame.size.width, bodyViewChance.frame.size.height-70)];
     [bodyViewChance addSubview:upView];
     
-    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2 - 115, 10, 230, 60) Font:16 Text:@"摇一摇，要到外婆桥。猫君今天的摇一摇次数用完啦，换个宠物试试吧~"];
+    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2 - 115, 10, 230, 60) Font:16 Text:[NSString stringWithFormat:@"摇一摇，要到外婆桥。%@今天的摇一摇次数用完啦，换个宠物试试吧~",[self.animalInfoDict objectForKey:@"name"]]];
     shakeDescLabel.textColor = GRAYBLUECOLOR;
     [upView addSubview:shakeDescLabel];
     
@@ -321,25 +383,21 @@
     
     
     
-    UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"cat2.jpg"];
-    NSString *animalHeadPath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
-    UIImage *headImage = [UIImage imageWithContentsOfFile:animalHeadPath];
-    if (headImage) {
-        headImageView.image = headImage;
-    }else{
-        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinsh, httpDownloadBlock *load) {
-            if (isFinsh) {
-                
-                if (load.dataImage == NULL) {
-                    headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-                }else{
-                    NSString *headFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
+    UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
+    if (!([[self.animalInfoDict objectForKey:@"tx"] length]==0 || [[self.animalInfoDict objectForKey:@"tx"] isKindOfClass:[NSNull class]])) {
+        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [USER objectForKey:@"aid"]];
+        UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
+        if (animalHeaderImage) {
+            headImageView.image = animalHeaderImage;
+        }else{
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                if (isFinish) {
                     headImageView.image = load.dataImage;
-                    [load.data writeToFile:headFilePath atomically:YES];
+                    [load.data writeToFile:pngFilePath atomically:YES];
                 }
-            }
-        }];
-        [request release];
+            }];
+            [request release];
+        }
     }
     headImageView.layer.cornerRadius = 28;
     headImageView.layer.masksToBounds = YES;
@@ -412,28 +470,21 @@
 {
     UIView *downView = [MyControl createViewWithFrame:CGRectMake(0, bodyView.frame.size.height-70, bodyView.frame.size.width, 70)];
     [bodyView addSubview:downView];
-
-    
-    
-    UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"cat2.jpg"];
-    NSString *animalHeadPath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
-    UIImage *headImage = [UIImage imageWithContentsOfFile:animalHeadPath];
-    if (headImage) {
-        headImageView.image = headImage;
-    }else{
-        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinsh, httpDownloadBlock *load) {
-            if (isFinsh) {
-                
-                if (load.dataImage == NULL) {
-                    headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-                }else{
-                    NSString *headFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
+    UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
+    if (!([[self.animalInfoDict objectForKey:@"tx"] length]==0 || [[self.animalInfoDict objectForKey:@"tx"] isKindOfClass:[NSNull class]])) {
+        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [self.animalInfoDict objectForKey:@"aid"]];
+        UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
+        if (animalHeaderImage) {
+            headImageView.image = animalHeaderImage;
+        }else{
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                if (isFinish) {
                     headImageView.image = load.dataImage;
-                    [load.data writeToFile:headFilePath atomically:YES];
+                    [load.data writeToFile:pngFilePath atomically:YES];
                 }
-            }
-        }];
-        [request release];
+            }];
+            [request release];
+        }
     }
     headImageView.layer.cornerRadius = 28;
     headImageView.layer.masksToBounds = YES;

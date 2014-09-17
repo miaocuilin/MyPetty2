@@ -211,6 +211,8 @@
 -(void)tempLogin
 {
     NSLog(@"%@--%@", [USER objectForKey:@"isSuccess"], [USER objectForKey:@"SID"]);
+//    [USER setObject:@"" forKey:@"SID"];
+//    [USER setObject:@"" forKey:@"isSuccess"];
     if ([[USER objectForKey:@"isSuccess"] intValue] && [USER objectForKey:@"SID"]) {
         [ControllerManager setIsSuccess:[[USER objectForKey:@"isSuccess"] intValue]];
         [ControllerManager setSID:[USER objectForKey:@"SID"]];

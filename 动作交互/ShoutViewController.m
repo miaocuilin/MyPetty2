@@ -54,7 +54,10 @@
 #pragma mark - 是否已经上传录音
 - (void)loadIsRecorderData
 {
-    NSString *isTouchString = [NSString stringWithFormat:@"%@%@",ISRECORDERAPI,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+    
+    NSString *isTouchString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ISRECORDERAPI,self.aid,sig,[ControllerManager getSID]];
+    NSLog(@"isTouchString:%@",isTouchString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:isTouchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
             NSLog(@"isVoiced:%@",load.dataDict);
@@ -326,18 +329,18 @@
     [bodyView addSubview:downView];
     
     UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"cat2.jpg"];
-    NSString *animalHeadPath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
+    NSString *animalHeadPath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[USER objectForKey:@"a_tx"]]];
     UIImage *headImage = [UIImage imageWithContentsOfFile:animalHeadPath];
     if (headImage) {
         headImageView.image = headImage;
     }else{
-        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinsh, httpDownloadBlock *load) {
+        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[USER objectForKey:@"a_tx"]] Block:^(BOOL isFinsh, httpDownloadBlock *load) {
             if (isFinsh) {
                 
                 if (load.dataImage == NULL) {
                     headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
                 }else{
-                    NSString *headFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
+                    NSString *headFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[USER objectForKey:@"a_tx"]]];
                     headImageView.image = load.dataImage;
                     [load.data writeToFile:headFilePath atomically:YES];
                 }
@@ -353,7 +356,7 @@
     [downView addSubview:cricleHeadImageView];
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 5, 200, 20) Font:12 Text:nil];
     
-    NSAttributedString *helpPetString = [self firstString:@"让叫一叫" formatString:[self.animalInfoDict objectForKey:@"name"] insertAtIndex:1];
+    NSAttributedString *helpPetString = [self firstString:@"让叫一叫" formatString:[USER objectForKey:@"a_name"] insertAtIndex:1];
     helpPetLabel.attributedText = helpPetString;
     [helpPetString release];
     [downView addSubview:helpPetLabel];

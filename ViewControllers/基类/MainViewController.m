@@ -17,7 +17,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <AviarySDK/AviarySDK.h>
 #import "ToolTipsViewController.h"
-
+#import "ShakeViewController.h"
 #import "WaterViewController.h"
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
@@ -69,7 +69,54 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self.view bringSubviewToFront:self.menuBgView];
     
     [self createAlphaBtn];
+//    if ([ControllerManager getIsSuccess]) {
+//        [self loadAnimalInfoData];
+//    }
 }
+
+//- (void)loadAnimalInfoData
+//{
+//    NSString *aid = [USER objectForKey:@"aid"];
+//    NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",aid]];
+//    NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALINFOAPI,aid,animalInfoSig,[ControllerManager getSID]];
+//    NSLog(@"宠物信息API:%@",animalInfo);
+//    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalInfo Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//        NSLog(@"Main宠物信息：%@",load.dataDict);
+//        if (isFinish) {
+//            self.masterID =[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"];
+//            super.animalInfoDict = [load.dataDict objectForKey:@"data"];
+//            //            [self createMenu];
+//            super.shakeInfoDict = [load.dataDict objectForKey:@"data"];
+//                
+//            if ([self.masterID isEqualToString:[USER objectForKey:@"usr_id"]]){
+//                self.label3.text = @"叫一叫";
+//            }
+//            
+//        }
+//    }];
+//    [request release];
+//    
+//    if (!([[USER objectForKey:@"a_tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"a_tx"] length]==0)) {
+//        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [USER objectForKey:@"aid"]];
+//        
+//        UIImage *image =[UIImage imageWithContentsOfFile:pngFilePath];
+//        if (image) {
+//            [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
+//        }else{
+//            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[USER objectForKey:@"a_tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//                if (isFinish) {
+//                    if (load.dataImage == NULL) {
+//                        [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
+//                    }else{
+//                        [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                        [load.data writeToFile:pngFilePath atomically:YES];
+//                    }
+//                }
+//            }];
+//            [request release];
+//        }
+//    }
+//}
 /***********************/
 -(void)createAlphaBtn
 {
@@ -224,6 +271,25 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     sc.selectedSegmentIndex = segmentClickIndex;
 }
+#pragma mark - 复写四个动作
+//-(void)btn1Click
+//{
+//    [super isRegister];
+//    if (![ControllerManager getIsSuccess]) {
+//        return;
+//    }
+//    
+//    NSLog(@"摇一摇");
+//    ShakeViewController *shake = [[ShakeViewController alloc] init];
+//    [self addChildViewController:shake];
+//    [shake release];
+//    [shake didMoveToParentViewController:self];
+//    [shake becomeFirstResponder];
+//    [self.view addSubview:shake.view];
+//    shake.titleString = self.label1.text;
+//    shake.animalInfoDict = super.shakeInfoDict;
+//    [super hideAll];
+//}
 #pragma mark - scrollViewDelegate
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
@@ -303,31 +369,39 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //===============================================//
 -(void)cameraClick
 {
+//    NSLog(@"animalInfoDict:%@",animalInfoDict);
+//    NSLog(@"master_id:%@",masterID);
+    
     if ([ControllerManager getIsSuccess]) {
-        if (sheet == nil) {
-            // 判断是否支持相机
-            if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-            {
-                sheet  = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
-            }
-            else {
+        if ([self.masterID isEqualToString:[USER objectForKey:@"usr_id"]]) {
+            if (sheet == nil) {
+                // 判断是否支持相机
+                if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+                {
+                    sheet  = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
+                }
+                else {
+                    
+                    sheet = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"从相册选择", nil];
+                }
                 
-                sheet = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"从相册选择", nil];
+                sheet.tag = 255;
+                
+            }else{
+                
             }
-            
-            sheet.tag = 255;
-            
+            [sheet showInView:self.view];
         }else{
-            
+            [ControllerManager HUDText:@"只有主人才可以(⊙o⊙)哦~~" showView:self.view yOffset:0];
         }
-        [sheet showInView:self.view];
+        
     }else{
         //提示注册
         ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
         [self addChildViewController:vc];
         [self.view addSubview:vc.view];
         [vc createLoginAlertView];
-//        [vc autorelease];
+        //        [vc autorelease];
     }
     
 }

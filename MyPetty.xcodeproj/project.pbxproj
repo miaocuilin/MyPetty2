@@ -362,6 +362,7 @@
 		495FFFEA19AAD1BD00976F18 /* redHeart.png in Resources */ = {isa = PBXBuildFile; fileRef = 495FFFDF19AAD1BD00976F18 /* redHeart.png */; };
 		495FFFEB19AAD1BD00976F18 /* alertBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 495FFFE019AAD1BD00976F18 /* alertBg.png */; };
 		495FFFEE19AAD38F00976F18 /* ToolTipsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 495FFFED19AAD38F00976F18 /* ToolTipsViewController.m */; };
+		4964C26019C95D2600DF896D /* WalkAndTeaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4964C25F19C95D2600DF896D /* WalkAndTeaseViewController.m */; };
 		496CF22019A44F570081BF5E /* AddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 496CF21F19A44F570081BF5E /* AddressViewController.m */; };
 		496CF22619A4908D0081BF5E /* IQButtonBarArrowLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 496CF22219A4908C0081BF5E /* IQButtonBarArrowLeft@2x.png */; };
 		496CF22719A4908D0081BF5E /* IQButtonBarArrowRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 496CF22319A4908C0081BF5E /* IQButtonBarArrowRight@2x.png */; };
@@ -1119,6 +1120,8 @@
 		495FFFE019AAD1BD00976F18 /* alertBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = alertBg.png; sourceTree = "<group>"; };
 		495FFFEC19AAD38F00976F18 /* ToolTipsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolTipsViewController.h; sourceTree = "<group>"; };
 		495FFFED19AAD38F00976F18 /* ToolTipsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToolTipsViewController.m; sourceTree = "<group>"; };
+		4964C25E19C95D2600DF896D /* WalkAndTeaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WalkAndTeaseViewController.h; sourceTree = "<group>"; };
+		4964C25F19C95D2600DF896D /* WalkAndTeaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WalkAndTeaseViewController.m; sourceTree = "<group>"; };
 		496CF21E19A44F570081BF5E /* AddressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressViewController.h; sourceTree = "<group>"; };
 		496CF21F19A44F570081BF5E /* AddressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressViewController.m; sourceTree = "<group>"; };
 		496CF22219A4908C0081BF5E /* IQButtonBarArrowLeft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IQButtonBarArrowLeft@2x.png"; sourceTree = "<group>"; };
@@ -1799,6 +1802,8 @@
 				49500A2819AD85F700D175D8 /* TouchViewController.m */,
 				493DEF6519AED166009D0027 /* UIWindow+MotionEvent.h */,
 				493DEF6619AED166009D0027 /* UIWindow+MotionEvent.m */,
+				4964C25E19C95D2600DF896D /* WalkAndTeaseViewController.h */,
+				4964C25F19C95D2600DF896D /* WalkAndTeaseViewController.m */,
 			);
 			name = "动作交互";
 			path = "../动作交互";
@@ -3431,6 +3436,7 @@
 				49CE193319A9AC14005F21EE /* PresentDetailViewController.m in Sources */,
 				09EC596519876C9500FDE806 /* RecommendViewController.m in Sources */,
 				099F2D131960F76A009614D3 /* TopicListModel.m in Sources */,
+				4964C26019C95D2600DF896D /* WalkAndTeaseViewController.m in Sources */,
 				091EAD36194ECA6400B0DE41 /* MyPetViewController.m in Sources */,
 				491C1FC019B9B4E400CA833E /* UserBagCollectionViewCell.m in Sources */,
 				09F0CBC319527C4100FA3898 /* MyPhotoCell.m in Sources */,

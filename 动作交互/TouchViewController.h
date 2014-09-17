@@ -22,5 +22,6 @@
 }
 @property (nonatomic,strong)NSDictionary *animalInfoDict;
 @property (nonatomic,strong)NSString *recordURL;
+@property (nonatomic,getter = getRecord)BOOL haveRecord;
 - (void)createAlertView;
 @end

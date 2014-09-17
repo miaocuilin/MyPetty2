@@ -24,4 +24,10 @@
 @property(nonatomic,retain)UILabel *label2;
 @property(nonatomic,retain)UILabel *label3;
 @property(nonatomic,retain)UILabel *label4;
+@property(nonatomic,retain)NSDictionary *animalInfoDict;
+@property(nonatomic,retain)NSDictionary *shakeInfoDict;
+@property(nonatomic,copy)NSString *masterID;
+-(void)isRegister;
+-(void)hideAll;
+- (void)loadAnimalInfoData;
 @end

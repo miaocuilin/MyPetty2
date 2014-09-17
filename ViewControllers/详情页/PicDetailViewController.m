@@ -202,11 +202,15 @@
     NSLog(@"PetInfoAPI:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"%@", load.dataDict);
+//            NSLog(@"照片详情页宠物信息：%@", load.dataDict);
 //            PetInfoModel * model = [[PetInfoModel alloc] init];
 //            [model setValuesForKeysWithDictionary:load.dataDict];
 //            [self.petInfoArray addObject:model];
             NSDictionary * dic = [load.dataDict objectForKey:@"data"];
+            //父类的宠物信息字典
+//            masterID = [dic objectForKey:@"master_id"];
+            super.shakeInfoDict = dic;
+            
             LoadingSuccess;
             //改变header数据
             self.name.text = [dic objectForKey:@"name"];
@@ -739,17 +743,22 @@
 -(void)sendGiftClick
 {
     NSLog(@"赠送礼物");
+    ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+    [self addChildViewController:vc];
+    [self.view addSubview:vc.view];
     if (![ControllerManager getIsSuccess]) {
         //提示注册
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
         [vc createLoginAlertView];
-        return;
+//        return;
+    }else{
+        [vc createPresentGiftAlertView];
     }
-    PresentDetailViewController * vc = [[PresentDetailViewController alloc] init];
-    [self presentViewController:vc animated:YES completion:nil];
-    [vc release];
+//    PresentDetailViewController * vc = [[PresentDetailViewController alloc] init];
+//    [self presentViewController:vc animated:YES completion:nil];
+//    [vc release];
+    
+    
+
 }
 -(void)commentClick
 {
@@ -1111,8 +1120,8 @@
     _request.delegate = self;
     [_request startAsynchronous];
     
-    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithStatus:@"评论中..."];
+//    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//    [MMProgressHUD showWithStatus:@"评论中..."];
 }
 #pragma mark - ASI代理
 -(void)requestFinished:(ASIHTTPRequest *)request
@@ -1120,6 +1129,14 @@
 //    buttonRight.userInteractionEnabled = YES;
     
     NSLog(@"success");
+    NSLog(@"request.responseData:%@",[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
+    //经验弹窗
+    NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
+    [USER setObject:[USER objectForKey:@"exp"] forKey:@"oldexp"];
+    [USER setObject:[[dict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
+    int index = [[USER objectForKey:@"exp"] intValue]-[[USER objectForKey:@"oldexp"] intValue];
+    [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+    
     [commentTextView resignFirstResponder];
     //添加评论
     [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];
@@ -1134,7 +1151,7 @@
         commentTextView.textColor = [UIColor lightGrayColor];
     }];
     bgButton.hidden = YES;
-    [MMProgressHUD dismissWithSuccess:@"评论成功" title:nil afterDelay:1];
+//    [MMProgressHUD dismissWithSuccess:@"评论成功" title:nil afterDelay:0.5];
     //
     commentNum.text = [NSString stringWithFormat:@"%d", self.nameArray.count];
     

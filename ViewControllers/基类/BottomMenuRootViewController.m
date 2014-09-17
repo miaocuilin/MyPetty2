@@ -13,13 +13,12 @@
 #import "ShakeViewController.h"
 #import "ShoutViewController.h"
 #import "CallViewController.h"
-
+#import "WalkAndTeaseViewController.h"
 #define headBtnWidth 64
 #define circleWidth 82
 @interface BottomMenuRootViewController ()
 {
-    NSString *masterID;
-    NSDictionary *animalInfoDict;
+    
 }
 
 @end
@@ -39,7 +38,6 @@
         [self loadAnimalInfoData];
     }
 }
-
 - (void)loadAnimalInfoData
 {
     NSString *aid = [USER objectForKey:@"aid"];
@@ -49,17 +47,16 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalInfo Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"宠物信息：%@",load.dataDict);
         if (isFinish) {
-            masterID =[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"];
-            animalInfoDict = [load.dataDict objectForKey:@"data"];
-//            [self createMenu];
-            
-            NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [USER objectForKey:@"aid"]];
+            self.masterID =[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"];
+            self.animalInfoDict = [load.dataDict objectForKey:@"data"];
+            self.shakeInfoDict = [load.dataDict objectForKey:@"data"];
+            NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [self.animalInfoDict objectForKey:@"aid"]];
             
             UIImage *image =[UIImage imageWithContentsOfFile:pngFilePath];
             if (image) {
                 [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
             }else{
-                httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[USER objectForKey:@"a_tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
                     if (isFinish) {
                         if (load.dataImage == NULL) {
                             [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
@@ -74,7 +71,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
 
             
             
-            if ([masterID isEqualToString:[USER objectForKey:@"usr_id"]]){
+            if ([self.masterID isEqualToString:[USER objectForKey:@"usr_id"]]){
                 self.label3.text = @"叫一叫";
             }
 
@@ -139,11 +136,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     [self.menuBgView addSubview:headCircle];
     
     self.headButton = [MyControl createButtonWithFrame:CGRectMake(78, self.self.menuBgView.frame.size.height-headBtnWidth, headBtnWidth, headBtnWidth) ImageName:@"defaultPetHead.png" Target:self Action:@selector(headBtnClick) Title:nil];
-    if (!([[USER objectForKey:@"a_tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"a_tx"] length]==0)) {
-//        NSString *animalTXPath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[USER objectForKey:@"a_tx"]]];
-        
-
-    }
+    
     
     self.headButton.layer.cornerRadius = headBtnWidth/2;
     self.headButton.layer.masksToBounds = YES;
@@ -171,13 +164,14 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     
     NSLog(@"摇一摇");
     ShakeViewController *shake = [[ShakeViewController alloc] init];
+    shake.titleString = self.label1.text;
+    shake.animalInfoDict = self.shakeInfoDict;
+    NSLog(@"shakeInfoDict:%@",self.shakeInfoDict);
     [self addChildViewController:shake];
     [shake release];
     [shake didMoveToParentViewController:self];
     [shake becomeFirstResponder];
     [self.view addSubview:shake.view];
-    shake.titleString = self.label1.text;
-    shake.animalInfoDict = animalInfoDict;
     [self hideAll];
 }
 
@@ -205,16 +199,10 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }
     
     NSLog(@"录音和摸一摸");
-//    CallViewController *call = [[CallViewController alloc] init];
-//    [self addChildViewController:call];
-//    [call release];
-//    [call didMoveToParentViewController:self];
-//    [call createRecordOne];
-//    [self.view addSubview:call.view];
-    if ([masterID isEqualToString:[USER objectForKey:@"usr_id"]]) {
+    if ([[self.animalInfoDict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
         ShoutViewController *shout = [[ShoutViewController alloc] init];
+        shout.animalInfoDict = self.animalInfoDict;
         [self addChildViewController:shout];
-        shout.animalInfoDict = animalInfoDict;
         [shout release];
         [shout didMoveToParentViewController:self];
 //        [shout createRecordOne];
@@ -223,7 +211,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }else{
         
         TouchViewController *touch = [[TouchViewController alloc] init];
-        touch.animalInfoDict = animalInfoDict;
+        touch.animalInfoDict = self.animalInfoDict;
         [self addChildViewController:touch];
         [touch release];
         [touch didMoveToParentViewController:self];
@@ -240,13 +228,15 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         return;
     }
     NSLog(@"遛一遛");
+    WalkAndTeaseViewController *walkAndTeasevc = [[WalkAndTeaseViewController alloc] init];
+    walkAndTeasevc.titleString = self.label4.text;
+    [self presentViewController:walkAndTeasevc animated:YES completion:^{
+//        [walkAndTeasevc release];
+        [self hideAll];
+    }];
+
     
-    TouchViewController *touch = [[TouchViewController alloc] init];
-    [self addChildViewController:touch];
-    [touch release];
-    [touch didMoveToParentViewController:self];
-    [self.view addSubview:touch.view];
-    [self hideAll];
+    
 }
 -(void)headBtnClick
 {

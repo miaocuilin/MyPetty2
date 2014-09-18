@@ -105,6 +105,9 @@
 
     //join家族API
     #define JOINFAMILYAPI @"http://54.199.161.210:8001/index.php?r=animal/joinApi&aid="
+
+    //退出王国API
+    #define EXITFAMILYAPI @"http://54.199.161.210:8001/index.php?r=animal/exitApi&aid="
     /***************************/
     //获取宠物信息API
     #define PETINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/infoApi&aid="

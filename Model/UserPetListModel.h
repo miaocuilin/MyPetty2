@@ -18,4 +18,5 @@
 @property(nonatomic,copy)NSString * rank;
 @property(nonatomic,copy)NSString * t_contri;
 @property(nonatomic,copy)NSString * tx;
+@property(nonatomic,copy)NSString * master_id;
 @end

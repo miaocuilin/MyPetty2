@@ -379,4 +379,36 @@ MBProgressHUD *HUD;
         return [NSString stringWithFormat:@"%@ | %@", province, city];
     }
 }
+#pragma mark -
++(NSDictionary *)returnGiftDictWithItemId:(NSString *)itemId
+{
+    NSMutableArray * array = [NSMutableArray arrayWithCapacity:0];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"shopGift" ofType:@"plist"];
+    NSMutableDictionary *DictData = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+    NSArray *level0 = [[DictData objectForKey:@"good"] objectForKey:@"level0"];
+    NSArray *level1 =[[DictData objectForKey:@"good"] objectForKey:@"level1"];
+    NSArray *level2 =[[DictData objectForKey:@"good"] objectForKey:@"level2"];
+    NSArray *level3 =[[DictData objectForKey:@"good"] objectForKey:@"level3"];
+    [array addObjectsFromArray:level0];
+    [array addObjectsFromArray:level1];
+    [array addObjectsFromArray:level2];
+    [array addObjectsFromArray:level3];
+
+    
+    NSArray *level4 =[[DictData objectForKey:@"bad"] objectForKey:@"level0"];
+    NSArray *level5 =[[DictData objectForKey:@"bad"] objectForKey:@"level1"];
+    NSArray *level6 =[[DictData objectForKey:@"bad"] objectForKey:@"level2"];
+    [array addObjectsFromArray:level4];
+    [array addObjectsFromArray:level5];
+    [array addObjectsFromArray:level6];
+    
+    NSDictionary * dict = nil;
+    for (int i=0; i<array.count; i++) {
+        if ([[array[i] objectForKey:@"no"] isEqualToString:itemId]) {
+            dict = array[i];
+            break;
+        }
+    }
+    return dict;
+}
 @end

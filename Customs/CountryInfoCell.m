@@ -50,21 +50,21 @@
         nameLabel.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:nameLabel];
     }
-}
--(void)modify:(int)row
-{
-    if (row == 0) {
-        self.switchLabel1.text = @"默 认";
-        self.switchLabel2.text = @"宠 物";
-    }else{
-        self.switchLabel1.text = @"设 为";
-        self.switchLabel2.text = @"默 认";
-    }
     
+    crown = [MyControl createImageViewWithFrame:CGRectMake(55, 52, 20, 20) ImageName:@"crown.png"];
+    [self.contentView addSubview:crown];
+}
+-(void)modify:(int)row isSelf:(BOOL)isSelf
+{
+    if (isSelf) {
+        isMe = YES;
+    }
 }
 //手势操作
 - (IBAction)show:(id)sender {
-
+    if (!isMe) {
+        return;
+    }
     [UIView animateWithDuration:0.2 animations:^{
         CGRect cellFrame = self.frame;
         cellFrame.origin.x = -200;
@@ -78,7 +78,9 @@
     }];
 }
 - (IBAction)hide:(id)sender {
-
+    if (!isMe) {
+        return;
+    }
     [UIView animateWithDuration:0.2 animations:^{
         
         CGRect cellFrame = self.frame;
@@ -109,6 +111,20 @@
 #pragma mark -
 -(void)configUI:(UserPetListModel *)model
 {
+    crown.hidden = YES;
+    
+    if ([model.aid isEqualToString:[USER objectForKey:@"aid"]]) {
+        crown.hidden = NO;
+    }
+    
+    if ([model.aid isEqualToString:[USER objectForKey:@"aid"]]) {
+        self.switchLabel1.text = @"默 认";
+        self.switchLabel2.text = @"宠 物";
+    }else{
+        self.switchLabel1.text = @"设 为";
+        self.switchLabel2.text = @"默 认";
+    }
+    
     self.nameLabel.text = [NSString stringWithFormat:@"祭司 — %@国", model.name];
     for(int i=0;i<3;i++){
         UILabel * numLabel = (UILabel *)[self.contentView viewWithTag:100+i];

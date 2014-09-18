@@ -28,6 +28,9 @@
     self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
     self.userAttentionListArray = [NSMutableArray arrayWithCapacity:0];
     
+    self.goodsArray = [NSMutableArray arrayWithCapacity:0];
+    self.goodsNumArray = [NSMutableArray arrayWithCapacity:0];
+    
     cellNum = 15;
 //    isOwner = YES;
     [self loadUserInfoData];
@@ -113,6 +116,46 @@
     }];
     [request release];
 }
+-(void)loadBagData
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERGOODSLISTAPI, self.usr_id, sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"背包物品:%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary * dict = [load.dataDict objectForKey:@"data"];
+                [self.goodsArray removeAllObjects];
+                [self.goodsNumArray removeAllObjects];
+                
+                for (NSString * itemId in [dict allKeys]) {
+                    [self.goodsArray addObject:itemId];
+                }
+                //排序
+                for (int i=0; i<self.goodsArray.count; i++) {
+                    for (int j=0; j<self.goodsArray.count-i-1; j++) {
+                        if ([self.goodsArray[j] intValue] > [self.goodsArray[j+1] intValue]) {
+                            NSString * str1 = [NSString stringWithFormat:@"%@", self.goodsArray[j]];
+                            NSString * str2 = [NSString stringWithFormat:@"%@", self.goodsArray[j+1]];
+                            self.goodsArray[j] = str2;
+                            self.goodsArray[j+1] = str1;
+                        }
+                    }
+                }
+                //获取对应数量
+                for (int i=0; i<self.goodsArray.count; i++) {
+                    self.goodsNumArray[i] = [dict objectForKey:self.goodsArray[i]];
+                }
+            }
+            [self createTableView4];
+        }else{
+            
+        }
+    }];
+    [request release];
+}
+
 #pragma mark - 用户列表
 
 #pragma mark - 
@@ -549,6 +592,7 @@
     tv4 = [[UITableView alloc] initWithFrame:CGRectMake(320*3, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv4.delegate = self;
     tv4.dataSource = self;
+    tv4.separatorStyle = 0;
     [sv addSubview:tv4];
     
     UIView * tvHeaderView4 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
@@ -597,7 +641,8 @@
         }
     }else{
         if (!isCreated[a-200]) {
-            [self createTableView4];
+            [self loadBagData];
+            
         }
     }
 }
@@ -651,10 +696,18 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableView == tv4) {
-        return 1;
+        if (self.goodsArray.count) {
+            return 1;
+        }else{
+            return 0;
+        }
     }else if(tableView == tv){
         //+的这个1是添加王国的按钮
-        return self.userPetListArray.count+1;
+        if ([self.usr_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+            return self.userPetListArray.count+1;
+        }else{
+            return self.userPetListArray.count;
+        }
     }else if(tableView == tv2){
         return self.userAttentionListArray.count;
     }else{
@@ -690,12 +743,15 @@
         //不要忘记指针指向
         cell.delegate = self;
         cell.selectionStyle = 0;
-        if (indexPath.row == 0) {
-            UIImageView * crown = [MyControl createImageViewWithFrame:CGRectMake(55, 52, 20, 20) ImageName:@"crown.png"];
-            [cell addSubview:crown];
+//        if (indexPath.row == 0) {
+//            UIImageView * crown = [MyControl createImageViewWithFrame:CGRectMake(55, 52, 20, 20) ImageName:@"crown.png"];
+//            [cell addSubview:crown];
+//        }
+        if ([self.usr_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+            [cell modify:indexPath.row isSelf:YES];
+        }else{
+            [cell modify:indexPath.row isSelf:NO];
         }
-        
-        [cell modify:indexPath.row];
         [cell configUI:self.userPetListArray[indexPath.row]];
         return cell;
     }else if (tableView == tv2) {
@@ -724,8 +780,9 @@
         }
         cell.selectionStyle = 0;
         
-        for(int i=0;i<3*10;i++){
+        for(int i=0;i<self.goodsArray.count;i++){
             CGRect rect = CGRectMake(20+i%3*100, 15+i/3*100, 85, 90);
+            NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:self.goodsArray[i]];
             UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"giftBg.png"];
             [cell addSubview:imageView];
             
@@ -737,24 +794,29 @@
             rq.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
             [triangle addSubview:rq];
             
-            UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 8, 25, 10) Font:9 Text:@"+150"];
+            UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 8, 25, 10) Font:9 Text:nil];
+            if ([[dict objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
+                rqNum.text = [NSString stringWithFormat:@"+%@", [dict objectForKey:@"add_rq"]];
+            }else{
+                rqNum.text = [dict objectForKey:@"add_rq"];
+            }
             rqNum.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
             rqNum.textAlignment = NSTextAlignmentCenter;
             //            rqNum.backgroundColor = [UIColor redColor];
             [triangle addSubview:rqNum];
             
-            UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 5, 85, 15) Font:11 Text:@"汪汪项圈"];
+            UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 5, 85, 15) Font:11 Text:[dict objectForKey:@"name"]];
             giftName.textColor = [UIColor grayColor];
             giftName.textAlignment = NSTextAlignmentCenter;
             [imageView addSubview:giftName];
             
-            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(20, 20, 45, 45) ImageName:[NSString stringWithFormat:@"bother%d_2.png", arc4random()%6+1]];
+            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(20, 20, 45, 45) ImageName:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"no"]]];
             [imageView addSubview:giftPic];
             
             UIImageView * gift = [MyControl createImageViewWithFrame:CGRectMake(20, 90-14-5, 12, 14) ImageName:@"detail_gift.png"];
             [imageView addSubview:gift];
             
-            UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(35, 90-18, 40, 15) Font:13 Text:@" × 3"];
+            UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(35, 90-18, 40, 15) Font:13 Text:[NSString stringWithFormat:@" × %@", self.goodsNumArray[i]]];
             giftNum.textColor = BGCOLOR;
             [imageView addSubview:giftNum];
             
@@ -771,7 +833,7 @@
 }
 -(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (tableView == tv2) {
+    if ([self.usr_id isEqualToString:[USER objectForKey:@"usr_id"]] && tableView == tv2) {
         return UITableViewCellEditingStyleDelete;
     }else{
         return 0;
@@ -784,8 +846,18 @@
         [self.userAttentionListArray removeObjectAtIndex:indexPath.row];
         //删除单元格的某一行时，在用动画效果实现删除过程
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-        
     }
+//    else if(tableView == tv){
+//        if ([self.usr_id isEqualToString:[self.userPetListArray[indexPath.row] master_id]]) {
+//            StartLoading;
+//            [MMProgressHUD dismissWithError:@"不能退出自己的国家" afterDelay:1];
+//            return;
+//        }
+//        [self quitCountryWithRow:indexPath.row];
+//        [self.userPetListArray removeObjectAtIndex:indexPath.row];
+//        //删除单元格的某一行时，在用动画效果实现删除过程
+//        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+//    }
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -796,7 +868,12 @@
     }else if (tableView == tv3) {
         return 200.0f;
     }else{
-        return 15+10*100;
+        int i = self.goodsArray.count;
+        if (i%3) {
+            return 15+(i/3+1)*100;
+        }else{
+            return 15+i/3*100;
+        }
     }
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -813,7 +890,15 @@
         if (index == 1) {
             //退出国家
             NSIndexPath * cellIndexPath = [tv indexPathForCell:cell];
-            cellNum -= 1;
+            NSLog(@"%@", [self.userPetListArray[cellIndexPath.row] master_id]);
+            if ([self.usr_id isEqualToString:[self.userPetListArray[cellIndexPath.row] master_id]]) {
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"不能退出自己的国家" afterDelay:1];
+                return;
+            }
+            [self quitCountryWithRow:cellIndexPath.row];
+            
+            [self.userPetListArray removeObjectAtIndex:cellIndexPath.row];
             [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
         }else if(index == 2){
             //切换并置顶
@@ -840,6 +925,29 @@
     }];
     [request release];
 }
+-(void)quitCountryWithRow:(int)row
+{
+    NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [self.userPetListArray[row] aid]];
+    NSString * sig = [MyMD5 md5:code];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", EXITFAMILYAPI, [self.userPetListArray[row] aid], sig, [ControllerManager getSID]];
+    NSLog(@"quitApiurl:%@", url);
+    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+    [MMProgressHUD showWithStatus:@"退出中..."];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+                [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:1];
+            }else{
+                [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:1];
+            }
+            
+        }else{
+            [MMProgressHUD dismissWithError:@"退出失败" afterDelay:1];
+        }
+    }];
+    [request release];
+}
+
 //礼物点击事件
 -(void)buttonClick:(UIButton *)btn
 {

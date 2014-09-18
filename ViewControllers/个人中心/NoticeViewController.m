@@ -363,56 +363,56 @@
     }
     
 }
-#pragma mark - 将消息存储到本地plist文件
--(void)saveTalkDataWithUserID:(NSString *)usrID  time:(NSString *)timeStamp msg:(NSString *)msg Tx:(NSString *)tx Name:(NSString *)name
-{
-    NSFileManager * manager = [[NSFileManager alloc] init];
-    NSString * docDir = DOCDIR;
-    NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
-    if ([manager fileExistsAtPath:path]) {
-        //文件存在
-        NSLog(@"文件存在");
-//        if (isNewCreated) {
-//            //新创建不读取本地数据
-//            //直接存储数据
-            [self saveWithUserID:usrID time:timeStamp msg:msg];
-//        }else{
-//            //非新创建，读取本地数据
-//            if (isRead) {
-//                //已经读取本地文件
-//            }else{
-//                //未读取本地文件
-//                isRead = YES;
-//                self.totalDataDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
-//                if ([self.totalDataDict objectForKey:self.talk_id]) {
-//                    self.talkDataDict = [self.totalDataDict objectForKey:self.talk_id];
-//                    self.talkDataArray = [NSMutableArray arrayWithArray:[self.talkDataDict objectForKey:@"data"]];
-//                }
-//                //                NSLog(@"%@--%@", self.totalDataDict, self.talkDataDict);
-//            }
-//            [self saveWithUserID:usrID time:timeStamp msg:msg];
-//        }
-    }else{
-        //文件不存在
-        NSLog(@"文件不存在");
-//        isNewCreated = YES;
-        
-        NSMutableDictionary * messageDict = [NSMutableDictionary dictionaryWithCapacity:0];
-        [messageDict setObject:timeStamp forKey:@"time"];
-        [messageDict setObject:msg forKey:@"msg"];
-        [messageDict setObject:usrID forKey:@"usr_id"];
-//        [self.talkDataArray addObject:messageDict];
+//#pragma mark - 将消息存储到本地plist文件
+//-(void)saveTalkDataWithUserID:(NSString *)usrID  time:(NSString *)timeStamp msg:(NSString *)msg Tx:(NSString *)tx Name:(NSString *)name
+//{
+//    NSFileManager * manager = [[NSFileManager alloc] init];
+//    NSString * docDir = DOCDIR;
+//    NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
+//    if ([manager fileExistsAtPath:path]) {
+//        //文件存在
+//        NSLog(@"文件存在");
+////        if (isNewCreated) {
+////            //新创建不读取本地数据
+////            //直接存储数据
+////            [self saveWithUserID:usrID time:timeStamp msg:msg];
+////        }else{
+////            //非新创建，读取本地数据
+////            if (isRead) {
+////                //已经读取本地文件
+////            }else{
+////                //未读取本地文件
+////                isRead = YES;
+////                self.totalDataDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
+////                if ([self.totalDataDict objectForKey:self.talk_id]) {
+////                    self.talkDataDict = [self.totalDataDict objectForKey:self.talk_id];
+////                    self.talkDataArray = [NSMutableArray arrayWithArray:[self.talkDataDict objectForKey:@"data"]];
+////                }
+////                //                NSLog(@"%@--%@", self.totalDataDict, self.talkDataDict);
+////            }
+////            [self saveWithUserID:usrID time:timeStamp msg:msg];
+////        }
+//    }else{
+//        //文件不存在
+//        NSLog(@"文件不存在");
+////        isNewCreated = YES;
 //        
+//        NSMutableDictionary * messageDict = [NSMutableDictionary dictionaryWithCapacity:0];
+//        [messageDict setObject:timeStamp forKey:@"time"];
+//        [messageDict setObject:msg forKey:@"msg"];
+//        [messageDict setObject:usrID forKey:@"usr_id"];
+////        [self.talkDataArray addObject:messageDict];
+////        
+////        
+////        [self.talkDataDict setObject:self.talkDataArray forKey:@"data"];
+////        [self.talkDataDict setObject:self.usr_id forKey:@"usr_id"];
+////        
+////        [self.totalDataDict setObject:self.talkDataDict forKey:self.talk_id];
+////        [self.totalDataDict writeToFile:path atomically:YES];
 //        
-//        [self.talkDataDict setObject:self.talkDataArray forKey:@"data"];
-//        [self.talkDataDict setObject:self.usr_id forKey:@"usr_id"];
-//        
-//        [self.totalDataDict setObject:self.talkDataDict forKey:self.talk_id];
-//        [self.totalDataDict writeToFile:path atomically:YES];
-        
-        //        [messageDict release];
-    }
-}
+//        //        [messageDict release];
+//    }
+//}
 -(void)saveWithUserID:(NSString *)usrID time:(NSString *)timeStamp msg:(NSString *)msg Tx:(NSString *)tx Name:(NSString *)name
 {
     NSString * docDir = DOCDIR;

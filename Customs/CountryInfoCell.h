@@ -18,7 +18,8 @@
 
 @interface CountryInfoCell : UITableViewCell
 {
-    
+    BOOL isMe;
+    UIImageView * crown;
 }
 @property (nonatomic,assign)id <CountryInfoCellDelegate>delegate;
 
@@ -33,6 +34,9 @@
 @property (retain, nonatomic) IBOutlet UILabel *switchLabel2;
 
 @property (retain,nonatomic) UIImageView * expImageView;
--(void)modify:(int)row;
+- (IBAction)show:(id)sender;
+- (IBAction)hide:(id)sender;
+
+-(void)modify:(int)row isSelf:(BOOL)isSelf;
 -(void)configUI:(UserPetListModel *)model;
 @end

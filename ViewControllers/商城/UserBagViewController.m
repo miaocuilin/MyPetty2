@@ -21,6 +21,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.goodsArray = [NSMutableArray arrayWithCapacity:0];
+    self.goodsNumArray = [NSMutableArray arrayWithCapacity:0];
+    
     [self createBg];
     [self loadData];
     [self createCollectionView];
@@ -31,10 +34,35 @@
 {
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERGOODSLISTAPI, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
-    NSLog(@"%@", url);
+//    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            
+            NSLog(@"背包物品:%@", load.dataDict);
+            if ([load.dataDict objectForKey:@"data"] != NO) {
+                NSDictionary * dict = [load.dataDict objectForKey:@"data"];
+                [self.goodsArray removeAllObjects];
+                [self.goodsNumArray removeAllObjects];
+                
+                for (NSString * itemId in [dict allKeys]) {
+                    [self.goodsArray addObject:itemId];
+                }
+                //排序
+                for (int i=0; i<self.goodsArray.count; i++) {
+                    for (int j=0; j<self.goodsArray.count-i-1; j++) {
+                        if ([self.goodsArray[j] intValue] > [self.goodsArray[j+1] intValue]) {
+                            NSString * str1 = [NSString stringWithFormat:@"%@", self.goodsArray[j]];
+                            NSString * str2 = [NSString stringWithFormat:@"%@", self.goodsArray[j+1]];
+                            self.goodsArray[j] = str2;
+                            self.goodsArray[j+1] = str1;
+                        }
+                    }
+                }
+                //获取对应数量
+                for (int i=0; i<self.goodsArray.count; i++) {
+                    self.goodsNumArray[i] = [dict objectForKey:self.goodsArray[i]];
+                }
+                [self.collectionView reloadData];
+            }
         }else{
         
         }
@@ -56,7 +84,7 @@
 }
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 50;
+    return self.goodsArray.count;
 }
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
@@ -64,6 +92,7 @@
 {
     static NSString *identifer = @"cell";
     UserBagCollectionViewCell *cell = (UserBagCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:identifer forIndexPath:indexPath];
+    [cell configUIWithItemId:self.goodsArray[indexPath.row] Num:self.goodsNumArray[indexPath.row]];
     return cell;
 }
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath

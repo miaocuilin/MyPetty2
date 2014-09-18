@@ -19,6 +19,7 @@
     [_rank release];
     [_t_contri release];
     [_tx release];
+    [_master_id release];
     [super dealloc];
 }
 

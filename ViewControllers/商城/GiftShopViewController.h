@@ -33,4 +33,9 @@
 @property(nonatomic,retain)NSMutableArray * cateArray;
 @property(nonatomic,retain)NSMutableArray * cateArray2;
 @property(nonatomic,retain)NSMutableArray * orderArray;
+
+@property(nonatomic,retain)NSMutableArray * totalGoodsDataArray;
+@property(nonatomic,retain)NSMutableArray * priceHighToLowArray;
+@property(nonatomic,retain)NSMutableArray * priceLotToHighArray;
+@property(nonatomic,retain)NSArray * showArray;
 @end

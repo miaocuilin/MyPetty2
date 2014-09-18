@@ -221,7 +221,7 @@
 //            masterID = [dic objectForKey:@"master_id"];
             super.shakeInfoDict = dic;
             
-            LoadingSuccess;
+            
             //改变header数据
             self.name.text = [dic objectForKey:@"name"];
             if ([[dic objectForKey:@"gender"] intValue] == 2) {
@@ -240,6 +240,7 @@
             
             /********************/
             if (++prepareCreateUINum == 2) {
+                LoadingSuccess;
                 [self createUI];
             }
         }else{
@@ -334,6 +335,7 @@
         bigImageView.image = image;
         [self adjustedImage:bigImageView];
         if (++prepareCreateUINum == 2) {
+            LoadingSuccess;
             [self createUI];
         }
     }else{
@@ -343,7 +345,9 @@
                 bigImageView.image = load.dataImage;
                 [self adjustedImage:bigImageView];
                 if (++prepareCreateUINum == 2) {
+                    LoadingSuccess;
                     [self createUI];
+                    
                 }
             }else{
                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"图片加载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];

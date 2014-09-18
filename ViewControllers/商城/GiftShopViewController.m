@@ -33,11 +33,16 @@
     self.cateArray = [NSMutableArray arrayWithObjects:@"全部", @"新品", @"热卖", @"推荐", nil];
     self.cateArray2 = [NSMutableArray arrayWithObjects:@"喵喵专用", @"汪汪专用", nil];
     self.orderArray = [NSMutableArray arrayWithObjects:@"由高到低", @"由低到高", nil];
+    self.totalGoodsDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.priceHighToLowArray = [NSMutableArray arrayWithCapacity:0];
+    self.priceLotToHighArray = [NSMutableArray arrayWithCapacity:0];
+    
     [self addGiftShopData];
     [self createBg];
     [self createFakeNavigation];
     [self createHeader];
-    [self createUI];
+    [self createScrollView2];
+    [self createScrollView];
     [self createBottom];
     
     [self createAlphaBtn];
@@ -82,6 +87,37 @@
     [self addData:level6 isGood:NO];
     
 //    NSLog(@"data:%@",DictData);
+    [self.totalGoodsDataArray addObjectsFromArray:self.goodGiftDataArray];
+    [self.totalGoodsDataArray addObjectsFromArray:self.badGiftDataArray];
+    
+    self.showArray = self.totalGoodsDataArray;
+    
+    NSMutableArray * temp1 = [NSMutableArray arrayWithArray:self.totalGoodsDataArray];
+    NSMutableArray * temp2 = [NSMutableArray arrayWithArray:self.totalGoodsDataArray];
+    //从高到低
+    for (int i=0; i<temp1.count; i++) {
+        for (int j=0; j<temp1.count-1-i; j++) {
+            if ([[temp1[j] price] intValue]<[[temp1[j+1] price] intValue]) {
+                GiftShopModel * model1 = temp1[j];
+                GiftShopModel * model2 = temp1[j+1];
+                temp1[j] = model2;
+                temp1[j+1] = model1;
+            }
+        }
+    }
+    self.priceHighToLowArray = [NSMutableArray arrayWithArray:temp1];
+    //从低到高
+    for (int i=0; i<temp2.count; i++) {
+        for (int j=0; j<temp2.count-1-i; j++) {
+            if ([[temp2[j] price] intValue]>[[temp2[j+1] price] intValue]) {
+                GiftShopModel * model1 = temp2[j];
+                GiftShopModel * model2 = temp2[j+1];
+                temp2[j] = model2;
+                temp2[j+1] = model1;
+            }
+        }
+    }
+    self.priceLotToHighArray = [NSMutableArray arrayWithArray:temp2];
 }
 - (void)addData:(NSArray *)array isGood:(BOOL)good
 {
@@ -313,7 +349,22 @@
 -(void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
 {
     NSLog(@"%d--%@", Line, Words);
-    int temp = 0;
+    if (sender == dropDown) {
+        if (Line == 0) {
+            [sv removeFromSuperview];
+            self.showArray = self.totalGoodsDataArray;
+        }
+        [self createScrollView];
+    }else{
+        [sv removeFromSuperview];
+        if (Line == 0) {
+            self.showArray = self.priceHighToLowArray;
+        }else{
+            self.showArray = self.priceLotToHighArray;
+        }
+        [self createScrollView];
+    }
+//    int temp = 0;
 //    for (int i=1; i< self.goodGiftDataArray.count; i++) {
 //        GiftShopModel *model = self.goodGiftDataArray[i];
 //        temp = [model.price intValue];
@@ -345,15 +396,20 @@
 }
 
 #pragma mark - createUI
--(void)createUI
+-(void)createScrollView
 {
     sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
-    sv.contentSize = CGSizeMake(320, 64+35+15+(30/3)*100);
+    //    sv.contentSize = CGSizeMake(320, 64+35+15+(30/3)*100);
     [self.view addSubview:sv];
     
     [self.view bringSubviewToFront:navView];
     [self.view bringSubviewToFront:headerView];
-    int index = self.badGiftDataArray.count + self.goodGiftDataArray.count;
+    int index = self.showArray.count;
+    if (index%3) {
+        sv.contentSize = CGSizeMake(320, 64+35+15+(index/3+1)*100);
+    }else{
+        sv.contentSize = CGSizeMake(320, 64+35+15+(index/3)*100);
+    }
     NSLog(@"index:%d",index);
     for(int i=0;i<index;i++){
         CGRect rect = CGRectMake(20+i%3*100, 64+35+15+i/3*100, 85, 90);
@@ -414,23 +470,21 @@
         button.tag = 1000+i;
         
         //更换礼物图片
-        GiftShopModel *model;
-        if (self.goodGiftDataArray.count>i) {
-            model = self.goodGiftDataArray[i];
+        GiftShopModel *model = self.showArray[i];
+        if ([model.add_rq rangeOfString:@"-"].location == NSNotFound) {
             rqNum.text = [NSString stringWithFormat:@"+%@",model.add_rq];
         }else{
-            model = self.badGiftDataArray[i-self.goodGiftDataArray.count];
             rqNum.text = [NSString stringWithFormat:@"%@",model.add_rq];
         }
         giftNum.text = model.price;
         giftPic.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
         giftName.text=model.name;
-
+        
     }
-    
-    
+}
+-(void)createScrollView2
+{
     /******************************/
-    
     sv2 = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
     sv2.contentSize = CGSizeMake(320, 64+35+15+(30/2)*185);
     [self.view addSubview:sv2];

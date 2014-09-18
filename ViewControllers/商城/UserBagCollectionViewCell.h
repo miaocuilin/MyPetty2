@@ -13,4 +13,6 @@
 @property (nonatomic,strong)UILabel *titleLabel;
 @property (nonatomic,strong)UILabel *presentNumberLabel;
 @property (nonatomic,strong)UILabel *popNumberLabel;
+
+-(void)configUIWithItemId:(NSString *)itemId Num:(NSString *)num;
 @end

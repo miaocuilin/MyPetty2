@@ -89,6 +89,10 @@
             self.dataDict=result;
             //判断errorCode是否为1，为1弹窗提示
             if([[self.dataDict objectForKey:@"errorCode"] intValue] == -1){
+                if ([[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"余额不足"]) {
+                    [ControllerManager HUDText:@"余额不足(⊙o⊙)哦~~" showView:[[UIApplication sharedApplication]keyWindow] yOffset:-50];
+                    return;
+                }
                 UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[self.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
                 self.httpRequestBlock(NO,self);
                 return;

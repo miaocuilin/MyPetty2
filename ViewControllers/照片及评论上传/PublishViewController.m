@@ -529,10 +529,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [MMProgressHUD dismissWithSuccess:@"上传成功" title:nil afterDelay:0.5];
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     NSDictionary *dict =[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
-    [USER setObject:[USER objectForKey:@"exp"] forKey:@"oldexp"];
+    int exp = [[USER objectForKey:@"exp"] intValue];
     [USER setObject:[[dict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
-    int index = [[USER objectForKey:@"exp"] intValue]-[[USER objectForKey:@"oldexp"] intValue];
-    [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+    int index = [[USER objectForKey:@"exp"] intValue]-exp;
+    if (index > 0) {
+        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+
+    }
     //分享到微博
 //    if ([[USER objectForKey:@"sina"] intValue] == 1) {
 //        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:_textView.text image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){

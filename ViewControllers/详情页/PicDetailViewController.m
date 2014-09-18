@@ -1211,8 +1211,8 @@
     _request.delegate = self;
     [_request startAsynchronous];
     
-//    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-//    [MMProgressHUD showWithStatus:@"评论中..."];
+    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+    [MMProgressHUD showWithStatus:@"评论中..."];
 }
 #pragma mark - ASI代理
 -(void)requestFinished:(ASIHTTPRequest *)request
@@ -1223,10 +1223,13 @@
     NSLog(@"request.responseData:%@",[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     //经验弹窗
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
-    [USER setObject:[USER objectForKey:@"exp"] forKey:@"oldexp"];
+    int exp = [[USER objectForKey:@"exp"] intValue];
     [USER setObject:[[dict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
-    int index = [[USER objectForKey:@"exp"] intValue]-[[USER objectForKey:@"oldexp"] intValue];
-    [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+    int index = [[USER objectForKey:@"exp"] intValue]-exp;
+    if (index>0) {
+        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+    }
+    
     
     [commentTextView resignFirstResponder];
     //添加评论
@@ -1247,7 +1250,7 @@
         commentTextView.textColor = [UIColor lightGrayColor];
     }];
     bgButton.hidden = YES;
-//    [MMProgressHUD dismissWithSuccess:@"评论成功" title:nil afterDelay:0.5];
+    [MMProgressHUD dismissWithSuccess:@"评论成功" title:nil afterDelay:0.2];
     //
     commentNum.text = [NSString stringWithFormat:@"%d", self.nameArray.count];
     

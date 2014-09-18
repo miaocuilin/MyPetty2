@@ -94,7 +94,7 @@
     int oldgold = [[USER objectForKey:@"oldgold"] intValue];
     int gold = [[USER objectForKey:@"gold"] intValue];
     [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
-    if (oldgold != gold) {
+    if (oldgold < gold) {
         int index = gold - oldgold;
         toolTipsVC = [[ToolTipsViewController alloc ]init];
         [self addChildViewController:toolTipsVC];
@@ -104,6 +104,13 @@
         toolTipsVC.nextgold = [[USER objectForKey:@"next_gold"] intValue];
         toolTipsVC.continuousDay = [[USER objectForKey:@"con_login"] intValue];
         [toolTipsVC createAlertView];
+    }
+    int oldexp = [[USER objectForKey:@"oldexp"] intValue];
+    int exp = [[USER objectForKey:@"exp"] intValue];
+    [USER setObject:[USER objectForKey:@"exp"] forKey:@"oldexp"];
+    if (oldexp < exp) {
+        int index = exp - oldexp;
+        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:index];
     }
 //    if (!isMenuBgViewAppear) {
 ////        [self.view bringSubviewToFront:self.menuBgView];

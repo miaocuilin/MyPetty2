@@ -26,6 +26,7 @@
     
     UIButton * alphaBtn;
     UIButton * backBtn;
+    UILabel * BottomGold;
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 

@@ -47,11 +47,15 @@
 
 - (void)buyGiftItemsAPI
 {
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=1102&num=2dog&cat"]];
-    NSString *buyItemsString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=item/buyApi&item_id=1102&num=2&sig=%@&SID=%@",sig,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=1102&num=1dog&cat"]];
+    NSString *buyItemsString = [NSString stringWithFormat:@"%@1102&num=1&sig=%@&SID=%@",BUYSHOPGIFTAPI,sig,[ControllerManager getSID]];
+//    NSLog(@"购买商品api:%@",buyItemsString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:buyItemsString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-        NSLog(@"购买商品结果：%@",load.dataDict);
-        
+//        NSLog(@"购买商品结果：%@",load.dataDict);
+        if (isFinish) {
+            [USER setObject:[NSString stringWithFormat:@"%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"user_gold"]] forKey:@"gold"];
+            BottomGold.text = [USER objectForKey:@"gold"];
+        }
     }];
     [request release];
 }
@@ -414,8 +418,6 @@
         if (self.goodGiftDataArray.count>i) {
             model = self.goodGiftDataArray[i];
             rqNum.text = [NSString stringWithFormat:@"+%@",model.add_rq];
-            NSLog(@"i:%d",i);
-
         }else{
             model = self.badGiftDataArray[i-self.goodGiftDataArray.count];
             rqNum.text = [NSString stringWithFormat:@"%@",model.add_rq];
@@ -501,6 +503,7 @@
 -(void)buttonClick:(UIButton *)btn
 {
     NSLog(@"点击了虚拟礼物第%d个", btn.tag-1000+1);
+    [self buyGiftItemsAPI];
 }
 -(void)buttonClick2:(UIButton *)btn
 {
@@ -519,9 +522,9 @@
     
     CGSize size = [MyGold.text sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
     
-    UILabel * gold = [MyControl createLabelWithFrame:CGRectMake(MyGold.frame.origin.x+size.width, 10, 100, 20) Font:15 Text:[USER objectForKey:@"gold"]];
-    gold.textColor = BGCOLOR;
-    [view addSubview:gold];
+    BottomGold = [MyControl createLabelWithFrame:CGRectMake(MyGold.frame.origin.x+size.width, 10, 100, 20) Font:15 Text:[USER objectForKey:@"gold"]];
+    BottomGold.textColor = BGCOLOR;
+    [view addSubview:BottomGold];
     
     UIButton * moreGold = [MyControl createButtonWithFrame:CGRectMake(220, (40-25)/2.0, 90, 25) ImageName:@"" Target:self Action:@selector(moreGoldClick) Title:@"更多金币"];
     moreGold.titleLabel.font = [UIFont systemFontOfSize:15];

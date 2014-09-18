@@ -111,12 +111,12 @@
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:touchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"摸一摸数据：%@",load.dataDict);
         if (isFinish) {
-            [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
+            int tempGold = [[USER objectForKey:@"gold"] intValue];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] forKey:@"gold"];
-            [USER setObject:[USER objectForKey:@"exp"] forKey:@"oldexp"];
+            int tempExp = [[USER objectForKey:@"exp"] intValue];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
-            int gold = [[USER objectForKey:@"gold"] intValue]-[[USER objectForKey:@"oldgold"] intValue];
-            int exp = [[USER objectForKey:@"exp"] intValue]-[[USER objectForKey:@"oldexp"] intValue];
+            int gold = [[USER objectForKey:@"gold"] intValue]-tempGold;
+            int exp = [[USER objectForKey:@"exp"] intValue]-tempExp;
             
             [ControllerManager HUDImageIcon:@"gold.png" showView:self.view.window yOffset:-50.0 Number:gold];
             [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:exp];

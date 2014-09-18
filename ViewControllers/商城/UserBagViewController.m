@@ -26,6 +26,7 @@
     [self createFakeNavigation];
 
 }
+
 - (void)createCollectionView
 {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];

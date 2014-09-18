@@ -142,10 +142,8 @@ MBProgressHUD *HUD;
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-//        NTSlidingViewController * slidingVc = [self shareSliding];
         MainViewController * main = [ControllerManager shareMain];
         JDMenuViewController * menu = [[JDMenuViewController alloc] init];
-
         sideMenu = [[JDSideMenu alloc]initWithContentController:main menuController:menu];
     });
     

@@ -264,4 +264,6 @@
     #define TOUCHAPI @"http://54.199.161.210:8001/index.php?r=animal/touchApi&aid="
     //是否已经进行过摸一摸
     #define ISTOUCHAPI @"http://54.199.161.210:8001/index.php?r=animal/isTouchedApi&aid="
+    //购买礼物
+    #define BUYSHOPGIFTAPI @"http://54.199.161.210:8001/index.php?r=item/buyApi&item_id="
 #endif

@@ -271,25 +271,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     sc.selectedSegmentIndex = segmentClickIndex;
 }
-#pragma mark - 复写四个动作
-//-(void)btn1Click
-//{
-//    [super isRegister];
-//    if (![ControllerManager getIsSuccess]) {
-//        return;
-//    }
-//    
-//    NSLog(@"摇一摇");
-//    ShakeViewController *shake = [[ShakeViewController alloc] init];
-//    [self addChildViewController:shake];
-//    [shake release];
-//    [shake didMoveToParentViewController:self];
-//    [shake becomeFirstResponder];
-//    [self.view addSubview:shake.view];
-//    shake.titleString = self.label1.text;
-//    shake.animalInfoDict = super.shakeInfoDict;
-//    [super hideAll];
-//}
 #pragma mark - scrollViewDelegate
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {

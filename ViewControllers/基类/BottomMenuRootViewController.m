@@ -14,6 +14,7 @@
 #import "ShoutViewController.h"
 #import "CallViewController.h"
 #import "WalkAndTeaseViewController.h"
+#import "QuickGiftViewController.h"
 #define headBtnWidth 64
 #define circleWidth 82
 @interface BottomMenuRootViewController ()
@@ -48,6 +49,11 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
 //        NSLog(@"宠物信息：%@",load.dataDict);
         if (isFinish) {
             self.masterID =[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"];
+            if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                [USER setObject:@"1" forKey:@"master"];
+            }else{
+                [USER setObject:@"0" forKey:@"master"];
+            }
             self.animalInfoDict = [load.dataDict objectForKey:@"data"];
             self.shakeInfoDict = [load.dataDict objectForKey:@"data"];
             NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [self.animalInfoDict objectForKey:@"aid"]];
@@ -183,12 +189,11 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }
     
     NSLog(@"送礼物");
-    ToolTipsViewController *tool = [[ToolTipsViewController alloc] init];
-    [self addChildViewController:tool];
-    [tool release];
-    [tool didMoveToParentViewController:self];
-    [self.view addSubview:tool.view];
-    [tool createPresentGiftAlertView];
+    QuickGiftViewController *quictGiftvc = [[QuickGiftViewController alloc] init];
+    [self addChildViewController:quictGiftvc];
+    [quictGiftvc didMoveToParentViewController:self];
+    [self.view addSubview:quictGiftvc.view];
+    [quictGiftvc release];
     [self hideAll];
 }
 -(void)btn3Click

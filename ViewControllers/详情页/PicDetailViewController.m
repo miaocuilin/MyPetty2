@@ -13,6 +13,7 @@
 #import "ToolTipsViewController.h"
 #import "PetInfoViewController.h"
 #import "MassWatchViewController.h"
+#import "QuickGiftViewController.h"
 @interface PicDetailViewController ()
 
 @end
@@ -817,15 +818,20 @@
 -(void)sendGiftClick
 {
     NSLog(@"赠送礼物");
-    ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-    [self addChildViewController:vc];
-    [self.view addSubview:vc.view];
+    
     if (![ControllerManager getIsSuccess]) {
         //提示注册
+        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
         [vc createLoginAlertView];
 //        return;
     }else{
-        [vc createPresentGiftAlertView];
+        QuickGiftViewController *quictGiftvc = [[QuickGiftViewController alloc] init];
+        [self addChildViewController:quictGiftvc];
+        [quictGiftvc didMoveToParentViewController:self];
+        [self.view addSubview:quictGiftvc.view];
+        [quictGiftvc release];
     }
 //    PresentDetailViewController * vc = [[PresentDetailViewController alloc] init];
 //    [self presentViewController:vc animated:YES completion:nil];

@@ -13,6 +13,7 @@
 @interface GiftShopViewController ()
 @property (nonatomic,retain)NSMutableArray *goodGiftDataArray;
 @property (nonatomic,retain)NSMutableArray *badGiftDataArray;
+@property (nonatomic,retain)NSMutableArray *giftDataArray;
 @end
 
 @implementation GiftShopViewController
@@ -50,7 +51,7 @@
 //    [self buyGiftItemsAPI];
 }
 
-- (void)buyGiftItemsAPI
+- (void)buyGiftItemsAPI:(NSInteger)tag
 {
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=1102&num=1dog&cat"]];
     NSString *buyItemsString = [NSString stringWithFormat:@"%@1102&num=1&sig=%@&SID=%@",BUYSHOPGIFTAPI,sig,[ControllerManager getSID]];
@@ -58,8 +59,10 @@
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:buyItemsString Block:^(BOOL isFinish, httpDownloadBlock *load) {
 //        NSLog(@"购买商品结果：%@",load.dataDict);
         if (isFinish) {
+            GiftShopModel *model = self.giftDataArray[tag];
             [USER setObject:[NSString stringWithFormat:@"%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"user_gold"]] forKey:@"gold"];
             BottomGold.text = [USER objectForKey:@"gold"];
+            [ControllerManager HUDText:[NSString stringWithFormat:@"恭喜您，购买 %@ 成功！",model.name] showView:self.view yOffset:0];
         }
     }];
     [request release];
@@ -68,6 +71,7 @@
 {
     self.goodGiftDataArray =[NSMutableArray arrayWithCapacity:0];
     self.badGiftDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.giftDataArray = [NSMutableArray arrayWithCapacity:0];
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"shopGift" ofType:@"plist"];
     NSMutableDictionary *DictData = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
     NSArray *level0 = [[DictData objectForKey:@"good"] objectForKey:@"level0"];
@@ -129,6 +133,7 @@
         }else{
             [self.badGiftDataArray addObject:model];
         }
+        [self.giftDataArray addObject:model];
         [model release];
     }
 }
@@ -240,21 +245,25 @@
 }
 -(void)backBtnClick:(UIButton *)button
 {
-    button.selected = !button.selected;
-    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
-    if (button.selected) {
-        [menu showMenuAnimated:YES];
-        alphaBtn.hidden = NO;
-        [UIView animateWithDuration:0.25 animations:^{
-            alphaBtn.alpha = 0.5;
-        }];
+    if (self.isQuick) {
+        [self dismissViewControllerAnimated:YES completion:nil];
     }else{
-        [menu hideMenuAnimated:YES];
-        [UIView animateWithDuration:0.25 animations:^{
-            alphaBtn.alpha = 0;
-        } completion:^(BOOL finished) {
-            alphaBtn.hidden = YES;
-        }];
+        button.selected = !button.selected;
+        JDSideMenu * menu = [ControllerManager shareJDSideMenu];
+        if (button.selected) {
+            [menu showMenuAnimated:YES];
+            alphaBtn.hidden = NO;
+            [UIView animateWithDuration:0.25 animations:^{
+                alphaBtn.alpha = 0.5;
+            }];
+        }else{
+            [menu hideMenuAnimated:YES];
+            [UIView animateWithDuration:0.25 animations:^{
+                alphaBtn.alpha = 0;
+            } completion:^(BOOL finished) {
+                alphaBtn.hidden = YES;
+            }];
+        }
     }
 }
 -(void)giftBagBtnClick
@@ -557,7 +566,7 @@
 -(void)buttonClick:(UIButton *)btn
 {
     NSLog(@"点击了虚拟礼物第%d个", btn.tag-1000+1);
-    [self buyGiftItemsAPI];
+    [self buyGiftItemsAPI:btn.tag -1000];
 }
 -(void)buttonClick2:(UIButton *)btn
 {

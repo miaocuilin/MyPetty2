@@ -20,6 +20,7 @@
 //#import "MainTabBarViewController.h"
 #import "MainViewController.h"
 #import <CoreText/CoreText.h>
+#import "LevelRank.h"
 @implementation ControllerManager
 
 static RandomViewController * rvc = nil;
@@ -39,6 +40,8 @@ static JDSideMenu * sideMenu = nil;
 //static NTSlidingViewController * sliding = nil;
 static MainViewController * main = nil;
 MBProgressHUD *HUD;
+static LevelRank *levelAndRank =nil;
+
 
 +(id)shareManagerRandom
 {
@@ -279,6 +282,34 @@ MBProgressHUD *HUD;
     [HUD show:YES];
     [HUD hide:YES afterDelay:1.5];
     
+}
++(id)shareLevelAndRank
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        levelAndRank = [[LevelRank alloc]init];
+    });
+    return levelAndRank;
+}
++(BOOL)levelPOP:(NSString *)exp addExp:(NSInteger)add
+{
+    [self shareLevelAndRank];
+    NSString *level = [levelAndRank calculateLevel:exp addExp:add];
+    if ([level intValue] >[[USER objectForKey:@"level"] intValue]) {
+        [USER setObject:level forKey:@"level"];
+        return YES;
+    }
+    return NO;
+}
++(BOOL)rankPOP:(NSString *)contribution addContribution:(NSInteger)add planet:(NSString *)dogOrcat
+{
+    [self shareLevelAndRank];
+    NSString *rank = [levelAndRank calculaterRank:contribution planet:dogOrcat addContribution:add];
+    if ([rank intValue] > [[USER objectForKey:@"rank"] intValue]) {
+        [USER setObject:@"" forKey:@"rank"];
+        return YES;
+    }
+    return NO;
 }
 
 //+ (void)loginHUDAlertView:(UIView *)showInView

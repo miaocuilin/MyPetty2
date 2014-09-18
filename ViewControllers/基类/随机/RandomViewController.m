@@ -105,33 +105,29 @@
         toolTipsVC.continuousDay = [[USER objectForKey:@"con_login"] intValue];
         [toolTipsVC createAlertView];
     }
-    int oldexp = [[USER objectForKey:@"oldexp"] intValue];
-    int exp = [[USER objectForKey:@"exp"] intValue];
-    [USER setObject:[USER objectForKey:@"exp"] forKey:@"oldexp"];
-    if (oldexp < exp) {
-        int index = exp - oldexp;
-        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:index];
-    }
-//    if (!isMenuBgViewAppear) {
-////        [self.view bringSubviewToFront:self.menuBgView];
-//        isMenuBgViewAppear = YES;
-//    }
-
-//    int tt = arc4random()%3;
-//    NSLog(@"tt%d",tt);
-//    if (tt == 0) {
-//        [toolTipsVC createAlertView];
-//    }else if(tt == 1){
-//        [toolTipsVC createExpAlertView];
-//    }else if (tt == 2){
-//        [toolTipsVC createGovernmentAlertView];
-//    }
+    [self RandomTips];
 
 }
 
 - (void)RandomTips
 {
+    int oldexp = [[USER objectForKey:@"oldexp"] intValue];
+    int exp = [[USER objectForKey:@"exp"] intValue];
+    [USER setObject:[USER objectForKey:@"exp"] forKey:@"oldexp"];
+    int index = exp - oldexp;
+    if (oldexp < exp) {
+        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:index];
+    }
     
+    BOOL islevel = [ControllerManager levelPOP:[USER objectForKey:@"oldexp"] addExp:index];
+    if (islevel) {
+        ToolTipsViewController *level = [[ToolTipsViewController alloc] init];
+        level.expLevel = [[USER objectForKey:@"level"] integerValue];
+        [self addChildViewController:level];
+        [level didMoveToParentViewController:self];
+        [self.view addSubview:level.view];
+        [level createExpAlertView];
+    }
 }
 -(void)viewWillAppear:(BOOL)animated
 {

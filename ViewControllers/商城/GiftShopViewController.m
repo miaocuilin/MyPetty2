@@ -42,6 +42,18 @@
     
     [self createAlphaBtn];
     [self loadData];
+//    [self buyGiftItemsAPI];
+}
+
+- (void)buyGiftItemsAPI
+{
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=1102&num=2dog&cat"]];
+    NSString *buyItemsString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=item/buyApi&item_id=1102&num=2&sig=%@&SID=%@",sig,[ControllerManager getSID]];
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:buyItemsString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"购买商品结果：%@",load.dataDict);
+        
+    }];
+    [request release];
 }
 - (void)addGiftShopData
 {
@@ -405,8 +417,6 @@
         }else{
             model = self.badGiftDataArray[i-self.goodGiftDataArray.count];
             rqNum.text = [NSString stringWithFormat:@"%@",model.add_rq];
-            NSLog(@"i:%d",i);
-            NSLog(@"i___%d",i-self.goodGiftDataArray.count);
         }
         giftNum.text = model.price;
         giftPic.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
@@ -507,7 +517,7 @@
     
     CGSize size = [MyGold.text sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
     
-    UILabel * gold = [MyControl createLabelWithFrame:CGRectMake(MyGold.frame.origin.x+size.width, 10, 100, 20) Font:15 Text:@"20000"];
+    UILabel * gold = [MyControl createLabelWithFrame:CGRectMake(MyGold.frame.origin.x+size.width, 10, 100, 20) Font:15 Text:[USER objectForKey:@"gold"]];
     gold.textColor = BGCOLOR;
     [view addSubview:gold];
     
@@ -517,6 +527,7 @@
     moreGold.layer.cornerRadius = 5;
     moreGold.layer.masksToBounds = YES;
     moreGold.showsTouchWhenHighlighted = YES;
+    moreGold.hidden = YES;
     [view addSubview:moreGold];
 }
 -(void)moreGoldClick

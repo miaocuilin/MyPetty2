@@ -33,4 +33,5 @@
 @property(nonatomic,retain)NSMutableArray * cateArray;
 @property(nonatomic,retain)NSMutableArray * cateArray2;
 @property(nonatomic,retain)NSMutableArray * orderArray;
+@property(nonatomic)BOOL isQuick;
 @end

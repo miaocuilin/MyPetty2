@@ -8,8 +8,10 @@
 
 #import "ToolTipsViewController.h"
 #import "ChooseInViewController.h"
-#define PAGENUMBER 5
+#import "GiftShopModel.h"
+#define PAGENUMBER 4
 @interface ToolTipsViewController ()
+@property (nonatomic,retain)NSMutableArray *giftDataArray;
 
 @end
 
@@ -21,13 +23,13 @@
     // Do any additional setup after loading the view.
 //    self.coinNumber = 10;
 //    self.continuousDay = 1;
-    self.expLevel = 20;
+//    self.expLevel = 20;
     self.countryName = @"猫国君";
     self.positionName = @"喵骑士";
     self.headImageName = @"cat1.jpg";
     //    self.expCoinNum = 100;
-//    [self createButton];
 }
+
 #pragma mark - 每日登陆、官职升级、等级升级弹窗
 //经验值升级奖励弹窗
 -(void)createExpAlertView
@@ -325,77 +327,42 @@
         [vc release];
     }
 }
-
-#pragma mark - 临时button
-- (void)createButton
+#pragma mark - 弹出送礼界面
+- (void)addGiftShopData
 {
-    NSArray *array1 = @[@"每日登陆",@"升级经验",@"官职升级"];
-    for (int i = 0 ; i < 3; i++) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(50, 100+(i*100), 100, 100);
-        [button setTitle:array1[i] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.view addSubview:button];
-    }
-    NSArray *array2 = @[@"加入国家",@"购买成功",@"送礼物"];
-    for (int i = 0; i < array2.count; i++) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(150, 100+(i*100), 100, 100);
-        [button setTitle:array2[i] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.view addSubview:button];
-    }
+    self.giftDataArray = [NSMutableArray arrayWithCapacity:0];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"shopGift" ofType:@"plist"];
+    NSMutableDictionary *DictData = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+    NSArray *level0 = [[DictData objectForKey:@"good"] objectForKey:@"level0"];
+    NSArray *level1 =[[DictData objectForKey:@"good"] objectForKey:@"level1"];
+    NSArray *level2 =[[DictData objectForKey:@"good"] objectForKey:@"level2"];
+    NSArray *level3 =[[DictData objectForKey:@"good"] objectForKey:@"level3"];
+    [self addData:level0];
+    [self addData:level1];
+    [self addData:level2];
+    [self addData:level3];
+    
+    NSArray *level4 =[[DictData objectForKey:@"bad"] objectForKey:@"level0"];
+    NSArray *level5 =[[DictData objectForKey:@"bad"] objectForKey:@"level1"];
+    NSArray *level6 =[[DictData objectForKey:@"bad"] objectForKey:@"level2"];
+    [self addData:level4];
+    [self addData:level5];
+    [self addData:level6];
     
 }
-
-- (void)buttonAction:(UIButton *)sender
+- (void)addData:(NSArray *)array
 {
-    if ([sender.currentTitle isEqualToString:@"每日登陆"]) {
-        [self createLoginAlertView];
-    }else if ([sender.currentTitle isEqualToString:@"升级经验"]){
-        [self createExpAlertView];
-    }else if ([sender.currentTitle isEqualToString:@"官职升级"]){
-        [self createGovernmentAlertView];
-    }else if ([sender.currentTitle isEqualToString:@"加入国家"]){
-        NSLog(@"%@",sender.currentTitle);
-        [self createJoinCountryAlertView];
-    }else if ([sender.currentTitle isEqualToString:@"购买成功"]){
-        NSLog(@"%@",sender.currentTitle);
-        [self createBuyGiftAlertView];
-    }else{
-        [self createPresentGiftAlertView];
+    for (NSDictionary *dict in array) {
+        GiftShopModel *model = [[GiftShopModel alloc] init];
+        [model setValuesForKeysWithDictionary:dict];
+        [self.giftDataArray addObject:model];
+        [model release];
     }
 }
-#pragma mark - 弹出送礼界面
 - (void)createPresentGiftAlertView
 {
-    /*
-     giftHUD = [self alertViewInit:CGSizeMake(300, 425)];
-     UIView *totalView = [self createAlertTitleView:@"给猫君送个礼物吧" titleSize:CGSizeMake(300,425)];
-     UIView *totalView = [MyControl createViewWithFrame:CGRectMake(0, 0, 300, 425)];
-     totalView.layer.cornerRadius = 10;
-     totalView.layer.masksToBounds = YES;
-     UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
-     [totalView addSubview:titleView];
-     UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:16 Text:@"给猫君送个礼物吧"];
-     titleLabel.textAlignment = NSTextAlignmentCenter;
-     [totalView addSubview:titleLabel];
-     UIButton *closeButton = [MyControl createButtonWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png" Target:self Action:@selector(colseGiftAction) Title:nil];
-     [totalView addSubview:closeButton];
-     
-     
-     UIView *bodyView = nil;
-     bodyView = [MyControl createViewWithFrame:CGRectMake(0, 40, 300, 385)];
-     bodyView.backgroundColor = [UIColor clearColor];
-     UIView *alphaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 385)];
-     alphaView.backgroundColor = [UIColor whiteColor];
-     alphaView.alpha = 0.8;
-     [bodyView addSubview:alphaView];
-     [totalView addSubview:bodyView];
-     
-     */
+    [self addGiftShopData];
+    
     UIView *bodyView = [self shopGiftTitle];
     giftScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height)];
     giftScrollView.delegate = self;
@@ -414,49 +381,50 @@
         for (int i = 1; i <= 3; i++)
         {
             for (int j = 1; j<=3; j++) {
-                UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(i*HorizontalDistance+80*(i-1)+bodyView.frame.size.width * (PageNumber-1), VerticalDistance *j+90*(j-1), 80, 90)];
-                imageView.image = [UIImage imageNamed:@"product_bg.png"];
-                [giftScrollView addSubview:imageView];
-                [imageView release];
-                
-                UIImageView *productImageView = [MyControl createImageViewWithFrame:CGRectMake(imageView.frame.size.width/2-25, imageView.frame.size.height/2-20, 40, 40) ImageName:[NSString stringWithFormat:@"bother%d_2.png",PageNumber+1]];
-                [imageView addSubview:productImageView];
-                UILabel *productLabel = [MyControl createLabelWithFrame:CGRectMake(20, 10, imageView.frame.size.width-20, 10) Font:10 Text:@"宠物球球"];
-                
-                UILabel *numberCoinLabel = [MyControl createLabelWithFrame:CGRectMake(32, 75, 50, 10) Font:13 Text:@"200"];
-                numberCoinLabel.textColor =BGCOLOR;
-                [imageView addSubview:numberCoinLabel];
-                UIImageView *coinImageView = [MyControl createImageViewWithFrame:CGRectMake(20, 75, 10, 10) ImageName:@"gold.png"];
-                [imageView addSubview:coinImageView];
-                
-                productLabel.font = [UIFont boldSystemFontOfSize:10];
-                productLabel.textColor = [UIColor grayColor];
-                [imageView addSubview:productLabel];
-                
-                UILabel *leftCornerLabel1 =[MyControl createLabelWithFrame:CGRectMake(-3, 4, 20, 8) Font:7 Text:@"人气"];
-                leftCornerLabel1.textAlignment = NSTextAlignmentCenter;
-                leftCornerLabel1.font = [UIFont boldSystemFontOfSize:8];
-                CGAffineTransform transform =  CGAffineTransformMakeRotation(-45.0 *M_PI / 180.0);
-                leftCornerLabel1.transform = transform;
-                UILabel *leftCornerLabel2 = [MyControl createLabelWithFrame:CGRectMake(3, 10, 20, 8) Font:10 Text:@"+50"];
-                leftCornerLabel2.textAlignment = NSTextAlignmentCenter;
-                leftCornerLabel2.transform = transform;
-                [imageView addSubview:leftCornerLabel1];
-                [imageView addSubview:leftCornerLabel2];
-                //
-                //                UIButton *productButton = [MyControl createButtonWithFrame:CGRectMake(i*HorizontalDistance+80*(i-1)+bodyView.frame.size.width * (PageNumber-1), VerticalDistance *j+90*(j-1), 80, 90) ImageName:nil Target:self Action:@selector(productBuyAction:) Title:nil];
-                //                NSString *string = [NSString stringWithFormat:@"%d%d%d",PageNumber,j,i];
-                //                NSLog(@"string %@",string);
-                //                productButton.tag = [string intValue] *10;
-                //
-                //                [giftScrollView addSubview:productButton];
                 
             }
         }
         PageNumber++;
     }
     
-    for(int i=0;i<45;i++){
+    for(int i=0;i<self.giftDataArray.count;i++){
+        
+        UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(HorizontalDistance+i/9*320+i%3*(HorizontalDistance +80), VerticalDistance+i%9/3*(VerticalDistance + 90), 80, 90)];
+        imageView.image = [UIImage imageNamed:@"product_bg.png"];
+        [giftScrollView addSubview:imageView];
+        [imageView release];
+        
+        UIImageView *productImageView = [MyControl createImageViewWithFrame:CGRectMake(imageView.frame.size.width/2-25, imageView.frame.size.height/2-20, 45, 30) ImageName:[NSString stringWithFormat:@"bother%d_2.png",1]];
+        [imageView addSubview:productImageView];
+        UILabel *productLabel = [MyControl createLabelWithFrame:CGRectMake(20, 10, imageView.frame.size.width-20, 10) Font:10 Text:@"宠物球球"];
+        UILabel *numberCoinLabel = [MyControl createLabelWithFrame:CGRectMake(32, 75, 50, 10) Font:13 Text:@"200"];
+        numberCoinLabel.textColor =BGCOLOR;
+        [imageView addSubview:numberCoinLabel];
+        UIImageView *coinImageView = [MyControl createImageViewWithFrame:CGRectMake(20, 75, 10, 10) ImageName:@"gold.png"];
+        [imageView addSubview:coinImageView];
+        
+        productLabel.font = [UIFont boldSystemFontOfSize:10];
+        productLabel.textColor = [UIColor grayColor];
+        [imageView addSubview:productLabel];
+        
+        UILabel *leftCornerLabel1 =[MyControl createLabelWithFrame:CGRectMake(-3, 4, 20, 8) Font:7 Text:@"人气"];
+        leftCornerLabel1.textAlignment = NSTextAlignmentCenter;
+        leftCornerLabel1.font = [UIFont boldSystemFontOfSize:8];
+        CGAffineTransform transform =  CGAffineTransformMakeRotation(-45.0 *M_PI / 180.0);
+        leftCornerLabel1.transform = transform;
+        UILabel *leftCornerLabel2 = [MyControl createLabelWithFrame:CGRectMake(3, 10, 20, 8) Font:10 Text:@"+50"];
+        leftCornerLabel2.textAlignment = NSTextAlignmentCenter;
+        leftCornerLabel2.transform = transform;
+        [imageView addSubview:leftCornerLabel1];
+        [imageView addSubview:leftCornerLabel2];
+        GiftShopModel *model = self.giftDataArray[i];
+        productImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
+        productLabel.text = model.name;
+        numberCoinLabel.text = model.price;
+        NSLog(@"rq:%d",[model.add_rq intValue]);
+        
+        
+        
         UIButton * button = [MyControl createButtonWithFrame:CGRectMake(HorizontalDistance+i/9*320+i%3*(HorizontalDistance +80), VerticalDistance+i%9/3*(VerticalDistance + 90), 80, 90) ImageName:nil Target:self Action:@selector(productBuyAction:) Title:nil];
         [giftScrollView addSubview:button];
         button.tag = 1000+i;
@@ -508,8 +476,6 @@
 {
     NSLog(@"购买");
     NSLog(@"tag:%d",sender.tag);
-    [giftHUD hide:YES];
-    [self createStroyNoMoneyAlertView];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView

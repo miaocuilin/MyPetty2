@@ -38,4 +38,5 @@
 @property(nonatomic,retain)NSMutableArray * priceHighToLowArray;
 @property(nonatomic,retain)NSMutableArray * priceLotToHighArray;
 @property(nonatomic,retain)NSArray * showArray;
+@property(nonatomic)BOOL isQuick;
 @end

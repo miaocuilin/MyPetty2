@@ -64,10 +64,10 @@
     
 }
 
--(UIColor *)activityIndicatorView:(MONActivityIndicatorView *)activityIndicatorView circleBackgroundColorAtIndex:(NSUInteger)index
-{
-    return BGCOLOR;
-}
+//-(UIColor *)activityIndicatorView:(MONActivityIndicatorView *)activityIndicatorView circleBackgroundColorAtIndex:(NSUInteger)index
+//{
+//    return BGCOLOR;
+//}
 
 #pragma mark -数据加载
 -(void)loadData
@@ -181,111 +181,111 @@
     NSLog(@"离开详情页，times:%@", [USER objectForKey:@"MyHomeTimes"]);
     [self dismissViewControllerAnimated:YES completion:nil];
 }
--(void)rightButtonClick
-{
-    NSLog(@"分享");
-    if (!isClicked) {
-        isClicked = 1;
-//        shareBgView = [[AMBlurView alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height)];
-        shareBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-//        shareBgButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(shareBgButtonClick) Title:nil];
-        shareBgView.hidden = YES;
-        [self.view addSubview:shareBgView];
-        
-        shareBgButton1 = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(shareBgButton1Click) Title:nil];
-        shareBgButton1.alpha = 0.5;
-        shareBgButton1.backgroundColor = [UIColor blackColor];
-        [shareBgView addSubview:shareBgButton1];
-        
-        bgView1 = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 90)];
-        [shareBgView addSubview:bgView1];
-        
-        UIView * bgView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 90)];
-        bgView2.backgroundColor = [UIColor blackColor];
-        bgView2.alpha = 0.5;
-        [bgView1 addSubview:bgView2];
-        
-        NSArray * imageArray = @[@"21-2.png", @"wxFriend-1.png", @"weibo-1.png"];
-        NSArray * textArray = @[@"微信联系人", @"微信朋友圈", @"微博"];
-        for (int i=0; i<3; i++) {
-            UIButton * button = [MyControl createButtonWithFrame:CGRectMake(40+i*100, 10, 40, 40) ImageName:imageArray[i] Target:self Action:@selector(shareButtonClick:) Title:nil];
-            [bgView1 addSubview:button];
-            button.tag = 200+i;
-            
-            UILabel * label = [MyControl createLabelWithFrame:CGRectMake(-10, 40, 60, 20) Font:12 Text:textArray[i]];
-            label.textAlignment = NSTextAlignmentCenter;
-            [button addSubview:label];
-            
-        }
-        
-//        UIButton * cancelButton = [MyControl createButtonWithFrame:CGRectMake(10, 90, 300, 30) ImageName:nil Target:self Action:@selector(cancelButtonClick) Title:@"取消"];
-//        cancelButton.showsTouchWhenHighlighted = YES;
-//        cancelButton.layer.cornerRadius = 5;
-//        cancelButton.layer.masksToBounds = YES;
-//        cancelButton.backgroundColor = BGCOLOR;
-//        [bgView1 addSubview:cancelButton];
-    }else{
-        [self.view bringSubviewToFront:shareBgView];
-        [self.view bringSubviewToFront:bgView1];
-    }
-    
-    [UIView animateWithDuration:0.0 animations:^{
-//        shareBgView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-        shareBgView.hidden = NO;
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.3 animations:^{
-            bgView1.frame = CGRectMake(0, self.view.frame.size.height-90, self.view.frame.size.width, 140);
-        }];
-    }];
-    
-    
-//    [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-//    [UMSocialSnsService presentSnsIconSheetView:self
-//                                         appKey:@"538fddca56240b40a105fcfb"
-//                                      shareText:[NSString stringWithFormat:@"#爱动物，爱生活#%@", self.cmt]
-//                                     shareImage:imageView.image
-//                                shareToSnsNames:[NSArray arrayWithObjects:UMShareToSina,UMShareToTencent,UMShareToWechatSession,UMShareToWechatTimeline,nil]
-//                                       delegate:nil];
-    
-//    [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:[NSString stringWithFormat:@"#爱动物，爱生活#%@", self.cmt] image:imageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-//        if (response.responseCode == UMSResponseCodeSuccess) {
-//            NSLog(@"分享成功！");
+//-(void)rightButtonClick
+//{
+//    NSLog(@"分享");
+//    if (!isClicked) {
+//        isClicked = 1;
+////        shareBgView = [[AMBlurView alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height)];
+//        shareBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+////        shareBgButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(shareBgButtonClick) Title:nil];
+//        shareBgView.hidden = YES;
+//        [self.view addSubview:shareBgView];
+//        
+//        shareBgButton1 = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(shareBgButton1Click) Title:nil];
+//        shareBgButton1.alpha = 0.5;
+//        shareBgButton1.backgroundColor = [UIColor blackColor];
+//        [shareBgView addSubview:shareBgButton1];
+//        
+//        bgView1 = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 90)];
+//        [shareBgView addSubview:bgView1];
+//        
+//        UIView * bgView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 90)];
+//        bgView2.backgroundColor = [UIColor blackColor];
+//        bgView2.alpha = 0.5;
+//        [bgView1 addSubview:bgView2];
+//        
+//        NSArray * imageArray = @[@"21-2.png", @"wxFriend-1.png", @"weibo-1.png"];
+//        NSArray * textArray = @[@"微信联系人", @"微信朋友圈", @"微博"];
+//        for (int i=0; i<3; i++) {
+//            UIButton * button = [MyControl createButtonWithFrame:CGRectMake(40+i*100, 10, 40, 40) ImageName:imageArray[i] Target:self Action:@selector(shareButtonClick:) Title:nil];
+//            [bgView1 addSubview:button];
+//            button.tag = 200+i;
 //            
-//            if (successView == nil) {
-//                successView = [MyControl createViewWithFrame:CGRectMake(100, 20, 120, 30)];
-//                successView.backgroundColor = [UIColor blackColor];
-//                successView.layer.cornerRadius = 5;
-//                successView.layer.masksToBounds = YES;
-//                successView.alpha = 0.7;
-//                [self.view addSubview:successView];
-//                
-//                UILabel * successLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 120, 30) Font:17 Text:@"分享成功"];
-//                successLabel.textAlignment = NSTextAlignmentCenter;
-//                [successView addSubview:successLabel];
-//            }
+//            UILabel * label = [MyControl createLabelWithFrame:CGRectMake(-10, 40, 60, 20) Font:12 Text:textArray[i]];
+//            label.textAlignment = NSTextAlignmentCenter;
+//            [button addSubview:label];
 //            
-//            [successView fadeIn:0.3 delegate:nil];
-//            [self performSelector:@selector(fadeout) withObject:nil afterDelay:2];
 //        }
+//        
+////        UIButton * cancelButton = [MyControl createButtonWithFrame:CGRectMake(10, 90, 300, 30) ImageName:nil Target:self Action:@selector(cancelButtonClick) Title:@"取消"];
+////        cancelButton.showsTouchWhenHighlighted = YES;
+////        cancelButton.layer.cornerRadius = 5;
+////        cancelButton.layer.masksToBounds = YES;
+////        cancelButton.backgroundColor = BGCOLOR;
+////        [bgView1 addSubview:cancelButton];
+//    }else{
+//        [self.view bringSubviewToFront:shareBgView];
+//        [self.view bringSubviewToFront:bgView1];
+//    }
+//    
+//    [UIView animateWithDuration:0.0 animations:^{
+////        shareBgView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+//        shareBgView.hidden = NO;
+//    } completion:^(BOOL finished) {
+//        [UIView animateWithDuration:0.3 animations:^{
+//            bgView1.frame = CGRectMake(0, self.view.frame.size.height-90, self.view.frame.size.width, 140);
+//        }];
 //    }];
-}
-#pragma mark - 透明背景button
--(void)shareBgButton1Click
-{
-    [UIView animateWithDuration:0.3 animations:^{
-        bgView1.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 90);
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.0 animations:^{
-            shareBgView.hidden = YES;
-            //            shareBgView.frame = CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
-        }];
-    }];
-}
+//    
+//    
+////    [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+////    [UMSocialSnsService presentSnsIconSheetView:self
+////                                         appKey:@"538fddca56240b40a105fcfb"
+////                                      shareText:[NSString stringWithFormat:@"#爱动物，爱生活#%@", self.cmt]
+////                                     shareImage:imageView.image
+////                                shareToSnsNames:[NSArray arrayWithObjects:UMShareToSina,UMShareToTencent,UMShareToWechatSession,UMShareToWechatTimeline,nil]
+////                                       delegate:nil];
+//    
+////    [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:[NSString stringWithFormat:@"#爱动物，爱生活#%@", self.cmt] image:imageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+////        if (response.responseCode == UMSResponseCodeSuccess) {
+////            NSLog(@"分享成功！");
+////            
+////            if (successView == nil) {
+////                successView = [MyControl createViewWithFrame:CGRectMake(100, 20, 120, 30)];
+////                successView.backgroundColor = [UIColor blackColor];
+////                successView.layer.cornerRadius = 5;
+////                successView.layer.masksToBounds = YES;
+////                successView.alpha = 0.7;
+////                [self.view addSubview:successView];
+////                
+////                UILabel * successLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 120, 30) Font:17 Text:@"分享成功"];
+////                successLabel.textAlignment = NSTextAlignmentCenter;
+////                [successView addSubview:successLabel];
+////            }
+////            
+////            [successView fadeIn:0.3 delegate:nil];
+////            [self performSelector:@selector(fadeout) withObject:nil afterDelay:2];
+////        }
+////    }];
+//}
+//#pragma mark - 透明背景button
+//-(void)shareBgButton1Click
+//{
+//    [UIView animateWithDuration:0.3 animations:^{
+//        bgView1.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 90);
+//    } completion:^(BOOL finished) {
+//        [UIView animateWithDuration:0.0 animations:^{
+//            shareBgView.hidden = YES;
+//            //            shareBgView.frame = CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
+//        }];
+//    }];
+//}
 
--(void)fadeout
-{
-    [successView fadeOut:0.3 delegate:nil];
-}
+//-(void)fadeout
+//{
+//    [successView fadeOut:0.3 delegate:nil];
+//}
 #pragma mark - 好友，朋友圈，新浪微博按钮的点击事件
 -(void)shareButtonClick:(UIButton *)button
 {
@@ -296,7 +296,6 @@
             if (response.responseCode == UMSResponseCodeSuccess) {
                 [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeApp;
                 NSLog(@"分享成功！");
-                [self cancelButtonClick];
 //                [self showHUD];
             }
         }];
@@ -307,7 +306,6 @@
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
 //                [self showHUD];
-                [self cancelButtonClick];
             }
         }];
     }else{
@@ -316,7 +314,6 @@
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self showHUD];
-                [self cancelButtonClick];
             }else{
                 NSLog(@"失败原因：%@", response);
             }
@@ -357,9 +354,9 @@
 //    }];
 //}
 #pragma mark - 评论半透明黑背景点击事件
--(void)bgButtonClick:(UIButton *)button
+-(void)bgButtonClick
 {
-    buttonRight.userInteractionEnabled = YES;
+//    buttonRight.userInteractionEnabled = YES;
     [commentTextView resignFirstResponder];
     [UIView animateWithDuration:0.3 animations:^{
         commentBgView.frame = CGRectMake(-self.view.frame.size.width, self.view.frame.size.height-216-40, 320, 40);
@@ -545,7 +542,7 @@
 #pragma mark - 评论点击事件
 -(void)commentButtonClick
 {
-    buttonRight.userInteractionEnabled = NO;
+//    buttonRight.userInteractionEnabled = NO;
     
     NSLog(@"Comment");
     if (!isCommentCreated) {
@@ -683,9 +680,9 @@
     buttonLeft.showsTouchWhenHighlighted = YES;
     [bgView2 addSubview:buttonLeft];
     
-    buttonRight = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-30-17, 30, 30, 30) ImageName:@"11-3.png" Target:self Action:@selector(rightButtonClick) Title:nil];
-    buttonRight.showsTouchWhenHighlighted = YES;
-    [bgView2 addSubview:buttonRight];
+//    buttonRight = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-30-17, 30, 30, 30) ImageName:@"11-3.png" Target:self Action:@selector(rightButtonClick) Title:nil];
+//    buttonRight.showsTouchWhenHighlighted = YES;
+//    [bgView2 addSubview:buttonRight];
     
     //头像
     UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(55, 25, 40, 40) ImageName:@""];
@@ -734,7 +731,7 @@
 }
 -(void)jumpToHomeButtonClick
 {
-    buttonRight.userInteractionEnabled = YES;
+//    buttonRight.userInteractionEnabled = YES;
     [commentTextView resignFirstResponder];
     [UIView animateWithDuration:0.3 animations:^{
         commentBgView.frame = CGRectMake(-self.view.frame.size.width, self.view.frame.size.height-216-40, 320, 40);
@@ -909,7 +906,7 @@
 #pragma mark - 创建评论界面
 -(void)createComment
 {
-    bgButton = [MyControl createButtonWithFrame:CGRectMake(0, 70, 320, self.view.frame.size.height-70) ImageName:nil Target:self Action:@selector(bgButtonClick:) Title:nil];
+    bgButton = [MyControl createButtonWithFrame:CGRectMake(0, 70, 320, self.view.frame.size.height-70) ImageName:nil Target:self Action:@selector(bgButtonClick) Title:nil];
     bgButton.backgroundColor = [UIColor blackColor];
     bgButton.alpha = 0.3;
     [self.view addSubview:bgButton];
@@ -939,6 +936,7 @@
 #pragma mark -键盘监听
 -(void)keyboardWasChange:(NSNotification *)notification
 {
+    NSLog(@"%@", notification.userInfo);
     float y = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.y;
     if (y == self.view.frame.size.height) {
         return;
@@ -991,7 +989,7 @@
 #pragma mark - ASI代理
 -(void)requestFinished:(ASIHTTPRequest *)request
 {
-    buttonRight.userInteractionEnabled = YES;
+//    buttonRight.userInteractionEnabled = YES;
     
     NSLog(@"success");
     [commentTextView resignFirstResponder];

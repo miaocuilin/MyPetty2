@@ -272,7 +272,7 @@
 }
 - (void)audioPlayerCreate
 {
-    NSError *playerError;
+//    NSError *playerError;
 //    _player = [[AVAudioPlayer alloc] initWithContentsOfURL:_recordedFile error:&playerError];
     _player.meteringEnabled = YES;
     if (_player == nil)
@@ -423,7 +423,7 @@
 	}
     
     //	[self destroyStreamer];
-    NSString *demo = @"http://54.199.161.210:8001/assets/voices/ani/voice_14-09-14_2000000241";
+//    NSString *demo = @"http://54.199.161.210:8001/assets/voices/ani/voice_14-09-14_2000000241";
     NSLog(@"recordURL:%@",self.recordURL);
     NSString *escapedValue =
     [(NSString *)CFURLCreateStringByAddingPercentEscapes(

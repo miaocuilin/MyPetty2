@@ -788,6 +788,10 @@
     if (!isInThisController) {
         return;
     }
+    //如果不是textView触发的变化不改变位置
+    if (!isCommentActive) {
+        return;
+    }
     float y = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.y;
     if (y == self.view.frame.size.height) {
         return;
@@ -920,6 +924,8 @@
 {
 //    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
 //    [MMProgressHUD showWithStatus:@"正在分享..."];
+    [self cancelBtnClick];
+    
     if (button.tag == 200) {
         NSLog(@"微信");
         //强制分享图片
@@ -930,11 +936,11 @@
                 shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
                 StartLoading;
                 [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
-                [self cancelBtnClick];
             }else{
                 StartLoading;
                 [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
+            
         }];
     }else if(button.tag == 201){
         NSLog(@"朋友圈");
@@ -946,11 +952,11 @@
                 shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
                 StartLoading;
                 [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
-                [self cancelBtnClick];
             }else{
                 StartLoading;
                 [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
+
         }];
     }else{
         NSLog(@"微博");
@@ -960,12 +966,12 @@
                 shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
                 StartLoading;
                 [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
-                [self cancelBtnClick];
             }else{
                 NSLog(@"失败原因：%@", response);
                 StartLoading;
                 [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
+
         }];
     }
 }
@@ -1267,6 +1273,14 @@
     [MMProgressHUD dismissWithError:@"评论失败" afterDelay:1];
 }
 #pragma mark - textView代理
+-(void)textViewDidBeginEditing:(UITextView *)textView
+{
+    isCommentActive = YES;
+}
+-(void)textViewDidEndEditing:(UITextView *)textView
+{
+    isCommentActive = NO;
+}
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
 //    NSLog(@"%d--%@", commentTextView.text.length, text);

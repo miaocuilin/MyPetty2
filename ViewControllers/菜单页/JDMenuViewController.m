@@ -440,11 +440,11 @@
     NSArray * array = @[@"menu-13.png", @"menu-14.png", @"menu-8.png", @"menu-10.png", @"through.png"];
     NSArray * array2 = @[@"首页", @"商城", @"活动", @"设置", @"穿越"];
     for(int i=0;i<array.count;i++){
-        UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, i*45, OFFSET, 30)];
+        UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, i*45-5, OFFSET, 40)];
         [noticeBgView addSubview:bgView];
         bgView.tag = 2000+i;
         
-        UIImageView * imageView = [MyControl createImageViewWithFrame:CGRectMake(25, 0, 30, 30) ImageName:array[i]];
+        UIImageView * imageView = [MyControl createImageViewWithFrame:CGRectMake(25, 5, 30, 30) ImageName:array[i]];
         [bgView addSubview:imageView];
         
         if (i == 2) {
@@ -471,14 +471,14 @@
 //            [greenBall addSubview:noticeNumLabel];
 //        }
         
-        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(85, 5, 100, 20) Font:15 Text:array2[i]];
+        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(85, 5+5, 100, 20) Font:15 Text:array2[i]];
         label.font = [UIFont systemFontOfSize:17];
         [bgView addSubview:label];
         
-        UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(370/2, 7.5, 9, 15) ImageName:@"menu-11.png"];
+        UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(370/2, 7.5+5, 9, 15) ImageName:@"menu-11.png"];
         [bgView addSubview:arrow];
         
-        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(0, 0, OFFSET, 25) ImageName:nil Target:self Action:@selector(menuButtonClick:) Title:nil];
+        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(0, 0, OFFSET, 35) ImageName:nil Target:self Action:@selector(menuButtonClick:) Title:nil];
         [button addTarget:self action:@selector(menuButtonClick2:) forControlEvents:UIControlEventTouchDown];
         [button addTarget:self action:@selector(menuButtonClick3) forControlEvents:UIControlEventTouchDragOutside];
         [bgView addSubview:button];

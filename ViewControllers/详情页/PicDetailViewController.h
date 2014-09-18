@@ -41,6 +41,8 @@
     
     BOOL isReply;
     int replyRow;
+    
+    BOOL isCommentActive;
 }
 @property (retain, nonatomic) UIImageView * bgImageView;
 @property (retain, nonatomic) IBOutlet UIScrollView *sv;

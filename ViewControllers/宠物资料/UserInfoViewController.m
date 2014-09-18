@@ -765,6 +765,28 @@
         return cell;
     }
 }
+-(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return @"取消关注";
+}
+-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == tv2) {
+        return UITableViewCellEditingStyleDelete;
+    }else{
+        return 0;
+    }
+}
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == tv2 && editingStyle==UITableViewCellEditingStyleDelete) {
+        [self unFollow:indexPath.row];
+        [self.userAttentionListArray removeObjectAtIndex:indexPath.row];
+        //删除单元格的某一行时，在用动画效果实现删除过程
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        
+    }
+}
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == tv) {
@@ -800,6 +822,24 @@
     }
 }
 #pragma mark -
+-(void)unFollow:(int)row
+{
+    NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [self.userAttentionListArray[row] aid]];
+    NSString * sig = [MyMD5 md5:code];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNFOLLOWAPI, [self.userAttentionListArray[row] aid], sig, [ControllerManager getSID]];
+    NSLog(@"unfollowApiurl:%@", url);
+    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+    [MMProgressHUD showWithStatus:@"取消关注中..."];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+//            NSLog(@"%@", load.dataDict);
+            [MMProgressHUD dismissWithSuccess:@"取消关注成功" title:nil afterDelay:1];
+        }else{
+            [MMProgressHUD dismissWithError:@"取消关注失败" afterDelay:1];
+        }
+    }];
+    [request release];
+}
 //礼物点击事件
 -(void)buttonClick:(UIButton *)btn
 {

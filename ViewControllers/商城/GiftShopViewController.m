@@ -375,7 +375,7 @@
         giftName.textAlignment = NSTextAlignmentCenter;
         [imageView addSubview:giftName];
         
-        UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(20, 20, 45, 45) ImageName:[NSString stringWithFormat:@"bother%d_2.png", arc4random()%6+1]];
+        UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(5, 20, 75, 50) ImageName:[NSString stringWithFormat:@"bother%d_2.png", arc4random()%6+1]];
         [imageView addSubview:giftPic];
         
         UIImageView * gift = [MyControl createImageViewWithFrame:CGRectMake(20, 90-14-5, 15, 15) ImageName:@"gold.png"];
@@ -408,6 +408,8 @@
         UIButton * button = [MyControl createButtonWithFrame:rect ImageName:@"" Target:self Action:@selector(buttonClick:) Title:nil];
         [sv addSubview:button];
         button.tag = 1000+i;
+        
+        //更换礼物图片
         GiftShopModel *model;
         if (self.goodGiftDataArray.count>i) {
             model = self.goodGiftDataArray[i];

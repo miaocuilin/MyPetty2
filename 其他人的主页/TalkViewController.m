@@ -10,6 +10,8 @@
 #import "Message.h"
 #import "MessageCell.h"
 #import "MessageFrame.h"
+#import "NoticeViewController.h";
+
 @interface TalkViewController ()
 
 @end
@@ -127,6 +129,9 @@
                 for (int i=0; i<self.keysArray.count; i++) {
                     NSLog(@"%@--%@", self.keysArray[i], self.valuesArray[i]);
                     [self saveTalkDataWithUserID:self.usr_id time:self.keysArray[i] msg:self.valuesArray[i]];
+                    if (i == self.keysArray.count-1) {
+                        self.noticeVc.lastMessage = self.valuesArray[i];
+                    }
                 }
                 
                 //展示
@@ -217,6 +222,10 @@
     //退出时先暂停timer
     [timer invalidate];
     timer = nil;
+    if ([[USER objectForKey:@"isFromNotice"] intValue]) {
+        [USER setObject:@"0" forKey:@"isFromNotice"];
+        [USER setObject:@"1" forKey:@"isBackToTalk"];
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -248,6 +257,9 @@
     NSDate * date = [NSDate date];
     NSString * timeStamp = [NSString stringWithFormat:@"%d", (int)[date timeIntervalSince1970]];
     [self saveTalkDataWithUserID:[USER objectForKey:@"usr_id"] time:timeStamp msg:self.lastMessage];
+    //设置父控制器消息
+    NoticeViewController * vc = self.noticeVc;
+    vc.lastMessage = self.lastMessage;
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {

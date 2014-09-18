@@ -407,8 +407,6 @@
         }else{
             model = self.badGiftDataArray[i-self.goodGiftDataArray.count];
             rqNum.text = [NSString stringWithFormat:@"%@",model.add_rq];
-            NSLog(@"i:%d",i);
-            NSLog(@"i___%d",i-self.goodGiftDataArray.count);
         }
         giftNum.text = model.price;
         giftPic.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];

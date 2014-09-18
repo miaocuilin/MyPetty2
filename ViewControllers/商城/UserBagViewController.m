@@ -22,9 +22,24 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self createBg];
+    [self loadData];
     [self createCollectionView];
     [self createFakeNavigation];
 
+}
+-(void)loadData
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERGOODSLISTAPI, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            
+        }else{
+        
+        }
+    }];
+    [request release];
 }
 - (void)createCollectionView
 {
@@ -54,10 +69,10 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"indexPath.item:%d",indexPath.item);
-    PresentDetailViewController *presentDetailVC = [[PresentDetailViewController alloc] init];
-    [self presentViewController:presentDetailVC animated:YES completion:^{
-        [presentDetailVC release];
-    }];
+//    PresentDetailViewController *presentDetailVC = [[PresentDetailViewController alloc] init];
+//    [self presentViewController:presentDetailVC animated:YES completion:^{
+//        [presentDetailVC release];
+//    }];
     
 }
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
@@ -72,7 +87,7 @@
     //    self.bgImageView.backgroundColor = [UIColor redColor];
     NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
-    NSLog(@"%@", filePath);
+//    NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
     //    NSLog(@"%@", data);
     UIImage * image = [UIImage imageWithData:data];

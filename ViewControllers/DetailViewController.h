@@ -55,7 +55,7 @@
     
     CGSize textViewSize;
     //为了禁止在用户评论的时候点击分享
-    UIButton * buttonRight;
+//    UIButton * buttonRight;
 }
 //头像
 @property (nonatomic,copy)NSString * headImageURL;

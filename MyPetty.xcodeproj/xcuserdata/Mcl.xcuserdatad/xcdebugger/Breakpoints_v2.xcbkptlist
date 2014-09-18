@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x8be6;&#x60c5;&#x9875;/PicDetailViewController.m"
-            timestampString = "432651344.443911"
+            timestampString = "432703319.347538"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1098"
-            endingLineNumber = "1098"
+            startingLineNumber = "1104"
+            endingLineNumber = "1104"
             landmarkName = "-zanBtnClick:"
             landmarkType = "5">
          </BreakpointContent>
@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x8be6;&#x60c5;&#x9875;/PicDetailViewController.m"
-            timestampString = "432651344.443911"
+            timestampString = "432703319.347538"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1094"
-            endingLineNumber = "1094"
+            startingLineNumber = "1100"
+            endingLineNumber = "1100"
             landmarkName = "-zanBtnClick:"
             landmarkType = "5">
          </BreakpointContent>
@@ -250,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x8be6;&#x60c5;&#x9875;/PicDetailViewController.m"
-            timestampString = "432651344.443911"
+            timestampString = "432703319.347538"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1102"
-            endingLineNumber = "1102"
+            startingLineNumber = "1108"
+            endingLineNumber = "1108"
             landmarkName = "-zanBtnClick:"
             landmarkType = "5">
          </BreakpointContent>
@@ -473,12 +473,12 @@
                   symbolName = "-[ChooseFamilyViewController joinClick:]"
                   moduleName = "MyPetty"
                   urlString = "file:///Users/Mcl/Desktop/aidi/MyPetty2/ViewControllers/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/ChooseFamilyViewController.m"
-                  timestampString = "432652822.079146"
+                  timestampString = "432707108.802226"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "423"
                   endingLineNumber = "423"
-                  offsetFromSymbolStart = "722">
+                  offsetFromSymbolStart = "602">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -487,12 +487,12 @@
                   symbolName = "__40-[ChooseFamilyViewController joinClick:]_block_invoke"
                   moduleName = "MyPetty"
                   urlString = "file:///Users/Mcl/Desktop/aidi/MyPetty2/ViewControllers/%E7%99%BB%E5%BD%95%E6%B3%A8%E5%86%8C/ChooseFamilyViewController.m"
-                  timestampString = "432652822.079341"
+                  timestampString = "432707108.80271"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "424"
                   endingLineNumber = "424"
-                  offsetFromSymbolStart = "20">
+                  offsetFromSymbolStart = "35">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -616,11 +616,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x5ba0;&#x7269;&#x8d44;&#x6599;/UserInfoViewController.m"
-            timestampString = "432375790.450743"
+            timestampString = "432707108.359039"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "790"
-            endingLineNumber = "790"
+            startingLineNumber = "812"
+            endingLineNumber = "812"
             landmarkName = "-swipeTableViewCell:didClickButtonWithIndex:"
             landmarkType = "5">
          </BreakpointContent>
@@ -926,6 +926,38 @@
             startingLineNumber = "173"
             endingLineNumber = "173"
             landmarkName = "-analyseComments"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ViewControllers/DetailViewController.m"
+            timestampString = "432702103.154652"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "939"
+            endingLineNumber = "939"
+            landmarkName = "-keyboardWasChange:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ViewControllers/DetailViewController.m"
+            timestampString = "432702216.796927"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "360"
+            endingLineNumber = "360"
+            landmarkName = "-bgButtonClick"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

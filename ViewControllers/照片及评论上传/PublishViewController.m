@@ -142,19 +142,19 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     bigImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 64+5, self.view.frame.size.width-20, 230) ImageName:@""];
 //    bigImageView.image = [UIImage imageNamed:@"cat2.jpg"];
     bigImageView.image = self.oriImage;
-//    float Width = bigImageView.image.size.width;
-//    float Height = bigImageView.image.size.height;
+    float Width = self.oriImage.size.width;
+    float Height = self.oriImage.size.height;
 //    if (Width>300) {
 //        float w = 300/Width;
 //        Width *= w;
 //        Height *= w;
 //    }
 //    if (Height>230) {
-//        float h = 230/Height;
+        float h = (self.view.frame.size.width-20)/Width;
 //        Width *= h;
-//        Height *= h;
+        Height *= h;
 //    }
-    bigImageView.frame = CGRectMake((self.view.frame.size.width-300)/2, bigImageView.frame.origin.y, 300, 230);
+    bigImageView.frame = CGRectMake((self.view.frame.size.width-300)/2, bigImageView.frame.origin.y, self.view.frame.size.width-20, Height);
     bigImageView.layer.cornerRadius = 5;
     bigImageView.layer.masksToBounds = YES;
     [sv addSubview:bigImageView];
@@ -220,7 +220,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     /************************************/
     UIImageView * bgImageView2 = [MyControl createImageViewWithFrame:CGRectMake(10, publishButton.frame.origin.y+publishButton.frame.size.height+5, 300, 45) ImageName:nil];
 //    bgImageView2.image = [[UIImage imageNamed:@"30-2-2.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:0];
-    
+    /*******************/
+    sv.contentSize = CGSizeMake(self.view.frame.size.width, bgImageView2.frame.origin.y+bgImageView2.frame.size.height+20);
+    /*******************/
     bgImageView2.image = [[UIImage imageNamed:@"30-2-2.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
     [sv addSubview:bgImageView2];
     

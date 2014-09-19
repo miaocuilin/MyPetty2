@@ -20,6 +20,9 @@
     [_t_contri release];
     [_tx release];
     [_master_id release];
+    [_gender release];
+    [_type release];
+    [_age release];
     [super dealloc];
 }
 

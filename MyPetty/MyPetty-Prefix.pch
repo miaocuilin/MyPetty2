@@ -85,7 +85,10 @@
     #define CHANGEDEFAULTPETAPI @"http://54.199.161.210:8001/index.php?r=user/chgDefAniApi&aid="
     /***************************/
     //用户宠物列表：
-    #define USERPETLISTAPI @"http://54.199.161.210:8001/index.php?r=user/petsApi&usr_id="
+    //参数：usr_id,  另外参数：is_simple,区别
+    //侧边栏里和设置默认宠物里is_simple为1
+    //个人主页里is_simple为0
+    #define USERPETLISTAPI @"http://54.199.161.210:8001/index.php?r=user/petsApi&is_simple="
     //用户关注列表：
     #define USERATTENTIONLISTAPI @"http://54.199.161.210:8001/index.php?r=user/followingApi&usr_id="
     //用户活动列表：

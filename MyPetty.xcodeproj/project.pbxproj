@@ -9,14 +9,10 @@
 /* Begin PBXBuildFile section */
 		090872CE19739B33004276EF /* message.png in Resources */ = {isa = PBXBuildFile; fileRef = 090872CA19739B33004276EF /* message.png */; };
 		090872CF19739B33004276EF /* talkHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = 090872CB19739B33004276EF /* talkHeader.png */; };
-		090872D019739B33004276EF /* talkLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 090872CC19739B33004276EF /* talkLeft.png */; };
-		090872D119739B33004276EF /* talkRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 090872CD19739B33004276EF /* talkRight.png */; };
 		0908736A1973B2F2004276EF /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 0908734E1973B2F2004276EF /* Message.m */; };
 		0908736B1973B2F2004276EF /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 090873501973B2F2004276EF /* MessageCell.m */; };
 		0908736C1973B2F2004276EF /* MessageFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 090873521973B2F2004276EF /* MessageFrame.m */; };
 		0908737D1973B2F2004276EF /* icon02.png in Resources */ = {isa = PBXBuildFile; fileRef = 090873641973B2F2004276EF /* icon02.png */; };
-		0908737F1973B2F2004276EF /* talkLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 090873671973B2F2004276EF /* talkLeft.png */; };
-		090873801973B2F2004276EF /* talkRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 090873681973B2F2004276EF /* talkRight.png */; };
 		090873841973B34A004276EF /* TalkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 090873831973B34A004276EF /* TalkViewController.m */; };
 		090F046219540278002B1F45 /* LikersLIstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 090F046119540278002B1F45 /* LikersLIstViewController.m */; };
 		0914B6CF196E3F410056CFB0 /* MMHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 0914B6BF196E3F410056CFB0 /* MMHud.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -530,6 +526,8 @@
 		603B021D1991E68B005A6D30 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 603B021C1991E68B005A6D30 /* area.plist */; };
 		6042F59E1994D4B100CA2A0E /* menu-13.png in Resources */ = {isa = PBXBuildFile; fileRef = 6042F59D1994D4B100CA2A0E /* menu-13.png */; };
 		6042F5A01994D62800CA2A0E /* menu-14.png in Resources */ = {isa = PBXBuildFile; fileRef = 6042F59F1994D62800CA2A0E /* menu-14.png */; };
+		6044F4A819CC296500698E5F /* talkLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 6044F4A719CC296500698E5F /* talkLeft.png */; };
+		6044F4AA19CC297A00698E5F /* talkRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 6044F4A919CC297A00698E5F /* talkRight.png */; };
 		605195C519B47038005E9E2C /* about.png in Resources */ = {isa = PBXBuildFile; fileRef = 605195C419B47038005E9E2C /* about.png */; };
 		605195CD19B484B3005E9E2C /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 605195CC19B484B3005E9E2C /* AboutViewController.m */; };
 		6056901F19A2E54400E04F89 /* catAmbassador.png in Resources */ = {isa = PBXBuildFile; fileRef = 6056901619A2E54400E04F89 /* catAmbassador.png */; };
@@ -624,8 +622,6 @@
 /* Begin PBXFileReference section */
 		090872CA19739B33004276EF /* message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = message.png; sourceTree = "<group>"; };
 		090872CB19739B33004276EF /* talkHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = talkHeader.png; sourceTree = "<group>"; };
-		090872CC19739B33004276EF /* talkLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = talkLeft.png; sourceTree = "<group>"; };
-		090872CD19739B33004276EF /* talkRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = talkRight.png; sourceTree = "<group>"; };
 		0908734D1973B2F2004276EF /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		0908734E1973B2F2004276EF /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		0908734F1973B2F2004276EF /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
@@ -633,8 +629,6 @@
 		090873511973B2F2004276EF /* MessageFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageFrame.h; sourceTree = "<group>"; };
 		090873521973B2F2004276EF /* MessageFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageFrame.m; sourceTree = "<group>"; };
 		090873641973B2F2004276EF /* icon02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon02.png; sourceTree = "<group>"; };
-		090873671973B2F2004276EF /* talkLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = talkLeft.png; sourceTree = "<group>"; };
-		090873681973B2F2004276EF /* talkRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = talkRight.png; sourceTree = "<group>"; };
 		090873821973B34A004276EF /* TalkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TalkViewController.h; sourceTree = "<group>"; };
 		090873831973B34A004276EF /* TalkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TalkViewController.m; sourceTree = "<group>"; };
 		090F046019540278002B1F45 /* LikersLIstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikersLIstViewController.h; sourceTree = "<group>"; };
@@ -1335,6 +1329,8 @@
 		603B021C1991E68B005A6D30 /* area.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = area.plist; sourceTree = "<group>"; };
 		6042F59D1994D4B100CA2A0E /* menu-13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-13.png"; sourceTree = "<group>"; };
 		6042F59F1994D62800CA2A0E /* menu-14.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-14.png"; sourceTree = "<group>"; };
+		6044F4A719CC296500698E5F /* talkLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = talkLeft.png; sourceTree = "<group>"; };
+		6044F4A919CC297A00698E5F /* talkRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = talkRight.png; sourceTree = "<group>"; };
 		605195C419B47038005E9E2C /* about.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = about.png; sourceTree = "<group>"; };
 		605195CB19B484B3005E9E2C /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		605195CC19B484B3005E9E2C /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
@@ -1501,8 +1497,8 @@
 			children = (
 				60DFFDB219C2F67A00AE9E78 /* chat_timeline_bg.png */,
 				090873641973B2F2004276EF /* icon02.png */,
-				090873671973B2F2004276EF /* talkLeft.png */,
-				090873681973B2F2004276EF /* talkRight.png */,
+				6044F4A719CC296500698E5F /* talkLeft.png */,
+				6044F4A919CC297A00698E5F /* talkRight.png */,
 			);
 			path = QQ;
 			sourceTree = "<group>";
@@ -2162,8 +2158,6 @@
 			children = (
 				090872CA19739B33004276EF /* message.png */,
 				090872CB19739B33004276EF /* talkHeader.png */,
-				090872CC19739B33004276EF /* talkLeft.png */,
-				090872CD19739B33004276EF /* talkRight.png */,
 				094B4E8C196F8BD500AAF441 /* comment.png */,
 				09292292196CD47F00C6EAAF /* 30-2-2.png */,
 				09B901F7196BC8A30060E002 /* 21-2.png */,
@@ -3002,6 +2996,7 @@
 				602EB10019B8626100B4110B /* fish1.png in Resources */,
 				497E3FCF19C841F100F0F2EC /* shopGift.plist in Resources */,
 				60F618051999CBBB003C34F2 /* exp.png in Resources */,
+				6044F4A819CC296500698E5F /* talkLeft.png in Resources */,
 				495FFFE619AAD1BD00976F18 /* expLevel_1.png in Resources */,
 				600A5EC819A9840700FB4358 /* detail_comment.png in Resources */,
 				091EAD30194EBCA900B0DE41 /* 19-5(2).png in Resources */,
@@ -3093,6 +3088,7 @@
 				496CF22719A4908D0081BF5E /* IQButtonBarArrowRight@2x.png in Resources */,
 				60F618011999C884003C34F2 /* page4_selected.png in Resources */,
 				098EA869195473AC00EF0AC6 /* 29-8.png in Resources */,
+				6044F4AA19CC297A00698E5F /* talkRight.png in Resources */,
 				60BFBC7219B0271300EE3746 /* silverMedal.png in Resources */,
 				091EAD66194ECEA200B0DE41 /* bcat6_1.png in Resources */,
 				60EC8FAC198B444300F1781A /* 1-e.png in Resources */,
@@ -3162,8 +3158,6 @@
 				09C87C801951B0A500F41C6A /* 20-4.png in Resources */,
 				6032630619C1AE750013A6AA /* FAQ.plist in Resources */,
 				60DDF24519AF135100CB3042 /* topic_tfBg.png in Resources */,
-				090872D119739B33004276EF /* talkRight.png in Resources */,
-				0908737F1973B2F2004276EF /* talkLeft.png in Resources */,
 				6038617919A6EDB600B1312A /* greenBall.png in Resources */,
 				6033BDF819C99753009552FE /* 1206.png in Resources */,
 				60179B7719AC1E8300758D21 /* contribution.png in Resources */,
@@ -3277,12 +3271,10 @@
 				09C87C6E1951ADAB00F41C6A /* 24-3.png in Resources */,
 				09C87C631951ADAB00F41C6A /* 22-2（2）.png in Resources */,
 				091EAD2C194EBCA900B0DE41 /* 19-3(2).png in Resources */,
-				090872D019739B33004276EF /* talkLeft.png in Resources */,
 				6033BDF519C99753009552FE /* 1203.png in Resources */,
 				60F6180B1999DCB1003C34F2 /* CountryInfoCell.xib in Resources */,
 				09F88499195060500053A6D0 /* UMSocialSDKResourcesNew.bundle in Resources */,
 				60BFBC6E19B0271300EE3746 /* goldMedal.png in Resources */,
-				090873801973B2F2004276EF /* talkRight.png in Resources */,
 				602EB0FD19B8626100B4110B /* bone.png in Resources */,
 				60F618001999C884003C34F2 /* page3.png in Resources */,
 				6033BDFB19C99753009552FE /* 1302.png in Resources */,

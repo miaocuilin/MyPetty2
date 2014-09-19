@@ -46,7 +46,7 @@
     }
     
     self.rank.text = [NSString stringWithFormat:@"%d", rank];
-    NSLog(@"isup:%d",isUp);
+//    NSLog(@"isup:%d",isUp);
     if (isUp == 1) {
         self.upDown.image = [UIImage imageNamed:@"list_up.png"];
     }else if(isUp == -1){

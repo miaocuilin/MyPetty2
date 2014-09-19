@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "UserPetListModel.h"
 @interface DefaultPetCell : UITableViewCell
 {
     int rowNum;
@@ -20,5 +20,6 @@
 @property (retain, nonatomic) IBOutlet UIButton *defaultBtn;
 @property (copy, nonatomic)void (^defaultBtnClick)(int);
 
--(void)configUIWithSex:(int)sex Name:(NSString *)name Cate:(NSString *)cate Age:(NSString *)age Default:(BOOL)isDefault row:(int)row;
+//-(void)configUIWithSex:(int)sex Name:(NSString *)name Cate:(NSString *)cate Age:(NSString *)age Default:(BOOL)isDefault row:(int)row;
+-(void)configUIWithModel:(UserPetListModel *)model Default:(BOOL)isDefault Row:(int)row;
 @end

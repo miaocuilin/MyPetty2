@@ -15,6 +15,7 @@
 #import "CallViewController.h"
 #import "WalkAndTeaseViewController.h"
 #import "QuickGiftViewController.h"
+#import "RockViewController.h"
 #define headBtnWidth 64
 #define circleWidth 82
 @interface BottomMenuRootViewController ()
@@ -169,7 +170,8 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }
     
     NSLog(@"摇一摇");
-    ShakeViewController *shake = [[ShakeViewController alloc] init];
+//    ShakeViewController *shake = [[ShakeViewController alloc] init];
+    RockViewController *shake = [[RockViewController alloc] init];
     shake.titleString = self.label1.text;
     shake.animalInfoDict = self.shakeInfoDict;
     NSLog(@"shakeInfoDict:%@",self.shakeInfoDict);

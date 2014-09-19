@@ -97,6 +97,7 @@
             NSLog(@"%d",[[[load.dataDict objectForKey:@"data"] objectForKey:@"is_fan"] intValue]);
             if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"is_fan"] intValue]) {
                 super.label1.text =@"捣捣乱";
+                [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
             }
             LoadingSuccess;
         }

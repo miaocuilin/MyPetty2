@@ -311,7 +311,15 @@ static LevelRank *levelAndRank =nil;
     }
     return NO;
 }
-
++ (NSMutableArray *)getGift:(BOOL)isBad
+{
+    [self shareLevelAndRank];
+    if (isBad) {
+        return [levelAndRank getBadGiftDataArray:YES];
+    }else{
+        return [levelAndRank getBadGiftDataArray:NO];
+    }
+}
 //+ (void)loginHUDAlertView:(UIView *)showInView
 //{
 //    HUD = [[MBProgressHUD alloc] initWithWindow:showInView.window];

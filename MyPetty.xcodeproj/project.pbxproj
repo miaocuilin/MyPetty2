@@ -110,7 +110,6 @@
 		09561ACC193829E2008A13EB /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 09561ACB193829E2008A13EB /* FirstViewController.m */; };
 		09561AD5193872BC008A13EB /* line.png in Resources */ = {isa = PBXBuildFile; fileRef = 09561AD4193872BC008A13EB /* line.png */; };
 		0957F6721981F4A000F3DC5C /* ShakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0957F6711981F4A000F3DC5C /* ShakeViewController.m */; };
-		0957F6761982306500F3DC5C /* RecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0957F6751982306500F3DC5C /* RecordViewController.m */; };
 		0957F678198230C800F3DC5C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0957F677198230C800F3DC5C /* AVFoundation.framework */; };
 		0957F67A198230D300F3DC5C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0957F679198230D300F3DC5C /* AudioToolbox.framework */; };
 		096249FC1948539A00FC0E4A /* 13-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 096249FB1948539A00FC0E4A /* 13-1.png */; };
@@ -379,6 +378,20 @@
 		497E3FCF19C841F100F0F2EC /* shopGift.plist in Resources */ = {isa = PBXBuildFile; fileRef = 497E3FCE19C841F100F0F2EC /* shopGift.plist */; };
 		497E3FD519C8525500F0F2EC /* GiftShopModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 497E3FD419C8525500F0F2EC /* GiftShopModel.m */; };
 		49A1A1E119A9D76F00213C04 /* SAStepperControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A1A1E019A9D76F00213C04 /* SAStepperControl.m */; };
+		49A5625E19CBD7F400B6080A /* RockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A5625D19CBD7F400B6080A /* RockViewController.m */; };
+		49A5626019CBF87A00B6080A /* bluecloudbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A5625F19CBF87A00B6080A /* bluecloudbg.png */; };
+		49A5626219CBFA8600B6080A /* blackcloudbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A5626119CBFA8600B6080A /* blackcloudbg.png */; };
+		49A5626419CBFCAE00B6080A /* rock1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A5626319CBFCAE00B6080A /* rock1.png */; };
+		49A562A619CC1EEE00B6080A /* rewardbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A562A519CC1EEE00B6080A /* rewardbg.png */; };
+		49A562A819CC243400B6080A /* yellowcloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A562A719CC243400B6080A /* yellowcloud.png */; };
+		49A562AA19CC247C00B6080A /* threeshare.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A562A919CC247C00B6080A /* threeshare.png */; };
+		49A562AC19CC283E00B6080A /* grassnothing.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A562AB19CC283E00B6080A /* grassnothing.png */; };
+		49A562AE19CC284600B6080A /* grassbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A562AD19CC284600B6080A /* grassbg.png */; };
+		49A562B019CC2D8F00B6080A /* blackcloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A562AF19CC2D8F00B6080A /* blackcloud.png */; };
+		49A562B219CC2EB100B6080A /* badrewardbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A562B119CC2EB100B6080A /* badrewardbg.png */; };
+		49A562B419CC334C00B6080A /* troublenothing.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A562B319CC334C00B6080A /* troublenothing.png */; };
+		49A562B619CC356A00B6080A /* rock2.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A562B519CC356A00B6080A /* rock2.png */; };
+		49A562B819CC35BB00B6080A /* head_cricle1.png in Resources */ = {isa = PBXBuildFile; fileRef = 49A562B719CC35BB00B6080A /* head_cricle1.png */; };
 		49A7240319B484FC000D7826 /* ColllectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A7240019B484FC000D7826 /* ColllectionViewCell.m */; };
 		49A799AA19B566E3002411FC /* WaterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799A919B566E3002411FC /* WaterViewController.m */; };
 		49A799FE19B5A075002411FC /* MyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 49A799FB19B5A075002411FC /* MyCollectionViewCell.m */; };
@@ -748,8 +761,6 @@
 		09561AD4193872BC008A13EB /* line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line.png; sourceTree = "<group>"; };
 		0957F6701981F4A000F3DC5C /* ShakeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeViewController.h; path = "../账号设置/ShakeViewController.h"; sourceTree = "<group>"; };
 		0957F6711981F4A000F3DC5C /* ShakeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeViewController.m; path = "../账号设置/ShakeViewController.m"; sourceTree = "<group>"; };
-		0957F6741982306500F3DC5C /* RecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordViewController.h; sourceTree = "<group>"; };
-		0957F6751982306500F3DC5C /* RecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordViewController.m; sourceTree = "<group>"; };
 		0957F677198230C800F3DC5C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0957F679198230D300F3DC5C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		096249FB1948539A00FC0E4A /* 13-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "13-1.png"; sourceTree = "<group>"; };
@@ -1152,6 +1163,21 @@
 		497E3FD419C8525500F0F2EC /* GiftShopModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftShopModel.m; sourceTree = "<group>"; };
 		49A1A1DF19A9D76F00213C04 /* SAStepperControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAStepperControl.h; sourceTree = "<group>"; };
 		49A1A1E019A9D76F00213C04 /* SAStepperControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SAStepperControl.m; sourceTree = "<group>"; };
+		49A5625C19CBD7F400B6080A /* RockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RockViewController.h; sourceTree = "<group>"; };
+		49A5625D19CBD7F400B6080A /* RockViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RockViewController.m; sourceTree = "<group>"; };
+		49A5625F19CBF87A00B6080A /* bluecloudbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bluecloudbg.png; sourceTree = "<group>"; };
+		49A5626119CBFA8600B6080A /* blackcloudbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackcloudbg.png; sourceTree = "<group>"; };
+		49A5626319CBFCAE00B6080A /* rock1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rock1.png; sourceTree = "<group>"; };
+		49A562A519CC1EEE00B6080A /* rewardbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rewardbg.png; sourceTree = "<group>"; };
+		49A562A719CC243400B6080A /* yellowcloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yellowcloud.png; sourceTree = "<group>"; };
+		49A562A919CC247C00B6080A /* threeshare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = threeshare.png; sourceTree = "<group>"; };
+		49A562AB19CC283E00B6080A /* grassnothing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grassnothing.png; sourceTree = "<group>"; };
+		49A562AD19CC284600B6080A /* grassbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grassbg.png; sourceTree = "<group>"; };
+		49A562AF19CC2D8F00B6080A /* blackcloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackcloud.png; sourceTree = "<group>"; };
+		49A562B119CC2EB100B6080A /* badrewardbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = badrewardbg.png; sourceTree = "<group>"; };
+		49A562B319CC334C00B6080A /* troublenothing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = troublenothing.png; sourceTree = "<group>"; };
+		49A562B519CC356A00B6080A /* rock2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rock2.png; sourceTree = "<group>"; };
+		49A562B719CC35BB00B6080A /* head_cricle1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = head_cricle1.png; sourceTree = "<group>"; };
 		49A723FF19B484FC000D7826 /* ColllectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColllectionViewCell.h; sourceTree = "<group>"; };
 		49A7240019B484FC000D7826 /* ColllectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColllectionViewCell.m; sourceTree = "<group>"; };
 		49A799A819B566E3002411FC /* WaterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterViewController.h; sourceTree = "<group>"; };
@@ -1798,8 +1824,8 @@
 			children = (
 				0957F6701981F4A000F3DC5C /* ShakeViewController.h */,
 				0957F6711981F4A000F3DC5C /* ShakeViewController.m */,
-				0957F6741982306500F3DC5C /* RecordViewController.h */,
-				0957F6751982306500F3DC5C /* RecordViewController.m */,
+				49A5625C19CBD7F400B6080A /* RockViewController.h */,
+				49A5625D19CBD7F400B6080A /* RockViewController.m */,
 				491C1FC519B9CC0600CA833E /* HttpRequest.h */,
 				491C1FC619B9CC0600CA833E /* HttpRequest.m */,
 				493DEF6A19AF1A32009D0027 /* ShoutViewController.h */,
@@ -2567,6 +2593,17 @@
 		49500A3819ADD5A700D175D8 /* 动作交互 */ = {
 			isa = PBXGroup;
 			children = (
+				49A562B319CC334C00B6080A /* troublenothing.png */,
+				49A562B519CC356A00B6080A /* rock2.png */,
+				49A562AD19CC284600B6080A /* grassbg.png */,
+				49A562AB19CC283E00B6080A /* grassnothing.png */,
+				49A562A919CC247C00B6080A /* threeshare.png */,
+				49A562B119CC2EB100B6080A /* badrewardbg.png */,
+				49A562A719CC243400B6080A /* yellowcloud.png */,
+				49A562AF19CC2D8F00B6080A /* blackcloud.png */,
+				49A5626319CBFCAE00B6080A /* rock1.png */,
+				49A5626119CBFA8600B6080A /* blackcloudbg.png */,
+				49A5625F19CBF87A00B6080A /* bluecloudbg.png */,
 				49590B6219B083FC0090E697 /* record_loading.png */,
 				49590B5C19B0656D0090E697 /* record_uploading.png */,
 				49590B5D19B0656D0090E697 /* rerecording.png */,
@@ -2575,7 +2612,9 @@
 				49FA203119AF49250077897D /* record_bg.png */,
 				49FA202F19AF3DF50077897D /* recordButton.png */,
 				493DEF6819AF05C7009D0027 /* nochance.png */,
+				49A562B719CC35BB00B6080A /* head_cricle1.png */,
 				49500A3919ADD5C800D175D8 /* head_cricle.png */,
+				49A562A519CC1EEE00B6080A /* rewardbg.png */,
 				49500A3A19ADD5C800D175D8 /* reward_bg.png */,
 				49500A3B19ADD5C800D175D8 /* reward_desc.png */,
 				49500A3C19ADD5C800D175D8 /* rock_pengyou.png */,
@@ -3073,6 +3112,7 @@
 				60186DD719B5714400207ED6 /* CateNameList.plist in Resources */,
 				09D98A9C1935D4E900C83C4B /* 7-7.png in Resources */,
 				601BB35819AB2D4D0076E051 /* sendOne.png in Resources */,
+				49A562B619CC356A00B6080A /* rock2.png in Resources */,
 				6038618419A71A5600B1312A /* PicDetailViewController.xib in Resources */,
 				6020BD7F1998B8D5002C74FA /* tool2.png in Resources */,
 				60186DDA19B5730C00207ED6 /* defaultPetHead.png in Resources */,
@@ -3081,6 +3121,7 @@
 				6024A62719A227FD005ED3D3 /* shake.png in Resources */,
 				6057847519B05C14007FAF4C /* PopularityCell.xib in Resources */,
 				600376671990AB2500F3107F /* menu-9.png in Resources */,
+				49A562B219CC2EB100B6080A /* badrewardbg.png in Resources */,
 				497BE7DE19CAE90500E65BB5 /* animalAndPeople.plist in Resources */,
 				60F617FA1999C884003C34F2 /* mail.png in Resources */,
 				495FFFE419AAD1BD00976F18 /* button_gray.png in Resources */,
@@ -3116,6 +3157,7 @@
 				091EAD79194ECEA200B0DE41 /* bother3_2.png in Resources */,
 				09D98A6E1935D4E900C83C4B /* 1-3.png in Resources */,
 				096520D91964388700A8186D /* DoneDown.png in Resources */,
+				49A562B019CC2D8F00B6080A /* blackcloud.png in Resources */,
 				09D98A821935D4E900C83C4B /* 14-9.png in Resources */,
 				600376691990AB2500F3107F /* menu-11.png in Resources */,
 				091EAD23194EBCA900B0DE41 /* 18-5.png in Resources */,
@@ -3130,6 +3172,7 @@
 				6020BD6C199893AA002C74FA /* RQBg.png in Resources */,
 				091EAD5C194ECEA200B0DE41 /* bcat1_1.png in Resources */,
 				60F617F81999C884003C34F2 /* cry.png in Resources */,
+				49A562A819CC243400B6080A /* yellowcloud.png in Resources */,
 				6020BD7D1998B8D5002C74FA /* tool1.png in Resources */,
 				606181C319B1BA80009AF63D /* more_orangeBg.png in Resources */,
 				09F46ADC196AB2DC00209749 /* 37x-Checkmark.png in Resources */,
@@ -3138,6 +3181,7 @@
 				600A5EC419A97A5200FB4358 /* detail_share.png in Resources */,
 				6038618C19A7351500B1312A /* didAttention.png in Resources */,
 				09C87C5E1951ADAB00F41C6A /* 21-1.png in Resources */,
+				49A5626019CBF87A00B6080A /* bluecloudbg.png in Resources */,
 				600376601990AB2500F3107F /* menu-2.png in Resources */,
 				602EB10219B8626100B4110B /* zan_fish.png in Resources */,
 				0968263A1936D5A000B0D7A2 /* cat2.jpg in Resources */,
@@ -3221,7 +3265,9 @@
 				606181BE19B1B3E5009AF63D /* more_sina.png in Resources */,
 				600AF3CA199B697D00613DCB /* Icon@2x.png in Resources */,
 				6056902119A2E54400E04F89 /* dogAmbassador.png in Resources */,
+				49A562AE19CC284600B6080A /* grassbg.png in Resources */,
 				602A880D19ADED08004F368C /* publish_unSelected.png in Resources */,
+				49A562B819CC35BB00B6080A /* head_cricle1.png in Resources */,
 				0917703F1962A970002F8502 /* 30-5.png in Resources */,
 				600376651990AB2500F3107F /* menu-7.png in Resources */,
 				091EAD1F194EBCA900B0DE41 /* 18-1.png in Resources */,
@@ -3243,6 +3289,7 @@
 				49500A4619ADD5C800D175D8 /* rock_xinlang.png in Resources */,
 				4927D98D19AB173300EBDC88 /* governmentLevel.png in Resources */,
 				603A367F19C080FC0000E0AD /* PlanetAttentionCell.xib in Resources */,
+				49A562B419CC334C00B6080A /* troublenothing.png in Resources */,
 				60EC8FB9198B6B2300F1781A /* 2-c.png in Resources */,
 				09C87C811951B0A500F41C6A /* 20-灰色线.png in Resources */,
 				49500A4519ADD5C800D175D8 /* rock_weixin.png in Resources */,
@@ -3262,6 +3309,7 @@
 				091EAD32194EBCA900B0DE41 /* 19-6(2).png in Resources */,
 				0908737D1973B2F2004276EF /* icon02.png in Resources */,
 				49FA203219AF49250077897D /* record_bg.png in Resources */,
+				49A562AC19CC283E00B6080A /* grassnothing.png in Resources */,
 				091EAD60194ECEA200B0DE41 /* bcat3_1.png in Resources */,
 				09C87C621951ADAB00F41C6A /* 22-2.png in Resources */,
 				60BFBC7119B0271300EE3746 /* list_up.png in Resources */,
@@ -3272,6 +3320,7 @@
 				6056902719A2E54400E04F89 /* switchBg.png in Resources */,
 				09C87C6D1951ADAB00F41C6A /* 24-2.png in Resources */,
 				09D98A871935D4E900C83C4B /* 2-2.png in Resources */,
+				49A562AA19CC247C00B6080A /* threeshare.png in Resources */,
 				09C87C6E1951ADAB00F41C6A /* 24-3.png in Resources */,
 				09C87C631951ADAB00F41C6A /* 22-2（2）.png in Resources */,
 				091EAD2C194EBCA900B0DE41 /* 19-3(2).png in Resources */,
@@ -3344,9 +3393,11 @@
 				6033BE0A19C99753009552FE /* 2302.png in Resources */,
 				6003765F1990AB2500F3107F /* menu-1.png in Resources */,
 				49500A3219ADA51D00D175D8 /* product_bg2.png in Resources */,
+				49A5626419CBFCAE00B6080A /* rock1.png in Resources */,
 				091EAD22194EBCA900B0DE41 /* 18-4.png in Resources */,
 				6038617F19A6F19B00B1312A /* menu_message.png in Resources */,
 				0917703E1962A970002F8502 /* 30-4.png in Resources */,
+				49A562A619CC1EEE00B6080A /* rewardbg.png in Resources */,
 				600A5EC519A97A5200FB4358 /* detail_symbol_fish.png in Resources */,
 				6033BDF419C99753009552FE /* 1202.png in Resources */,
 				098EA863195473AC00EF0AC6 /* 29-2.png in Resources */,
@@ -3364,6 +3415,7 @@
 				4927D99219AB53A200EBDC88 /* 11.png in Resources */,
 				60F617FD1999C884003C34F2 /* page2_selected.png in Resources */,
 				096A0BD419668BCD00FE25ED /* 36-1.png in Resources */,
+				49A5626219CBFA8600B6080A /* blackcloudbg.png in Resources */,
 				096520CE1963EFD200A8186D /* weibo.png in Resources */,
 				6033BDF319C99753009552FE /* 1201.png in Resources */,
 				602A881619ADFEC9004F368C /* atUsers_selected.png in Resources */,
@@ -3431,6 +3483,7 @@
 				497BE82419CAFDDB00E65BB5 /* LevelRank.m in Sources */,
 				6003D9F019931EB400AA6558 /* ChooseFamilyDetailCell.m in Sources */,
 				49590B5719B044CC0090E697 /* CircularProgressView.m in Sources */,
+				49A5625E19CBD7F400B6080A /* RockViewController.m in Sources */,
 				098FC7EC194053320064A004 /* MyMD5.m in Sources */,
 				60EC8F9F198B429F00F1781A /* ChoseLoadViewController.m in Sources */,
 				49A799AA19B566E3002411FC /* WaterViewController.m in Sources */,
@@ -3455,7 +3508,6 @@
 				491C1FC019B9B4E400CA833E /* UserBagCollectionViewCell.m in Sources */,
 				09F0CBC319527C4100FA3898 /* MyPhotoCell.m in Sources */,
 				6020BD711998A442002C74FA /* UserInfoViewController.m in Sources */,
-				0957F6761982306500F3DC5C /* RecordViewController.m in Sources */,
 				601716E2198F21E1001E6DE6 /* ChooseFamilyViewController.m in Sources */,
 				0914B6CF196E3F410056CFB0 /* MMHud.m in Sources */,
 				09292296196CDC6900C6EAAF /* SystemMessageListModel.m in Sources */,

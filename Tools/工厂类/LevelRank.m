@@ -7,8 +7,12 @@
 //
 
 #import "LevelRank.h"
+#import "GiftShopModel.h"
 @interface LevelRank ()
 @property (nonatomic,strong)NSMutableDictionary *dict;
+@property (nonatomic,retain)NSMutableArray *goodGiftDataArray;
+@property (nonatomic,retain)NSMutableArray *badGiftDataArray;
+
 @end
 @implementation LevelRank
 //传入经验和贡献值、种类
@@ -64,4 +68,52 @@
     }
     return rankString;
 }
+
+- (void)addGiftShopData
+{
+    self.goodGiftDataArray =[NSMutableArray arrayWithCapacity:0];
+    self.badGiftDataArray = [NSMutableArray arrayWithCapacity:0];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"shopGift" ofType:@"plist"];
+    NSMutableDictionary *DictData = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+    NSArray *level0 = [[DictData objectForKey:@"good"] objectForKey:@"level0"];
+    NSArray *level1 =[[DictData objectForKey:@"good"] objectForKey:@"level1"];
+    NSArray *level2 =[[DictData objectForKey:@"good"] objectForKey:@"level2"];
+    NSArray *level3 =[[DictData objectForKey:@"good"] objectForKey:@"level3"];
+    [self addData:level0 isGood:YES];
+    [self addData:level1 isGood:YES];
+    [self addData:level2 isGood:YES];
+    [self addData:level3 isGood:YES];
+    
+    NSArray *level4 =[[DictData objectForKey:@"bad"] objectForKey:@"level0"];
+    NSArray *level5 =[[DictData objectForKey:@"bad"] objectForKey:@"level1"];
+    NSArray *level6 =[[DictData objectForKey:@"bad"] objectForKey:@"level2"];
+    [self addData:level4 isGood:NO];
+    [self addData:level5 isGood:NO];
+    [self addData:level6 isGood:NO];
+    
+    //    NSLog(@"data:%@",DictData);
+}
+- (void)addData:(NSArray *)array isGood:(BOOL)good
+{
+    for (NSDictionary *dict in array) {
+        GiftShopModel *model = [[GiftShopModel alloc] init];
+        [model setValuesForKeysWithDictionary:dict];
+        if (good) {
+            [self.goodGiftDataArray addObject:model];
+        }else{
+            [self.badGiftDataArray addObject:model];
+        }
+        [model release];
+    }
+}
+- (NSMutableArray *)getBadGiftDataArray:(BOOL)isBad
+{
+    [self addGiftShopData];
+    if (isBad) {
+        return self.badGiftDataArray;
+    }else{
+        return self.goodGiftDataArray;
+    }
+}
+
 @end

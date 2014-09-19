@@ -108,6 +108,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             addBtn.selected = isFans;
             if (!isFans) {
                 super.label1.text =@"捣捣乱";
+                [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
             }
             LoadingSuccess;
         }

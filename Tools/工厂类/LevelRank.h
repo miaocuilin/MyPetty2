@@ -12,4 +12,5 @@
 - (NSString *)calculateLevel:(NSString *)userExp addExp:(NSInteger)add;
 - (NSString *)calculaterRank:(NSString *)contribution planet:(NSString *)dogOrcat addContribution:(NSInteger)add;
 
+- (NSMutableArray *)getBadGiftDataArray:(BOOL)isBad;
 @end

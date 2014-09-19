@@ -28,6 +28,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    //修改aid,a_name,a_tx,age,gender
     self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
     [self createBg];
     [self createTableView];

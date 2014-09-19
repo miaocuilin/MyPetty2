@@ -81,6 +81,8 @@
     //其它用户信息
     #define USERINFOAPI @"http://54.199.161.210:8001/index.php?r=user/infoApi&usr_id="
 
+    //修改默认宠物信息
+    #define CHANGEDEFAULTPETAPI @"http://54.199.161.210:8001/index.php?r=user/chgDefAniApi&aid="
     /***************************/
     //用户宠物列表：
     #define USERPETLISTAPI @"http://54.199.161.210:8001/index.php?r=user/petsApi&usr_id="
@@ -138,7 +140,8 @@
 
     //照片信息
     #define IMAGEINFOAPI @"http://54.199.161.210:8001/index.php?r=image/infoApi&img_id="
-
+    //照片分享API
+    #define SHAREIMAGEAPI @"http://54.199.161.210:8001/index.php?r=image/shareApi&img_id="
 
 
     //加关注API

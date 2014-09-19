@@ -127,6 +127,8 @@
             if ([ControllerManager getIsSuccess]) {
                 [self loadAttentionAPI];
             }
+            self.shares = [dict objectForKey:@"shares"];
+//            NSLog(@"%@", [dict objectForKey:@"shares"]);
             self.cmt = [dict objectForKey:@"cmt"];
             self.num = [dict objectForKey:@"likes"];
             self.imageURL = [dict objectForKey:@"url"];
@@ -937,6 +939,7 @@
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:self.cmt image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
+                [self loadShareAPI];
                 shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
                 StartLoading;
                 [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
@@ -953,6 +956,7 @@
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:self.cmt image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
+                [self loadShareAPI];
                 shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
                 StartLoading;
                 [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
@@ -967,6 +971,7 @@
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:@"ha哈哈哈" image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
+                [self loadShareAPI];
                 shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
                 StartLoading;
                 [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
@@ -979,6 +984,30 @@
         }];
     }
 }
+#pragma mark - 分享API
+-(void)loadShareAPI
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", SHAREIMAGEAPI, self.img_id, sig, [ControllerManager getSID]];
+    NSLog(@"shareUrl:%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            //返回gold
+            int gold = [[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] intValue];
+            if (gold != [[USER objectForKey:@"gold"] intValue]) {
+                //差值
+                int add = gold-[[USER objectForKey:@"gold"] intValue];
+                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] forKey:@"gold"];
+                [ControllerManager HUDImageIcon:@"gold.png" showView:self.view yOffset:0 Number:add];
+            }
+        }else{
+            
+        }
+    }];
+    [request release];
+}
+
 -(void)cancelBtnClick
 {
     NSLog(@"cancel");

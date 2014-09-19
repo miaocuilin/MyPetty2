@@ -81,8 +81,10 @@
 {
     //固定礼物1102
     NSString *item = @"1102";
-    NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_buy=%d&item_id=%@dog&cat",[USER objectForKey:@"aid"],isBuy,item]];
-    NSString *sendString = [NSString stringWithFormat:@"%@%@&is_buy=%d&item_id=%@&sig=%@&SID=%@",SENDSHAKEGIFT,[USER objectForKey:@"aid"],isBuy,item,sendSig,[ControllerManager getSID]];
+    //NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_buy=%d&item_id=%@dog&cat",[USER objectForKey:@"aid"],isBuy,item]];
+    //NSString *sendString = [NSString stringWithFormat:@"%@%@&is_buy=%d&item_id=%@&sig=%@&SID=%@",SENDSHAKEGIFT,[USER objectForKey:@"aid"],isBuy,item,sendSig,[ControllerManager getSID]];
+    NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&item_id=%@dog&cat",[USER objectForKey:@"aid"],item]];
+    NSString *sendString = [NSString stringWithFormat:@"%@%@&item_id=%@&sig=%@&SID=%@",SENDSHAKEGIFT,[USER objectForKey:@"aid"],item,sendSig,[ControllerManager getSID]];
     NSLog(@"赠送url:%@",sendString);
     httpDownloadBlock *request  = [[httpDownloadBlock alloc] initWithUrlStr:sendString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"赠送数据：%@",load.dataDict);
@@ -140,7 +142,8 @@
     giftPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, 310+45, bodyView.frame.size.width, 20)];
     giftPageControl.backgroundColor = [UIColor clearColor];
     giftPageControl.userInteractionEnabled = NO;
-    giftPageControl.numberOfPages = (int)floorf(self.giftDataArray.count/9);
+//    giftPageControl.numberOfPages = (int)floorf(self.giftDataArray.count/9);
+    giftPageControl.numberOfPages =ceilf(self.giftDataArray.count/9);
     giftPageControl.currentPageIndicatorTintColor = BGCOLOR;
     giftPageControl.pageIndicatorTintColor = [UIColor grayColor];
     [totalView addSubview:giftPageControl];

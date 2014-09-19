@@ -18,7 +18,6 @@
 #import "RegisterViewController.h"
 #import "PublishViewController.h"
 #import "ShakeViewController.h"
-#import "RecordViewController.h"
 
 #import "UMSocial.h"
 #import "UMSocialWechatHandler.h"
@@ -45,7 +44,6 @@
 #import "TopicViewController.h"
 #import "GiftShopViewController.h"
 #import "PopularityListViewController.h"
-#import "RecordViewController.h"
 #import "ContributionViewController.h"
 #import "CallViewController.h"
 #import "AboutViewController.h"

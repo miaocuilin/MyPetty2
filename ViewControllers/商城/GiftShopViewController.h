@@ -27,6 +27,9 @@
     UIButton * alphaBtn;
     UIButton * backBtn;
     UILabel * BottomGold;
+    
+    UILabel * giftNum;
+    UIImageView * greenBall;
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 

@@ -50,6 +50,15 @@
     [self loadData];
 //    [self buyGiftItemsAPI];
 }
+- (void)viewDidAppear:(BOOL)animated
+{
+     giftNum.text = [NSString stringWithFormat:@"%@",[USER objectForKey:@"noViewGift"]];
+    if ([giftNum.text isEqualToString:@""]) {
+        greenBall.hidden = YES;
+    }else{
+        greenBall.hidden = NO;
+    }
+}
 
 - (void)buyGiftItemsAPI:(NSInteger)tag
 {
@@ -62,6 +71,14 @@
             GiftShopModel *model = self.giftDataArray[tag];
             [USER setObject:[NSString stringWithFormat:@"%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"user_gold"]] forKey:@"gold"];
             BottomGold.text = [USER objectForKey:@"gold"];
+            int noViewGiftNumber = [[USER objectForKey:@"noViewGift"] intValue];
+            [USER setObject:[NSString stringWithFormat:@"%d",noViewGiftNumber+1] forKey:@"noViewGift"];
+            giftNum.text = [NSString stringWithFormat:@"%@",[USER objectForKey:@"noViewGift"]];
+            if ([giftNum.text isEqualToString:@""]) {
+                greenBall.hidden = YES;
+            }else{
+                greenBall.hidden = NO;
+            }
             [ControllerManager HUDText:[NSString stringWithFormat:@"恭喜您，购买 %@ 成功！",model.name] showView:self.view yOffset:0];
         }
     }];
@@ -213,10 +230,11 @@
     UIImageView * giftImageView = [MyControl createImageViewWithFrame:CGRectMake(320-31, 30, 51*0.4, 55*0.4) ImageName:@"tool4.png"];
     [navView addSubview:giftImageView];
     
-    UIImageView * greenBall = [MyControl createImageViewWithFrame:CGRectMake(13, -5, 15, 15) ImageName:@"greenBall.png"];
+    greenBall = [MyControl createImageViewWithFrame:CGRectMake(13, -5, 15, 15) ImageName:@"greenBall.png"];
     [giftImageView addSubview:greenBall];
     
-    UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(-5, 0, 25, 15) Font:9 Text:@"107"];
+    giftNum = [MyControl createLabelWithFrame:CGRectMake(-5, 0, 25, 15) Font:9 Text:nil];
+    giftNum.text = [NSString stringWithFormat:@"%@",[USER objectForKey:@"noViewGift"]];
     giftNum.font = [UIFont boldSystemFontOfSize:9];
     giftNum.textAlignment = NSTextAlignmentCenter;
     [greenBall addSubview:giftNum];
@@ -273,6 +291,7 @@
 //    vc.offset = 320*3;
 //    [self presentViewController:vc animated:YES completion:nil];
 //    [vc release];
+    [USER setObject:@"" forKey:@"noViewGift"];
     UserBagViewController *userBagVC = [[UserBagViewController alloc] init];
     [self presentViewController:userBagVC animated:YES completion:^{
         [userBagVC release];

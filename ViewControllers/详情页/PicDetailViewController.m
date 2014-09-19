@@ -1270,13 +1270,14 @@
     //经验弹窗
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
     int exp = [[USER objectForKey:@"exp"] intValue];
+    
     [USER setObject:[[dict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
     int index = [[USER objectForKey:@"exp"] intValue]-exp;
     if (index>0) {
         [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
     }
-    
-    
+    NSString * gold = [[dict objectForKey:@"data"] objectForKey:@"gold"];
+    [USER setObject:gold forKey:@"gold"];
     [commentTextView resignFirstResponder];
     //添加评论
     [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];

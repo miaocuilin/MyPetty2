@@ -40,15 +40,16 @@
     _iconF = CGRectMake(iconX, iconY, kIconWH, kIconWH);
     
     // 3、计算内容位置
-    CGFloat contentX = CGRectGetMaxX(_iconF) + kMargin;
+    CGFloat contentX = CGRectGetMaxX(_iconF) + kMargin-5;
+//    CGFloat contentX = kIconWH + iconX + kMargin-5;
     CGFloat contentY = iconY;
-    CGSize contentSize = [_message.content sizeWithFont:kContentFont constrainedToSize:CGSizeMake(kContentW, CGFLOAT_MAX)];
+    CGSize contentSize = [_message.content sizeWithFont:kContentFont constrainedToSize:CGSizeMake(kContentW, CGFLOAT_MAX) lineBreakMode:1];
     
     if (_message.type == MessageTypeMe) {
-        contentX = iconX - kMargin - contentSize.width - kContentLeft - kContentRight;
+        contentX = iconX - kMargin - contentSize.width - kContentLeft - kContentRight+5;
     }
     
-    _contentF = CGRectMake(contentX, contentY, contentSize.width + kContentLeft + kContentRight, contentSize.height + kContentTop + kContentBottom);
+    _contentF = CGRectMake(contentX, contentY, contentSize.width + kContentLeft + kContentRight, contentSize.height + kContentTop + kContentBottom+5);
 
     // 4、计算高度
     _cellHeight = MAX(CGRectGetMaxY(_contentF), CGRectGetMaxY(_iconF))  + kMargin;

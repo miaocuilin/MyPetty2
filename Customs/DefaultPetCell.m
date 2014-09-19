@@ -25,28 +25,74 @@
     //
     self.cateAndAge.textColor = [UIColor lightGrayColor];
 }
-
--(void)configUIWithSex:(int)sex Name:(NSString *)name Cate:(NSString *)cate Age:(NSString *)age Default:(BOOL)isDefault row:(int)row
+-(void)configUIWithModel:(UserPetListModel *)model Default:(BOOL)isDefault Row:(int)row
 {
     rowNum = row;
     
     self.crownImage.hidden = YES;
     
-    self.headImage.image = [UIImage imageNamed:@"cat2.jpg"];
-    if (sex == 2) {
+    self.headImage.image = [UIImage imageNamed:@"defaultPetHead.jpg"];
+    
+    if ([model.gender intValue] == 2) {
         self.sexImage.image = [UIImage imageNamed:@"woman.png"];
     }else{
         self.sexImage.image = [UIImage imageNamed:@"man.png"];
     }
-    self.nameLabel.text = name;
-    self.cateAndAge.text = [NSString stringWithFormat:@"%@ | %@岁", cate, age];
+    self.nameLabel.text = model.name;
+    self.cateAndAge.text = [NSString stringWithFormat:@"%@ | %@岁", [ControllerManager returnCateNameWithType:model.type], model.age];
     if (isDefault) {
         self.crownImage.hidden = NO;
         [self.defaultBtn setBackgroundImage:[UIImage imageNamed:@"defaultPet.png"] forState:UIControlStateNormal];
     }else{
         [self.defaultBtn setBackgroundImage:[UIImage imageNamed:@"setToDefaultPet.png"] forState:UIControlStateNormal];
     }
+    
+    /**************************/
+    if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            self.headImage.image = image;
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    self.headImage.image = load.dataImage;
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+    /**************************/
 }
+//-(void)configUIWithSex:(int)sex Name:(NSString *)name Cate:(NSString *)cate Age:(NSString *)age Default:(BOOL)isDefault row:(int)row
+//{
+//    rowNum = row;
+//    
+//    self.crownImage.hidden = YES;
+//    
+//    self.headImage.image = [UIImage imageNamed:@"cat2.jpg"];
+//    if (sex == 2) {
+//        self.sexImage.image = [UIImage imageNamed:@"woman.png"];
+//    }else{
+//        self.sexImage.image = [UIImage imageNamed:@"man.png"];
+//    }
+//    self.nameLabel.text = name;
+//    self.cateAndAge.text = [NSString stringWithFormat:@"%@ | %@岁", cate, age];
+//    if (isDefault) {
+//        self.crownImage.hidden = NO;
+//        [self.defaultBtn setBackgroundImage:[UIImage imageNamed:@"defaultPet.png"] forState:UIControlStateNormal];
+//    }else{
+//        [self.defaultBtn setBackgroundImage:[UIImage imageNamed:@"setToDefaultPet.png"] forState:UIControlStateNormal];
+//    }
+//}
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];

@@ -72,7 +72,7 @@
     //    self.bgImageView.backgroundColor = [UIColor redColor];
     NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
-    NSLog(@"%@", filePath);
+//    NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
     //    NSLog(@"%@", data);
     UIImage * image = [UIImage imageWithData:data];
@@ -308,7 +308,7 @@
     NSString *cachPath = DOCDIR;
     //    NSLog(@"%@", cachPath);
     NSArray *files = [[NSFileManager defaultManager] subpathsAtPath:cachPath];
-    NSLog(@"files :%d",[files count]);
+//    NSLog(@"files :%d",[files count]);
     for (NSString *p in files) {
         NSError *error;
         NSString *path = [cachPath stringByAppendingPathComponent:p];

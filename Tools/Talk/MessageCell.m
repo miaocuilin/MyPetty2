@@ -30,7 +30,7 @@
         
         // 1、创建时间按钮
         _timeBtn = [[UIButton alloc] init];
-        [_timeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [_timeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         _timeBtn.titleLabel.font = kTimeFont;
         _timeBtn.enabled = NO;
         [_timeBtn setBackgroundImage:[UIImage imageNamed:@"chat_timeline_bg.png"] forState:UIControlStateNormal];
@@ -44,7 +44,8 @@
         
         // 3、创建内容
         _contentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_contentBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        //修改字体颜色
+        [_contentBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 
         _contentBtn.titleLabel.font = kContentFont;
         _contentBtn.titleLabel.numberOfLines = 0;
@@ -61,7 +62,7 @@
 
     // 1、设置时间
     [_timeBtn setTitle:message.time forState:UIControlStateNormal];
-    NSLog(@"===============================%@", message.time);
+//    NSLog(@"===============================%@", message.time);
 //    _messageFrame.showTime = YES;
     _timeBtn.frame = _messageFrame.timeF;
 //    [_timeBtn setBackgroundImage:[[UIImage imageNamed:@"chat_timeline_bg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:0] forState:UIControlStateNormal];

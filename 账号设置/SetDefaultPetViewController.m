@@ -39,12 +39,12 @@
 -(void)loadMyCountryInfoData
 {
     //    user/petsApi&usr_id=(若用户为自己则留空不填)
-    NSString * code = [NSString stringWithFormat:@"usr_id=%@dog&cat",[USER objectForKey:@"usr_id"]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERPETLISTAPI, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
-    //    NSLog(@"%@", url);
+    NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+//    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"用户宠物数据:%@", load.dataDict);
+//            NSLog(@"用户宠物数据:%@", load.dataDict);
             [self.userPetListArray removeAllObjects];
             NSArray * array = [load.dataDict objectForKey:@"data"];
             for (NSDictionary * dict in array) {
@@ -68,7 +68,7 @@
     //    self.bgImageView.backgroundColor = [UIColor redColor];
     NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
-    NSLog(@"%@", filePath);
+//    NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
     //    NSLog(@"%@", data);
     UIImage * image = [UIImage imageWithData:data];
@@ -133,17 +133,18 @@
     UserPetListModel *model = self.userPetListArray[indexPath.row];
     cell.defaultBtnClick = ^(int a){
         NSLog(@"clickDefaultPet:%d", a);
+        //请求切换默认宠物API
+        [self changeDefaultPet:[self.userPetListArray[a] aid]];
     };
     
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
-    if (indexPath.row == 0) {
-        [cell configUIWithSex:2 Name:model.name Cate:@"101" Age:@"11" Default:YES row:indexPath.row];
+    if ([model.aid isEqualToString:[USER objectForKey:@"aid"]]) {
+        [cell configUIWithModel:model Default:YES Row:indexPath.row];
     }else{
-        [cell configUIWithSex:2 Name:model.name Cate:@"101" Age:@"12" Default:NO row:indexPath.row];
+        [cell configUIWithModel:model Default:NO Row:indexPath.row];
     }
-//    NSString *string
-//    cell.headImage.image =
+
     return cell;
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -151,6 +152,32 @@
     return 72.0f;
 }
 
+#pragma mark -
+-(void)changeDefaultPet:(NSString *)aid
+{
+    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+    [MMProgressHUD showWithStatus:@"切换中..."];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
+    NSString * url =[NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", CHANGEDEFAULTPETAPI, aid, sig, [ControllerManager getSID]];
+//    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                NSLog(@"%@", aid);
+                [USER setObject:aid forKey:@"aid"];
+                [tv reloadData];
+                [MMProgressHUD dismissWithSuccess:@"切换成功" title:nil  afterDelay:0.2];
+            }else{
+                [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+            }
+            
+        }else{
+            [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+        }
+    }];
+    [request release];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

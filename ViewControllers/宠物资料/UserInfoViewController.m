@@ -72,8 +72,8 @@
 -(void)loadMyCountryInfoData
 {
 //    user/petsApi&usr_id=(若用户为自己则留空不填)
-    NSString * code = [NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERPETLISTAPI, self.usr_id, [MyMD5 md5:code], [ControllerManager getSID]];
+    NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
 //    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {

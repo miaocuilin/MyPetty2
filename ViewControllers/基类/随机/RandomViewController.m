@@ -105,7 +105,7 @@
         toolTipsVC.continuousDay = [[USER objectForKey:@"con_login"] intValue];
         [toolTipsVC createAlertView];
     }
-    [self RandomTips];
+//    [self RandomTips];
 
 }
 
@@ -170,7 +170,7 @@
 //    }];
     
 
-    [self.view bringSubviewToFront:indicatorView];
+//    [self.view bringSubviewToFront:indicatorView];
 }
 
 - (void)headerRereshing
@@ -186,17 +186,7 @@
 -(void)loadData
 {
     StartLoading;
-    
-    //Loading界面开始启动
-//    indicatorView = [[MONActivityIndicatorView alloc] init];
-//    indicatorView.delegate = self;
-//    indicatorView.numberOfCircles = 4;
-//    indicatorView.radius = 10;
-//    indicatorView.internalSpacing = 3;
-//    indicatorView.center = CGPointMake(320/2, (self.view.frame.size.height-[MyControl isIOS7])/2-[MyControl isIOS7]/2);
-//    [self.view addSubview:indicatorView];
-//    [indicatorView startAnimating];
-//    NSLog(@"randomAPI:%@",[NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]]);
+
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             //只包含img_id和图片的url
@@ -214,12 +204,12 @@
             self.lastImg_id = [self.dataArray[self.dataArray.count-1] img_id];
             [qtmquitView reloadData];
             [qtmquitView headerEndRefreshing];
-            [indicatorView stopAnimating];
+//            [indicatorView stopAnimating];
             
             LoadingSuccess;
         }else{
             LoadingFailed;
-            [indicatorView stopAnimating];
+//            [indicatorView stopAnimating];
             [qtmquitView headerEndRefreshing];
             NSLog(@"数据加载失败");
         }

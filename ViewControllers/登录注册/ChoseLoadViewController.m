@@ -298,6 +298,8 @@
 #pragma mark -获取用户数据
 -(void)getUserData
 {
+    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+    [MMProgressHUD showWithStatus:@"登陆中..."];
     NSString * url = [NSString stringWithFormat:@"%@%@", INFOAPI,[ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -332,7 +334,7 @@
                 if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
                     [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
                 }
-                LoadingSuccess;
+//                [MMProgressHUD dismissWithSuccess:@"登陆星球成功" title:nil afterDelay:0.1f];
                 
                 JDSideMenu * menu = [ControllerManager shareJDSideMenu];
 //                ChooseFamilyViewController * menu = [[ChooseFamilyViewController alloc] init];

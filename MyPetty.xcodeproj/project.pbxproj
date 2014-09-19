@@ -2094,6 +2094,8 @@
 				60186DD619B5714400207ED6 /* CateNameList.plist */,
 				603B021C1991E68B005A6D30 /* area.plist */,
 				09D9894A1935C08E00C83C4B /* MyPetty-Info.plist */,
+				497E3FCE19C841F100F0F2EC /* shopGift.plist */,
+				6032630519C1AE750013A6AA /* FAQ.plist */,
 				09D9894B1935C08E00C83C4B /* InfoPlist.strings */,
 				09D9894E1935C08E00C83C4B /* main.m */,
 				09D989501935C08E00C83C4B /* MyPetty-Prefix.pch */,

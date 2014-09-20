@@ -16,6 +16,9 @@
     UILabel *rewardLabel;
     UIImageView *rewardImage;
     UILabel *descRewardLabel;
+    UIImageView *floating1;
+    UIImageView *floating2;
+    UIImageView *floating3;
 
 }
 @property (nonatomic,retain)NSMutableArray *goodGiftDataArray;
@@ -25,6 +28,7 @@
 @property (nonatomic)NSInteger count;
 @property (nonatomic)BOOL isShaking;
 @property (nonatomic,strong)NSTimer *timer;
+@property (nonatomic)CGFloat distance;
 @property (nonatomic)BOOL isBack1;
 @property (nonatomic)BOOL isBack2;
 @property (nonatomic)BOOL isBack3;
@@ -106,17 +110,21 @@
     NSLog(@"赠送url:%@",sendString);
     httpDownloadBlock *request  = [[httpDownloadBlock alloc] initWithUrlStr:sendString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"赠送数据：%@",load.dataDict);
-        int newexp = [[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] intValue];
-        int exp = [[USER objectForKey:@"exp"] intValue];
-        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
-        if (exp != newexp && (newexp - exp)>0) {
-            int index = newexp - exp;
-            self.count--;
-            AudioServicesPlaySystemSound(soundID2);
-            self.isShaking = NO;
-            self.upView.contentOffset = CGPointMake(self.upView.frame.size.width, 0);
-            timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:3];
-            [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+        if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+            int newexp = [[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] intValue];
+            int exp = [[USER objectForKey:@"exp"] intValue];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
+            if (exp != newexp && (newexp - exp)>0) {
+                int index = newexp - exp;
+                self.count--;
+                AudioServicesPlaySystemSound(soundID2);
+                self.isShaking = NO;
+                self.upView.contentOffset = CGPointMake(self.upView.frame.size.width, 0);
+                timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:3];
+                [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+            }
+        }else{
+            [MyControl createAlertViewWithTitle:[load.dataDict objectForKey:@"errorMessage"]];
         }
     }];
     [request release];
@@ -133,6 +141,11 @@
         }
     }else{
         self.upView.contentOffset = CGPointMake(self.upView.frame.size.width*3, 0);
+        self.distance = self.upView.frame.size.width*3;
+        floating1.frame = CGRectMake(floating1.frame.origin.x+self.distance, 40, 70, 25);
+        floating2.frame = CGRectMake(floating2.frame.origin.x+self.distance, 90, 70, 25);
+        floating3.frame = CGRectMake(floating3.frame.origin.x+self.distance, 180, 70, 25);
+
     }
 }
 #pragma mark - 创建界面
@@ -171,45 +184,52 @@
     [bodyView addSubview:self.upView];
 #pragma mark - one
     //1
-    UIView *view1 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.upView.frame.size.width, self.upView.frame.size.height)];
-    [self.upView addSubview:view1];
+//    UIView *view1 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.upView.frame.size.width, self.upView.frame.size.height)];
+//    [self.upView addSubview:view1];
+//    UIView *view2 = [MyControl createViewWithFrame:CGRectMake(self.upView.frame.size.width, 0, self.upView.frame.size.width, self.upView.frame.size.height)];
+//    [self.upView addSubview:view2];
+//    UIView *view3 = [MyControl createViewWithFrame:CGRectMake(self.upView.frame.size.width*2, 0, self.upView.frame.size.width, self.upView.frame.size.height)];
+//    [self.upView addSubview:view3];
+//    UIView *view4 = [MyControl createViewWithFrame:CGRectMake(self.upView.frame.size.width*3, 0, self.upView.frame.size.width, self.upView.frame.size.height)];
+//    [self.upView addSubview:view4];
+
     
-    UIImageView *shakeBg1 = [MyControl createImageViewWithFrame:CGRectMake(0, 110, view1.frame.size.width, 200) ImageName:@"bluecloudbg.png"];
-    [view1 addSubview:shakeBg1];
-    UIImageView *floating1 = [MyControl createImageViewWithFrame:CGRectMake(230, 40, 70, 25) ImageName:@"yellowcloud.png"];
+    //    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(floatingAnimation) userInfo:nil repeats:YES];
+    CGFloat upViewWidth= self.upView.frame.size.width;
+    self.distance = 0;
+    
+    UIImageView *shakeBg1 = [MyControl createImageViewWithFrame:CGRectMake(0, 110, upViewWidth, 200) ImageName:@"bluecloudbg.png"];
+    [self.upView addSubview:shakeBg1];
+    floating1 = [MyControl createImageViewWithFrame:CGRectMake(230, 40, 70, 25) ImageName:@"yellowcloud.png"];
     floating1.tag = 30;
-    [view1 addSubview:floating1];
+    [self.upView addSubview:floating1];
     
-    UIImageView *floating2 = [MyControl createImageViewWithFrame:CGRectMake(23, 90, 70, 25) ImageName:@"yellowcloud.png"];
+    floating2 = [MyControl createImageViewWithFrame:CGRectMake(23, 90, 70, 25) ImageName:@"yellowcloud.png"];
     floating2.tag = 31;
-    [view1 addSubview:floating2];
+    [self.upView addSubview:floating2];
     
-    UIImageView *floating3 = [MyControl createImageViewWithFrame:CGRectMake(180, 180, 70, 25) ImageName:@"yellowcloud.png"];
+    floating3 = [MyControl createImageViewWithFrame:CGRectMake(180, 180, 70, 25) ImageName:@"yellowcloud.png"];
     floating3.tag = 32;
-    [view1 addSubview:floating3];
-    
-//    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(floatingAnimation) userInfo:nil repeats:YES];
-    self.timer = [NSTimer timerWithTimeInterval:0.05 target:self selector:@selector(floatingAnimation) userInfo:nil repeats:YES];
+    [self.upView addSubview:floating3];
+    self.timer = [NSTimer timerWithTimeInterval:0.02 target:self selector:@selector(floatingAnimation) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
 //    [self.timer fire];
-    UILabel *shakeDescLabel1 = [MyControl createLabelWithFrame:CGRectMake(view1.frame.size.width/2 - 115, 10, 230, 20) Font:16 Text:@"每天摇一摇，精彩礼品大放送~"];
+    UILabel *shakeDescLabel1 = [MyControl createLabelWithFrame:CGRectMake(self.upView.frame.size.width/2 - 115, 10, 230, 20) Font:16 Text:@"每天摇一摇，精彩礼品大放送~"];
     shakeDescLabel1.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel1.textColor = GRAYBLUECOLOR;
-    [view1 addSubview:shakeDescLabel1];
-    UIImageView *shakeImageView1 = [MyControl createImageViewWithFrame:CGRectMake(view1.frame.size.width/2 - 95, 65, 190, 190) ImageName:@"rock1.png"];
-    [view1 addSubview:shakeImageView1];
+    [self.upView addSubview:shakeDescLabel1];
+    UIImageView *shakeImageView1 = [MyControl createImageViewWithFrame:CGRectMake(self.upView.frame.size.width/2 - 95, 65, 190, 190) ImageName:@"rock1.png"];
+    [self.upView addSubview:shakeImageView1];
 #pragma mark - two
     //2
-    UIView *view2 = [MyControl createViewWithFrame:CGRectMake(self.upView.frame.size.width, 0, self.upView.frame.size.width, self.upView.frame.size.height)];
-    [self.upView addSubview:view2];
-    UILabel *shakeDescLabel2 = [MyControl createLabelWithFrame:CGRectMake(view2.frame.size.width/2 - 115, 10, 230, 20) Font:16 Text:@"哎吆运气不错吆~恭喜摇出"];
+    UILabel *shakeDescLabel2 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 +upViewWidth- 115, 10, 230, 20) Font:16 Text:@"哎吆运气不错吆~恭喜摇出"];
     shakeDescLabel2.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel2.textColor = GRAYBLUECOLOR;
-    [view2 addSubview:shakeDescLabel2];
-    UIImageView *rewardbg = [MyControl createImageViewWithFrame:CGRectMake(view2.frame.size.width/2-80, 50, 160, 185) ImageName:@"rewardbg.png"];
-    [view2 addSubview:rewardbg];
-    rewardLabel = [MyControl createLabelWithFrame:CGRectMake(view2.frame.size.width/2-100, 70, 200, 15) Font:16 Text:@"糖果 X 1"];
-    [view2 addSubview:rewardLabel];
+    [self.upView addSubview:shakeDescLabel2];
+    UIImageView *rewardbg = [MyControl createImageViewWithFrame:CGRectMake(self.upView.frame.size.width/2-80+upViewWidth, 50, 160, 185) ImageName:@"rewardbg.png"];
+    [self.upView addSubview:rewardbg];
+    rewardLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2-100+upViewWidth, 70, 200, 15) Font:16 Text:@"糖果 X 1"];
+    [self.upView addSubview:rewardLabel];
     rewardLabel.font = [UIFont boldSystemFontOfSize:16];
     rewardLabel.textColor = LIGHTORANGECOLOR;
     rewardLabel.textAlignment = NSTextAlignmentCenter;
@@ -221,10 +241,10 @@
     descRewardLabel.textAlignment = NSTextAlignmentCenter;
     [rewardbg addSubview:descRewardLabel];
     
-    UIImageView *share = [MyControl createImageViewWithFrame:CGRectMake(0, 265, view2.frame.size.width, 40) ImageName:@"threeshare.png"];
-    [view2 addSubview:share];
-    UIView *shareView = [MyControl createViewWithFrame:CGRectMake(view2.frame.size.width/2-195/2.0, 250, 195, 50)];
-    [view2 addSubview:shareView];
+    UIImageView *share = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth, 265, upViewWidth, 40) ImageName:@"threeshare.png"];
+    [self.upView addSubview:share];
+    UIView *shareView = [MyControl createViewWithFrame:CGRectMake(upViewWidth/2-195/2.0+upViewWidth, 250, 195, 50)];
+    [self.upView addSubview:shareView];
     for (int i = 0; i<3; i++) {
         UIButton *shareButton = [MyControl createButtonWithFrame:CGRectMake(0+shareView.frame.size.width/3 * i +(i*12), 15, 40, 40) ImageName:nil Target:self Action:@selector(shareAction:) Title:nil];
         shareButton.tag = 77+i;
@@ -233,27 +253,23 @@
     }
 #pragma mark - three
     //3
-    UIView *view3 = [MyControl createViewWithFrame:CGRectMake(self.upView.frame.size.width*2, 0, self.upView.frame.size.width, self.upView.frame.size.height)];
-    [self.upView addSubview:view3];
-    
-    UIImageView *shakeBg3 = [MyControl createImageViewWithFrame:CGRectMake(0, 150, view3.frame.size.width, 120) ImageName:@"grassnothing.png"];
-    [view3 addSubview:shakeBg3];
-    UILabel *descNoGiftLabel = [MyControl createLabelWithFrame:CGRectMake(view3.frame.size.width/2-115,10, 230, 100) Font:16 Text:@"如果上天再给我一次机会\n我会 ... 我一定会 ... \n摇到你"];
+    UIImageView *shakeBg3 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*2, 150, upViewWidth, 120) ImageName:@"grassnothing.png"];
+    [self.upView addSubview:shakeBg3];
+    UILabel *descNoGiftLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2-115+upViewWidth*2,10, 230, 100) Font:16 Text:@"如果上天再给我一次机会\n我会 ... 我一定会 ... \n摇到你"];
     descNoGiftLabel.textAlignment = NSTextAlignmentCenter;
     descNoGiftLabel.textColor = GRAYBLUECOLOR;
-    [view3 addSubview:descNoGiftLabel];
+    [self.upView addSubview:descNoGiftLabel];
 #pragma mark - four
 
     //4
-    UIView *view4 = [MyControl createViewWithFrame:CGRectMake(self.upView.frame.size.width*3, 0, self.upView.frame.size.width, self.upView.frame.size.height)];
-    [self.upView addSubview:view4];
-    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(view4.frame.size.width/2 - 115, 10, 230, 100) Font:16 Text:[NSString stringWithFormat:@"摇一摇，要到外婆桥。\n%@今天的摇一摇次数用完啦~\n换个宠物试试吧~",[self.animalInfoDict objectForKey:@"name"]]];
+    
+    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 - 115+upViewWidth*3, 10, 230, 100) Font:16 Text:[NSString stringWithFormat:@"摇一摇，要到外婆桥。\n%@今天的摇一摇次数用完啦~\n换个宠物试试吧~",[self.animalInfoDict objectForKey:@"name"]]];
     shakeDescLabel.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel.textColor = GRAYBLUECOLOR;
-    [view4 addSubview:shakeDescLabel];
-    UIImageView *shakeBg4 = [MyControl createImageViewWithFrame:CGRectMake(0, 150, view4.frame.size.width, 120) ImageName:@"grassbg.png"];
-    [view4 addSubview:shakeBg4];
-    UIImageView *shakeImageView = [MyControl createImageViewWithFrame:CGRectMake(view4.frame.size.width/2 - 50, 0, 100, 110) ImageName:@"nochance.png"];
+    [self.upView addSubview:shakeDescLabel];
+    UIImageView *shakeBg4 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*3, 150, upViewWidth, 120) ImageName:@"grassbg.png"];
+    [self.upView addSubview:shakeBg4];
+    UIImageView *shakeImageView = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 50, 0, 100, 110) ImageName:@"nochance.png"];
     [shakeBg4 addSubview:shakeImageView];
     //底部视图
 #pragma mark - bottom
@@ -316,6 +332,8 @@
 {
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
+    [self.timer invalidate];
+    self.timer = nil;
 }
 - (void)shareAction:(UIButton *)sender
 {
@@ -336,39 +354,40 @@
 #pragma mark - 浮云
 - (void)floatingAnimation
 {
-    UIImageView *floating1 = (UIImageView *)[self.view viewWithTag:30];
+    UIImageView *floatinga = (UIImageView *)[self.view viewWithTag:30];
     if (!self.isBack1) {
-        floating1.frame = CGRectMake(floating1.frame.origin.x-2, 40, 70, 25);
-        if (floating1.frame.origin.x<=0) {
+        floatinga.frame = CGRectMake(floatinga.frame.origin.x-1, 40, 70, 25);
+        if (floatinga.frame.origin.x<=0+self.distance) {
             self.isBack1 = YES;
         }
     }else{
-        floating1.frame = CGRectMake(floating1.frame.origin.x+2, 40, 70, 25);
-        if (floating1.frame.origin.x > 230) {
+        floatinga.frame = CGRectMake(floatinga.frame.origin.x+1, 40, 70, 25);
+        if (floatinga.frame.origin.x > 230+self.distance) {
             self.isBack1 = NO;
         }
     }
-    UIImageView *floating2 = (UIImageView *)[self.view viewWithTag:31];
+    UIImageView *floatingb = (UIImageView *)[self.view viewWithTag:31];
     if (self.isBack2) {
-        floating2.frame =CGRectMake(floating2.frame.origin.x+1, 90, 70, 25);
-        if (floating2.frame.origin.x >240) {
+        floatingb.frame =CGRectMake(floatingb.frame.origin.x+0.5, 90, 70, 25);
+        if (floatingb.frame.origin.x >240+self.distance) {
             self.isBack2 = NO;
         }
     }else{
-        floating2.frame =CGRectMake(floating2.frame.origin.x-1, 90, 70, 25);
-        if (floating2.frame.origin.x <0) {
+        floatingb.frame =CGRectMake(floatingb.frame.origin.x-0.5, 90, 70, 25);
+        if (floatingb.frame.origin.x <0+self.distance) {
             self.isBack2 = YES;
         }
     }
-    UIImageView *floating3 = (UIImageView *)[self.view viewWithTag:32];
+    
+    UIImageView *floatingc = (UIImageView *)[self.view viewWithTag:32];
     if (self.isBack3) {
-        floating3.frame =CGRectMake(floating3.frame.origin.x-1.5, 180, 70, 25);
-        if (floating3.frame.origin.x <0) {
+        floatingc.frame =CGRectMake(floatingc.frame.origin.x-0.75, 180, 70, 25);
+        if (floatingc.frame.origin.x <0+self.distance) {
             self.isBack3 = NO;
         }
     }else{
-        floating3.frame =CGRectMake(floating3.frame.origin.x+1.5, 180, 70, 25);
-        if (floating3.frame.origin.x >240) {
+        floatingc.frame =CGRectMake(floatingc.frame.origin.x+0.75, 180, 70, 25);
+        if (floatingc.frame.origin.x >240+self.distance) {
             self.isBack3 = YES;
         }
     }

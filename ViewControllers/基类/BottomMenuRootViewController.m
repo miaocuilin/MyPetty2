@@ -12,7 +12,7 @@
 #import "TouchViewController.h"
 #import "ShakeViewController.h"
 #import "ShoutViewController.h"
-#import "CallViewController.h"
+#import "RecordViewController.h"
 #import "WalkAndTeaseViewController.h"
 #import "QuickGiftViewController.h"
 #import "RockViewController.h"
@@ -47,7 +47,7 @@
 NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALINFOAPI,aid,animalInfoSig,[ControllerManager getSID]];
 //    NSLog(@"宠物信息API:%@",animalInfo);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalInfo Block:^(BOOL isFinish, httpDownloadBlock *load) {
-//        NSLog(@"宠物信息：%@",load.dataDict);
+        NSLog(@"宠物信息：%@",load.dataDict);
         if (isFinish) {
             self.masterID =[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"];
             if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
@@ -57,29 +57,29 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
             }
             self.animalInfoDict = [load.dataDict objectForKey:@"data"];
             self.shakeInfoDict = [load.dataDict objectForKey:@"data"];
-            NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [self.animalInfoDict objectForKey:@"aid"]];
-            
-            UIImage *image =[UIImage imageWithContentsOfFile:pngFilePath];
-            if (image) {
-                [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
-            }else{
-                httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                    if (isFinish) {
-                        if (load.dataImage == NULL) {
-                            [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
-                        }else{
+            if (!([[[load.dataDict objectForKey:@"data"] objectForKey:@"tx"] length]== 0 ||[[[load.dataDict objectForKey:@"data"] objectForKey:@"tx"] isKindOfClass:[NSNull class]]) ) {
+                NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [self.animalInfoDict objectForKey:@"aid"]];
+                
+                UIImage *image =[UIImage imageWithContentsOfFile:pngFilePath];
+                if (image) {
+                    [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
+                }else{
+                    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                        if (isFinish) {
                             [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
                             [load.data writeToFile:pngFilePath atomically:YES];
                         }
-                    }
-                }];
-                [request release];
+                    }];
+                    [request release];
+                }
+            }else{
+                [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
             }
 
-            
-            
-            if ([self.masterID isEqualToString:[USER objectForKey:@"usr_id"]]){
+            if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]){
                 self.label3.text = @"叫一叫";
+            }else{
+                self.label3.text = @"摸一摸";
             }
 
         }
@@ -207,7 +207,8 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     
     NSLog(@"录音和摸一摸");
     if ([[self.animalInfoDict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
-        ShoutViewController *shout = [[ShoutViewController alloc] init];
+//        ShoutViewController *shout = [[ShoutViewController alloc] init];
+        RecordViewController *shout = [[RecordViewController alloc] init];
         shout.animalInfoDict = self.animalInfoDict;
         [self addChildViewController:shout];
         [shout release];

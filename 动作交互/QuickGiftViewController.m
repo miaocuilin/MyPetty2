@@ -230,6 +230,7 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"indexPath.item:%d",indexPath.item);
+    GiftShopModel *model = self.giftDataArray[indexPath.item];
     if (self.shopGiftCount > indexPath.item) {
         [self sendGiftData:0];
     }else{

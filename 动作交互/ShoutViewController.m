@@ -41,6 +41,8 @@
     [super viewDidLoad];
     [self backgroundView];
     [self loadIsRecorderData];
+    NSLog(@"animalinfo:%@",self.animalInfoDict);
+
     // Do any additional setup after loading the view.
 }
 
@@ -328,25 +330,21 @@
     UIView *downView = [MyControl createViewWithFrame:CGRectMake(0, bodyView.frame.size.height-70, bodyView.frame.size.width, 70)];
     [bodyView addSubview:downView];
     
-    UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"cat2.jpg"];
-    NSString *animalHeadPath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[USER objectForKey:@"a_tx"]]];
-    UIImage *headImage = [UIImage imageWithContentsOfFile:animalHeadPath];
-    if (headImage) {
-        headImageView.image = headImage;
-    }else{
-        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[USER objectForKey:@"a_tx"]] Block:^(BOOL isFinsh, httpDownloadBlock *load) {
-            if (isFinsh) {
-                
-                if (load.dataImage == NULL) {
-                    headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-                }else{
-                    NSString *headFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[USER objectForKey:@"a_tx"]]];
+    UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
+    if (!([[self.animalInfoDict objectForKey:@"tx"] length]==0 || [[self.animalInfoDict objectForKey:@"tx"] isKindOfClass:[NSNull class]])) {
+        NSString *animalHeadPath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
+        UIImage *headImage = [UIImage imageWithContentsOfFile:animalHeadPath];
+        if (headImage) {
+            headImageView.image = headImage;
+        }else{
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinsh, httpDownloadBlock *load) {
+                if (isFinsh) {
                     headImageView.image = load.dataImage;
-                    [load.data writeToFile:headFilePath atomically:YES];
+                    [load.data writeToFile:animalHeadPath atomically:YES];
                 }
-            }
-        }];
-        [request release];
+            }];
+            [request release];
+        }
     }
     headImageView.layer.cornerRadius = 28;
     headImageView.layer.masksToBounds = YES;
@@ -355,8 +353,7 @@
     UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:headImageView.frame ImageName:@"head_cricle.png"];
     [downView addSubview:cricleHeadImageView];
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 5, 200, 20) Font:12 Text:nil];
-    
-    NSAttributedString *helpPetString = [self firstString:@"让叫一叫" formatString:[USER objectForKey:@"a_name"] insertAtIndex:1];
+    NSAttributedString *helpPetString = [self firstString:@"让叫一叫" formatString:[self.animalInfoDict objectForKey:@"name"] insertAtIndex:1];
     helpPetLabel.attributedText = helpPetString;
     [helpPetString release];
     [downView addSubview:helpPetLabel];

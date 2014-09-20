@@ -378,6 +378,7 @@ static LevelRank *levelAndRank =nil;
 //    [HUD show:YES];
 //}
 
+#pragma mark - 返回方法
 +(NSString *)returnCateNameWithType:(NSString *)type
 {
     NSString * str = nil;
@@ -418,7 +419,7 @@ static LevelRank *levelAndRank =nil;
         return [NSString stringWithFormat:@"%@ | %@", province, city];
     }
 }
-#pragma mark -
+//#pragma mark -
 +(NSDictionary *)returnGiftDictWithItemId:(NSString *)itemId
 {
     NSMutableArray * array = [NSMutableArray arrayWithCapacity:0];

@@ -14,10 +14,8 @@
 #import "InfoModel.h"
 #import "MJRefresh.h"
 
-@interface FavoriteViewController () <MONActivityIndicatorViewDelegate>
-{
-    MONActivityIndicatorView *  indicatorView;
-}
+@interface FavoriteViewController ()
+
 @end
 
 @implementation FavoriteViewController
@@ -71,10 +69,10 @@
 //    self.menuBgView.frame = CGRectMake(50, self.view.frame.size.height-40, 220, 80);
 }
 
--(UIColor *)activityIndicatorView:(MONActivityIndicatorView *)activityIndicatorView circleBackgroundColorAtIndex:(NSUInteger)index
-{
-    return BGCOLOR;
-}
+//-(UIColor *)activityIndicatorView:(MONActivityIndicatorView *)activityIndicatorView circleBackgroundColorAtIndex:(NSUInteger)index
+//{
+//    return BGCOLOR;
+//}
 -(void)loadData
 {
     StartLoading;
@@ -159,7 +157,7 @@
                 [tv headerEndRefreshing];
                 [tv footerEndRefreshing];
 
-                [indicatorView stopAnimating];
+//                [indicatorView stopAnimating];
                 [tv reloadData];
 //                count = 0;
 //                for(int i=0;i<self.dataArray.count;i++){
@@ -172,14 +170,14 @@
                 }
                 if(count <= 2){
                     [self createTableView];
-                    [self.view bringSubviewToFront:indicatorView];
+//                    [self.view bringSubviewToFront:indicatorView];
                 }
                 self.view.userInteractionEnabled = YES;
                 [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
             }else{
                 if (count == 2 && self.dataArray.count>2) {
                     [self createTableView];
-                    [self.view bringSubviewToFront:indicatorView];
+//                    [self.view bringSubviewToFront:indicatorView];
                     self.view.userInteractionEnabled = NO;
                 }
                 NSLog(@"%d", count);
@@ -190,7 +188,7 @@
         }else{
             LoadingFailed;
             self.view.userInteractionEnabled = YES;
-            [indicatorView stopAnimating];
+//            [indicatorView stopAnimating];
             NSLog(@"用户信息数据加载失败");
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         }
@@ -226,7 +224,7 @@
 }
 -(void)loadMorePhotos
 {
-    [indicatorView startAnimating];
+//    [indicatorView startAnimating];
     self.view.userInteractionEnabled = NO;
     
     NSString * str = [NSString stringWithFormat:@"img_id=%@dog&cat", [self.dataArray[self.dataArray.count-1] img_id]];
@@ -239,7 +237,7 @@
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             if(array.count == 0){
                 [tv footerEndRefreshing];
-                [indicatorView stopAnimating];
+//                [indicatorView stopAnimating];
                 self.view.userInteractionEnabled = YES;
                 return;
             }
@@ -266,12 +264,12 @@
             }else{
                 NET = NO;
                 //                [self alertNull];
-                [indicatorView stopAnimating];
+//                [indicatorView stopAnimating];
             }
             NSLog(@"%d", count);
             //            [tv reloadData];
         }else{
-            [indicatorView stopAnimating];
+//            [indicatorView stopAnimating];
             NSLog(@"数据加载失败。");
             NET = NO;
         }

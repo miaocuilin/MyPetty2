@@ -20,7 +20,7 @@
     #import "ControllerManager.h"
     #import "UIImageView+WebCache.h"
     #import "UIImage+UIImageExtras.h"
-    #import "MONActivityIndicatorView.h"
+//    #import "MONActivityIndicatorView.h"
     #import "MJRefresh.h"
     #import "MMProgressHUD.h"
     #import "UMSocial.h"
@@ -92,7 +92,7 @@
     //用户关注列表：
     #define USERATTENTIONLISTAPI @"http://54.199.161.210:8001/index.php?r=user/followingApi&usr_id="
     //用户活动列表：
-    #define USERACTIVITYLISTAPI @"http://54.199.161.210:8001/index.php?r=user/topicApi&usr_id="
+    #define USERACTLISTAPI @"http://54.199.161.210:8001/index.php?r=user/topicApi&usr_id="
     //用户物品列表：
     #define USERGOODSLISTAPI @"http://54.199.161.210:8001/index.php?r=user/itemsApi&usr_id="
     /***************************/
@@ -117,6 +117,8 @@
     //获取宠物信息API
     #define PETINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/infoApi&aid="
 
+    /*********活动详情*************/
+    #define PETLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/othersApi&aids="
     //获取用户照片API
     #define IMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     #define IMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
@@ -181,7 +183,6 @@
 
     //活动页面API
     #define TOPICLISTAPI @"http://54.199.161.210:8001/index.php?r=topic/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-#define USERTOPICLISTAPI @""
 
     //活动图片请求API
     #define TOPICIMAGEAPI @"http://54.199.161.210/dc/images/topic/"
@@ -194,11 +195,15 @@
     #define POPULARAPI2 @"http://54.199.161.210:8001/index.php?r=topic/popularApi&topic_id=%@&img_id="
 
     //最新
-    #define NEWESTAPI @"http://54.199.161.210/dc/index.php?r=topic/newestApi&topic_id="
-    #define NEWESTAPI2 @"http://54.199.161.210/dc/index.php?r=topic/newestApi&topic_id=%@&img_id="
+    #define NEWESTAPI @"http://54.199.161.210:8001/index.php?r=topic/newestApi&topic_id="
+    #define NEWESTAPI2 @"http://54.199.161.210:8001/index.php?r=topic/newestApi&topic_id=%@&img_id="
+
+    //活动排名
+    #define ACTRANKLISTAPI @"http://54.199.161.210:8001/index.php?r=topic/rankApi&topic_id="
+    #define ACTRANKLISTAPI2 @"http://54.199.161.210:8001/index.php?r=topic/rankApi&topic_id="
 
     //奖品
-    #define REWARDAPI @"http://54.199.161.210/dc/index.php?r=topic/rewardApi&topic_id="
+    #define REWARDAPI @"http://54.199.161.210:8001/index.php?r=topic/rewardApi&topic_id="
 
     //消息列表 mail_id=&is_system=
     #define NOTIFYAPI @"http://54.199.161.210:8001/index.php?r=talk/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="

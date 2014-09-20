@@ -22,47 +22,57 @@
 
 -(void)makeUI
 {
-    headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 15, 40, 40) ImageName:@"13-1.png"];
-    headImageView.layer.cornerRadius = 20;
-    headImageView.layer.masksToBounds = YES;
-    [self.contentView addSubview:headImageView];
+    headImageBtn = [MyControl createButtonWithFrame:CGRectMake(15, 15, 40, 40) ImageName:@"defaultPetHead.png" Target:self Action:@selector(headImageBtnClick) Title:nil];
+    headImageBtn.layer.cornerRadius = 20;
+    headImageBtn.layer.masksToBounds = YES;
+    [self.contentView addSubview:headImageBtn];
     
-    sexImageView = [MyControl createImageViewWithFrame:CGRectMake(55, 12, 25, 25) ImageName:@""];
+    sexImageView = [MyControl createImageViewWithFrame:CGRectMake(65, 15, 14, 17) ImageName:@"man.png"];
     [self.contentView addSubview:sexImageView];
     
-    nameLabel = [MyControl createLabelWithFrame:CGRectMake(80, 15, 150, 20) Font:17 Text:nil];
+    nameLabel = [MyControl createLabelWithFrame:CGRectMake(80, 15, 150, 20) Font:16 Text:nil];
     nameLabel.textColor = BGCOLOR;
-    nameLabel.font = [UIFont boldSystemFontOfSize:17];
+//    nameLabel.font = [UIFont boldSystemFontOfSize:17];
     [self.contentView addSubview:nameLabel];
     
-    cateAndNameLabel = [MyControl createLabelWithFrame:CGRectMake(55, 40, 200, 20) Font:15 Text:nil];
+    cateAndNameLabel = [MyControl createLabelWithFrame:CGRectMake(65, 35, 200, 20) Font:14 Text:nil];
     cateAndNameLabel.textColor = [UIColor grayColor];
     [self.contentView addSubview:cateAndNameLabel];
-     
+    
+    UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 64, self.contentView.frame.size.width, 1)];
+    line.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:line];
+    
+    attentionBtn = [MyControl createButtonWithFrame:CGRectMake(510/2, 18, 50, 29) ImageName:@"addAttention.png" Target:self Action:@selector(attentionBtnClick:) Title:nil];
+    [attentionBtn setBackgroundImage:[UIImage imageNamed:@"didAttention.png"] forState:UIControlStateSelected];
+    [self.contentView addSubview:attentionBtn];
 }
 
--(void)configUI:(InfoModel *)model
+-(void)configUI:(PetInfoModel *)model
 {
+    attentionBtn.selected = NO;
+    self.aid = model.aid;
+    if ([model.is_follow intValue] == 1) {
+        attentionBtn.selected = YES;
+    }
     
-//    [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", TXURL, model.tx]] placeholderImage:[UIImage imageNamed:@"13-1.png"]];
     NSString * docDir = DOCDIR;
     NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
     UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txFilePath]];
     if (image) {
-        headImageView.image = image;
+        [headImageBtn setBackgroundImage:image forState:UIControlStateNormal];
     }else{
         [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 //本地目录，用于存放favorite下载的原图
-                NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                //                    NSLog(@"docDir:%@", docDir);
+                NSString * docDir = DOCDIR;
                 if (!docDir) {
                     NSLog(@"Documents 目录未找到");
                 }else{
                     NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
                     //将下载的图片存放到本地
                     [load.data writeToFile:txFilePath atomically:YES];
-                    headImageView.image = load.dataImage;
+                    [headImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
                 }
             }else{
             }
@@ -70,59 +80,54 @@
     }
     
     if ([model.gender intValue] == 2) {
-        sexImageView.image = [UIImage imageNamed:@"3-4.png"];
-    }else{
-        sexImageView.image = [UIImage imageNamed:@"3-6.png"];
+        sexImageView.image = [UIImage imageNamed:@"woman.png"];
     }
+    
     nameLabel.text = model.name;
     
-    int a = [model.type intValue];
-    NSLog(@"%@--%d", [USER objectForKey:@"type"], a);
-    NSString * cateName = nil;
-    
-    if (a/100 == 1) {
-        cateName = [[[USER objectForKey:@"CateNameList"]objectForKey:@"1"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-    }else if(a/100 == 2){
-        cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"2"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-    }else if(a/100 == 3){
-        cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"3"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-    }else{
-        cateName = @"未知物种";
-    }
-    if (cateName == nil) {
-        //更新本地宠物名单列表
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TYPEAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"CateNameList"];
-                NSString * path = [DOCDIR stringByAppendingPathComponent:@"CateNameList.plist"];
-                NSMutableDictionary * data = [load.dataDict objectForKey:@"data"];
-                //本地及内存存储
-                [data writeToFile:path atomically:YES];
-                [USER setObject:data forKey:@"CateNameList"];
-                int a = [[USER objectForKey:@"type"] intValue];
-                NSString * cateName = nil;
-                
-                if (a/100 == 1) {
-                    cateName = [[[USER objectForKey:@"CateNameList"]objectForKey:@"1"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-                }else if(a/100 == 2){
-                    cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"2"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-                }else if(a/100 == 3){
-                    cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"3"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-                }else{
-                    cateName = @"未知物种";
-                }
-                cateAndNameLabel.text = [NSString stringWithFormat:@"%@ | %@岁", cateName, model.age];
-            }
-        }];
-        
-    }else{
-        cateAndNameLabel.text = [NSString stringWithFormat:@"%@ | %@岁", cateName, model.age];
-    }
-//    cateAndNameLabel.text = [NSString stringWithFormat:@"西伯利亚森林猫 | %@岁", model.age];
-//    attentionButton.selected = arc4random()%2;
-//    self.usr_id = model.usr_id;
+    cateAndNameLabel.text = [NSString stringWithFormat:@"%@ | %@岁", [ControllerManager returnCateNameWithType:model.type], model.age];
 }
 
+-(void)headImageBtnClick
+{
+    self.jumpToPetInfo(self.aid);
+}
+-(void)attentionBtnClick:(UIButton *)btn
+{
+    if (!btn.selected) {
+        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
+        NSString * sig = [MyMD5 md5:code];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", FOLLOWAPI, self.aid, sig, [ControllerManager getSID]];
+        NSLog(@"url:%@", url);
+        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+        [MMProgressHUD showWithStatus:@"关注中..."];
+        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                [MMProgressHUD dismissWithSuccess:@"关注成功" title:nil afterDelay:1];
+                btn.selected = YES;
+            }else{
+                [MMProgressHUD dismissWithError:@"关注失败" afterDelay:1];
+            }
+        }];
+    }else{
+        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
+        NSString * sig = [MyMD5 md5:code];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNFOLLOWAPI, self.aid, sig, [ControllerManager getSID]];
+        NSLog(@"unfollowApiurl:%@", url);
+        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+        [MMProgressHUD showWithStatus:@"取消关注中..."];
+        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                [MMProgressHUD dismissWithSuccess:@"取消关注成功" title:nil afterDelay:1];
+                btn.selected = NO;
+            }else{
+                [MMProgressHUD dismissWithError:@"取消关注失败" afterDelay:1];
+            }
+        }];
+    }
+}
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];

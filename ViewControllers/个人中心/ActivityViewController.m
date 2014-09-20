@@ -106,7 +106,7 @@
     NSLog(@"%@%@",TOPICLISTAPI,[ControllerManager getSID]);
     [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TOPICLISTAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"topicList:%@", load.dataDict);
+//            NSLog(@"topicList:%@", load.dataDict);
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
                 TopicListModel * model = [[TopicListModel alloc] init];

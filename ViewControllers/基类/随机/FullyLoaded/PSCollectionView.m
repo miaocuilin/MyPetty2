@@ -23,7 +23,7 @@
 
 #import "PSCollectionView.h"
 
-#define kMargin 8.0
+#define kMargin 4.0
 
 static inline NSString * PSCollectionKeyForIndex(NSInteger index) {
     return [NSString stringWithFormat:@"%d", index];

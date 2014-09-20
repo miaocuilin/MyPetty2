@@ -26,6 +26,7 @@
     [_u_name release];
     [_u_rank release];
     [_u_tx release];
+    [_is_follow release];
     [super dealloc];
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key

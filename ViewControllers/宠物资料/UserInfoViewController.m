@@ -116,6 +116,22 @@
     }];
     [request release];
 }
+-(void)loadActData
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERACTLISTAPI, self.usr_id, sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            
+            [tv3 reloadData];
+        }else{
+            
+        }
+    }];
+    [request release];
+}
 -(void)loadBagData
 {
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
@@ -638,11 +654,11 @@
     }else if(a == 202) {
         if (!isCreated[a-200]) {
             [self createTableView3];
+//            [self loadActData];
         }
     }else{
         if (!isCreated[a-200]) {
             [self loadBagData];
-            
         }
     }
 }

@@ -12,10 +12,8 @@
 #import "DetailViewController.h"
 #define DARKGRAY [UIColor darkGrayColor]
 #import "TalkViewController.h"
-@interface OtherHomeViewController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIAlertViewDelegate,UIAlertViewDelegate,MONActivityIndicatorViewDelegate>
-{
-    MONActivityIndicatorView * indicatorView;
-}
+@interface OtherHomeViewController ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UIAlertViewDelegate,UIAlertViewDelegate>
+
 @end
 
 @implementation OtherHomeViewController
@@ -46,22 +44,22 @@
 }
 
 #pragma mark - 改变loading动画颜色
--(UIColor *)activityIndicatorView:(MONActivityIndicatorView *)activityIndicatorView circleBackgroundColorAtIndex:(NSUInteger)index
-{
-    return BGCOLOR;
-}
+//-(UIColor *)activityIndicatorView:(MONActivityIndicatorView *)activityIndicatorView circleBackgroundColorAtIndex:(NSUInteger)index
+//{
+//    return BGCOLOR;
+//}
 -(void)loadUserData
 {
     //Loading界面开始启动
-    indicatorView = [[MONActivityIndicatorView alloc] init];
-    indicatorView.delegate = self;
-    indicatorView.numberOfCircles = 4;
-    indicatorView.radius = 10;
-    indicatorView.internalSpacing = 3;
+//    indicatorView = [[MONActivityIndicatorView alloc] init];
+//    indicatorView.delegate = self;
+//    indicatorView.numberOfCircles = 4;
+//    indicatorView.radius = 10;
+//    indicatorView.internalSpacing = 3;
 //    indicatorView.center = CGPointMake(320/2, (self.view.frame.size.height-[MyControl isIOS7])/2-[MyControl isIOS7]/2);
-    indicatorView.center = self.view.center;
-    [self.view addSubview:indicatorView];
-    [indicatorView startAnimating];
+//    indicatorView.center = self.view.center;
+//    [self.view addSubview:indicatorView];
+//    [indicatorView startAnimating];
     
     NSString * code = [NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id];
     NSString * sig = [MyMD5 md5:code];
@@ -85,14 +83,14 @@
             [model release];
             [self loadData];
         }else{
-            [indicatorView stopAnimating];
+//            [indicatorView stopAnimating];
             NSLog(@"用户信息下载失败");
         }
     }];
 }
 -(void)loadData
 {
-    [indicatorView startAnimating];
+//    [indicatorView startAnimating];
     NSString * code = [NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id];
     NSString * sig = [MyMD5 md5:code];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", OTHERIMAGESAPI, self.usr_id, sig, [ControllerManager getSID]];
@@ -113,12 +111,12 @@
             [self createTableView];
 //            [self createHeader];
 //            [tv reloadData];
-            [indicatorView stopAnimating];
+//            [indicatorView stopAnimating];
             [tv headerEndRefreshing];
             self.view.userInteractionEnabled = YES;
         }else{
             self.view.userInteractionEnabled = YES;
-            [indicatorView stopAnimating];
+//            [indicatorView stopAnimating];
             [tv headerEndRefreshing];
             NSLog(@"用户图片下载失败");
         }
@@ -171,7 +169,7 @@
 }
 -(void)loadMorePhotos
 {
-    [indicatorView startAnimating];
+//    [indicatorView startAnimating];
     self.view.userInteractionEnabled = NO;
     
     NSString * str = [NSString stringWithFormat:@"img_id=%@&usr_id=%@dog&cat", [self.dataArray[self.dataArray.count-1] img_id], [self.userDataArray[0] usr_id]];
@@ -187,13 +185,13 @@
                 [self.dataArray addObject:model];
                 [model release];
             }
-            [indicatorView stopAnimating];
+//            [indicatorView stopAnimating];
             self.view.userInteractionEnabled = YES;
             [tv reloadData];
             [tv footerEndRefreshing];
         }else{
             self.view.userInteractionEnabled = YES;
-            [indicatorView stopAnimating];
+//            [indicatorView stopAnimating];
             [tv footerEndRefreshing];
             NSLog(@"数据加载失败。");
         }

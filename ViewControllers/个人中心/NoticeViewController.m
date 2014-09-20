@@ -456,31 +456,31 @@
         }
     }];
 }
--(void)loadSystemData
-{
-    NSString * code = [NSString stringWithFormat:@"is_system=%ddog&cat", 1];
-    NSString * sig = [MyMD5 md5:code];
-    NSString * url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", NOTIFYAPI, 1, sig, [ControllerManager getSID]];
-    NSLog(@"systemAPI:%@", url);
-    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        if (isFinish) {
-            NSLog(@"systemData:%@", load.dataDict);
-            [self.systemDataArray removeAllObjects];
-            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-            for (NSDictionary * dict in array) {
-                SystemMessageListModel * model = [[SystemMessageListModel alloc] init];
-                [model setValuesForKeysWithDictionary:dict];
-                [self.systemDataArray addObject:model];
-                [model release];
-            }
-            [systemTableView headerEndRefreshing];
-            [systemTableView reloadData];
-        }else{
-            NSLog(@"系统数据读取失败");
-            [systemTableView headerEndRefreshing];
-        }
-    }];
-}
+//-(void)loadSystemData
+//{
+//    NSString * code = [NSString stringWithFormat:@"is_system=%ddog&cat", 1];
+//    NSString * sig = [MyMD5 md5:code];
+//    NSString * url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", NOTIFYAPI, 1, sig, [ControllerManager getSID]];
+//    NSLog(@"systemAPI:%@", url);
+//    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            NSLog(@"systemData:%@", load.dataDict);
+//            [self.systemDataArray removeAllObjects];
+//            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+//            for (NSDictionary * dict in array) {
+//                SystemMessageListModel * model = [[SystemMessageListModel alloc] init];
+//                [model setValuesForKeysWithDictionary:dict];
+//                [self.systemDataArray addObject:model];
+//                [model release];
+//            }
+//            [systemTableView headerEndRefreshing];
+//            [systemTableView reloadData];
+//        }else{
+//            NSLog(@"系统数据读取失败");
+//            [systemTableView headerEndRefreshing];
+//        }
+//    }];
+//}
 -(void)loadMoreMessageData
 {
     if (self.messageDataArray.count == 0) {
@@ -507,32 +507,32 @@
         }
     }];
 }
--(void)loadMoreSystemData
-{
-    if (self.systemDataArray.count == 0) {
-        [systemTableView footerEndRefreshing];
-        return;
-    }
-    NSString * code = [NSString stringWithFormat:@"is_system=%d&mail_id=%@dog&cat", 1, [self.systemDataArray[self.systemDataArray.count-1] mail_id]];
-    NSString * sig = [MyMD5 md5:code];
-    NSString * url = [NSString stringWithFormat:@"%@%d&mail_id=%@&sig=%@&SID=%@", NOTIFYAPI, 1, [self.systemDataArray[self.systemDataArray.count-1] mail_id], sig, [ControllerManager getSID]];
-    NSLog(@"systemMoreAPI:%@", url);
-    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        if (isFinish) {
-            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-            for (NSDictionary * dict in array) {
-                SystemMessageListModel * model = [[SystemMessageListModel alloc] init];
-                [model setValuesForKeysWithDictionary:dict];
-                [self.systemDataArray addObject:model];
-                [model release];
-            }
-            [systemTableView footerEndRefreshing];
-            [systemTableView reloadData];
-        }else{
-            NSLog(@"系统数据读取失败");
-        }
-    }];
-}
+//-(void)loadMoreSystemData
+//{
+//    if (self.systemDataArray.count == 0) {
+//        [systemTableView footerEndRefreshing];
+//        return;
+//    }
+//    NSString * code = [NSString stringWithFormat:@"is_system=%d&mail_id=%@dog&cat", 1, [self.systemDataArray[self.systemDataArray.count-1] mail_id]];
+//    NSString * sig = [MyMD5 md5:code];
+//    NSString * url = [NSString stringWithFormat:@"%@%d&mail_id=%@&sig=%@&SID=%@", NOTIFYAPI, 1, [self.systemDataArray[self.systemDataArray.count-1] mail_id], sig, [ControllerManager getSID]];
+//    NSLog(@"systemMoreAPI:%@", url);
+//    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+//            for (NSDictionary * dict in array) {
+//                SystemMessageListModel * model = [[SystemMessageListModel alloc] init];
+//                [model setValuesForKeysWithDictionary:dict];
+//                [self.systemDataArray addObject:model];
+//                [model release];
+//            }
+//            [systemTableView footerEndRefreshing];
+//            [systemTableView reloadData];
+//        }else{
+//            NSLog(@"系统数据读取失败");
+//        }
+//    }];
+//}
 
 - (void)createNavgation
 {
@@ -594,47 +594,47 @@
     NSLog(@"搜索");
 }
 
-- (void)createDivision
-{
-    UIView *ViewButton = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, 35)];
-    [self.view addSubview:ViewButton];
-    
-    UIView * alphaView = [MyControl createViewWithFrame:ViewButton.bounds];
-    alphaView.alpha = 0.85;
-    alphaView.backgroundColor = BGCOLOR;
-    [ViewButton addSubview:alphaView];
-    
-    messageLabel = [MyControl createLabelWithFrame:CGRectMake(32, 5, 100, 26) Font:15 Text:@"私信"];
-    messageLabel.backgroundColor = SelectedColor;
-    messageLabel.textAlignment = NSTextAlignmentCenter;
-    messageLabel.layer.cornerRadius = 5;
-    messageLabel.layer.masksToBounds = YES;
-    [ViewButton addSubview:messageLabel];
-    
-    messageButton = [MyControl createButtonWithFrame:CGRectMake(32, 5, 100, 26) ImageName:nil Target:self Action:@selector(messageClick:) Title:nil];
-    
-//    messageButton.selected = YES;
-    [ViewButton addSubview:messageButton];
-    
-    systemLabel = [MyControl createLabelWithFrame:CGRectMake(190, 5, 100, 26) Font:15 Text:@"评论"];
-    systemLabel.textAlignment = NSTextAlignmentCenter;
-    systemLabel.layer.cornerRadius = 5;
-    systemLabel.layer.masksToBounds = YES;
-    [ViewButton addSubview:systemLabel];
-    
-    systemButton = [MyControl createButtonWithFrame:CGRectMake(190, 5, 100, 26) ImageName:nil Target:self Action:@selector(systemClick:) Title:nil];
-    [ViewButton addSubview:systemButton];
-    
-//    UIImageView *line = [MyControl createImageViewWithFrame:CGRectMake(0, 39, self.view.frame.size.width, 1) ImageName:@"31-2.png"];
-//    [self.view addSubview:line];
-}
-
-- (void)changeBackgroundColor
-{
-    UIColor *Temp = messageLabel.backgroundColor;
-    messageLabel.backgroundColor = systemLabel.backgroundColor;
-    systemLabel.backgroundColor = Temp;
-}
+//- (void)createDivision
+//{
+//    UIView *ViewButton = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, 35)];
+//    [self.view addSubview:ViewButton];
+//    
+//    UIView * alphaView = [MyControl createViewWithFrame:ViewButton.bounds];
+//    alphaView.alpha = 0.85;
+//    alphaView.backgroundColor = BGCOLOR;
+//    [ViewButton addSubview:alphaView];
+//    
+//    messageLabel = [MyControl createLabelWithFrame:CGRectMake(32, 5, 100, 26) Font:15 Text:@"私信"];
+//    messageLabel.backgroundColor = SelectedColor;
+//    messageLabel.textAlignment = NSTextAlignmentCenter;
+//    messageLabel.layer.cornerRadius = 5;
+//    messageLabel.layer.masksToBounds = YES;
+//    [ViewButton addSubview:messageLabel];
+//    
+//    messageButton = [MyControl createButtonWithFrame:CGRectMake(32, 5, 100, 26) ImageName:nil Target:self Action:@selector(messageClick:) Title:nil];
+//    
+////    messageButton.selected = YES;
+//    [ViewButton addSubview:messageButton];
+//    
+//    systemLabel = [MyControl createLabelWithFrame:CGRectMake(190, 5, 100, 26) Font:15 Text:@"评论"];
+//    systemLabel.textAlignment = NSTextAlignmentCenter;
+//    systemLabel.layer.cornerRadius = 5;
+//    systemLabel.layer.masksToBounds = YES;
+//    [ViewButton addSubview:systemLabel];
+//    
+//    systemButton = [MyControl createButtonWithFrame:CGRectMake(190, 5, 100, 26) ImageName:nil Target:self Action:@selector(systemClick:) Title:nil];
+//    [ViewButton addSubview:systemButton];
+//    
+////    UIImageView *line = [MyControl createImageViewWithFrame:CGRectMake(0, 39, self.view.frame.size.width, 1) ImageName:@"31-2.png"];
+////    [self.view addSubview:line];
+//}
+//
+//- (void)changeBackgroundColor
+//{
+//    UIColor *Temp = messageLabel.backgroundColor;
+//    messageLabel.backgroundColor = systemLabel.backgroundColor;
+//    systemLabel.backgroundColor = Temp;
+//}
 
 - (void)createTableView
 {

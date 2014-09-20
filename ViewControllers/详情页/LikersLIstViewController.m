@@ -8,9 +8,8 @@
 
 #import "LikersLIstViewController.h"
 #import "AttentionCell.h"
-#import "InfoModel.h"
-#import "MyHomeViewController.h"
-#import "OtherHomeViewController.h"
+#import "PetInfoModel.h"
+#import "PetInfoViewController.h"
 @interface LikersLIstViewController ()
 
 @end
@@ -30,43 +29,71 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor whiteColor];
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
-    [self makeNavigation];
+    [self createBg];
+    [self createFakeNavgation];
     [self loadData];
+    
 }
 
-#pragma mark -创建导航
--(void)makeNavigation
+-(void)createBg
 {
-//    self.navigationController.navigationBar.translucent = YES;
-    self.navigationController.navigationBar.translucent = NO;
-    self.navigationItem.title = @"参与用户";
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-    if (iOS7) {
-        self.navigationController.navigationBar.barTintColor = BGCOLOR;
-    }else{
-        self.navigationController.navigationBar.tintColor = BGCOLOR;
-    }
-    UIButton * button1 = [MyControl createButtonWithFrame:CGRectMake(0, 0, 56/2, 56/2) ImageName:@"7-7.png" Target:self Action:@selector(returnClick) Title:nil];
+    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    [self.view addSubview:bgImageView];
+    //    self.bgImageView.backgroundColor = [UIColor redColor];
+    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+
+    NSData * data = [NSData dataWithContentsOfFile:filePath];
+
+    UIImage * image = [UIImage imageWithData:data];
+    bgImageView.image = image;
     
-    UIBarButtonItem * leftItem = [[UIBarButtonItem alloc] initWithCustomView:button1];
-    self.navigationItem.leftBarButtonItem = leftItem;
-    [leftItem release];
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+    [self.view addSubview:tempView];
+}
+#pragma mark -创建导航
+- (void)createFakeNavgation
+{
+    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    [self.view addSubview:navView];
+    
+    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+    alphaView.alpha = 0.85;
+    alphaView.backgroundColor = BGCOLOR;
+    [navView addSubview:alphaView];
+    
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+    [navView addSubview:backImageView];
+    
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    backBtn.showsTouchWhenHighlighted = YES;
+    [navView addSubview:backBtn];
+    
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"参与宠物"];
+    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [navView addSubview:titleLabel];
+    
+}
+-(void)backBtnClick
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)loadData
 {
-    NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", self.usr_ids];
+    NSString * str = [NSString stringWithFormat:@"aids=%@dog&cat", self.aids];
     NSString * code = [MyMD5 md5:str];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKERSAPI, self.usr_ids, code, [ControllerManager getSID]];
-    NSLog(@"赞列表：%@", url);
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETLISTAPI, self.aids, code, [ControllerManager getSID]];
+    NSLog(@"列表：%@", url);
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
            
             [self.dataArray removeAllObjects];
-            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
             for (NSDictionary * dict in array) {
-                InfoModel * model = [[InfoModel alloc] init];
+                PetInfoModel * model = [[PetInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
                 [self.dataArray addObject:model];
                 [model release];
@@ -84,8 +111,14 @@
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
+    tv.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tv];
+    
+    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 64)];
+    tv.tableHeaderView = view;
     [tv release];
+    
+    [self.view bringSubviewToFront:navView];
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -99,47 +132,55 @@
         cell = [[[AttentionCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ID"] autorelease];
     }
     cell.selectionStyle = 0;
-    InfoModel * model = self.dataArray[indexPath.row];
+    cell.backgroundColor = [UIColor clearColor];
+    PetInfoModel * model = self.dataArray[indexPath.row];
     [cell configUI:model];
-    return cell;
-}
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([[self.dataArray[indexPath.row] usr_id] isEqualToString:[USER objectForKey:@"usr_id"]]) {
-        //跳到我的个人主页
-        NSLog(@"进入主页，times：%@", [USER objectForKey:@"MyHomeTimes"]);
-        if ([[USER objectForKey:@"MyHomeTimes"] intValue] == 2) {
-//            [self.parentViewController.parentViewController dismissViewControllerAnimated:YES completion:nil];
-//            [USER setObject:@"0" forKey:@"MyHomeTimes"];
-        }else{
-            MyHomeViewController * vc = [ControllerManager shareManagerMyHome];
-            [self presentViewController:vc animated:YES completion:nil];
-        }
-        
-    }else{
-        //跳到其他人的主页
-        OtherHomeViewController * vc = [[OtherHomeViewController alloc] init];
-        vc.usr_id = [self.dataArray[indexPath.row] usr_id];
+    
+    cell.jumpToPetInfo = ^(NSString * aid){
+        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+        vc.aid = aid;
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
-    }
-    
+    };
+    return cell;
 }
+//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if ([[self.dataArray[indexPath.row] usr_id] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+//        //跳到我的个人主页
+//        NSLog(@"进入主页，times：%@", [USER objectForKey:@"MyHomeTimes"]);
+//        if ([[USER objectForKey:@"MyHomeTimes"] intValue] == 2) {
+////            [self.parentViewController.parentViewController dismissViewControllerAnimated:YES completion:nil];
+////            [USER setObject:@"0" forKey:@"MyHomeTimes"];
+//        }else{
+//            MyHomeViewController * vc = [ControllerManager shareManagerMyHome];
+//            [self presentViewController:vc animated:YES completion:nil];
+//        }
+//        
+//    }else{
+//        //跳到其他人的主页
+//        OtherHomeViewController * vc = [[OtherHomeViewController alloc] init];
+//        vc.usr_id = [self.dataArray[indexPath.row] usr_id];
+//        [self presentViewController:vc animated:YES completion:nil];
+//        [vc release];
+//    }
+//    
+//}
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 65;
 }
 
--(void)returnClick
-{
-    NSLog(@"%d", [[USER objectForKey:@"isFromActivity"] intValue]);
-    if ([[USER objectForKey:@"isFromActivity"] intValue] == 1) {
-        [USER setObject:@"0" forKey:@"isFromActivity"];
-        [self.navigationController popViewControllerAnimated:YES];
-    }else{
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }
-}
+//-(void)returnClick
+//{
+//    NSLog(@"%d", [[USER objectForKey:@"isFromActivity"] intValue]);
+//    if ([[USER objectForKey:@"isFromActivity"] intValue] == 1) {
+//        [USER setObject:@"0" forKey:@"isFromActivity"];
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }else{
+//        [self dismissViewControllerAnimated:YES completion:nil];
+//    }
+//}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

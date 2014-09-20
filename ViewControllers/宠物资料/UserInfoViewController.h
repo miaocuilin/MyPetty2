@@ -43,6 +43,7 @@
 
 @property(nonatomic,retain)UIImage * petHeadImage;
 @property(nonatomic,copy)NSString * usr_id;
+
 @property(nonatomic,retain)NSMutableArray * userPetListArray;
 @property(nonatomic,retain)NSMutableArray * userAttentionListArray;
 //

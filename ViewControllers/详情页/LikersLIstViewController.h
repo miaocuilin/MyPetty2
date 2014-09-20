@@ -10,8 +10,10 @@
 
 @interface LikersLIstViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 {
+    UIView * navView;
+    UIImageView * bgImageView;
     UITableView * tv;
 }
 @property(nonatomic,retain)NSMutableArray * dataArray;
-@property(nonatomic,copy)NSString * usr_ids;
+@property(nonatomic,copy)NSString * aids;
 @end

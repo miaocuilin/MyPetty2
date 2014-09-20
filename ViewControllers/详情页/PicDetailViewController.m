@@ -44,6 +44,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+//    NSMutableArray * tempArray = [NSMutableArray arrayWithCapacity:0];
+//    NSLog(@"%@--%d", tempArray, tempArray.count);
+//    for (int i=0; i<100; i++) {
+//        [tempArray addObject:@""];
+//    }
+//    [tempArray insertObject:@"reply_name" atIndex:8];
+//    
+//    NSLog(@"%@--%d", tempArray, tempArray.count);
+    
     
     // Do any additional setup after loading the view from its nib.
     self.usrIdArray = [NSMutableArray arrayWithCapacity:0];
@@ -1252,6 +1261,7 @@
     if (isReply) {
 //        NSLog(@"%@--%@--%@", self.usrIdArray[replyRow],self.nameArray[replyRow],[self.nameArray[replyRow] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
         [_request setPostValue:self.usrIdArray[replyRow] forKey:@"reply_id"];
+        NSLog(@"%@", self.nameArray[replyRow]);
         [_request setPostValue:[self.nameArray[replyRow] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] forKey:@"reply_name"];
     }
     _request.delegate = self;
@@ -1279,6 +1289,7 @@
     NSString * gold = [[dict objectForKey:@"data"] objectForKey:@"gold"];
     [USER setObject:gold forKey:@"gold"];
     [commentTextView resignFirstResponder];
+    
     //添加评论
     [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];
     if (isReply) {

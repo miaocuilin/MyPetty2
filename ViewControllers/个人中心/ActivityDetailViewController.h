@@ -19,7 +19,20 @@
     UIView * navView;
     UIImageView * bgImageView;
     float Height[1000];
-
+    
+    UIButton * newButton;
+    UIButton * hotButton;
+    
+    //最新最热是否停靠
+    BOOL isBerth;
+    
+    //是否当前是最热
+    BOOL isHotest;
+    
+    //活动是否结束
+    BOOL isEnd;
+    
+    UIView * lastLine;
 }
 @property(nonatomic,retain)NSMutableString * txs;
 @property(nonatomic,retain)TopicListModel * listModel;
@@ -31,4 +44,5 @@
 @property(nonatomic,retain)NSMutableArray * randomDataArray;
 @property(nonatomic,retain)NSMutableArray * newDataArray;
 @property(nonatomic,retain)NSMutableArray * hotDataArray;
+@property(nonatomic,retain)NSMutableArray * rankDataArray;
 @end

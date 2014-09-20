@@ -24,4 +24,6 @@
 @property(nonatomic,copy)NSString * u_name;
 @property(nonatomic,copy)NSString * u_rank;
 @property(nonatomic,copy)NSString * u_tx;
+
+@property(nonatomic,copy)NSString * is_follow;
 @end

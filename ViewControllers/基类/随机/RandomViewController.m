@@ -15,11 +15,10 @@
 #import "UIImageView+WebCache.h"
 #import "PicDetailViewController.h"
 #import "ToolTipsViewController.h"
-@interface RandomViewController () <TMQuiltViewDataSource,TMQuiltViewDelegate,MONActivityIndicatorViewDelegate>
+@interface RandomViewController () <TMQuiltViewDataSource,TMQuiltViewDelegate>
 {
     TMQuiltView *qtmquitView;
     UIImageView * heart;
-    MONActivityIndicatorView * indicatorView;
     ToolTipsViewController *toolTipsVC;
 }
 @property (nonatomic, retain) NSMutableArray *images;
@@ -141,10 +140,7 @@
     //    self.navigationController.navigationBar.barTintColor = BGCOLOR;
 //    [qtmquitView reloadData];
 }
--(UIColor *)activityIndicatorView:(MONActivityIndicatorView *)activityIndicatorView circleBackgroundColorAtIndex:(NSUInteger)index
-{
-    return BGCOLOR;
-}
+
 
 -(void)createQtmquitView
 {

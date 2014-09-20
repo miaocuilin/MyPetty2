@@ -12,9 +12,8 @@
 #import "LikersListViewController.h"
 #import "FTAnimation+UIView.h"
 #import "MBProgressHUD.h"
-@interface DetailViewController () <MONActivityIndicatorViewDelegate,MBProgressHUDDelegate>
+@interface DetailViewController () <MBProgressHUDDelegate>
 {
-    MONActivityIndicatorView *indicatorView;
     MBProgressHUD * HUD;
 }
 @end
@@ -72,16 +71,7 @@
 #pragma mark -数据加载
 -(void)loadData
 {  
-    //Loading界面开始启动
-    indicatorView = [[MONActivityIndicatorView alloc] init];
-    indicatorView.delegate = self;
-    indicatorView.numberOfCircles = 4;
-    indicatorView.radius = 10;
-    indicatorView.internalSpacing = 3;
-    indicatorView.center = self.view.center;
-    [self.view addSubview:indicatorView];
-    [indicatorView startAnimating];
-    
+   
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", IMAGEINFOAPI, self.img_id, sig, [ControllerManager getSID]];
     NSLog(@"imageInfoAPI:%@", url);
@@ -103,7 +93,6 @@
             self.createTime = [dict objectForKey:@"create_time"];
             [self loadUserData];
             [self createImage];
-            [self.view bringSubviewToFront:indicatorView];
             
             //分析评论字符串
             [self analyseComments];
@@ -145,8 +134,6 @@
     NSLog(@"UserInfoAPI:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            [indicatorView stopAnimating];
-            
             NSLog(@"用户信息：%@", load.dataDict);
             NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectForKey:@"user"];
             self.name = [dict objectForKey:@"name"];
@@ -164,7 +151,6 @@
             [self createTop];
             [self createBottom];
         }else{
-            [indicatorView stopAnimating];
             NSLog(@"用户信息数据加载失败");
         }
     }];
@@ -1049,7 +1035,7 @@
     LikersLIstViewController * vc = [[LikersLIstViewController alloc] init];
     UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
     nc.modalTransitionStyle = 2;
-    vc.usr_ids = self.likers;
+    vc.aids = self.likers;
     [self presentViewController:nc animated:YES completion:nil];
     [vc release];
     [nc release];

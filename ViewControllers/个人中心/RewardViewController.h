@@ -9,6 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface RewardViewController : UIViewController
-
+{
+    UIImageView * bgImageView;
+    UIView * navView;
+//    UIScrollView * sv;
+}
 @property(nonatomic,copy)NSString * topic_id;
 @end

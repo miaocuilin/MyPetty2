@@ -7,17 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "InfoModel.h"
+#import "PetInfoModel.h"
 @interface AttentionCell : UITableViewCell <UIAlertViewDelegate>
 {
-    UIImageView * headImageView;
+    UIButton * headImageBtn;
     UIImageView * sexImageView;
     UILabel * nameLabel;
     UILabel * cateAndNameLabel;
     UIButton * attentionButton;
     BOOL isAttention;
 //    BOOL sex;
+    UIButton * attentionBtn;
 }
-//@property(nonatomic,copy)NSString * usr_id;
--(void)configUI:(InfoModel *)model;
+@property(nonatomic,copy)void (^jumpToPetInfo)(NSString *);
+@property(nonatomic,copy)void (^cellClick)(int);
+
+@property(nonatomic,copy)NSString * aid;
+-(void)configUI:(PetInfoModel *)model;
 @end

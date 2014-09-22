@@ -104,7 +104,8 @@
     descRewardLabel.text = [NSString stringWithFormat:@"%@ 人气 %@",[self.animalInfoDict objectForKey:@"name"],model.add_rq];
     AudioServicesPlaySystemSound (soundID);
     //固定礼物1102
-    NSString *item = @"1102";
+//    NSString *item = @"1102";
+    NSString *item = model.no;
     NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_shake=1&item_id=%@dog&cat",[self.animalInfoDict objectForKey:@"aid"],item]];
     NSString *sendString = [NSString stringWithFormat:@"%@%@&is_shake=1&item_id=%@&sig=%@&SID=%@",SENDSHAKEGIFT,[self.animalInfoDict objectForKey:@"aid"],item,sendSig,[ControllerManager getSID]];
     NSLog(@"赠送url:%@",sendString);

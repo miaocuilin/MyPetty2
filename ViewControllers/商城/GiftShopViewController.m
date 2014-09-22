@@ -62,13 +62,14 @@
 
 - (void)buyGiftItemsAPI:(NSInteger)tag
 {
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=1102&num=1dog&cat"]];
-    NSString *buyItemsString = [NSString stringWithFormat:@"%@1102&num=1&sig=%@&SID=%@",BUYSHOPGIFTAPI,sig,[ControllerManager getSID]];
+    GiftShopModel *model = self.giftDataArray[tag];
+    NSString *item = model.no;
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=%@&num=1dog&cat",item]];
+    NSString *buyItemsString = [NSString stringWithFormat:@"%@%@&num=1&sig=%@&SID=%@",BUYSHOPGIFTAPI,item,sig,[ControllerManager getSID]];
 //    NSLog(@"购买商品api:%@",buyItemsString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:buyItemsString Block:^(BOOL isFinish, httpDownloadBlock *load) {
 //        NSLog(@"购买商品结果：%@",load.dataDict);
         if (isFinish) {
-            GiftShopModel *model = self.giftDataArray[tag];
             [USER setObject:[NSString stringWithFormat:@"%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"user_gold"]] forKey:@"gold"];
             BottomGold.text = [USER objectForKey:@"gold"];
             int noViewGiftNumber = [[USER objectForKey:@"noViewGift"] intValue];

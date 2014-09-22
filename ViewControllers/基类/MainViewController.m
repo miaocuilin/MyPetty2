@@ -19,6 +19,7 @@
 #import "ToolTipsViewController.h"
 #import "ShakeViewController.h"
 #import "WaterViewController.h"
+#import "TipsView.h"
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 @interface MainViewController () <AFPhotoEditorControllerDelegate>
@@ -41,6 +42,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)viewDidAppear:(BOOL)animated
 {
     self.menuBtn.selected = NO;
+//    TipsView *tips = [[TipsView alloc] initWithFrame:self.view.frame tipsName:REGISTER];
+//    [self.view addSubview:tips];
 }
 - (void)viewDidLoad
 {

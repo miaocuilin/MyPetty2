@@ -414,7 +414,7 @@
     else
         [session setActive:YES error:nil];
     NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:
-                              [NSNumber numberWithFloat: 44100],                  AVSampleRateKey,
+                              [NSNumber numberWithFloat: 11025],                  AVSampleRateKey,
                               [NSNumber numberWithInt: kAudioFormatLinearPCM],                   AVFormatIDKey,
                               [NSNumber numberWithInt: 2],                              AVNumberOfChannelsKey,
                               [NSNumber numberWithInt: AVAudioQualityLow],                       AVEncoderAudioQualityKey,

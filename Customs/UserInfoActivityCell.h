@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "UserActivityListModel.h"
 @interface UserInfoActivityCell : UITableViewCell
 {
     UILabel * activityLabel;
@@ -16,5 +16,10 @@
 
 @property (retain, nonatomic) IBOutlet UILabel *timeLabel;
 @property (retain, nonatomic) IBOutlet UIButton *imageBtn;
--(void)modifyWithString:(NSString *)str;
+@property (nonatomic, copy)NSString * img_id;
+
+@property (nonatomic,copy)void (^jumpToDetail)(NSString *);
+//-(void)modifyWithString:(NSString *)str;
+
+-(void)configUI:(UserActivityListModel *)model;
 @end

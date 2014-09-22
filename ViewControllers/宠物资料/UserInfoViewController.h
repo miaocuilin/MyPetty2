@@ -46,6 +46,7 @@
 
 @property(nonatomic,retain)NSMutableArray * userPetListArray;
 @property(nonatomic,retain)NSMutableArray * userAttentionListArray;
+@property(nonatomic,retain)NSMutableArray * userActivityListArray;
 //
 @property(nonatomic,retain)NSMutableArray * goodsArray;
 @property(nonatomic,retain)NSMutableArray * goodsNumArray;

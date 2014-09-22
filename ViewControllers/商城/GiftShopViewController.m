@@ -52,10 +52,10 @@
 }
 - (void)viewWillAppear:(BOOL)animated
 {
-     giftNum.text = [NSString stringWithFormat:@"%@",[USER objectForKey:@"noViewGift"]];
-    if ([giftNum.text isEqualToString:@""]) {
+    if ([USER objectForKey:@"noViewGift"] == nil || [[USER objectForKey:@"noViewGift"] length] == 0 || [[USER objectForKey:@"noViewGift"] intValue] == 0) {
         greenBall.hidden = YES;
     }else{
+        giftNum.text = [NSString stringWithFormat:@"%@",[USER objectForKey:@"noViewGift"]];
         greenBall.hidden = NO;
     }
 }

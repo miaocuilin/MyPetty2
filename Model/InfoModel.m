@@ -29,6 +29,9 @@
     [_weichat release];
     [_weibo release];
     [_aid release];
+    [_usr_name release];
+    [_usr_tx release];
+    
     [super dealloc];
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key

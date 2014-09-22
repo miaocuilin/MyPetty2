@@ -12,6 +12,7 @@
 #import "SetDefaultPetViewController.h"
 #import "AboutViewController.h"
 #import "FAQViewController.h"
+#import "RegisterViewController.h"
 @interface SettingViewController ()
 
 @end
@@ -227,7 +228,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        if (indexPath.row == 1) {
+        if (indexPath.row == 0) {
+            RegisterViewController * vc = [[RegisterViewController alloc] init];
+            vc.isModify = YES;
+            [self presentViewController:vc animated:YES completion:nil];
+            [vc release];
+        }else if (indexPath.row == 1) {
             NSLog(@"收货地址");
             AddressViewController *address = [[AddressViewController alloc]init];
             [self presentViewController:address animated:YES completion:^{

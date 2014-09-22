@@ -273,6 +273,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     NSLog(@"进入@用户页");
     AtUsersViewController * vc = [[AtUsersViewController alloc] init];
+    vc.sendNameAndIds = ^(NSString * name, NSString * idsString){
+        if (name != nil && name.length != 0) {
+            [users setTitle:name forState:UIControlStateNormal];
+            self.usr_ids = idsString;
+        }else{
+            [users setTitle:@"点击@用户" forState:UIControlStateNormal];
+        }
+    };
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
@@ -513,8 +521,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else{
         [_request setPostValue:[USER objectForKey:@"topic"] forKey:@"topic_name"];
     }
+    /************/
+    if ([users.titleLabel.text isEqualToString:@"点击@用户"]) {
+        [_request setPostValue:@"" forKey:@"relates"];
+    }else{
+        NSLog(@"%@", users.titleLabel.text);
+        [_request setPostValue:users.titleLabel.text forKey:@"relates"];
+    }
     
-    [_request setPostValue:@"" forKey:@"relates"];
 //    NSLog(@"%@", _textView.text);
     _request.delegate = self;
     [_request startAsynchronous];

@@ -86,6 +86,8 @@
 @property (nonatomic,copy)NSString * cmt;
 //点赞者
 @property (nonatomic,copy)NSString * likers;
+//@用户
+@property (nonatomic,copy)NSString * relates;
 //评论
 @property (nonatomic,copy)NSString * comments;
 @property (nonatomic,copy)NSString * aid;

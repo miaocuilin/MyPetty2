@@ -41,10 +41,10 @@
     //    user/petsApi&usr_id=(若用户为自己则留空不填)
     NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
-//    NSLog(@"%@", url);
+    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-//            NSLog(@"用户宠物数据:%@", load.dataDict);
+            NSLog(@"用户宠物数据:%@", load.dataDict);
             [self.userPetListArray removeAllObjects];
             NSArray * array = [load.dataDict objectForKey:@"data"];
             for (NSDictionary * dict in array) {
@@ -131,10 +131,10 @@
         cell = [[[NSBundle mainBundle] loadNibNamed:@"DefaultPetCell" owner:self options:nil] objectAtIndex:0];
     }
     UserPetListModel *model = self.userPetListArray[indexPath.row];
-    cell.defaultBtnClick = ^(int a){
+    cell.defaultBtnClick = ^(int a, NSString * master_id){
         NSLog(@"clickDefaultPet:%d", a);
         //请求切换默认宠物API
-        [self changeDefaultPet:[self.userPetListArray[a] aid]];
+        [self changeDefaultPet:[self.userPetListArray[a] aid] MasterId:master_id];
     };
     
     cell.selectionStyle = 0;
@@ -153,7 +153,7 @@
 }
 
 #pragma mark -
--(void)changeDefaultPet:(NSString *)aid
+-(void)changeDefaultPet:(NSString *)aid MasterId:(NSString *)master_id
 {
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
     [MMProgressHUD showWithStatus:@"切换中..."];
@@ -166,6 +166,8 @@
             if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                 NSLog(@"%@", aid);
                 [USER setObject:aid forKey:@"aid"];
+                [USER setObject:master_id forKey:@"master_id"];
+                NSLog(@"%@--%@--%@", [USER objectForKey:@"aid"], [USER objectForKey:@"master_id"], [USER objectForKey:@"usr_id"]);
                 [tv reloadData];
                 [MMProgressHUD dismissWithSuccess:@"切换成功" title:nil  afterDelay:0.2];
             }else{
@@ -178,6 +180,7 @@
     }];
     [request release];
 }
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

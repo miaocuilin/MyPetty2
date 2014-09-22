@@ -18,8 +18,8 @@
 @property (retain, nonatomic) IBOutlet UILabel *nameLabel;
 @property (retain, nonatomic) IBOutlet UILabel *cateAndAge;
 @property (retain, nonatomic) IBOutlet UIButton *defaultBtn;
-@property (copy, nonatomic)void (^defaultBtnClick)(int);
-
+@property (copy, nonatomic)void (^defaultBtnClick)(int,NSString *);
+@property (nonatomic,copy)NSString * master_id;
 //-(void)configUIWithSex:(int)sex Name:(NSString *)name Cate:(NSString *)cate Age:(NSString *)age Default:(BOOL)isDefault row:(int)row;
 -(void)configUIWithModel:(UserPetListModel *)model Default:(BOOL)isDefault Row:(int)row;
 @end

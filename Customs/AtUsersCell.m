@@ -21,7 +21,7 @@
 }
 -(void)createUI
 {
-    head = [MyControl createImageViewWithFrame:CGRectMake(15, 6, 32, 32) ImageName:@""];
+    head = [MyControl createImageViewWithFrame:CGRectMake(15, 6, 32, 32) ImageName:@"defaultUserHead.png"];
     head.layer.cornerRadius = head.frame.size.width/2;
     head.layer.masksToBounds = YES;
     [self.contentView addSubview:head];
@@ -38,16 +38,42 @@
     line.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:line];
 }
--(void)modifyWith:(NSString *)name row:(int)row selected:(BOOL)isSelected
+-(void)modifyWith:(InfoModel *)model row:(int)row selected:(BOOL)isSelected
 {
-    head.image = [UIImage imageNamed:@"cat1.jpg"];
-    nameLabel.text = name;
+    nameLabel.text = model.usr_name;
     btn.tag = 100+row;
     if (isSelected) {
         btn.selected = YES;
     }else{
         btn.selected = NO;
     }
+    //
+    /**************************/
+    if (!([model.usr_tx isKindOfClass:[NSNull class]] || [model.usr_tx length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.usr_tx]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+//            [button setBackgroundImage:image forState:UIControlStateNormal];
+            head.image = image;
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.usr_tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+//                    [button setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                    head.image = load.dataImage;
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.usr_tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+    /**************************/
 }
 -(void)btnClick:(UIButton *)button
 {

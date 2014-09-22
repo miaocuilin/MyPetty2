@@ -121,6 +121,38 @@
             }
             NSLog(@"-----%@", self.myCountryArray);
             count = 0;
+//            if (self.view.frame.size.height == 640) {
+//                //4s  3名，7名
+//                if (self.rankDataArray.count>=7) {
+//                    //寻找是否有我
+//                    for (int i=0; i<self.myCountryArray.count; i++) {
+//                        if ([self.myCountryArray[i] intValue]<=3) {
+//                            break;
+//                        }else{
+//                            [self findMeBtnClick];
+//                            break;
+//                        }
+//                    }
+//                }else{
+//                
+//                }
+//            }else{
+//                //5s  5名，9名
+//                if (self.rankDataArray.count>=9) {
+//                    //寻找是否有我
+//                    for (int i=0; i<self.myCountryArray.count; i++) {
+//                        if ([self.myCountryArray[i] intValue]<=3) {
+//                            break;
+//                        }else{
+//                            [self findMeBtnClick];
+//                            break;
+//                        }
+//                    }
+//                }else{
+//                    
+//                }
+//            }
+            
             [self findMeBtnClick];
             LoadingSuccess;
         }else{

@@ -8,6 +8,7 @@
 
 #import "AtUsersViewController.h"
 #import "AtUsersCell.h"
+#import "InfoModel.h"
 @interface AtUsersViewController ()
 
 @end
@@ -28,15 +29,43 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.selectArray = [NSMutableArray arrayWithCapacity:0];
+    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+    self.dataArrayTemp = [NSMutableArray arrayWithCapacity:0];
+    self.userIdsString = [NSMutableString stringWithCapacity:0];
     
     [self createBg];
     [self createFakeNavigation];
     [self createHeader];
+    [self getNearTalkUserIds];
     [self createTableView];
     
     [self.view bringSubviewToFront:navView];
     [self.view bringSubviewToFront:headerView];
     
+}
+-(void)getNearTalkUserIds
+{
+    NSFileManager * manager = [[NSFileManager alloc] init];
+    NSString * docDir = DOCDIR;
+    NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
+    if ([manager fileExistsAtPath:path]) {
+        //文件存在
+        NSLog(@"文件存在");
+        NSMutableDictionary * totalDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
+        
+        [self.dataArray removeAllObjects];
+        for (NSString * key in [totalDict allKeys]) {
+            NSDictionary * dic = [totalDict objectForKey:key];
+            InfoModel * model = [[InfoModel alloc] init];
+            [model setValuesForKeysWithDictionary:dic];
+            [self.dataArray addObject:model];
+            [model release];
+        }
+        self.dataArrayTemp = [NSMutableArray arrayWithArray:self.dataArray];
+    }else{
+        //文件不存在
+        
+    }
 }
 -(void)createBg
 {
@@ -102,7 +131,7 @@
     
     tf = [MyControl createTextFieldWithFrame:CGRectMake(30, 10, 560/2, 20) placeholder:@"" passWord:NO leftImageView:nil rightImageView:nil Font:15];
     tf.borderStyle = 0;
-    //    tf.returnKeyType = UIReturnKeySearch;
+    tf.returnKeyType = UIReturnKeySearch;
     //    tf.backgroundColor = BGCOLOR;
     tf.delegate = self;
     tf.textColor = [UIColor whiteColor];
@@ -135,12 +164,33 @@
 -(void)rightButtonClick
 {
     NSLog(@"确定");
+    self.userIdsString = [NSMutableString stringWithString:@""];
+    self.selectName = @"";
+    
+    if (self.selectArray.count>1) {
+        NSString * str = [self.dataArray[[self.selectArray[0] intValue]] usr_name];
+        self.selectName = [NSString stringWithFormat:@"@%@ 等小伙伴", str];
+    }else if(self.selectArray.count == 1){
+        NSString * str = [self.dataArray[[self.selectArray[0] intValue]] usr_name];
+        self.selectName = [NSString stringWithFormat:@"@%@ 小伙伴", str];
+    }
+    for (int i=0; i<self.selectArray.count; i++) {
+        NSString * usr_id = [self.dataArray[i] usr_id];
+        if (i == 0) {
+            [self.userIdsString appendString:usr_id];
+        }else{
+            [self.userIdsString appendFormat:@",%@", usr_id];
+        }
+    }
+    NSLog(@"%@--%@", self.selectName, self.userIdsString);
+    self.sendNameAndIds(self.selectName, self.userIdsString);
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - tableView代理
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 20;
+    return self.dataArrayTemp.count;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -162,16 +212,18 @@
     };
     
     cell.selectionStyle = 0;
+    InfoModel * model = self.dataArrayTemp[indexPath.row];
+    
     if (self.selectArray.count == 0) {
-        [cell modifyWith:@"白天不懂夜的黑" row:indexPath.row selected:NO];
+        [cell modifyWith:model row:indexPath.row selected:NO];
     }
     for (int i=0; i<self.selectArray.count; i++) {
         if ([self.selectArray[i] intValue] == indexPath.row) {
-            [cell modifyWith:@"白天不懂夜的黑" row:indexPath.row selected:YES];
+            [cell modifyWith:model row:indexPath.row selected:YES];
             break;
         }else{
             if (i == self.selectArray.count-1) {
-                [cell modifyWith:@"白天不懂夜的黑" row:indexPath.row selected:NO];
+                [cell modifyWith:model row:indexPath.row selected:NO];
             }
         }
     }
@@ -179,10 +231,23 @@
     cell.backgroundColor = [UIColor clearColor];
     return cell;
 }
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tf resignFirstResponder];
+}
 
 #pragma mark - textField
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    self.dataArrayTemp = [NSMutableArray arrayWithArray:self.dataArray];
+    if (tf.text.length != 0) {
+        for (InfoModel * model in self.dataArray) {
+            if ([model.usr_name rangeOfString:tf.text].location == NSNotFound) {
+                [self.dataArrayTemp removeObject:model];
+            }
+        }
+    }
+    [tv reloadData];
     [tf resignFirstResponder];
     return YES;
 }

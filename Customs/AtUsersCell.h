@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "InfoModel.h"
 @interface AtUsersCell : UITableViewCell
 {
     UIImageView * head;
     UILabel * nameLabel;
     UIButton * btn;
 }
--(void)modifyWith:(NSString *)name row:(int)row selected:(BOOL)isSelected;
+-(void)modifyWith:(InfoModel *)model row:(int)row selected:(BOOL)isSelected;
 @property(nonatomic,copy)void(^click)(int, BOOL);
 @end

@@ -321,6 +321,7 @@
                 [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
                 [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
                 [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
+                [USER setObject:[dict objectForKey:@"city"] forKey:@"city"];
                 [USER setObject:[dict objectForKey:@"exp"] forKey:@"oldexp"];
                 [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
                 [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];

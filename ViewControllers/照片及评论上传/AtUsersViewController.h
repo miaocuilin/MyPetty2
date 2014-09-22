@@ -17,4 +17,11 @@
 }
 @property (nonatomic,retain)UIImageView * bgImageView;
 @property (nonatomic,retain)NSMutableArray * selectArray;
+
+@property (nonatomic,retain)NSMutableArray * dataArray;
+@property (nonatomic,retain)NSMutableArray * dataArrayTemp;
+@property (nonatomic,retain)NSMutableString * userIdsString;
+@property (nonatomic,copy)NSString * selectName;
+
+@property (nonatomic,copy)void (^sendNameAndIds)(NSString *,NSString *);
 @end

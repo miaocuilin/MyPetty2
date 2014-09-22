@@ -27,14 +27,36 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.topicNameArray = [NSMutableArray arrayWithCapacity:0];
+    self.topicIdArray = [NSMutableArray arrayWithCapacity:0];
     
     [self createBg];
     [self createFakeNavigation];
+    [self loadTopicData];
     [self createHeader];
     [self createTableView];
     
     [self.view bringSubviewToFront:navView];
     [self.view bringSubviewToFront:headerView];
+}
+-(void)loadTopicData
+{
+    NSString * url = [NSString stringWithFormat:@"%@%@", PUBLISHTOPICLISTAPI, [ControllerManager getSID]];
+    NSLog(@"url:%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for (NSDictionary * dict in array) {
+                [self.topicNameArray addObject:[dict objectForKey:@"topic"]];
+                [self.topicIdArray addObject:[dict objectForKey:@"topic_id"]];
+            }
+            [tv reloadData];
+        }else{
+            
+        }
+    }];
+    [request release];
 }
 -(void)createBg
 {
@@ -147,7 +169,7 @@
 #pragma mark - tableView代理
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 20;
+    return self.topicNameArray.count;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -156,10 +178,10 @@
     if (!cell) {
         cell = [[[topicCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
     }
-    if (indexPath.row < 3) {
-        [cell modifyWithName:@"喵喵cosplay大比拼" isActivity:YES];
+    if ([self.topicIdArray[indexPath.row] intValue]) {
+        [cell modifyWithName:self.topicNameArray[indexPath.row] isActivity:YES];
     }else{
-        [cell modifyWithName:@"喵喵cosplay大比拼" isActivity:NO];
+        [cell modifyWithName:self.topicNameArray[indexPath.row] isActivity:NO];
     }
     
     cell.selectionStyle = 0;
@@ -169,7 +191,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"选择了第%d个", indexPath.row);
-    tf.text = @"喵喵cosplay大比拼";
+    tf.text = self.topicNameArray[indexPath.row];
 }
 
 #pragma mark - textField

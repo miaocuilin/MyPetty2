@@ -16,4 +16,7 @@
     UIView * headerView;
 }
 @property (nonatomic,retain)UIImageView * bgImageView;
+
+@property (nonatomic,retain)NSMutableArray * topicNameArray;
+@property (nonatomic,retain)NSMutableArray * topicIdArray;
 @end

@@ -70,6 +70,16 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.cateName = @"喵星";
     self.detailName = @"布偶猫";
     
+    if (self.isModify) {
+        if ([[USER objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+            self.isMyPet = YES;
+        
+        }else{
+            self.isAdoption = YES;
+        }
+        [self loadDefaultPetInfo];
+    }
+    
     [self createIQ];
 //    [self createNavigation];
     [self createBg];
@@ -77,6 +87,31 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self loadCateNameList];
     
 }
+#pragma mark -
+-(void)loadDefaultPetInfo
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            PetInfoModel * model = [[PetInfoModel alloc] init];
+            [model setValuesForKeysWithDictionary:[load.dataDict objectForKey:@"data"]];
+            self.petInfoModel = model;
+//            [self.petInfoModel setValuesForKeysWithDictionary:[load.dataDict objectForKey:@"data"]];
+            NSLog(@"%@", [self.petInfoModel name]);
+            //开始搭建界面
+            [self createUI];
+            [self createFakeNavigation];
+        }else{
+
+        }
+    }];
+    [request release];
+}
+
+
+#pragma mark -
 - (void)createIQ
 {
     //Enabling keyboard manager
@@ -121,9 +156,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }
             self.tempArray = self.catArray;
             count = self.catArray.count;
-            //开始搭建界面
-            [self createUI];
-            [self createFakeNavigation];
+    if (!self.isModify){
+        [self createUI];
+        [self createFakeNavigation];
+    }
 //        }
 //    }];
 }
@@ -166,6 +202,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
+    if (self.isModify) {
+        titleLabel.text = @"资料修改";
+    }
 }
 
 -(void)backBtnClick
@@ -329,7 +368,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [sv addSubview:boy];
     
     /*******/
-    if (self.isAdoption && [self.petInfoModel.gender intValue] == 1) {
+    if ((self.isAdoption || self.isModify) && [self.petInfoModel.gender intValue] == 1) {
         girl.selected = NO;
         boy.selected = YES;
     }
@@ -358,7 +397,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             tf.backgroundColor = [UIColor clearColor];
             [bgImageView addSubview:tf];
             
-            if (self.isAdoption) {
+            if (self.isAdoption || self.isModify) {
                 tf.text = self.petInfoModel.name;
             }
             
@@ -371,7 +410,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             fromTF.backgroundColor = [UIColor clearColor];
             [bgImageView addSubview:fromTF];
             
-            if (self.isAdoption) {
+            if (self.isAdoption || self.isModify) {
                 fromTF.text = [ControllerManager returnCateNameWithType:self.petInfoModel.type];
             }
             
@@ -391,7 +430,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             ageTextField.inputAccessoryView = keyboardBgView;
             [bgImageView addSubview:ageTextField];
             
-            if (self.isAdoption) {
+            if (self.isAdoption || self.isModify) {
                 ageTextField.text = self.petInfoModel.age;
             }
             UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(185, 5, 15, 20) ImageName:@"扩展更多图标.png"];
@@ -419,10 +458,35 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UIImageView * roundImageView2 = [MyControl createImageViewWithFrame:CGRectMake(-30+320+108.5, 100-116/2+64, 217/2, 116/2) ImageName:@"4-3.png"];
     [sv addSubview:roundImageView2];
     
-    photoButton2 = [MyControl createButtonWithFrame:CGRectMake(-30+320+105+(116-80)/2, 42+18+64-5, 80, 80) ImageName:@"defaultUserHead" Target:self Action:@selector(photoButtonClick2) Title:nil];
+    photoButton2 = [MyControl createButtonWithFrame:CGRectMake(-30+320+105+(116-80)/2, 42+18+64-5, 80, 80) ImageName:@"defaultUserHead.png" Target:self Action:@selector(photoButtonClick2) Title:nil];
     photoButton2.layer.cornerRadius = 40;
     photoButton2.layer.masksToBounds = YES;
     [sv addSubview:photoButton2];
+    /**************************/
+    if (!([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+        //        NSLog(@"--%@--", txFilePath);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            [photoButton2 setBackgroundImage:image forState:UIControlStateNormal];
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    [photoButton2 setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+    
+    /**************************/
     
     UILabel * userTitle = [MyControl createLabelWithFrame:CGRectMake(-30+320+100, 205, 120, 20) Font:18 Text:@"用户信息"];
     userTitle.textAlignment = NSTextAlignmentCenter;
@@ -453,6 +517,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             tfUserName.backgroundColor = [UIColor clearColor];
             [bgImageView addSubview:tfUserName];
             
+            if (self.isModify) {
+                tfUserName.text = [USER objectForKey:@"name"];
+            }
             UIImageView * keyboard = [MyControl createImageViewWithFrame:CGRectMake(150, 6, 25, 17) ImageName:@"3-2-2.png"];
             [bgImageView addSubview:keyboard];
         }else if(i == 1){
@@ -475,6 +542,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             UILabel * mLabel = [MyControl createLabelWithFrame:CGRectMake(112, 5, 50, 20) Font:15 Text:@"男"];
             mLabel.font = [UIFont boldSystemFontOfSize:15];
             [bgImageView addSubview:mLabel];
+            
+            if (self.isModify) {
+                if ([[USER objectForKey:@"gender"] intValue] == 1) {
+                    [self manClick:man];
+                }
+            }
         }else{
             tfCity = [MyControl createTextFieldWithFrame:CGRectMake(10, 5, 170, 20) placeholder:@"点击选择城市" passWord:NO leftImageView:nil rightImageView:nil Font:13];
             tfCity.delegate = self;
@@ -486,6 +559,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             tfCity.minimumFontSize = w;
             
             [bgImageView addSubview:tfCity];
+            if (self.isModify) {
+                NSString * str = [ControllerManager returnProvinceAndCityWithCityNum:[USER objectForKey:@"city"]];
+                NSArray * array = [str componentsSeparatedByString:@" | "];
+                NSMutableString * mutableStr = [NSMutableString stringWithCapacity:0];
+                for (int i=0; i<array.count; i++) {
+                    [mutableStr appendString:array[i]];
+                }
+                tfCity.text = mutableStr;
+            }
         }
     }
     /****************************************/
@@ -541,6 +623,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UIButton * confirmButton2 = [MyControl createButtonWithFrame:CGRectMake(320-80, 150, 50, 30) ImageName:@"" Target:self Action:@selector(confirmButtonClick2) Title:@"确认"];
     [confirmButton2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [pickerBgView2 addSubview:confirmButton2];
+    
+    /*************************************/
+//    if (self.isModify) {
+//        tf.text = [self.petInfoModel name];
+//        fromTF.text = [ControllerManager returnCateNameWithType:[self.petInfoModel type]];
+//        
+//        if (self.isMyPet) {
+//            
+//        }else{
+//            
+//        }
+//    }
 }
 
 #pragma mark - 男女性别选择按钮
@@ -964,7 +1058,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         type = 300+num+1;
     }
     /*******************/
-    if (self.isAdoption) {
+    if (self.isAdoption || self.isModify) {
         type = [self.petInfoModel.type intValue];
     }
     /*******************/
@@ -1007,7 +1101,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         str = [NSString stringWithFormat:@"age=%d&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, gender, type, self.u_city, self.u_gender];
     /****************/
-    if (self.isAdoption) {
+    if (self.isAdoption || self.isModify) {
         str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender];
     }
@@ -1015,6 +1109,57 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         sig = [MyMD5 md5:str2];
     
 //    }
+    if (self.isModify) {
+        [MMProgressHUD showWithStatus:@"正在修改，请稍后..."];
+        NSString * code = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", MODIFYINFOAPI, code, sig, [ControllerManager getSID]];
+        NSLog(@"%@", url);
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+//                if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+//                    [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
+//                }else{
+//                    [MMProgressHUD dismissWithSuccess:@"修改失败" title:nil afterDelay:0.5];
+//                }
+                /**********************/
+                if([[load.dataDict objectForKey:@"errorCode"] intValue] == 2){
+                    //SID过期，重新获取
+                    [alert0 setTitle:@"SID过期"];
+                    [self login];
+//                    [self userRegister];
+                    return;
+                }else if([[load.dataDict objectForKey:@"errorCode"] intValue] == 1 || [[load.dataDict objectForKey:@"errorCode"] intValue] == -1){
+                    
+                    NSLog(@"%@", load.dataDict);
+                    //发生错误，显示错误信息，用户名已存在等。
+                    NSString * errorMessage = [load.dataDict objectForKey:@"errorMessage"];
+                    [alert0 setTitle:errorMessage];
+//                    [alert0 setTitle:@"用户名已存在"];
+                    [MMProgressHUD dismissWithError:@"修改失败" afterDelay:0];
+                    return;
+                }else{
+                    [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
+                    
+                    if (self.oriImage || self.self.oriUserImage){
+                        isNeedPostImage = YES;
+                    }
+                    
+                    [self getUserData];
+                    return;
+                }
+            }else{
+                [MMProgressHUD dismissWithError:@"修改失败%>_<%" afterDelay:0.5];
+                NSLog(@"您的网络不佳，修改失败!");
+                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+                return;
+            }
+        }];
+        [request release];
+    }
+    
+    
     //访问注册API
     NSString * message = [NSString stringWithFormat:@"%@?r=user/registerApi&%@&sig=%@&SID=%@", IPURL2, str, sig, [ControllerManager getSID]];
     //进行注册
@@ -1169,6 +1314,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
                 [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
                 [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
+                [USER setObject:[dict objectForKey:@"city"] forKey:@"city"];
                 [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
                 [USER setObject:[dict objectForKey:@"gold"] forKey:@"gold"];
                 [USER setObject:@"0" forKey:@"oldgold"];
@@ -1197,7 +1343,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         [self postUserImage];
                     }
                 }else{
-                    [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+                    if (self.isModify) {
+                        [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
+                    }else{
+                        [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+                    }
                     [USER setObject:@"1" forKey:@"Menu"];
                     [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
                     [self dismissViewControllerAnimated:NO completion:nil];
@@ -1293,13 +1443,21 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [USER setObject:@"1" forKey:@"Menu"];
     if (doubleNeedPost) {
         if (++postCount == 2) {
-            [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+            if (self.isModify) {
+                [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
+            }else{
+                [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+            }
             [USER setObject:@"1" forKey:@"Menu"];
             [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
             [self dismissViewControllerAnimated:NO completion:nil];
         }
     }else{
-        [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+        if (self.isModify) {
+            [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
+        }else{
+            [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+        }
         [USER setObject:@"1" forKey:@"Menu"];
         [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
         [self dismissViewControllerAnimated:NO completion:nil];

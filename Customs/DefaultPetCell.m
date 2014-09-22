@@ -28,7 +28,7 @@
 -(void)configUIWithModel:(UserPetListModel *)model Default:(BOOL)isDefault Row:(int)row
 {
     rowNum = row;
-    
+    self.master_id = model.master_id;
     self.crownImage.hidden = YES;
     
     self.headImage.image = [UIImage imageNamed:@"defaultPetHead.jpg"];
@@ -100,7 +100,7 @@
     // Configure the view for the selected state
 }
 - (IBAction)defaultBtnClick:(UIButton *)sender {
-    self.defaultBtnClick(rowNum);
+    self.defaultBtnClick(rowNum, self.master_id);
 }
 
 - (void)dealloc {

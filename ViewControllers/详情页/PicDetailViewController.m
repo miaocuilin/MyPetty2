@@ -147,6 +147,7 @@
             self.likers = [dict objectForKey:@"likers"];
             self.comments = [dict objectForKey:@"comments"];
             self.topic_name = [dict objectForKey:@"topic_name"];
+            self.relates = [dict objectForKey:@"relates"];
             self.likerTxArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"liker_tx"];
             self.senderTxArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"sender_tx"];
             
@@ -566,8 +567,11 @@
     topicDetail.textColor = [UIColor darkGrayColor];
     [self.sv addSubview:topicDetail];
 
-    topicUser = [MyControl createLabelWithFrame:CGRectMake(15, topicDetail.frame.origin.y+topicDetail.frame.size.height+10, 200, 20) Font:14 Text:@"@一起来看流星雨 等小伙伴"];
+    topicUser = [MyControl createLabelWithFrame:CGRectMake(15, topicDetail.frame.origin.y+topicDetail.frame.size.height+10, 200, 20) Font:14 Text:@"没有@小伙伴"];
     topicUser.textColor = BGCOLOR;
+    if (self.relates.length != 0) {
+        topicUser.text = self.relates;
+    }
     [self.sv addSubview:topicUser];
     
     NSDate * date = [NSDate dateWithTimeIntervalSince1970:[self.createTime intValue]];

@@ -27,4 +27,7 @@
 @property(nonatomic,copy)NSString * weichat;
 @property(nonatomic,copy)NSString * weibo;
 @property(nonatomic,copy)NSString * aid;
+
+@property(nonatomic,copy)NSString * usr_name;
+@property(nonatomic,copy)NSString * usr_tx;
 @end

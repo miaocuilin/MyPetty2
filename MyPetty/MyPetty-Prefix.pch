@@ -54,6 +54,10 @@
 
     //注册API
     #define REGISTERAPI @"http://54.199.161.210:8001/index.php?r=user/registerApi&age=&code=&gender=&type=&wechat=&weibo=&sig=%@&SID=%@"
+
+    //修改个人信息API
+    #define MODIFYINFOAPI @"http://54.199.161.210:8001/index.php?r=user/modifyInfoApi&"
+
     //登录API
     #define LOGINAPI @"http://54.199.161.210:8001/index.php?r=user/loginApi&planet="
 
@@ -83,6 +87,9 @@
 
     //修改默认宠物信息
     #define CHANGEDEFAULTPETAPI @"http://54.199.161.210:8001/index.php?r=user/chgDefAniApi&aid="
+
+    //发布照片 #话题#
+    #define PUBLISHTOPICLISTAPI @"http://54.199.161.210:8001/index.php?r=image/topicApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     /***************************/
     //用户宠物列表：
     //参数：usr_id,  另外参数：is_simple,区别
@@ -226,6 +233,7 @@
 
     //获取活动数和消息数
     #define ACTIVITYANDNOTIFYAPI @"http://54.199.161.210:8001/index.php?r=user/notifyApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
 
     //注销API
     #define DELETEAPI @"http://54.199.161.210:8001/index.php?r=site/clearUser&name="

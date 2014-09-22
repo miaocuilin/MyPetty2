@@ -28,5 +28,6 @@
 //@property (nonatomic,retain)UIImageView * bgImageView;
 @property (nonatomic,retain)UIImage * oriImage;
 //@property (nonatomic,retain)AFPhotoEditorController * af;
+@property (nonatomic,copy)NSString * usr_ids;
 
 @end

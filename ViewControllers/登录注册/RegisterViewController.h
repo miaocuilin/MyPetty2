@@ -99,5 +99,9 @@
 @property (nonatomic,retain)PetInfoModel * petInfoModel;
 //是否是认养
 @property (nonatomic)BOOL isAdoption;
+//是否是修改
+@property (nonatomic)BOOL isModify;
+//
+@property (nonatomic)BOOL isMyPet;
 @end
 

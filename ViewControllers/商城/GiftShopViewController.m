@@ -50,7 +50,7 @@
     [self loadData];
 //    [self buyGiftItemsAPI];
 }
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
      giftNum.text = [NSString stringWithFormat:@"%@",[USER objectForKey:@"noViewGift"]];
     if ([giftNum.text isEqualToString:@""]) {
@@ -234,7 +234,7 @@
     [giftImageView addSubview:greenBall];
     
     giftNum = [MyControl createLabelWithFrame:CGRectMake(-5, 0, 25, 15) Font:9 Text:nil];
-    giftNum.text = [NSString stringWithFormat:@"%@",[USER objectForKey:@"noViewGift"]];
+//    giftNum.text = [NSString stringWithFormat:@"%@",[USER objectForKey:@"noViewGift"]];
     giftNum.font = [UIFont boldSystemFontOfSize:9];
     giftNum.textAlignment = NSTextAlignmentCenter;
     [greenBall addSubview:giftNum];

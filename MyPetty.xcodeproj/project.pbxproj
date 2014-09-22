@@ -421,6 +421,8 @@
 		600AF3C6199B46EB00613DCB /* BottomMenuBaseViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 600AF3C4199B46EB00613DCB /* BottomMenuBaseViewController.xib */; };
 		600AF3C9199B697D00613DCB /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 600AF3C7199B697D00613DCB /* Icon.png */; };
 		600AF3CA199B697D00613DCB /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 600AF3C8199B697D00613DCB /* Icon@2x.png */; };
+		600D4D6A19CFB7FE008DA8E8 /* UserActivityListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 600D4D6919CFB7FE008DA8E8 /* UserActivityListModel.m */; };
+		600D4D6C19CFC41C008DA8E8 /* shopGift.plist in Resources */ = {isa = PBXBuildFile; fileRef = 600D4D6B19CFC41C008DA8E8 /* shopGift.plist */; };
 		601716E2198F21E1001E6DE6 /* ChooseFamilyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 601716E1198F21E1001E6DE6 /* ChooseFamilyViewController.m */; };
 		601716E6198F33FB001E6DE6 /* 5-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 601716E3198F33FB001E6DE6 /* 5-2.png */; };
 		601716E7198F33FB001E6DE6 /* 5-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 601716E4198F33FB001E6DE6 /* 5-3.png */; };
@@ -1213,6 +1215,9 @@
 		600AF3C4199B46EB00613DCB /* BottomMenuBaseViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomMenuBaseViewController.xib; sourceTree = "<group>"; };
 		600AF3C7199B697D00613DCB /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		600AF3C8199B697D00613DCB /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		600D4D6819CFB7FE008DA8E8 /* UserActivityListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserActivityListModel.h; sourceTree = "<group>"; };
+		600D4D6919CFB7FE008DA8E8 /* UserActivityListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserActivityListModel.m; sourceTree = "<group>"; };
+		600D4D6B19CFC41C008DA8E8 /* shopGift.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = shopGift.plist; sourceTree = "<group>"; };
 		601716E0198F21E1001E6DE6 /* ChooseFamilyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseFamilyViewController.h; sourceTree = "<group>"; };
 		601716E1198F21E1001E6DE6 /* ChooseFamilyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseFamilyViewController.m; sourceTree = "<group>"; };
 		601716E3198F33FB001E6DE6 /* 5-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "5-2.png"; sourceTree = "<group>"; };
@@ -1902,6 +1907,8 @@
 				497E3FD419C8525500F0F2EC /* GiftShopModel.m */,
 				6080F5BF19C8631F0021BA2B /* PetNewsModel.h */,
 				6080F5C019C8631F0021BA2B /* PetNewsModel.m */,
+				600D4D6819CFB7FE008DA8E8 /* UserActivityListModel.h */,
+				600D4D6919CFB7FE008DA8E8 /* UserActivityListModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2122,6 +2129,7 @@
 			children = (
 				60186DD619B5714400207ED6 /* CateNameList.plist */,
 				603B021C1991E68B005A6D30 /* area.plist */,
+				600D4D6B19CFC41C008DA8E8 /* shopGift.plist */,
 				09D9894A1935C08E00C83C4B /* MyPetty-Info.plist */,
 				497BE7DD19CAE90500E65BB5 /* animalAndPeople.plist */,
 				09D9894B1935C08E00C83C4B /* InfoPlist.strings */,
@@ -3173,6 +3181,7 @@
 				09D98A721935D4E900C83C4B /* 11-2.png in Resources */,
 				6038617C19A6EE0A00B1312A /* menu_left.png in Resources */,
 				6033BE0019C99753009552FE /* 1402.png in Resources */,
+				600D4D6C19CFC41C008DA8E8 /* shopGift.plist in Resources */,
 				602A880419AD80AA004F368C /* UserInfoActivityCell.xib in Resources */,
 				6020BD6C199893AA002C74FA /* RQBg.png in Resources */,
 				091EAD5C194ECEA200B0DE41 /* bcat1_1.png in Resources */,
@@ -3469,6 +3478,7 @@
 				09C87C26195137CA00F41C6A /* UIImage+UIImageExtras.m in Sources */,
 				09D98AC01935E87300C83C4B /* FavoriteCell.m in Sources */,
 				60F6180A1999DCB1003C34F2 /* CountryInfoCell.m in Sources */,
+				600D4D6A19CFB7FE008DA8E8 /* UserActivityListModel.m in Sources */,
 				49590B5319B0447A0090E697 /* DALabeledCircularProgressView.m in Sources */,
 				09D9894F1935C08E00C83C4B /* main.m in Sources */,
 				09DA9DCB1965400200E219A6 /* NoticeViewController.m in Sources */,

@@ -13,6 +13,8 @@
 #import "PetInfoModel.h"
 #import "ChooseFamilyViewController.h"
 #import "TalkViewController.h"
+#import "UserActivityListModel.h"
+#import "PicDetailViewController.h"
 @interface UserInfoViewController ()
 {
     NSDictionary *headerDict;
@@ -27,6 +29,7 @@
     // Do any additional setup after loading the view.
     self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
     self.userAttentionListArray = [NSMutableArray arrayWithCapacity:0];
+    self.userActivityListArray = [NSMutableArray arrayWithCapacity:0];
     
     self.goodsArray = [NSMutableArray arrayWithCapacity:0];
     self.goodsNumArray = [NSMutableArray arrayWithCapacity:0];
@@ -123,8 +126,14 @@
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"%@", load.dataDict);
-            
+//            NSLog(@"%@", load.dataDict);
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for (NSDictionary * dict in array) {
+                UserActivityListModel * model = [[UserActivityListModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.userActivityListArray addObject:model];
+                [model release];
+            }
             [tv3 reloadData];
         }else{
             
@@ -592,6 +601,7 @@
     tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv3.delegate = self;
     tv3.dataSource = self;
+    tv3.separatorStyle = 0;
     [sv addSubview:tv3];
     
     UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
@@ -654,7 +664,7 @@
     }else if(a == 202) {
         if (!isCreated[a-200]) {
             [self createTableView3];
-//            [self loadActData];
+            [self loadActData];
         }
     }else{
         if (!isCreated[a-200]) {
@@ -727,7 +737,7 @@
     }else if(tableView == tv2){
         return self.userAttentionListArray.count;
     }else{
-        return cellNum;
+        return self.userActivityListArray.count;
     }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -786,7 +796,15 @@
             cell = [[[NSBundle mainBundle] loadNibNamed:@"UserInfoActivityCell" owner:self options:nil] objectAtIndex:0];
         }
         cell.selectionStyle = 0;
-        [cell modifyWithString:@"# 萌宠时装秀 #"];
+        UserActivityListModel * model = self.userActivityListArray[indexPath.row];
+        [cell configUI:model];
+        cell.jumpToDetail = ^(NSString * img_id){
+            PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+            vc.img_id = img_id;
+            [self presentViewController:vc animated:YES completion:nil];
+            [vc release];
+        };
+//        [cell modifyWithString:@"# 萌宠时装秀 #"];
         return cell;
     }else{
         static NSString * cellID4 = @"ID4";

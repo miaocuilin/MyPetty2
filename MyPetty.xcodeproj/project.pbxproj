@@ -487,6 +487,7 @@
 		602EB10119B8626100B4110B /* zan_bone.png in Resources */ = {isa = PBXBuildFile; fileRef = 602EB0FA19B8626100B4110B /* zan_bone.png */; };
 		602EB10219B8626100B4110B /* zan_fish.png in Resources */ = {isa = PBXBuildFile; fileRef = 602EB0FB19B8626100B4110B /* zan_fish.png */; };
 		602EB10319B8626100B4110B /* zan_gift.png in Resources */ = {isa = PBXBuildFile; fileRef = 602EB0FC19B8626100B4110B /* zan_gift.png */; };
+		602F8EFF19D19BD400AAEC70 /* FAQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 602F8EFE19D19BD400AAEC70 /* FAQ.plist */; };
 		60320BB319B95E190094A6E0 /* UserInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60320BB219B95E190094A6E0 /* UserInfoModel.m */; };
 		60320BB619B994F40094A6E0 /* UserPetListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60320BB519B994F40094A6E0 /* UserPetListModel.m */; };
 		6032630419C1A35A0013A6AA /* FAQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6032630319C1A35A0013A6AA /* FAQViewController.m */; };
@@ -1296,6 +1297,7 @@
 		602EB0FA19B8626100B4110B /* zan_bone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zan_bone.png; sourceTree = "<group>"; };
 		602EB0FB19B8626100B4110B /* zan_fish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zan_fish.png; sourceTree = "<group>"; };
 		602EB0FC19B8626100B4110B /* zan_gift.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zan_gift.png; sourceTree = "<group>"; };
+		602F8EFE19D19BD400AAEC70 /* FAQ.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FAQ.plist; sourceTree = "<group>"; };
 		60320BB119B95E190094A6E0 /* UserInfoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoModel.h; sourceTree = "<group>"; };
 		60320BB219B95E190094A6E0 /* UserInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoModel.m; sourceTree = "<group>"; };
 		60320BB419B994F40094A6E0 /* UserPetListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPetListModel.h; sourceTree = "<group>"; };
@@ -2127,6 +2129,7 @@
 		09D989491935C08E00C83C4B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				602F8EFE19D19BD400AAEC70 /* FAQ.plist */,
 				60186DD619B5714400207ED6 /* CateNameList.plist */,
 				603B021C1991E68B005A6D30 /* area.plist */,
 				600D4D6B19CFC41C008DA8E8 /* shopGift.plist */,
@@ -3053,6 +3056,7 @@
 				091EAD30194EBCA900B0DE41 /* 19-5(2).png in Resources */,
 				09D98A8D1935D4E900C83C4B /* 3-5.png in Resources */,
 				094B4E8D196F8BD500AAF441 /* comment.png in Resources */,
+				602F8EFF19D19BD400AAEC70 /* FAQ.plist in Resources */,
 				091EAD7B194ECEA200B0DE41 /* bother4_2.png in Resources */,
 				6024A62819A227FD005ED3D3 /* sound.png in Resources */,
 				091EAD83194F0C8B00B0DE41 /* 18-5-2.png in Resources */,

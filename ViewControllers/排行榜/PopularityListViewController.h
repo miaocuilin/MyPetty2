@@ -29,7 +29,13 @@
     
     int myCurrentCountNum;
     int count;
+    //记录全列表第几行有底色
+    int markLineNum;
+    //是否显示找我
+    BOOL isShow;
     
+    //是iPhone4s还是5s
+    BOOL isiPhone4s;
 }
 @property (nonatomic,retain)NSMutableArray * catArray;
 @property (nonatomic,retain)NSMutableArray * dogArray;

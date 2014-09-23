@@ -58,7 +58,7 @@
     [self createFakeNavigation];
     
     [self createArrow];
-    [self findMeBtnClick];
+//    [self findMeBtnClick];
     [self loadData];
     
 
@@ -121,39 +121,49 @@
             }
             NSLog(@"-----%@", self.myCountryArray);
             count = 0;
-//            if (self.view.frame.size.height == 640) {
-//                //4s  3名，7名
-//                if (self.rankDataArray.count>=7) {
-//                    //寻找是否有我
-//                    for (int i=0; i<self.myCountryArray.count; i++) {
-//                        if ([self.myCountryArray[i] intValue]<=3) {
-//                            break;
-//                        }else{
-//                            [self findMeBtnClick];
-//                            break;
-//                        }
-//                    }
-//                }else{
-//                
-//                }
-//            }else{
-//                //5s  5名，9名
-//                if (self.rankDataArray.count>=9) {
-//                    //寻找是否有我
-//                    for (int i=0; i<self.myCountryArray.count; i++) {
-//                        if ([self.myCountryArray[i] intValue]<=3) {
-//                            break;
-//                        }else{
-//                            [self findMeBtnClick];
-//                            break;
-//                        }
-//                    }
-//                }else{
-//                    
-//                }
-//            }
-            
-            [self findMeBtnClick];
+            /***************逻辑判断*****************/
+            if (self.view.frame.size.height == 480) {
+                //iPhone4s  3名，7名
+                isiPhone4s = YES;
+                
+                if (self.rankDataArray.count>=6) {
+                    //寻找是否有我
+                    for (int i=0; i<self.myCountryArray.count; i++) {
+                        if ([self.myCountryArray[i] intValue]<=3+2) {
+                            //记录我的第一名
+                            markLineNum = [self.myCountryArray[i] intValue]-1;
+                            [self showEntireList];
+                            break;
+                        }else{
+                            markLineNum = [self.myCountryArray[i] intValue]-1;
+                            [self findMeBtnClick];
+                            break;
+                        }
+                    }
+                }else{
+                    [self showEntireList];
+                }
+            }else{
+                //iPhone5s  5名，9名
+                if (self.rankDataArray.count>=8) {
+                    //寻找是否有我
+                    for (int i=0; i<self.myCountryArray.count; i++) {
+                        if ([self.myCountryArray[i] intValue]<=5+2) {
+                            //记录我的第一名
+                            markLineNum = [self.myCountryArray[i] intValue]-1;
+                            [self showEntireList];
+                            break;
+                        }else{
+                            markLineNum = [self.myCountryArray[i] intValue]-1;
+                            [self findMeBtnClick];
+                            break;
+                        }
+                    }
+                }else{
+                    [self showEntireList];
+                }
+            }
+//            [self findMeBtnClick];
             LoadingSuccess;
         }else{
             LoadingFailed;
@@ -282,6 +292,10 @@
         [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:YES];
     }else{
         [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:NO];
+    }
+    if (tableView == tv && markLineNum == indexPath.row && isShow == NO) {
+        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:YES];
+        cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
     }
 //    NSLog(@"model.tx:%@",model.tx);
     if ([model.tx isEqualToString:@""]) {
@@ -441,7 +455,84 @@
         NSLog(@"排行榜中没有您的王国");
         return;
     }
+    /***************逻辑判断*****************/
+//    for (int i=0; i<self.myCountryArray.count; i++) {
+//        if (!isShow) {
+//            if ([self.myCountryArray[i] intValue] > markLineNum) {
+//                if (self.view.frame.size.height == 480) {
+//                    //iPhone4s 7名
+//                    if () {
+//                        
+//                    }
+//                }
+//            }else if(i == self.myCountryArray.count-1){
+//                
+//            }
+//        }else{
+//            
+//        }
+//    }
     
+//    if (isiPhone4s) {
+//        //iPhone4s  3名，7名
+//        if (self.rankDataArray.count>=7) {
+//            //寻找是否有我
+//            for (int i=0; i<self.myCountryArray.count; i++) {
+//                if ([self.myCountryArray[i] intValue]<3+2) {
+//                    markLineNum = [self.myCountryArray[i] intValue]-1;
+//                    [self showEntireList];
+//                    break;
+//                }else{
+//                    [self findMeBtnClick];
+//                    break;
+//                }
+//            }
+//        }else{
+//            
+//        }
+//    }else{
+//        //iPhone5s  5名，9名
+//        if (self.rankDataArray.count>=9) {
+//            //寻找是否有我
+//            for (int i=0; i<self.myCountryArray.count; i++) {
+//                if ([self.myCountryArray[i] intValue]<=3) {
+//                    break;
+//                }else{
+//                    [self findMeBtnClick];
+//                    break;
+//                }
+//            }
+//        }else{
+//            
+//        }
+//    }
+//    if (isiPhone4s) {
+//        if (isShow) {
+//            for (int i=0; i<self.myCountryArray.count; i++) {
+//                if ([self.myCountryArray[i] intValue]>markLineNum+1) {
+//                    markLineNum = [self.myCountryArray[i] intValue];
+//                }else if(i == self.myCountryArray.count-1){
+//                    //到最后也没有找到我自己国家的下一名，循环到我的第一个国家，判断底层偏移量，判断我的这一个国家是不是在界面的3+2个后，如果在--》跳到这一个；如果不在--》将上层隐藏，跳到底层的下一个。
+//                    //如何循环到下一个，而且不影响上边判断从markLineNum的下一个开始。
+//                    float offset = tv.contentOffset.y;
+//                    //offset/50为当前显示的第一个排行名次-1
+//                    if (offset/50 + 5 > [self.myCountryArray[0] intValue]) {
+//                        <#statements#>
+//                    }
+//                }
+//            }
+//        }else{
+//            //没显示上一层
+//        
+//        }
+//    }else{
+//        if (isShow) {
+//            
+//        }else{
+//            
+//        }
+//    }
+    /******************************/
     
     if (self.myCountryArray.count) {
         if (count == self.myCountryArray.count) {

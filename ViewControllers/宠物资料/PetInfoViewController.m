@@ -121,7 +121,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //1 成为粉丝 2 加入王国 3发图片 4送礼物 5叫一叫 6逗一逗 7捣捣乱
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI, self.aid, sig, [ControllerManager getSID]];
-//    NSLog(@"国王动态API:%@", url);
+    NSLog(@"国王动态API:%@", url);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            NSLog(@"国王动态数据：%@",load.dataDict);

@@ -47,6 +47,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 - (void)viewDidLoad
 {
+//    self.pet_aid = [USER objectForKey:@"aid"];
+    
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
@@ -61,6 +63,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     // Start the Aviary Editor OpenGL Load
     [AFOpenGLManager beginOpenGLLoad];
+
     
     segmentClickIndex = 1;
     [self createScrollView];
@@ -209,16 +212,16 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
     sv.delegate = self;
     sv.contentSize = CGSizeMake(320*3, self.view.frame.size.height);
-    sv.contentOffset = CGPointMake(320, 0);
+    sv.contentOffset = CGPointMake(0, 0);
     sv.pagingEnabled = YES;
     sv.showsHorizontalScrollIndicator = NO;
     [self.view addSubview:sv];
 }
 -(void)createViewControllers
 {
-    RandomViewController * rvc = [[RandomViewController alloc] init];
+    RecommendViewController * rvc = [[RecommendViewController alloc] init];
     [self addChildViewController:rvc];
-    [rvc.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
+    [rvc.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
     [sv addSubview:rvc.view];
     
 //    WaterViewController *water = [[WaterViewController alloc] init];
@@ -241,7 +244,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     sc.frame = CGRectMake(10, 69, 300, 30);
     [sc addTarget:self action:@selector(segmentClick:) forControlEvents:UIControlEventValueChanged];
     //默认选中第二个，宇宙广场
-    sc.selectedSegmentIndex = 1;
+    sc.selectedSegmentIndex = 0;
     sc.tintColor = BGCOLOR;
     [self.view addSubview:sc];
 }
@@ -280,12 +283,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     int a = sv.contentOffset.x;
     sc.selectedSegmentIndex = a/320;
     
-    if (a == 0) {
-        if (isCreated[0] == NO) {
-            isCreated[0] = YES;
-            RecommendViewController * svc = [[RecommendViewController alloc] init];
+    if (a == 320) {
+        if (isCreated[1] == NO) {
+            isCreated[1] = YES;
+            RandomViewController * svc = [[RandomViewController alloc] init];
             [self addChildViewController:svc];
-            [svc.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+            [svc.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
             [sv addSubview:svc.view];
             [self.view bringSubviewToFront:sc];
         }
@@ -301,7 +304,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         if (isCreated[2] == NO) {
             isCreated[2] = YES;
-            FavoriteViewController * fvc = [[FavoriteViewController alloc] init];
+            PlanetAttentionViewController * fvc = [[PlanetAttentionViewController alloc] init];
             [self addChildViewController:fvc];
             [fvc.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
             [sv addSubview:fvc.view];
@@ -311,12 +314,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (scrollView.contentOffset.x == 0) {
-        if (isCreated[0] == NO) {
-            isCreated[0] = YES;
-            RecommendViewController * svc = [[RecommendViewController alloc] init];
+    if (scrollView.contentOffset.x == 320) {
+        if (isCreated[1] == NO) {
+            isCreated[1] = YES;
+            RandomViewController * svc = [[RandomViewController alloc] init];
             [self addChildViewController:svc];
-            [svc.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+            [svc.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
             [sv addSubview:svc.view];
             [self.view bringSubviewToFront:sc];
             

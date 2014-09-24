@@ -165,6 +165,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 }
                 [model release];
             }
+//            NSLog(@"%@", [self.countryMembersDataArray[0] usr_id]);
             [self createCountryMembersTableView];
 //            [self loadKingPresentsData];
         }
@@ -224,10 +225,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    NSLog(@"国王信息API:%@", animalInfoAPI);
     [[httpDownloadBlock alloc] initWithUrlStr:animalInfoAPI Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-//            NSLog(@"国王信息:%@", load.dataDict);
+            NSLog(@"国王信息:%@", load.dataDict);
             petInfoDict = [load.dataDict objectForKey:@"data"];
             //宠物父类信息字典
             self.shakeInfoDict = [load.dataDict objectForKey:@"data"];
+//            self.pet_aid = [self.shakeInfoDict objectForKey:@"aid"];
             [self createHeader];
 
             [self.view bringSubviewToFront:navView];
@@ -1015,7 +1017,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv3.delegate = self;
     tv3.dataSource = self;
-    [tv3 addFooterWithTarget:self action:@selector(loadKingMembersDataMore)];
+//    [tv3 addFooterWithTarget:self action:@selector(loadKingMembersDataMore)];
     [sv addSubview:tv3];
     
     UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
@@ -1355,12 +1357,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [vc release];
     }
     if (tableView == tv3) {
+//        NSLog(@"%@--%@", [self.countryMembersDataArray[0] name], [self.countryMembersDataArray[0] usr_id]);
         CountryMembersModel * model = self.countryMembersDataArray[indexPath.row];
-        NSLog(@"%d--%@--%@", self.countryMembersDataArray.count, model.tx, model.usr_id);
+        
+//        NSLog(@"%d--%d--%@--%@--%@", indexPath.row, self.countryMembersDataArray.count, model.tx, model.usr_id, [self.countryMembersDataArray[indexPath.row] usr_id]);
         //跳转到用户页面
-        NSLog(@"model.usr_id:%@--%@---%@",model.usr_id,model.city,model.gender);
+//        NSLog(@"model.usr_id:%@--%@---%@",model.usr_id,model.city,model.gender);
         UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] init];
-        NSLog(@"%@", model.usr_id);
+//        NSLog(@"%@", model.usr_id);
         userInfoVC.usr_id = model.usr_id;
         [self presentViewController:userInfoVC animated:YES completion:^{
             [userInfoVC release];

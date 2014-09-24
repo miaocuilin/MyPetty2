@@ -213,7 +213,7 @@
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (section == 0) {
-        return @"账户设置";
+        return @"账号设置";
     }else if(section == 1){
         return @"同步分享";
     }else{

@@ -9,6 +9,7 @@
 #import "ToolTipsViewController.h"
 #import "ChooseInViewController.h"
 #import "GiftShopModel.h"
+#import "GiftShopViewController.h"
 #define PAGENUMBER 4
 @interface ToolTipsViewController ()
 @property (nonatomic,retain)NSMutableArray *giftDataArray;
@@ -367,29 +368,27 @@
     giftScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height)];
     giftScrollView.delegate = self;
     giftScrollView.pagingEnabled = YES;
-    giftScrollView.showsVerticalScrollIndicator = NO;
     giftScrollView.showsHorizontalScrollIndicator = NO;
-    giftScrollView.backgroundColor = [UIColor clearColor];
     
     
     CGSize scrollViewSize = CGSizeMake(bodyView.frame.size.width * PAGENUMBER, giftScrollView.frame.size.height);
     [giftScrollView setContentSize:scrollViewSize];
-    int HorizontalDistance = 15;//水平间距
-    int VerticalDistance = 10;//垂直间距
-    int PageNumber = 1;
-    while (PageNumber <= PAGENUMBER ) {
-        for (int i = 1; i <= 3; i++)
-        {
-            for (int j = 1; j<=3; j++) {
-                
-            }
-        }
-        PageNumber++;
-    }
+    int h = 15;//水平间距
+    int v = 10;//垂直间距
+//    int PageNumber = 1;
+//    while (PageNumber <= PAGENUMBER ) {
+//        for (int i = 1; i <= 3; i++)
+//        {
+//            for (int j = 1; j<=3; j++) {
+//                
+//            }
+//        }
+//        PageNumber++;
+//    }
     
     for(int i=0;i<self.giftDataArray.count;i++){
         
-        UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(HorizontalDistance+i/9*320+i%3*(HorizontalDistance +80), VerticalDistance+i%9/3*(VerticalDistance + 90), 80, 90)];
+        UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(h+i%3*(80+h)+300*(i/9), h+(i/3)%3*(90+v), 80, 90)];
         imageView.image = [UIImage imageNamed:@"product_bg.png"];
         [giftScrollView addSubview:imageView];
         [imageView release];
@@ -425,7 +424,7 @@
         
         
         
-        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(HorizontalDistance+i/9*320+i%3*(HorizontalDistance +80), VerticalDistance+i%9/3*(VerticalDistance + 90), 80, 90) ImageName:nil Target:self Action:@selector(productBuyAction:) Title:nil];
+        UIButton * button = [MyControl createButtonWithFrame:imageView.frame ImageName:nil Target:self Action:@selector(productBuyAction:) Title:nil];
         [giftScrollView addSubview:button];
         button.tag = 1000+i;
     }
@@ -460,7 +459,13 @@
 {
     NSLog(@"去商城");
     [giftHUD hide:YES];
-    [self createRealityNoMoneyAlertView];
+//    [self createRealityNoMoneyAlertView];
+    GiftShopViewController *vc = [[GiftShopViewController alloc] init];
+    vc.isQuick = YES;
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
 }
 - (void)colseGiftAction
 {

@@ -123,9 +123,9 @@
     UIImage * image = [UIImage imageWithData:data];
     self.bgImageView.image = image;
 
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
-    [self.view addSubview:tempView];
+//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+//    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+//    [self.view addSubview:tempView];
 }
 
 -(void)createUI

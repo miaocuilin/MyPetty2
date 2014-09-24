@@ -153,29 +153,29 @@
     }
     
 }
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    if (tableView == tv) {
-        UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 35)];
-        view.backgroundColor = [UIColor colorWithRed:242/255.0 green:239/255.0 blue:234/255.0 alpha:1];
-        
-        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(20, 0, 200, 35) Font:17 Text:@"常见问题分类"];
-        label.textColor = [UIColor lightGrayColor];
-        [view addSubview:label];
-        return view;
-    }else{
-        return nil;
-    }
-    
-}
--(float)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    if (tableView == tv) {
-        return 35.0f;
-    }else{
-        return 0;
-    }
-}
+//-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    if (tableView == tv) {
+//        UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 35)];
+//        view.backgroundColor = [UIColor colorWithRed:242/255.0 green:239/255.0 blue:234/255.0 alpha:1];
+//        
+//        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(20, 0, 200, 35) Font:17 Text:@"常见问题分类"];
+//        label.textColor = [UIColor lightGrayColor];
+//        [view addSubview:label];
+//        return view;
+//    }else{
+//        return nil;
+//    }
+//    
+//}
+//-(float)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    if (tableView == tv) {
+//        return 35.0f;
+//    }else{
+//        return 0;
+//    }
+//}
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == tv) {

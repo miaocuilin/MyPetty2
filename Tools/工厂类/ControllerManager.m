@@ -280,7 +280,7 @@ static LevelRank *levelAndRank =nil;
     UIImage *imageBG = [UIImage imageNamed:iconImageString];
     imageView.image = imageBG;
     [HUD show:YES];
-    [HUD hide:YES afterDelay:1.5];
+    [HUD hide:YES afterDelay:2.0];
     
 }
 +(id)shareLevelAndRank
@@ -420,7 +420,7 @@ static LevelRank *levelAndRank =nil;
     }
 }
 //#pragma mark -
-+(NSDictionary *)returnGiftDictWithItemId:(NSString *)itemId
++(NSArray *)returnAllGiftsArray
 {
     NSMutableArray * array = [NSMutableArray arrayWithCapacity:0];
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"shopGift" ofType:@"plist"];
@@ -433,7 +433,7 @@ static LevelRank *levelAndRank =nil;
     [array addObjectsFromArray:level1];
     [array addObjectsFromArray:level2];
     [array addObjectsFromArray:level3];
-
+    
     
     NSArray *level4 =[[DictData objectForKey:@"bad"] objectForKey:@"level0"];
     NSArray *level5 =[[DictData objectForKey:@"bad"] objectForKey:@"level1"];
@@ -441,6 +441,11 @@ static LevelRank *levelAndRank =nil;
     [array addObjectsFromArray:level4];
     [array addObjectsFromArray:level5];
     [array addObjectsFromArray:level6];
+    return array;
+}
++(NSDictionary *)returnGiftDictWithItemId:(NSString *)itemId
+{
+    NSArray * array = [self returnAllGiftsArray];
     
     NSDictionary * dict = nil;
     for (int i=0; i<array.count; i++) {

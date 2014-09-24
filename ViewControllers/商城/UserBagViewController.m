@@ -38,7 +38,7 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"背包物品:%@", load.dataDict);
-            if ([load.dataDict objectForKey:@"data"] != NO) {
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
                 NSDictionary * dict = [load.dataDict objectForKey:@"data"];
                 [self.goodsArray removeAllObjects];
                 [self.goodsNumArray removeAllObjects];
@@ -60,6 +60,13 @@
                 //获取对应数量
                 for (int i=0; i<self.goodsArray.count; i++) {
                     self.goodsNumArray[i] = [dict objectForKey:self.goodsArray[i]];
+                }
+                for(int i=0;i<self.goodsArray.count;i++){
+                    if ([self.goodsNumArray[i] intValue] == 0) {
+                        [self.goodsArray removeObjectAtIndex:i];
+                        [self.goodsNumArray removeObjectAtIndex:i];
+                        i--;
+                    }
                 }
                 [self.collectionView reloadData];
             }

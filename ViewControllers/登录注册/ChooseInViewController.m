@@ -38,16 +38,24 @@
     if ([[USER objectForKey:@"planet"] intValue] == 1) {
         self.isMi = YES;
     }
+    
     [self createUI];
 }
 
 -(void)createUI
 {
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+    [self.view addSubview:backImageView];
+    
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    backBtn.showsTouchWhenHighlighted = YES;
+    [self.view addSubview:backBtn];
+    /******************************/
     UIView * statusView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 20)];
     statusView.backgroundColor = BGCOLOR;
     [self.view addSubview:statusView];
     
-    ambassadorMessage = [MyControl createLabelWithFrame:CGRectMake(120, 60, 140, 40) Font:15 Text:nil];
+    ambassadorMessage = [MyControl createLabelWithFrame:CGRectMake(80, 60, 140, 40) Font:15 Text:nil];
     ambassadorMessage.font = [UIFont boldSystemFontOfSize:15];
     if (_isMi) {
         ambassadorMessage.text = @"我 是 喵 星 大 使，\n欢 迎 来 到 喵 星！";
@@ -58,7 +66,7 @@
     [self.view addSubview:ambassadorMessage];
     
     
-    UIImageView * ambassador = [MyControl createImageViewWithFrame:CGRectMake(430/2, 200/2, 170/2, 180/2) ImageName:@""];
+    UIImageView * ambassador = [MyControl createImageViewWithFrame:CGRectMake(370/2, 170/2, 230/2, 206/2) ImageName:@""];
     if (_isMi) {
         ambassador.image = [UIImage imageNamed:@"catAmbassador.png"];
     }else{
@@ -129,26 +137,35 @@
     UIImageView * earth = [MyControl createImageViewWithFrame:CGRectMake(0, self.view.frame.size.height-100, 320, 219/2) ImageName:@"2-b.png"];
     [self.view addSubview:earth];
     
-    UIImageView * switchBg = [MyControl createImageViewWithFrame:CGRectMake(0, self.view.frame.size.height-45, 150, 45) ImageName:@""];
-    switchBg.image = [[UIImage imageNamed:@"switchBg.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:20];
-    [self.view addSubview:switchBg];
+//    UIImageView * switchBg = [MyControl createImageViewWithFrame:CGRectMake(0, self.view.frame.size.height-45, 150, 45) ImageName:@""];
+//    switchBg.image = [[UIImage imageNamed:@"switchBg.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:20];
+//    [self.view addSubview:switchBg];
+//    
+//    UIImageView * head = [MyControl createImageViewWithFrame:CGRectMake(2, 2, 60, 40) ImageName:@"dogHead.png"];
+//    if (!_isMi) {
+//        head.frame = CGRectMake(2, 2, 40, 40);
+//        head.image = [UIImage imageNamed:@"catHead.png"];
+//    }
+//    [switchBg addSubview:head];
+//    
+//    UILabel * label = [MyControl createLabelWithFrame:CGRectMake(60, 12, 80, 20) Font:15 Text:@"切换到喵星"];
+//    if (_isMi) {
+//        label.text = @"切换到汪星";
+//    }
+//    label.textColor = [UIColor colorWithRed:250/255.0 green:162/255.0 blue:134/255.0 alpha:1];
+//    [switchBg addSubview:label];
     
-    UIImageView * head = [MyControl createImageViewWithFrame:CGRectMake(2, 2, 60, 40) ImageName:@"dogHead.png"];
-    if (!_isMi) {
-        head.frame = CGRectMake(2, 2, 40, 40);
-        head.image = [UIImage imageNamed:@"catHead.png"];
+    UIButton * switchBtn = [MyControl createButtonWithFrame:CGRectMake(0, self.view.frame.size.height-167/2, 275/2, 167/2) ImageName:@"" Target:self Action:@selector(switchBtnClick) Title:nil];
+    if (self.isMi) {
+        [switchBtn setBackgroundImage:[UIImage imageNamed:@"catHead.png"] forState:UIControlStateNormal];
+    }else{
+        [switchBtn setBackgroundImage:[UIImage imageNamed:@"dogHead.png"] forState:UIControlStateNormal];
     }
-    [switchBg addSubview:head];
-    
-    UILabel * label = [MyControl createLabelWithFrame:CGRectMake(60, 12, 80, 20) Font:15 Text:@"切换到喵星"];
-    if (_isMi) {
-        label.text = @"切换到汪星";
-    }
-    label.textColor = [UIColor colorWithRed:250/255.0 green:162/255.0 blue:134/255.0 alpha:1];
-    [switchBg addSubview:label];
-    
-    UIButton * switchBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 150, 45) ImageName:@"" Target:self Action:@selector(switchBtnClick) Title:nil];
-    [switchBg addSubview:switchBtn];
+    [self.view addSubview:switchBtn];
+}
+-(void)backBtnClick
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)switchBtnClick
 {
@@ -159,9 +176,13 @@
         _isMi = YES;
         NSLog(@"切换到喵星");
     }
-    for (int i=0; i<8; i++) {
-        [self.view.subviews[0] removeFromSuperview];
+    //注意以下两种方法的区别
+    for (UIView * view in self.view.subviews) {
+        [view removeFromSuperview];
     }
+//    for (int i=0; i<8; i++) {
+//        [self.view.subviews[0] removeFromSuperview];
+//    }
     [self createUI];
 }
 

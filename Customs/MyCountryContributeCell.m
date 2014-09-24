@@ -58,7 +58,8 @@
 }
 -(void)configUI:(CountryMembersModel *)model
 {
-    model.usr_id = usr_id;
+//    NSLog(@"%@", model.usr_id)
+    usr_id = model.usr_id;
     self.name.text = model.name;
     self.location.text =[ControllerManager returnProvinceAndCityWithCityNum:model.city];
     self.contribution.text = model.t_contri;

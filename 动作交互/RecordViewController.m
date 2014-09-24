@@ -148,7 +148,7 @@
     
     //上方视图
     self.upScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
-    
+    self.upScrollView.scrollEnabled = NO;
     [bodyView addSubview:self.upScrollView];
     self.upScrollView.contentSize = CGSizeMake(self.upScrollView.frame.size.width*5, self.upScrollView.frame.size.height);
     self.upScrollView.pagingEnabled = YES;

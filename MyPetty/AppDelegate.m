@@ -25,6 +25,7 @@
 #import "JDSideMenu.h"
 
 #import "ChoseLoadViewController.h"
+#import "ChooseInViewController.h"
 #import "ChooseFamilyViewController.h"
 #import "JDMenuViewController.h"
 #import "PetInfoViewController.h"
@@ -113,6 +114,7 @@
 //    JDMenuViewController * info = [[JDMenuViewController alloc] init];
 //    JDMenuViewController * fvc = [[JDMenuViewController alloc] init];
     FirstViewController * info = [[FirstViewController alloc] init];
+//    ChooseInViewController * info = [[ChooseInViewController alloc] init];
 //    AboutViewController * info = [[AboutViewController alloc] init];
 //    PopularityListViewController * info = [[PopularityListViewController alloc] init];
 //    ContributionViewController * info = [[ContributionViewController alloc] init];

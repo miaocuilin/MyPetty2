@@ -234,7 +234,8 @@
             //父类的宠物信息字典
 //            masterID = [dic objectForKey:@"master_id"];
             super.shakeInfoDict = dic;
-            
+//            self.pet_aid = [dic objectForKey:@"aid"];
+//            [super viewDidLoad];
             
             //改变header数据
             self.name.text = [dic objectForKey:@"name"];
@@ -552,7 +553,7 @@
     [giftBgView addSubview:share];
     
     //话题
-    UILabel * topic = [MyControl createLabelWithFrame:CGRectMake(15, giftBgView.frame.origin.y+giftBgView.frame.size.height+10, 200, 20) Font:14 Text:@"#一起来看超级月亮#"];
+    UILabel * topic = [MyControl createLabelWithFrame:CGRectMake(15, giftBgView.frame.origin.y+giftBgView.frame.size.height+10, 200, 20) Font:14 Text:@""];
     if (self.topic_name.length != 0) {
         topic.text = [NSString stringWithFormat:@"#%@#", self.topic_name];
     }
@@ -567,7 +568,7 @@
     topicDetail.textColor = [UIColor darkGrayColor];
     [self.sv addSubview:topicDetail];
 
-    topicUser = [MyControl createLabelWithFrame:CGRectMake(15, topicDetail.frame.origin.y+topicDetail.frame.size.height+10, 200, 20) Font:14 Text:@"没有@小伙伴"];
+    topicUser = [MyControl createLabelWithFrame:CGRectMake(15, topicDetail.frame.origin.y+topicDetail.frame.size.height+10, 200, 20) Font:14 Text:@""];
     topicUser.textColor = BGCOLOR;
     if (self.relates.length != 0) {
         topicUser.text = self.relates;
@@ -1297,13 +1298,17 @@
     //添加评论
     [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];
     if (isReply) {
-        [self.nameArray addObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]]];
+        [self.nameArray insertObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]] atIndex:0];
+//        [self.nameArray addObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]]];
     }else{
-        [self.nameArray addObject:[USER objectForKey:@"name"]];
+        [self.nameArray insertObject:[USER objectForKey:@"name"] atIndex:0];
+//        [self.nameArray addObject:[USER objectForKey:@"name"]];
     }
     
-    [self.bodyArray addObject:commentTextView.text];
-    [self.createTimeArray addObject:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]];
+    [self.bodyArray insertObject:commentTextView.text atIndex:0];
+//    [self.bodyArray addObject:commentTextView.text];
+    [self.createTimeArray insertObject:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]] atIndex:0];
+//    [self.createTimeArray addObject:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]];
     
     [UIView animateWithDuration:0.3 animations:^{
         commentBgView.frame = CGRectMake(-self.view.frame.size.width, self.view.frame.size.height-216-40, 320, 40);

@@ -34,7 +34,10 @@
     protWebView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
     [self.view addSubview:protWebView];
     protWebView.delegate = self;
-    NSURL *url = [[NSURL alloc]initWithString:@"http://www.4399.com"];
+    
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
+    NSString * URL = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", HAVEFUNAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+    NSURL *url = [[NSURL alloc]initWithString:URL];
     [protWebView loadRequest:[NSURLRequest requestWithURL:url]];
 }
 -(void)createFakeNavigation
@@ -61,8 +64,8 @@
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
     
-    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(320-31, 33, 18, 16) ImageName:@"5-5.png"];
-    [navView addSubview:searchImageView];
+//    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(320-31, 33, 18, 16) ImageName:@"5-5.png"];
+//    [navView addSubview:searchImageView];
     
 //    UIButton * searchBtn = [MyControl createButtonWithFrame:CGRectMake(320-41-5, 25, 35, 30) ImageName:@"" Target:self Action:@selector(searchBtnClick) Title:nil];
 //    //    searchBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];

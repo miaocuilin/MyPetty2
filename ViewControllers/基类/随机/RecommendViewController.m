@@ -36,6 +36,7 @@
 -(void)loadData
 {
     StartLoading;
+    
     NSString * url = [NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]];
 //    NSLog(@"recommendAPI:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {

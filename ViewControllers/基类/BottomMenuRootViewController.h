@@ -27,6 +27,10 @@
 @property(nonatomic,retain)NSDictionary *animalInfoDict;
 @property(nonatomic,retain)NSDictionary *shakeInfoDict;
 @property(nonatomic,copy)NSString *masterID;
+
+@property(nonatomic,copy)NSString * currentName;
+//@property(nonatomic,copy)NSString * pet_aid;
+
 -(void)isRegister;
 -(void)hideAll;
 - (void)loadAnimalInfoData;

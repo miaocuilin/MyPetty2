@@ -79,7 +79,12 @@
         if (isFinish) {
             int index = [[[load.dataDict objectForKey:@"data"] objectForKey:@"shake_count"] intValue];
             self.count = index;
+
             timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:3];
+            
+            if (self.count == 0) {
+                self.upView.contentOffset = CGPointMake(300*3, 0);
+            }
         }
     }];
     [request release];
@@ -87,6 +92,9 @@
 #pragma mark - 赠送礼物界面
 - (void)sendGiftData
 {
+    if (self.count == 0) {
+        self.upView.contentOffset = CGPointMake(300*3, 0);
+    }
     GiftShopModel *model;
     int index ;
     NSString * add_rq;
@@ -273,6 +281,8 @@
     UIImageView *shakeImageView = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 50, 0, 100, 110) ImageName:@"nochance.png"];
     [shakeBg4 addSubview:shakeImageView];
     //底部视图
+    
+    
 #pragma mark - bottom
     UIView *downView = [MyControl createViewWithFrame:CGRectMake(0, bodyView.frame.size.height-70, bodyView.frame.size.width, 70)];
     [bodyView addSubview:downView];

@@ -63,6 +63,8 @@
             }
             LoadingSuccess;
             [self createHeader];
+            //
+            
             
         }else{
             LoadingFailed;
@@ -450,9 +452,39 @@
     //    positionAndUserName.font = [UIFont boldSystemFontOfSize:15];
     [bgView addSubview:positionAndUserName];
     
-    //用户头像，点击进入个人中心
-    UIButton * userImageBtn = [MyControl createButtonWithFrame:CGRectMake(positionAndUserName.frame.origin.x+positionAndUserName.frame.size.width+5, 160/2, 30, 30) ImageName:@"" Target:self Action:@selector(jumpToUserInfo) Title:nil];
-    [userImageBtn setBackgroundImage:self.petHeadImage forState:UIControlStateNormal];
+    //宠物头像，点击进入宠物主页
+    UIButton * userImageBtn = [MyControl createButtonWithFrame:CGRectMake(positionAndUserName.frame.origin.x+positionAndUserName.frame.size.width+5, 160/2, 30, 30) ImageName:@"defaultPetHead.png" Target:self Action:@selector(jumpToUserInfo) Title:nil];
+    if (self.petHeadImage != nil) {
+        [userImageBtn setBackgroundImage:self.petHeadImage forState:UIControlStateNormal];
+    }else{
+        /**************************/
+        if (!([[headerDict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]] || [[headerDict objectForKey:@"a_tx"] length]==0)) {
+            NSString * docDir = DOCDIR;
+            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"a_tx"]]];
+            //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+            if (image) {
+                [userImageBtn setBackgroundImage:image forState:UIControlStateNormal];
+                //            headImageView.image = image;
+            }else{
+                //下载头像
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXAPI, [headerDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        [userImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                        //                    headImageView.image = load.dataImage;
+                        NSString * docDir = DOCDIR;
+                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"a_tx"]]];
+                        [load.data writeToFile:txFilePath atomically:YES];
+                    }else{
+                        NSLog(@"头像下载失败");
+                    }
+                }];
+                [request release];
+            }
+        }
+        /**************************/
+    }
+    
     userImageBtn.layer.cornerRadius = 15;
     userImageBtn.layer.masksToBounds = YES;
     [bgView addSubview:userImageBtn];

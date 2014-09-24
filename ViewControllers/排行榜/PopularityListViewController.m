@@ -122,47 +122,47 @@
             NSLog(@"-----%@", self.myCountryArray);
             count = 0;
             /***************逻辑判断*****************/
-            if (self.view.frame.size.height == 480) {
-                //iPhone4s  3名，7名
-                isiPhone4s = YES;
-                
-                if (self.rankDataArray.count>=6) {
-                    //寻找是否有我
-                    for (int i=0; i<self.myCountryArray.count; i++) {
-                        if ([self.myCountryArray[i] intValue]<=3+2) {
-                            //记录我的第一名
-                            markLineNum = [self.myCountryArray[i] intValue]-1;
-                            [self showEntireList];
-                            break;
-                        }else{
-                            markLineNum = [self.myCountryArray[i] intValue]-1;
-                            [self findMeBtnClick];
-                            break;
-                        }
-                    }
-                }else{
-                    [self showEntireList];
-                }
-            }else{
-                //iPhone5s  5名，9名
-                if (self.rankDataArray.count>=8) {
-                    //寻找是否有我
-                    for (int i=0; i<self.myCountryArray.count; i++) {
-                        if ([self.myCountryArray[i] intValue]<=5+2) {
-                            //记录我的第一名
-                            markLineNum = [self.myCountryArray[i] intValue]-1;
-                            [self showEntireList];
-                            break;
-                        }else{
-                            markLineNum = [self.myCountryArray[i] intValue]-1;
-                            [self findMeBtnClick];
-                            break;
-                        }
-                    }
-                }else{
-                    [self showEntireList];
-                }
-            }
+//            if (self.view.frame.size.height == 480) {
+//                //iPhone4s  3名，7名
+//                isiPhone4s = YES;
+//                
+//                if (self.rankDataArray.count>=6) {
+//                    //寻找是否有我
+//                    for (int i=0; i<self.myCountryArray.count; i++) {
+//                        if ([self.myCountryArray[i] intValue]<=3+2) {
+//                            //记录我的第一名
+//                            markLineNum = [self.myCountryArray[i] intValue]-1;
+//                            [self showEntireList];
+//                            break;
+//                        }else{
+//                            markLineNum = [self.myCountryArray[i] intValue]-1;
+//                            [self findMeBtnClick];
+//                            break;
+//                        }
+//                    }
+//                }else{
+//                    [self showEntireList];
+//                }
+//            }else{
+//                //iPhone5s  5名，9名
+//                if (self.rankDataArray.count>=8) {
+//                    //寻找是否有我
+//                    for (int i=0; i<self.myCountryArray.count; i++) {
+//                        if ([self.myCountryArray[i] intValue]<=5+2) {
+//                            //记录我的第一名
+//                            markLineNum = [self.myCountryArray[i] intValue]-1;
+//                            [self showEntireList];
+//                            break;
+//                        }else{
+//                            markLineNum = [self.myCountryArray[i] intValue]-1;
+//                            [self findMeBtnClick];
+//                            break;
+//                        }
+//                    }
+//                }else{
+//                    [self showEntireList];
+//                }
+//            }
 //            [self findMeBtnClick];
             LoadingSuccess;
         }else{

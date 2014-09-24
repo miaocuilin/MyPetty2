@@ -41,8 +41,9 @@
 +(NSString *)returnCateNameWithType:(NSString *)type;
 //传入城市代号，返回城市及区名
 +(NSString *)returnProvinceAndCityWithCityNum:(NSString *)cityNum;
-//传入item_id，返回所有礼物的信息的数组
 
+//传入item_id，返回所有礼物的信息的数组
++(NSArray *)returnAllGiftsArray;
 //传入item_id，返回该礼物的信息字典dict
 +(NSDictionary *)returnGiftDictWithItemId:(NSString *)itemId;
 

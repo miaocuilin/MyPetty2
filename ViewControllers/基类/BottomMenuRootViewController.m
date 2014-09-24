@@ -16,6 +16,7 @@
 #import "WalkAndTeaseViewController.h"
 #import "QuickGiftViewController.h"
 #import "RockViewController.h"
+#import "SendGiftViewController.h"
 #define headBtnWidth 64
 #define circleWidth 82
 @interface BottomMenuRootViewController ()
@@ -43,8 +44,8 @@
 - (void)loadAnimalInfoData
 {
     NSString *aid = [USER objectForKey:@"aid"];
-    NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",aid]];
-NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALINFOAPI,aid,animalInfoSig,[ControllerManager getSID]];
+    NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
+NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALINFOAPI, aid,animalInfoSig,[ControllerManager getSID]];
 //    NSLog(@"宠物信息API:%@",animalInfo);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalInfo Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"宠物信息：%@",load.dataDict);
@@ -191,11 +192,15 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }
     
     NSLog(@"送礼物");
-    QuickGiftViewController *quictGiftvc = [[QuickGiftViewController alloc] init];
-    [self addChildViewController:quictGiftvc];
-    [quictGiftvc didMoveToParentViewController:self];
-    [self.view addSubview:quictGiftvc.view];
-    [quictGiftvc release];
+//    QuickGiftViewController *quictGiftvc = [[QuickGiftViewController alloc] init];
+//    ToolTipsViewController * quictGiftvc = [[ToolTipsViewController alloc] init];
+    SendGiftViewController * vc = [[SendGiftViewController alloc] init];
+    [self addChildViewController:vc];
+    [vc didMoveToParentViewController:self];
+    
+    [self.view addSubview:vc.view];
+//    [vc createPresentGiftAlertView];
+    [vc release];
     [self hideAll];
 }
 -(void)btn3Click

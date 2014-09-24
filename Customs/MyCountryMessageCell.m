@@ -150,7 +150,8 @@
         NSString * str1 = @"喵小二";
         NSString * str2 = [model.content objectForKey:@"u_name"];
         NSString * str3 = [model.content objectForKey:@"a_name"];
-        NSString * str4 = [model.content objectForKey:@"item_name"];
+        NSString * str4 = [[ControllerManager returnGiftDictWithItemId:[model.content objectForKey:@"item_id"]] objectForKey:@"name"];
+//        NSString * str4 = [model.content objectForKey:@"item_name"];
         NSString * str5 = [NSString stringWithFormat:@"+%@", [model.content objectForKey:@"rq"]];
         NSString * bodyStr = [NSString stringWithFormat:@"%@— %@ 送给了 %@ 一个 %@ 人气 %@", str1, str2, str3, str4, str5];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
@@ -173,7 +174,7 @@
     }else if (type == 5) {
         //摸一摸 叫一叫
         typeImageView.image = [UIImage imageNamed:@"myCountry_shout.png"];
-        NSString * str1 = @"猫君";
+        NSString * str1 = petName;
         NSString * bodyStr = [NSString stringWithFormat:@"%@ 今天心情很好，开心的叫了叫", str1];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
@@ -218,16 +219,16 @@
         
         NSString * str1 = [model.content objectForKey:@"u_name"];
         NSString * str2 = [model.content objectForKey:@"a_name"];
-        NSString * str3 = [model.content objectForKey:@"item_name"];
-        NSString * str4 = [NSString stringWithFormat:@"-%@", [model.content objectForKey:@"rq"]];
+        NSString * str3 = [[ControllerManager returnGiftDictWithItemId:[model.content objectForKey:@"item_id"]] objectForKey:@"name"];
+        NSString * str4 = [NSString stringWithFormat:@"%@", [model.content objectForKey:@"rq"]];
         
-        NSString * bodyStr = [NSString stringWithFormat:@"%@ 向 %@ 扔了一个%@ 人气 %@", str1, str2, str3, str4];
+        NSString * bodyStr = [NSString stringWithFormat:@"%@ 向 %@ 扔了一个 %@ 人气 %@", str1, str2, str3, str4];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
         
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+3, str2.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+3+str2.length+5+str3.length+4, str4.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+3+str2.length+6+str3.length+4, str4.length)];
         
         CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
         

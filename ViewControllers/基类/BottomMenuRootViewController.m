@@ -195,6 +195,10 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
 //    QuickGiftViewController *quictGiftvc = [[QuickGiftViewController alloc] init];
 //    ToolTipsViewController * quictGiftvc = [[ToolTipsViewController alloc] init];
     SendGiftViewController * vc = [[SendGiftViewController alloc] init];
+    vc.receiver_aid = [USER objectForKey:@"aid"];
+    vc.hasSendGift = ^(){
+        NSLog(@"赠送礼物给默认宠物成功!");
+    };
     [self addChildViewController:vc];
     [vc didMoveToParentViewController:self];
     

@@ -11,7 +11,7 @@
 #import "UserInfoRankCell.h"
 #import "UserPetListModel.h"
 #import "PetInfoModel.h"
-#import "ChooseFamilyViewController.h"
+#import "ChooseInViewController.h"
 #import "TalkViewController.h"
 #import "UserActivityListModel.h"
 #import "PicDetailViewController.h"
@@ -173,6 +173,14 @@
                 //获取对应数量
                 for (int i=0; i<self.goodsArray.count; i++) {
                     self.goodsNumArray[i] = [dict objectForKey:self.goodsArray[i]];
+                }
+                //剔除数目为0的物品
+                for(int i=0;i<self.goodsArray.count;i++){
+                    if ([self.goodsNumArray[i] intValue] == 0) {
+                        [self.goodsArray removeObjectAtIndex:i];
+                        [self.goodsNumArray removeObjectAtIndex:i];
+                        i--;
+                    }
                 }
             }
             [self createTableView4];
@@ -566,7 +574,6 @@
     tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
-    
     [sv addSubview:tv];
     
     UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
@@ -876,7 +883,7 @@
             giftName.textAlignment = NSTextAlignmentCenter;
             [imageView addSubview:giftName];
             
-            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(20, 20, 45, 45) ImageName:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"no"]]];
+            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(5, 20, 75, 50) ImageName:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"no"]]];
             [imageView addSubview:giftPic];
             
             UIImageView * gift = [MyControl createImageViewWithFrame:CGRectMake(20, 90-14-5, 12, 14) ImageName:@"detail_gift.png"];
@@ -1022,7 +1029,7 @@
 -(void)addCountry
 {
     NSLog(@"加入国家");
-    ChooseFamilyViewController * vc = [[ChooseFamilyViewController alloc] init];
+    ChooseInViewController * vc = [[ChooseInViewController alloc] init];
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }

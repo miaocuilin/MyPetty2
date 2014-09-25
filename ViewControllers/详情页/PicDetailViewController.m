@@ -14,6 +14,7 @@
 #import "PetInfoViewController.h"
 #import "MassWatchViewController.h"
 #import "QuickGiftViewController.h"
+#import "SendGiftViewController.h"
 @interface PicDetailViewController ()
 
 @end
@@ -140,11 +141,13 @@
             }
             self.shares = [dict objectForKey:@"shares"];
 //            NSLog(@"%@", [dict objectForKey:@"shares"]);
+            self.gifts = [dict objectForKey:@"gifts"];
             self.cmt = [dict objectForKey:@"cmt"];
             self.num = [dict objectForKey:@"likes"];
             self.imageURL = [dict objectForKey:@"url"];
             self.usr_id = [dict objectForKey:@"usr_id"];
             self.likers = [dict objectForKey:@"likers"];
+            self.senders = [dict objectForKey:@"senders"];
             self.comments = [dict objectForKey:@"comments"];
             self.topic_name = [dict objectForKey:@"topic_name"];
             self.relates = [dict objectForKey:@"relates"];
@@ -513,7 +516,8 @@
     vLine.backgroundColor = [UIColor lightGrayColor];
     [giftBgView addSubview:vLine];
     
-    UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(65, 7.5, 120, 20) Font:15 Text:nil];
+    giftNum = [MyControl createLabelWithFrame:CGRectMake(65, 7.5, 120, 20) Font:15 Text:nil];
+//    NSLog(@"%@", self.gifts);
     if (self.gifts) {
         giftNum.text = [NSString stringWithFormat:@"已经收到%@件礼物", self.gifts];
     }else{
@@ -844,7 +848,21 @@
         [vc createLoginAlertView];
 //        return;
     }else{
-        QuickGiftViewController *quictGiftvc = [[QuickGiftViewController alloc] init];
+        SendGiftViewController *quictGiftvc = [[SendGiftViewController alloc] init];
+        quictGiftvc.receiver_aid = self.aid;
+        quictGiftvc.receiver_img_id = self.img_id;
+        
+        NSLog(@"%@--%@", self.aid, [USER objectForKey:@"aid"]);
+        quictGiftvc.hasSendGift = ^(){
+            giftNum.text = [NSString stringWithFormat:@"已经收到%d件礼物", [self.gifts intValue]+1];
+            self.gifts = [NSString stringWithFormat:@"%d", [self.gifts intValue]+1];
+            /*=====================*/
+            [usersBgView removeFromSuperview];
+            //【注意】这里是commentsBgView，不是commentBgView
+            [commentsBgView removeFromSuperview];
+            [self createUsersTx];
+            [self createCmt];
+        };
         [self addChildViewController:quictGiftvc];
         [quictGiftvc didMoveToParentViewController:self];
         [self.view addSubview:quictGiftvc.view];
@@ -1041,11 +1059,20 @@
         menuBgBtn.hidden = YES;
     }];
 }
+#pragma mark - 跳转到围观群众页
 -(void)usersBtnClick
 {
-    NSLog(@"跳转到用户详情页");
+    NSLog(@"跳转到围观群众页");
     MassWatchViewController * vc = [[MassWatchViewController alloc] init];
-    vc.usr_ids = self.likers;
+    NSString * str = nil;
+    if (self.likers == nil || self.likers.length == 0) {
+        str = self.senders;
+    }else if(self.senders == nil || self.senders.length == 0){
+        str = self.likers;
+    }else{
+        str = [NSString stringWithFormat:@"%@,%@", self.senders, self.likers];
+    }
+    vc.usr_ids = str;
     vc.txTypesArray = self.txTypeTotalArray;
     vc.isMi = isMi;
     vc.modalTransitionStyle = 2;
@@ -1147,7 +1174,7 @@
         [request release];
     }else{
         StartLoading;
-        [MMProgressHUD dismissWithError:@"您已经点过赞了" afterDelay:1];
+        [MMProgressHUD dismissWithError:@"您已经点过赞了" afterDelay:0.7];
     }
     
 //    btn.selected = !btn.selected;

@@ -16,6 +16,8 @@ static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 #import "AtUsersViewController.h"
 #import "TopicViewController.h"
+//#import "IQKeyboardManager.h"
+
 @interface PublishViewController () <UITextViewDelegate,AFPhotoEditorControllerDelegate>
 {
     UITextView * _textView;
@@ -77,6 +79,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self createFakeNavigation];
     [self makeUI];
 }
+
+
 -(void)createBg
 {
     bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
@@ -227,11 +231,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [sv addSubview:bgImageView2];
     
     sina = [MyControl createButtonWithFrame:CGRectMake(20+5, 5+5, 25, 25) ImageName:@"publish_unSelected.png" Target:self Action:@selector(sinaClick) Title:nil];
-    if ([[USER objectForKey:@"sina"] intValue] == 1) {
-        sina.selected = YES;
-    }else{
-        sina.selected = NO;
-    }
     [bgImageView2 addSubview:sina];
     [sina setBackgroundImage:[UIImage imageNamed:@"publish_selected.png"] forState:UIControlStateSelected];
     
@@ -239,21 +238,31 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     sinaLabel.textColor = [UIColor colorWithRed:56/255.0 green:56/255.0 blue:56/255.0 alpha:1];
     [bgImageView2 addSubview:sinaLabel];
     
+    if ([[USER objectForKey:@"sina"] intValue] == 1) {
+        sina.selected = YES;
+        sinaLabel.textColor = BGCOLOR;
+    }else{
+        sina.selected = NO;
+    }
+    /*============================*/
     UIImageView * line = [MyControl createImageViewWithFrame:CGRectMake(300/2, 0, 2, bgImageView2.frame.size.height) ImageName:@"30-2.png"];
     [bgImageView2 addSubview:line];
     
     weChat = [MyControl createButtonWithFrame:CGRectMake(170+5, 5+5, 25, 25) ImageName:@"publish_unSelected.png" Target:self Action:@selector(weChatClick) Title:nil];
-    if ([[USER objectForKey:@"weChat"] intValue] == 1) {
-        weChat.selected = YES;
-    }else{
-        weChat.selected = NO;
-    }
     [bgImageView2 addSubview:weChat];
     [weChat setBackgroundImage:[UIImage imageNamed:@"publish_selected.png"] forState:UIControlStateSelected];
     
     weChatLabel = [MyControl createLabelWithFrame:CGRectMake(weChat.frame.origin.x+weChat.frame.size.width+7, 10, 80, 25) Font:15 Text:@"微信朋友圈"];
     weChatLabel.textColor = [UIColor colorWithRed:56/255.0 green:56/255.0 blue:56/255.0 alpha:1];
     [bgImageView2 addSubview:weChatLabel];
+    
+    if ([[USER objectForKey:@"weChat"] intValue] == 1) {
+        weChat.selected = YES;
+        weChatLabel.textColor = BGCOLOR;
+    }else{
+        weChat.selected = NO;
+    }
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -429,11 +438,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -键盘监听
 -(void)keyboardWillShow:(NSNotification *)info
 {
-    if (textBgView.frame.origin.y+textBgView.frame.size.height<=(self.view.frame.size.height-216)) {
+    float h = sv.contentOffset.y;
+    if (textBgView.frame.origin.y+textBgView.frame.size.height-h<=(self.view.frame.size.height-216)) {
         return;
     }
     [UIView animateWithDuration:0.25 animations:^{
-        textBgView.frame = CGRectMake(10, self.view.frame.size.height-80-216, 300, 80);
+        textBgView.frame = CGRectMake(10, self.view.frame.size.height-80-216+h, 300, 80);
     }];
 }
 -(void)keyboardWillHide:(NSNotification *)info
@@ -467,11 +477,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if ([str isEqualToString:@"zh-Hans"]) {
         
         [UIView animateWithDuration:0.25 animations:^{
-            textBgView.frame = CGRectMake(10, self.view.frame.size.height-height-80, 300, 80);
+            textBgView.frame = CGRectMake(10, self.view.frame.size.height-height-80+sv.contentOffset.y, 300, 80);
         }];
     }else{
         [UIView animateWithDuration:0.25 animations:^{
-            textBgView.frame = CGRectMake(10, self.view.frame.size.height-height-80, 300, 80);
+            textBgView.frame = CGRectMake(10, self.view.frame.size.height-height-80+sv.contentOffset.y, 300, 80);
         }];
     }
 }
@@ -576,7 +586,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
 //    DetailViewController * vc = [[DetailViewController alloc] init];
 //    [self presentViewController:vc animated:YES completion:^{
+    [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
         [self dismissViewControllerAnimated:YES completion:nil];
+    } completion:nil];
+    
 //    }];
 //    [vc release];
     

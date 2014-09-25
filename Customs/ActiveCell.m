@@ -66,6 +66,8 @@
     NSTimeInterval  timeInterval = [endDate timeIntervalSinceNow];
     if (timeInterval<=0) {
         statusImageView.image = [UIImage imageNamed:@"24-2.png"];
+    }else{
+        statusImageView.image = [UIImage imageNamed:@"24-1.png"];
     }
 }
 

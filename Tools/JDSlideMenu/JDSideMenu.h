@@ -21,6 +21,8 @@
 @property(nonatomic,retain)NSMutableArray * userPetListArray;
 //下载完宠物列表新数据
 @property(nonatomic,copy)void (^refreshData)(void);
+//下载完活动数 更新
+@property(nonatomic,copy)void (^refreshActNum)(NSString *);
 /****************************/
 - (id)initWithContentController:(UIViewController*)contentController
                  menuController:(UIViewController*)menuController;

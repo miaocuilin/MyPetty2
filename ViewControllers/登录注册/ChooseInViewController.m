@@ -157,9 +157,9 @@
     
     UIButton * switchBtn = [MyControl createButtonWithFrame:CGRectMake(0, self.view.frame.size.height-167/2, 275/2, 167/2) ImageName:@"" Target:self Action:@selector(switchBtnClick) Title:nil];
     if (self.isMi) {
-        [switchBtn setBackgroundImage:[UIImage imageNamed:@"catHead.png"] forState:UIControlStateNormal];
-    }else{
         [switchBtn setBackgroundImage:[UIImage imageNamed:@"dogHead.png"] forState:UIControlStateNormal];
+    }else{
+        [switchBtn setBackgroundImage:[UIImage imageNamed:@"catHead.png"] forState:UIControlStateNormal];
     }
     [self.view addSubview:switchBtn];
 }
@@ -219,7 +219,7 @@
 //    RegisterViewController * vc = [[RegisterViewController alloc] init];
     ChooseFamilyViewController * vc = [[ChooseFamilyViewController alloc] init];
 //    UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
-    
+    vc.isMi = self.isMi;
     [self presentViewController:vc animated:YES completion:nil];
 //    [nc release];
     [vc release];

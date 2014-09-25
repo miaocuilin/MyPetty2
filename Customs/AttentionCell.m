@@ -56,28 +56,31 @@
         attentionBtn.selected = YES;
     }
     
-    NSString * docDir = DOCDIR;
-    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-    UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txFilePath]];
-    if (image) {
-        [headImageBtn setBackgroundImage:image forState:UIControlStateNormal];
-    }else{
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                //本地目录，用于存放favorite下载的原图
-                NSString * docDir = DOCDIR;
-                if (!docDir) {
-                    NSLog(@"Documents 目录未找到");
+    if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length] == 0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txFilePath]];
+        if (image) {
+            [headImageBtn setBackgroundImage:image forState:UIControlStateNormal];
+        }else{
+            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    //本地目录，用于存放favorite下载的原图
+                    NSString * docDir = DOCDIR;
+                    if (!docDir) {
+                        NSLog(@"Documents 目录未找到");
+                    }else{
+                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+                        //将下载的图片存放到本地
+                        [load.data writeToFile:txFilePath atomically:YES];
+                        [headImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                    }
                 }else{
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-                    //将下载的图片存放到本地
-                    [load.data writeToFile:txFilePath atomically:YES];
-                    [headImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
                 }
-            }else{
-            }
-        }];
+            }];
+        }
     }
+    
     
     if ([model.gender intValue] == 2) {
         sexImageView.image = [UIImage imageNamed:@"woman.png"];

@@ -1258,7 +1258,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                                     height = 200;
                                 }
                                 UIImage * image = nil;
-//                                NSLog(@"%f--%f", width, height);
+                                NSLog(@"%f--%f", width, height);
                                 //改变照片大小
                                 image = [load.dataImage imageByScalingToSize:CGSizeMake(width, height)];
 //                                NSLog(@"%f--%f", image.size.width, image.size.height);

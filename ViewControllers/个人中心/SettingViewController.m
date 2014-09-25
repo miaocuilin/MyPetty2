@@ -171,12 +171,21 @@
     }else if(indexPath.section == 1){
         if (indexPath.row == 0) {
             sina = [[UISwitch alloc] initWithFrame:CGRectMake(500/2, 7, 0, 0)];
-            sina.on = YES;
+            if ([[USER objectForKey:@"sina"] intValue]) {
+                sina.on = YES;
+            }else{
+                sina.on = NO;
+            }
+            
             [sina addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
             [cell addSubview:sina];
         }else{
             weChat = [[UISwitch alloc] initWithFrame:CGRectMake(500/2, 7, 0, 0)];
-            weChat.on = YES;
+            if ([[USER objectForKey:@"weChat"] intValue]) {
+                weChat.on = YES;
+            }else{
+                weChat.on = NO;
+            }
             [weChat addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
             [cell addSubview:weChat];
         }
@@ -273,8 +282,19 @@
         NSLog(@"%d", _switch.on);
     }else if(_switch == sina){
         NSLog(@"%d", _switch.on);
-    }else{
+        if (_switch.on) {
+            [USER setObject:@"1" forKey:@"sina"];
+        }else{
+            [USER setObject:@"0" forKey:@"sina"];
+        }
+    }else if(_switch == weChat){
         NSLog(@"%d", _switch.on);
+        if (_switch.on) {
+            [USER setObject:@"1" forKey:@"weChat"];
+        }else{
+            [USER setObject:@"0" forKey:@"weChat"];
+        }
+        
     }
 }
 
@@ -289,7 +309,9 @@
     {
         //NSLog(@"%d--%@", array.count, [array objectAtIndex:i]);
         NSString *fullPath = [path stringByAppendingPathComponent:[array objectAtIndex:i]];
-        
+        if ([fullPath hasSuffix:@".plist"] || [fullPath rangeOfString:@"blurBg.png"].location != NSNotFound) {
+            continue;
+        }
         BOOL isDir;
         if ( !([fileManager fileExistsAtPath:fullPath isDirectory:&isDir] && isDir) )
         {
@@ -319,7 +341,7 @@
         NSError *error;
         NSString *path = [cachPath stringByAppendingPathComponent:p];
         NSLog(@"%@", path);
-        if (!([path hasSuffix:@".png"] || [path hasSuffix:@".jpg"] || [path hasSuffix:@".jpeg"] || [path hasSuffix:@".bmp"])) {
+        if (!([path hasSuffix:@".png"] || [path hasSuffix:@".jpg"] || [path hasSuffix:@".jpeg"] || [path hasSuffix:@".bmp"] || [path hasSuffix:@".mp3"])) {
             continue;
         }
         if ([path rangeOfString:@"blurBg.png"].location != NSNotFound) {

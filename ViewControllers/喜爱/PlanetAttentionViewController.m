@@ -55,6 +55,7 @@
             }
             [tv reloadData];
             LoadingSuccess;
+            [tv headerEndRefreshing];
         }else{
             LoadingFailed;
         }
@@ -78,6 +79,11 @@
     [self.view addSubview:tempView];
 }
 #pragma mark -
+-(void)headRefresh
+{
+    [self loadData];
+}
+
 -(void)createTableView
 {
     tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64) style:UITableViewStylePlain];
@@ -86,6 +92,8 @@
     tv.separatorStyle = 0;
     tv.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tv];
+    
+    [tv addHeaderWithTarget:self action:@selector(headRefresh)];
     
 //    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
 //    tv.tableHeaderView = tempView;

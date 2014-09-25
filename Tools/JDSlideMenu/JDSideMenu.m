@@ -243,7 +243,9 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
-            
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                self.refreshActNum([[load.dataDict objectForKey:@"data"] objectForKey:@"topic_count"]);
+            }
         }else{
             
         }

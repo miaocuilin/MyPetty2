@@ -31,7 +31,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.cateArray = [NSMutableArray arrayWithObjects:@"全部", @"新品", @"热卖", @"推荐", nil];
+    self.cateArray = [NSMutableArray arrayWithObjects:@"爱心礼物", @"捣乱礼物", nil];
     self.cateArray2 = [NSMutableArray arrayWithObjects:@"喵喵专用", @"汪汪专用", nil];
     self.orderArray = [NSMutableArray arrayWithObjects:@"由高到低", @"由低到高", nil];
     self.totalGoodsDataArray = [NSMutableArray arrayWithCapacity:0];
@@ -267,6 +267,7 @@
     if (self.isQuick) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }else{
+        [USER setObject:@"" forKey:@"noViewGift"];
         button.selected = !button.selected;
         JDSideMenu * menu = [ControllerManager shareJDSideMenu];
         if (button.selected) {
@@ -308,7 +309,7 @@
     headerBgView.alpha = 0.85;
     [headerView addSubview:headerBgView];
     
-    cateBtn = [MyControl createButtonWithFrame:CGRectMake(35, 5, 90, 25) ImageName:@"" Target:self Action:@selector(cateBtnClick) Title:@"全部"];
+    cateBtn = [MyControl createButtonWithFrame:CGRectMake(35, 5, 90, 25) ImageName:@"" Target:self Action:@selector(cateBtnClick) Title:@"爱心礼物"];
     cateBtn.layer.cornerRadius = 5;
     cateBtn.layer.masksToBounds = YES;
     cateBtn.titleLabel.font = [UIFont boldSystemFontOfSize:14];
@@ -470,9 +471,9 @@
         UIImageView * gift = [MyControl createImageViewWithFrame:CGRectMake(20, 90-14-5, 15, 15) ImageName:@"gold.png"];
         [imageView addSubview:gift];
         
-        UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(42, 90-19, 40, 15) Font:13 Text:[NSString stringWithFormat:@"%d", i*50+50]];
-        giftNum.textColor = BGCOLOR;
-        [imageView addSubview:giftNum];
+        UILabel * giftPrice = [MyControl createLabelWithFrame:CGRectMake(42, 90-19, 40, 15) Font:13 Text:[NSString stringWithFormat:@"%d", i*50+50]];
+        giftPrice.textColor = BGCOLOR;
+        [imageView addSubview:giftPrice];
         
         //新品，推荐，热卖标注
         UIImageView * label = [MyControl createImageViewWithFrame:CGRectMake(62, -6, 73/2, 46/2) ImageName:@"right_corner.png"];
@@ -505,11 +506,13 @@
         }else{
             rqNum.text = [NSString stringWithFormat:@"%@",model.add_rq];
         }
-        giftNum.text = model.price;
+        giftPrice.text = model.price;
         giftPic.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
         giftName.text=model.name;
         
     }
+    
+    [self.view bringSubviewToFront:alphaBtn];
 }
 -(void)createScrollView2
 {

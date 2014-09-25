@@ -25,6 +25,7 @@
     UILabel * topicUser;
     UIView * usersBgView;
     
+    UILabel * giftNum;
     UILabel * shareNum;
     UILabel * commentNum;
     
@@ -91,6 +92,7 @@
 //评论
 @property (nonatomic,copy)NSString * comments;
 @property (nonatomic,copy)NSString * aid;
+//礼物数
 @property (nonatomic,copy)NSString * gifts;
 @property (nonatomic,copy)NSString * shares;
 @property (nonatomic,copy)NSString * topic_name;

@@ -48,6 +48,7 @@
 #pragma mark - 背包数据
 - (void)loadBagData
 {
+    StartLoading;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERGOODSLISTAPI, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
 //    NSLog(@"背包url:%@", url);
@@ -95,9 +96,11 @@
             }
 //            NSLog(@"%d", self.tempGiftArray.count);
             //
+            LoadingSuccess;
             [self createBgView];
             [self createUI];
         }else{
+            LoadingFailed;
         }
     }];
     [request release];
@@ -113,7 +116,7 @@
     
     UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
     [totalView addSubview:titleView];
-    UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:16 Text:@"给猫君送个礼物吧"];
+    UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:16 Text:@"给Ta送个礼物吧"];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [totalView addSubview:titleLabel];
     
@@ -262,6 +265,7 @@
 #pragma mark - 买礼物
 -(void)buyGiftWithItemId:(NSString *)ItemId
 {
+    StartLoading;
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=%@&num=1dog&cat", ItemId]];
     NSString * url = [NSString stringWithFormat:@"%@%@&num=1&sig=%@&SID=%@",BUYSHOPGIFTAPI, ItemId, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
@@ -282,12 +286,19 @@
 -(void)sendGiftWithItemId:(NSString *)ItemId fromBag:(BOOL)fromBag
 {
     StartLoading;
-    NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&item_id=%@dog&cat", [USER objectForKey:@"aid"], ItemId]];
-    NSString *sendString = [NSString stringWithFormat:@"%@%@&item_id=%@&sig=%@&SID=%@", SENDSHAKEGIFT, [USER objectForKey:@"aid"],ItemId, sendSig, [ControllerManager getSID]];
-    NSLog(@"赠送url:%@",sendString);
-    httpDownloadBlock *request  = [[httpDownloadBlock alloc] initWithUrlStr:sendString Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    NSString * url = nil;
+    
+    if (self.receiver_img_id) {
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&img_id=%@&item_id=%@dog&cat", self.receiver_aid, self.receiver_img_id, ItemId]];
+        url = [NSString stringWithFormat:@"%@%@&img_id=%@&item_id=%@&sig=%@&SID=%@", SENDSHAKEGIFT, self.receiver_aid, self.receiver_img_id, ItemId, sig, [ControllerManager getSID]];
+    }else{
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&item_id=%@dog&cat", self.receiver_aid, ItemId]];
+        url = [NSString stringWithFormat:@"%@%@&item_id=%@&sig=%@&SID=%@", SENDSHAKEGIFT, self.receiver_aid,ItemId, sig, [ControllerManager getSID]];
+    }
+    
+    NSLog(@"赠送url:%@",url);
+    httpDownloadBlock *request  = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            
             if (fromBag) {
                 for (int i=0; self.bagItemIdArray.count; i++) {
                     if ([self.bagItemIdArray[i] isEqualToString:ItemId]) {
@@ -332,7 +343,8 @@
                 int index = newexp - exp;
                 [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:index];
             }
-            
+            //送礼block
+            self.hasSendGift();
             [MMProgressHUD dismissWithSuccess:@"赠送成功" title:nil afterDelay:0.1];
         }else{
             

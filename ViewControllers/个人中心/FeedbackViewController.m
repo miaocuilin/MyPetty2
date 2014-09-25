@@ -47,8 +47,14 @@
     //Enabling keyboard manager
     [[IQKeyboardManager sharedManager] setEnable:YES];
     [[IQKeyboardManager sharedManager] setKeyboardDistanceFromTextField:10];
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(umCheck:) name:UMFBCheckFinishedNotification object:nil];
 
 }
+//- (void)umCheck:(NSNotification *)notification {
+//    NSLog(@"notification = %@", notification.userInfo);
+//}
+
 
 -(void)createNavigation
 {

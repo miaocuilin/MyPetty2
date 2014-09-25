@@ -43,7 +43,7 @@
     self.totalArray = [NSMutableArray arrayWithCapacity:0];
     self.detailDict = [NSMutableDictionary dictionaryWithCapacity:0];
     
-    self.systemListArray = [NSMutableArray arrayWithObjects:@"按系统推荐", @"按人气排列", @"按人数排列", nil];
+    self.systemListArray = [NSMutableArray arrayWithObjects:@"推荐", @"人气", nil];
     [UIApplication sharedApplication].statusBarHidden = NO;
     
     
@@ -107,25 +107,29 @@
     //将数据存到数组中
     NSDictionary * dict1 = [oriDict objectForKey:@"1"];
     NSDictionary * dict2 = [oriDict objectForKey:@"2"];
-    NSDictionary * dict3 = [oriDict objectForKey:@"3"];
+//    NSDictionary * dict3 = [oriDict objectForKey:@"3"];
     
     [self.totalArray addObject:@"所有种族"];
     
-    for (int i=0; i<[dict1 count]; i++) {
-        NSString * str = [dict1 objectForKey:[NSString stringWithFormat:@"%d", 100+i+1]];
-        [self.catArray addObject:str];
-        [self.totalArray addObject:str];
+    if (self.isMi) {
+        for (int i=0; i<[dict1 count]; i++) {
+            NSString * str = [dict1 objectForKey:[NSString stringWithFormat:@"%d", 100+i+1]];
+            [self.catArray addObject:str];
+            [self.totalArray addObject:str];
+        }
+    }else{
+        for (int i=0; i<[dict2 count]; i++) {
+            NSString * str = [dict2 objectForKey:[NSString stringWithFormat:@"%d", 200+i+1]];
+            [self.dogArray addObject:str];
+            [self.totalArray addObject:str];
+        }
     }
-    for (int i=0; i<[dict2 count]; i++) {
-        NSString * str = [dict2 objectForKey:[NSString stringWithFormat:@"%d", 200+i+1]];
-        [self.dogArray addObject:str];
-        [self.totalArray addObject:str];
-    }
-    for (int i=0; i<[dict3 count]; i++) {
-        NSString * str = [dict3 objectForKey:[NSString stringWithFormat:@"%d", 300+i+1]];
-        [self.otherArray addObject:str];
-        [self.totalArray addObject:str];
-    }
+    
+//    for (int i=0; i<[dict3 count]; i++) {
+//        NSString * str = [dict3 objectForKey:[NSString stringWithFormat:@"%d", 300+i+1]];
+//        [self.otherArray addObject:str];
+//        [self.totalArray addObject:str];
+//    }
 }
 -(void)hidden
 {
@@ -207,7 +211,7 @@
     UIImageView * triangle1 = [MyControl createImageViewWithFrame:CGRectMake(117-8, 9, 10, 8) ImageName:@"5-2.png"];
     [raceBtn addSubview:triangle1];
     
-    systemBtn = [MyControl createButtonWithFrame:CGRectMake(180, 5, 110, 25) ImageName:@"" Target:self Action:@selector(systemBtnClick) Title:@"按系统推荐"];
+    systemBtn = [MyControl createButtonWithFrame:CGRectMake(180, 5, 110, 25) ImageName:@"" Target:self Action:@selector(systemBtnClick) Title:@"推荐"];
     systemBtn.layer.cornerRadius = 5;
     systemBtn.layer.masksToBounds = YES;
     systemBtn.titleLabel.font = [UIFont boldSystemFontOfSize:14];
@@ -294,8 +298,8 @@
             headImageView.image = image;
         }else{
             //下载头像
-            NSLog(@"%@", [NSString stringWithFormat:@"%@%@", USERTXURL, model.tx]);
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            NSLog(@"%@", [NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     headImageView.image = load.dataImage;
                     NSString * docDir = DOCDIR;

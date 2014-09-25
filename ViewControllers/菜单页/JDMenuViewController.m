@@ -47,6 +47,12 @@
         [self refreshCountryList];
 //        [self createUI];
     };
+    sideMenu.refreshActNum = ^(NSString * actNum){
+        activityNumLabel.text = actNum;
+        if ([actNum intValue] != 0) {
+            actGreenBall.hidden = NO;
+        }
+    };
 }
 -(void)refreshCountryList
 {
@@ -448,15 +454,15 @@
         [bgView addSubview:imageView];
         
         if (i == 2) {
-            UIImageView * greenBall = [MyControl createImageViewWithFrame:CGRectMake(20, -3, 15, 15) ImageName:@"greenBall.png"];
-//            greenBall.hidden = YES;
-            greenBall.tag = 50;
-            [imageView addSubview:greenBall];
+            actGreenBall = [MyControl createImageViewWithFrame:CGRectMake(20, -3, 15, 15) ImageName:@"greenBall.png"];
+            actGreenBall.hidden = YES;
+            actGreenBall.tag = 50;
+            [imageView addSubview:actGreenBall];
             
             activityNumLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 15, 15) Font:14 Text:@"1"];
             activityNumLabel.textAlignment = NSTextAlignmentCenter;
 //            activityNumLabel.hidden = YES;
-            [greenBall addSubview:activityNumLabel];
+            [actGreenBall addSubview:activityNumLabel];
             
         }
 //        if (i == 2) {

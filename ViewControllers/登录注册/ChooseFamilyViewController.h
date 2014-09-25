@@ -41,4 +41,6 @@
 
 @property(nonatomic,retain)NSMutableDictionary * detailDict;
 @property(nonatomic,retain)NSDictionary * cardDict;
+
+@property(nonatomic)BOOL isMi;
 @end

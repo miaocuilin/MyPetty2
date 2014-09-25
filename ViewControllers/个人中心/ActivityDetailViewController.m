@@ -419,7 +419,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    NSLog(@"%f--%f", desLabel.frame.origin.y, desLabel.frame.size.height);
     //    self.userDataArray.count
     for (int i=0; i<self.userDataArray.count; i++) {
-        UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(13+i*35, desLabel.frame.origin.y+desLabel.frame.size.height+10, 30, 30) ImageName:@"cat2.jpg"];
+        UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(13+i*35, desLabel.frame.origin.y+desLabel.frame.size.height+10, 30, 30) ImageName:@"defaultPetHead.png"];
         headImageView.layer.cornerRadius = 15;
         headImageView.layer.masksToBounds = YES;
         [bgView addSubview:headImageView];
@@ -437,33 +437,36 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [bgView addSubview:lastLine];
         }
         //头像的下载
-        NSString * docDir = DOCDIR;
-        if (!docDir) {
-            NSLog(@"Documents 目录未找到");
-        }else{
-            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.userDataArray[i] tx]]];
-            UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txFilePath]];
-            if (image) {
-                headImageView.image = image;
+        if (!([[self.userDataArray[i] tx] isKindOfClass:[NSNull class]] || [[self.userDataArray[i] tx] length] == 0)) {
+            NSString * docDir = DOCDIR;
+            if (!docDir) {
+                NSLog(@"Documents 目录未找到");
             }else{
-                [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userDataArray[i] tx]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                    if (isFinish) {
-                        //本地目录，用于存放favorite下载的原图
-                        NSString * docDir = DOCDIR;
-                        //                    NSLog(@"docDir:%@", docDir);
-                        if (!docDir) {
-                            NSLog(@"Documents 目录未找到");
+                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.userDataArray[i] tx]]];
+                UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txFilePath]];
+                if (image) {
+                    headImageView.image = image;
+                }else{
+                    [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userDataArray[i] tx]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                        if (isFinish) {
+                            //本地目录，用于存放favorite下载的原图
+                            NSString * docDir = DOCDIR;
+                            //                    NSLog(@"docDir:%@", docDir);
+                            if (!docDir) {
+                                NSLog(@"Documents 目录未找到");
+                            }else{
+                                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.userDataArray[i] tx]]];
+                                //将下载的图片存放到本地
+                                [load.data writeToFile:txFilePath atomically:YES];
+                                headImageView.image = load.dataImage;
+                            }
                         }else{
-                            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.userDataArray[i] tx]]];
-                            //将下载的图片存放到本地
-                            [load.data writeToFile:txFilePath atomically:YES];
-                            headImageView.image = load.dataImage;
                         }
-                    }else{
-                    }
-                }];
+                    }];
+                }
             }
         }
+        
     }
     /*************************************/
     cv = [[PSCollectionView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
@@ -608,7 +611,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 -(void)partButtonClick
 {
-    //跳转到奖品页
     LikersLIstViewController * vc = [[LikersLIstViewController alloc] init];
     vc.aids = self.txs;
     [USER setObject:@"1" forKey:@"isFromActivity"];
@@ -618,6 +620,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 -(void)rewardClick
 {
+    //跳转到奖品页
     RewardViewController * vc = [[RewardViewController alloc] init];
     vc.topic_id = self.listModel.topic_id;
     [self presentViewController:vc animated:YES completion:nil];

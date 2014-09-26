@@ -254,10 +254,13 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
 }
 - (void)showMenuAnimated:(BOOL)animated;
 {
-    //请求国家列表API
-    [self loadCountryList];
-    //请求消息和活动数API
-    [self getMsgAndActivityNum];
+    if ([[USER objectForKey:@"isSuccess"] intValue]) {
+        //请求国家列表API
+        [self loadCountryList];
+        //请求消息和活动数API
+        [self getMsgAndActivityNum];
+    }
+    
     
     [self showMenuAnimated:animated duration:JDSideMenuDefaultOpenAnimationTime
            initialVelocity:1.0];

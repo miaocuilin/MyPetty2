@@ -83,7 +83,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self createIQ];
 //    [self createNavigation];
     [self createBg];
-    [self getCityData];
+    
+    if ([ControllerManager getSID]) {
+        [self getCityData];
+    }
+
     [self loadCateNameList];
     
 }
@@ -322,7 +326,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UIImageView * roundImageView = [MyControl createImageViewWithFrame:CGRectMake(108.5, 326/2-116/2, 217/2, 116/2) ImageName:@"4-3.png"];
     [sv addSubview:roundImageView];
     
-    photoButton = [MyControl createButtonWithFrame:CGRectMake(105+(116-80)/2, 42+18+64-5, 80, 80) ImageName:@"defaultPetHead" Target:self Action:@selector(photoButtonClick) Title:nil];
+    photoButton = [MyControl createButtonWithFrame:CGRectMake(105+(116-80)/2, 42+18+64-5, 80, 80) ImageName:@"camaraHead.png" Target:self Action:@selector(photoButtonClick) Title:nil];
     photoButton.layer.cornerRadius = 40;
     photoButton.layer.masksToBounds = YES;
     [sv addSubview:photoButton];
@@ -458,12 +462,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UIImageView * roundImageView2 = [MyControl createImageViewWithFrame:CGRectMake(-30+320+108.5, 100-116/2+64, 217/2, 116/2) ImageName:@"4-3.png"];
     [sv addSubview:roundImageView2];
     
-    photoButton2 = [MyControl createButtonWithFrame:CGRectMake(-30+320+105+(116-80)/2, 42+18+64-5, 80, 80) ImageName:@"defaultUserHead.png" Target:self Action:@selector(photoButtonClick2) Title:nil];
+    photoButton2 = [MyControl createButtonWithFrame:CGRectMake(-30+320+105+(116-80)/2, 42+18+64-5, 80, 80) ImageName:@"camaraHead.png" Target:self Action:@selector(photoButtonClick2) Title:nil];
     photoButton2.layer.cornerRadius = 40;
     photoButton2.layer.masksToBounds = YES;
     [sv addSubview:photoButton2];
     /**************************/
-    if (!([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
+    if ([ControllerManager getIsSuccess] && !([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
         NSString * docDir = DOCDIR;
         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
         //        NSLog(@"--%@--", txFilePath);

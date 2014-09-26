@@ -154,10 +154,9 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
 -(void)isRegister
 {
     if (![ControllerManager getIsSuccess]) {
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
+        /***************************/
+        ShowAlertView;
+        /***************************/
         
         [self hideAll];
         return;
@@ -259,10 +258,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
 {
     if(isOpen){
         if (![ControllerManager getIsSuccess]) {
-            ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-            [self addChildViewController:vc];
-            [self.view addSubview:vc.view];
-            [vc createLoginAlertView];
+            ShowAlertView;
             
             [self hideAll];
             return;

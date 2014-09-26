@@ -12,11 +12,17 @@
 {
     UIView * navView;
     UITableView * tv;
-    
+    int sendersCount;
 }
+//@property(nonatomic,retain)NSArray * sendersArray;
+//@property(nonatomic,retain)NSArray * likersArray;
+
 @property(nonatomic,retain)UIImageView * bgImageView;
 @property(nonatomic,retain)NSArray * txTypesArray;
 @property(nonatomic,retain)NSMutableArray * dataArray;
 @property(nonatomic,copy)NSString * usr_ids;
+
+@property(nonatomic,copy)NSString * senders;
+@property(nonatomic,copy)NSString * likers;
 @property(nonatomic)BOOL isMi;
 @end

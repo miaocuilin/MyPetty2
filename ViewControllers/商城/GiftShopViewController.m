@@ -251,6 +251,8 @@
 }
 -(void)titleBtnClick:(UIButton *)btn
 {
+    return;
+    
     btn.selected = !btn.selected;
     if (btn.selected) {
         sv2.hidden = NO;
@@ -288,6 +290,10 @@
 }
 -(void)giftBagBtnClick
 {
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        return;
+    }
     NSLog(@"跳转到我的背包");
 //    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
 //    vc.offset = 320*3;
@@ -380,10 +386,10 @@
 {
     NSLog(@"%d--%@", Line, Words);
     if (sender == dropDown) {
-        if (Line == 0) {
+//        if (Line == 0) {
             [sv removeFromSuperview];
             self.showArray = self.totalGoodsDataArray;
-        }
+//        }
         [self createScrollView];
     }else{
         [sv removeFromSuperview];
@@ -516,7 +522,7 @@
 }
 -(void)createScrollView2
 {
-    /******************************/
+    /************现实礼物******************/
     sv2 = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
     sv2.contentSize = CGSizeMake(320, 64+35+15+(30/2)*185);
     [self.view addSubview:sv2];
@@ -588,6 +594,10 @@
 }
 -(void)buttonClick:(UIButton *)btn
 {
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        return;
+    }
     NSLog(@"点击了虚拟礼物第%d个", btn.tag-1000+1);
     [self buyGiftItemsAPI:btn.tag -1000];
 }
@@ -611,6 +621,9 @@
     BottomGold = [MyControl createLabelWithFrame:CGRectMake(MyGold.frame.origin.x+size.width, 10, 100, 20) Font:15 Text:[USER objectForKey:@"gold"]];
     BottomGold.textColor = BGCOLOR;
     [view addSubview:BottomGold];
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        BottomGold.text = @"500";
+    }
     
     UIButton * moreGold = [MyControl createButtonWithFrame:CGRectMake(220, (40-25)/2.0, 90, 25) ImageName:@"" Target:self Action:@selector(moreGoldClick) Title:@"更多金币"];
     moreGold.titleLabel.font = [UIFont systemFontOfSize:15];

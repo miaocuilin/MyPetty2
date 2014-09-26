@@ -24,17 +24,23 @@
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
     
     [self createBg];
-    [self loadData];
+    //请求两次：一次senders，一次likers。
+    [self loadSendersData];
 //    [self createTableView];
     [self createNavgation];
     
 }
--(void)loadData
+
+-(void)loadSendersData
 {
+    if (self.senders == nil || self.senders.length == 0) {
+        [self loadLikersData];
+        return;
+    }
     StartLoading;
-    NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", self.usr_ids];
+    NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", self.senders];
     NSString * code = [MyMD5 md5:str];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKERSAPI, self.usr_ids, code, [ControllerManager getSID]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKERSAPI, self.senders, code, [ControllerManager getSID]];
     NSLog(@"赞列表：%@", url);
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -47,6 +53,43 @@
                 [self.dataArray addObject:model];
                 [model release];
             }
+            sendersCount = self.dataArray.count;
+            
+            [self loadLikersData];
+//            [self createTableView];
+//            LoadingSuccess;
+        }else{
+            LoadingFailed;
+            NSLog(@"请求赞列表失败");
+        }
+    }];
+}
+-(void)loadLikersData
+{
+    if (self.likers == nil || self.likers.length == 0) {
+        [self createTableView];
+        LoadingSuccess;
+        return;
+    }
+    StartLoading;
+    NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", self.likers];
+    NSString * code = [MyMD5 md5:str];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKERSAPI, self.likers, code, [ControllerManager getSID]];
+    NSLog(@"赞列表：%@", url);
+    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            
+//            [self.dataArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"] ;
+            for (NSDictionary * dict in array) {
+                UserInfoModel * model = [[UserInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.dataArray addObject:model];
+                [model release];
+            }
+//            sendersCount = self.dataArray.count;
+            
+//            [self loadLikersData];
             [self createTableView];
             LoadingSuccess;
         }else{
@@ -113,9 +156,14 @@
         cell = [[[MassWatchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:normalCell] autorelease];
     }
     cell.num = indexPath.row;
-    cell.txType = self.txTypesArray[indexPath.row];
+//    cell.txType = self.txTypesArray[indexPath.row];
     cell.isMi = self.isMi;
-    [cell configUI:self.dataArray[indexPath.row]];
+    if (indexPath.row>=sendersCount) {
+        [cell configUI:self.dataArray[indexPath.row] isLiker:YES];
+    }else{
+        [cell configUI:self.dataArray[indexPath.row] isLiker:NO];
+    }
+    
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
     

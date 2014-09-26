@@ -11,7 +11,7 @@
 #import "FavoriteViewController.h"
 #import "RecommendViewController.h"
 #import "PlanetAttentionViewController.h"
-
+#import "RegisterViewController.h"
 #import "PublishViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
@@ -65,7 +65,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [AFOpenGLManager beginOpenGLLoad];
 
     
-    segmentClickIndex = 1;
+    segmentClickIndex = 0;
     [self createScrollView];
     [self createFakeNavigation];
     [self createViewControllers];
@@ -175,7 +175,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     button.selected = !button.selected;
     JDSideMenu * menu = [ControllerManager shareJDSideMenu];
-    if ([ControllerManager getIsSuccess]) {
+//    if ([ControllerManager getIsSuccess]) {
         if (button.selected) {
             //截屏
             UIImage * image = [MyControl imageWithView:[UIApplication sharedApplication].keyWindow];
@@ -198,14 +198,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 self.alphaBtn.hidden = YES;
             }];
         }
-    }else{
-        //提示注册
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
-//        [vc autorelease];
-    }
+//    }
+//    else{
+//        //提示注册
+//    }
 }
 -(void)createScrollView
 {
@@ -251,10 +247,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)segmentClick:(UISegmentedControl *)seg
 {
     if (sc.selectedSegmentIndex == 2 && ![ControllerManager getIsSuccess]) {
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
+        /***************************/
+        ShowAlertView;
+        /***************************/
+        
+//        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+//        [self addChildViewController:vc];
+//        [self.view addSubview:vc.view];
+//        [vc createLoginAlertView];
         
         sc.selectedSegmentIndex = segmentClickIndex;
         return;
@@ -295,11 +295,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else if(a == 320*2){
         if (![ControllerManager getIsSuccess]) {
             sv.contentOffset = CGPointMake(320, 0);
-            //提示注册
-            ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-            [self addChildViewController:vc];
-            [self.view addSubview:vc.view];
-            [vc createLoginAlertView];
+            /***************************/
+            ShowAlertView;
+            /***************************/
             return;
         }
         if (isCreated[2] == NO) {
@@ -330,11 +328,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else if(scrollView.contentOffset.x == 320*2){
         if (![ControllerManager getIsSuccess]) {
             sv.contentOffset = CGPointMake(320, 0);
-            //提示注册
-            ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-            [self addChildViewController:vc];
-            [self.view addSubview:vc.view];
-            [vc createLoginAlertView];
+            /***************************/
+            ShowAlertView;
+            /***************************/
             return;
         }
         if (isCreated[2] == NO) {
@@ -384,11 +380,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         
     }else{
         //提示注册
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
-        //        [vc autorelease];
+        /***************************/
+        ShowAlertView;
+        /***************************/
     }
     
 }

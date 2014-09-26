@@ -259,7 +259,14 @@
     }else if (indexPath.section == 2){
         if (indexPath.row == 0) {
             [self clearData];
-        }else if(indexPath.row == 2){
+        }else if(indexPath.row == 1){
+            [USER setObject:@"0" forKey:@"isSuccess"];
+            [USER setObject:@"0" forKey:@"SID"];
+            [ControllerManager setIsSuccess:0];
+            [ControllerManager setSID:@"0"];
+            StartLoading;
+            [MMProgressHUD dismissWithSuccess:@"重置成功" title:nil afterDelay:0.5f];
+        }if(indexPath.row == 2){
             FAQViewController * vc = [[FAQViewController alloc] init];
             [self presentViewController:vc animated:YES completion:nil];
             [vc release];

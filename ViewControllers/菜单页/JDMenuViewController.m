@@ -212,40 +212,53 @@
     headBg2.backgroundColor = [UIColor whiteColor];
     [sv3 addSubview:headBg2];
     
-    headImageBtn = [MyControl createButtonWithFrame:CGRectMake(4, 4, 62, 62) ImageName:@"defaultUserHead.png" Target:self Action:@selector(headImageBtnClick) Title:nil];
-//    headImageView = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
-//    headImageView.canClick = YES;
-//    headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
-    headImageBtn.layer.cornerRadius = 31;
-    headImageBtn.layer.masksToBounds = YES;
-    [headBg2 addSubview:headImageBtn];
-    /**************************/
-    if (!([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
-        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-            [headImageBtn setBackgroundImage:image forState:UIControlStateNormal];
-//            headImageView.image = image;
-        }else{
-            //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    [headImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-//                    headImageView.image = load.dataImage;
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
-                }
-            }];
-            [request release];
+    if ([[USER objectForKey:@"isSuccess"] intValue]) {
+        headImageBtn = [MyControl createButtonWithFrame:CGRectMake(4, 4, 62, 62) ImageName:@"defaultUserHead.png" Target:self Action:@selector(headImageBtnClick) Title:nil];
+        //    headImageView = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
+        //    headImageView.canClick = YES;
+        //    headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+        headImageBtn.layer.cornerRadius = 31;
+        headImageBtn.layer.masksToBounds = YES;
+        [headBg2 addSubview:headImageBtn];
+        /**************************/
+        if (!([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
+            NSString * docDir = DOCDIR;
+            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+            //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+            if (image) {
+                [headImageBtn setBackgroundImage:image forState:UIControlStateNormal];
+                //            headImageView.image = image;
+            }else{
+                //下载头像
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        [headImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                        //                    headImageView.image = load.dataImage;
+                        NSString * docDir = DOCDIR;
+                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+                        [load.data writeToFile:txFilePath atomically:YES];
+                    }else{
+                        NSLog(@"头像下载失败");
+                    }
+                }];
+                [request release];
+            }
         }
+        
+        /**************************/
+    }else{
+        //未注册
+        headClickImage = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
+        headClickImage.image = [UIImage imageNamed:@"defaultUserHead.png"];
+        headClickImage.canClick = YES;
+        headClickImage.layer.cornerRadius = 31;
+        headClickImage.layer.masksToBounds = YES;
+        [headBg2 addSubview:headClickImage];
+        
+        messageNum.hidden = YES;
     }
     
-    /**************************/
     //等级
     UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headBg2.frame.origin.x+4+48, headBg2.frame.origin.y+4+50, 30, 16) Font:10 Text:[NSString stringWithFormat:@"Lv.%@", [USER objectForKey:@"lv"]]];
     exp.textAlignment = NSTextAlignmentCenter;
@@ -263,7 +276,7 @@
     }
     [sv3 addSubview:sex];
     
-    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+14+10, sex.frame.origin.y, 100, 20) Font:17 Text:[USER objectForKey:@"name"]];
+    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+14+10, sex.frame.origin.y, 150, 20) Font:15 Text:[USER objectForKey:@"name"]];
     [sv3 addSubview:name];
     
     //官职  225menu总宽
@@ -282,6 +295,17 @@
     goldLabel.textAlignment = NSTextAlignmentCenter;
     [sv3 addSubview:goldLabel];
     goldLabel.center = CGPointMake(gold.center.x, gold.center.y+gold.frame.size.height);
+    
+    /******************************************/
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        exp.hidden = YES;
+        sex.hidden = YES;
+        name.frame = CGRectMake(25, 145, 150, 20);
+        name.text = @"游荡的两脚兽";
+        position.text = @"陌生人";
+        goldLabel.text = @"500";
+    }
+    /******************************************/
     
     //金币及商店
 //    UIImageView * goldBgImageView = [MyControl createImageViewWithFrame:CGRectMake(10, position.frame.origin.y+30, 205, 35) ImageName:@""];
@@ -349,50 +373,69 @@
 //    [currentBgView addSubview:currentBgView2];
     
     /******创建各个国家的图标在一个scrollView上******/
-    //添加左右两个箭头
-    UIImageView * leftArrow = [MyControl createImageViewWithFrame:CGRectMake(8, (65-18)/2, 11, 18) ImageName:@"menu_left.png"];
-    [countryBg addSubview:leftArrow];
-    
-    UIImageView * rightArrow = [MyControl createImageViewWithFrame:CGRectMake(414/2, (65-18)/2, 11, 18) ImageName:@"menu_right.png"];
-    [countryBg addSubview:rightArrow];
-    
-    UIView * gestureView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 65)];
-    [countryBg addSubview:gestureView];
-    
-    countryCount = 3;
-    selectedNum = 1;
-
-    /*****************国家循环*******************/
-    UIView * view = [[UIView alloc] initWithFrame:CGRectMake(25-3, 0, 176+6, 65)];
-//    view.backgroundColor = [UIColor lightGrayColor];
-    view.clipsToBounds = YES;
-    view.tag = 99;
-    [countryBg addSubview:view];
-    
-    for (int i=0; i<countryCount; i++) {
-        UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(3+i*SPACE, 12.5, 40, 40);
-        button.layer.cornerRadius = 20;
-        button.layer.masksToBounds = YES;
-        [button setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(countryButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        button.tag = 100+i;
-        [view addSubview:button];
+    if ([[USER objectForKey:@"isSuccess"] intValue]) {
+        //添加左右两个箭头
+        UIImageView * leftArrow = [MyControl createImageViewWithFrame:CGRectMake(8, (65-18)/2, 11, 18) ImageName:@"menu_left.png"];
+        [countryBg addSubview:leftArrow];
         
-        [self.countryArray addObject:button];
+        UIImageView * rightArrow = [MyControl createImageViewWithFrame:CGRectMake(414/2, (65-18)/2, 11, 18) ImageName:@"menu_right.png"];
+        [countryBg addSubview:rightArrow];
+        
+        UIView * gestureView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 65)];
+        [countryBg addSubview:gestureView];
+        
+        countryCount = 3;
+        selectedNum = 1;
+        
+        /*****************国家循环*******************/
+        UIView * view = [[UIView alloc] initWithFrame:CGRectMake(25-3, 0, 176+6, 65)];
+        //    view.backgroundColor = [UIColor lightGrayColor];
+        view.clipsToBounds = YES;
+        view.tag = 99;
+        [countryBg addSubview:view];
+        
+        for (int i=0; i<countryCount; i++) {
+            UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.frame = CGRectMake(3+i*SPACE, 12.5, 40, 40);
+            button.layer.cornerRadius = 20;
+            button.layer.masksToBounds = YES;
+            [button setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
+            [button addTarget:self action:@selector(countryButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+            button.tag = 100+i;
+            [view addSubview:button];
+            
+            [self.countryArray addObject:button];
+        }
+        //王冠
+        UIButton * button = self.countryArray[selectedNum-1];
+        crown = [MyControl createImageViewWithFrame:CGRectMake(button.frame.origin.x+25, button.frame.origin.y+27, 18, 18) ImageName:@"crown.png"];
+        [view addSubview:crown];
+        
+        UISwipeGestureRecognizer * swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft)];
+        [swipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+        [view addGestureRecognizer:swipeLeft];
+        
+        UISwipeGestureRecognizer * swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight)];
+        [swipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
+        [view addGestureRecognizer:swipeRight];
+    }else{
+        //未注册
+        UIImageView * ambassador = [MyControl createImageViewWithFrame:CGRectMake(12, 15, 158/2, 35) ImageName:@"ambassador.png"];
+        [countryBg addSubview:ambassador];
+        
+        UILabel * tip1 = [MyControl createLabelWithFrame:CGRectMake(95, 15, 125, 15) Font:11 Text:@"宠物星球，宠来宠趣"];
+        tip1.textAlignment = NSTextAlignmentCenter;
+        [countryBg addSubview:tip1];
+        
+        UILabel * tip2 = [MyControl createLabelWithFrame:CGRectMake(95, 35, 125, 15) Font:11 Text:@"快来创建或者加入王国吧"];
+        tip2.textAlignment = NSTextAlignmentCenter;
+        [countryBg addSubview:tip2];
+        
+        UIButton * regBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, OFFSET, 65) ImageName:@"" Target:self Action:@selector(regBtnClick) Title:nil];
+        [countryBg addSubview:regBtn];
     }
-    //王冠
-    UIButton * button = self.countryArray[selectedNum-1];
-    crown = [MyControl createImageViewWithFrame:CGRectMake(button.frame.origin.x+25, button.frame.origin.y+27, 18, 18) ImageName:@"crown.png"];
-    [view addSubview:crown];
     
-    UISwipeGestureRecognizer * swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft)];
-    [swipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
-    [view addGestureRecognizer:swipeLeft];
     
-    UISwipeGestureRecognizer * swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight)];
-    [swipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
-    [view addGestureRecognizer:swipeRight];
     
     /*****************************************/
 //    sv2 = [[UIScrollView alloc] initWithFrame:CGRectMake(25, 0, 176, 65)];
@@ -513,6 +556,10 @@
     [sv addSubview:tv];
 }
 #pragma mark -
+-(void)regBtnClick
+{
+    ShowAlertView;
+}
 -(void)headImageBtnClick
 {
     UserInfoViewController * vc = [[UserInfoViewController alloc] init];
@@ -742,8 +789,31 @@
 {
     NSLog(@"messageBtnClick");
     //消息
-    NoticeViewController * vc = [[NoticeViewController alloc] init];
-    [self.sideMenuController setContentController:vc animted:YES];
+    if ([[USER objectForKey:@"isSuccess"] intValue]) {
+        NoticeViewController * vc = [[NoticeViewController alloc] init];
+        [self.sideMenuController setContentController:vc animted:YES];
+    }else{
+        ShowAlertView;
+//        UIView * view = [UIApplication sharedApplication].keyWindow;
+//        NSLog(@"%f--%f", view.frame.size.width, view.frame.size.height);
+//        AlertView * alert = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+//        CGRect rect1 = alert.bgImageView.frame;
+//        CGRect rect2 = alert.closeBtn.frame;
+//        CGRect rect3 = alert.confirmBtn.frame;
+//        
+//        int add = 45;
+//        rect1.origin.x += add;
+//        rect2.origin.x += add;
+//        rect3.origin.x += add;
+//        
+//        alert.bgImageView.frame = rect1;
+//        alert.closeBtn.frame = rect2;
+//        alert.confirmBtn.frame = rect3;
+//        
+//        [view addSubview:alert];
+//        [alert release];
+    }
+    
 //    [vc release];
 }
 -(void)shopBtnClick

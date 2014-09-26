@@ -36,6 +36,7 @@
     UITableView * tv;
     
     UIButton * headImageBtn;
+    ClickImage * headClickImage;
 }
 @property (nonatomic,copy)NSString * tfString;
 

@@ -61,6 +61,7 @@
     self.bodyArray = [NSMutableArray arrayWithCapacity:0];
     self.createTimeArray = [NSMutableArray arrayWithCapacity:0];
 //    self.petInfoArray = [NSMutableArray arrayWithCapacity:0];
+    self.likerTxArray = [NSMutableArray arrayWithCapacity:0];
     self.senderTxArray = [NSMutableArray arrayWithCapacity:0];
     self.txTotalArray = [NSMutableArray arrayWithCapacity:0];
     self.txTypeTotalArray = [NSMutableArray arrayWithCapacity:0];
@@ -76,20 +77,20 @@
 //    [self createUI];
 //    [self createComment];
 }
-- (void)createIQ
-{
-    //Enabling keyboard manager
-    [[IQKeyboardManager sharedManager] setEnable:NO];
-    [[IQKeyboardManager sharedManager] setKeyboardDistanceFromTextField:15];
-	//Enabling autoToolbar behaviour. If It is set to NO. You have to manually create UIToolbar for keyboard.
-	[[IQKeyboardManager sharedManager] setEnableAutoToolbar:NO];
-    
-	//Setting toolbar behavious to IQAutoToolbarBySubviews. Set it to IQAutoToolbarByTag to manage previous/next according to UITextField's tag property in increasing order.
-	[[IQKeyboardManager sharedManager] setToolbarManageBehaviour:IQAutoToolbarBySubviews];
-    
-    //Resign textField if touched outside of UITextField/UITextView.
-    [[IQKeyboardManager sharedManager] setShouldResignOnTouchOutside:NO];
-}
+//- (void)createIQ
+//{
+//    //Enabling keyboard manager
+//    [[IQKeyboardManager sharedManager] setEnable:NO];
+//    [[IQKeyboardManager sharedManager] setKeyboardDistanceFromTextField:15];
+//	//Enabling autoToolbar behaviour. If It is set to NO. You have to manually create UIToolbar for keyboard.
+//	[[IQKeyboardManager sharedManager] setEnableAutoToolbar:NO];
+//    
+//	//Setting toolbar behavious to IQAutoToolbarBySubviews. Set it to IQAutoToolbarByTag to manage previous/next according to UITextField's tag property in increasing order.
+//	[[IQKeyboardManager sharedManager] setToolbarManageBehaviour:IQAutoToolbarBySubviews];
+//    
+//    //Resign textField if touched outside of UITextField/UITextView.
+//    [[IQKeyboardManager sharedManager] setShouldResignOnTouchOutside:NO];
+//}
 #pragma mark - 关系API
 
 
@@ -151,8 +152,14 @@
             self.comments = [dict objectForKey:@"comments"];
             self.topic_name = [dict objectForKey:@"topic_name"];
             self.relates = [dict objectForKey:@"relates"];
-            self.likerTxArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"liker_tx"];
-            self.senderTxArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"sender_tx"];
+            
+            if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"liker_tx"] isKindOfClass:[NSNull class]]) {
+                self.likerTxArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"liker_tx"];
+            }
+            
+            if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"sender_tx"] isKindOfClass:[NSNull class]]) {
+                self.senderTxArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"sender_tx"];
+            }
             
             self.createTime = [dict objectForKey:@"create_time"];
             
@@ -224,6 +231,7 @@
 }
 -(void)loadPetData
 {
+    StartLoading;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.aid]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, self.aid, sig, [ControllerManager getSID]];
     NSLog(@"PetInfoAPI:%@", url);
@@ -479,14 +487,14 @@
     zanLabel.textAlignment = NSTextAlignmentRight;
     [zanBgView addSubview:zanLabel];
     
-    fish = [MyControl createImageViewWithFrame:CGRectMake(0, 4, 30, 12) ImageName:@""];
+    fish = [MyControl createImageViewWithFrame:CGRectMake(3, 0, 30, 20) ImageName:@""];
     if (isMi) {
-        //48*23
-        fish.frame = CGRectMake(3, 3, 30, 14);
+        //53*34
+//        fish.frame = CGRectMake(3, 3, 30, 14);
         fish.image = [UIImage imageNamed:@"fish.png"];
     }else{
-        //41*34
-        fish.frame = CGRectMake(8, 3, 20, 16);
+        //53*34
+//        fish.frame = CGRectMake(8, 3, 20, 16);
         fish.image = [UIImage imageNamed:@"bone.png"];
     }
     [zanBgView addSubview:fish];
@@ -612,6 +620,7 @@
      当我新点赞或送礼之后，我的头像出现在下方最前端。也就是添加在数组的最前端--
      但是退出再近排布顺序还是送礼在前，点赞在后。所以我点赞之后退出再进第一个可能不是我。
      */
+//    NSLog(@"%@---%@--%@", self.senderTxArray, self.likerTxArray, self.txTypeTotalArray);
     if (![self.senderTxArray isKindOfClass:[NSNull class]]) {
         [self.txTotalArray addObjectsFromArray:self.senderTxArray];
         for (int i=0; i<self.senderTxArray.count; i++) {
@@ -624,7 +633,7 @@
             [self.txTypeTotalArray addObject:@"liker"];
         }
     }
-    
+//    NSLog(@"%@", self.txTypeTotalArray);
     //txCount最大限制为8
     if (self.txTotalArray.count > 8) {
         txCount = 8;
@@ -835,7 +844,7 @@
         }];
     }
 }
-#pragma mark - 
+#pragma mark - 送礼点击事件及block回调
 -(void)sendGiftClick
 {
     NSLog(@"赠送礼物");
@@ -857,6 +866,23 @@
             giftNum.text = [NSString stringWithFormat:@"已经收到%d件礼物", [self.gifts intValue]+1];
             self.gifts = [NSString stringWithFormat:@"%d", [self.gifts intValue]+1];
             /*=====================*/
+            [self.txTotalArray removeAllObjects];
+            [self.txTypeTotalArray removeAllObjects];
+            
+            if ([USER objectForKey:@"tx"] == nil || [[USER objectForKey:@"tx"] isEqualToString:@""]) {
+                [self.senderTxArray insertObject:@"" atIndex:0];
+//                [self.senderTxArray addObject:@""];
+            }else{
+                [self.senderTxArray insertObject:[USER objectForKey:@"tx"] atIndex:0];
+//                [self.senderTxArray addObject:[USER objectForKey:@"tx"]];
+            }
+//            [self.txTypeTotalArray insertObject:@"sender" atIndex:0];
+//            [self.txTypeTotalArray addObject:@"sender"];
+            if ([self.senders isKindOfClass:[NSNull class]] || self.senders.length == 0) {
+                self.senders = [NSString stringWithFormat:@"%@", [USER objectForKey:@"usr_id"]];
+            }else{
+                self.senders = [NSString stringWithFormat:@"%@,%@", self.senders, [USER objectForKey:@"usr_id"]];
+            }
             [usersBgView removeFromSuperview];
             //【注意】这里是commentsBgView，不是commentBgView
             [commentsBgView removeFromSuperview];
@@ -1064,15 +1090,17 @@
 {
     NSLog(@"跳转到围观群众页");
     MassWatchViewController * vc = [[MassWatchViewController alloc] init];
-    NSString * str = nil;
-    if (self.likers == nil || self.likers.length == 0) {
-        str = self.senders;
-    }else if(self.senders == nil || self.senders.length == 0){
-        str = self.likers;
-    }else{
-        str = [NSString stringWithFormat:@"%@,%@", self.senders, self.likers];
-    }
-    vc.usr_ids = str;
+    vc.senders = self.senders;
+    vc.likers = self.likers;
+//    NSString * str = nil;
+//    if (self.likers == nil || self.likers.length == 0) {
+//        str = self.senders;
+//    }else if(self.senders == nil || self.senders.length == 0){
+//        str = self.likers;
+//    }else{
+//        str = [NSString stringWithFormat:@"%@,%@", self.senders, self.likers];
+//    }
+//    vc.usr_ids = str;
     vc.txTypesArray = self.txTypeTotalArray;
     vc.isMi = isMi;
     vc.modalTransitionStyle = 2;
@@ -1091,7 +1119,7 @@
         commentTextView.textColor = [UIColor lightGrayColor];
     }];
 }
-
+#pragma mark - 点赞！！
 -(void)zanBtnClick:(UIButton *)btn
 {
     if (![ControllerManager getIsSuccess]) {
@@ -1123,36 +1151,53 @@
                         fish.image = [UIImage imageNamed:@"bone1.png"];
                     }
                     zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
+                    CGRect rect = fish.frame;
+                    
                     [UIView animateWithDuration:0.5 animations:^{
-                        if (isMi) {
-                            //48*23
-                            fish.frame = CGRectMake(0-15, 4-12, 30*2, 14*2);
-                        }else{
-                            //41*34
-                            fish.frame = CGRectMake(0-15, 4-12, 20*2, 16*2);
-                        }
+                        fish.frame = CGRectMake(rect.origin.x-rect.size.width/2, rect.origin.y-rect.size.height/2, rect.size.width*2, rect.size.height*2);
+//                        if (isMi) {
+//                            //48*23
+//                            fish.frame = CGRectMake(0-15, 4-12, 30*2, 14*2);
+//                            fish.center = point;
+//                        }else{
+//                            //41*34
+//                            fish.frame = CGRectMake(0-15, 4-12, 20*2, 16*2);
+//                            fish.center = point;
+//                        }
                         
                     } completion:^(BOOL finished) {
                         [UIView animateWithDuration:0.5 animations:^{
-                            if (isMi) {
-                                //48*23
-                                fish.frame = CGRectMake(3, 3, 30, 14);
-                            }else{
-                                //41*34
-                                fish.frame = CGRectMake(8, 3, 20, 16);
-                            }
+                            fish.frame = rect;
+//                            if (isMi) {
+//                                //48*23
+//                                fish.frame = CGRectMake(3, 3, 30, 14);
+//                                fish.center = point;
+//                            }else{
+//                                //41*34
+//                                fish.frame = CGRectMake(8, 3, 20, 16);
+//                                fish.center = point;
+//                            }
                         }];
                     }];
                     //在头像横条中显示
+                    /*因为在重新布局的时候会重新在
+                     txTotalArray中添加tx数据，所以
+                     在这里将数组清空，将自己tx添加
+                     在最前端。
+                     */
                     [self.txTotalArray removeAllObjects];
                     [self.txTypeTotalArray removeAllObjects];
                     
                     if ([USER objectForKey:@"tx"] == nil || [[USER objectForKey:@"tx"] isEqualToString:@""]) {
-                        [self.txTotalArray addObject:@""];
+                        [self.likerTxArray insertObject:@"" atIndex:0];
+//                        [self.txTotalArray addObject:@""];
                     }else{
-                        [self.txTotalArray addObject:[USER objectForKey:@"tx"]];
+                        [self.likerTxArray insertObject:[USER objectForKey:@"tx"] atIndex:0];
+//                        [self.likerTxArray addObject:[USER objectForKey:@"tx"]];
+//                        [self.txTotalArray addObject:[USER objectForKey:@"tx"]];
                     }
-                    [self.txTypeTotalArray addObject:@"liker"];
+//                    [self.txTypeTotalArray insertObject:@"liker" atIndex:0];
+//                    [self.txTypeTotalArray addObject:@"liker"];
                     if ([self.likers isKindOfClass:[NSNull class]] || self.likers.length == 0) {
                         self.likers = [NSString stringWithFormat:@"%@", [USER objectForKey:@"usr_id"]];
                     }else{

@@ -72,7 +72,7 @@
     line.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:line];
 }
--(void)configUI:(UserInfoModel *)model
+-(void)configUI:(UserInfoModel *)model isLiker:(BOOL)isLiker
 {
     self.usr_id = model.usr_id;
     
@@ -81,7 +81,7 @@
     }
     self.watcherName.text = model.name;
     self.ProvinceAndCity.text = [ControllerManager returnProvinceAndCityWithCityNum:model.city];
-    if ([self.txType isEqualToString:@"liker"]) {
+    if (isLiker) {
         if (self.isMi) {
             self.giftView.image = [UIImage imageNamed:@"zan_fish.png"];
         }else{

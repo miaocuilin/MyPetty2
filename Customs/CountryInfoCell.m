@@ -21,7 +21,7 @@
     self.headImageView.layer.masksToBounds = YES;
     
     self.expBgImageView.image = [[UIImage imageNamed:@"RQBg.png"] stretchableImageWithLeftCapWidth:37/2 topCapHeight:26/2];
-    self.expBgImageView.layer.cornerRadius = 7;
+    self.expBgImageView.layer.cornerRadius = 6;
     self.expBgImageView.layer.masksToBounds = YES;
     
     
@@ -53,6 +53,10 @@
     
     crown = [MyControl createImageViewWithFrame:CGRectMake(55, 52, 20, 20) ImageName:@"crown.png"];
     [self.contentView addSubview:crown];
+    
+    UIView * line = [MyControl createViewWithFrame:CGRectMake(0, self.contentView.frame.size.height-1, self.contentView.frame.size.width, 1)];
+    line.backgroundColor = [UIColor lightGrayColor];
+    [self.contentView addSubview:line];
 }
 -(void)modify:(int)row isSelf:(BOOL)isSelf
 {
@@ -151,7 +155,7 @@
             self.headImageView.image = image;
         }else{
             //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     self.headImageView.image = load.dataImage;
                     NSString * docDir = DOCDIR;

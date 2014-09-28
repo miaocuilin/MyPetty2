@@ -25,7 +25,7 @@
     self.kingName.font = [UIFont boldSystemFontOfSize:15];
     [self.contentView addSubview:self.kingName];
     //
-    self.sex = [MyControl createImageViewWithFrame:CGRectMake(125, 10, 14, 17) ImageName:@"man.png"];
+    self.sex = [MyControl createImageViewWithFrame:CGRectMake(125, 10, 17, 17) ImageName:@"man.png"];
     [self.contentView addSubview:self.sex];
     
     //
@@ -38,6 +38,11 @@
     [self.contentView addSubview:self.userName];
     //
     self.rankNum.textColor = BGCOLOR;
+    
+    //
+    UIView * line = [MyControl createViewWithFrame:CGRectMake(0, self.contentView.frame.size.height-1, self.contentView.frame.size.width, 1)];
+    line.backgroundColor = [UIColor lightGrayColor];
+    [self.contentView addSubview:line];
     
     //
     [self.contentView bringSubviewToFront:self.gotoKing];

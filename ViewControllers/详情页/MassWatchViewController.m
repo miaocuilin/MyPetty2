@@ -168,6 +168,10 @@
     cell.backgroundColor = [UIColor clearColor];
     
     cell.jumpToUserInfo = ^(UIImage * image, NSString * usr_id){
+//        if (![ControllerManager getIsSuccess]) {
+//            ShowAlertView;
+//            return;
+//        }
         UserInfoViewController * vc = [[UserInfoViewController alloc] init];
         vc.usr_id = usr_id;
         vc.modalTransitionStyle = 2;
@@ -177,7 +181,11 @@
     };
     
     cell.cellClick = ^(int num){
-        NSLog(@"跳转到第%d个国家", num);
+        if (![ControllerManager getIsSuccess]) {
+            ShowAlertView;
+            return;
+        }
+//        NSLog(@"跳转到第%d个国家", num);
         TalkViewController *talk = [[TalkViewController alloc] init];
         talk.friendName = [self.dataArray[num] name];
         talk.usr_id = [self.dataArray[num] usr_id];

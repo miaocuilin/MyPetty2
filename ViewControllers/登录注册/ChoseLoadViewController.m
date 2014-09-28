@@ -120,23 +120,24 @@
 //    [behavior2 addItem:waBgView];
 //    [behavior2.collider setTranslatesReferenceBoundsIntoBoundaryWithInsets:UIEdgeInsetsMake(-155, 0, 650/2-55, 0)];
     
-    UIView * waBg1 = [MyControl createViewWithFrame:CGRectMake(0, 5, 100, 100)];
-    waBg1.backgroundColor = BGCOLOR;
-    waBg1.layer.cornerRadius = waBg1.frame.size.height/2;
-    waBg1.layer.masksToBounds = YES;
-    [waBgView addSubview:waBg1];
+//    UIView * waBg1 = [MyControl createViewWithFrame:CGRectMake(0, 5, 100, 100)];
+//    waBg1.backgroundColor = BGCOLOR;
+//    waBg1.layer.cornerRadius = waBg1.frame.size.height/2;
+//    waBg1.layer.masksToBounds = YES;
+//    [waBgView addSubview:waBg1];
     
-    UIView * waBg2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 100, 100)];
-    waBg2.backgroundColor = BGCOLOR3;
-    waBg2.layer.cornerRadius = waBg2.frame.size.height/2;
-    waBg2.layer.masksToBounds = YES;
-    [waBgView addSubview:waBg2];
+//    UIView * waBg2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 100, 100)];
+//    waBg2.backgroundColor = BGCOLOR3;
+//    waBg2.layer.cornerRadius = waBg2.frame.size.height/2;
+//    waBg2.layer.masksToBounds = YES;
+//    [waBgView addSubview:waBg2];
+//    
+    UIImageView * wa = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 100, 105) ImageName:@"dogPlanet.png"];
+    [waBgView addSubview:wa];
     
-    UIImageView * wa = [MyControl createImageViewWithFrame:CGRectMake(5, 12, 90, 153/2) ImageName:@"1-e.png"];
-    [waBg2 addSubview:wa];
-    
-    UIButton * waBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, waBg2.frame.size.width, waBg2.frame.size.height) ImageName:@"" Target:self Action:@selector(waBtnClick) Title:nil];
-    [waBg2 addSubview:waBtn];
+    UIButton * waBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, wa.frame.size.width, wa.frame.size.height) ImageName:@"" Target:self Action:@selector(waBtnClick) Title:nil];
+//    waBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    [waBgView addSubview:waBtn];
     
     UILabel * waDes = [MyControl createLabelWithFrame:CGRectMake(-15, 105, 140, 50) Font:15 Text:@"   WA星球(汪星球)\n距离地球九十亿光年"];
     waDes.textColor = [UIColor colorWithRed:50/255.0 green:138/255.0 blue:197/255.0 alpha:1];
@@ -269,6 +270,7 @@
             [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
             NSLog(@"isSuccess:%d,SID:%@", [ControllerManager getIsSuccess], [ControllerManager getSID]);
             if ([ControllerManager getIsSuccess]) {
                 [self getUserData];
@@ -298,9 +300,14 @@
 #pragma mark -获取用户数据
 -(void)getUserData
 {
+    if ([USER objectForKey:@"usr_id"] == nil || [[USER objectForKey:@"usr_id"] length] == 0) {
+        [self login];
+        return;
+    }
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
     [MMProgressHUD showWithStatus:@"登陆中..."];
-    NSString * url = [NSString stringWithFormat:@"%@%@", INFOAPI,[ControllerManager getSID]];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [USER objectForKey:@"usr_id"], sig,[ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {

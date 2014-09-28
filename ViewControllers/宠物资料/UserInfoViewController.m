@@ -52,7 +52,7 @@
     StartLoading;
 //    user/infoApi&usr_id=
     NSString *userInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
-    NSString *userInfoString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",USERINFOAPI, self.usr_id, userInfoSig,[ControllerManager getSID]];
+    NSString *userInfoString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, self.usr_id, userInfoSig,[ControllerManager getSID]];
     NSLog(@"用户信息API:%@",userInfoString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:userInfoString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
@@ -77,8 +77,8 @@
 -(void)loadMyCountryInfoData
 {
 //    user/petsApi&usr_id=(若用户为自己则留空不填)
-    NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
-    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", self.usr_id];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, self.usr_id, [MyMD5 md5:code], [ControllerManager getSID]];
 //    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -417,14 +417,14 @@
     /**************************/
     
     //等级
-    UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headImageView.frame.origin.x+70-20, headImageView.frame.origin.y+70-16, 30, 16) Font:10 Text:[NSString stringWithFormat:@"Lv.%@",[headerDict objectForKey:@"lv"]]];
-    exp.textAlignment = NSTextAlignmentCenter;
-    exp.backgroundColor = [UIColor colorWithRed:249/255.0 green:135/255.0 blue:88/255.0 alpha:1];
-    exp.textColor = [UIColor colorWithRed:229/255.0 green:79/255.0 blue:36/255.0 alpha:1];
-    exp.layer.cornerRadius = 3;
-    exp.layer.masksToBounds = YES;
-    exp.font = [UIFont boldSystemFontOfSize:10];
-    [bgView addSubview:exp];
+//    UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headImageView.frame.origin.x+70-20, headImageView.frame.origin.y+70-16, 30, 16) Font:10 Text:[NSString stringWithFormat:@"Lv.%@",[headerDict objectForKey:@"lv"]]];
+//    exp.textAlignment = NSTextAlignmentCenter;
+//    exp.backgroundColor = [UIColor colorWithRed:249/255.0 green:135/255.0 blue:88/255.0 alpha:1];
+//    exp.textColor = [UIColor colorWithRed:229/255.0 green:79/255.0 blue:36/255.0 alpha:1];
+//    exp.layer.cornerRadius = 3;
+//    exp.layer.masksToBounds = YES;
+//    exp.font = [UIFont boldSystemFontOfSize:10];
+//    [bgView addSubview:exp];
     
 //    UIButton * attentionBtn = [MyControl createButtonWithFrame:CGRectMake(60, 75, 20, 20) ImageName:@"" Target:self Action:@selector(attentionBtnClick) Title:@"关注"];
 //    attentionBtn.titleLabel.font = [UIFont systemFontOfSize:10];
@@ -440,7 +440,7 @@
     UILabel * name = [MyControl createLabelWithFrame:CGRectMake(105, 25, size.width+5, 20) Font:15 Text:str];
     [bgView addSubview:name];
     
-    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 14, 17) ImageName:@"man.png"];
+    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 17, 17) ImageName:@"man.png"];
     if ([[headerDict objectForKey:@"gender"] intValue] == 2) {
         sex.image = [UIImage imageNamed:@"woman.png"];
     }
@@ -521,15 +521,15 @@
     UIImageView * RQBgImageView = [MyControl createImageViewWithFrame:CGRectMake(64+size3.width, 132, 350/2, 13) ImageName:@""];
     RQBgImageView.image = [[UIImage imageNamed:@"RQBg.png"] stretchableImageWithLeftCapWidth:37/2 topCapHeight:26/2];
     //边缘处理
-    RQBgImageView.layer.cornerRadius = 7;
+    RQBgImageView.layer.cornerRadius = 6;
     RQBgImageView.layer.masksToBounds = YES;
     [bgView addSubview:RQBgImageView];
     
-    int length = [[headerDict objectForKey:@"exp"] intValue]/100.0*175;
+    int length = ([[headerDict objectForKey:@"exp"] intValue]%100)/100.0*173;
     //    float length = 3.5/2*70;
     NSLog(@"%d", length);
     UIImageView * RQImageView = [MyControl createImageViewWithFrame:CGRectMake(1, 1, length, 11) ImageName:@""];
-    RQImageView.image = [[UIImage imageNamed:@"RQImage.png"] stretchableImageWithLeftCapWidth:26/2 topCapHeight:30/2];
+    RQImageView.image = [[UIImage imageNamed:@"RQImage.png"] stretchableImageWithLeftCapWidth:51/2 topCapHeight:25/2];
     [RQBgImageView addSubview:RQImageView];
     
     UILabel * RQNumLabel = [MyControl createLabelWithFrame:CGRectMake(50, 0, 75, 13) Font:12 Text:[NSString stringWithFormat:@"%d/100", [[headerDict objectForKey:@"exp"] intValue]]];
@@ -568,12 +568,14 @@
     [self.view addSubview:sv];
 }
 
-#pragma mark - 创建tableView
+#pragma mark - 创建tableView&&createTool
+
 -(void)createTableView1
 {
     tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
+    tv.separatorStyle = 0;
     [sv addSubview:tv];
     
     UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
@@ -589,14 +591,14 @@
     [self.view addSubview:toolBgView];
     
     UIView * toolAlphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 44)];
-    toolAlphaView.alpha = 0.3;
-    toolAlphaView.backgroundColor = [UIColor blackColor];
+    toolAlphaView.alpha = 0.4;
+    toolAlphaView.backgroundColor = [ControllerManager colorWithHexString:@"8e2918"];
     [toolBgView addSubview:toolAlphaView];
     
     NSArray * unSeletedArray = @[@"page1.png", @"page2.png", @"page3.png", @"page4.png"];
     NSArray * seletedArray = @[@"page1_selected.png", @"page2_selected.png", @"page3_selected.png", @"page4_selected.png"];
     for(int i=0;i<seletedArray.count;i++){
-        UIButton * imageButton = [MyControl createButtonWithFrame:CGRectMake(25+i*80, 9, 30, 26) ImageName:unSeletedArray[i] Target:self Action:@selector(imageButtonClick) Title:nil];
+        UIButton * imageButton = [MyControl createButtonWithFrame:CGRectMake(25+i*80, 9, 30, 30) ImageName:unSeletedArray[i] Target:self Action:@selector(imageButtonClick) Title:nil];
         [imageButton setBackgroundImage:[UIImage imageNamed:seletedArray[i]] forState:UIControlStateSelected];
         [toolBgView addSubview:imageButton];
         imageButton.tag = 100+i;
@@ -624,6 +626,7 @@
     tv2 = [[UITableView alloc] initWithFrame:CGRectMake(320, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv2.delegate = self;
     tv2.dataSource = self;
+    tv2.separatorStyle = 0;
     [sv addSubview:tv2];
     
     UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];

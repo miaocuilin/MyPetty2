@@ -23,6 +23,7 @@
     UIView * commentsBgView;
     int prepareCreateUINum;
     UILabel * topicUser;
+    UILabel * topicDetail;
     UIView * usersBgView;
     
     UILabel * giftNum;
@@ -44,6 +45,8 @@
     int replyRow;
     
     BOOL isCommentActive;
+    
+//    NSMutableAttributedString * attString;
 }
 @property (retain, nonatomic) UIImageView * bgImageView;
 @property (retain, nonatomic) IBOutlet UIScrollView *sv;
@@ -53,7 +56,8 @@
 @property (retain, nonatomic) IBOutlet UIImageView *sex;
 @property (retain, nonatomic) IBOutlet UILabel *name;
 @property (retain, nonatomic) IBOutlet UILabel *cate;
-@property (retain, nonatomic) IBOutlet UIButton *attentionBtn;
+@property (retain, nonatomic) IBOutlet UILabel *timeLabel;
+
 
 //评论解析数组
 @property (nonatomic,retain)NSMutableArray * usrIdArray;

@@ -46,7 +46,7 @@
     NSString *aid = [USER objectForKey:@"aid"];
     NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
 NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALINFOAPI, aid,animalInfoSig,[ControllerManager getSID]];
-//    NSLog(@"宠物信息API:%@",animalInfo);
+    NSLog(@"宠物信息API:%@",animalInfo);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalInfo Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"宠物信息：%@",load.dataDict);
         if (isFinish) {

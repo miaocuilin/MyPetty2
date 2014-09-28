@@ -7,13 +7,13 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PicDetailViewController">
             <connections>
-                <outlet property="attentionBtn" destination="uyV-ZX-q0t" id="OBl-4N-pVR"/>
                 <outlet property="cate" destination="k82-Vw-pmh" id="2y6-fE-rLX"/>
                 <outlet property="headBtn" destination="tBb-eN-M7f" id="ovj-a5-JqG"/>
                 <outlet property="headerBgView" destination="hOp-Od-E2Z" id="6Fn-KX-1Xf"/>
                 <outlet property="name" destination="aiB-Yj-ulk" id="4W8-5Z-RSs"/>
                 <outlet property="sex" destination="83I-p5-gOr" id="ayY-B6-gJM"/>
                 <outlet property="sv" destination="ZId-32-h9P" id="KRA-kg-GKU"/>
+                <outlet property="timeLabel" destination="YqR-AM-xt6" id="Le6-a6-h70"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -46,8 +46,8 @@
                                 <action selector="headBtnClick:" destination="-1" eventType="touchUpInside" id="Jff-dB-Gy4"/>
                             </connections>
                         </button>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="man.png" id="83I-p5-gOr">
-                            <rect key="frame" x="55" y="4" width="14" height="17"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="83I-p5-gOr">
+                            <rect key="frame" x="55" y="4" width="17" height="17"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aiB-Yj-ulk">
@@ -64,17 +64,13 @@
                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="uyV-ZX-q0t">
-                            <rect key="frame" x="263" y="7" width="47" height="30"/>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="YqR-AM-xt6">
+                            <rect key="frame" x="210" y="15" width="100" height="20"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                            <state key="normal" backgroundImage="addAttention.png">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="attentionBtnClick:" destination="-1" eventType="touchUpInside" id="bC9-Ce-jRH"/>
-                            </connections>
-                        </button>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
@@ -84,8 +80,4 @@
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>
     </objects>
-    <resources>
-        <image name="addAttention.png" width="97" height="56"/>
-        <image name="man.png" width="28" height="34"/>
-    </resources>
 </document>

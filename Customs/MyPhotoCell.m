@@ -128,6 +128,7 @@
                     btn.enabled = NO;
                     fish.image = [UIImage imageNamed:@"fish1.png"];
                     zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
+                    zanLabel.textColor = BGCOLOR;
                     [UIView animateWithDuration:0.5 animations:^{
                         fish.frame = CGRectMake(0-15, 4-12, 30*2, 12*2);
                     } completion:^(BOOL finished) {

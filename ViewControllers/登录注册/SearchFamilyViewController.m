@@ -42,7 +42,7 @@
 - (void)loadSearchData:(NSString *)name
 {
     NSString *searchSig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
-    NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@",SEARCHAPI,name,searchSig,[ControllerManager getSID]];
+    NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@", SEARCHAPI, [name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], searchSig,[ControllerManager getSID]];
     NSLog(@"搜索API:%@",searchString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:searchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"搜索结果：%@",load.dataDict);
@@ -121,6 +121,7 @@
     tf.borderStyle = 0;
 //    tf.returnKeyType = UIReturnKeySearch;
 //    tf.backgroundColor = BGCOLOR;
+    tf.clearButtonMode = UITextFieldViewModeAlways;
     tf.delegate = self;
     tf.textColor = [UIColor whiteColor];
     [headerView addSubview:tf];
@@ -156,6 +157,7 @@
     SearchCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
         cell = [[[SearchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
+        cell.selectionStyle = 0;
     }
     cell.backgroundColor = [UIColor clearColor];
     PetInfoModel *model = self.tempDataArray[indexPath.row];

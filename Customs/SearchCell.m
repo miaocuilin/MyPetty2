@@ -33,7 +33,7 @@
         /**************************/
     
     
-    sex = [MyControl createImageViewWithFrame:CGRectMake(80, 10, 28/2, 34/2) ImageName:@"man.png"];
+    sex = [MyControl createImageViewWithFrame:CGRectMake(80, 10, 34/2, 34/2) ImageName:@"man.png"];
     [headerBgView addSubview:sex];
     name = [MyControl createLabelWithFrame:CGRectMake(100, 10, 150, 20) Font:15 Text:@"毛毛"];
     name.textColor = BGCOLOR;

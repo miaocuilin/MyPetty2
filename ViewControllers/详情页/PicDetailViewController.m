@@ -15,6 +15,10 @@
 #import "MassWatchViewController.h"
 #import "QuickGiftViewController.h"
 #import "SendGiftViewController.h"
+
+#define Alpha 0.4
+//礼物条、评论、头像之间的间隔
+#define Space 6
 @interface PicDetailViewController ()
 
 @end
@@ -131,9 +135,9 @@
         if (isFinish) {
             NSLog(@"imageInfo:%@", load.dataDict);
             self.is_follow = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_follow"] intValue];
-            if (self.is_follow) {
-                self.attentionBtn.selected = YES;
-            }
+//            if (self.is_follow) {
+//                self.attentionBtn.selected = YES;
+//            }
             NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
             self.aid = [dict objectForKey:@"aid"];
             //四个动作是摇一摇还是捣捣乱
@@ -162,6 +166,7 @@
             }
             
             self.createTime = [dict objectForKey:@"create_time"];
+            self.timeLabel.text = [MyControl timeFromTimeStamp:self.createTime];
             
             //解析数据
             if (![self.likers isKindOfClass:[NSNull class]]) {
@@ -252,7 +257,10 @@
             self.name.text = [dic objectForKey:@"name"];
             if ([[dic objectForKey:@"gender"] intValue] == 2) {
                 self.sex.image = [UIImage imageNamed:@"woman.png"];
+            }else{
+                self.sex.image = [UIImage imageNamed:@"man.png"];
             }
+            
             if ([[dic objectForKey:@"type"] intValue]/100 == 1) {
                 isMi = YES;
             }
@@ -463,7 +471,7 @@
     self.headBtn.layer.cornerRadius = self.headBtn.frame.size.height/2;
     self.headBtn.layer.masksToBounds = YES;
     
-    [self.attentionBtn setBackgroundImage:[UIImage imageNamed:@"didAttention.png"] forState:UIControlStateSelected];
+//    [self.attentionBtn setBackgroundImage:[UIImage imageNamed:@"didAttention.png"] forState:UIControlStateSelected];
 }
 -(void)createUI
 {
@@ -509,48 +517,61 @@
             fish.image = [UIImage imageNamed:@"bone1.png"];
         }
         zanBtn.selected = YES;
+        zanLabel.textColor = BGCOLOR;
     }
     
     //礼物盒、工具条
-    UIView * giftBgView = [MyControl createViewWithFrame:CGRectMake(0, bigImageView.frame.origin.y+bigImageView.frame.size.height, 320, 35)];
-    giftBgView.backgroundColor = [UIColor whiteColor];
+    UIView * giftBgAlphaView = [MyControl createViewWithFrame:CGRectMake(0, bigImageView.frame.origin.y+bigImageView.frame.size.height, self.view.frame.size.width, 44)];
+    giftBgAlphaView.backgroundColor = [UIColor whiteColor];
+    giftBgAlphaView.alpha = Alpha;
+    [self.sv addSubview:giftBgAlphaView];
+    
+    UIView * giftBgView = [MyControl createViewWithFrame:CGRectMake(0, bigImageView.frame.origin.y+bigImageView.frame.size.height, self.view.frame.size.width, 44)];
     [self.sv addSubview:giftBgView];
     
-    UIButton * sendGift = [MyControl createButtonWithFrame:CGRectMake(20, 11/2, 45/2, 48/2) ImageName:@"detail_gift.png" Target:self Action:@selector(sendGiftClick) Title:nil];
+    
+    UIButton * sendGift = [MyControl createButtonWithFrame:CGRectMake(20, 9, 25, 26) ImageName:@"detail_gift.png" Target:self Action:@selector(sendGiftClick) Title:nil];
     sendGift.showsTouchWhenHighlighted = YES;
     [giftBgView addSubview:sendGift];
     
-    UIView * vLine = [MyControl createViewWithFrame:CGRectMake(60, 2, 1, 31)];
-    vLine.backgroundColor = [UIColor lightGrayColor];
+    UIView * vLine = [MyControl createViewWithFrame:CGRectMake(60, 4, 1, 36)];
+    vLine.backgroundColor = LineGray;
     [giftBgView addSubview:vLine];
     
-    giftNum = [MyControl createLabelWithFrame:CGRectMake(65, 7.5, 120, 20) Font:15 Text:nil];
-//    NSLog(@"%@", self.gifts);
-    if (self.gifts) {
-        giftNum.text = [NSString stringWithFormat:@"已经收到%@件礼物", self.gifts];
-    }else{
-        giftNum.text = @"已经收到0件礼物";
-    }
+    giftNum = [MyControl createLabelWithFrame:CGRectMake(65, 12, 150, 20) Font:14 Text:nil];
     giftNum.textColor = [UIColor blackColor];
+//    NSLog(@"%@", self.gifts);
+    if ([self.gifts intValue]) {
+        NSString * str = [NSString stringWithFormat:@"已经收到了 %@ 件礼物", self.gifts];
+        NSMutableAttributedString * attString = [[NSMutableAttributedString alloc] initWithString:str];
+        [attString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, 6)];
+        [attString addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(6, self.gifts.length)];
+        [attString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(6+self.gifts.length, 4)];
+        giftNum.attributedText = attString;
+        
+    }else{
+        giftNum.text = @"木有收到礼物~";
+    }
+    
     [giftBgView addSubview:giftNum];
     
     //评论和分享
-    UIImageView * commentImageView = [MyControl createImageViewWithFrame:CGRectMake(435/2, 9, 35*0.75, 18) ImageName:@"detail_comment.png"];
+    UIImageView * commentImageView = [MyControl createImageViewWithFrame:CGRectMake(435/2, 13, 35*0.75, 18) ImageName:@"detail_comment.png"];
     [giftBgView addSubview:commentImageView];
     
-    commentNum = [MyControl createLabelWithFrame:CGRectMake(commentImageView.frame.origin.x+commentImageView.frame.size.width, 7.5, 30, 20) Font:10 Text:[NSString stringWithFormat:@"%d", self.nameArray.count]];
+    commentNum = [MyControl createLabelWithFrame:CGRectMake(commentImageView.frame.origin.x+commentImageView.frame.size.width, 12, 30, 20) Font:10 Text:[NSString stringWithFormat:@"%d", self.nameArray.count]];
     commentNum.textAlignment = NSTextAlignmentCenter;
     commentNum.textColor = [UIColor lightGrayColor];
     [giftBgView addSubview:commentNum];
     
-    UIButton * comment = [MyControl createButtonWithFrame:CGRectMake(435/2, 0, 45, 35) ImageName:@"" Target:self Action:@selector(commentClick) Title:nil];
+    UIButton * comment = [MyControl createButtonWithFrame:CGRectMake(435/2, 0, 45, 44) ImageName:@"" Target:self Action:@selector(commentClick) Title:nil];
 //    comment.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [giftBgView addSubview:comment];
     /*******************************/
-    UIImageView * shareImageView = [MyControl createImageViewWithFrame:CGRectMake(546/2, 9, 32*(18/30.0), 18) ImageName:@"detail_share.png"];
+    UIImageView * shareImageView = [MyControl createImageViewWithFrame:CGRectMake(546/2, 13, 32*(18/30.0), 18) ImageName:@"detail_share.png"];
     [giftBgView addSubview:shareImageView];
     
-    shareNum = [MyControl createLabelWithFrame:CGRectMake(shareImageView.frame.origin.x+shareImageView.frame.size.width, 7.5, 20, 20) Font:10 Text:nil];
+    shareNum = [MyControl createLabelWithFrame:CGRectMake(shareImageView.frame.origin.x+shareImageView.frame.size.width, 12, 20, 20) Font:10 Text:nil];
     if (self.shares) {
         shareNum.text = [NSString stringWithFormat:@"%@", self.shares];
     }else{
@@ -560,41 +581,75 @@
     shareNum.textColor = [UIColor lightGrayColor];
     [giftBgView addSubview:shareNum];
     
-    UIButton * share = [MyControl createButtonWithFrame:CGRectMake(546/2, 0, 45, 35) ImageName:@"" Target:self Action:@selector(shareClick) Title:nil];
+    UIButton * share = [MyControl createButtonWithFrame:CGRectMake(546/2, 0, 45, 44) ImageName:@"" Target:self Action:@selector(shareClick) Title:nil];
 //    share.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [giftBgView addSubview:share];
     
+    UIView * line = [MyControl createViewWithFrame:CGRectMake(0, giftBgView.frame.size.height-1, self.view.frame.size.width, 1)];
+    line.backgroundColor = LineGray;
+    [giftBgView addSubview:line];
+    
+    //白背景
+    UIView * whiteBgView = [MyControl createViewWithFrame:CGRectMake(0, giftBgView.frame.origin.y+giftBgView.frame.size.height, self.view.frame.size.width, 0)];
+    whiteBgView.backgroundColor = [UIColor whiteColor];
+    whiteBgView.alpha = Alpha;
+    [self.sv addSubview:whiteBgView];
+    
+    
     //话题
-    UILabel * topic = [MyControl createLabelWithFrame:CGRectMake(15, giftBgView.frame.origin.y+giftBgView.frame.size.height+10, 200, 20) Font:14 Text:@""];
+    UILabel * topic = [MyControl createLabelWithFrame:CGRectMake(15, giftBgView.frame.origin.y+giftBgView.frame.size.height+Space, 200, 20) Font:14 Text:@""];
     if (self.topic_name.length != 0) {
         topic.text = [NSString stringWithFormat:@"#%@#", self.topic_name];
+    }else{
+        CGRect rect = topic.frame;
+        rect.size.height = 0;
+        topic.frame = rect;
     }
     topic.textColor = BGCOLOR;
+//    topic.backgroundColor = [UIColor whiteColor];
     [self.sv addSubview:topic];
     
 //    NSString * string = @"她渐渐的让我明白了感情的戏，戏总归是戏，再美也是暂时的假象，无论投入多深多真，结局总是如此。";
     NSString * string = self.cmt;
     CGSize topicSize = [string sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(290, 100) lineBreakMode:1];
     
-    UILabel * topicDetail = [MyControl createLabelWithFrame:CGRectMake(15, topic.frame.origin.y+topic.frame.size.height+10, 290, topicSize.height) Font:14 Text:string];
+//    (15, topic.frame.origin.y+topic.frame.size.height+10, 290, topicSize.height)
+    topicDetail = [MyControl createLabelWithFrame:CGRectMake(15, topic.frame.origin.y+topic.frame.size.height + Space, 290, topicSize.height) Font:14 Text:string];
     topicDetail.textColor = [UIColor darkGrayColor];
+//    topicDetail.backgroundColor = [UIColor whiteColor];
     [self.sv addSubview:topicDetail];
 
-    topicUser = [MyControl createLabelWithFrame:CGRectMake(15, topicDetail.frame.origin.y+topicDetail.frame.size.height+10, 200, 20) Font:14 Text:@""];
+    topicUser = [MyControl createLabelWithFrame:CGRectMake(15, topicDetail.frame.origin.y+topicDetail.frame.size.height + Space, 200, 20) Font:14 Text:@""];
     topicUser.textColor = BGCOLOR;
+//    topicUser.backgroundColor = [UIColor whiteColor];
     if (self.relates.length != 0) {
         topicUser.text = self.relates;
+    }else{
+        CGRect rect = topicUser.frame;
+        rect.size.height = 0;
+        topicUser.frame = rect;
     }
     [self.sv addSubview:topicUser];
     
-    NSDate * date = [NSDate dateWithTimeIntervalSince1970:[self.createTime intValue]];
-    NSDateFormatter * format = [[NSDateFormatter alloc] init];
-    [format setDateFormat:@"yyyy-MM-dd HH:mm"];
-    UILabel * topicTime = [MyControl createLabelWithFrame:CGRectMake(320-10-150, topicUser.frame.origin.y+3, 150, 15) Font:12 Text:[format stringFromDate:date]];
-    topicTime.textAlignment = NSTextAlignmentRight;
-    topicTime.textColor = [UIColor lightGrayColor];
-    [self.sv addSubview:topicTime];
-    [format release];
+    //定下白色背景的高度
+    CGRect rect = whiteBgView.frame;
+    if ([self.cmt isKindOfClass:[NSNull class]] || self.cmt.length == 0) {
+        
+    }else{
+        rect.size.height = topicUser.frame.origin.y+topicUser.frame.size.height-rect.origin.y+Space;
+    }
+    
+    NSLog(@"%f", rect.size.height);
+    whiteBgView.frame = rect;
+    
+//    NSDate * date = [NSDate dateWithTimeIntervalSince1970:[self.createTime intValue]];
+//    NSDateFormatter * format = [[NSDateFormatter alloc] init];
+//    [format setDateFormat:@"yyyy-MM-dd HH:mm"];
+//    UILabel * topicTime = [MyControl createLabelWithFrame:CGRectMake(320-10-150, topicUser.frame.origin.y+3, 150, 15) Font:12 Text:[format stringFromDate:date]];
+//    topicTime.textAlignment = NSTextAlignmentRight;
+//    topicTime.textColor = [UIColor lightGrayColor];
+//    [self.sv addSubview:topicTime];
+//    [format release];
     
     [self createUsersTx];
     
@@ -609,10 +664,25 @@
 }
 -(void)createUsersTx
 {
+    UIView * usersBgAlphaView = [MyControl createViewWithFrame:CGRectMake(0, topicUser.frame.origin.y+topicUser.frame.size.height + Space, self.view.frame.size.width, 44)];
+    usersBgAlphaView.backgroundColor = [UIColor whiteColor];
+    usersBgAlphaView.alpha = Alpha;
+    [self.sv addSubview:usersBgAlphaView];
+    
     //用户头像
-    usersBgView = [MyControl createViewWithFrame:CGRectMake(0, topicUser.frame.origin.y+topicUser.frame.size.height+10, 320, 50)];
-    usersBgView.backgroundColor = [UIColor whiteColor];
+//    (0, topicUser.frame.origin.y+topicUser.frame.size.height+10, 320, 50)
+    usersBgView = [MyControl createViewWithFrame:CGRectMake(0, topicUser.frame.origin.y+topicUser.frame.size.height+Space, self.view.frame.size.width, 44)];
+//    NSLog(@"%f--%@", topicDetail.frame.size.height, self.cmt);
+    if ([self.cmt isKindOfClass:[NSNull class]] || self.cmt.length == 0) {
+        usersBgView.frame = CGRectMake(0, topicDetail.frame.origin.y-Space*2, self.view.frame.size.width, 44);
+        usersBgAlphaView.frame = usersBgView.frame;
+    }else{
+        UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1)];
+        line.backgroundColor = LineGray;
+        [usersBgView addSubview:line];
+    }
     [self.sv addSubview:usersBgView];
+    
     
     /*
      设置一个总的数组用来存储头像，送礼在前，点赞在后，详情页只能容下8个头像。
@@ -641,7 +711,7 @@
         txCount = self.txTotalArray.count;
     }
     for (int i=0; i<txCount; i++) {
-        UIImageView * header = [MyControl createImageViewWithFrame:CGRectMake(15+i*(76/2), 10, 30, 30) ImageName:@""];
+        UIImageView * header = [MyControl createImageViewWithFrame:CGRectMake(15+i*(76/2), 7, 30, 30) ImageName:@""];
         header.layer.cornerRadius = 15;
         header.layer.masksToBounds = YES;
         [usersBgView addSubview:header];
@@ -683,10 +753,10 @@
         }
         [usersBgView addSubview:giftSymbol];
     }
-    UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(320-20-10, 15, 20, 20) ImageName:@"arrow_right.png"];
+    UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(320-20-10, 12, 20, 20) ImageName:@"arrow_right.png"];
     [usersBgView addSubview:arrow];
     
-    UIButton * usersBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, 50) ImageName:nil Target:self Action:@selector(usersBtnClick) Title:nil];
+    UIButton * usersBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, 44) ImageName:nil Target:self Action:@selector(usersBtnClick) Title:nil];
     [usersBgView addSubview:usersBtn];
     
 
@@ -734,7 +804,7 @@
         [commentsBgView addSubview:cmtLabel];
         
         UIView * line = [MyControl createViewWithFrame:CGRectMake(0, cmtLabel.frame.origin.y+cmtLabel.frame.size.height+size.height, 320, 1)];
-        line.backgroundColor = [UIColor lightGrayColor];
+        line.backgroundColor = LineGray;
         [commentsBgView addSubview:line];
         
         UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(0, cmtUserName.frame.origin.y, self.view.frame.size.width, line.frame.origin.y+line.frame.size.height-cmtUserName.frame.origin.y) ImageName:@"" Target:self Action:@selector(replyBtnClick:) Title:nil];
@@ -783,14 +853,14 @@
 -(void)replyClick:(int)row
 {
     NSLog(@"replyComment");
-    if (![ControllerManager getIsSuccess]) {
-        //提示注册
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
-        return;
-    }
+//    if (![ControllerManager getIsSuccess]) {
+//        //提示注册
+//        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+//        [self addChildViewController:vc];
+//        [self.view addSubview:vc.view];
+//        [vc createLoginAlertView];
+//        return;
+//    }
     isReply = YES;
     replyRow = row;
     bgButton.hidden = NO;
@@ -804,6 +874,11 @@
 #pragma mark - 回复点击事件监听
 -(void)replyBtnClick:(UIButton *)btn
 {
+    if (![ControllerManager getIsSuccess]) {
+        //提示注册
+        ShowAlertView;
+        return;
+    }
     int i = btn.tag-1000;
     NSLog(@"btn.tag:%d-回复:%@", btn.tag, self.nameArray[i]);
     if ([self.usrIdArray[i] isEqualToString:[USER objectForKey:@"usr_id"]]) {
@@ -851,11 +926,8 @@
     
     if (![ControllerManager getIsSuccess]) {
         //提示注册
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
-//        return;
+        ShowAlertView;
+        return;
     }else{
         SendGiftViewController *quictGiftvc = [[SendGiftViewController alloc] init];
         quictGiftvc.receiver_aid = self.aid;
@@ -863,8 +935,13 @@
         
         NSLog(@"%@--%@", self.aid, [USER objectForKey:@"aid"]);
         quictGiftvc.hasSendGift = ^(){
-            giftNum.text = [NSString stringWithFormat:@"已经收到%d件礼物", [self.gifts intValue]+1];
             self.gifts = [NSString stringWithFormat:@"%d", [self.gifts intValue]+1];
+            NSString * str = [NSString stringWithFormat:@"已经收到了%@件礼物", self.gifts];
+            NSMutableAttributedString * attString = [[NSMutableAttributedString alloc] initWithString:str];
+            [attString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, 6)];
+            [attString addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(6, self.gifts.length)];
+            [attString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(6+self.gifts.length, 4)];
+            giftNum.attributedText = attString;
             /*=====================*/
             [self.txTotalArray removeAllObjects];
             [self.txTypeTotalArray removeAllObjects];
@@ -906,10 +983,7 @@
     NSLog(@"comment");
     if (![ControllerManager getIsSuccess]) {
         //提示注册
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
+        ShowAlertView;
         return;
     }
 //    buttonRight.userInteractionEnabled = NO;
@@ -931,14 +1005,14 @@
 -(void)shareClick
 {
     NSLog(@"share");
-    if (![ControllerManager getIsSuccess]) {
-        //提示注册
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
-        return;
-    }else{
+//    if (![ControllerManager getIsSuccess]) {
+//        //提示注册
+//        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+//        [self addChildViewController:vc];
+//        [self.view addSubview:vc.view];
+//        [vc createLoginAlertView];
+//        return;
+//    }else{
         if (!isMoreCreated) {
             //create more
             [self createMore];
@@ -951,7 +1025,7 @@
             moreView.frame = rect;
             menuBgBtn.alpha = 0.5;
         }];
-    }
+//    }
 }
 #pragma mark - 创建更多视图
 -(void)createMore
@@ -1033,7 +1107,7 @@
         }];
     }else{
         NSLog(@"微博");
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:@"ha哈哈哈" image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:self.cmt image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self loadShareAPI];
@@ -1124,10 +1198,7 @@
 {
     if (![ControllerManager getIsSuccess]) {
         //提示注册
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
+        ShowAlertView;
         return;
     }
     //
@@ -1242,64 +1313,64 @@
 #pragma mark - 进入国王
 - (IBAction)headBtnClick:(id)sender {
     NSLog(@"进入王国");
-    if (![ControllerManager getIsSuccess]) {
-        //提示注册
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
-    }else{
+//    if (![ControllerManager getIsSuccess]) {
+//        //提示注册
+//        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+//        [self addChildViewController:vc];
+//        [self.view addSubview:vc.view];
+//        [vc createLoginAlertView];
+//    }else{
         PetInfoViewController *petInfoKing = [[PetInfoViewController alloc] init];
         petInfoKing.aid = self.aid;
         [self presentViewController:petInfoKing animated:YES completion:^{
             NSLog(@"进入王国");
         }];
-    }
+//    }
     
 }
-- (IBAction)attentionBtnClick:(id)sender {
-    if (![ControllerManager getIsSuccess]) {
-        //提示注册
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
-        return;
-    }
-    if (!self.attentionBtn.selected) {
-        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
-        NSString * sig = [MyMD5 md5:code];
-        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", FOLLOWAPI, self.aid, sig, [ControllerManager getSID]];
-        NSLog(@"url:%@", url);
-        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-        [MMProgressHUD showWithStatus:@"关注中..."];
-        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                NSLog(@"%@", load.dataDict);
-                [MMProgressHUD dismissWithSuccess:@"关注成功" title:nil afterDelay:1];
-                self.attentionBtn.selected = YES;
-            }else{
-                [MMProgressHUD dismissWithError:@"关注失败" afterDelay:1];
-            }
-        }];
-    }else{
-        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
-        NSString * sig = [MyMD5 md5:code];
-        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNFOLLOWAPI, self.aid, sig, [ControllerManager getSID]];
-        NSLog(@"unfollowApiurl:%@", url);
-        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-        [MMProgressHUD showWithStatus:@"取消关注中..."];
-        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                NSLog(@"%@", load.dataDict);
-                [MMProgressHUD dismissWithSuccess:@"取消关注成功" title:nil afterDelay:1];
-                self.attentionBtn.selected = NO;
-            }else{
-                [MMProgressHUD dismissWithError:@"取消关注失败" afterDelay:1];
-            }
-        }];
-    }
-}
+//- (IBAction)attentionBtnClick:(id)sender {
+//    if (![ControllerManager getIsSuccess]) {
+//        //提示注册
+//        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+//        [self addChildViewController:vc];
+//        [self.view addSubview:vc.view];
+//        [vc createLoginAlertView];
+//        return;
+//    }
+//    if (!self.attentionBtn.selected) {
+//        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
+//        NSString * sig = [MyMD5 md5:code];
+//        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", FOLLOWAPI, self.aid, sig, [ControllerManager getSID]];
+//        NSLog(@"url:%@", url);
+//        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//        [MMProgressHUD showWithStatus:@"关注中..."];
+//        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                NSLog(@"%@", load.dataDict);
+//                [MMProgressHUD dismissWithSuccess:@"关注成功" title:nil afterDelay:1];
+//                self.attentionBtn.selected = YES;
+//            }else{
+//                [MMProgressHUD dismissWithError:@"关注失败" afterDelay:1];
+//            }
+//        }];
+//    }else{
+//        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
+//        NSString * sig = [MyMD5 md5:code];
+//        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNFOLLOWAPI, self.aid, sig, [ControllerManager getSID]];
+//        NSLog(@"unfollowApiurl:%@", url);
+//        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//        [MMProgressHUD showWithStatus:@"取消关注中..."];
+//        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                NSLog(@"%@", load.dataDict);
+//                [MMProgressHUD dismissWithSuccess:@"取消关注成功" title:nil afterDelay:1];
+//                self.attentionBtn.selected = NO;
+//            }else{
+//                [MMProgressHUD dismissWithError:@"取消关注失败" afterDelay:1];
+//            }
+//        }];
+//    }
+//}
 
 -(void)backBtnClick
 {
@@ -1368,6 +1439,7 @@
     [commentTextView resignFirstResponder];
     
     //添加评论
+    NSLog(@"%@", [USER objectForKey:@"usr_id"]);
     [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];
     if (isReply) {
         [self.nameArray insertObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]] atIndex:0];
@@ -1441,7 +1513,8 @@
     [_sex release];
     [_name release];
     [_cate release];
-    [_attentionBtn release];
+//    [_attentionBtn release];
+    [_timeLabel release];
     [super dealloc];
 }
 @end

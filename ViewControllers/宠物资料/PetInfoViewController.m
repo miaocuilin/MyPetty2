@@ -88,7 +88,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [self loadAttentionAPI];
 //    [self.view bringSubviewToFront:self.menuBgBtn];
 //    [self.view bringSubviewToFront:self.menuBgView];
-    [self loadAttentionAPI];
+//    [self loadAttentionAPI];
 }
 #pragma mark - 关系API
 - (void)loadAttentionAPI
@@ -818,7 +818,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UILabel * name = [MyControl createLabelWithFrame:CGRectMake(105, 25, size.width+5, 20) Font:15 Text:str];
     [bgView addSubview:name];
     
-    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 14, 17) ImageName:@"woman"];
+    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 17, 17) ImageName:@"woman"];
     if ([[petInfoDict objectForKey:@"gender"] intValue] == 1) {
         sex.image = [UIImage imageNamed:@"man.png"];
     }
@@ -1045,8 +1045,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self.view addSubview:toolBgView];
     
     UIView * toolAlphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 44)];
-    toolAlphaView.alpha = 0.3;
-    toolAlphaView.backgroundColor = [UIColor blackColor];
+    toolAlphaView.alpha = 0.4;
+    toolAlphaView.backgroundColor = [ControllerManager colorWithHexString:@"8e2918"];
     [toolBgView addSubview:toolAlphaView];
     
     NSArray * unSeletedArray = @[@"tool1.png", @"tool2.png", @"tool3.png", @"tool4.png"];

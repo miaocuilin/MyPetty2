@@ -36,7 +36,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="woman.png" translatesAutoresizingMaskIntoConstraints="NO" id="aw9-Bo-GoL">
-                        <rect key="frame" x="135" y="18" width="14" height="17"/>
+                        <rect key="frame" x="135" y="18" width="17" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egL-Xh-oP5">
@@ -84,6 +84,6 @@
     <resources>
         <image name="circleBg.png" width="82" height="81"/>
         <image name="contribution.png" width="69" height="60"/>
-        <image name="woman.png" width="28" height="34"/>
+        <image name="woman.png" width="31" height="32"/>
     </resources>
 </document>

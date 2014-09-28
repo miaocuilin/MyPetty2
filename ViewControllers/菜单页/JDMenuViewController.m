@@ -165,18 +165,22 @@
     searchBgView.layer.masksToBounds = YES;
     [self.view addSubview:searchBgView];
 
-    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 12, 12) ImageName:@"menu-1.png"];
-    tfSearch = [MyControl createTextFieldWithFrame:searchBgView.frame placeholder:nil passWord:NO leftImageView:searchImageView rightImageView:nil Font:13];
+    UIImageView * searchView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 25, 12) ImageName:@""];
+    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(3, -1.5, 12, 12) ImageName:@"menu-1.png"];
+    [searchView addSubview:searchImageView];
+    
+    tfSearch = [MyControl createTextFieldWithFrame:CGRectMake(15, 15+20+1, 340/2, 25) placeholder:nil passWord:NO leftImageView:searchView rightImageView:nil Font:11];
     tfSearch.delegate = self;
     tfSearch.returnKeyType = UIReturnKeySearch;
+    tfSearch.textColor = [UIColor whiteColor];
     tfSearch.backgroundColor = [UIColor clearColor];
     tfSearch.borderStyle = 0;
-    tfSearch.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@" 搜索萌宠的昵称" attributes:@{NSForegroundColorAttributeName:BGCOLOR}];
+    tfSearch.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"搜索萌宠昵称" attributes:@{NSForegroundColorAttributeName:BGCOLOR}];
     [self.view addSubview:tfSearch];
     
     searchBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 37, 38, 20) ImageName:@"" Target:self Action:@selector(searchBtnClick) Title:@"取消"];
     searchBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-//    searchBtn.hidden = YES;
+    searchBtn.hidden = YES;
     [self.view addSubview:searchBtn];
     
     //消息
@@ -270,7 +274,7 @@
     [sv3 addSubview:exp];
     
     //性别，姓名，官职
-    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(25, 140+5, 28/2, 34/2) ImageName:@"man.png"];
+    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(25, 140+5, 34/2, 34/2) ImageName:@"man.png"];
     if ([[USER objectForKey:@"gender"] intValue] == 2) {
         sex.image = [UIImage imageNamed:@"woman.png"];
     }
@@ -283,7 +287,7 @@
 //    UILabel * kingName = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:[NSString stringWithFormat:@"%@国", [USER objectForKey:@"a_name"]]];
 //    [sv3 addSubview:kingName];
     
-    UILabel * position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:[NSString stringWithFormat:@"%@国大祭司", [USER objectForKey:@"a_name"]]];
+    UILabel * position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:13 Text:[NSString stringWithFormat:@"%@国大祭司", [USER objectForKey:@"a_name"]]];
     [sv3 addSubview:position];
     
     //金币
@@ -575,6 +579,10 @@
         [tfSearch resignFirstResponder];
         [UIView animateWithDuration:0.3 animations:^{
             sv.contentOffset = CGPointMake(0, 0);
+        } completion:^(BOOL finished) {
+            searchBtn.hidden = YES;
+            [self.searchArray removeAllObjects];
+            [tv reloadData];
         }];
         [self.searchArray removeAllObjects];
         [tv reloadData];
@@ -723,7 +731,7 @@
 //参数name不需要加密
 - (void)loadSearchData:(NSString *)name{
     NSString *searchSig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
-    NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@",SEARCHAPI,name,searchSig,[ControllerManager getSID]];
+    NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@", SEARCHAPI, [name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], searchSig,[ControllerManager getSID]];
     NSLog(@"搜索API:%@",searchString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:searchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         [self.searchArray removeAllObjects];
@@ -901,8 +909,7 @@
         btn.layer.masksToBounds = YES;
         [cell addSubview:btn];
         
-        label = [MyControl createLabelWithFrame:CGRectMake(70, 15, 140, 20) Font:15 Text:nil];
-        label.textColor = [UIColor blackColor];
+        label = [MyControl createLabelWithFrame:CGRectMake(75, 15, 140, 20) Font:15 Text:nil];
         [cell addSubview:label];
     }
     SearchResultModel *model = self.searchArray[indexPath.row];
@@ -953,7 +960,7 @@
 #pragma mark - textField代理
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-//    searchBtn.hidden = NO;
+    searchBtn.hidden = NO;
     [UIView animateWithDuration:0.3 animations:^{
         sv.contentOffset = CGPointMake(225, 0);
     }];

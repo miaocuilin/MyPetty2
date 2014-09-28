@@ -316,13 +316,13 @@
     /**************************/
     
     
-    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(80, 10, 28/2, 34/2) ImageName:@"man.png"];
+    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(80, 10, 34/2, 34/2) ImageName:@"man.png"];
     if ([model.gender intValue] == 2) {
         sex.image = [UIImage imageNamed:@"woman.png"];
     }
     [headerBgView addSubview:sex];
     
-    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(100, 10, 150, 20) Font:15 Text:@"毛毛"];
+    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(100, 10, 150, 20) Font:15 Text:@""];
     name.textColor = BGCOLOR;
     name.text = model.name;
     [headerBgView addSubview:name];

@@ -40,14 +40,14 @@
     self.giftView = [MyControl createImageViewWithFrame:CGRectMake(50, 37, 24, 24) ImageName:@"zan_gift.png"];
     [self.contentView addSubview:self.giftView];
     
-    self.sexView = [MyControl createImageViewWithFrame:CGRectMake(80, 15, 14, 17) ImageName:@"man.png"];
+    self.sexView = [MyControl createImageViewWithFrame:CGRectMake(80, 15, 17, 17) ImageName:@"man.png"];
     [self.contentView addSubview:self.sexView];
     
     self.watcherName = [MyControl createLabelWithFrame:CGRectMake(103, 15, 100, 20) Font:16 Text:@"羊驼"];
     self.watcherName.textColor = BGCOLOR;
     [self.contentView addSubview:self.watcherName];
     
-    self.ProvinceAndCity = [MyControl createLabelWithFrame:CGRectMake(80, 40, 120, 20) Font:14 Text:[NSString stringWithFormat:@"%@ | %@",@"北京市",@"朝阳区"]];
+    self.ProvinceAndCity = [MyControl createLabelWithFrame:CGRectMake(80, 40, 170, 20) Font:14 Text:[NSString stringWithFormat:@"%@ | %@",@"北京市",@"朝阳区"]];
     self.ProvinceAndCity.textColor = [UIColor blackColor];
     [self.contentView addSubview:self.ProvinceAndCity];
     

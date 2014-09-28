@@ -38,20 +38,20 @@
     label2.textColor = [UIColor grayColor];
     [self.contentView addSubview:label2];
     
-//    for(int i=0;i<4;i++){
-////        ClickImage * pic = [[ClickImage alloc] initWithFrame:CGRectMake(10+i%2*75, 25+i/2*45, 65, 40)];
-////        UIImageView * pic = [MyControl createImageViewWithFrame:CGRectMake(10+i%2*75, 25+i/2*45, 65, 40) ImageName:@""];
-//        UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(10+i%2*75, 25+i/2*45, 65, 40) ImageName:@"" Target:self Action:@selector(btnClick:) Title:nil];
+    for(int i=0;i<4;i++){
+//        ClickImage * pic = [[ClickImage alloc] initWithFrame:CGRectMake(10+i%2*75, 25+i/2*45, 65, 40)];
+//        UIImageView * pic = [MyControl createImageViewWithFrame:CGRectMake(10+i%2*75, 25+i/2*45, 65, 40) ImageName:@""];
+        UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(10+i%2*75, 25+i/2*45, 65, 40) ImageName:@"" Target:self Action:@selector(btnClick:) Title:nil];
 //        if (i%2 == 0) {
 //            [btn setImage:[UIImage imageNamed:@"cat1.jpg"] forState:UIControlStateNormal];
 //        }else{
-//            [btn setImage:[UIImage imageNamed:@"cat2.jpg"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"defaultPic.png"] forState:UIControlStateNormal];
 //        }
-//        
-//        [self.contentView addSubview:btn];
-//        btn.tag = 100+i;
-////        pic.canClick = YES;
-//    }
+        
+        [self.contentView addSubview:btn];
+        btn.tag = 100+i;
+//        pic.canClick = YES;
+    }
     
 //    UIView * bgView1 = [MyControl createViewWithFrame:CGRectMake(200, 20, 70, 70)];
 //    bgView1.layer.cornerRadius = 35;

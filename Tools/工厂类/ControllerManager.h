@@ -39,6 +39,8 @@
 //+ (void)loginHUDAlertView:(UIView *)showInView;
 //传入宠物类型，返回宠物类型名称
 +(NSString *)returnCateNameWithType:(NSString *)type;
+//传入宠物类型，返回宠物类型名称
++(NSString *)returnCateTypeWithName:(NSString *)name;
 //传入城市代号，返回城市及区名
 +(NSString *)returnProvinceAndCityWithCityNum:(NSString *)cityNum;
 

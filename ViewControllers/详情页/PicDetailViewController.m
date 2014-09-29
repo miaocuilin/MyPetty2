@@ -141,9 +141,9 @@
             NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
             self.aid = [dict objectForKey:@"aid"];
             //四个动作是摇一摇还是捣捣乱
-            if ([ControllerManager getIsSuccess]) {
-                [self loadAttentionAPI];
-            }
+//            if ([ControllerManager getIsSuccess]) {
+//                [self loadAttentionAPI];
+//            }
             self.shares = [dict objectForKey:@"shares"];
 //            NSLog(@"%@", [dict objectForKey:@"shares"]);
             self.gifts = [dict objectForKey:@"gifts"];
@@ -673,14 +673,14 @@
 //    (0, topicUser.frame.origin.y+topicUser.frame.size.height+10, 320, 50)
     usersBgView = [MyControl createViewWithFrame:CGRectMake(0, topicUser.frame.origin.y+topicUser.frame.size.height+Space, self.view.frame.size.width, 44)];
 //    NSLog(@"%f--%@", topicDetail.frame.size.height, self.cmt);
-    if ([self.cmt isKindOfClass:[NSNull class]] || self.cmt.length == 0) {
-        usersBgView.frame = CGRectMake(0, topicDetail.frame.origin.y-Space*2, self.view.frame.size.width, 44);
-        usersBgAlphaView.frame = usersBgView.frame;
-    }else{
-        UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1)];
-        line.backgroundColor = LineGray;
-        [usersBgView addSubview:line];
-    }
+//    if ([self.cmt isKindOfClass:[NSNull class]] || self.cmt.length == 0) {
+//        usersBgView.frame = CGRectMake(0, topicDetail.frame.origin.y-Space*2, self.view.frame.size.width, 44);
+//        usersBgAlphaView.frame = usersBgView.frame;
+//    }else{
+//        UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1)];
+//        line.backgroundColor = LineGray;
+//        [usersBgView addSubview:line];
+//    }
     [self.sv addSubview:usersBgView];
     
     
@@ -710,6 +710,26 @@
     }else{
         txCount = self.txTotalArray.count;
     }
+    
+    //
+    if ([self.cmt isKindOfClass:[NSNull class]] || self.cmt.length == 0) {
+        usersBgView.frame = CGRectMake(0, topicDetail.frame.origin.y-Space*2, self.view.frame.size.width, 44);
+        usersBgAlphaView.frame = usersBgView.frame;
+    }else{
+        if (txCount) {
+            UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1)];
+            line.backgroundColor = LineGray;
+            [usersBgView addSubview:line];
+        }else{
+            CGRect rect = usersBgView.frame;
+            rect.size.height = 0;
+            usersBgView.frame = rect;
+            usersBgAlphaView.frame = usersBgView.frame;
+        }
+        
+    }
+    
+    //
     for (int i=0; i<txCount; i++) {
         UIImageView * header = [MyControl createImageViewWithFrame:CGRectMake(15+i*(76/2), 7, 30, 30) ImageName:@""];
         header.layer.cornerRadius = 15;

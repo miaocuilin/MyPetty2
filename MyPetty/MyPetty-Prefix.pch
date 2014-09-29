@@ -72,6 +72,9 @@
     //修改个人信息API
     #define MODIFYINFOAPI @"http://54.199.161.210:8001/index.php?r=user/modifyInfoApi&"
 
+    //获取以前的SID
+    #define GETPRESID @"http://54.199.161.210:8001/index.php?r=user/getSIDApi&uid="
+
     //登录API
     #define LOGINAPI @"http://54.199.161.210:8001/index.php?r=user/loginApi&planet="
 
@@ -126,6 +129,13 @@
     /***************************/
     //注册王国推荐列表
     #define RECOMMANDCOUNTRYLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define RECOMMANDCOUNTRYLISTAPI2 @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&type="
+    #define RECOMMANDCOUNTRYLISTAPI3 @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&aid="
+    //注册王国人气列表  type=  aid=
+    #define TOPICCOUNTRYLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/popularApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+    #define TOPICCOUNTRYLISTAPI2 @"http://54.199.161.210:8001/index.php?r=animal/popularApi&type="
+    #define TOPICCOUNTRYLISTAPI3 @"http://54.199.161.210:8001/index.php?r=animal/popularApi&aid="
+
     //宠物名片
     #define PETCARDAPI @"http://54.199.161.210:8001/index.php?r=animal/cardApi&aid="
 

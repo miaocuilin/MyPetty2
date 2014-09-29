@@ -34,7 +34,8 @@
     // Do any additional setup after loading the view.
     
     didSelected = -1;
-    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.dataArray2 = [NSMutableArray arrayWithCapacity:0];
     self.limitDataArray = [NSMutableArray arrayWithCapacity:0];
     
     self.catArray = [NSMutableArray arrayWithCapacity:0];
@@ -44,6 +45,7 @@
     self.detailDict = [NSMutableDictionary dictionaryWithCapacity:0];
     
     self.systemListArray = [NSMutableArray arrayWithObjects:@"推荐", @"人气", nil];
+    self.limitTypeName = @"所有种族";
     [UIApplication sharedApplication].statusBarHidden = NO;
     
     
@@ -64,16 +66,16 @@
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            [self.dataArray removeAllObjects];
+            [self.limitDataArray removeAllObjects];
             //        NSLog(@"%@", load.dataDict);
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
                 PetInfoModel * model = [[PetInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.dataArray addObject:model];
+                [self.limitDataArray addObject:model];
                 [model release];
             }
-            [self.limitDataArray addObjectsFromArray:self.dataArray];
+            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
             [self createTableView];
             LoadingSuccess;
         }else{
@@ -103,7 +105,7 @@
 
 -(void)getListData
 {
-    NSDictionary * oriDict = [USER objectForKey:@"CateNameList"];
+    NSDictionary * oriDict = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CateNameList" ofType:@"plist"]];;
     //将数据存到数组中
     NSDictionary * dict1 = [oriDict objectForKey:@"1"];
     NSDictionary * dict2 = [oriDict objectForKey:@"2"];
@@ -225,6 +227,16 @@
     
 
 }
+-(void)loadMoreData
+{
+    NSLog(@"loadMore");
+    if (!isRQ) {
+        [self loadMoreRecommandDataWithType:self.type Aid:self.lastAid];
+    }else{
+        [self loadMoreTopicDataType:self.type Aid:self.lastAid];
+    }
+
+}
 -(void)createTableView
 {
     tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
@@ -233,6 +245,8 @@
     tv.backgroundColor = [UIColor clearColor];
     tv.separatorStyle = 0;
     [self.view addSubview:tv];
+    
+    [tv addFooterWithTarget:self action:@selector(loadMoreData)];
     
     [self.view bringSubviewToFront:navView];
     [self.view bringSubviewToFront:headerView];
@@ -459,13 +473,19 @@
     if (dropDown == nil) {
         CGFloat f = 200;
         dropDown = [[NIDropDown alloc] showDropDown:raceBtn :&f :self.totalArray];
+//        NSLog(@"%@", self.totalArray);
         [dropDown setDefaultCellType];
         dropDown.delegate = self;
         headerView.frame = CGRectMake(0, 64, 320, 35+200);
         isRaceShow = YES;
+        if (isSystemShow) {
+            isSystemShow = NO;
+            [dropDown2 hideDropDown:systemBtn];
+            [self rel2];
+        }
         //
-        [self.limitDataArray removeAllObjects];
-        [self.limitDataArray addObjectsFromArray:self.dataArray];
+//        [self.limitDataArray removeAllObjects];
+//        [self.limitDataArray addObjectsFromArray:self.dataArray];
     }else{
         [dropDown hideDropDown:raceBtn];
         isRaceShow = NO;
@@ -485,6 +505,11 @@
             headerView.frame = CGRectMake(0, 64, 320, 35+120);
         }
         isSystemShow = YES;
+        if (isRaceShow) {
+            [dropDown hideDropDown:raceBtn];
+            isRaceShow = NO;
+            [self rel];
+        }
     }else{
         isSystemShow = NO;
         [dropDown2 hideDropDown:systemBtn];
@@ -509,25 +534,72 @@
     NSLog(@"%d--%@", Line, Words);
     if (sender == dropDown) {
         self.limitTypeName = Words;
-        if ([Words isEqualToString:@"所有种族"]) {
-            [self.limitDataArray removeAllObjects];
-            [self.limitDataArray addObjectsFromArray:self.dataArray];
+        if (Line == 0) {
+            self.type = @"0";
         }else{
-//            NSLog(@"--%d", self.limitDataArray.count);
-            //在下拉列表初始化时limitDataArray数组就已经重置了
-            
-            for (int i=0; i<self.limitDataArray.count; i++) {
-                PetInfoModel * model = self.limitDataArray[i];
-                if (![[ControllerManager returnCateNameWithType:model.type] isEqualToString:self.limitTypeName]) {
-                    [self.limitDataArray removeObjectAtIndex:i];
-                    i--;
+            for (int i=1; i<self.totalArray.count; i++) {
+                if (Line == i) {
+                    self.type = [ControllerManager returnCateTypeWithName:self.totalArray[i]];
+                    break;
                 }
             }
         }
         
-        [tv reloadData];
+        
+        if ([Words isEqualToString:@"所有种族"]) {
+            if (!isRQ) {
+                [self reloadRecommandData];
+            }else{
+                [self reloadTopicData];
+            }
+//            [self.limitDataArray removeAllObjects];
+//            [self.limitDataArray addObjectsFromArray:self.dataArray];
+        }else{
+            if (!isRQ) {
+                [self loadRecommandDataWithType:self.type];
+            }else{
+                [self loadTopicDataWithType:self.type];
+            }
+//            NSLog(@"--%d", self.limitDataArray.count);
+            //在下拉列表初始化时limitDataArray数组就已经重置了
+            
+            
+            
+//            for (int i=0; i<self.limitDataArray.count; i++) {
+//                PetInfoModel * model = self.limitDataArray[i];
+//                if (![[ControllerManager returnCateNameWithType:model.type] isEqualToString:self.limitTypeName]) {
+//                    [self.limitDataArray removeObjectAtIndex:i];
+//                    i--;
+//                }
+//            }
+        }
+        
+//        [tv reloadData];
     }else if(sender == dropDown2){
         NSLog(@"22222222");
+        if (Line == 0) {
+            //推荐
+            isRQ = NO;
+        }else{
+            //人气
+            isRQ = YES;
+        }
+        //请求相应的API
+        if ([self.limitTypeName isEqualToString:@"所有种族"]) {
+            //请求相应api1
+            if (isRQ) {
+                [self reloadTopicData];
+            }else{
+                [self reloadRecommandData];
+            }
+        }else{
+            //请求相应api2
+            if (isRQ) {
+                [self loadTopicDataWithType:self.type];
+            }else{
+                [self loadRecommandDataWithType:self.type];
+            }
+        }
     }
 }
 -(void)rel
@@ -558,6 +630,215 @@
 //    UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
     afView = [AFPopupView popupWithView:vc.view];
     [afView show];
+}
+
+#pragma mark - reload
+
+//下拉刷新的时候调用
+-(void)reloadRecommandData
+{
+    StartLoading;
+    NSString * url = [NSString stringWithFormat:@"%@%@", RECOMMANDCOUNTRYLISTAPI, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+//            [self.dataArray removeAllObjects];
+            [self.limitDataArray removeAllObjects];
+            //        NSLog(@"%@", load.dataDict);
+            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary * dict in array) {
+                PetInfoModel * model = [[PetInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.limitDataArray addObject:model];
+                [model release];
+            }
+//            [self.limitDataArray addObjectsFromArray:self.dataArray];
+            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+            [tv reloadData];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+-(void)reloadTopicData
+{
+    StartLoading;
+    NSString * url = [NSString stringWithFormat:@"%@%@", TOPICCOUNTRYLISTAPI, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+//            [self.dataArray2 removeAllObjects];
+            [self.limitDataArray removeAllObjects];
+            //        NSLog(@"%@", load.dataDict);
+            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary * dict in array) {
+                PetInfoModel * model = [[PetInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.limitDataArray addObject:model];
+                [model release];
+            }
+//            [self.limitDataArray addObjectsFromArray:self.dataArray2];
+            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+            [tv reloadData];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+
+//当点击推荐还是人气的时候调用
+-(void)loadRecommandDataWithType:(NSString *)type
+{
+    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
+        [self reloadRecommandData];
+    }else{
+        StartLoading;
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"type=%@dog&cat", type]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI2, type, sig, [ControllerManager getSID]];
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                [self.limitDataArray removeAllObjects];
+                //        NSLog(@"%@", load.dataDict);
+                
+                NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                
+                for (NSDictionary * dict in array) {
+                    PetInfoModel * model = [[PetInfoModel alloc] init];
+                    [model setValuesForKeysWithDictionary:dict];
+                    [self.limitDataArray addObject:model];
+                    [model release];
+                }
+                if (array.count) {
+                    self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+                }else{
+                    self.lastAid = @"";
+                }
+                LoadingSuccess;
+                [tv reloadData];
+            }else{
+                LoadingFailed;
+            }
+        }];
+        [request release];
+    }
+}
+-(void)loadTopicDataWithType:(NSString *)type
+{
+    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
+        [self reloadTopicData];
+    }else{
+        StartLoading;
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"type=%@dog&cat", type]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI2, type, sig, [ControllerManager getSID]];
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                [self.limitDataArray removeAllObjects];
+                //        NSLog(@"%@", load.dataDict);
+                NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                for (NSDictionary * dict in array) {
+                    PetInfoModel * model = [[PetInfoModel alloc] init];
+                    [model setValuesForKeysWithDictionary:dict];
+                    [self.limitDataArray addObject:model];
+                    [model release];
+                }
+                //排除该种类为空的情况
+                if (array.count) {
+                    self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+                }else{
+                    self.lastAid = @"";
+                }
+                [tv reloadData];
+                LoadingSuccess;
+            }else{
+                LoadingFailed;
+            }
+        }];
+        [request release];
+    }
+}
+
+//上拉加载的时候调用
+-(void)loadMoreRecommandDataWithType:(NSString *)type Aid:(NSString *)aid
+{
+    NSLog(@"---%@", aid);
+    NSString * sig = nil;
+    NSString * url = nil;
+    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
+        sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
+        url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI3, aid, sig, [ControllerManager getSID]];
+    }else{
+        sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&type=%@dog&cat", aid, type]];
+        url = [NSString stringWithFormat:@"%@%@&type=%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI3, aid, type, sig, [ControllerManager getSID]];
+    }
+    //
+    StartLoading;
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary * dict in array) {
+                PetInfoModel * model = [[PetInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.limitDataArray addObject:model];
+                [model release];
+            }
+            //排除该种类为空的情况
+            if (array.count) {
+                self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+                [tv reloadData];
+            }
+            [tv footerEndRefreshing];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+    
+}
+-(void)loadMoreTopicDataType:(NSString *)type Aid:(NSString *)aid
+{
+    NSLog(@"---%@", aid);
+    NSString * sig = nil;
+    NSString * url = nil;
+    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
+        sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
+        url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI3, aid, sig, [ControllerManager getSID]];
+    }else{
+        sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&type=%@dog&cat", aid, type]];
+        url = [NSString stringWithFormat:@"%@%@&type=%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI3, aid, type, sig, [ControllerManager getSID]];
+    }
+    //
+    StartLoading;
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary * dict in array) {
+                PetInfoModel * model = [[PetInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.limitDataArray addObject:model];
+                [model release];
+            }
+            //排除该种类为空的情况
+            if (array.count) {
+                self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+                [tv reloadData];
+            }
+            
+            [tv footerEndRefreshing];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
 }
 
 - (void)didReceiveMemoryWarning

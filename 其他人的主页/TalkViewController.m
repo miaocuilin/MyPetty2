@@ -64,7 +64,7 @@
 //    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-//            NSLog(@"%@", load.dataDict);
+            NSLog(@"%@", load.dataDict);
             self.talk_id = [[load.dataDict objectForKey:@"data"] objectForKey:@"talk_id"];
             //下载完talk_id之后查看本地是否有历史聊天记录，有的话调出来
             [self loadHistoryTalk];

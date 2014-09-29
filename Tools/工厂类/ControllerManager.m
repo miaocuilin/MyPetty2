@@ -397,7 +397,35 @@ static LevelRank *levelAndRank =nil;
     }
     return str;
 }
-
++(NSString *)returnCateTypeWithName:(NSString *)name
+{
+    NSString * path = [[NSBundle mainBundle] pathForResource:@"CateNameList" ofType:@"plist"];
+    NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:path];
+//    NSLog(@"%@", dict);
+//    NSMutableArray * mutableArray = [NSMutableArray arrayWithCapacity:0];
+//    NSDictionary
+    NSDictionary * dict1 = [dict objectForKey:@"1"];
+    NSDictionary * dict2 = [dict objectForKey:@"2"];
+    NSDictionary * dict3 = [dict objectForKey:@"3"];
+    for (NSString * key in [dict1 allKeys]) {
+//        NSLog(@"%@", dic);
+        if ([[dict1 objectForKey:key] isEqualToString:name]) {
+            return key;
+        }
+    }
+    for (NSString * key in [dict2 allKeys]) {
+        if ([[dict2 objectForKey:key] isEqualToString:name]) {
+            return key;
+        }
+    }
+    for (NSString * key in [dict3 allKeys]) {
+        if ([[dict3 objectForKey:key] isEqualToString:name]) {
+            return key;
+        }
+    }
+    
+    return nil;
+}
 +(NSString *)returnProvinceAndCityWithCityNum:(NSString *)cityNum
 {
     NSString * province = nil;

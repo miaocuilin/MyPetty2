@@ -211,16 +211,61 @@
 }
 -(void)tempLogin
 {
+    //一进来先看本地有没有SID，本地有直接请求，过期再请求login
+    //如果本地没有就去网上去SID，如果网上没有--》login，如果有直接用
+    //用着如果过期再去请求SID。
+    if ([USER objectForKey:@"SID"] != nil) {
+        if ([[USER objectForKey:@"isSuccess"] intValue]
+            ) {
+            [ControllerManager setIsSuccess:[[USER objectForKey:@"isSuccess"] intValue]];
+            [ControllerManager setSID:[USER objectForKey:@"SID"]];
+            [self getUserData];
+        }else{
+            [self login];
+        }
+    }else{
+        [self getPreSID];
+//        return;
+    }
+    
+    /******************************/
     NSLog(@"%@--%@", [USER objectForKey:@"isSuccess"], [USER objectForKey:@"SID"]);
 //    [USER setObject:@"" forKey:@"SID"];
 //    [USER setObject:@"" forKey:@"isSuccess"];
-    if ([[USER objectForKey:@"isSuccess"] intValue] && [USER objectForKey:@"SID"]) {
-        [ControllerManager setIsSuccess:[[USER objectForKey:@"isSuccess"] intValue]];
-        [ControllerManager setSID:[USER objectForKey:@"SID"]];
-        [self getUserData];
-    }else{
-        [self login];
-    }
+//    if ([[USER objectForKey:@"isSuccess"] intValue] && [USER objectForKey:@"SID"]) {
+//        [ControllerManager setIsSuccess:[[USER objectForKey:@"isSuccess"] intValue]];
+//        [ControllerManager setSID:[USER objectForKey:@"SID"]];
+//        [self getUserData];
+//    }else{
+//        [self login];
+//    }
+}
+-(void)getPreSID
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"uid=%@dog&cat", [OpenUDID value]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@", GETPRESID, [OpenUDID value], sig];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            if (![[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                //网上也米有SID--》login
+                [self login];
+            }else{
+                if ([[USER objectForKey:@"isSuccess"] intValue]
+                    ) {
+                    [ControllerManager setIsSuccess:[[USER objectForKey:@"isSuccess"] intValue]];
+                    [ControllerManager setSID:[USER objectForKey:@"SID"]];
+                    [self getUserData];
+                }else{
+                    [self login];
+                }
+            }
+        }else{
+            
+        }
+    }];
+    [request release];
 }
 -(void)miBtnClick
 {
@@ -270,7 +315,10 @@
             [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
-            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
+            if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] isKindOfClass:[NSNull class]]) {
+                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
+            }
+            
             NSLog(@"isSuccess:%d,SID:%@", [ControllerManager getIsSuccess], [ControllerManager getSID]);
             if ([ControllerManager getIsSuccess]) {
                 [self getUserData];

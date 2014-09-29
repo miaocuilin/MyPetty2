@@ -102,7 +102,7 @@
     if (!isAdded) {
 //        isAdded = YES;
 //        NSLog(@"===%@", self.imagesArray);
-        for(int i=0;i<self.imagesArray.count;i++){
+        for(int i=0;i<4;i++){
             UIButton * button = (UIButton *)[self.contentView viewWithTag:100+i];
             height[i] = 320/button.currentBackgroundImage.size.width*button.currentBackgroundImage.size.height;
 
@@ -112,7 +112,7 @@
 //            NSLog(@"%f--%f", imageView.frame.size.width, imageView.frame.size.height);
             [sv addSubview:imageView];
         }
-        UIButton * maskBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320*self.imagesArray.count, [UIScreen mainScreen].bounds.size.height) ImageName:@"" Target:self Action:@selector(maskBtnClick) Title:nil];
+        UIButton * maskBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320*4, [UIScreen mainScreen].bounds.size.height) ImageName:@"" Target:self Action:@selector(maskBtnClick) Title:nil];
         [sv addSubview:maskBtn];
     }
     int a = btn.tag-100;
@@ -184,17 +184,20 @@
     }
     
     /**************************/
-    sv.contentSize = CGSizeMake(320*self.imagesArray.count, [UIScreen mainScreen].bounds.size.height);
+    sv.contentSize = CGSizeMake(320*4, [UIScreen mainScreen].bounds.size.height);
     
-    for(int i=0;i<self.imagesArray.count;i++){
-        UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(10+i%2*75, 25+i/2*45, 65, 40) ImageName:@"20-1.png" Target:self Action:@selector(btnClick:) Title:nil];
+    for(int i=0;i<4;i++){
+        UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(10+i%2*75, 25+i/2*45, 65, 40) ImageName:@"defaultPic.png" Target:self Action:@selector(btnClick:) Title:nil];
         
         [self.contentView addSubview:btn];
         btn.tag = 100+i;
+        if (i >= self.imagesArray.count) {
+            continue;
+        }
         /**************************/
         if (!([[self.imagesArray[i] objectForKey:@"url"] isKindOfClass:[NSNull class]] || [[self.imagesArray[i] objectForKey:@"url"] length]==0)) {
             NSString * docDir = DOCDIR;
-            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.imagesArray[i] objectForKey:@"url"]]];
+            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_card.png", [self.imagesArray[i] objectForKey:@"url"]]];
             UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
             if (image) {
                 [btn setBackgroundImage:image forState:UIControlStateNormal];
@@ -203,10 +206,38 @@
                 //下载图片
                 httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.imagesArray[i] objectForKey:@"url"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
-                        [btn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                        //对图片进行缩放和截取
+                        UIImage * image1 = load.dataImage;
+                        float Width = image1.size.width;
+                        float Height = image1.size.height;
+                        
+                        UIImage * image2 = nil;
+                        
+                        if (Width/Height>65/40.0) {
+                            //偏宽，保证高度
+                            float rate = Width/Height-65/40.0;
+                            image2 = [self imageFromImage:image1 inRect:CGRectMake(Width*rate/2, 0, Width*40.0/65, Height)];
+
+//                            Height = 40.0;
+//                            Width = 40.0/Height*Width;
+                        }else{
+                            //偏高，保证宽度
+                            float rate = Height/Width-40.0/65;
+                            
+                            image2 = [self imageFromImage:image1 inRect:CGRectMake(0, Height*rate/2, Width, Height*40.0/65)];
+//                            Width = 65.0;
+//                            Height = 65.0/Width*Height;
+                        }
+
+                        [btn setBackgroundImage:image2 forState:UIControlStateNormal];
+                        
                         NSString * docDir = DOCDIR;
                         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.imagesArray[i] objectForKey:@"url"]]];
                         [load.data writeToFile:txFilePath atomically:YES];
+                        //
+                        NSString * txFilePath2 = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_card.png", [self.imagesArray[i] objectForKey:@"url"]]];
+                        NSData * data = UIImagePNGRepresentation(image2);
+                        [data writeToFile:txFilePath2 atomically:YES];
                     }else{
                         NSLog(@"头像下载失败");
                     }
@@ -216,6 +247,18 @@
         }
         /**************************/
     }
+}
+#pragma mark -取图片的一部分
+/**
+ *从图片中按指定的位置大小截取图片的一部分
+ * UIImage image 原始的图片
+ * CGRect rect 要截取的区域
+ */
+- (UIImage *)imageFromImage:(UIImage *)image inRect:(CGRect)rect {
+    CGImageRef sourceImageRef = [image CGImage];
+    CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, rect);
+    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+    return newImage;
 }
 - (void)awakeFromNib
 {

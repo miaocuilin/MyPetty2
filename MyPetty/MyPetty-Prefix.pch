@@ -78,6 +78,9 @@
     //登录API
     #define LOGINAPI @"http://54.199.161.210:8001/index.php?r=user/loginApi&planet="
 
+    //穿越API
+    #define THROUGHAPI @"http://54.199.161.210:8001/index.php?r=user/planetApi&planet="
+
     //获取图片未拼接的URL，后面需要加图片的名称
     #define IMAGEURL @"http://54.199.161.210:8001/images/upload/"
     #define USERTXURL @"http://54.199.161.210:8001/images/tx/tx_usr/"
@@ -126,15 +129,18 @@
 
     //还有一个nid参数用来上拉加载
     #define PETNEWS2 @"http://54.199.161.210:8001/index.php?r=animal/newsApi&aid="
+
+    //宠物背包
+    #define PETGOODSLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/itemsApi&aid="
     /***************************/
     //注册王国推荐列表
     #define RECOMMANDCOUNTRYLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     #define RECOMMANDCOUNTRYLISTAPI2 @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&type="
-    #define RECOMMANDCOUNTRYLISTAPI3 @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&aid="
+    #define RECOMMANDCOUNTRYLISTAPI3 @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&page="
     //注册王国人气列表  type=  aid=
     #define TOPICCOUNTRYLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/popularApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     #define TOPICCOUNTRYLISTAPI2 @"http://54.199.161.210:8001/index.php?r=animal/popularApi&type="
-    #define TOPICCOUNTRYLISTAPI3 @"http://54.199.161.210:8001/index.php?r=animal/popularApi&aid="
+    #define TOPICCOUNTRYLISTAPI3 @"http://54.199.161.210:8001/index.php?r=animal/popularApi&page="
 
     //宠物名片
     #define PETCARDAPI @"http://54.199.161.210:8001/index.php?r=animal/cardApi&aid="

@@ -71,7 +71,8 @@
 #pragma mark - 加载摇一摇数据
 - (void)loadShakeDataInit
 {
-    NSString *shakeSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[self.animalInfoDict objectForKey:@"aid"]]];
+    self.animalInfoDict = [USER objectForKey:@"petInfoDict"];
+    NSString *shakeSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [self.animalInfoDict objectForKey:@"aid"]]];
     NSString *shakeString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",SHAKEAPI,[self.animalInfoDict objectForKey:@"aid"],shakeSig,[ControllerManager getSID]];
     NSLog(@"摇一摇：%@",shakeString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:shakeString Block:^(BOOL isFinish, httpDownloadBlock *load) {

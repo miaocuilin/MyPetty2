@@ -1026,17 +1026,24 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)finishButtonClick:(UIButton *)sender
 {
     if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"] || tfUserName.text.length == 0 || tfCity.text.length == 0) {
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"您有信息没有填写!" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-        [alert show];
-        [alert release];
+        StartLoading;
+        [MMProgressHUD dismissWithError:@"您有信息没有填写!" afterDelay:1];
+//        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"您有信息没有填写!" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+//        [alert show];
+//        [alert release];
         return;
     }
     if (tfUserName.text.length >8) {
-        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"昵称不可以超过8个汉字哦~"];
+        StartLoading;
+        [MMProgressHUD dismissWithError:@"昵称不可以超过8个字哦~" afterDelay:1];
+//        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"昵称不可以超过8个汉字哦~"];
         return;
     }
+    
     if ([ageTextField.text intValue]>=100) {
-        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"不可以谎报年龄哦~"];
+//        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"不可以谎报年龄哦~"];
+        StartLoading;
+        [MMProgressHUD dismissWithError:@"不可以谎报年龄哦~" afterDelay:1];
         return;
     }
     
@@ -1087,7 +1094,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)userRegister
 {
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithStatus:@"正在注册，请稍后..."];
+    [MMProgressHUD showWithStatus:@"注册中..."];
 //    alert0 = [[UIAlertView alloc] initWithTitle:@"正在注册，请稍后..." message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
 //    [alert0 show];
 //    [alert0 release];
@@ -1114,7 +1121,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
 //    }
     if (self.isModify) {
-        [MMProgressHUD showWithStatus:@"正在修改，请稍后..."];
+        [MMProgressHUD showWithStatus:@"修改中..."];
         NSString * code = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", MODIFYINFOAPI, code, sig, [ControllerManager getSID]];
@@ -1130,7 +1137,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 /**********************/
                 if([[load.dataDict objectForKey:@"errorCode"] intValue] == 2){
                     //SID过期，重新获取
-                    [alert0 setTitle:@"SID过期"];
+//                    [alert0 setTitle:@"SID过期"];
                     [self login];
 //                    [self userRegister];
                     return;
@@ -1139,9 +1146,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     NSLog(@"%@", load.dataDict);
                     //发生错误，显示错误信息，用户名已存在等。
                     NSString * errorMessage = [load.dataDict objectForKey:@"errorMessage"];
-                    [alert0 setTitle:errorMessage];
+                    
+//                    [alert0 setTitle:errorMessage];
 //                    [alert0 setTitle:@"用户名已存在"];
-                    [MMProgressHUD dismissWithError:@"修改失败" afterDelay:0];
+                    [MMProgressHUD dismissWithError:errorMessage afterDelay:0];
                     return;
                 }else{
                     [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
@@ -1167,15 +1175,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //访问注册API
     NSString * message = [NSString stringWithFormat:@"%@?r=user/registerApi&%@&sig=%@&SID=%@", IPURL2, str, sig, [ControllerManager getSID]];
     //进行注册
-    NSLog(@"%d", [ControllerManager getIsSuccess]);
-    NSLog(@"%@", [ControllerManager getSID]);
+    NSLog(@"getIsSuccess:%d", [ControllerManager getIsSuccess]);
+    NSLog(@"getSID:%@", [ControllerManager getSID]);
     NSLog(@"self.name: %@",self.name);
     NSLog(@"self.nameUTF8: %@",[self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
-    NSLog(@"%@", message);
+    NSLog(@"url:%@", message);
     [[httpDownloadBlock alloc] initWithUrlStr:message Block:^(BOOL isFinish, httpDownloadBlock * load) {
         NSLog(@"%@", load.dataDict);
 //        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-        [alert0 setTitle:@"正在下载注册返回信息"];
+//        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//        [MMProgressHUD showWithStatus:@"正在下载注册返回信息"];
+//        [alert0 setTitle:@"正在下载注册返回信息"];
+//        [MMProgressHUD showWithStatus:@""];
         if (isFinish) {
             if([[load.dataDict objectForKey:@"errorCode"] intValue] == 2){
                 //SID过期，重新获取
@@ -1285,9 +1296,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSString * url = [NSString stringWithFormat:@"%@%@&uid=%@&sig=%@&SID=%@", LOGINAPI, [USER objectForKey:@"planet"], [OpenUDID value], [MyMD5 md5:code], [ControllerManager getSID]];
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){
-            NSLog(@"%@", load.dataDict);
+            NSLog(@"登录结果：%@", load.dataDict);
             [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
             [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
             NSLog(@"isSuccess:%d,SID:%@", [ControllerManager getIsSuccess], [ControllerManager getSID]);
             NSLog(@"是否成功？：%d", [ControllerManager getIsSuccess]);
             [self getUserData];
@@ -1454,7 +1468,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
             }
             [USER setObject:@"1" forKey:@"Menu"];
+            
+            //注册完之后直接返回主页
             [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+            [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
+            [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
             [self dismissViewControllerAnimated:NO completion:nil];
         }
     }else{
@@ -1464,7 +1482,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
         }
         [USER setObject:@"1" forKey:@"Menu"];
+        
+        //注册完之后直接返回主页
         [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+        [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
+        [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
         [self dismissViewControllerAnimated:NO completion:nil];
     }
     

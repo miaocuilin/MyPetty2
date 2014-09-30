@@ -24,6 +24,12 @@
     
     UIButton * topic;
     UIButton * users;
+    UIButton * publishTo;
+    
+    UIButton * publishButton;
+    
+    //用于限制键盘change的通知
+    BOOL isInPublish;
 }
 //@property (nonatomic,retain)UIImageView * bgImageView;
 @property (nonatomic,retain)UIImage * oriImage;

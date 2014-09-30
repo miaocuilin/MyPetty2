@@ -55,6 +55,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     
 }
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    isInPublish = YES;
+//}
+//-(void)viewWillDisappear:(BOOL)animated
+//{
+//    isInPublish = NO;
+//}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -163,8 +171,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     bigImageView.layer.masksToBounds = YES;
     [sv addSubview:bigImageView];
     
-    /***********#话题#  @用户************/
-    topic = [MyControl createButtonWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, 290/2, 30) ImageName:@"" Target:self Action:@selector(topicClick) Title:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]]];
+    /***********#话题#  @用户  发布到************/
+    int width = (self.view.frame.size.width-20-7.5*2)/3;
+    float space = 7.5;
+    
+    topic = [MyControl createButtonWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, width, 30) ImageName:@"" Target:self Action:@selector(topicClick) Title:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]]];
     topic.titleLabel.font = [UIFont systemFontOfSize:13];
     topic.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
     topic.layer.cornerRadius = 3;
@@ -172,7 +183,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     topic.showsTouchWhenHighlighted = YES;
     [sv addSubview:topic];
     
-    users = [MyControl createButtonWithFrame:CGRectMake(320-10-290/2, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, 290/2, 30) ImageName:@"" Target:self Action:@selector(usersClick) Title:@"点击@用户"];
+    users = [MyControl createButtonWithFrame:CGRectMake(topic.frame.origin.x+topic.frame.size.width+space, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, width, 30) ImageName:@"" Target:self Action:@selector(usersClick) Title:@"点击@小伙伴"];
+//    users.userInteractionEnabled = NO;
 //    if ([[USER objectForKey:@"atUsers"] count] == 0) {
 //        [users setTitle:@"点击@用户" forState:UIControlStateNormal];
 //    }else{
@@ -184,6 +196,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     users.layer.masksToBounds = YES;
     users.showsTouchWhenHighlighted = YES;
     [sv addSubview:users];
+    
+    publishTo = [MyControl createButtonWithFrame:CGRectMake(users.frame.origin.x+users.frame.size.width+space, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, width, 30) ImageName:@"" Target:self Action:@selector(usersClick) Title:[NSString stringWithFormat:@"发布到%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"]]];
+    publishTo.userInteractionEnabled = NO;
+    publishTo.titleLabel.font = [UIFont systemFontOfSize:13];
+    publishTo.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
+    publishTo.layer.cornerRadius = 3;
+    publishTo.layer.masksToBounds = YES;
+    publishTo.showsTouchWhenHighlighted = YES;
+    [sv addSubview:publishTo];
     /***********************************/
 //    _textView = [MyControl createTextFieldWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+5, 300, 80) placeholder:@"为您爱宠的靓照写个描述吧~" passWord:NO leftImageView:nil rightImageView:nil Font:17];
     textBgView = [MyControl createViewWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+5+33, 300, 80)];
@@ -193,7 +214,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     limitLabel = [MyControl createLabelWithFrame:CGRectMake(textBgView.frame.size.width-15-80, textBgView.frame.size.height-25-30, 80, 30) Font:25 Text:@"40"];
     limitLabel.textAlignment = NSTextAlignmentRight;
-    limitLabel.textColor = [UIColor colorWithRed:200/255.0 green:180/255.0 blue:180/255.0 alpha:1];
+//    [UIColor colorWithRed:200/255.0 green:180/255.0 blue:180/255.0 alpha:1]
+    limitLabel.textColor = [UIColor colorWithRed:160/255.0 green:160/255.0 blue:160/255.0 alpha:1];
     [textBgView addSubview:limitLabel];
     
     _textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 300, 80)];
@@ -215,7 +237,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    _textView.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
     [textBgView addSubview:_textView];
     
-    UIButton * publishButton = [MyControl createButtonWithFrame:CGRectMake(10, textBgView.frame.origin.y+textBgView.frame.size.height+5, 300, 35) ImageName:@"" Target:self Action:@selector(publishButtonClick:) Title:@"发布"];
+    publishButton = [MyControl createButtonWithFrame:CGRectMake(10, textBgView.frame.origin.y+textBgView.frame.size.height+5, 300, 35) ImageName:@"" Target:self Action:@selector(publishButtonClick:) Title:@"发布"];
     publishButton.backgroundColor = BGCOLOR;
     publishButton.layer.cornerRadius = 5;
     publishButton.layer.masksToBounds = YES;
@@ -424,12 +446,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {
+    isInPublish = YES;
     if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"]) {
         _textView.text = @"";
     }
 }
 -(void)textViewDidEndEditing:(UITextView *)textView
 {
+    isInPublish = NO;
     if (_textView.text.length == 0) {
         _textView.text = @"为您爱宠的靓照写个描述吧~";
     }
@@ -458,6 +482,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 -(void)keyboardWasChange:(NSNotification *)notification
 {
+    if (!isInPublish) {
+        return;
+    }
     float y = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.y;
     if (y == self.view.frame.size.height) {
         return;
@@ -555,13 +582,24 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [MMProgressHUD dismissWithSuccess:@"上传成功" title:nil afterDelay:0.5];
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     NSDictionary *dict =[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
-    int exp = [[USER objectForKey:@"exp"] intValue];
-    [USER setObject:[[dict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
-    int index = [[USER objectForKey:@"exp"] intValue]-exp;
-    if (index > 0) {
-        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
-
+    if ([[dict objectForKey:@"errorCode"] intValue] == -1) {
+        [MMProgressHUD dismissWithError:[dict objectForKey:@"errorMessage"] afterDelay:1];
+        NSLog(@"errorMessage:%@", [dict objectForKey:@"errorMessage"]);
+        publishButton.userInteractionEnabled = YES;
+    }else{
+        int exp = [[USER objectForKey:@"exp"] intValue];
+        [USER setObject:[[dict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
+        int index = [[USER objectForKey:@"exp"] intValue]-exp;
+        if (index > 0) {
+            [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+            
+        }
+        LoadingSuccess;
+        [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+            [self dismissViewControllerAnimated:YES completion:nil];
+        } completion:nil];
     }
+    
     //分享到微博
 //    if ([[USER objectForKey:@"sina"] intValue] == 1) {
 //        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:_textView.text image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
@@ -586,9 +624,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
 //    DetailViewController * vc = [[DetailViewController alloc] init];
 //    [self presentViewController:vc animated:YES completion:^{
-    [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-        [self dismissViewControllerAnimated:YES completion:nil];
-    } completion:nil];
+    
     
 //    }];
 //    [vc release];
@@ -598,6 +634,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     NSLog(@"failed");
     UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
+    LoadingFailed;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

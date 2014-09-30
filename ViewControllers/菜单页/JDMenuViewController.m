@@ -25,13 +25,25 @@
 #import "UserInfoViewController.h"
 #import "SearchResultModel.h"
 #import "PetInfoViewController.h"
+#import "ChoseLoadViewController.h"
 @interface JDMenuViewController ()
 
 @end
 
 @implementation JDMenuViewController
 
-
+-(void)viewWillAppear:(BOOL)animated
+{
+    //1 代表未注册  2 代表刚注册  3代表已注册
+    if ([[USER objectForKey:@"isNotRegister"] intValue] == 2) {
+        [USER setObject:@"3" forKey:@"isNotRegister"];
+        for (UIView * view in self.view.subviews) {
+            [view removeFromSuperview];
+        }
+        [self createBg];
+        [self createUI];
+    }
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -189,6 +201,7 @@
     
     UIImageView * messageNum = [MyControl  createImageViewWithFrame:CGRectMake(17, -7., 15, 15) ImageName:@"greenBall.png"];
     messageNum.tag = 49;
+    messageNum.hidden = YES;
     [messageBtn addSubview:messageNum];
     
     noticeNumLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 15, 15) Font:14 Text:@"5"];
@@ -863,12 +876,10 @@
     }else{
         //穿越
         NSLog(@"回到星球选择页面");
-        ToolTipsViewController *tool = [ToolTipsViewController alloc];
-        [self addChildViewController:tool];
-        [tool didMoveToParentViewController:self];
-        [self.view addSubview:tool.view];
-        [tool createAlertView];
-        
+        ChoseLoadViewController * vc = [[ChoseLoadViewController alloc] init];
+        vc.isFromMenu = YES;
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
     }
     [self performSelector:@selector(resetColor) withObject:nil afterDelay:0.3];
 

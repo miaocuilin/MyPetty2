@@ -169,7 +169,8 @@
                 [USER setObject:master_id forKey:@"master_id"];
                 NSLog(@"%@--%@--%@", [USER objectForKey:@"aid"], [USER objectForKey:@"master_id"], [USER objectForKey:@"usr_id"]);
                 [tv reloadData];
-                [MMProgressHUD dismissWithSuccess:@"切换成功" title:nil  afterDelay:0.2];
+                [self loadPetInfo];
+                
             }else{
                 [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
             }
@@ -180,7 +181,29 @@
     }];
     [request release];
 }
-
+-(void)loadPetInfo
+{
+//    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+    [MMProgressHUD showProgressWithStyle:0 title:nil status:@"切换成功，更新信息中..." confirmationMessage:@"确认取消?" cancelBlock:^{
+        LoadingFailed;
+    }];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"petInfo:%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                
+                //记录默认宠物信息
+                [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"petInfoDict"];
+            }
+            [MMProgressHUD dismissWithSuccess:@"更新成功" title:nil afterDelay:0.5];
+        }else{
+            [MMProgressHUD dismissWithError:@"更新失败" afterDelay:0.5];
+        }
+    }];
+    [request release];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

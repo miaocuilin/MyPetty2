@@ -37,9 +37,9 @@
 }
 - (void)viewWillAppear:(BOOL)animated
 {
-    if ([ControllerManager getIsSuccess]) {
-        [self loadAnimalInfoData];
-    }
+//    if ([ControllerManager getIsSuccess]) {
+//        [self loadAnimalInfoData];
+//    }
 }
 - (void)loadAnimalInfoData
 {

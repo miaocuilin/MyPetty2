@@ -21,4 +21,5 @@
     //1猫 2狗
     int planet;
 }
+@property(nonatomic)BOOL isFromMenu;
 @end

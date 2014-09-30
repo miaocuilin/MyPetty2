@@ -94,6 +94,7 @@
                     return;
                 }
                 UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[self.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
+                NSLog(@"%@", [self.dataDict objectForKey:@"errorMessage"]);
                 self.httpRequestBlock(NO,self);
                 return;
             }

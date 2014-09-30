@@ -28,6 +28,12 @@
     return self;
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    if ([[USER objectForKey:@"isChooseFamilyShouldDismiss"]intValue]) {
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -75,7 +81,8 @@
                 [self.limitDataArray addObject:model];
                 [model release];
             }
-            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+//            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+            pageNum = 1;
             [self createTableView];
             LoadingSuccess;
         }else{
@@ -231,9 +238,9 @@
 {
     NSLog(@"loadMore");
     if (!isRQ) {
-        [self loadMoreRecommandDataWithType:self.type Aid:self.lastAid];
+        [self loadMoreRecommandDataWithType:self.type];
     }else{
-        [self loadMoreTopicDataType:self.type Aid:self.lastAid];
+        [self loadMoreTopicDataType:self.type];
     }
 
 }
@@ -653,7 +660,8 @@
                 [model release];
             }
 //            [self.limitDataArray addObjectsFromArray:self.dataArray];
-            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+//            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+            pageNum = 1;
             [tv reloadData];
             LoadingSuccess;
         }else{
@@ -680,8 +688,9 @@
                 [model release];
             }
 //            [self.limitDataArray addObjectsFromArray:self.dataArray2];
-            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+//            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
             [tv reloadData];
+            pageNum = 1;
             LoadingSuccess;
         }else{
             LoadingFailed;
@@ -713,11 +722,12 @@
                     [self.limitDataArray addObject:model];
                     [model release];
                 }
-                if (array.count) {
-                    self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
-                }else{
-                    self.lastAid = @"";
-                }
+                pageNum = 1;
+//                if (array.count) {
+//                    self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+//                }else{
+//                    self.lastAid = @"";
+//                }
                 LoadingSuccess;
                 [tv reloadData];
             }else{
@@ -748,11 +758,12 @@
                     [model release];
                 }
                 //排除该种类为空的情况
-                if (array.count) {
-                    self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
-                }else{
-                    self.lastAid = @"";
-                }
+                pageNum = 1;
+//                if (array.count) {
+//                    self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+//                }else{
+//                    self.lastAid = @"";
+//                }
                 [tv reloadData];
                 LoadingSuccess;
             }else{
@@ -764,17 +775,17 @@
 }
 
 //上拉加载的时候调用
--(void)loadMoreRecommandDataWithType:(NSString *)type Aid:(NSString *)aid
+-(void)loadMoreRecommandDataWithType:(NSString *)type
 {
-    NSLog(@"---%@", aid);
+    NSLog(@"---%d", pageNum);
     NSString * sig = nil;
     NSString * url = nil;
     if ([self.limitTypeName isEqualToString:@"所有种族"]) {
-        sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
-        url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI3, aid, sig, [ControllerManager getSID]];
+        sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%ddog&cat", pageNum]];
+        url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI3, pageNum, sig, [ControllerManager getSID]];
     }else{
-        sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&type=%@dog&cat", aid, type]];
-        url = [NSString stringWithFormat:@"%@%@&type=%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI3, aid, type, sig, [ControllerManager getSID]];
+        sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%d&type=%@dog&cat", pageNum, type]];
+        url = [NSString stringWithFormat:@"%@%d&type=%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI3, pageNum, type, sig, [ControllerManager getSID]];
     }
     //
     StartLoading;
@@ -790,7 +801,7 @@
             }
             //排除该种类为空的情况
             if (array.count) {
-                self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+                pageNum++;
                 [tv reloadData];
             }
             [tv footerEndRefreshing];
@@ -802,17 +813,17 @@
     [request release];
     
 }
--(void)loadMoreTopicDataType:(NSString *)type Aid:(NSString *)aid
+-(void)loadMoreTopicDataType:(NSString *)type
 {
-    NSLog(@"---%@", aid);
+    NSLog(@"---%d", pageNum);
     NSString * sig = nil;
     NSString * url = nil;
     if ([self.limitTypeName isEqualToString:@"所有种族"]) {
-        sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
-        url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI3, aid, sig, [ControllerManager getSID]];
+        sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%ddog&cat", pageNum]];
+        url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI3, pageNum, sig, [ControllerManager getSID]];
     }else{
-        sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&type=%@dog&cat", aid, type]];
-        url = [NSString stringWithFormat:@"%@%@&type=%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI3, aid, type, sig, [ControllerManager getSID]];
+        sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%d&type=%@dog&cat", pageNum, type]];
+        url = [NSString stringWithFormat:@"%@%d&type=%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI3, pageNum, type, sig, [ControllerManager getSID]];
     }
     //
     StartLoading;
@@ -828,7 +839,7 @@
             }
             //排除该种类为空的情况
             if (array.count) {
-                self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+                pageNum++;
                 [tv reloadData];
             }
             

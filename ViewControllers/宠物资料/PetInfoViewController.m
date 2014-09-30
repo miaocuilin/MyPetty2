@@ -76,6 +76,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.photosDataArray = [NSMutableArray arrayWithCapacity:0];
 //    self.userDataArray = [NSMutableArray arrayWithCapacity:0];
     self.countryMembersDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.goodsArray = [NSMutableArray arrayWithCapacity:0];
+    self.goodsNumArray = [NSMutableArray arrayWithCapacity:0];
     
     [self loadKingData];
     
@@ -204,12 +206,43 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 - (void)loadKingPresentsData
 {
     NSString *animalPresentsSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-    NSString *animalPresentsString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETPRESENTSAPI,self.aid,animalPresentsSig, [ControllerManager getSID]];
+    NSString *animalPresentsString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETGOODSLISTAPI, self.aid, animalPresentsSig, [ControllerManager getSID]];
     NSLog(@"国王礼物API:%@",animalPresentsString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalPresentsString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
-            
 //            NSLog(@"国王礼物数据：%@",load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary * dict = [load.dataDict objectForKey:@"data"];
+                [self.goodsArray removeAllObjects];
+                [self.goodsNumArray removeAllObjects];
+                
+                for (NSString * itemId in [dict allKeys]) {
+                    [self.goodsArray addObject:itemId];
+                }
+                //排序
+                for (int i=0; i<self.goodsArray.count; i++) {
+                    for (int j=0; j<self.goodsArray.count-i-1; j++) {
+                        if ([self.goodsArray[j] intValue] > [self.goodsArray[j+1] intValue]) {
+                            NSString * str1 = [NSString stringWithFormat:@"%@", self.goodsArray[j]];
+                            NSString * str2 = [NSString stringWithFormat:@"%@", self.goodsArray[j+1]];
+                            self.goodsArray[j] = str2;
+                            self.goodsArray[j+1] = str1;
+                        }
+                    }
+                }
+                //获取对应数量
+                for (int i=0; i<self.goodsArray.count; i++) {
+                    self.goodsNumArray[i] = [dict objectForKey:self.goodsArray[i]];
+                }
+                //剔除数目为0的物品
+//                for(int i=0;i<self.goodsArray.count;i++){
+//                    if ([self.goodsNumArray[i] intValue] == 0) {
+//                        [self.goodsArray removeObjectAtIndex:i];
+//                        [self.goodsNumArray removeObjectAtIndex:i];
+//                        i--;
+//                    }
+//                }
+            }
             [self createPresentsTableView];
         }
     }];
@@ -227,6 +260,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isFinish) {
             NSLog(@"国王信息:%@", load.dataDict);
             petInfoDict = [load.dataDict objectForKey:@"data"];
+            if ([[petInfoDict objectForKey:@"type"] intValue]/100 == 1) {
+                //猫
+                titleLabel.text = [NSString stringWithFormat:@"%@国", [petInfoDict objectForKey:@"name"]];
+            }else{
+                //狗
+                titleLabel.text = [NSString stringWithFormat:@"%@族", [petInfoDict objectForKey:@"name"]];
+            }
+            
             //宠物父类信息字典
             self.shakeInfoDict = [load.dataDict objectForKey:@"data"];
 //            self.pet_aid = [self.shakeInfoDict objectForKey:@"aid"];
@@ -340,7 +381,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"我的王国"];
+    titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"我的王国"];
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
@@ -370,7 +411,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         isMoreCreated = YES;
     }
     //
-    if (![self.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+//    NSLog(@"%@--%@", self.master_id, [USER objectForKey:@"usr_id"]);
+    if (![[petInfoDict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
         [self loadAttentionAPI];
     }
     
@@ -1288,6 +1330,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if(!cell){
             cell = [[[NSBundle mainBundle] loadNibNamed:@"MyCountryContributeCell" owner:self options:nil] objectAtIndex:0];
         }
+        cell.selectionStyle = 0;
+        
         if (indexPath.row == 0) {
             [cell modifyWithBOOL:YES lineNum:indexPath.row];
         }else{
@@ -1304,8 +1348,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         cell.selectionStyle = 0;
         
-        for(int i=0;i<3*10;i++){
+        for(int i=0;i<self.goodsArray.count;i++){
             CGRect rect = CGRectMake(20+i%3*100, 15+i/3*100, 85, 90);
+            NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:self.goodsArray[i]];
             UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"giftBg.png"];
             [cell addSubview:imageView];
             
@@ -1318,23 +1363,28 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [triangle addSubview:rq];
             
             UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 8, 25, 10) Font:9 Text:@"+150"];
+            if ([[dict objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
+                rqNum.text = [NSString stringWithFormat:@"+%@", [dict objectForKey:@"add_rq"]];
+            }else{
+                rqNum.text = [dict objectForKey:@"add_rq"];
+            }
             rqNum.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
             rqNum.textAlignment = NSTextAlignmentCenter;
 //            rqNum.backgroundColor = [UIColor redColor];
             [triangle addSubview:rqNum];
             
-            UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 5, 85, 15) Font:11 Text:@"汪汪项圈"];
+            UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 5, 85, 15) Font:11 Text:[dict objectForKey:@"name"]];
             giftName.textColor = [UIColor grayColor];
             giftName.textAlignment = NSTextAlignmentCenter;
             [imageView addSubview:giftName];
             
-            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(20, 20, 45, 45) ImageName:[NSString stringWithFormat:@"bother%d_2.png", arc4random()%6+1]];
+            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(20, 20, 45, 45) ImageName:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"no"]]];
             [imageView addSubview:giftPic];
             
             UIImageView * gift = [MyControl createImageViewWithFrame:CGRectMake(20, 90-14-5, 12, 14) ImageName:@"detail_gift.png"];
             [imageView addSubview:gift];
             
-            UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(35, 90-18, 40, 15) Font:13 Text:@" × 3"];
+            UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(35, 90-18, 40, 15) Font:13 Text:[NSString stringWithFormat:@" × %@", self.goodsNumArray[i]]];
             giftNum.textColor = BGCOLOR;
             [imageView addSubview:giftNum];
             

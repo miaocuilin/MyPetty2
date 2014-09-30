@@ -170,22 +170,54 @@
 -(void)switchBtnClick
 {
     if (_isMi) {
-        _isMi = NO;
+        [self throughPlanet:2];
+//        _isMi = NO;
         NSLog(@"切换到汪星");
     }else{
-        _isMi = YES;
+        [self throughPlanet:1];
+//        _isMi = YES;
         NSLog(@"切换到喵星");
     }
     //注意以下两种方法的区别
-    for (UIView * view in self.view.subviews) {
-        [view removeFromSuperview];
-    }
+//    for (UIView * view in self.view.subviews) {
+//        [view removeFromSuperview];
+//    }
 //    for (int i=0; i<8; i++) {
 //        [self.view.subviews[0] removeFromSuperview];
 //    }
-    [self createUI];
+//    [self createUI];
 }
-
+#pragma mark - 穿越
+-(void)throughPlanet:(int)planet
+{
+    StartLoading;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"planet=%ddog&cat", planet]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", THROUGHAPI, planet, sig, [USER objectForKey:@"SID"]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            //            if ([[load.dataDict objectForKey:@"isSuccess"] intValue]) {
+            //
+            //            }
+            if (_isMi) {
+                _isMi = NO;
+                [USER setObject:@"2" forKey:@"planet"];
+            }else{
+                _isMi = YES;
+                [USER setObject:@"1" forKey:@"planet"];
+            }
+            for (UIView * view in self.view.subviews) {
+                [view removeFromSuperview];
+            }
+            [self createUI];
+            [MMProgressHUD dismissWithSuccess:@"切换成功" title:nil afterDelay:0.2];
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
 
 //-(void)updateAmbassadorMessage
 //{

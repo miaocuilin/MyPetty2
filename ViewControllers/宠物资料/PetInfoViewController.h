@@ -11,6 +11,8 @@
 #import "ClickImage.h"
 @interface PetInfoViewController : BottomMenuRootViewController <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate>
 {
+    UILabel * titleLabel;
+    
     UIScrollView * sv;
     UITableView * tv;
     UITableView * tv2;
@@ -43,4 +45,6 @@
 @property (nonatomic,copy)NSString *aid;
 @property (nonatomic,copy)NSString *master_id;
 //@property (nonatomic,copy)NSString *usr_id;
+@property(nonatomic,retain)NSMutableArray * goodsArray;
+@property(nonatomic,retain)NSMutableArray * goodsNumArray;
 @end

@@ -10,6 +10,7 @@
 #import "BottomMenuRootViewController.h"
 @interface MainViewController : BottomMenuRootViewController <UIScrollViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate>
 {
+    UIButton * camara;
     UIView * navView;
     UIScrollView * sv;
     BOOL isCreated[3];

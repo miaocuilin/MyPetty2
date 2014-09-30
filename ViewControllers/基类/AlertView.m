@@ -66,6 +66,8 @@
 -(void)comfirmBtnClick
 {
     NSLog(@"跳转注册");
+    //本地存储一个值，来记录是否未注册，在注册完之后打开侧边栏的时候判断是否是刚注册完进入侧边栏，然后重新布局侧边栏数据。
+    [USER setObject:@"1" forKey:@"isNotRegister"];
     [self closeBtnClick];
     self.jump();
 }

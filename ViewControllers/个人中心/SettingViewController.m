@@ -260,10 +260,10 @@
         if (indexPath.row == 0) {
             [self clearData];
         }else if(indexPath.row == 1){
-            [USER setObject:@"0" forKey:@"isSuccess"];
-            [USER setObject:@"0" forKey:@"SID"];
+            [USER setObject:@"" forKey:@"isSuccess"];
+            [USER setObject:@"" forKey:@"SID"];
             [ControllerManager setIsSuccess:0];
-            [ControllerManager setSID:@"0"];
+            [ControllerManager setSID:@""];
             StartLoading;
             [MMProgressHUD dismissWithSuccess:@"重置成功" title:nil afterDelay:0.5f];
         }if(indexPath.row == 2){

@@ -13,6 +13,8 @@
 
 @interface UserInfoViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,CountryInfoCellDelegate>
 {
+    UILabel * titleLabel;
+    
     UIScrollView * sv;
     UITableView * tv;
     UITableView * tv2;

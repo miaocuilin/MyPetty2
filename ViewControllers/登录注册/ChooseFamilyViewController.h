@@ -29,6 +29,8 @@
     //判断当前是否是显示的人气
     BOOL isRQ;
     
+    //记录到第几页，用于上拉刷新
+    int pageNum;
 }
 //推荐数组
 //@property(nonatomic,retain)NSMutableArray * dataArray;
@@ -37,7 +39,7 @@
 
 @property(nonatomic,retain)NSMutableArray * limitDataArray;
 @property(nonatomic,copy)NSString * type;
-@property(nonatomic,copy)NSString * lastAid;
+//@property(nonatomic,copy)NSString * lastAid;
 
 @property (nonatomic,retain)NSMutableArray * catArray;
 @property (nonatomic,retain)NSMutableArray * dogArray;

@@ -18,6 +18,12 @@
 
 @implementation SearchFamilyViewController
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    if ([[USER objectForKey:@"isSearchFamilyShouldDismiss"] intValue]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"af" object:nil];
+    }
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];

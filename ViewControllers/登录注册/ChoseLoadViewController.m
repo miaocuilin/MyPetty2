@@ -35,6 +35,19 @@
 //    
 //    timer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(cloudMove) userInfo:nil repeats:YES];
 //}
+-(void)viewDidAppear:(BOOL)animated
+{
+    //
+    if (!self.isFromMenu) {
+        if ([[USER objectForKey:@"planet"] intValue] == 1) {
+            [self miBtnClick];
+        }
+        if ([[USER objectForKey:@"planet"] intValue] == 2) {
+            [self waBtnClick];
+        }
+    }
+    
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -214,7 +227,8 @@
     //一进来先看本地有没有SID，本地有直接请求，过期再请求login
     //如果本地没有就去网上去SID，如果网上没有--》login，如果有直接用
     //用着如果过期再去请求SID。
-    if ([USER objectForKey:@"SID"] != nil) {
+    if ([USER objectForKey:@"SID"] != nil && [[USER objectForKey:@"SID"] length] != 0) {
+        NSLog(@"%@", [USER objectForKey:@"SID"]);
         if ([[USER objectForKey:@"isSuccess"] intValue]
             ) {
             [ControllerManager setIsSuccess:[[USER objectForKey:@"isSuccess"] intValue]];
@@ -240,6 +254,35 @@
 //        [self login];
 //    }
 }
+#pragma mark - 穿越
+-(void)throughPlanet
+{
+    StartLoading;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"planet=%ddog&cat", planet]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", THROUGHAPI, planet, sig, [USER objectForKey:@"SID"]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+//            if ([[load.dataDict objectForKey:@"isSuccess"] intValue]) {
+//                
+//            }
+            if (self.isFromMenu) {
+                [MMProgressHUD dismissWithSuccess:@"穿越成功" title:nil afterDelay:1];
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }else{
+                [self jumpToMain];
+                LoadingSuccess;
+            }
+            
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+
+
 -(void)getPreSID
 {
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"uid=%@dog&cat", [OpenUDID value]]];
@@ -276,7 +319,11 @@
     planet = 1;
     [USER setObject:[NSString stringWithFormat:@"%d", planet] forKey:@"planet"];
     
-    [self tempLogin];
+    if (self.isFromMenu) {
+        [self throughPlanet];
+    }else{
+        [self tempLogin];
+    }
     
     [timer invalidate];
     timer = nil;
@@ -291,12 +338,24 @@
     planet = 2;
     [USER setObject:[NSString stringWithFormat:@"%d", planet] forKey:@"planet"];
     
-    [self tempLogin];
+    if (self.isFromMenu) {
+        [self throughPlanet];
+    }else{
+        [self tempLogin];
+    }
     
     [timer invalidate];
     timer = nil;
 //    [vc release];
 }
+-(void)jumpToMain
+{
+    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+    //                ChooseFamilyViewController * sideMenu = [[ChooseFamilyViewController alloc] init];
+    sideMenu.modalTransitionStyle = 1;
+    [self presentViewController:sideMenu animated:YES completion:nil];
+}
+
 #pragma mark -登录
 -(void)login
 {
@@ -326,10 +385,7 @@
             }else{
                 LoadingSuccess;
                 //跳转到主页
-                JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
-//                ChooseFamilyViewController * sideMenu = [[ChooseFamilyViewController alloc] init];
-                sideMenu.modalTransitionStyle = 1;
-                [self presentViewController:sideMenu animated:YES completion:nil];
+                [self throughPlanet];
             }
         }else{
             LoadingFailed;
@@ -390,18 +446,37 @@
                 if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
                     [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
                 }
-//                [MMProgressHUD dismissWithSuccess:@"登陆星球成功" title:nil afterDelay:0.1f];
+
                 
-                JDSideMenu * menu = [ControllerManager shareJDSideMenu];
-//                ChooseFamilyViewController * menu = [[ChooseFamilyViewController alloc] init];
-                menu.modalTransitionStyle = 1;
-                [self presentViewController:menu animated:YES completion:nil];
+                //获取宠物信息，存储到本地
+                [self loadPetInfo];
+                
+                
             }
         }
     }];
     [request release];
 }
-
+-(void)loadPetInfo
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"petInfo:%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                
+                //记录默认宠物信息
+                [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"petInfoDict"];
+            }
+            
+            [self throughPlanet];
+        }else{
+            
+        }
+    }];
+    [request release];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

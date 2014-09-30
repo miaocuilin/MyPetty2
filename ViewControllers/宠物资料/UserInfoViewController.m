@@ -59,6 +59,11 @@
             NSLog(@"用户信息数据：%@",load.dataDict);
            headerDict=  [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             if ([[headerDict objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                titleLabel.text = @"我的档案";
+            }else{
+                titleLabel.text = @"TA的档案";
+            }
+            if ([[headerDict objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
                 isOwner = YES;
             }
             LoadingSuccess;
@@ -211,7 +216,7 @@
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"用户资料"];
+    titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"用户资料"];
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];

@@ -39,6 +39,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     return self;
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    if (![[[USER objectForKey:@"petInfoDict"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+        camara.hidden = YES;
+    }else{
+        camara.hidden = NO;
+    }
+}
 -(void)viewDidAppear:(BOOL)animated
 {
     self.menuBtn.selected = NO;
@@ -164,7 +172,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
     
-    UIButton * camara = [MyControl createButtonWithFrame:CGRectMake(320-82/2-15, 64-54/2-7, 82/2, 54/2) ImageName:@"相机图标.png" Target:self Action:@selector(cameraClick) Title:nil];
+    camara = [MyControl createButtonWithFrame:CGRectMake(320-82/2-15, 64-54/2-7, 82/2, 54/2) ImageName:@"相机图标.png" Target:self Action:@selector(cameraClick) Title:nil];
     camara.showsTouchWhenHighlighted = YES;
     [navView addSubview:camara];
 }
@@ -356,27 +364,29 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    NSLog(@"master_id:%@",masterID);
     
     if ([ControllerManager getIsSuccess]) {
-        if ([self.masterID isEqualToString:[USER objectForKey:@"usr_id"]]) {
-            if (sheet == nil) {
-                // 判断是否支持相机
-                if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-                {
-                    sheet  = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
-                }
-                else {
-                    
-                    sheet = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"从相册选择", nil];
-                }
-                
-                sheet.tag = 255;
-                
-            }else{
-                
+        if (sheet == nil) {
+            // 判断是否支持相机
+            if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+            {
+                sheet  = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
             }
-            [sheet showInView:self.view];
-        }else{
-            [ControllerManager HUDText:@"只有主人才可以(⊙o⊙)哦~~" showView:self.view yOffset:0];
+            else {
+                
+                sheet = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"从相册选择", nil];
+            }
+            
+            sheet.tag = 255;
+            
         }
+//        if ([self.masterID isEqualToString:[USER objectForKey:@"usr_id"]]) {
+//            else{
+//                
+//            }
+        [sheet showInView:self.view];
+        
+//        }else{
+//            [ControllerManager HUDText:@"只有主人才可以(⊙o⊙)哦~~" showView:self.view yOffset:0];
+//        }
         
     }else{
         //提示注册

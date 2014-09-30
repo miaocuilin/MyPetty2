@@ -41,6 +41,7 @@
 }
 -(void)loadTopicData
 {
+    StartLoading;
     NSString * url = [NSString stringWithFormat:@"%@%@", PUBLISHTOPICLISTAPI, [ControllerManager getSID]];
     NSLog(@"url:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -52,8 +53,9 @@
                 [self.topicIdArray addObject:[dict objectForKey:@"topic_id"]];
             }
             [tv reloadData];
+            LoadingSuccess;
         }else{
-            
+            LoadingFailed;
         }
     }];
     [request release];

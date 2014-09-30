@@ -37,7 +37,7 @@
     [self.contentView bringSubviewToFront:self.expLabel];
     self.expLabel.text = [NSString stringWithFormat:@"%d/100", 11];
     
-    NSArray * array = @[@"今日人气", @"最新动态", @"王国成员"];
+    NSArray * array = @[@"人气", @"动态", @"成员"];
     for(int i=0;i<3;i++){
         UILabel * numLabel = [MyControl createLabelWithFrame:CGRectMake(90+i*60, 60, 50, 15) Font:12 Text:@"100"];
         numLabel.textColor = BGCOLOR;

@@ -37,6 +37,9 @@
     
     UIButton * headImageBtn;
     ClickImage * headClickImage;
+    
+    UILabel * goldLabel;
+    UILabel * position;
 }
 @property (nonatomic,copy)NSString * tfString;
 

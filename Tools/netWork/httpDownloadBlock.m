@@ -148,7 +148,7 @@
             [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
-            LoadingFailed;
+            LoadingSuccess;
         }else{
             LoadingFailed;
         }

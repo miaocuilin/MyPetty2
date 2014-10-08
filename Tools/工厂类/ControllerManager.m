@@ -484,4 +484,16 @@ static LevelRank *levelAndRank =nil;
     }
     return dict;
 }
+
++(NSString *)returnPositionWithType:(NSString *)type Rank:(NSString *)rank
+{
+    NSString * position = nil;
+    if ([type intValue]/100 == 1) {
+        
+    }else{
+        
+    }
+    
+    return position;
+}
 @end

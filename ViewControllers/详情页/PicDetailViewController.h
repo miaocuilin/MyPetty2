@@ -47,6 +47,7 @@
     BOOL isCommentActive;
     
 //    NSMutableAttributedString * attString;
+    UIView * whiteBgView;
 }
 @property (retain, nonatomic) UIImageView * bgImageView;
 @property (retain, nonatomic) IBOutlet UIScrollView *sv;

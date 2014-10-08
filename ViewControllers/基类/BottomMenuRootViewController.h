@@ -31,6 +31,7 @@
 @property(nonatomic,copy)NSString * currentName;
 //@property(nonatomic,copy)NSString * pet_aid;
 
+
 -(void)isRegister;
 -(void)hideAll;
 - (void)loadAnimalInfoData;

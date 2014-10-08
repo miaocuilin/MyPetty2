@@ -450,7 +450,8 @@
                 
                 //获取宠物信息，存储到本地
                 [self loadPetInfo];
-                
+                //获取本人所有宠物信息
+                [self loadPetList];
                 
             }
         }
@@ -471,6 +472,29 @@
             }
             
             [self throughPlanet];
+        }else{
+            
+        }
+    }];
+    [request release];
+}
+
+//
+-(void)loadPetList
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            //获取用户所有宠物，将aid存到本地
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            NSMutableArray * aidArray = [NSMutableArray arrayWithCapacity:0];
+            for (NSDictionary * dict in array) {
+                [aidArray addObject:[dict objectForKey:@"aid"]];
+            }
+            [USER setObject:aidArray forKey:@"petAidArray"];
+//            NSLog(@"%@", [USER objectForKey:@"petAidArray"]);
         }else{
             
         }

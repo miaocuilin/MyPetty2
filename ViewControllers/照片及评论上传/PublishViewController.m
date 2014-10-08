@@ -559,7 +559,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [_request setPostValue:[USER objectForKey:@"topic"] forKey:@"topic_name"];
     }
     /************/
-    if ([users.titleLabel.text isEqualToString:@"点击@用户"]) {
+    if ([users.titleLabel.text isEqualToString:@"点击@小伙伴"]) {
         [_request setPostValue:@"" forKey:@"relates"];
     }else{
         NSLog(@"%@", users.titleLabel.text);

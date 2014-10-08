@@ -44,6 +44,7 @@
         [self createUI];
     }
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -59,10 +60,24 @@
         [self refreshCountryList];
 //        [self createUI];
     };
+    
     sideMenu.refreshActNum = ^(NSString * actNum){
         activityNumLabel.text = actNum;
         if ([actNum intValue] != 0) {
             actGreenBall.hidden = NO;
+        }
+    };
+    
+    sideMenu.refreshUserData = ^(){
+        NSLog(@"====refreshUserData====");
+        if ([[USER objectForKey:@"isSuccess"] intValue]) {
+            goldLabel.text = [USER objectForKey:@"gold"];
+            if ([[[USER objectForKey:@"petInfoDict"] objectForKey:@"type"] intValue]/100 == 1) {
+                //mao
+                position.text = [NSString stringWithFormat:@"%@国祭司", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"]];
+            }else{
+                position.text = [NSString stringWithFormat:@"%@族族长", [USER objectForKey:@"a_name"]];
+            }
         }
     };
 }
@@ -300,14 +315,14 @@
 //    UILabel * kingName = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:[NSString stringWithFormat:@"%@国", [USER objectForKey:@"a_name"]]];
 //    [sv3 addSubview:kingName];
     
-    UILabel * position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:13 Text:[NSString stringWithFormat:@"%@国大祭司", [USER objectForKey:@"a_name"]]];
+    position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:13 Text:[NSString stringWithFormat:@"%@国祭司", [USER objectForKey:@"a_name"]]];
     [sv3 addSubview:position];
     
     //金币
     UIImageView * gold = [MyControl createImageViewWithFrame:CGRectMake(170, sex.frame.origin.y-2, 22, 22) ImageName:@"gold.png"];
     [sv3 addSubview:gold];
     
-    UILabel * goldLabel = [MyControl createLabelWithFrame:CGRectMake(151, gold.frame.origin.y+23, 60, 20) Font:14 Text:[USER objectForKey:@"gold"]];
+    goldLabel = [MyControl createLabelWithFrame:CGRectMake(151, gold.frame.origin.y+23, 60, 20) Font:14 Text:[USER objectForKey:@"gold"]];
 //    goldLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     goldLabel.textAlignment = NSTextAlignmentCenter;
     [sv3 addSubview:goldLabel];

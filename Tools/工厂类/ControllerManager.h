@@ -37,6 +37,7 @@
 + (void)HUDText:(NSString *)string showView:(UIView *)inView yOffset:(float) offset;
 + (void)HUDImageIcon:(NSString *)iconImageString showView:(UIView *)inView yOffset:(float)offset Number:(int)num;
 //+ (void)loginHUDAlertView:(UIView *)showInView;
+/***********************************************/
 //传入宠物类型，返回宠物类型名称
 +(NSString *)returnCateNameWithType:(NSString *)type;
 //传入宠物类型，返回宠物类型名称
@@ -49,7 +50,8 @@
 //传入item_id，返回该礼物的信息字典dict
 +(NSDictionary *)returnGiftDictWithItemId:(NSString *)itemId;
 
-
++(NSString *)returnPositionWithType:(NSString *)type Rank:(NSString *)rank;
+/***********************************************/
 //计算升级和官职弹窗
 +(BOOL)levelPOP:(NSString *)exp addExp:(NSInteger)add;
 +(BOOL)rankPOP:(NSString *)contribution addContribution:(NSInteger)add planet:(NSString *)dogOrcat;

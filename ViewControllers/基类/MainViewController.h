@@ -25,4 +25,7 @@
 
 @property(nonatomic,retain)UIButton * menuBtn;
 @property(nonatomic,retain)UIImage * oriImage;
+
+//用来记录当前头像名称，和本地存储的tx对比，如果不等则换头像，等则不换。
+//@property(nonatomic,copy)NSString * currentTx;
 @end

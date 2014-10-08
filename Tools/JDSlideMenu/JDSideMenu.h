@@ -23,6 +23,8 @@
 @property(nonatomic,copy)void (^refreshData)(void);
 //下载完活动数 更新
 @property(nonatomic,copy)void (^refreshActNum)(NSString *);
+//刷新个人数据
+@property(nonatomic,copy)void (^refreshUserData)(void);
 /****************************/
 - (id)initWithContentController:(UIViewController*)contentController
                  menuController:(UIViewController*)menuController;

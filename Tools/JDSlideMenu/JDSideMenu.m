@@ -252,6 +252,10 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
     }];
     [request release];
 }
+-(void)refreshUData
+{
+    self.refreshUserData();
+}
 - (void)showMenuAnimated:(BOOL)animated;
 {
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
@@ -259,6 +263,8 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
         [self loadCountryList];
         //请求消息和活动数API
         [self getMsgAndActivityNum];
+        //刷新个人数据
+        [self performSelector:@selector(refreshUData) withObject:nil afterDelay:0.1];
     }
     
     

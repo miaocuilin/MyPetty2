@@ -33,9 +33,10 @@
     }
     return self;
 }
-//-(void)viewDidAppear:(BOOL)animated
+//-(void)viewWillAppear:(BOOL)animated
 //{
-//    self.sv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
+////    self.sv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
+//
 //}
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -249,6 +250,25 @@
             NSDictionary * dic = [load.dataDict objectForKey:@"data"];
             //父类的宠物信息字典
 //            masterID = [dic objectForKey:@"master_id"];
+            //
+            NSArray * array = [USER objectForKey:@"petAidArray"];
+            for (int i=0; i<array.count; i++) {
+                if ([array[i] isEqualToString:[dic objectForKey:@"aid"]]) {
+                    self.label1.text = @"摇一摇";
+                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
+                }else if(i == array.count-1){
+                    self.label1.text = @"捣捣乱";
+                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
+                }
+            }
+            if ([[dic objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                self.label3.text = @"叫一叫";
+                [self.btn3 setBackgroundImage:[UIImage imageNamed:@"sound.png"] forState:UIControlStateNormal];
+            }else{
+                self.label3.text = @"摸一摸";
+                [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
+            }
+            
             super.shakeInfoDict = dic;
 //            self.pet_aid = [dic objectForKey:@"aid"];
 //            [super viewDidLoad];
@@ -590,7 +610,7 @@
     [giftBgView addSubview:line];
     
     //白背景
-    UIView * whiteBgView = [MyControl createViewWithFrame:CGRectMake(0, giftBgView.frame.origin.y+giftBgView.frame.size.height, self.view.frame.size.width, 0)];
+    whiteBgView = [MyControl createViewWithFrame:CGRectMake(0, giftBgView.frame.origin.y+giftBgView.frame.size.height, self.view.frame.size.width, 0)];
     whiteBgView.backgroundColor = [UIColor whiteColor];
     whiteBgView.alpha = Alpha;
     [self.sv addSubview:whiteBgView];
@@ -618,11 +638,15 @@
     topicDetail.textColor = [UIColor darkGrayColor];
 //    topicDetail.backgroundColor = [UIColor whiteColor];
     [self.sv addSubview:topicDetail];
+//    if ([self.cmt isKindOfClass:[NSNull class]] || self.cmt.length == 0) {
+//        CGRect rect = topicDetail.frame;
+//        rect.origin.
+//    }
 
     topicUser = [MyControl createLabelWithFrame:CGRectMake(15, topicDetail.frame.origin.y+topicDetail.frame.size.height + Space, 200, 20) Font:14 Text:@""];
     topicUser.textColor = BGCOLOR;
 //    topicUser.backgroundColor = [UIColor whiteColor];
-    if (self.relates.length != 0) {
+    if (self.relates.length != 0 && ![self.relates isEqualToString:@"点击@小伙伴"]) {
         topicUser.text = self.relates;
     }else{
         CGRect rect = topicUser.frame;
@@ -633,8 +657,19 @@
     
     //定下白色背景的高度
     CGRect rect = whiteBgView.frame;
-    if ([self.cmt isKindOfClass:[NSNull class]] || self.cmt.length == 0) {
-        
+    BOOL t = [self.topic_name isKindOfClass:[NSNull class]] || self.topic_name.length == 0;
+    BOOL c = [self.cmt isKindOfClass:[NSNull class]] || self.cmt.length == 0;
+    BOOL r = [self.relates isKindOfClass:[NSNull class]] || self.relates.length == 0 || [self.relates isEqualToString:@"点击@小伙伴"];
+    if (t && c && r) {
+        /*???????????????????????*/
+//        if ([self.relates isEqualToString:@"点击@小伙伴"]) {
+//            rect.size.height = topic.frame.origin.y+topic.frame.size.height-rect.origin.y+Space;
+//        }else{
+//            rect.size.height = topicUser.frame.origin.y+topicUser.frame.size.height-rect.origin.y+Space;
+//        }
+        //都为0，白色背景高度设为0.
+        rect.size.height = 0;
+//        whiteBgView.frame = rect;
     }else{
         rect.size.height = topicUser.frame.origin.y+topicUser.frame.size.height-rect.origin.y+Space;
     }
@@ -651,7 +686,11 @@
 //    [self.sv addSubview:topicTime];
 //    [format release];
     
-    [self createUsersTx];
+//    NSLog(@"%@--%@", self.likerTxArray, self.senderTxArray);
+//    if ((![self.likerTxArray isKindOfClass:[NSNull class]] && self.likerTxArray.count > 0) || (![self.senderTxArray isKindOfClass:[NSNull class]] && self.senderTxArray.count > 0)) {
+        [self createUsersTx];
+//    }
+    
     
     [self createCmt];
     
@@ -664,14 +703,17 @@
 }
 -(void)createUsersTx
 {
-    UIView * usersBgAlphaView = [MyControl createViewWithFrame:CGRectMake(0, topicUser.frame.origin.y+topicUser.frame.size.height + Space, self.view.frame.size.width, 44)];
+    usersBgView = [MyControl createViewWithFrame:CGRectMake(0, whiteBgView.frame.origin.y+whiteBgView.frame.size.height, self.view.frame.size.width, 44)];
+    [self.sv addSubview:usersBgView];
+    
+    UIView * usersBgAlphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
     usersBgAlphaView.backgroundColor = [UIColor whiteColor];
     usersBgAlphaView.alpha = Alpha;
-    [self.sv addSubview:usersBgAlphaView];
+    [usersBgView addSubview:usersBgAlphaView];
     
     //用户头像
 //    (0, topicUser.frame.origin.y+topicUser.frame.size.height+10, 320, 50)
-    usersBgView = [MyControl createViewWithFrame:CGRectMake(0, topicUser.frame.origin.y+topicUser.frame.size.height+Space, self.view.frame.size.width, 44)];
+    
 //    NSLog(@"%f--%@", topicDetail.frame.size.height, self.cmt);
 //    if ([self.cmt isKindOfClass:[NSNull class]] || self.cmt.length == 0) {
 //        usersBgView.frame = CGRectMake(0, topicDetail.frame.origin.y-Space*2, self.view.frame.size.width, 44);
@@ -681,7 +723,7 @@
 //        line.backgroundColor = LineGray;
 //        [usersBgView addSubview:line];
 //    }
-    [self.sv addSubview:usersBgView];
+    
     
     
     /*
@@ -712,22 +754,30 @@
     }
     
     //
-    if ([self.cmt isKindOfClass:[NSNull class]] || self.cmt.length == 0) {
-        usersBgView.frame = CGRectMake(0, topicDetail.frame.origin.y-Space*2, self.view.frame.size.width, 44);
-        usersBgAlphaView.frame = usersBgView.frame;
-    }else{
+//    if ([self.cmt isKindOfClass:[NSNull class]] || self.cmt.length == 0) {
+//        if (([self.topic_name isKindOfClass:[NSNull class]] || self.topic_name.length == 0) && ([self.relates isEqualToString:@""] || [self.relates isEqualToString:@"点击@小伙伴"])) {
+//            usersBgView.frame = CGRectMake(0, topicUser.frame.origin.y+topicUser.frame.size.height, self.view.frame.size.width, 44);
+//            usersBgAlphaView.frame = usersBgView.frame;
+//        }else{
+//            usersBgView.frame = CGRectMake(0, usersBgAlphaView.frame.origin.y, self.view.frame.size.width, 44);
+//        }
+//        
+////        usersBgAlphaView.frame = usersBgView.frame;
+//    }else{
         if (txCount) {
-            UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1)];
-            line.backgroundColor = LineGray;
-            [usersBgView addSubview:line];
+            if (whiteBgView.frame.size.height != 0) {
+                UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1)];
+                line.backgroundColor = LineGray;
+                [usersBgView addSubview:line];
+            }
         }else{
             CGRect rect = usersBgView.frame;
             rect.size.height = 0;
             usersBgView.frame = rect;
-            usersBgAlphaView.frame = usersBgView.frame;
+            usersBgAlphaView.frame = CGRectZero;
         }
         
-    }
+//    }
     
     //
     for (int i=0; i<txCount; i++) {
@@ -958,9 +1008,9 @@
             self.gifts = [NSString stringWithFormat:@"%d", [self.gifts intValue]+1];
             NSString * str = [NSString stringWithFormat:@"已经收到了%@件礼物", self.gifts];
             NSMutableAttributedString * attString = [[NSMutableAttributedString alloc] initWithString:str];
-            [attString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, 6)];
-            [attString addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(6, self.gifts.length)];
-            [attString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(6+self.gifts.length, 4)];
+            [attString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, 5)];
+            [attString addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(5, self.gifts.length)];
+            [attString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(5+self.gifts.length, 3)];
             giftNum.attributedText = attString;
             /*=====================*/
             [self.txTotalArray removeAllObjects];

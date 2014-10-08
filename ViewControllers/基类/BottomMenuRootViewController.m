@@ -35,12 +35,40 @@
     
     [self createMenu];
 }
-- (void)viewWillAppear:(BOOL)animated
-{
-//    if ([ControllerManager getIsSuccess]) {
-//        [self loadAnimalInfoData];
+//- (void)viewWillAppear:(BOOL)animated
+//{
+//    if (![self.currentTx isEqualToString:[[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]]) {
+//        if ([USER objectForKey:@"petInfoDict"] != nil) {
+//            /**************************/
+//            NSDictionary * dict = [USER objectForKey:@"petInfoDict"];
+//            if (!([[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[dict objectForKey:@"tx"] length]==0)) {
+//                NSString * docDir = DOCDIR;
+//                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"tx"]]];
+//                //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+//                UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+//                if (image) {
+//                    [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
+//                    //            headImageView.image = image;
+//                }else{
+//                    //下载头像
+//                    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [dict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                        if (isFinish) {
+//                            [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                            //                    headImageView.image = load.dataImage;
+//                            NSString * docDir = DOCDIR;
+//                            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"tx"]]];
+//                            [load.data writeToFile:txFilePath atomically:YES];
+//                        }else{
+//                            NSLog(@"头像下载失败");
+//                        }
+//                    }];
+//                    [request release];
+//                }
+//            }
+//            /**************************/
+//        }
 //    }
-}
+//}
 - (void)loadAnimalInfoData
 {
     NSString *aid = [USER objectForKey:@"aid"];
@@ -149,6 +177,38 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     self.headButton.layer.cornerRadius = headBtnWidth/2;
     self.headButton.layer.masksToBounds = YES;
     [self.menuBgView addSubview:self.headButton];
+    
+//    NSLog(@"%@", [USER objectForKey:@"petInfoDict"]);
+    if ([USER objectForKey:@"petInfoDict"] != nil) {
+        /**************************/
+        NSDictionary * dict = [USER objectForKey:@"petInfoDict"];
+        if (!([[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[dict objectForKey:@"tx"] length]==0)) {
+            NSString * docDir = DOCDIR;
+            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"tx"]]];
+            //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+            if (image) {
+                [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
+                //            headImageView.image = image;
+            }else{
+                //下载头像
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [dict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                        //                    headImageView.image = load.dataImage;
+                        NSString * docDir = DOCDIR;
+                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"tx"]]];
+                        [load.data writeToFile:txFilePath atomically:YES];
+                    }else{
+                        NSLog(@"头像下载失败");
+                    }
+                }];
+                [request release];
+            }
+        }
+        
+        /**************************/
+    }
 }
 #pragma mark -
 -(void)isRegister

@@ -46,12 +46,51 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else{
         camara.hidden = NO;
     }
+    
+//    if (![self.currentTx isEqualToString:[[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]]) {
+        if ([USER objectForKey:@"petInfoDict"] != nil) {
+            /**************************/
+            NSDictionary * dict = [USER objectForKey:@"petInfoDict"];
+            if (!([[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[dict objectForKey:@"tx"] length]==0)) {
+                NSString * docDir = DOCDIR;
+                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"tx"]]];
+                //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+                UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+                if (image) {
+                    [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
+                    //            headImageView.image = image;
+                }else{
+                    //下载头像
+                    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [dict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                        if (isFinish) {
+                            [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                            //                    headImageView.image = load.dataImage;
+                            NSString * docDir = DOCDIR;
+                            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"tx"]]];
+                            [load.data writeToFile:txFilePath atomically:YES];
+                        }else{
+                            NSLog(@"头像下载失败");
+                        }
+                    }];
+                    [request release];
+                }
+            }
+            /**************************/
+        }
+//    }
 }
 -(void)viewDidAppear:(BOOL)animated
 {
     self.menuBtn.selected = NO;
 //    TipsView *tips = [[TipsView alloc] initWithFrame:self.view.frame tipsName:REGISTER];
 //    [self.view addSubview:tips];
+    if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [[[USER objectForKey:@"petInfoDict"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+        self.label3.text = @"叫一叫";
+        [self.btn3 setBackgroundImage:[UIImage imageNamed:@"sound.png"] forState:UIControlStateNormal];
+    }else{
+        self.label3.text = @"摸一摸";
+        [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
+    }
 }
 - (void)viewDidLoad
 {
@@ -85,6 +124,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self createAlphaBtn];
 //    if ([ControllerManager getIsSuccess]) {
 //        [self loadAnimalInfoData];
+//    }
+//    if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [[[USER objectForKey:@"petInfoDict"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+//        self.label3.text = @"叫一叫";
+//        [self.btn3 setBackgroundImage:[UIImage imageNamed:@"shout.png"] forState:UIControlStateNormal];
+//    }else{
+//        self.label3.text = @"摸一摸";
+//        [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
 //    }
 }
 

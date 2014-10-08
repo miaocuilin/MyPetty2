@@ -267,7 +267,23 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 //狗
                 titleLabel.text = [NSString stringWithFormat:@"%@族", [petInfoDict objectForKey:@"name"]];
             }
-            
+            NSArray * array = [USER objectForKey:@"petAidArray"];
+            for (int i=0; i<array.count; i++) {
+                if ([array[i] isEqualToString:[petInfoDict objectForKey:@"aid"]]) {
+                    self.label1.text = @"摇一摇";
+                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
+                }else if(i == array.count-1){
+                    self.label1.text = @"捣捣乱";
+                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
+                }
+            }
+            if ([[petInfoDict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                self.label3.text = @"叫一叫";
+                [self.btn3 setBackgroundImage:[UIImage imageNamed:@"sound.png"] forState:UIControlStateNormal];
+            }else{
+                self.label3.text = @"摸一摸";
+                [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
+            }
             //宠物父类信息字典
             self.shakeInfoDict = [load.dataDict objectForKey:@"data"];
 //            self.pet_aid = [self.shakeInfoDict objectForKey:@"aid"];
@@ -1378,7 +1394,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             giftName.textAlignment = NSTextAlignmentCenter;
             [imageView addSubview:giftName];
             
-            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(20, 20, 45, 45) ImageName:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"no"]]];
+            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(5, 20, 75, 50) ImageName:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"no"]]];
             [imageView addSubview:giftPic];
             
             UIImageView * gift = [MyControl createImageViewWithFrame:CGRectMake(20, 90-14-5, 12, 14) ImageName:@"detail_gift.png"];

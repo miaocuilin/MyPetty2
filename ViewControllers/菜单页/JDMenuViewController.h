@@ -40,6 +40,9 @@
     
     UILabel * goldLabel;
     UILabel * position;
+    UILabel * exp;
+    UILabel * name;
+    UIImageView * sex;
 }
 @property (nonatomic,copy)NSString * tfString;
 

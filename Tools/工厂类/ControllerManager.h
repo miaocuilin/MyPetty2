@@ -50,7 +50,8 @@
 //传入item_id，返回该礼物的信息字典dict
 +(NSDictionary *)returnGiftDictWithItemId:(NSString *)itemId;
 
-+(NSString *)returnPositionWithType:(NSString *)type Rank:(NSString *)rank;
++(NSString *)returnPositionWithRank:(NSString *)rank;
++(NSString *)returnActionStringWithItemId:(NSString *)item_id;
 /***********************************************/
 //计算升级和官职弹窗
 +(BOOL)levelPOP:(NSString *)exp addExp:(NSInteger)add;

@@ -1342,6 +1342,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
                 [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
                 [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
+                [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
                 
                 if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
                     [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];

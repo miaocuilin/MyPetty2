@@ -87,26 +87,26 @@
 //        [menu hideMenuAnimated:YES];
 //    }
 //}
--(void)viewDidAppear:(BOOL)animated
-{
-    NSLog(@"%f", qtmquitView.frame.origin.y);
-    int oldgold = [[USER objectForKey:@"oldgold"] intValue];
-    int gold = [[USER objectForKey:@"gold"] intValue];
-    [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
-    if (oldgold < gold) {
-        int index = gold - oldgold;
-        toolTipsVC = [[ToolTipsViewController alloc ]init];
-        [self addChildViewController:toolTipsVC];
-        [toolTipsVC didMoveToParentViewController:self];
-        [self.view addSubview:toolTipsVC.view];
-        toolTipsVC.coinNumber= index;
-        toolTipsVC.nextgold = [[USER objectForKey:@"next_gold"] intValue];
-        toolTipsVC.continuousDay = [[USER objectForKey:@"con_login"] intValue];
-        [toolTipsVC createAlertView];
-    }
-//    [self RandomTips];
-
-}
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    NSLog(@"%f", qtmquitView.frame.origin.y);
+//    int oldgold = [[USER objectForKey:@"oldgold"] intValue];
+//    int gold = [[USER objectForKey:@"gold"] intValue];
+//    [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
+//    if (oldgold < gold) {
+//        int index = gold - oldgold;
+//        toolTipsVC = [[ToolTipsViewController alloc ]init];
+//        [self addChildViewController:toolTipsVC];
+//        [toolTipsVC didMoveToParentViewController:self];
+//        [self.view addSubview:toolTipsVC.view];
+//        toolTipsVC.coinNumber= index;
+//        toolTipsVC.nextgold = [[USER objectForKey:@"next_gold"] intValue];
+//        toolTipsVC.continuousDay = [[USER objectForKey:@"con_login"] intValue];
+//        [toolTipsVC createAlertView];
+//    }
+////    [self RandomTips];
+//
+//}
 
 - (void)RandomTips
 {

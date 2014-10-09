@@ -26,6 +26,7 @@
 #import "SearchResultModel.h"
 #import "PetInfoViewController.h"
 #import "ChoseLoadViewController.h"
+#import "JDSideMenuCell.h"
 @interface JDMenuViewController ()
 
 @end
@@ -72,12 +73,41 @@
         NSLog(@"====refreshUserData====");
         if ([[USER objectForKey:@"isSuccess"] intValue]) {
             goldLabel.text = [USER objectForKey:@"gold"];
-            if ([[[USER objectForKey:@"petInfoDict"] objectForKey:@"type"] intValue]/100 == 1) {
-                //mao
-                position.text = [NSString stringWithFormat:@"%@国祭司", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"]];
+            position.text = [NSString stringWithFormat:@"%@联萌%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];;
+            exp.text = [NSString stringWithFormat:@"Lv.%@", [USER objectForKey:@"lv"]];
+            name.text = [USER objectForKey:@"name"];
+            sex.hidden = NO;
+            if ([[USER objectForKey:@"gender"] intValue] == 1) {
+                sex.image = [UIImage imageNamed:@"man.png"];
             }else{
-                position.text = [NSString stringWithFormat:@"%@族族长", [USER objectForKey:@"a_name"]];
+                sex.image = [UIImage imageNamed:@"woman.png"];
             }
+            /**************************/
+            if (!([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
+                NSString * docDir = DOCDIR;
+                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+                //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+                UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+                if (image) {
+                    [headImageBtn setBackgroundImage:image forState:UIControlStateNormal];
+                    //            headImageView.image = image;
+                }else{
+                    //下载头像
+                    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                        if (isFinish) {
+                            [headImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                            //                    headImageView.image = load.dataImage;
+                            NSString * docDir = DOCDIR;
+                            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+                            [load.data writeToFile:txFilePath atomically:YES];
+                        }else{
+                            NSLog(@"头像下载失败");
+                        }
+                    }];
+                    [request release];
+                }
+            }
+            /**************************/
         }
     };
 }
@@ -292,7 +322,7 @@
     }
     
     //等级
-    UILabel * exp = [MyControl createLabelWithFrame:CGRectMake(headBg2.frame.origin.x+4+48, headBg2.frame.origin.y+4+50, 30, 16) Font:10 Text:[NSString stringWithFormat:@"Lv.%@", [USER objectForKey:@"lv"]]];
+    exp = [MyControl createLabelWithFrame:CGRectMake(headBg2.frame.origin.x+4+48, headBg2.frame.origin.y+4+50, 30, 16) Font:10 Text:[NSString stringWithFormat:@"Lv.%@", [USER objectForKey:@"lv"]]];
     exp.textAlignment = NSTextAlignmentCenter;
     exp.backgroundColor = [UIColor colorWithRed:249/255.0 green:135/255.0 blue:88/255.0 alpha:1];
     exp.textColor = [UIColor colorWithRed:229/255.0 green:79/255.0 blue:36/255.0 alpha:1];
@@ -302,13 +332,13 @@
     [sv3 addSubview:exp];
     
     //性别，姓名，官职
-    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(25, 140+5, 34/2, 34/2) ImageName:@"man.png"];
+    sex = [MyControl createImageViewWithFrame:CGRectMake(25, 140+5, 34/2, 34/2) ImageName:@"man.png"];
     if ([[USER objectForKey:@"gender"] intValue] == 2) {
         sex.image = [UIImage imageNamed:@"woman.png"];
     }
     [sv3 addSubview:sex];
     
-    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+14+10, sex.frame.origin.y, 150, 20) Font:15 Text:[USER objectForKey:@"name"]];
+    name = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+14+10, sex.frame.origin.y, 150, 20) Font:15 Text:[USER objectForKey:@"name"]];
     [sv3 addSubview:name];
     
     //官职  225menu总宽
@@ -616,6 +646,7 @@
         [tv reloadData];
     }else{
         NSLog(@"搜索用户~~~");
+        NSLog(@"搜索%@", tfSearch.text);
         [self loadSearchData:tfSearch.text];
         [tfSearch resignFirstResponder];
 //        [self.searchArray addObject:@"11"];
@@ -762,9 +793,11 @@
     NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@", SEARCHAPI, [name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], searchSig,[ControllerManager getSID]];
     NSLog(@"搜索API:%@",searchString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:searchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-        [self.searchArray removeAllObjects];
-        NSLog(@"搜索结果：%@",load.dataDict);
         if (isFinish) {
+            [self.searchArray removeAllObjects];
+            
+            NSLog(@"搜索结果：%@",load.dataDict);
+
             NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary *dict in array) {
                 SearchResultModel *model = [[SearchResultModel alloc] init];
@@ -925,58 +958,39 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString * cellID = @"ID";
-    UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-    UIButton * btn = nil;
-    UILabel * label = nil;
+    JDSideMenuCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
-        btn = [MyControl createButtonWithFrame:CGRectMake(20, 7, 36, 36) ImageName:@"" Target:self Action:@selector(btnClick:) Title:nil];
-        btn.layer.cornerRadius = btn.frame.size.width/2;
-        btn.layer.masksToBounds = YES;
-        [cell addSubview:btn];
-        
-        label = [MyControl createLabelWithFrame:CGRectMake(75, 15, 140, 20) Font:15 Text:nil];
-        [cell addSubview:label];
+        cell = [[[JDSideMenuCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
     }
     SearchResultModel *model = self.searchArray[indexPath.row];
-    NSString *headPath = [DOCDIR stringByAppendingString:model.tx];
-    UIImage *headImage = [UIImage imageWithContentsOfFile:headPath];
-    if (headImage) {
-        [btn setBackgroundImage:headImage forState:UIControlStateNormal];
-    }else{
-        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-            if (isFinish) {
-                if (load.dataImage == NULL) {
-                    [btn setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
-
-                }else{
-                    [load.data writeToFile:[DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",model.tx]] atomically:YES];
-                    [btn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                }
-            }
-        }];
-        [request release];
-    }
+    [cell configUI:model];
     
-    btn.tag = indexPath.row;
-    
-    label.text = model.name;
-
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
     return cell;
 }
--(void)btnClick:(UIButton *)btn
+//-(void)btnClick:(UIButton *)btn
+//{
+//    NSLog(@"点击了第%d个", btn.tag);
+//    SearchResultModel *model = self.searchArray[btn.tag];
+//    PetInfoViewController *petInfoVC = [[PetInfoViewController alloc] init];
+//    petInfoVC.aid = model.aid;
+//
+//    [self presentViewController:petInfoVC animated:YES completion:^{
+//        [petInfoVC release];
+//    }];
+//    
+//}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"点击了第%d个", btn.tag);
-    SearchResultModel *model = self.searchArray[btn.tag];
+    NSLog(@"点击了第%d个", indexPath.row);
+    SearchResultModel *model = self.searchArray[indexPath.row];
     PetInfoViewController *petInfoVC = [[PetInfoViewController alloc] init];
     petInfoVC.aid = model.aid;
-
+    
     [self presentViewController:petInfoVC animated:YES completion:^{
         [petInfoVC release];
     }];
-    
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {

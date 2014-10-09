@@ -260,18 +260,20 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isFinish) {
             NSLog(@"国王信息:%@", load.dataDict);
             petInfoDict = [load.dataDict objectForKey:@"data"];
-            if ([[petInfoDict objectForKey:@"type"] intValue]/100 == 1) {
-                //猫
-                titleLabel.text = [NSString stringWithFormat:@"%@国", [petInfoDict objectForKey:@"name"]];
-            }else{
-                //狗
-                titleLabel.text = [NSString stringWithFormat:@"%@族", [petInfoDict objectForKey:@"name"]];
-            }
+//            if ([[petInfoDict objectForKey:@"type"] intValue]/100 == 1) {
+//                //猫
+                titleLabel.text = [NSString stringWithFormat:@"%@联萌", [petInfoDict objectForKey:@"name"]];
+//            }else{
+//                //狗
+//                titleLabel.text = [NSString stringWithFormat:@"%@族", [petInfoDict objectForKey:@"name"]];
+//            }
             NSArray * array = [USER objectForKey:@"petAidArray"];
+//            NSLog(@"%@--%@", array, [petInfoDict objectForKey:@"aid"]);
             for (int i=0; i<array.count; i++) {
                 if ([array[i] isEqualToString:[petInfoDict objectForKey:@"aid"]]) {
                     self.label1.text = @"摇一摇";
                     [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
+                    break;
                 }else if(i == array.count-1){
                     self.label1.text = @"捣捣乱";
                     [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
@@ -421,6 +423,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)moreBtnClick
 {
     NSLog(@"more");
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        return;
+    }
+    
     if (!isMoreCreated) {
         //create more
         [self createMore];
@@ -934,7 +941,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         cateNameLabel.text = [NSString stringWithFormat:@"%@ | %@岁", cateName, [petInfoDict objectForKey:@"age"]];
     }
     /*****************************/
-    NSString *str2 = [NSString stringWithFormat:@"祭司 - %@",[petInfoDict objectForKey:@"u_name"]];
+    NSString *str2 = [NSString stringWithFormat:@"经纪人 - %@",[petInfoDict objectForKey:@"u_name"]];
 //    NSString *str2 = [NSString stringWithFormat:@"祭司 - %@",[self.userDataArray[0] u_name]];
     CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:15 Text:str2];
@@ -1270,7 +1277,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         //照片下载完后加载
         if (isPhotoDownload) {
             PhotoModel * model = self.photosDataArray[indexPath.row];
-            [cell configUI:model];
+            
+            [cell configUI:model type:[petInfoDict objectForKey:@"type"]];
 //            NSLog(@"照片张数%d", self.photosDataArray.count);
             
             //本地目录，用于存放下载的原图
@@ -1450,13 +1458,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }else if (a == 3) {
             return 130.0f;
         }else if (a == 4) {
-            return 90.0f;
+            return 125.0f;
         }else if (a == 5) {
             return 90.0f;
         }else if (a == 6) {
             return 90.0f;
         }else{
-            return 70.0f;
+            return 85.0f;
         }
     }else if (tableView == tv2) {
         return 230.0f;

@@ -105,7 +105,7 @@
     self.cateNameAndAge.text = [NSString stringWithFormat:@"%@ | %@岁", [ControllerManager returnCateNameWithType:model.type], model.age];
     
     //
-    NSString * str = [NSString stringWithFormat:@"%@ — ", @"祭司"];
+    NSString * str = [NSString stringWithFormat:@"%@ — ", [ControllerManager returnPositionWithRank:model.u_rank]];
     CGSize size2 = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
     CGRect rect3 = self.position.frame;
     rect3.size.width = size2.width;
@@ -122,12 +122,12 @@
     self.rankNum.text = model.t_rq;
     
     //
-    if ([model.type intValue]/100 == 1) {
-        self.planet.text = @"王国人气";
-    }else{
-        self.position.text = [NSString stringWithFormat:@"%@ — ", @"族长"];
-        self.planet.text = @"家族人气";
-    }
+//    if ([model.type intValue]/100 == 1) {
+        self.planet.text = @"联萌人气";
+//    }else{
+//        self.position.text = [NSString stringWithFormat:@"%@ — ", @"族长"];
+//        self.planet.text = @"家族人气";
+//    }
     
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

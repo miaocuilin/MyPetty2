@@ -168,6 +168,10 @@
             [cell addSubview:sinaBind];
         }
         cell.textLabel.text =[NSString stringWithFormat:@"     %@",self.arr1[indexPath.row]];
+        if (![[USER objectForKey:@"isSuccess"] intValue]) {
+            cell.textLabel.textColor = [ControllerManager colorWithHexString:@"a2a2a2"];
+            sinaBind.userInteractionEnabled = NO;
+        }
     }else if(indexPath.section == 1){
         if (indexPath.row == 0) {
             sina = [[UISwitch alloc] initWithFrame:CGRectMake(500/2, 7, 0, 0)];
@@ -191,6 +195,11 @@
         }
         
         cell.textLabel.text =[NSString stringWithFormat:@"     %@",self.arr2[indexPath.row]];
+        if (![[USER objectForKey:@"isSuccess"] intValue]) {
+            cell.textLabel.textColor = [ControllerManager colorWithHexString:@"a2a2a2"];
+            sina.userInteractionEnabled = NO;
+            weChat.userInteractionEnabled = NO;
+        }
     }else{
         if (indexPath.row == 0) {
             cacheLabel = [MyControl createLabelWithFrame:CGRectMake(320-100-20, 10, 100, 20) Font:15 Text:nil];
@@ -204,18 +213,23 @@
     }
     cell.textLabel.font = [UIFont systemFontOfSize:15];
     [self normalCell:cell arrow:indexPath];
+    
     return cell;
 }
 //设置箭头和初始化cell
 - (void)normalCell:(UITableViewCell *)cell arrow:(NSIndexPath *)indexPath
 {
     //右箭头
+    UIImageView * arrow = nil;
     if((indexPath.section == 0 && indexPath.row != 3) ||(indexPath.section == 2 && indexPath.row != 0)){
-        UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(570/2, 10, 20, 20) ImageName:@"14-6-2.png"];
+        arrow = [MyControl createImageViewWithFrame:CGRectMake(570/2, 10, 20, 20) ImageName:@"14-6-2.png"];
 //        [cell addSubview:arrow];
         cell.accessoryView = arrow;
     }
-    
+    if (![[USER objectForKey:@"isSuccess"] intValue] && (indexPath.section == 0 || indexPath.section == 1)) {
+        cell.accessoryView.alpha = 0.3;
+//        arrow.backgroundColor = [UIColor redColor];
+    }
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
 }
@@ -237,6 +251,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
+        if (![[USER objectForKey:@"isSuccess"] intValue]) {
+            return;
+        }
         if (indexPath.row == 0) {
             RegisterViewController * vc = [[RegisterViewController alloc] init];
             vc.isModify = YES;

@@ -129,7 +129,7 @@
         self.switchLabel2.text = @"默 认";
     }
     
-    self.nameLabel.text = [NSString stringWithFormat:@"祭司 — %@国", model.name];
+    self.nameLabel.text = [NSString stringWithFormat:@"%@ — %@联萌", [ControllerManager returnPositionWithRank:model.rank], model.name];
     for(int i=0;i<3;i++){
         UILabel * numLabel = (UILabel *)[self.contentView viewWithTag:100+i];
         if (i == 0) {

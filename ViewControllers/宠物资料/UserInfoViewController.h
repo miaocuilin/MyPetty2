@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CountryInfoCell.h"
 #import "ClickImage.h"
-@class PetInfoViewController;
+//@class PetInfoViewController;
 
 @interface UserInfoViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,CountryInfoCellDelegate>
 {

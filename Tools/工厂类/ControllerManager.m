@@ -485,15 +485,139 @@ static LevelRank *levelAndRank =nil;
     return dict;
 }
 
-+(NSString *)returnPositionWithType:(NSString *)type Rank:(NSString *)rank
++(NSString *)returnPositionWithRank:(NSString *)rank
 {
     NSString * position = nil;
-    if ([type intValue]/100 == 1) {
-        
-    }else{
-        
+//    [[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [[[USER objectForKey:@"petInfoDict"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]
+    if ([rank intValue] == -1) {
+        //陌生人
+        position = @"路人";
+    }else if ([rank intValue] == 0) {
+        //主人
+        position = @"经纪人";
+    }else if([rank intValue] == 1){
+        position = @"凉粉";
+    }else if([rank intValue] == 2){
+        position = @"淡粉";
+    }else if([rank intValue] == 3){
+        position = @"狠粉";
+    }else if([rank intValue] == 4){
+        position = @"灰常粉";
+    }else if([rank intValue] == 5){
+        position = @"超级粉";
+    }else if([rank intValue] == 6){
+        position = @"铁杆粉";
+    }else if([rank intValue] == 7){
+        position = @"脑残粉";
+    }else if([rank intValue] == 8){
+        position = @"骨灰粉";
     }
+//    NSString * totalPosition = [NSString stringWithFormat:@"%@联萌%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], position];
     
     return position;
+}
+
++(NSString *)returnActionStringWithItemId:(NSString *)item_id
+{
+    int a = [item_id intValue];
+    NSString * actionStr = nil;
+    switch (a) {
+        case 1101:
+            actionStr = @"惊喜地伸出小爪子拨弄毛线球";
+            break;
+        case 1102:
+            actionStr = @"纵身一跃，在空中叼住了飞盘，bingo!";
+            break;
+        case 1103:
+            actionStr = @"好奇的拨弄铃铛，叮铃~叮铃~";
+            break;
+        case 1104:
+            actionStr = @"乖巧地戴上了蝴蝶结，神气地走了两步";
+            break;
+        case 1105:
+            actionStr = @"顿时眼前一亮，挥舞着爪子扑了上去";
+            break;
+        case 1106:
+            actionStr = @"立刻精神抖擞地去追棒球了";
+            break;
+        case 1107:
+            actionStr = @"一脸幸福地舔了舔糖果";
+            break;
+        case 1201:
+            actionStr = @"闻了闻猫饼干，满意地喵喵叫~";
+            break;
+        case 1202:
+            actionStr = @"闻闻肉包子，狼吞虎咽地吃了起来";
+            break;
+        case 1203:
+            actionStr = @"悠哉地嚼着宠物小馒头";
+            break;
+        case 1204:
+            actionStr = @"一口咬住了磨牙棒，谁要也不给！";
+            break;
+        case 1205:
+            actionStr = @"发现了新牵引绳，迫不及待地要出门逛逛";
+            break;
+        case 1206:
+            actionStr = @"疑惑地歪头看，咦，为什么是空的？";
+            break;
+        case 1207:
+            actionStr = @"瞪大了圆滴滴眼睛，好奇地伸爪拨弄";
+            break;
+        case 1301:
+            actionStr = @"戴上了新围巾，兴奋异常地到处炫耀";
+            break;
+        case 1302:
+            actionStr = @"戴上新帽子活泼地冲你撒了个娇";
+            break;
+        case 1303:
+            actionStr = @"洗完澡浑身香喷喷的";
+            break;
+        case 1304:
+            actionStr = @"的毛皮更顺滑了，又干净又漂亮~";
+            break;
+        case 1305:
+            actionStr = @"穿上新衣服，调皮地在地上打了个滚";
+            break;
+        case 1401:
+            actionStr = @"懒洋洋地吹着风，还打了个小哈欠";
+            break;
+        case 1402:
+            actionStr = @"惊奇地看着新窝，满意地钻进去睡觉了";
+            break;
+        case 1403:
+            actionStr = @"嗅了嗅新窝，放心地扯着呼噜睡觉~";
+            break;
+        case 2101:
+            actionStr = @"被熏得晕头转向……";
+            break;
+        case 2102:
+            actionStr = @"被砸个正着，异常愤怒的叫了起来";
+            break;
+        case 2103:
+            actionStr = @"被溅了一身的水，成了湿漉漉的可怜虫";
+            break;
+        case 2104:
+            actionStr = @"警觉地瞅了一眼毛毛虫，嫌恶地跑开了";
+            break;
+        case 2201:
+            actionStr = @"惊慌的看着鸡毛掸子，畏惧地缩了缩脑袋";
+            break;
+        case 2202:
+            actionStr = @"被吓了一跳，惊慌地躲进沙发下面了";
+            break;
+        case 2203:
+            actionStr = @"没有注意到便便，竟然一脚踩了上去！";
+            break;
+        case 2301:
+            actionStr = @"竟一头撞上了仙人球，好痛痛……";
+            break;
+        case 2302:
+            actionStr = @"惊慌失措地尖叫，主人快来保护我！！！";
+            break;
+        default:
+            break;
+    }
+    return actionStr;
 }
 @end

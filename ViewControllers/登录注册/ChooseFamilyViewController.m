@@ -162,7 +162,7 @@
 //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
     
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"选择王国"];
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"选择萌主"];
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];

@@ -353,6 +353,7 @@
 		601BB35919AB2D4D0076E051 /* touchOne.png in Resources */ = {isa = PBXBuildFile; fileRef = 601BB35619AB2D4D0076E051 /* touchOne.png */; };
 		601BB36019AB4CAD0076E051 /* NIDropDown.m in Sources */ = {isa = PBXBuildFile; fileRef = 601BB35F19AB4CAD0076E051 /* NIDropDown.m */; };
 		601BB36319AB4D660076E051 /* MyHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 601BB36219AB4D660076E051 /* MyHomeViewController.m */; };
+		601CDF7519E65FEC00E249E9 /* JDSideMenuCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 601CDF7419E65FEC00E249E9 /* JDSideMenuCell.m */; };
 		601F819719E4E14E00FA94BB /* touch.png in Resources */ = {isa = PBXBuildFile; fileRef = 601F819619E4E14E00FA94BB /* touch.png */; };
 		6020BD6819987DC3002C74FA /* PetInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6020BD6719987DC3002C74FA /* PetInfoViewController.m */; };
 		6020BD711998A442002C74FA /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6020BD701998A442002C74FA /* UserInfoViewController.m */; };
@@ -1072,6 +1073,8 @@
 		601BB35F19AB4CAD0076E051 /* NIDropDown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NIDropDown.m; sourceTree = "<group>"; };
 		601BB36119AB4D660076E051 /* MyHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyHomeViewController.h; sourceTree = "<group>"; };
 		601BB36219AB4D660076E051 /* MyHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyHomeViewController.m; sourceTree = "<group>"; };
+		601CDF7319E65FEC00E249E9 /* JDSideMenuCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JDSideMenuCell.h; sourceTree = "<group>"; };
+		601CDF7419E65FEC00E249E9 /* JDSideMenuCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JDSideMenuCell.m; sourceTree = "<group>"; };
 		601F819619E4E14E00FA94BB /* touch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touch.png; sourceTree = "<group>"; };
 		6020BD6619987DC3002C74FA /* PetInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PetInfoViewController.h; sourceTree = "<group>"; };
 		6020BD6719987DC3002C74FA /* PetInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetInfoViewController.m; sourceTree = "<group>"; };
@@ -2081,6 +2084,8 @@
 				491C1FBF19B9B4E400CA833E /* UserBagCollectionViewCell.m */,
 				497BE7D819CAB0CF00E65BB5 /* QuickGiftCellectionViewCell.h */,
 				497BE7D919CAB0CF00E65BB5 /* QuickGiftCellectionViewCell.m */,
+				601CDF7319E65FEC00E249E9 /* JDSideMenuCell.h */,
+				601CDF7419E65FEC00E249E9 /* JDSideMenuCell.m */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -3249,6 +3254,7 @@
 				0979B7751941C6BF007C36A7 /* UIImageView+WebCache.m in Sources */,
 				09F46AE1196AB34E00209749 /* MBProgressHUD.m in Sources */,
 				497BE7DA19CAB0CF00E65BB5 /* QuickGiftCellectionViewCell.m in Sources */,
+				601CDF7519E65FEC00E249E9 /* JDSideMenuCell.m in Sources */,
 				0914B6D5196E3F410056CFB0 /* MMProgressHUDWindow.m in Sources */,
 				0914B6D3196E3F410056CFB0 /* MMProgressHUDOverlayView.m in Sources */,
 				0979B7741941C6BF007C36A7 /* UIButton+WebCache.m in Sources */,
@@ -3424,8 +3430,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3447,7 +3453,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "dba48338-22b9-4cd7-a953-06ac9fae20b4";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3459,8 +3465,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3482,7 +3488,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "dba48338-22b9-4cd7-a953-06ac9fae20b4";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

@@ -15,6 +15,8 @@
 #import "TalkViewController.h"
 #import "UserActivityListModel.h"
 #import "PicDetailViewController.h"
+//@class PetInfoViewController;
+
 @interface UserInfoViewController ()
 {
     NSDictionary *headerDict;
@@ -459,7 +461,7 @@
     
     //
     
-    NSString * str2= [NSString stringWithFormat:@"祭司 — %@国", [headerDict objectForKey:@"a_name"]];
+    NSString * str2= [NSString stringWithFormat:@"经纪人 — %@联萌", [headerDict objectForKey:@"a_name"]];
     CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:15 Text:str2];
     //    positionAndUserName.font = [UIFont boldSystemFontOfSize:15];
@@ -550,9 +552,9 @@
     if (self.isFromPetInfo) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }else{
-        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
-        [self presentViewController:vc animated:YES completion:nil];
-        [vc release];
+//        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+//        [self presentViewController:vc animated:YES completion:nil];
+//        [vc release];
     }
     
 }
@@ -912,6 +914,7 @@
 {
     return @"取消关注";
 }
+
 -(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([self.usr_id isEqualToString:[USER objectForKey:@"usr_id"]] && tableView == tv2) {
@@ -961,6 +964,12 @@
 {
     if (tableView == tv) {
         NSLog(@"%d", indexPath.row);
+//        UserPetListModel * model = self.userPetListArray[indexPath.row];
+//        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+//
+//        vc.aid = model.aid;
+//        [self presentViewController:vc animated:YES completion:nil];
+//        [vc release];
     }
 }
 

@@ -13,6 +13,8 @@
     NSString * img_id;
     NSString * aid;
     UIButton * headBtn;
+    
+    float Height;
 }
 @property (retain, nonatomic) IBOutlet UIImageView *headImage;
 @property (retain, nonatomic) IBOutlet UILabel *nameLabel;

@@ -34,7 +34,8 @@
     zanLabel.textAlignment = NSTextAlignmentRight;
     [zanBgView addSubview:zanLabel];
     
-    fish = [MyControl createImageViewWithFrame:CGRectMake(0, 4, 30, 12) ImageName:@"fish.png"];
+    fish = [MyControl createImageViewWithFrame:CGRectMake(3, 0, 30, 20) ImageName:@"fish.png"];
+    
     [zanBgView addSubview:fish];
     
     UIButton * zanBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 50, 20) ImageName:@"" Target:self Action:@selector(zanBtnClick:) Title:nil];
@@ -67,50 +68,36 @@
 //    UIImageView * line = [MyControl createImageViewWithFrame:CGRectMake(0, 230, 320, 1) ImageName:@"20-灰色线.png"];
 //    [self.contentView addSubview:line];
 }
--(void)configUI:(PhotoModel *)model
+-(void)configUI:(PhotoModel *)model type:(NSString *)type
 {
+//    NSLog(@"%@", model.type);
+    if ([type intValue]/100 == 1) {
+        isMi = YES;
+       fish.image = [UIImage imageNamed:@"fish.png"];
+    }else{
+        fish.image = [UIImage imageNamed:@"bone.png"];
+    }
+    
+    
     if (![model.likers isKindOfClass:[NSNull class]]) {
         self.likersArray = [model.likers componentsSeparatedByString:@","];
         for(NSString * str in self.likersArray){
             if ([str isEqualToString:[USER objectForKey:@"usr_id"]]) {
-                fish.image = [UIImage imageNamed:@"fish1.png"];
+                if (isMi) {
+                    fish.image = [UIImage imageNamed:@"fish1.png"];
+                }else{
+                    fish.image = [UIImage imageNamed:@"bone1.png"];
+                }
+                
             }
         }
     }
     self.img_id = model.img_id;
-//    numLabel.text = [NSString stringWithFormat:@"%@", model.likes];
+
     zanLabel.text = [NSString stringWithFormat:@"%@", model.likes];
     
-    NSDate *confromTimesp = [NSDate dateWithTimeIntervalSince1970:[model.create_time intValue]];
     
-    NSTimeInterval  timeInterval = [confromTimesp timeIntervalSinceNow];
-    timeInterval = -timeInterval;
-    long temp = 0;
-    NSString *result;
-    if (timeInterval < 60) {
-        result = [NSString stringWithFormat:@"刚刚"];
-    }
-    else if((temp = timeInterval/60) <60){
-        result = [NSString stringWithFormat:@"%ld分钟前",temp];
-    }
-    
-    else if((temp = temp/60) <24){
-        result = [NSString stringWithFormat:@"%ld小时前",temp];
-    }
-    
-    else if((temp = temp/24) <30){
-        result = [NSString stringWithFormat:@"%ld天前",temp];
-    }
-    
-    else if((temp = temp/30) <12){
-        result = [NSString stringWithFormat:@"%ld月前",temp];
-    }
-    else{
-        temp = temp/12;
-        result = [NSString stringWithFormat:@"%ld年前",temp];
-    }
-    
-    timeLabel.text = [NSString stringWithFormat:@"%@", result];
+    timeLabel.text = [NSString stringWithFormat:@"%@", [MyControl timeFromTimeStamp:model.create_time]];
 }
 -(void)zanBtnClick:(UIButton *)btn
 {
@@ -126,14 +113,22 @@
             if (isFinish) {
                 if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                     btn.enabled = NO;
-                    fish.image = [UIImage imageNamed:@"fish1.png"];
+                    if (isMi) {
+                        fish.image = [UIImage imageNamed:@"fish1.png"];
+                    }else{
+                        fish.image = [UIImage imageNamed:@"bone1.png"];
+                    }
+                    
                     zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
                     zanLabel.textColor = BGCOLOR;
+                    
+                    CGRect rect = fish.frame;
+                    
                     [UIView animateWithDuration:0.5 animations:^{
-                        fish.frame = CGRectMake(0-15, 4-12, 30*2, 12*2);
+                        fish.frame = CGRectMake(rect.origin.x-rect.size.width/2, rect.origin.y-rect.size.height/2, rect.size.width*2, rect.size.height*2);
                     } completion:^(BOOL finished) {
                         [UIView animateWithDuration:0.5 animations:^{
-                            fish.frame = CGRectMake(0, 4, 30, 12);
+                            fish.frame = rect;
                         }];
                     }];
                 }
@@ -164,58 +159,58 @@
         
     }
 }
--(void)heartButtonClick:(UIButton *)button
-{
-    button.selected = !button.selected;
-//    button.userInteractionEnabled = NO;
-//    self.contentView.userInteractionEnabled = NO;
-//    self.contentView
-    
-    NSString * code = [NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id];
-    NSString * sig = [MyMD5 md5:code];
-    if (button.selected) {
-        heart.image = [UIImage imageNamed:@"11-2.png"];
-        numLabel.text = [NSString stringWithFormat:@"%d", [numLabel.text intValue]+1];
-        //赞
-        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKEAPI, self.img_id, sig, [ControllerManager getSID]];
-        NSLog(@"likeURL:%@", url);
-        
-        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"点赞失败 = =."];
-                    heart.image = [UIImage imageNamed:@"11-1.png"];
-                    numLabel.text = [NSString stringWithFormat:@"%d", [numLabel.text intValue]-1];
-                }
-            }else{
-                NSLog(@"数据请求失败");
-            }
-//            button.userInteractionEnabled = YES;
-//            self.contentView.userInteractionEnabled = YES;
-        }];
-        
-    }else{
-        heart.image = [UIImage imageNamed:@"11-1.png"];
-        numLabel.text = [NSString stringWithFormat:@"%d", [numLabel.text intValue]-1];
-        //取消赞
-        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNLIKEAPI, self.img_id, sig, [ControllerManager getSID]];
-        NSLog(@"likeURL:%@", url);
-        
-        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消赞失败 = =."];
-                    heart.image = [UIImage imageNamed:@"11-2.png"];
-                    numLabel.text = [NSString stringWithFormat:@"%d", [numLabel.text intValue]+1];
-                }
-            }else{
-                NSLog(@"数据请求失败");
-            }
-//            button.userInteractionEnabled = YES;
-//            self.contentView.userInteractionEnabled = YES;
-        }];
-    }
-}
+//-(void)heartButtonClick:(UIButton *)button
+//{
+//    button.selected = !button.selected;
+////    button.userInteractionEnabled = NO;
+////    self.contentView.userInteractionEnabled = NO;
+////    self.contentView
+//    
+//    NSString * code = [NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id];
+//    NSString * sig = [MyMD5 md5:code];
+//    if (button.selected) {
+//        heart.image = [UIImage imageNamed:@"11-2.png"];
+//        numLabel.text = [NSString stringWithFormat:@"%d", [numLabel.text intValue]+1];
+//        //赞
+//        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKEAPI, self.img_id, sig, [ControllerManager getSID]];
+//        NSLog(@"likeURL:%@", url);
+//        
+//        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+//                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"点赞失败 = =."];
+//                    heart.image = [UIImage imageNamed:@"11-1.png"];
+//                    numLabel.text = [NSString stringWithFormat:@"%d", [numLabel.text intValue]-1];
+//                }
+//            }else{
+//                NSLog(@"数据请求失败");
+//            }
+////            button.userInteractionEnabled = YES;
+////            self.contentView.userInteractionEnabled = YES;
+//        }];
+//        
+//    }else{
+//        heart.image = [UIImage imageNamed:@"11-1.png"];
+//        numLabel.text = [NSString stringWithFormat:@"%d", [numLabel.text intValue]-1];
+//        //取消赞
+//        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNLIKEAPI, self.img_id, sig, [ControllerManager getSID]];
+//        NSLog(@"likeURL:%@", url);
+//        
+//        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+//                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消赞失败 = =."];
+//                    heart.image = [UIImage imageNamed:@"11-2.png"];
+//                    numLabel.text = [NSString stringWithFormat:@"%d", [numLabel.text intValue]+1];
+//                }
+//            }else{
+//                NSLog(@"数据请求失败");
+//            }
+////            button.userInteractionEnabled = YES;
+////            self.contentView.userInteractionEnabled = YES;
+//        }];
+//    }
+//}
 
 
 

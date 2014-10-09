@@ -32,9 +32,36 @@
     //
     [self.headBtn setBackgroundImage:[UIImage imageNamed:@"cat2.jpg"] forState:UIControlStateNormal];
     self.headBtn.tag = 10000+num;
+//    //
+//    [NSString stringWithFormat:@"", [ControllerManager returnPositionWithRank:<#(NSString *)#>]]
+//    NSString * str = @"祭司 — ";
+//    CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(60, 20) lineBreakMode:1];
+//    self.positionLabel.text = str;
+//    CGRect rect = self.positionLabel.frame;
+//    rect.size.width = size.width;
+//    self.positionLabel.frame = rect;
+//    //
+//    CGRect rect2 = self.sex.frame;
+//    rect2.origin.x = rect.origin.x+size.width;
+//    self.sex.frame = rect2;
+//    //
+//    CGRect rect3 = self.name.frame;
+//    rect3.origin.x = rect2.origin.x+rect2.size.width;
+//    self.name.frame = rect3;
+//    self.name.text = @"Anna";
+//    self.name.textColor = BGCOLOR;
     //
-    NSString * str = @"祭司 — ";
-    CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(60, 20) lineBreakMode:1];
+    self.location.text = @"北京市 | 朝阳区";
+    self.location.textColor = [UIColor lightGrayColor];
+    //
+    self.contribution.text = @"60000";
+    self.contribution.textColor = BGCOLOR;
+}
+-(void)configUI:(CountryMembersModel *)model
+{
+    //
+    NSString * str = [NSString stringWithFormat:@"%@ — ", [ControllerManager returnPositionWithRank:model.rank]];
+    CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
     self.positionLabel.text = str;
     CGRect rect = self.positionLabel.frame;
     rect.size.width = size.width;
@@ -49,15 +76,6 @@
     self.name.frame = rect3;
     self.name.text = @"Anna";
     self.name.textColor = BGCOLOR;
-    //
-    self.location.text = @"北京市 | 朝阳区";
-    self.location.textColor = [UIColor lightGrayColor];
-    //
-    self.contribution.text = @"60000";
-    self.contribution.textColor = BGCOLOR;
-}
--(void)configUI:(CountryMembersModel *)model
-{
 //    NSLog(@"%@", model.usr_id)
     usr_id = model.usr_id;
     self.name.text = model.name;

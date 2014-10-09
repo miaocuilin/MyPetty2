@@ -19,10 +19,12 @@
     //
     UIImageView * fish;
     UILabel * zanLabel;
+    
+    BOOL isMi;
 }
 
 @property(nonatomic,retain)UIImageView * bigImageView;
 @property(nonatomic,retain)NSArray * likersArray;
 @property(nonatomic,copy)NSString * img_id;
--(void)configUI:(PhotoModel *)model;
+-(void)configUI:(PhotoModel *)model type:(NSString *)type;
 @end

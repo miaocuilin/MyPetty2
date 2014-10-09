@@ -199,7 +199,8 @@
     if (!([self.comments isKindOfClass:[NSNull class]] || self.comments.length == 0)) {
         NSArray * arr1 = [self.comments componentsSeparatedByString:@";usr"];
         
-        for(int i=1;i<arr1.count;i++){
+        //以前这里i从1开始，起初好像是为了实时回复
+        for(int i=0;i<arr1.count;i++){
 //            NSLog(@"%@", arr1[i]);
             NSString * usrId = [[[[arr1[i] componentsSeparatedByString:@",name"] objectAtIndex:0] componentsSeparatedByString:@"_id:"] objectAtIndex:1];
             [self.usrIdArray addObject:usrId];
@@ -231,6 +232,8 @@
 //            [self createUI];
 //        }
     }
+    
+//    NSLog(@"%@--self.bodyArray:%@", self.comments, self.bodyArray);
 //    if (++prepareCreateUINum == 2) {
 //        [self createUI];
 //    }
@@ -1510,7 +1513,8 @@
     
     //添加评论
     NSLog(@"%@", [USER objectForKey:@"usr_id"]);
-    [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];
+    [self.usrIdArray insertObject:[USER objectForKey:@"usr_id"] atIndex:0];
+//    [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];
     if (isReply) {
         [self.nameArray insertObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]] atIndex:0];
 //        [self.nameArray addObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]]];
@@ -1518,7 +1522,7 @@
         [self.nameArray insertObject:[USER objectForKey:@"name"] atIndex:0];
 //        [self.nameArray addObject:[USER objectForKey:@"name"]];
     }
-    
+    NSLog(@"%@", commentTextView.text);
     [self.bodyArray insertObject:commentTextView.text atIndex:0];
 //    [self.bodyArray addObject:commentTextView.text];
     [self.createTimeArray insertObject:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]] atIndex:0];

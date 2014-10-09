@@ -9,6 +9,7 @@
 //#import <UIKit/UIKit.h>
 #import "BottomMenuRootViewController.h"
 #import "ClickImage.h"
+//#import "UserInfoViewController.h"
 @interface PetInfoViewController : BottomMenuRootViewController <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate>
 {
     UILabel * titleLabel;

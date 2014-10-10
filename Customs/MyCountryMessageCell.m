@@ -63,7 +63,7 @@
     touchOne.hidden = YES;
     
     int type = [model.type intValue];
-    //1.成粉 2.加入 3.发图 4.送礼 5.叫一叫 6.逗一逗 7.捣乱
+    //1.成粉 2.加入 3.发图 4.送礼 5.叫一叫 6.逗一逗 7.捣乱 8.参加活动
     time.text = [MyControl timeFromTimeStamp:model.create_time];
     if (type == 1) {
         //成为粉丝
@@ -87,13 +87,13 @@
         
         NSString * str1 = [model.content objectForKey:@"u_name"];
         NSString * str2 = petName;
-        NSString * bodyStr = [NSString stringWithFormat:@"%@ 加入了 %@ 成为了 %@ 凉粉", str1, str2, str2];
+        NSString * bodyStr = [NSString stringWithFormat:@"路人 %@ 加入了 %@ 联萌，成为了一枚新出炉的凉粉", str1, str2];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(3, str1.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+5, str2.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(3+str1.length+5, str2.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+5+str2.length+5, str2.length)];
+//        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(3+str1.length+5+str2.length+5, str2.length)];
         CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
         
         body.frame = CGRectMake(60, 30, 240, size.height);
@@ -105,11 +105,13 @@
         
         NSString * str1 = [model.content objectForKey:@"u_name"];
         NSString * str2 = petName;
-        NSString * bodyStr = [NSString stringWithFormat:@"%@ 发布了一张 %@ 的照片", str1, str2];
-        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
+        NSString * str3 = [ControllerManager returnPositionWithRank:[model.content objectForKey:@"rank"]];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+7, str2.length)];
+        NSString * bodyStr = [NSString stringWithFormat:@"%@— %@ 发布了一张萌主 %@ 的照片", str3, str1, str2];
+        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str3.length+2, str1.length)];
+        
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str3.length+2+str1.length+9, str2.length)];
         CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
         
         body.frame = CGRectMake(60, 30, 240, size.height);
@@ -155,17 +157,17 @@
         NSString * str5 = [NSString stringWithFormat:@"+%@", [model.content objectForKey:@"rq"]];
         NSString * str6 = [ControllerManager returnActionStringWithItemId:[model.content objectForKey:@"item_id"]];
         
-        NSString * bodyStr = [NSString stringWithFormat:@"%@— %@ 送给了 %@ 一个 %@, %@ %@ 人气 %@", str1, str2, str3, str4, str3, str6, str5];
+        NSString * bodyStr = [NSString stringWithFormat:@"%@— %@ 送了 %@ 一个 %@, %@ %@。人气 %@", str1, str2, str3, str4, str3, str6, str5];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length + 2, str2.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+5, str3.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+4, str3.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+5+str3.length+4, str4.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+4+str3.length+4, str4.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+5+str3.length+4+str4.length+2, str3.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+4+str3.length+4+str4.length+2, str3.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+5+str3.length+4+str4.length+2+str3.length+1+str6.length+4, str5.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+2+str2.length+4+str3.length+4+str4.length+2+str3.length+1+str6.length+4, str5.length)];
         CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
         
         body.frame = CGRectMake(60, 30, 240, size.height);
@@ -181,9 +183,9 @@
         //摸一摸 叫一叫
         typeImageView.image = [UIImage imageNamed:@"myCountry_shout.png"];
         NSString * str1 = petName;
-        NSString * bodyStr = [NSString stringWithFormat:@"%@ 今天心情很好，开心的叫了叫", str1];
+        NSString * bodyStr = [NSString stringWithFormat:@"萌主 %@ 今天心情nice~乖巧地叫了一声。", str1];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(3, str1.length)];
         CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
         
         body.frame = CGRectMake(60, 30, 240, size.height);
@@ -202,11 +204,13 @@
         NSString * str1 = @"Anna";
         NSString * str2 = @"逗一逗";
         NSString * str3 = @"99";
-        NSString * bodyStr = [NSString stringWithFormat:@"%@ 在 %@ 游戏中获得了 %@ 分的好成绩", str1, str2, str3];
-        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
+        NSString * str4 = @"凉粉";
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+3+str2.length+8, str3.length)];
+        NSString * bodyStr = [NSString stringWithFormat:@"%@— %@ 在 %@ 游戏中得到了 %@ 的高分，实在太厉害啦！", str4, str1, str2, str3];
+        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str4.length+2, str1.length)];
+        
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str4.length+2+str1.length+3+str2.length+8, str3.length)];
         
         CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
         
@@ -229,17 +233,17 @@
         NSString * str4 = [NSString stringWithFormat:@"%@", [model.content objectForKey:@"rq"]];
         NSString * str5 = [ControllerManager returnActionStringWithItemId:[model.content objectForKey:@"item_id"]];
         
-        NSString * bodyStr = [NSString stringWithFormat:@"%@ 向 %@ 扔了一个 %@, %@ %@ 人气 %@", str1, str2, str3, str2, str5, str4];
+        NSString * bodyStr = [NSString stringWithFormat:@"路人 %@ 对 %@ 扔了一个 %@, %@ %@。人气 %@", str1, str2, str3, str2, str5, str4];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(3, str1.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+3, str2.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(3+str1.length+3, str2.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+3+str2.length+6, str3.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(3+str1.length+3+str2.length+6, str3.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+3+str2.length+6+str3.length+2, str2.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(3+str1.length+3+str2.length+6+str3.length+2, str2.length)];
         
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+3+str2.length+6+str3.length+2+str2.length+1+str5.length+4, str4.length)];
+        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(3+str1.length+3+str2.length+6+str3.length+2+str2.length+1+str5.length+4, str4.length)];
         
         CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
         
@@ -250,6 +254,7 @@
 -(void)sendOneClick
 {
     NSLog(@"sendOne");
+    self.sendGift();
 }
 -(void)playOneClick
 {

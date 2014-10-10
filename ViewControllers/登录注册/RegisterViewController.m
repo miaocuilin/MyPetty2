@@ -1156,6 +1156,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     
                     if (self.oriImage || self.self.oriUserImage){
                         isNeedPostImage = YES;
+                    }else{
+                        [self loadPetInfo];
                     }
                     
                     [self getUserData];
@@ -1376,6 +1378,26 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
     }];
 }
+-(void)loadPetInfo
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"petInfo:%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                
+                //记录默认宠物信息
+                [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"petInfoDict"];
+            }
+            
+//            [self throughPlanet];
+        }else{
+            
+        }
+    }];
+    [request release];
+}
 
 #pragma mark
 #pragma mark -ASI
@@ -1438,7 +1460,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [alert show];
 //    [alert release];
     NSLog(@"headImage upload success");
-    NSLog(@"%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
+   
+    NSDictionary * dic = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
+    NSLog(@"%@", dic);
+    if (request == _requestUser) {
+        [USER setObject:[[dic objectForKey:@"data"] objectForKey:@"tx"] forKey:@"tx"];
+    }else{
+        [USER setObject:[[dic objectForKey:@"data"] objectForKey:@"tx"] forKey:@"a_tx"];
+        [self loadPetInfo];
+    }
 //    [self getUserData];
 //    alert1.hidden = YES;
     //头像存放在本地

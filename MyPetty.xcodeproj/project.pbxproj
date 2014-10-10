@@ -323,6 +323,7 @@
 		600AF3C6199B46EB00613DCB /* BottomMenuBaseViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 600AF3C4199B46EB00613DCB /* BottomMenuBaseViewController.xib */; };
 		600D4D6A19CFB7FE008DA8E8 /* UserActivityListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 600D4D6919CFB7FE008DA8E8 /* UserActivityListModel.m */; };
 		600D4D6C19CFC41C008DA8E8 /* shopGift.plist in Resources */ = {isa = PBXBuildFile; fileRef = 600D4D6B19CFC41C008DA8E8 /* shopGift.plist */; };
+		600DA82719E7ABB400DF1905 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 600DA82619E7ABB400DF1905 /* play.png */; };
 		601716E2198F21E1001E6DE6 /* ChooseFamilyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 601716E1198F21E1001E6DE6 /* ChooseFamilyViewController.m */; };
 		601716E6198F33FB001E6DE6 /* 5-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 601716E3198F33FB001E6DE6 /* 5-2.png */; };
 		601716E7198F33FB001E6DE6 /* 5-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 601716E4198F33FB001E6DE6 /* 5-3.png */; };
@@ -1037,6 +1038,7 @@
 		600D4D6819CFB7FE008DA8E8 /* UserActivityListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserActivityListModel.h; sourceTree = "<group>"; };
 		600D4D6919CFB7FE008DA8E8 /* UserActivityListModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserActivityListModel.m; sourceTree = "<group>"; };
 		600D4D6B19CFC41C008DA8E8 /* shopGift.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = shopGift.plist; sourceTree = "<group>"; };
+		600DA82619E7ABB400DF1905 /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
 		601716E0198F21E1001E6DE6 /* ChooseFamilyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseFamilyViewController.h; sourceTree = "<group>"; };
 		601716E1198F21E1001E6DE6 /* ChooseFamilyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseFamilyViewController.m; sourceTree = "<group>"; };
 		601716E3198F33FB001E6DE6 /* 5-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "5-2.png"; sourceTree = "<group>"; };
@@ -2349,6 +2351,7 @@
 				49FA202F19AF3DF50077897D /* recordButton.png */,
 				49A562B719CC35BB00B6080A /* head_cricle1.png */,
 				49500A3919ADD5C800D175D8 /* head_cricle.png */,
+				600DA82619E7ABB400DF1905 /* play.png */,
 				609D6CC219D27359005E7144 /* nochance.png */,
 				49A562A519CC1EEE00B6080A /* rewardbg.png */,
 				49500A3A19ADD5C800D175D8 /* reward_bg.png */,
@@ -2909,6 +2912,7 @@
 				6038618C19A7351500B1312A /* didAttention.png in Resources */,
 				49348AAB19CD434F00EFDC94 /* tipscat.png in Resources */,
 				49A5626019CBF87A00B6080A /* bluecloudbg.png in Resources */,
+				600DA82719E7ABB400DF1905 /* play.png in Resources */,
 				600376601990AB2500F3107F /* menu-2.png in Resources */,
 				6061280319D54FF60087F642 /* bone1.png in Resources */,
 				0968263A1936D5A000B0D7A2 /* cat2.jpg in Resources */,

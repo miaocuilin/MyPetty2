@@ -22,6 +22,7 @@
 
 #import "PublishViewController.h"
 #import "PetNewsModel.h"
+#import "SendGiftViewController.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
@@ -260,6 +261,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isFinish) {
             NSLog(@"国王信息:%@", load.dataDict);
             petInfoDict = [load.dataDict objectForKey:@"data"];
+            self.pet_aid = [petInfoDict objectForKey:@"aid"];
+            self.pet_name = [petInfoDict objectForKey:@"name"];
+            self.pet_tx = [petInfoDict objectForKey:@"tx"];
 //            if ([[petInfoDict objectForKey:@"type"] intValue]/100 == 1) {
 //                //猫
                 titleLabel.text = [NSString stringWithFormat:@"%@联萌", [petInfoDict objectForKey:@"name"]];
@@ -1022,6 +1026,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)GXListClick
 {
     NSLog(@"跳转贡献榜");
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        return;
+    }
     ContributionViewController * vc = [[ContributionViewController alloc] init];
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
@@ -1029,6 +1037,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)RQListClick
 {
     NSLog(@"跳转人气榜");
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        return;
+    }
     PopularityListViewController * vc = [[PopularityListViewController alloc] init];
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
@@ -1265,6 +1277,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self presentViewController:vc animated:YES completion:nil];
             [vc release];
         };
+        cell.sendGift = ^(){
+            [self sendGift];
+        };
         return cell;
     }else if (tableView == tv2) {
         static NSString * cellID2 = @"ID2";
@@ -1481,6 +1496,32 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     NSLog(@"%d", btn.tag);
 }
+#pragma mark - 送礼
+-(void)sendGift
+{
+    NSLog(@"赠送礼物");
+    
+    if (![ControllerManager getIsSuccess]) {
+        //提示注册
+        ShowAlertView;
+        return;
+    }else{
+        SendGiftViewController * quictGiftvc = [[SendGiftViewController alloc] init];
+        quictGiftvc.receiver_aid = [petInfoDict objectForKey:@"aid"];
+        quictGiftvc.receiver_name = [petInfoDict objectForKey:@"name"];
+        //
+        quictGiftvc.hasSendGift = ^(){
+            [self loadKingDynamicData];
+        };
+        
+        [self addChildViewController:quictGiftvc];
+        [quictGiftvc didMoveToParentViewController:self];
+        [self.view addSubview:quictGiftvc.view];
+        [quictGiftvc release];
+        
+    }
+}
+
 #pragma - 相机
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {

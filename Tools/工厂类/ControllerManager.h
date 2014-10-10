@@ -50,8 +50,15 @@
 //传入item_id，返回该礼物的信息字典dict
 +(NSDictionary *)returnGiftDictWithItemId:(NSString *)itemId;
 
+//传入rank值，返回官职名称
 +(NSString *)returnPositionWithRank:(NSString *)rank;
+//传入礼物item_id，返回对应的动态文字
 +(NSString *)returnActionStringWithItemId:(NSString *)item_id;
+
+//传入贡献值，返回对应下一级所需贡献值
++(int)returnContributionOfNeedWithContribution:(NSString *)con;
+//传入当前等级，返回升到下一级需要的总经验
++(int)returnExpOfNeedWithLv:(NSString *)lv;
 /***********************************************/
 //计算升级和官职弹窗
 +(BOOL)levelPOP:(NSString *)exp addExp:(NSInteger)add;

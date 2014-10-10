@@ -218,6 +218,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self makeUI];
             LoadingSuccess;
         }else{
+            ShowAlertView;
             LoadingFailed;
             NSLog(@"请求赞列表失败");
         }

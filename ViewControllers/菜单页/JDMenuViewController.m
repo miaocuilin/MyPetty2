@@ -131,7 +131,9 @@
         button.layer.masksToBounds = YES;
         [button setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
         /**************************/
+        NSLog(@"=============测试奔溃前");
         if (!([[sideMenu.userPetListArray[i] tx] isKindOfClass:[NSNull class]] || [[sideMenu.userPetListArray[i] tx] length]==0)) {
+            NSLog(@"测试奔溃后=============");
             NSString * docDir = DOCDIR;
             NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [sideMenu.userPetListArray[i] tx]]];
             //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);

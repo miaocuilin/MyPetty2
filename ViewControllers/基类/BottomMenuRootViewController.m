@@ -234,6 +234,10 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     RockViewController *shake = [[RockViewController alloc] init];
     shake.titleString = self.label1.text;
     shake.animalInfoDict = self.shakeInfoDict;
+    shake.pet_aid = self.pet_aid;
+    shake.pet_name = self.pet_name;
+    shake.pet_tx = self.pet_tx;
+    
     NSLog(@"shakeInfoDict:%@",self.shakeInfoDict);
     [self addChildViewController:shake];
     [shake release];
@@ -254,7 +258,8 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
 //    QuickGiftViewController *quictGiftvc = [[QuickGiftViewController alloc] init];
 //    ToolTipsViewController * quictGiftvc = [[ToolTipsViewController alloc] init];
     SendGiftViewController * vc = [[SendGiftViewController alloc] init];
-    vc.receiver_aid = [USER objectForKey:@"aid"];
+    vc.receiver_aid = self.pet_aid;
+    vc.receiver_name = self.pet_name;
     vc.hasSendGift = ^(){
         NSLog(@"赠送礼物给默认宠物成功!");
     };
@@ -274,10 +279,13 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }
     
     NSLog(@"录音和摸一摸");
-    if ([[self.animalInfoDict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+    if ([self.label3.text isEqualToString:@"叫一叫"]) {
 //        ShoutViewController *shout = [[ShoutViewController alloc] init];
         RecordViewController *shout = [[RecordViewController alloc] init];
         shout.animalInfoDict = self.animalInfoDict;
+        shout.pet_aid = self.pet_aid;
+        shout.pet_name = self.pet_name;
+        shout.pet_tx = self.pet_tx;
         [self addChildViewController:shout];
         [shout release];
         [shout didMoveToParentViewController:self];
@@ -285,9 +293,11 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         [self.view addSubview:shout.view];
         [self hideAll];
     }else{
-        
         TouchViewController *touch = [[TouchViewController alloc] init];
         touch.animalInfoDict = self.animalInfoDict;
+        touch.pet_aid = self.pet_aid;
+        touch.pet_name = self.pet_name;
+        touch.pet_tx = self.pet_tx;
         [self addChildViewController:touch];
         [touch release];
         [touch didMoveToParentViewController:self];

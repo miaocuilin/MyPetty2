@@ -141,10 +141,11 @@
         }
     }
     //
-    int length = [model.t_contri intValue]/100.0*160;
+    int nextContri = [ControllerManager returnContributionOfNeedWithContribution:model.t_contri];
+    int length = [model.t_contri floatValue]/nextContri*160;
     self.expImageView.frame = CGRectMake(1, 1, length, 11);
     self.expImageView.image = [[UIImage imageNamed:@"RQImage.png"] stretchableImageWithLeftCapWidth:23/2 topCapHeight:30/2];
-    self.expLabel.text = [NSString stringWithFormat:@"%@/100", model.t_contri];
+    self.expLabel.text = [NSString stringWithFormat:@"%@/%d", model.t_contri, nextContri];
     /**************************/
     if (!([model.tx isKindOfClass:[NSNull class]] || model.tx.length==0)) {
         NSString * docDir = DOCDIR;

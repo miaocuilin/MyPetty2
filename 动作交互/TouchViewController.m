@@ -50,8 +50,8 @@
 
 - (void)checkIsTouch
 {
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *isTouch = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ISTOUCHAPI,[USER objectForKey:@"aid"],sig,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+    NSString *isTouch = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ISTOUCHAPI, self.pet_aid, sig, [ControllerManager getSID]];
     NSLog(@"isTouch:%@",isTouch);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:isTouch Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"是否已经摸过：%@",load.dataDict);
@@ -64,13 +64,13 @@
     [request release];
     
 }
-#pragma mark - 下载声音
 
+#pragma mark - 下载声音
 - (void)loadRecordStringData
 {
     StartLoading;
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *downloadRecord = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RECORDDOWNLOADAPI,[USER objectForKey:@"aid" ],sig,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+    NSString *downloadRecord = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RECORDDOWNLOADAPI, self.pet_aid, sig,[ControllerManager getSID]];
     NSLog(@"下载API:%@",downloadRecord);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:downloadRecord Block:^(BOOL isFinsh, httpDownloadBlock *load) {
         NSLog(@"isFinsh:%d,load.dataDict:%@",isFinsh,load.dataDict);
@@ -79,8 +79,15 @@
             self.recordURL = [NSString stringWithFormat:@"http://54.199.161.210:8001/%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
             [self loadRecordData];
         }else{
-            [self createAlertView];
-            LoadingSuccess;
+            [MMProgressHUD dismissWithError:@"该宠物今天没有叫一叫" afterDelay:1.0];
+            [UIView animateWithDuration:0.1 delay:1.0 options:1 animations:^{
+                [_player stop];
+                [_player release],_player=nil;
+                [self.view removeFromSuperview];
+                [self removeFromParentViewController];
+            } completion:nil];
+            
+            
         }
     }];
     [request release];
@@ -89,15 +96,20 @@
 {
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:self.recordURL Block:^(BOOL isFinish, httpDownloadBlock *load) {
 //        NSLog(@"load.data音频二进制数据:%@",load.data);
-        NSDate *  senddate=[NSDate date];
-        NSDateFormatter  *dateformatter=[[NSDateFormatter alloc] init];
-        [dateformatter setDateFormat:@"YYYYMMdd"];
-        NSString *  locationString=[dateformatter stringFromDate:senddate];
-        [load.data writeToFile:[DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@%@.mp3",locationString,[USER objectForKey:@"aid"]]] atomically:YES];
-        [dateformatter release];
-        _player = [[AVAudioPlayer alloc] initWithData:load.data error:nil];
-        [self createAlertView];
-        LoadingSuccess;
+//        NSDate *  senddate=[NSDate date];
+//        NSDateFormatter  *dateformatter=[[NSDateFormatter alloc] init];
+//        [dateformatter setDateFormat:@"YYYYMMdd"];
+//        NSString *  locationString=[dateformatter stringFromDate:senddate];
+        if (isFinish) {
+            [load.data writeToFile:[DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", self.pet_aid]] atomically:YES];
+            //        [dateformatter release];
+            _player = [[AVAudioPlayer alloc] initWithData:load.data error:nil];
+            [self createAlertView];
+            LoadingSuccess;
+
+        }else{
+            LoadingFailed;
+        }
     }];
     [request release];
 }
@@ -105,8 +117,8 @@
 - (void)touchAPIData
 {
     StartLoading;
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *touchString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",TOUCHAPI,[USER objectForKey:@"aid"],sig,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+    NSString *touchString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",TOUCHAPI, self.pet_aid, sig,[ControllerManager getSID]];
     NSLog(@"摸一摸api:%@",touchString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:touchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"摸一摸数据：%@",load.dataDict);
@@ -137,13 +149,13 @@
     
     UIImageView *touchImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2-130, 40, 260, 180) ImageName:@"cat2.jpg"];
     
-    if (!([[USER objectForKey:@"a_tx"] length]==0 || [[USER objectForKey:@"a_tx"] isKindOfClass:[NSNull class]])) {
-        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [USER objectForKey:@"aid"]];
+    if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]==0)) {
+        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
         UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
         if (animalHeaderImage) {
             touchImageView.image = animalHeaderImage;
         }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[USER objectForKey:@"a_tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
                 if (isFinish) {
                     touchImageView.image = load.dataImage;
                     [load.data writeToFile:pngFilePath atomically:YES];
@@ -183,13 +195,13 @@
     [bodyView addSubview:downView];
     
     UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
-    if (!([[USER objectForKey:@"a_tx"] length]==0 || [[USER objectForKey:@"a_tx"] isKindOfClass:[NSNull class]])) {
-        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [USER objectForKey:@"aid"]];
-        UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
-        if (animalHeaderImage) {
-            headImageView.image = animalHeaderImage;
+    if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]== 0)) {
+        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
+        UIImage * image = [UIImage imageWithContentsOfFile:pngFilePath];
+        if (image) {
+            headImageView.image = image;
         }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[USER objectForKey:@"a_tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
                 if (isFinish) {
                     headImageView.image = load.dataImage;
                     [load.data writeToFile:pngFilePath atomically:YES];
@@ -203,11 +215,11 @@
     headImageView.layer.masksToBounds = YES;
     [downView addSubview:headImageView];
     
-    UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:headImageView.frame ImageName:@"head_cricle.png"];
+    UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:CGRectMake(8, -2, 60, 60) ImageName:@"head_cricle.png"];
     [downView addSubview:cricleHeadImageView];
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 15, 200, 20) Font:12 Text:nil];
 
-    NSAttributedString *helpPetString = [self firstString:@"摸摸~" formatString:[NSString stringWithFormat:@" %@ ",[self.animalInfoDict objectForKey:@"name"]] insertAtIndex:2];
+    NSAttributedString *helpPetString = [self firstString:@"摸摸~" formatString:[NSString stringWithFormat:@" %@ ", self.pet_name] insertAtIndex:2];
     helpPetLabel.attributedText = helpPetString;
     [helpPetString release];
     [downView addSubview:helpPetLabel];
@@ -351,7 +363,7 @@
     UIView *endbodyView = [MyControl createViewWithFrame:CGRectMake(0, 40, 300, 385)];
     [totalView addSubview:endbodyView];
     
-    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(totalView.frame.size.width/2-85,100,170,60) Font:16 Text:[NSString stringWithFormat:@"今天已经摸过 %@ 啦 期待明天的萌照摸摸吧~",[USER objectForKey:@"a_name"]]];
+    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(totalView.frame.size.width/2-85,100,170,60) Font:16 Text:[NSString stringWithFormat:@"今天已经摸过 %@ 啦 期待明天的萌照摸摸吧~", self.pet_name]];
 //    descLabel.textAlignment = NSTextAlignmentCenter;
     descLabel.textColor = GRAYBLUECOLOR;
     [totalView addSubview:descLabel];
@@ -364,13 +376,13 @@
     
     UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
     
-    if (!([[USER objectForKey:@"a_tx"] length]==0 || [[USER objectForKey:@"a_tx"] isKindOfClass:[NSNull class]])) {
-        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [USER objectForKey:@"aid"]];
+    if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]== 0)) {
+        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
         UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
         if (animalHeaderImage) {
             headImageView.image = animalHeaderImage;
         }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[USER objectForKey:@"a_tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
                 if (isFinish) {
                     headImageView.image = load.dataImage;
                     [load.data writeToFile:pngFilePath atomically:YES];
@@ -388,7 +400,7 @@
     [downView addSubview:cricleHeadImageView];
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 15, 200, 20) Font:12 Text:nil];
     
-    NSAttributedString *helpPetString = [self firstString:@"摸摸~" formatString:[NSString stringWithFormat:@" %@ ",[USER objectForKey:@"a_name"]] insertAtIndex:2];
+    NSAttributedString *helpPetString = [self firstString:@"摸摸~" formatString:[NSString stringWithFormat:@" %@ ", self.pet_name] insertAtIndex:2];
     helpPetLabel.attributedText = helpPetString;
     [helpPetString release];
     [downView addSubview:helpPetLabel];

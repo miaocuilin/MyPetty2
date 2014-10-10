@@ -23,5 +23,6 @@
 }
 
 @property(nonatomic,copy)void (^clickImage)(void);
+@property(nonatomic,copy)void (^sendGift)(void);
 -(void)modifyWithModel:(PetNewsModel *)model PetName:(NSString *)petName;
 @end

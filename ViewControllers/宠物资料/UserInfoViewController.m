@@ -86,7 +86,7 @@
 //    user/petsApi&usr_id=(若用户为自己则留空不填)
     NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", self.usr_id];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, self.usr_id, [MyMD5 md5:code], [ControllerManager getSID]];
-//    NSLog(@"%@", url);
+    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            NSLog(@"%@", load.dataDict);
@@ -532,14 +532,15 @@
     RQBgImageView.layer.masksToBounds = YES;
     [bgView addSubview:RQBgImageView];
     
-    int length = ([[headerDict objectForKey:@"exp"] intValue]%100)/100.0*173;
+    int needExp = [ControllerManager returnExpOfNeedWithLv:[headerDict objectForKey:@"lv"]];
+    int length = [[headerDict objectForKey:@"exp"] floatValue]/needExp*173;
     //    float length = 3.5/2*70;
     NSLog(@"%d", length);
     UIImageView * RQImageView = [MyControl createImageViewWithFrame:CGRectMake(1, 1, length, 11) ImageName:@""];
     RQImageView.image = [[UIImage imageNamed:@"RQImage.png"] stretchableImageWithLeftCapWidth:51/2 topCapHeight:25/2];
     [RQBgImageView addSubview:RQImageView];
     
-    UILabel * RQNumLabel = [MyControl createLabelWithFrame:CGRectMake(50, 0, 75, 13) Font:12 Text:[NSString stringWithFormat:@"%d/100", [[headerDict objectForKey:@"exp"] intValue]]];
+    UILabel * RQNumLabel = [MyControl createLabelWithFrame:CGRectMake(50, 0, 75, 13) Font:12 Text:[NSString stringWithFormat:@"%d/%d", [[headerDict objectForKey:@"exp"] intValue], needExp]];
     RQNumLabel.textAlignment = NSTextAlignmentCenter;
     [RQBgImageView addSubview:RQNumLabel];
     

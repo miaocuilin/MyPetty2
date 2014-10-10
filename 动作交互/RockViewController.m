@@ -71,9 +71,9 @@
 #pragma mark - 加载摇一摇数据
 - (void)loadShakeDataInit
 {
-    self.animalInfoDict = [USER objectForKey:@"petInfoDict"];
-    NSString *shakeSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [self.animalInfoDict objectForKey:@"aid"]]];
-    NSString *shakeString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",SHAKEAPI,[self.animalInfoDict objectForKey:@"aid"],shakeSig,[ControllerManager getSID]];
+//    self.animalInfoDict = [USER objectForKey:@"petInfoDict"];
+    NSString *shakeSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+    NSString *shakeString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",SHAKEAPI, self.pet_aid, shakeSig,[ControllerManager getSID]];
     NSLog(@"摇一摇：%@",shakeString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:shakeString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"摇一摇数据：%@",load.dataDict);
@@ -85,6 +85,10 @@
             
             if (self.count == 0) {
                 self.upView.contentOffset = CGPointMake(300*3, 0);
+                self.distance = self.upView.frame.size.width*3;
+                floating1.frame = CGRectMake(230+self.distance, 40, 70, 25);
+                floating2.frame = CGRectMake(23+self.distance, 90, 70, 25);
+                floating3.frame = CGRectMake(180+self.distance, 180, 70, 25);
             }
         }
     }];
@@ -110,13 +114,16 @@
     }
     rewardLabel.text = [NSString stringWithFormat:@"%@ X 1",model.name];
     rewardImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
-    descRewardLabel.text = [NSString stringWithFormat:@"%@ 人气 %@",[self.animalInfoDict objectForKey:@"name"],model.add_rq];
+    descRewardLabel.text = [NSString stringWithFormat:@"%@ 人气 %@",self.pet_name, model.add_rq];
+    if ([model.add_rq rangeOfString:@"-"].location == NSNotFound) {
+        descRewardLabel.text = [NSString stringWithFormat:@"%@ 人气 +%@",self.pet_name, model.add_rq];
+    }
     AudioServicesPlaySystemSound (soundID);
     //固定礼物1102
 //    NSString *item = @"1102";
     NSString *item = model.no;
-    NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_shake=1&item_id=%@dog&cat",[self.animalInfoDict objectForKey:@"aid"],item]];
-    NSString *sendString = [NSString stringWithFormat:@"%@%@&is_shake=1&item_id=%@&sig=%@&SID=%@",SENDSHAKEGIFT,[self.animalInfoDict objectForKey:@"aid"],item,sendSig,[ControllerManager getSID]];
+    NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_shake=1&item_id=%@dog&cat", self.pet_aid, item]];
+    NSString *sendString = [NSString stringWithFormat:@"%@%@&is_shake=1&item_id=%@&sig=%@&SID=%@",SENDSHAKEGIFT, self.pet_aid,item,sendSig,[ControllerManager getSID]];
     NSLog(@"赠送url:%@",sendString);
     httpDownloadBlock *request  = [[httpDownloadBlock alloc] initWithUrlStr:sendString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"赠送数据：%@",load.dataDict);
@@ -152,9 +159,9 @@
     }else{
         self.upView.contentOffset = CGPointMake(self.upView.frame.size.width*3, 0);
         self.distance = self.upView.frame.size.width*3;
-        floating1.frame = CGRectMake(floating1.frame.origin.x+self.distance, 40, 70, 25);
-        floating2.frame = CGRectMake(floating2.frame.origin.x+self.distance, 90, 70, 25);
-        floating3.frame = CGRectMake(floating3.frame.origin.x+self.distance, 180, 70, 25);
+        floating1.frame = CGRectMake(230+self.distance, 40, 70, 25);
+        floating2.frame = CGRectMake(23+self.distance, 90, 70, 25);
+        floating3.frame = CGRectMake(180+self.distance, 180, 70, 25);
 
     }
 }
@@ -273,7 +280,7 @@
 
     //4
     
-    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 - 115+upViewWidth*3, 10, 230, 100) Font:16 Text:[NSString stringWithFormat:@"摇一摇，要到外婆桥。\n%@今天的摇一摇次数用完啦~\n换个宠物试试吧~",[self.animalInfoDict objectForKey:@"name"]]];
+    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 - 115+upViewWidth*3, 10, 230, 100) Font:16 Text:[NSString stringWithFormat:@"摇一摇，要到外婆桥。\n%@今天的摇一摇次数用完啦~\n换个宠物试试吧~", self.pet_name]];
     shakeDescLabel.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel.textColor = GRAYBLUECOLOR;
     [self.upView addSubview:shakeDescLabel];
@@ -289,13 +296,13 @@
     [bodyView addSubview:downView];
     
     UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
-    if (!([[self.animalInfoDict objectForKey:@"tx"] length]==0 || [[self.animalInfoDict objectForKey:@"tx"] isKindOfClass:[NSNull class]])) {
-        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", DOCDIR, [USER objectForKey:@"aid"]];
-        UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
-        if (animalHeaderImage) {
-            headImageView.image = animalHeaderImage;
+    if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]== 0)) {
+        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
+        UIImage * image = [UIImage imageWithContentsOfFile:pngFilePath];
+        if (image) {
+            headImageView.image = image;
         }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
                 if (isFinish) {
                     headImageView.image = load.dataImage;
                     [load.data writeToFile:pngFilePath atomically:YES];
@@ -308,11 +315,11 @@
     headImageView.layer.masksToBounds = YES;
     [downView addSubview:headImageView];
     
-    UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:headImageView.frame ImageName:@"head_cricle1.png"];
+    UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:CGRectMake(8, -2, 60, 60) ImageName:@"head_cricle1.png"];
     [downView addSubview:cricleHeadImageView];
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 5, 200, 20) Font:12 Text:nil];
     
-    NSAttributedString *helpPetString = [self firstString:@"帮摇一摇" formatString:[self.animalInfoDict objectForKey:@"name"] insertAtIndex:1];
+    NSAttributedString *helpPetString = [self firstString:@"帮摇一摇" formatString:self.pet_name insertAtIndex:1];
     helpPetLabel.attributedText = helpPetString;
     [helpPetString release];
     [downView addSubview:helpPetLabel];
@@ -336,7 +343,7 @@
         shakeDescLabel.text = @"够了~你真是够了！\n你今天的捣捣乱次数用完啦~\n换个宠物继续捣乱吧~";
         shakeBg4.image = [UIImage imageNamed:@"troublenothing.png"];
         shakeImageView.hidden = YES;
-        helpPetLabel.attributedText = [self firstString:@"给  恶作剧" formatString:[self.animalInfoDict objectForKey:@"name"] insertAtIndex:2];
+        helpPetLabel.attributedText = [self firstString:@"给  恶作剧" formatString:self.pet_name insertAtIndex:2];
     }
 }
 #pragma mark - button点击事件
@@ -381,7 +388,7 @@
     UIImageView *floatingb = (UIImageView *)[self.view viewWithTag:31];
     if (self.isBack2) {
         floatingb.frame =CGRectMake(floatingb.frame.origin.x+0.5, 90, 70, 25);
-        if (floatingb.frame.origin.x >240+self.distance) {
+        if (floatingb.frame.origin.x >230+self.distance) {
             self.isBack2 = NO;
         }
     }else{
@@ -399,7 +406,7 @@
         }
     }else{
         floatingc.frame =CGRectMake(floatingc.frame.origin.x+0.75, 180, 70, 25);
-        if (floatingc.frame.origin.x >240+self.distance) {
+        if (floatingc.frame.origin.x >230+self.distance) {
             self.isBack3 = YES;
         }
     }

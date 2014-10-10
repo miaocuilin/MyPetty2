@@ -117,6 +117,9 @@
     UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
     [totalView addSubview:titleView];
     UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:16 Text:@"给Ta送个礼物吧"];
+    if (self.receiver_name.length != 0) {
+        titleLabel.text = [NSString stringWithFormat:@"给%@送个礼物吧", self.receiver_name];
+    }
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [totalView addSubview:titleLabel];
     

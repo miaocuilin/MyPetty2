@@ -17,4 +17,8 @@
 @property (nonatomic,strong)NSDictionary *animalInfoDict;
 @property (nonatomic,strong)NSString *titleString;
 @property (nonatomic)BOOL isTrouble;
+
+@property(nonatomic,copy)NSString * pet_aid;
+@property(nonatomic,copy)NSString * pet_name;
+@property(nonatomic,copy)NSString * pet_tx;
 @end

@@ -94,7 +94,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 - (void)viewDidLoad
 {
-//    self.pet_aid = [USER objectForKey:@"aid"];
+    
+    self.pet_aid = [USER objectForKey:@"aid"];
+    self.pet_name = [USER objectForKey:@"a_name"];
+    self.pet_tx = [USER objectForKey:@"a_tx"];
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.

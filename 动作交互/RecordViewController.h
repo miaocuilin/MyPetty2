@@ -15,4 +15,9 @@
 @interface RecordViewController : UIViewController<AVAudioPlayerDelegate,AVAudioRecorderDelegate>
 @property (nonatomic,strong)NSDictionary *animalInfoDict;
 
+@property(nonatomic,copy)NSString * recordURL;
+
+@property(nonatomic,copy)NSString * pet_aid;
+@property(nonatomic,copy)NSString * pet_name;
+@property(nonatomic,copy)NSString * pet_tx;
 @end

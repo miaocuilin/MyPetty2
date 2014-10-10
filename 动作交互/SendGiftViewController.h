@@ -22,9 +22,13 @@
 @property(nonatomic,retain)NSMutableArray * giftArray;
 @property(nonatomic,retain)NSMutableArray * tempGiftArray;
 
+//接受礼物的宠物名字
+@property(nonatomic,copy)NSString * receiver_name;
 //接受礼物人的aid
 @property(nonatomic,copy)NSString * receiver_aid;
 //接受礼物的图片id
 @property(nonatomic,copy)NSString * receiver_img_id;
+
+
 @property(nonatomic,copy)void (^hasSendGift)(void);
 @end

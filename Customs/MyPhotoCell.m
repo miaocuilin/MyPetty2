@@ -70,6 +70,8 @@
 }
 -(void)configUI:(PhotoModel *)model type:(NSString *)type
 {
+    zanLabel.textColor = [UIColor whiteColor];
+    
 //    NSLog(@"%@", model.type);
     if ([type intValue]/100 == 1) {
         isMi = YES;
@@ -83,6 +85,7 @@
         self.likersArray = [model.likers componentsSeparatedByString:@","];
         for(NSString * str in self.likersArray){
             if ([str isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                zanLabel.textColor = BGCOLOR;
                 if (isMi) {
                     fish.image = [UIImage imageNamed:@"fish1.png"];
                 }else{
@@ -95,7 +98,6 @@
     self.img_id = model.img_id;
 
     zanLabel.text = [NSString stringWithFormat:@"%@", model.likes];
-    
     
     timeLabel.text = [NSString stringWithFormat:@"%@", [MyControl timeFromTimeStamp:model.create_time]];
 }

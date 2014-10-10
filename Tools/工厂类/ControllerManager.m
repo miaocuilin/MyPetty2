@@ -620,4 +620,25 @@ static LevelRank *levelAndRank =nil;
     }
     return actionStr;
 }
+
++(int)returnContributionOfNeedWithContribution:(NSString *)con
+{
+    int contribution = 0;
+    int a = [con intValue];
+    NSArray * array = @[@"0", @"480", @"1140", @"2064", @"3252" ,@"4704", @"6420", @"8400"];
+    for (int i=0; i<array.count; i++) {
+        if (a<[array[i] intValue]) {
+            contribution = [array[i] intValue];
+            break;
+        }
+    }
+    return contribution;
+}
++(int)returnExpOfNeedWithLv:(NSString *)lv
+{
+    int a = [lv intValue]+1;
+    //a为要升到的级别
+    int needExp = 110*(a-1)+5*(a+2)*(a-1)/2;
+    return needExp;
+}
 @end

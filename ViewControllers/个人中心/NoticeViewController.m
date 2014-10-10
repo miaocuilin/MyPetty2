@@ -109,6 +109,9 @@
             NSLog(@"newMsg:%@", load.dataDict);
             if ([load.dataDict objectForKey:@"data"] && [[load.dataDict objectForKey:@"data"] count]) {
                 self.newDataArray = [load.dataDict objectForKey:@"data"];
+                for (int i=0; i<self.newDataArray.count; i++) {
+//                    NSLog(@"%@", [self.newDataArray[i] objectForKey:<#(id)#>])
+                }
                 //有新消息
                 hasNewMsg = YES;
             }else{

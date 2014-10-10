@@ -56,9 +56,10 @@
 - (void)loadIsRecorderData
 {
     StartLoading;
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[self.animalInfoDict objectForKey:@"aid"]]];
+//    NSLog(@"%@", self.pet_aid);
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
     
-    NSString *isTouchString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ISRECORDERAPI,[self.animalInfoDict objectForKey:@"aid"],sig,[ControllerManager getSID]];
+    NSString *isTouchString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ISRECORDERAPI, self.pet_aid, sig,[ControllerManager getSID]];
     NSLog(@"isTouchString:%@",isTouchString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:isTouchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
@@ -66,17 +67,118 @@
             if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"is_voiced"] intValue]) {
                 self.upScrollView.contentOffset = CGPointMake(self.upScrollView.frame.size.width*4, 0);
                 [self floatingFrame:4];
+                //已经录过了，从本地找看是否有录音
+                NSFileManager * manager = [[NSFileManager alloc] init];
+                NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", self.pet_aid]];
+                if ([manager fileExistsAtPath:filePath]) {
+                    //存在录音，播放
+//                    [self playRecord2];
+                }else{
+                    //不存在，去下载
+                    [self loadRecordStringData];
+                    
+//                    NSString * sig2 = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+//                    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECORDDOWNLOADAPI, self.pet_aid, sig2, [ControllerManager getSID]];
+//                    httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                        if (isFinish) {
+//                            BOOL isSuccess = [load.data writeToFile:filePath atomically:YES];
+//                            NSLog(@"%d", isSuccess);
+////                            [self playRecord2];
+//                        }else{
+//                            StartLoading;
+//                            LoadingFailed;
+//                        }
+//                    }];
+//                    [request2 release];
+                }
             }
         }
         LoadingSuccess;
     }];
     [request release];
 }
+#pragma mark - 下载声音
+- (void)loadRecordStringData
+{
+    StartLoading;
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+    NSString *downloadRecord = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECORDDOWNLOADAPI, self.pet_aid, sig,[ControllerManager getSID]];
+    NSLog(@"下载API:%@",downloadRecord);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:downloadRecord Block:^(BOOL isFinsh, httpDownloadBlock *load) {
+        NSLog(@"isFinsh:%d,load.dataDict:%@",isFinsh,load.dataDict);
+        if (isFinsh) {
+//            self.haveRecord = YES;
+            self.recordURL = [NSString stringWithFormat:@"http://54.199.161.210:8001/%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
+            [self loadRecordData];
+        }else{
+//            [self createAlertView];
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+- (void)loadRecordData
+{
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:self.recordURL Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        //        NSLog(@"load.data音频二进制数据:%@",load.data);
+//        NSDate *  senddate=[NSDate date];
+//        NSDateFormatter  *dateformatter=[[NSDateFormatter alloc] init];
+//        [dateformatter setDateFormat:@"YYYYMMdd"];
+//        NSString *  locationString=[dateformatter stringFromDate:senddate];
+        [load.data writeToFile:[DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", self.pet_aid]] atomically:YES];
+//        [dateformatter release];
+//        _player = [[AVAudioPlayer alloc] initWithData:load.data error:nil];
+//        [self createAlertView];
+        LoadingSuccess;
+    }];
+    [request release];
+}
+-(void)playRecord5Click
+{
+    //已经录过了，从本地找看是否有录音
+    NSFileManager * manager = [[NSFileManager alloc] init];
+    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", self.pet_aid]];
+    if ([manager fileExistsAtPath:filePath]) {
+        //存在录音，播放
+        [self playRecord2];
+    }else{
+        //不存在，去下载
+        NSString * sig2 = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECORDDOWNLOADAPI, self.pet_aid, sig2, [ControllerManager getSID]];
+        httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                [load.data writeToFile:filePath atomically:YES];
+                [self playRecord2];
+            }else{
+                StartLoading;
+                LoadingFailed;
+            }
+        }];
+        [request2 release];
+    }
+}
+-(void)playRecord2
+{
+    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", self.pet_aid]];
+    if (_player == nil)
+    {
+        NSError *playerError;
+        self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:&playerError];
+        self.player.meteringEnabled = YES;
+        if (_player == nil)
+        {
+            NSLog(@"ERror creating player: %@", [playerError description]);
+        }
+        self.player.delegate = self;
+    }
+    
+    [self.player play];
+}
 #pragma mark - 上传录音
 - (void)uploadRecordData
 {
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[self.animalInfoDict objectForKey:@"aid"]]];
-    NSString *uploadRecordString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RECORDUPLOADAPI,[self.animalInfoDict objectForKey:@"aid"],sig,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+    NSString *uploadRecordString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RECORDUPLOADAPI, self.pet_aid, sig,[ControllerManager getSID]];
     //网络上传
     NSLog(@"postUrl:%@", uploadRecordString);
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:uploadRecordString]];
@@ -259,6 +361,9 @@
     recordDescLabel4.textColor = GRAYBLUECOLOR;
     [self.upScrollView addSubview:recordDescLabel4];
     
+    UIButton * playRecord4 = [MyControl createButtonWithFrame:CGRectMake(upViewWidth*3 + (upViewWidth-45)/2, 70, 45, 45) ImageName:@"play.png" Target:self Action:@selector(playRecord5Click) Title:nil];
+    [self.upScrollView addSubview:playRecord4];
+    
     UIImageView *recordBg4 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*3, 140, upViewWidth, 120) ImageName:@"grassbg.png"];
     [self.upScrollView addSubview:recordBg4];
     UIImageView *recordImageView = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 50, 0, 100, 110) ImageName:@"nochance.png"];
@@ -277,11 +382,13 @@
     }
     //5
 #pragma mark - five
-    UILabel *recordDescLabel5 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2+upViewWidth*4 - 115, 10, 230, 50) Font:16 Text:[NSString stringWithFormat:@"今天 %@ 录过了哟\n期待明天的美妙叫叫",[self.animalInfoDict objectForKey:@"name"]]];
+    UILabel *recordDescLabel5 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2+upViewWidth*4 - 115, 10, 230, 50) Font:16 Text:[NSString stringWithFormat:@"今天 %@ 录过了哟\n期待明天的美妙叫叫", self.pet_name]];
     recordDescLabel5.textAlignment = NSTextAlignmentCenter;
     recordDescLabel5.textColor = GRAYBLUECOLOR;
     [self.upScrollView addSubview:recordDescLabel5];
-//    UIButton *littleButton2 = [MyControl createButtonWithFrame:CGRectMake(<#CGFloat x#>, <#CGFloat y#>, 45, 45) ImageName:@"" Target:self Action:<#(SEL)#> Title:<#(NSString *)#>]
+    
+    UIButton * playRecord5 = [MyControl createButtonWithFrame:CGRectMake(upViewWidth*4 + (upViewWidth-45)/2, 70, 45, 45) ImageName:@"play.png" Target:self Action:@selector(playRecord5Click) Title:nil];
+    [self.upScrollView addSubview:playRecord5];
     
     UIImageView *recordBg5 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*4, 140, upViewWidth, 120) ImageName:@"grassbg.png"];
     [self.upScrollView addSubview:recordBg5];
@@ -293,16 +400,16 @@
     [bodyView addSubview:downView];
     
     UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
-    if (!([[self.animalInfoDict objectForKey:@"tx"] length]==0 || [[self.animalInfoDict objectForKey:@"tx"] isKindOfClass:[NSNull class]])) {
-        NSString *animalHeadPath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png",[self.animalInfoDict objectForKey:@"tx"]]];
-        UIImage *headImage = [UIImage imageWithContentsOfFile:animalHeadPath];
-        if (headImage) {
-            headImageView.image = headImage;
+    if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]== 0)) {
+        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
+        UIImage * image = [UIImage imageWithContentsOfFile:pngFilePath];
+        if (image) {
+            headImageView.image = image;
         }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,[self.animalInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinsh, httpDownloadBlock *load) {
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinsh, httpDownloadBlock *load) {
                 if (isFinsh) {
                     headImageView.image = load.dataImage;
-                    [load.data writeToFile:animalHeadPath atomically:YES];
+                    [load.data writeToFile:pngFilePath atomically:YES];
                 }
             }];
             [request release];
@@ -312,13 +419,16 @@
     headImageView.layer.masksToBounds = YES;
     [downView addSubview:headImageView];
     
-    UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:headImageView.frame ImageName:@"head_cricle.png"];
+    UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:CGRectMake(8, -2, 60, 60) ImageName:@"head_cricle1.png"];
     [downView addSubview:cricleHeadImageView];
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 5, 200, 20) Font:12 Text:nil];
-    NSAttributedString *helpPetString = [self firstString:@"让叫一叫" formatString:[self.animalInfoDict objectForKey:@"name"] insertAtIndex:1];
+    NSAttributedString *helpPetString = [self firstString:@"让叫一叫" formatString: self.pet_name insertAtIndex:1];
     helpPetLabel.attributedText = helpPetString;
     [helpPetString release];
     [downView addSubview:helpPetLabel];
+    
+    //播放按钮
+//    UIButton * playRecordBtn = [MyControl createButtonWithFrame:CGRectMake(125, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>) ImageName:<#(NSString *)#> Target:<#(id)#> Action:<#(SEL)#> Title:<#(NSString *)#>];
 }
 //录音代理方法
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag
@@ -602,7 +712,7 @@
     UIImageView *floatingb = (UIImageView *)[self.view viewWithTag:31];
     if (self.isBack2) {
         floatingb.frame =CGRectMake(floatingb.frame.origin.x+0.5, 90, 70, 25);
-        if (floatingb.frame.origin.x >240+self.distance) {
+        if (floatingb.frame.origin.x >230+self.distance) {
             self.isBack2 = NO;
         }
     }else{
@@ -620,7 +730,7 @@
         }
     }else{
         floatingc.frame =CGRectMake(floatingc.frame.origin.x+0.75, 180, 70, 25);
-        if (floatingc.frame.origin.x >240+self.distance) {
+        if (floatingc.frame.origin.x >230+self.distance) {
             self.isBack3 = YES;
         }
     }

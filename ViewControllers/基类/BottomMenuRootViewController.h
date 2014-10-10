@@ -29,8 +29,10 @@
 @property(nonatomic,copy)NSString *masterID;
 
 @property(nonatomic,copy)NSString * currentName;
-//@property(nonatomic,copy)NSString * pet_aid;
-
+//动作对象的aid和name
+@property(nonatomic,copy)NSString * pet_aid;
+@property(nonatomic,copy)NSString * pet_name;
+@property(nonatomic,copy)NSString * pet_tx;
 
 -(void)isRegister;
 -(void)hideAll;

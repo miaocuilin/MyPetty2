@@ -140,11 +140,11 @@
 #pragma mark - 发送
 -(void)submitClick
 {
-    if (![self validateEmail:tf.text]) {
-        StartLoading;
-        [ControllerManager loadingFailed:@"要填写正确的邮箱哦"];
-        return;
-    }
+//    if (![self validateEmail:tf.text]) {
+//        StartLoading;
+//        [ControllerManager loadingFailed:@"要填写正确的邮箱哦"];
+//        return;
+//    }
 
     [ControllerManager startLoading:@"发送中..."];
     
@@ -230,7 +230,7 @@
 //判断完成按钮的颜色
 - (void)completeButton
 {
-    if (_textView.text.length == 0 || tf.text.length == 0 || [_textView.text isEqualToString:DefaultText]) {
+    if (_textView.text.length == 0 || [_textView.text isEqualToString:DefaultText]) {
         submit.backgroundColor = [UIColor grayColor];
     }else{
         submit.backgroundColor = BGCOLOR;

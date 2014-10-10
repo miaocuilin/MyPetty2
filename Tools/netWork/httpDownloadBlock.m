@@ -10,6 +10,7 @@
 #import "MyMD5.h"
 #import "NSFileManager+Mothod.h"
 #import "MMProgressHUD.h"
+
 @implementation httpDownloadBlock
 
 
@@ -93,6 +94,12 @@
                     [ControllerManager HUDText:@"余额不足(⊙o⊙)哦~~" showView:[[UIApplication sharedApplication]keyWindow] yOffset:-50];
                     return;
                 }
+                if ([[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"音频文件不存在"]) {
+//                    StartLoading;
+                    
+                    self.httpRequestBlock(NO,self);
+                    return;
+                }
                 UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[self.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
                 NSLog(@"%@", [self.dataDict objectForKey:@"errorMessage"]);
                 self.httpRequestBlock(NO,self);
@@ -101,6 +108,11 @@
             if ([[self.dataDict objectForKey:@"state"] intValue] == 2) {
                 //SID过期 login
                 [self login];
+                return;
+            }
+            if ([[self.dataDict objectForKey:@"state"] intValue] == 3) {
+                //未注册
+                self.httpRequestBlock(NO, self);
                 return;
             }
 //            NSLog(@"self.dataDict = %@",self.dataDict);

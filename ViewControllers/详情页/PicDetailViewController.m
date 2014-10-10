@@ -49,6 +49,8 @@
 }
 - (void)viewDidLoad
 {
+    
+    
     [super viewDidLoad];
 //    NSMutableArray * tempArray = [NSMutableArray arrayWithCapacity:0];
 //    NSLog(@"%@--%d", tempArray, tempArray.count);
@@ -149,6 +151,9 @@
 //            NSLog(@"%@", [dict objectForKey:@"shares"]);
             self.gifts = [dict objectForKey:@"gifts"];
             self.cmt = [dict objectForKey:@"cmt"];
+            if ([self.cmt isEqualToString:@" "]) {
+                self.cmt = @"";
+            }
             self.num = [dict objectForKey:@"likes"];
             self.imageURL = [dict objectForKey:@"url"];
             self.usr_id = [dict objectForKey:@"usr_id"];
@@ -251,6 +256,10 @@
 //            [model setValuesForKeysWithDictionary:load.dataDict];
 //            [self.petInfoArray addObject:model];
             NSDictionary * dic = [load.dataDict objectForKey:@"data"];
+//            NSLog(@"%@", [dic objectForKey:@"aid"]);
+            self.pet_aid = [dic objectForKey:@"aid"];
+            self.pet_name = [dic objectForKey:@"name"];
+            self.pet_tx = [dic objectForKey:@"tx"];
             //父类的宠物信息字典
 //            masterID = [dic objectForKey:@"master_id"];
             //
@@ -259,6 +268,7 @@
                 if ([array[i] isEqualToString:[dic objectForKey:@"aid"]]) {
                     self.label1.text = @"摇一摇";
                     [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
+                    break;
                 }else if(i == array.count-1){
                     self.label1.text = @"捣捣乱";
                     [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
@@ -272,7 +282,7 @@
                 [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
             }
             
-            super.shakeInfoDict = dic;
+//            super.shakeInfoDict = dic;
 //            self.pet_aid = [dic objectForKey:@"aid"];
 //            [super viewDidLoad];
             

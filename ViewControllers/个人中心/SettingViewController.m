@@ -32,9 +32,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.arr1 = @[@"资料修改", @"收货地址", @"设置默认宠物", @"绑定新浪微博"];
+    self.arr1 = @[@"收货地址", @"设置默认宠物", @"绑定新浪微博"];
     self.arr2 = @[@"新浪微博", @"微信朋友圈"];
-    self.arr3 = @[@"清除缓存", @"检查更新", @"常见问题", @"意见反馈", @"赏个好评", @"关于我们"];
+    self.arr3 = @[@"清除缓存", @"常见问题", @"意见反馈", @"赏个好评", @"关于我们"];
     
     [self createBg];
     [self createTableView];
@@ -89,6 +89,7 @@
     tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv.dataSource = self;
     tv.delegate = self;
+    tv.separatorStyle = 0;
     tv.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tv];
     
@@ -141,11 +142,11 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0) {
-        return 4;
+        return self.arr1.count;
     }else if(section == 1){
         return 2;
     }else{
-        return 6;
+        return self.arr3.count;
     }
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -159,6 +160,9 @@
     cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
+        UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 43, self.view.frame.size.width, 1)];
+        view.backgroundColor = LineGray;
+        [cell addSubview:view];
     }
     
     if (indexPath.section == 0) {
@@ -255,17 +259,16 @@
             return;
         }
         if (indexPath.row == 0) {
-            RegisterViewController * vc = [[RegisterViewController alloc] init];
-            vc.isModify = YES;
-            [self presentViewController:vc animated:YES completion:nil];
-            [vc release];
-        }else if (indexPath.row == 1) {
+//            RegisterViewController * vc = [[RegisterViewController alloc] init];
+//            vc.isModify = YES;
+//            [self presentViewController:vc animated:YES completion:nil];
+//            [vc release];
             NSLog(@"收货地址");
             AddressViewController *address = [[AddressViewController alloc]init];
             [self presentViewController:address animated:YES completion:^{
                 [address release];
             }];
-        }else if(indexPath.row == 2){
+        }else if (indexPath.row == 1) {
             NSLog(@"设置默认宠物");
             SetDefaultPetViewController * vc = [[SetDefaultPetViewController alloc] init];
             [self presentViewController:vc animated:YES completion:nil];
@@ -277,22 +280,23 @@
         if (indexPath.row == 0) {
             [self clearData];
         }else if(indexPath.row == 1){
-            [USER setObject:@"" forKey:@"isSuccess"];
-            [USER setObject:@"" forKey:@"SID"];
-            [ControllerManager setIsSuccess:0];
-            [ControllerManager setSID:@""];
-            StartLoading;
-            [MMProgressHUD dismissWithSuccess:@"重置成功" title:nil afterDelay:0.5f];
-        }if(indexPath.row == 2){
             FAQViewController * vc = [[FAQViewController alloc] init];
             [self presentViewController:vc animated:YES completion:nil];
             [vc release];
-        }else if (indexPath.row == 3) {
+//            [USER setObject:@"" forKey:@"isSuccess"];
+//            [USER setObject:@"" forKey:@"SID"];
+//            [ControllerManager setIsSuccess:0];
+//            [ControllerManager setSID:@""];
+//            StartLoading;
+//            [MMProgressHUD dismissWithSuccess:@"重置成功" title:nil afterDelay:0.5f];
+        }if(indexPath.row == 2){
             FeedbackViewController *feedBackVC = [[FeedbackViewController alloc] init];
             [self presentViewController:feedBackVC animated:YES completion:^{
                 [feedBackVC release];
             }];
-        }else if (indexPath.row == 5){
+        }else if (indexPath.row == 3) {
+            
+        }else if (indexPath.row == 4){
             AboutViewController * vc = [[AboutViewController alloc] init];
             [self presentViewController:vc animated:YES completion:nil];
             [vc release];

@@ -215,16 +215,16 @@
                         
                         if (Width/Height>65/40.0) {
                             //偏宽，保证高度
-                            float rate = Width/Height-65/40.0;
-                            image2 = [self imageFromImage:image1 inRect:CGRectMake(Width*rate/2, 0, Width*40.0/65, Height)];
+                            float rate = 65/40.0;
+                            image2 = [self imageFromImage:image1 inRect:CGRectMake((Width-Height*rate)/2, 0, Width*rate, Height)];
 
 //                            Height = 40.0;
 //                            Width = 40.0/Height*Width;
                         }else{
                             //偏高，保证宽度
-                            float rate = Height/Width-40.0/65;
+                            float rate = 40.0/65;
                             
-                            image2 = [self imageFromImage:image1 inRect:CGRectMake(0, Height*rate/2, Width, Height*40.0/65)];
+                            image2 = [self imageFromImage:image1 inRect:CGRectMake(0, (Height-Width*rate)/2, Width, Width*rate)];
 //                            Width = 65.0;
 //                            Height = 65.0/Width*Height;
                         }
@@ -236,7 +236,7 @@
                         [load.data writeToFile:txFilePath atomically:YES];
                         //
                         NSString * txFilePath2 = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_card.png", [self.imagesArray[i] objectForKey:@"url"]]];
-                        NSData * data = UIImagePNGRepresentation(image2);
+                        NSData * data = UIImageJPEGRepresentation(image2, 0.1);
                         [data writeToFile:txFilePath2 atomically:YES];
                     }else{
                         NSLog(@"头像下载失败");

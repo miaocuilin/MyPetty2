@@ -197,4 +197,25 @@
     UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
     return newImage;
 }
+
++(UIImage *)returnImageWithImage:(UIImage *)oldImage Width:(float)widthOfNeed Height:(float)heightOfNeed
+{
+    UIImage * newImage = nil;
+    
+    float rateA = widthOfNeed/heightOfNeed;
+    float rateB = heightOfNeed/widthOfNeed;
+    
+    float width = oldImage.size.width;
+    float height = oldImage.size.height;
+    
+    if (width/height>rateA) {
+        //偏宽，保证高度
+        newImage = [MyControl imageFromImage:oldImage inRect:CGRectMake((width-height*rateA)/2, 0, height*rateA, height)];
+    }else{
+        //偏高，保证宽度
+        newImage = [MyControl imageFromImage:oldImage inRect:CGRectMake(0, (height-width*rateB)/2, width, width*rateB)];
+    }
+    
+    return newImage;
+}
 @end

@@ -431,7 +431,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         ShowAlertView;
         return;
     }
-    
+    /********截图***********/
+    UIImage * image = [MyControl imageWithView:[UIApplication sharedApplication].keyWindow];
+    //存到本地
+    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"screenshot_pet.png"]];
+    //将下载的图片存放到本地
+    NSData * data = UIImageJPEGRepresentation(image, 0.5);
+    BOOL isWriten = [data writeToFile:filePath atomically:YES];
+    NSLog(@"--isWriten:%d", isWriten);
+    /**********************/
     if (!isMoreCreated) {
         //create more
         [self createMore];
@@ -546,12 +554,55 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)shareClick:(UIButton *)button
 {
+    NSString * imagePath = [DOCDIR stringByAppendingPathComponent:@"screenshot_pet.png"];
+    UIImage * screenshotImage = [UIImage imageWithContentsOfFile:imagePath];
     if (button.tag == 200) {
         NSLog(@"微信");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
     }else if(button.tag == 201){
         NSLog(@"朋友圈");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
     }else{
         NSLog(@"微博");
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:@"#宠物星球App#" image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                NSLog(@"失败原因：%@", response);
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
     }
 }
 -(void)addBtnClick:(UIButton *)button
@@ -1106,6 +1157,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     tv4 = [[UITableView alloc] initWithFrame:CGRectMake(320*3, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv4.delegate = self;
     tv4.dataSource = self;
+    tv4.separatorStyle = 0;
     [sv addSubview:tv4];
     
     UIView * tvHeaderView4 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
@@ -1288,7 +1340,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             cell = [[[MyPhotoCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID2] autorelease];
         }
         cell.selectionStyle = NO;
-
+        cell.unRegister = ^(){
+            ShowAlertView;
+            return;
+        };
         //照片下载完后加载
         if (isPhotoDownload) {
             PhotoModel * model = self.photosDataArray[indexPath.row];
@@ -1301,13 +1356,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             if (!docDir) {
                 NSLog(@"Documents 目录未找到");
             }else{
-                NSString * filePath2 = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_small.png", model.url]];
+                NSString * filePath2 = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_middle.png", model.url]];
                 UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:filePath2]];
                 if (image) {
                     cell.bigImageView.image = image;
-//                    cell.bigImageView.frame = CGRectMake(0, 0,  image.size.width, image.size.height);
-//                    NSLog(@"%f--%f", cell.bigImageView.frame.size.width, cell.bigImageView.frame.size.height);
-//                    cell.bigImageView.center = CGPointMake(320/2, 100);
                 }else{
                     [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                         if (isFinish) {
@@ -1317,40 +1369,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                                 NSLog(@"Documents 目录未找到");
                             }else{
                                 NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-                                NSString * filePath2 = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_small.png", model.url]];
+                                NSString * filePath2 = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_middle.png", model.url]];
                                 //将下载的图片存放到本地
                                 [load.data writeToFile:filePath atomically:YES];
                                 
-                                float width = load.dataImage.size.width;
-                                float height = load.dataImage.size.height;
-//                                if (width>320) {
-//                                    float w = 320/width;
-//                                    width *= w;
-//                                    height *= w;
-//                                }
-//                                NSLog(@"%f--%f", width, height);
-                                if (width<320) {
-                                    height = (320.0/width)*height;
-                                    width = 320;
-                                }
-//                                NSLog(@"%f--%f", width, height);
-                                if (height<200) {
-                                    width = (200.0/height)*width;
-                                    height = 200;
-                                }
-                                UIImage * image = nil;
-                                NSLog(@"%f--%f", width, height);
-                                //改变照片大小
-                                image = [load.dataImage imageByScalingToSize:CGSizeMake(width, height)];
-//                                NSLog(@"%f--%f", image.size.width, image.size.height);
-//                                if (image.size.height>200) {
-                                image = [MyControl imageFromImage:image inRect:CGRectMake(width/2-160, height/2-100, 320, 200)];
-//                                }
-//                                NSLog(@"%f--%f", image.size.width, image.size.height);
+                                UIImage * image2 = [MyControl returnImageWithImage:load.dataImage Width:self.view.frame.size.width Height:200.0f];
                                 
-                                cell.bigImageView.image = image;
+                                cell.bigImageView.image = image2;
                                 
-                                NSData * smallImageData = UIImagePNGRepresentation(image);
+                                NSData * smallImageData = UIImageJPEGRepresentation(image2, 0.1);
                                 [smallImageData writeToFile:filePath2 atomically:YES];
 //                                cell.bigImageView.frame = CGRectMake(0, 0, width, height);
 //                                cell.bigImageView.center = CGPointMake(320/2, 100);
@@ -1390,18 +1417,21 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         for(int i=0;i<self.goodsArray.count;i++){
             CGRect rect = CGRectMake(20+i%3*100, 15+i/3*100, 85, 90);
             NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:self.goodsArray[i]];
-            UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"giftBg.png"];
+            UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"product_bg.png"];
+            if ([[dict objectForKey:@"no"] intValue]>=2000) {
+                imageView.image = [UIImage imageNamed:@"trick_bg.png"];
+            }
             [cell addSubview:imageView];
             
-            UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
-            [imageView addSubview:triangle];
+//            UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
+//            [imageView addSubview:triangle];
             
-            UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-3, 1, 20, 9) Font:8 Text:@"人气"];
+            UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-3, 3, 20, 9) Font:8 Text:@"人气"];
             rq.font = [UIFont boldSystemFontOfSize:8];
             rq.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
-            [triangle addSubview:rq];
+            [imageView addSubview:rq];
             
-            UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 8, 25, 10) Font:9 Text:@"+150"];
+            UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 10, 25, 10) Font:9 Text:@"+150"];
             if ([[dict objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
                 rqNum.text = [NSString stringWithFormat:@"+%@", [dict objectForKey:@"add_rq"]];
             }else{
@@ -1410,7 +1440,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             rqNum.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
             rqNum.textAlignment = NSTextAlignmentCenter;
 //            rqNum.backgroundColor = [UIColor redColor];
-            [triangle addSubview:rqNum];
+            [imageView addSubview:rqNum];
             
             UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 5, 85, 15) Font:11 Text:[dict objectForKey:@"name"]];
             giftName.textColor = [UIColor grayColor];
@@ -1486,7 +1516,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else if (tableView == tv3) {
         return 72.0f;
     }else{
-        return 15+10*100;
+        int i = self.goodsArray.count;
+        if (i%3) {
+            //50是为了避免被4个动作挡住
+            return 15+(i/3+1)*100+50;
+        }else{
+            return 15+i/3*100+50;
+        }
     }
  
 }

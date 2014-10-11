@@ -108,7 +108,7 @@ static LevelRank *levelAndRank =nil;
 }
 +(id)getSID
 {
-    return SID;
+    return [SID retain];
 }
 
 +(void)startLoading:(NSString *)string

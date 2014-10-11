@@ -46,6 +46,9 @@
 
 #pragma mark - 截图图片一部分
 + (UIImage *)imageFromImage:(UIImage *)image inRect:(CGRect)rect;
+
+#pragma mark - 传入一个旧image和所需要的宽高，返回一个符合宽高比的image
++(UIImage *)returnImageWithImage:(UIImage *)oldImage Width:(float)width Height:(float)height;
 @end
 
 

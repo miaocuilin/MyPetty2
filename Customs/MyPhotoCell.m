@@ -81,7 +81,8 @@
     }
     
     
-    if (![model.likers isKindOfClass:[NSNull class]]) {
+    if (!([model.likers isKindOfClass:[NSNull class]] || model.likers.length == 0 || [[USER objectForKey:@"isSuccess"] intValue] ==0)) {
+        NSLog(@"%@--%@", model.likers, [USER objectForKey:@"usr_id"]);
         self.likersArray = [model.likers componentsSeparatedByString:@","];
         for(NSString * str in self.likersArray){
             if ([str isEqualToString:[USER objectForKey:@"usr_id"]]) {
@@ -103,6 +104,10 @@
 }
 -(void)zanBtnClick:(UIButton *)btn
 {
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        self.unRegister();
+        return;
+    }
     btn.selected = !btn.selected;
     NSString * code = [NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id];
     NSString * sig = [MyMD5 md5:code];

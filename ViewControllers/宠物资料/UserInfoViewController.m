@@ -242,6 +242,15 @@
 -(void)moreBtnClick
 {
     NSLog(@"more");
+    /********截图***********/
+    UIImage * image = [MyControl imageWithView:[UIApplication sharedApplication].keyWindow];
+    //存到本地
+    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"screenshot_user.png"]];
+    //将下载的图片存放到本地
+    NSData * data = UIImageJPEGRepresentation(image, 0.5);
+    BOOL isWriten = [data writeToFile:filePath atomically:YES];
+    NSLog(@"--isWriten:%d", isWriten);
+    /**********************/
     if (!isMoreCreated) {
         //create more
         [self createMore];
@@ -334,16 +343,64 @@
 }
 -(void)shareClick:(UIButton *)button
 {
+    NSString * imagePath = [DOCDIR stringByAppendingPathComponent:@"screenshot_user.png"];
+    UIImage * screenshotImage = [UIImage imageWithContentsOfFile:imagePath];
     if (button.tag == 200) {
         NSLog(@"微信");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                [self cancelBtnClick];
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
     }else if(button.tag == 201){
         NSLog(@"朋友圈");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                [self cancelBtnClick];
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
     }else{
         NSLog(@"微博");
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:@"#宠物星球App#" image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                [self cancelBtnClick];
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                NSLog(@"失败原因：%@", response);
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
     }
 }
 -(void)sendMessage
 {
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        [self cancelBtnClick];
+        return;
+    }
     NSLog(@"发私信");
     TalkViewController * vc = [[TalkViewController alloc] init];
     [self cancelBtnClick];
@@ -867,18 +924,22 @@
         for(int i=0;i<self.goodsArray.count;i++){
             CGRect rect = CGRectMake(20+i%3*100, 15+i/3*100, 85, 90);
             NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:self.goodsArray[i]];
-            UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"giftBg.png"];
+            
+            UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"product_bg.png"];
+            if ([[dict objectForKey:@"no"] intValue]>=2000) {
+                imageView.image = [UIImage imageNamed:@"trick_bg.png"];
+            }
             [cell addSubview:imageView];
             
-            UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
-            [imageView addSubview:triangle];
+//            UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
+//            [imageView addSubview:triangle];
             
-            UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-3, 1, 20, 9) Font:8 Text:@"人气"];
+            UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-3, 3, 20, 9) Font:8 Text:@"人气"];
             rq.font = [UIFont boldSystemFontOfSize:8];
             rq.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
-            [triangle addSubview:rq];
+            [imageView addSubview:rq];
             
-            UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 8, 25, 10) Font:9 Text:nil];
+            UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 10, 25, 10) Font:9 Text:nil];
             if ([[dict objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
                 rqNum.text = [NSString stringWithFormat:@"+%@", [dict objectForKey:@"add_rq"]];
             }else{
@@ -887,7 +948,7 @@
             rqNum.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
             rqNum.textAlignment = NSTextAlignmentCenter;
             //            rqNum.backgroundColor = [UIColor redColor];
-            [triangle addSubview:rqNum];
+            [imageView addSubview:rqNum];
             
             UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 5, 85, 15) Font:11 Text:[dict objectForKey:@"name"]];
             giftName.textColor = [UIColor grayColor];

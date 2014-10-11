@@ -60,6 +60,7 @@
     }
 }
 
+#pragma mark -
 - (void)buyGiftItemsAPI:(NSInteger)tag
 {
     GiftShopModel *model = self.giftDataArray[tag];
@@ -111,7 +112,7 @@
 //    NSLog(@"data:%@",DictData);
     [self.totalGoodsDataArray addObjectsFromArray:self.goodGiftDataArray];
     [self.totalGoodsDataArray addObjectsFromArray:self.badGiftDataArray];
-    
+//    self.totalGoodsDataArray = [NSMutableArray arrayWithArray:[ControllerManager returnAllGiftsArray]];
     self.showArray = self.totalGoodsDataArray;
     
     NSMutableArray * temp1 = [NSMutableArray arrayWithArray:self.totalGoodsDataArray];
@@ -447,24 +448,29 @@
         sv.contentSize = CGSizeMake(320, 64+35+15+(index/3)*100);
     }
     NSLog(@"index:%d",index);
+    
+    /***************************/
     for(int i=0;i<index;i++){
         CGRect rect = CGRectMake(20+i%3*100, 64+35+15+i/3*100, 85, 90);
-        UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"giftBg.png"];
+        UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"product_bg.png"];
+        if ([[self.showArray[i] no] intValue]>=2000) {
+            imageView.image = [UIImage imageNamed:@"trick_bg.png"];
+        }
         [sv addSubview:imageView];
         
-        UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
-        [imageView addSubview:triangle];
+//        UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
+//        [imageView addSubview:triangle];
         
-        UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-3, 1, 20, 9) Font:8 Text:@"人气"];
+        UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-3, 2, 20, 9) Font:7 Text:@"人气"];
         rq.font = [UIFont boldSystemFontOfSize:8];
         rq.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
-        [triangle addSubview:rq];
+        [imageView addSubview:rq];
         
-        UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 8, 25, 10) Font:9 Text:@"+150"];
+        UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(0, 10, 25, 8) Font:9 Text:@"+150"];
         rqNum.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
         rqNum.textAlignment = NSTextAlignmentCenter;
         //            rqNum.backgroundColor = [UIColor redColor];
-        [triangle addSubview:rqNum];
+        [imageView addSubview:rqNum];
         
         UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 5, 85, 15) Font:11 Text:@"汪汪项圈"];
         giftName.textColor = [UIColor grayColor];

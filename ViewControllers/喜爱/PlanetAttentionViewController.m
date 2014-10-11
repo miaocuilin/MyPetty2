@@ -86,7 +86,7 @@
 
 -(void)createTableView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64+35, 320, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;

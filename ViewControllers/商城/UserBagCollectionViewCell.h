@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface UserBagCollectionViewCell : UICollectionViewCell
-@property (nonatomic,strong)UIImageView *presentImageView;
-@property (nonatomic,strong)UILabel *titleLabel;
-@property (nonatomic,strong)UILabel *presentNumberLabel;
-@property (nonatomic,strong)UILabel *popNumberLabel;
+
+@property (nonatomic,strong)UIImageView * bgImageView;
+@property (nonatomic,strong)UIImageView * presentImageView;
+@property (nonatomic,strong)UILabel * titleLabel;
+@property (nonatomic,strong)UILabel * presentNumberLabel;
+@property (nonatomic,strong)UILabel * popNumberLabel;
 
 -(void)configUIWithItemId:(NSString *)itemId Num:(NSString *)num;
 @end

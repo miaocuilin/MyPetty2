@@ -358,6 +358,7 @@
 		601F819719E4E14E00FA94BB /* touch.png in Resources */ = {isa = PBXBuildFile; fileRef = 601F819619E4E14E00FA94BB /* touch.png */; };
 		6020BD6819987DC3002C74FA /* PetInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6020BD6719987DC3002C74FA /* PetInfoViewController.m */; };
 		6020BD711998A442002C74FA /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6020BD701998A442002C74FA /* UserInfoViewController.m */; };
+		6021E33E19E92D660086EAD6 /* trick_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6021E33D19E92D660086EAD6 /* trick_bg.png */; };
 		6024A61B19A18DE0005ED3D3 /* BottomMenuRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6024A61A19A18DE0005ED3D3 /* BottomMenuRootViewController.m */; };
 		6024A61E19A1D79E005ED3D3 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6024A61D19A1D79E005ED3D3 /* SettingViewController.m */; };
 		6024A62419A227FD005ED3D3 /* havefun.png in Resources */ = {isa = PBXBuildFile; fileRef = 6024A61F19A227FD005ED3D3 /* havefun.png */; };
@@ -1082,6 +1083,7 @@
 		6020BD6719987DC3002C74FA /* PetInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetInfoViewController.m; sourceTree = "<group>"; };
 		6020BD6F1998A442002C74FA /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
 		6020BD701998A442002C74FA /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoViewController.m; sourceTree = "<group>"; };
+		6021E33D19E92D660086EAD6 /* trick_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trick_bg.png; sourceTree = "<group>"; };
 		6024A61919A18DE0005ED3D3 /* BottomMenuRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BottomMenuRootViewController.h; sourceTree = "<group>"; };
 		6024A61A19A18DE0005ED3D3 /* BottomMenuRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BottomMenuRootViewController.m; sourceTree = "<group>"; };
 		6024A61C19A1D79E005ED3D3 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
@@ -2289,6 +2291,7 @@
 		4927D98E19AB531900EBDC88 /* 礼物商城 */ = {
 			isa = PBXGroup;
 			children = (
+				6021E33D19E92D660086EAD6 /* trick_bg.png */,
 				49500A2E19ADA51D00D175D8 /* product_bg1.png */,
 				49500A2F19ADA51D00D175D8 /* product_bg2.png */,
 				49500A3019ADA51D00D175D8 /* right_corner.png */,
@@ -2861,6 +2864,7 @@
 				601BB35819AB2D4D0076E051 /* sendOne.png in Resources */,
 				49A562B619CC356A00B6080A /* rock2.png in Resources */,
 				6038618419A71A5600B1312A /* PicDetailViewController.xib in Resources */,
+				6021E33E19E92D660086EAD6 /* trick_bg.png in Resources */,
 				60186DDA19B5730C00207ED6 /* defaultPetHead.png in Resources */,
 				49500A4719ADD5C800D175D8 /* rock.png in Resources */,
 				6024A62719A227FD005ED3D3 /* shake.png in Resources */,

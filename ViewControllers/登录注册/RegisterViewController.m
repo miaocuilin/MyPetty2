@@ -363,7 +363,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     
     girl = [MyControl createButtonWithFrame:CGRectMake(110, miBgView.frame.origin.y+205, 30, 30) ImageName:@"3-5.png" Target:self Action:@selector(girlButtonClick) Title:nil];
-    girl.selected = YES;
+//    girl.selected = YES;
     [girl setBackgroundImage:[UIImage imageNamed:@"3-4.png"] forState:UIControlStateSelected];
     [sv addSubview:girl];
     
@@ -662,14 +662,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //判断完成按钮的颜色
 - (void)completeButton
 {
-    if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"]) {
+    if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"] || (boy.selected == NO && girl.selected == NO)) {
         finishButton.backgroundColor = [UIColor grayColor];
         return;
     }else{
         [self performSelector:@selector(gotoPage2) withObject:nil afterDelay:0.3];
     }
     
-    if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"] || tfUserName.text.length == 0 || tfUserName.text.length >10 || tfCity.text.length == 0) {
+    if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"] || tfUserName.text.length == 0 || tfUserName.text.length >10 || tfCity.text.length == 0 || (boy.selected == NO && girl.selected == NO)) {
         finishButton.backgroundColor = [UIColor grayColor];
     }else{
         finishButton.backgroundColor = BGCOLOR;
@@ -1017,15 +1017,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     girl.selected = YES;
     boy.selected = NO;
+    [self completeButton];
 }
 -(void)boyButtonClick
 {
     girl.selected = NO;
     boy.selected = YES;
+    [self completeButton];
 }
 -(void)finishButtonClick:(UIButton *)sender
 {
-    if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"] || tfUserName.text.length == 0 || tfCity.text.length == 0) {
+    if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"] || tfUserName.text.length == 0 || tfCity.text.length == 0 || (boy.selected == NO && girl.selected == NO)) {
         StartLoading;
         [MMProgressHUD dismissWithError:@"您有信息没有填写!" afterDelay:1];
 //        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"您有信息没有填写!" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
@@ -1033,7 +1035,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        [alert release];
         return;
     }
-    if (tfUserName.text.length >8) {
+    if (tfUserName.text.length >8 || tf.text.length>8) {
         StartLoading;
         [MMProgressHUD dismissWithError:@"昵称不可以超过8个字哦~" afterDelay:1];
 //        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"昵称不可以超过8个汉字哦~"];
@@ -1055,7 +1057,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //宠物性别
     if (boy.selected) {
         gender = 1;
-    }else{
+    }else if(girl.selected){
         gender = 2;
     }
     
@@ -1249,7 +1251,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //                    [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
 //                    [self dismissViewControllerAnimated:NO completion:nil];
                 }
-                [self login];
+                [self getUserData];
 //                //注册成功，进入之前的选择页
 //                NSString * pageNum = [USER objectForKey:@"pageNum"];
 //                if([pageNum isEqualToString:@"1"]){

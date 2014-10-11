@@ -22,6 +22,7 @@
     
     BOOL isMi;
 }
+@property(nonatomic,copy)void (^unRegister)(void);
 
 @property(nonatomic,retain)UIImageView * bigImageView;
 @property(nonatomic,retain)NSArray * likersArray;

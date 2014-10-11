@@ -148,7 +148,6 @@
 }
 -(void)createUI
 {
-
     /***************************/
     sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 40, 300, 385-60)];
     sv.delegate = self;
@@ -174,7 +173,21 @@
 //            }
 //        }
         UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(h+i%3*(80+h)+300*(i/9), h+(i/3)%3*(90+v), 80, 90)];
-        imageView.image = [UIImage imageNamed:@"product_bg.png"];
+        if (i<self.bagItemIdArray.count) {
+            //背包
+            if ([self.bagItemIdArray[i] intValue]>=2000) {
+                imageView.image = [UIImage imageNamed:@"trick_bg.png"];
+            }else{
+                imageView.image = [UIImage imageNamed:@"product_bg.png"];
+            }
+        }else{
+            //商店
+            if ([[self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"no"] intValue]>2000) {
+                imageView.image = [UIImage imageNamed:@"trick_bg.png"];
+            }else{
+                imageView.image = [UIImage imageNamed:@"product_bg.png"];
+            }
+        }
         [sv addSubview:imageView];
         [imageView release];
         

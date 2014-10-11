@@ -86,31 +86,14 @@
                         //将下载的图片存放到本地
                         [load.data writeToFile:filePath atomically:YES];
                         
-                        float width = load.dataImage.size.width;
-                        float height = load.dataImage.size.height;
-
-                        if (width<320) {
-                            height = (320.0/width)*height;
-                            width = 320;
-                        }
-                        //                                NSLog(@"%f--%f", width, height);
-                        if (height<200) {
-                            width = (200.0/height)*width;
-                            height = 200;
-                        }
-                        UIImage * image = nil;
-                        //                                NSLog(@"%f--%f", width, height);
-                        //改变照片大小
-                        image = [load.dataImage imageByScalingToSize:CGSizeMake(width, height)];
-                        //                                NSLog(@"%f--%f", image.size.width, image.size.height);
-                        //                                if (image.size.height>200) {
-                        image = [MyControl imageFromImage:image inRect:CGRectMake(width/2-160, height/2-100, 320, 200)];
-                        //                                }
-                        //                                NSLog(@"%f--%f", image.size.width, image.size.height);
+                        //裁剪以获取要求比例的图片
+                        UIImage * image2 = [MyControl returnImageWithImage:load.dataImage Width:320.0f Height:160.0f];
                         
-                        [self.bigImageBtn setBackgroundImage:image forState:UIControlStateNormal];
+                        /**************************/
                         
-                        NSData * smallImageData = UIImagePNGRepresentation(image);
+                        [self.bigImageBtn setBackgroundImage:image2 forState:UIControlStateNormal];
+                        
+                        NSData * smallImageData = UIImageJPEGRepresentation(image2, 0.1);
                         [smallImageData writeToFile:filePath2 atomically:YES];
                     }
                 }else{

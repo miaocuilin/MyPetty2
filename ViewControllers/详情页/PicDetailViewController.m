@@ -206,6 +206,9 @@
         
         //以前这里i从1开始，起初好像是为了实时回复
         for(int i=0;i<arr1.count;i++){
+            if (i == 0 && [arr1[i] length] == 0) {
+                continue;
+            }
 //            NSLog(@"%@", arr1[i]);
             NSString * usrId = [[[[arr1[i] componentsSeparatedByString:@",name"] objectAtIndex:0] componentsSeparatedByString:@"_id:"] objectAtIndex:1];
             [self.usrIdArray addObject:usrId];
@@ -1148,6 +1151,8 @@
         [moreView addSubview:label];
     }
 }
+
+#pragma mark - 分享截图
 -(void)shareClick:(UIButton *)button
 {
 //    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];

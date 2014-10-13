@@ -53,12 +53,14 @@
     memberNum.textColor = [UIColor lightGrayColor];
     [headerBgView addSubview:memberNum];
     
-    UIView * whiteLine = [MyControl createViewWithFrame:CGRectMake(80, 69, 320-80, 1)];
-    whiteLine.backgroundColor = [UIColor whiteColor];
-    [headerBgView addSubview:whiteLine];
+//    UIView * whiteLine = [MyControl createViewWithFrame:CGRectMake(80, 69, 320-80, 1)];
+//    whiteLine.backgroundColor = [UIColor whiteColor];
+//    [headerBgView addSubview:whiteLine];
 }
 - (void)configUI:(PetInfoModel *)model
 {
+    headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+    
     if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
         NSString * docDir = DOCDIR;
         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
@@ -68,8 +70,8 @@
             headImageView.image = image;
         }else{
             //下载头像
-            NSLog(@"%@", [NSString stringWithFormat:@"%@%@", USERTXURL, model.tx]);
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            NSLog(@"%@", [NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     headImageView.image = load.dataImage;
                     NSString * docDir = DOCDIR;
@@ -88,7 +90,7 @@
         sex.image = [UIImage imageNamed:@"woman.png"];
     }
     name.text = model.name;
-    nameAndAgeLabel.text = [NSString stringWithFormat:@"%@ | %@岁", [ControllerManager returnCateNameWithType:model.type], model.age];
+    nameAndAgeLabel.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:model.type], [MyControl returnAgeStringWithCountOfMonth:model.age]];
     rq.text = [NSString stringWithFormat:@"总人气 %@", model.t_rq];
     memberNum.text = [NSString stringWithFormat:@"|    成员 %@", model.fans];
 

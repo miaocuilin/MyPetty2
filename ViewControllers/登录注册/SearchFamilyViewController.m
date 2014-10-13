@@ -164,6 +164,10 @@
     if (!cell) {
         cell = [[[SearchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
         cell.selectionStyle = 0;
+        
+        UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 64, cell.frame.size.width, 1)];
+        line.backgroundColor = [UIColor whiteColor];
+        [cell addSubview:line];
     }
     cell.backgroundColor = [UIColor clearColor];
     PetInfoModel *model = self.tempDataArray[indexPath.row];

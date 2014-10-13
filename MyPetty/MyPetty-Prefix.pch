@@ -45,6 +45,8 @@
     #define BGCOLOR4 [UIColor colorWithRed:117/255.0 green:186/255.0 blue:150/255.0 alpha:1]
     //浅灰
     #define LineGray [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1]
+    //修改资料背景绿
+    #define BGCOLOR5 [UIColor colorWithRed:147/255.0 green:204/255.0 blue:172/255.0 alpha:1]
 
     #define USER [ControllerManager shareUserDefault]
     #define NET [UIApplication sharedApplication].networkActivityIndicatorVisible
@@ -69,8 +71,11 @@
     //注册API
     #define REGISTERAPI @"http://54.199.161.210:8001/index.php?r=user/registerApi&age=&code=&gender=&type=&wechat=&weibo=&sig=%@&SID=%@"
 
+    //修改宠物信息API
+    #define MODIFYPETINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/modifyInfoApi&"
+
     //修改个人信息API
-    #define MODIFYINFOAPI @"http://54.199.161.210:8001/index.php?r=user/modifyInfoApi&"
+    #define MODIFYUSERINFOAPI @"http://54.199.161.210:8001/index.php?r=user/modifyInfoApi&"
 
     //获取以前的SID
     #define GETPRESID @"http://54.199.161.210:8001/index.php?r=user/getSIDApi&uid="

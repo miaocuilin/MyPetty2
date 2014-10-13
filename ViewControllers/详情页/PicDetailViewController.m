@@ -306,7 +306,7 @@
             //
             [self downloadHeadImage];
             
-            self.cate.text = [NSString stringWithFormat:@"%@ | %@岁", self.cateName, [dic objectForKey:@"age"]];
+            self.cate.text = [NSString stringWithFormat:@"%@ | %@", self.cateName, [MyControl returnAgeStringWithCountOfMonth:[dic objectForKey:@"age"]]];
             
             /********************/
             if (++prepareCreateUINum == 2) {

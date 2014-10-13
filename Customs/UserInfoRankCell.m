@@ -102,7 +102,7 @@
     self.sex.frame = rect2;
     
     //
-    self.cateNameAndAge.text = [NSString stringWithFormat:@"%@ | %@岁", [ControllerManager returnCateNameWithType:model.type], model.age];
+    self.cateNameAndAge.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:model.type], [MyControl returnAgeStringWithCountOfMonth:model.age]];
     
     //
     NSString * str = [NSString stringWithFormat:@"%@ — ", [ControllerManager returnPositionWithRank:model.u_rank]];

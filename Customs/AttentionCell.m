@@ -88,7 +88,7 @@
     
     nameLabel.text = model.name;
     
-    cateAndNameLabel.text = [NSString stringWithFormat:@"%@ | %@岁", [ControllerManager returnCateNameWithType:model.type], model.age];
+    cateAndNameLabel.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:model.type], [MyControl returnAgeStringWithCountOfMonth:model.age]];
 }
 
 -(void)headImageBtnClick

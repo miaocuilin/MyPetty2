@@ -15,6 +15,7 @@
 #import "TalkViewController.h"
 #import "UserActivityListModel.h"
 #import "PicDetailViewController.h"
+#import "ModifyPetOrUserInfoViewController.h"
 //@class PetInfoViewController;
 
 @interface UserInfoViewController ()
@@ -316,9 +317,21 @@
     [moreView addSubview:ownerView];
     
     UIButton * privateMessage = [MyControl createButtonWithFrame:CGRectMake(30, 0, 526/2, 76/2) ImageName:@"" Target:self Action:@selector(sendMessage) Title:@"私信"];
-    [privateMessage setBackgroundImage:[[UIImage imageNamed:@"more_greenBg.png"]stretchableImageWithLeftCapWidth:100 topCapHeight:30] forState:UIControlStateNormal];
+    privateMessage.backgroundColor = BGCOLOR5;
+    privateMessage.showsTouchWhenHighlighted = YES;
+    privateMessage.layer.cornerRadius = 5;
+    privateMessage.layer.masksToBounds = YES;
     privateMessage.titleLabel.font = [UIFont systemFontOfSize:15];
     [ownerView addSubview:privateMessage];
+    
+    UIButton * modifyUserInfo = [MyControl createButtonWithFrame:privateMessage.frame ImageName:@"" Target:self Action:@selector(modifyUserInfo) Title:@"修改资料"];
+    modifyUserInfo.titleLabel.font = [UIFont systemFontOfSize:15];
+    modifyUserInfo.backgroundColor = [UIColor lightGrayColor];
+    modifyUserInfo.layer.cornerRadius = 5;
+    modifyUserInfo.layer.masksToBounds = YES;
+    modifyUserInfo.showsTouchWhenHighlighted = YES;
+    modifyUserInfo.hidden = YES;
+    [ownerView addSubview:modifyUserInfo];
     
     //grayLine2
     UIView * grayLine2 = [MyControl createViewWithFrame:CGRectMake(0, 180, 320, 5)];
@@ -334,13 +347,38 @@
     
     /*************************/
     if (isOwner) {
-        ownerView.hidden = YES;
-        grayLine1.hidden = YES;
-        moreView.frame = CGRectMake(0, self.view.frame.size.height, 320, 156);
-        grayLine2.frame = CGRectMake(0, 104, 320, 4);
-        cancelBtn.frame = CGRectMake(0, 110, 320, 46);
+        privateMessage.hidden = YES;
+        modifyUserInfo.hidden = NO;
+//        grayLine1.hidden = YES;
+//        moreView.frame = CGRectMake(0, self.view.frame.size.height, 320, 156);
+//        grayLine2.frame = CGRectMake(0, 104, 320, 4);
+//        cancelBtn.frame = CGRectMake(0, 110, 320, 46);
     }
 }
+-(void)modifyUserInfo
+{
+    NSLog(@"跳转到修改用户资料");
+    ModifyPetOrUserInfoViewController * vc = [[ModifyPetOrUserInfoViewController alloc] init];
+    vc.isModifyUser = YES;
+    vc.refreshUserInfo = ^(void){
+        for (UIView * view in self.view.subviews) {
+            [view removeFromSuperview];
+        }
+        
+        isCreated[0] = 0;
+        isCreated[1] = 0;
+        isCreated[2] = 0;
+        isCreated[3] = 0;
+        isMoreCreated = 0;
+        isOwner = 0;
+        [self viewDidLoad];
+    };
+    [self cancelBtnClick];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
+}
+
+
 -(void)shareClick:(UIButton *)button
 {
     NSString * imagePath = [DOCDIR stringByAppendingPathComponent:@"screenshot_user.png"];
@@ -844,7 +882,7 @@
     }else if(tableView == tv2){
         return self.userAttentionListArray.count;
     }else{
-        return self.userActivityListArray.count;
+        return 1;
     }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -897,22 +935,29 @@
         [cell configUI:self.userAttentionListArray[indexPath.row]];
         return cell;
     }else if (tableView == tv3) {
+        
         static NSString * cellID3 = @"ID3";
-        UserInfoActivityCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID3];
-        if(!cell){
-            cell = [[[NSBundle mainBundle] loadNibNamed:@"UserInfoActivityCell" owner:self options:nil] objectAtIndex:0];
+        UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID3];
+        if (!cell) {
+            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID3] autorelease];
         }
-        cell.selectionStyle = 0;
-        UserActivityListModel * model = self.userActivityListArray[indexPath.row];
-        [cell configUI:model];
-        cell.jumpToDetail = ^(NSString * img_id){
-            PicDetailViewController * vc = [[PicDetailViewController alloc] init];
-            vc.img_id = img_id;
-            [self presentViewController:vc animated:YES completion:nil];
-            [vc release];
-        };
-//        [cell modifyWithString:@"# 萌宠时装秀 #"];
+        
         return cell;
+//        UserInfoActivityCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID3];
+//        if(!cell){
+//            cell = [[[NSBundle mainBundle] loadNibNamed:@"UserInfoActivityCell" owner:self options:nil] objectAtIndex:0];
+//        }
+//        cell.selectionStyle = 0;
+//        UserActivityListModel * model = self.userActivityListArray[indexPath.row];
+//        [cell configUI:model];
+//        cell.jumpToDetail = ^(NSString * img_id){
+//            PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+//            vc.img_id = img_id;
+//            [self presentViewController:vc animated:YES completion:nil];
+//            [vc release];
+//        };
+////        [cell modifyWithString:@"# 萌宠时装秀 #"];
+//        return cell;
     }else{
         static NSString * cellID4 = @"ID4";
         UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID4];

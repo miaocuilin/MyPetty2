@@ -34,6 +34,9 @@
     MBProgressHUD *alertView;
 
     ClickImage * headerImageView;
+    UILabel * name;
+    UIImageView * sex;
+    UILabel * cateNameLabel;
 }
 @property (nonatomic,copy)NSString * lastImg_id;
 @property (nonatomic,copy)NSString * lastUsr_id;

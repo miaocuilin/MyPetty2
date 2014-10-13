@@ -350,7 +350,7 @@
     
     UILabel * nameAndAgeLabel = [MyControl createLabelWithFrame:CGRectMake(80, 30, 150, 15) Font:13 Text:@"索马利猫 | 3岁"];
     nameAndAgeLabel.textColor = [UIColor blackColor];
-    nameAndAgeLabel.text = [NSString stringWithFormat:@"%@ | %@岁", [ControllerManager returnCateNameWithType:model.type], model.age];
+    nameAndAgeLabel.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:model.type], [MyControl returnAgeStringWithCountOfMonth:model.age]];
     [headerBgView addSubview:nameAndAgeLabel];
     
     UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(80, 52, 70, 15) Font:12 Text:@"总人气 500"];
@@ -375,7 +375,7 @@
     [headerBgView addSubview:join];
     join.tag = 200+section;
 
-    UIView * whiteLine = [MyControl createViewWithFrame:CGRectMake(80, 69, 320-80, 1)];
+    UIView * whiteLine = [MyControl createViewWithFrame:CGRectMake(0, 69, 320, 1)];
     whiteLine.backgroundColor = [UIColor whiteColor];
     [headerBgView addSubview:whiteLine];
     return headerBgView;

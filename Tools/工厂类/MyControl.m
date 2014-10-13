@@ -218,4 +218,33 @@
     
     return newImage;
 }
+
++(NSString *)returnAgeStringWithCountOfMonth:(NSString *)countOfMonth
+{
+    NSString * ageString = nil;
+    int a = [countOfMonth intValue];
+    if (a<12) {
+        ageString = [NSString stringWithFormat:@"%d个月", a];
+    }else if(a%12 == 0){
+        ageString = [NSString stringWithFormat:@"%d岁", a/12];
+    }else{
+        ageString = [NSString stringWithFormat:@"%d岁%d个月", a/12, a%12];
+    }
+    return ageString;
+}
+
+//自定义加载文字的loading
++(void)startLoadingWithStatus:(NSString *)status
+{
+    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+    [MMProgressHUD showProgressWithStyle:0 title:nil status:status confirmationMessage:@"确认取消?" cancelBlock:^{LoadingFailed;}];
+}
++(void)loadingSuccessWithContent:(NSString *)content afterDelay:(float)delay
+{
+    [MMProgressHUD dismissWithSuccess:content title:nil afterDelay:delay];
+}
++(void)loadingFailedWithContent:(NSString *)content afterDelay:(float)delay
+{
+    [MMProgressHUD dismissWithError:content afterDelay:delay];
+}
 @end

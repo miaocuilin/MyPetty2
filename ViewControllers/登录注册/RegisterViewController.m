@@ -372,9 +372,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [sv addSubview:boy];
     
     /*******/
-    if ((self.isAdoption || self.isModify) && [self.petInfoModel.gender intValue] == 1) {
-        girl.selected = NO;
-        boy.selected = YES;
+    if (self.isAdoption || self.isModify) {
+        if ([self.petInfoModel.gender intValue] == 1) {
+            girl.selected = NO;
+            boy.selected = YES;
+        }else{
+            girl.selected = YES;
+            boy.selected = NO;
+        }
     }
     
     /*******/
@@ -434,8 +439,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             ageTextField.inputAccessoryView = keyboardBgView;
             [bgImageView addSubview:ageTextField];
             
-            if (self.isAdoption || self.isModify) {
-                ageTextField.text = self.petInfoModel.age;
+            if (self.isAdoption) {
+                ageTextField.text = [MyControl returnAgeStringWithCountOfMonth:self.petInfoModel.age];
             }
             UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(185, 5, 15, 20) ImageName:@"扩展更多图标.png"];
             [bgImageView addSubview:arrow];
@@ -628,6 +633,23 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [confirmButton2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [pickerBgView2 addSubview:confirmButton2];
     
+    
+    /*****宠物年龄选择器*****/
+    pickerBgView3 = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height-200, self.view.frame.size.width, 200)];
+    pickerBgView3.backgroundColor = [UIColor colorWithWhite:1 alpha:0.8];
+    [self.view addSubview:pickerBgView3];
+    pickerBgView3.hidden = YES;
+    
+    //pickerView3
+    picker3 = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, 320, 100)];
+    picker3.delegate = self;
+    picker3.dataSource = self;
+    [picker3 selectRow: 0 inComponent: 0 animated: YES];
+    [pickerBgView3 addSubview:picker3];
+    
+    UIButton * confirmButton3 = [MyControl createButtonWithFrame:CGRectMake(320-80, 150, 50, 30) ImageName:@"" Target:self Action:@selector(confirmButtonClick3) Title:@"确认"];
+    [confirmButton3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [pickerBgView3 addSubview:confirmButton3];
     /*************************************/
 //    if (self.isModify) {
 //        tf.text = [self.petInfoModel name];
@@ -697,6 +719,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         pickerBgView2.hidden = NO;
         [tfCity resignFirstResponder];
         return NO;
+    }else if(textField == ageTextField){
+        NSLog(@"弹出年龄选择picker");
+        [tf resignFirstResponder];
+        pickerBgView2.hidden = YES;
+        pickerBgView3.hidden = NO;
+        [ageTextField resignFirstResponder];
+        return NO;
     }else{
         return YES;
     }
@@ -759,7 +788,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }else{
             return count;
         }
-    }else{
+    }else if(pickerView == picker2){
         if (component == PROVINCE_COMPONENT) {
             return [province count];
         }
@@ -768,6 +797,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         else {
             return [district count];
+        }
+    }else{
+        if (component == 0) {
+            return 100;
+        }else{
+            return 12;
         }
     }
     
@@ -811,7 +846,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             self.detailName = self.tempArray[row];
             num = row;
         }
-    }else{
+    }else if(pickerView == picker2){
         //picker2
         if (component == PROVINCE_COMPONENT) {
             selectedProvince = [province objectAtIndex: row];
@@ -885,6 +920,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            [picker2 selectRow: 0 inComponent: DISTRICT_COMPONENT animated: YES];
 //            [picker2 reloadComponent: DISTRICT_COMPONENT];
         }
+    }else if(pickerView == picker3){
+        if (component == 0) {
+            year = row;
+        }else{
+            month = row;
+        }
     }
     
 }
@@ -896,7 +937,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }else{
             return self.tempArray[row];
         }
-    }else{
+    }else if(pickerView == picker2){
         if (component == PROVINCE_COMPONENT) {
             return [province objectAtIndex: row];
         }
@@ -905,6 +946,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         else {
             return [district objectAtIndex: row];
+        }
+    }else{
+        if (component == 0) {
+            return [NSString stringWithFormat:@"%d", row];
+        }else{
+            return [NSString stringWithFormat:@"%d", row];
         }
     }
     
@@ -1042,18 +1089,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         return;
     }
     
-    if ([ageTextField.text intValue]>=100) {
-//        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"不可以谎报年龄哦~"];
-        StartLoading;
-        [MMProgressHUD dismissWithError:@"不可以谎报年龄哦~" afterDelay:1];
-        return;
-    }
+//    if ([ageTextField.text intValue]>=100) {
+////        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"不可以谎报年龄哦~"];
+//        StartLoading;
+//        [MMProgressHUD dismissWithError:@"不可以谎报年龄哦~" afterDelay:1];
+//        return;
+//    }
     
     //跳转到个人主页
     NSLog(@"完成！");
     
     //将数据整合，发送给服务器进行注册
-    age = [ageTextField.text intValue];
+    age = year*12+month;
     //宠物性别
     if (boy.selected) {
         gender = 1;
@@ -1122,58 +1169,58 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         sig = [MyMD5 md5:str2];
     
 //    }
-    if (self.isModify) {
-        [MMProgressHUD showWithStatus:@"修改中..."];
-        NSString * code = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender]];
-        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", MODIFYINFOAPI, code, sig, [ControllerManager getSID]];
-        NSLog(@"%@", url);
-        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                NSLog(@"%@", load.dataDict);
-//                if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
-//                    [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
+//    if (self.isModify) {
+//        [MMProgressHUD showWithStatus:@"修改中..."];
+//        NSString * code = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+//        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender]];
+//        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", MODIFYINFOAPI, code, sig, [ControllerManager getSID]];
+//        NSLog(@"%@", url);
+//        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                NSLog(@"%@", load.dataDict);
+////                if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+////                    [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
+////                }else{
+////                    [MMProgressHUD dismissWithSuccess:@"修改失败" title:nil afterDelay:0.5];
+////                }
+//                /**********************/
+//                if([[load.dataDict objectForKey:@"errorCode"] intValue] == 2){
+//                    //SID过期，重新获取
+////                    [alert0 setTitle:@"SID过期"];
+//                    [self login];
+////                    [self userRegister];
+//                    return;
+//                }else if([[load.dataDict objectForKey:@"errorCode"] intValue] == 1 || [[load.dataDict objectForKey:@"errorCode"] intValue] == -1){
+//                    
+//                    NSLog(@"%@", load.dataDict);
+//                    //发生错误，显示错误信息，用户名已存在等。
+//                    NSString * errorMessage = [load.dataDict objectForKey:@"errorMessage"];
+//                    
+////                    [alert0 setTitle:errorMessage];
+////                    [alert0 setTitle:@"用户名已存在"];
+//                    [MMProgressHUD dismissWithError:errorMessage afterDelay:0];
+//                    return;
 //                }else{
-//                    [MMProgressHUD dismissWithSuccess:@"修改失败" title:nil afterDelay:0.5];
+//                    [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
+//                    
+//                    if (self.oriImage || self.self.oriUserImage){
+//                        isNeedPostImage = YES;
+//                    }else{
+//                        [self loadPetInfo];
+//                    }
+//                    
+//                    [self getUserData];
+//                    return;
 //                }
-                /**********************/
-                if([[load.dataDict objectForKey:@"errorCode"] intValue] == 2){
-                    //SID过期，重新获取
-//                    [alert0 setTitle:@"SID过期"];
-                    [self login];
-//                    [self userRegister];
-                    return;
-                }else if([[load.dataDict objectForKey:@"errorCode"] intValue] == 1 || [[load.dataDict objectForKey:@"errorCode"] intValue] == -1){
-                    
-                    NSLog(@"%@", load.dataDict);
-                    //发生错误，显示错误信息，用户名已存在等。
-                    NSString * errorMessage = [load.dataDict objectForKey:@"errorMessage"];
-                    
-//                    [alert0 setTitle:errorMessage];
-//                    [alert0 setTitle:@"用户名已存在"];
-                    [MMProgressHUD dismissWithError:errorMessage afterDelay:0];
-                    return;
-                }else{
-                    [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
-                    
-                    if (self.oriImage || self.self.oriUserImage){
-                        isNeedPostImage = YES;
-                    }else{
-                        [self loadPetInfo];
-                    }
-                    
-                    [self getUserData];
-                    return;
-                }
-            }else{
-                [MMProgressHUD dismissWithError:@"修改失败%>_<%" afterDelay:0.5];
-                NSLog(@"您的网络不佳，修改失败!");
-                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-                return;
-            }
-        }];
-        [request release];
-    }
+//            }else{
+//                [MMProgressHUD dismissWithError:@"修改失败%>_<%" afterDelay:0.5];
+//                NSLog(@"您的网络不佳，修改失败!");
+//                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//                return;
+//            }
+//        }];
+//        [request release];
+//    }
     
     
     //访问注册API
@@ -1251,7 +1298,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //                    [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
 //                    [self dismissViewControllerAnimated:NO completion:nil];
                 }
-                [self getUserData];
+                [self login];
 //                //注册成功，进入之前的选择页
 //                NSString * pageNum = [USER objectForKey:@"pageNum"];
 //                if([pageNum isEqualToString:@"1"]){
@@ -1275,7 +1322,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"数据下载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
 //            [alert show];
 //            [alert release];
-            NSLog(@"您的网络不佳，注册失败!");
+//            NSLog(@"您的网络不佳，注册失败!");
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         }
         
@@ -1584,6 +1631,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     pickerBgView2.hidden = YES;
     [self completeButton];
 }
+-(void)confirmButtonClick3
+{
+    ageTextField.text = [MyControl returnAgeStringWithCountOfMonth:[NSString stringWithFormat:@"%d", year*12+month]];
+    pickerBgView3.hidden = YES;
+    [self completeButton];
+}
+
+
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

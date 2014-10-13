@@ -329,6 +329,7 @@
 		601716E7198F33FB001E6DE6 /* 5-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 601716E4198F33FB001E6DE6 /* 5-3.png */; };
 		601716E8198F33FB001E6DE6 /* 5-5.png in Resources */ = {isa = PBXBuildFile; fileRef = 601716E5198F33FB001E6DE6 /* 5-5.png */; };
 		601716EB198F5ACD001E6DE6 /* SearchFamilyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 601716EA198F5ACD001E6DE6 /* SearchFamilyViewController.m */; };
+		60178AE619EB6F8500E38C2C /* ModifyPetOrUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60178AE519EB6F8500E38C2C /* ModifyPetOrUserInfoViewController.m */; };
 		60179B7419AC1C6D00758D21 /* MyCountryContributeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60179B7219AC1C6D00758D21 /* MyCountryContributeCell.m */; };
 		60179B7519AC1C6D00758D21 /* MyCountryContributeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 60179B7319AC1C6D00758D21 /* MyCountryContributeCell.xib */; };
 		60179B7719AC1E8300758D21 /* contribution.png in Resources */ = {isa = PBXBuildFile; fileRef = 60179B7619AC1E8300758D21 /* contribution.png */; };
@@ -1047,6 +1048,8 @@
 		601716E5198F33FB001E6DE6 /* 5-5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "5-5.png"; sourceTree = "<group>"; };
 		601716E9198F5ACD001E6DE6 /* SearchFamilyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchFamilyViewController.h; sourceTree = "<group>"; };
 		601716EA198F5ACD001E6DE6 /* SearchFamilyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchFamilyViewController.m; sourceTree = "<group>"; };
+		60178AE419EB6F8500E38C2C /* ModifyPetOrUserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifyPetOrUserInfoViewController.h; sourceTree = "<group>"; };
+		60178AE519EB6F8500E38C2C /* ModifyPetOrUserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModifyPetOrUserInfoViewController.m; sourceTree = "<group>"; };
 		60179B7119AC1C6D00758D21 /* MyCountryContributeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCountryContributeCell.h; sourceTree = "<group>"; };
 		60179B7219AC1C6D00758D21 /* MyCountryContributeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCountryContributeCell.m; sourceTree = "<group>"; };
 		60179B7319AC1C6D00758D21 /* MyCountryContributeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyCountryContributeCell.xib; sourceTree = "<group>"; };
@@ -1579,6 +1582,8 @@
 				09561ACB193829E2008A13EB /* FirstViewController.m */,
 				09811381193D5EAC0084ED28 /* RegisterViewController.h */,
 				09811382193D5EAC0084ED28 /* RegisterViewController.m */,
+				60178AE419EB6F8500E38C2C /* ModifyPetOrUserInfoViewController.h */,
+				60178AE519EB6F8500E38C2C /* ModifyPetOrUserInfoViewController.m */,
 				60EC8F9D198B429F00F1781A /* ChoseLoadViewController.h */,
 				60EC8F9E198B429F00F1781A /* ChoseLoadViewController.m */,
 				60EC8FAF198B650A00F1781A /* ChooseInViewController.h */,
@@ -3205,6 +3210,7 @@
 				6020BD711998A442002C74FA /* UserInfoViewController.m in Sources */,
 				601716E2198F21E1001E6DE6 /* ChooseFamilyViewController.m in Sources */,
 				0914B6CF196E3F410056CFB0 /* MMHud.m in Sources */,
+				60178AE619EB6F8500E38C2C /* ModifyPetOrUserInfoViewController.m in Sources */,
 				09292296196CDC6900C6EAAF /* SystemMessageListModel.m in Sources */,
 				099D0F001945D246002137CB /* VisibleViewController.m in Sources */,
 				0979B7701941C6BF007C36A7 /* SDWebImageDecoder.m in Sources */,
@@ -3438,8 +3444,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3461,7 +3467,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "dba48338-22b9-4cd7-a953-06ac9fae20b4";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3473,8 +3479,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3496,7 +3502,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "dba48338-22b9-4cd7-a953-06ac9fae20b4";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

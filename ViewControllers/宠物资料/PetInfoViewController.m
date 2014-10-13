@@ -23,6 +23,8 @@
 #import "PublishViewController.h"
 #import "PetNewsModel.h"
 #import "SendGiftViewController.h"
+#import "ModifyPetOrUserInfoViewController.h"
+#import "PetInfoModel.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
@@ -528,14 +530,25 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         
     }else{
         //OwnerView
-        UIView * ownerView = [MyControl createViewWithFrame:CGRectMake(0, 127, 320, 76/2)];
+        UIView * ownerView = [MyControl createViewWithFrame:CGRectMake(0, 127, self.view.frame.size.width, 76/2)];
         [moreView addSubview:ownerView];
         
-        UIButton * takePhoto = [MyControl createButtonWithFrame:CGRectMake(30, 0, 526/2, 76/2) ImageName:@"" Target:self Action:@selector(takePhoto) Title:@"拍照"];
-        [takePhoto setBackgroundImage:[[UIImage imageNamed:@"more_greenBg.png"]stretchableImageWithLeftCapWidth:100 topCapHeight:30] forState:UIControlStateNormal];
+        UIButton * takePhoto = [MyControl createButtonWithFrame:CGRectMake(20, 0, 250/2, 76/2) ImageName:@"" Target:self Action:@selector(takePhoto) Title:@"拍照"];
+        takePhoto.backgroundColor = BGCOLOR5;
+        takePhoto.layer.cornerRadius = 5;
+        takePhoto.layer.masksToBounds = YES;
         takePhoto.titleLabel.font = [UIFont systemFontOfSize:15];
+        takePhoto.showsTouchWhenHighlighted = YES;
         [ownerView addSubview:takePhoto];
         //        ownerView.hidden = YES;
+        
+        UIButton * modifyPetInfo = [MyControl createButtonWithFrame:CGRectMake(355/2, 0, 250/2, 76/2) ImageName:@"" Target:self Action:@selector(modifyPetInfo) Title:@"修改资料"];
+        modifyPetInfo.titleLabel.font = [UIFont systemFontOfSize:15];
+        modifyPetInfo.backgroundColor = [UIColor lightGrayColor];
+        modifyPetInfo.layer.cornerRadius = 5;
+        modifyPetInfo.layer.masksToBounds = YES;
+        modifyPetInfo.showsTouchWhenHighlighted = YES;
+        [ownerView addSubview:modifyPetInfo];
     }
     
     
@@ -552,6 +565,83 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [moreView addSubview:cancelBtn];
 
 }
+-(void)modifyPetInfo
+{
+    NSLog(@"跳转到修改宠物资料");
+    ModifyPetOrUserInfoViewController * vc = [[ModifyPetOrUserInfoViewController alloc] init];
+    PetInfoModel * model = [[PetInfoModel alloc] init];
+    [model setValuesForKeysWithDictionary:petInfoDict];
+    vc.petInfoModel = model;
+    [model release];
+    
+    [self cancelBtnClick];
+    vc.refreshPetInfo = ^(void){
+        //刷新
+        for (UIView * view in self.view.subviews) {
+            [view removeFromSuperview];
+        }
+        //
+        isCreated[0] = 0;
+        isCreated[1] = 0;
+        isCreated[2] = 0;
+        isCreated[3] = 0;
+        isPhotoDownload = 0;
+        isMoreCreated = 0;
+        
+        //
+        [self viewDidLoad];
+//        NSString * txPetFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]]];
+//        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txPetFilePath]];
+//        if (image) {
+//            headerImageView.image = image;
+//            //连menu头像也换了
+//            [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
+//        }else{
+//            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+//                    //本地目录，用于存放favorite下载的原图
+//                    NSLog(@"宠物头像：%@",load.dataImage);
+//                    if (load.dataImage == NULL) {
+//                        headerImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+//                    }else{
+//                        NSString * docDir = DOCDIR;
+//                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]]];
+//                        //将下载的图片存放到本地
+//                        [load.data writeToFile:txFilePath atomically:YES];
+//                        headerImageView.image = load.dataImage;
+//                        
+//                        [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                    }
+//                    
+//                }else{
+//                    NSLog(@"download failed");
+//                }
+//            }];
+//        }
+//        //
+//        NSString * str = [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"];
+//        CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 100) lineBreakMode:NSLineBreakByCharWrapping];
+//        name.text = [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"];
+//        name.frame = CGRectMake(105, 25, size.width+5, 20);
+//        
+//        /****页面标题修改*****/
+//        titleLabel.text = [NSString stringWithFormat:@"%@联萌", name.text];
+//        
+//        sex.frame = CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 17, 17);
+//        if ([[[USER objectForKey:@"petInfoDict"] objectForKey:@"gender"] intValue] == 1) {
+//            sex.image = [UIImage imageNamed:@"man.png"];
+//        }else{
+//            sex.image = [UIImage imageNamed:@"woman.png"];
+//        }
+//        
+//        cateNameLabel.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:[[USER objectForKey:@"petInfoDict"] objectForKey:@"type"]], [MyControl returnAgeStringWithCountOfMonth:[[USER objectForKey:@"petInfoDict"] objectForKey:@"age"]]];
+    
+    };
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
+}
+
+/******************************/
 -(void)shareClick:(UIButton *)button
 {
     NSString * imagePath = [DOCDIR stringByAppendingPathComponent:@"screenshot_pet.png"];
@@ -935,10 +1025,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //
     NSString * str = [petInfoDict objectForKey:@"name"];
     CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 100) lineBreakMode:NSLineBreakByCharWrapping];
-    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(105, 25, size.width+5, 20) Font:15 Text:str];
+    name = [MyControl createLabelWithFrame:CGRectMake(105, 25, size.width+5, 20) Font:15 Text:str];
     [bgView addSubview:name];
     
-    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 17, 17) ImageName:@"woman"];
+    sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 17, 17) ImageName:@"woman"];
     if ([[petInfoDict objectForKey:@"gender"] intValue] == 1) {
         sex.image = [UIImage imageNamed:@"man.png"];
     }
@@ -947,54 +1037,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //
     int age = [[petInfoDict objectForKey:@"age"] intValue];
 
-    UILabel * cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, 130, 20) Font:14 Text:[NSString stringWithFormat:@"苏格兰折耳猫 | %d岁", age]];
+    cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, 130, 20) Font:14 Text:[NSString stringWithFormat:@"苏格兰折耳猫 | %d岁", age]];
     cateNameLabel.font = [UIFont boldSystemFontOfSize:13];
 //    cateNameLabel.alpha = 0.65;
+    cateNameLabel.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:[petInfoDict objectForKey:@"type"]], [MyControl returnAgeStringWithCountOfMonth:[petInfoDict objectForKey:@"age"]]];
     [bgView addSubview:cateNameLabel];
     
-    /*****************************/
-    int a = [[petInfoDict objectForKey:@"type"] intValue];
-    NSLog(@"%@--%d", [petInfoDict objectForKey:@"type"], a);
-    NSString * cateName = nil;
     
-    if (a/100 == 1) {
-        cateName = [[[USER objectForKey:@"CateNameList"]objectForKey:@"1"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-    }else if(a/100 == 2){
-        cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"2"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-    }else if(a/100 == 3){
-        cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"3"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-    }else{
-        cateName = @"未知物种";
-    }
-    if (cateName == nil) {
-        //更新本地宠物名单列表
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", TYPEAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"CateNameList"];
-                NSString * path = [DOCDIR stringByAppendingPathComponent:@"CateNameList.plist"];
-                NSMutableDictionary * data = [load.dataDict objectForKey:@"data"];
-                //本地及内存存储
-                [data writeToFile:path atomically:YES];
-                [USER setObject:data forKey:@"CateNameList"];
-                int a = [[petInfoDict objectForKey:@"type"] intValue];
-                NSString * cateName = nil;
-                
-                if (a/100 == 1) {
-                    cateName = [[[USER objectForKey:@"CateNameList"]objectForKey:@"1"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-                }else if(a/200 == 2){
-                    cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"2"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-                }else if(a/200 == 3){
-                    cateName = [[[USER objectForKey:@"CateNameList"] objectForKey:@"3"] objectForKey:[NSString stringWithFormat:@"%d", a]];
-                }else{
-                    cateName = @"未知物种";
-                }
-                cateNameLabel.text = [NSString stringWithFormat:@"%@ | %@岁", cateName, [petInfoDict objectForKey:@"age"]];
-            }
-        }];
-        
-    }else{
-        cateNameLabel.text = [NSString stringWithFormat:@"%@ | %@岁", cateName, [petInfoDict objectForKey:@"age"]];
-    }
     /*****************************/
     NSString *str2 = [NSString stringWithFormat:@"经纪人 - %@",[petInfoDict objectForKey:@"u_name"]];
 //    NSString *str2 = [NSString stringWithFormat:@"祭司 - %@",[self.userDataArray[0] u_name]];

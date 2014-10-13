@@ -49,6 +49,13 @@
 
 #pragma mark - 传入一个旧image和所需要的宽高，返回一个符合宽高比的image
 +(UIImage *)returnImageWithImage:(UIImage *)oldImage Width:(float)width Height:(float)height;
+
+//传入月数，返回年龄string
++(NSString *)returnAgeStringWithCountOfMonth:(NSString *)countOfMonth;
+
++(void)startLoadingWithStatus:(NSString *)status;
++(void)loadingSuccessWithContent:(NSString *)content afterDelay:(float)delay;
++(void)loadingFailedWithContent:(NSString *)content afterDelay:(float)delay;
 @end
 
 

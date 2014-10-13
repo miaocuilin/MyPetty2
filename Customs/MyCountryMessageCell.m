@@ -151,7 +151,7 @@
         //body
         NSString * str1 = [ControllerManager returnPositionWithRank:[model.content objectForKey:@"rank"]];
         NSString * str2 = [model.content objectForKey:@"u_name"];
-        NSString * str3 = [model.content objectForKey:@"a_name"];
+        NSString * str3 = petName;
         NSString * str4 = [[ControllerManager returnGiftDictWithItemId:[model.content objectForKey:@"item_id"]] objectForKey:@"name"];
 //        NSString * str4 = [model.content objectForKey:@"item_name"];
         NSString * str5 = [NSString stringWithFormat:@"+%@", [model.content objectForKey:@"rq"]];
@@ -228,7 +228,7 @@
         typeImageView.image = [UIImage imageNamed:@"myCountry_trouble.png"];
         
         NSString * str1 = [model.content objectForKey:@"u_name"];
-        NSString * str2 = [model.content objectForKey:@"a_name"];
+        NSString * str2 = petName;
         NSString * str3 = [[ControllerManager returnGiftDictWithItemId:[model.content objectForKey:@"item_id"]] objectForKey:@"name"];
         NSString * str4 = [NSString stringWithFormat:@"%@", [model.content objectForKey:@"rq"]];
         NSString * str5 = [ControllerManager returnActionStringWithItemId:[model.content objectForKey:@"item_id"]];

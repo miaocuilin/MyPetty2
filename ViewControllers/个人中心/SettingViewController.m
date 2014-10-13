@@ -166,10 +166,16 @@
     }
     
     if (indexPath.section == 0) {
-        if (indexPath.row == 3) {
+        if (indexPath.row == 2) {
             sinaBind = [[UISwitch alloc] initWithFrame:CGRectMake(500/2, 7, 0, 0)];
             [sinaBind addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
             [cell addSubview:sinaBind];
+            BOOL isOauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+            if (isOauth) {
+                sinaBind.on = YES;
+            }else{
+                sinaBind.on = NO;
+            }
         }
         cell.textLabel.text =[NSString stringWithFormat:@"     %@",self.arr1[indexPath.row]];
         if (![[USER objectForKey:@"isSuccess"] intValue]) {
@@ -225,7 +231,7 @@
 {
     //右箭头
     UIImageView * arrow = nil;
-    if((indexPath.section == 0 && indexPath.row != 3) ||(indexPath.section == 2 && indexPath.row != 0)){
+    if((indexPath.section == 0 && indexPath.row != 2) ||(indexPath.section == 2 && indexPath.row != 0)){
         arrow = [MyControl createImageViewWithFrame:CGRectMake(570/2, 10, 20, 20) ImageName:@"14-6-2.png"];
 //        [cell addSubview:arrow];
         cell.accessoryView = arrow;
@@ -308,6 +314,38 @@
 -(void)switchChanged:(UISwitch *)_switch{
     if (_switch == sinaBind) {
         NSLog(@"%d", _switch.on);
+        if (_switch.on) {
+            //绑定
+            NSLog(@"绑定");
+            [MyControl startLoadingWithStatus:@"绑定中..."];
+            UMSocialSnsPlatform *snsPlatform = [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina];
+            snsPlatform.loginClickHandler(self,[UMSocialControllerService defaultControllerService],YES,^(UMSocialResponseEntity *response){
+                NSLog(@"response is %@",response);
+                if (![UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina]) {
+                    [MyControl loadingFailedWithContent:@"绑定失败" afterDelay:0.5];
+                    _switch.on = NO;
+                }else{
+                    [MyControl loadingSuccessWithContent:@"绑定成功" afterDelay:0.5];
+                    _switch.on = YES;
+                }
+            });
+            
+        }else{
+            //解绑
+            NSLog(@"解绑");
+            [MyControl startLoadingWithStatus:@"解绑中..."];
+            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                NSLog(@"response is %@",response);
+                if (![UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina]) {
+                    [MyControl loadingSuccessWithContent:@"解绑成功" afterDelay:0.5];
+                    _switch.on = NO;
+                }else{
+                    [MyControl loadingFailedWithContent:@"解绑失败" afterDelay:0.5];
+                    _switch.on = YES;
+                }
+            }];
+        }
+        
     }else if(_switch == sina){
         NSLog(@"%d", _switch.on);
         if (_switch.on) {

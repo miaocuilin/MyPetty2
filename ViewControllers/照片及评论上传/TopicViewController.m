@@ -159,7 +159,8 @@
     NSLog(@"确定");
 //    NSLog(@"%@", [tf.text class]);
     if (tf.text == nil || [tf.text isEqualToString:@""]) {
-        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"话题为空!"];
+        StartLoading;
+        [MyControl loadingFailedWithContent:@"话题为空" afterDelay:0.5];
     }else{
         [USER setObject:@"1" forKey:@"selectTopic"];
         [USER setObject:tf.text forKey:@"topic"];

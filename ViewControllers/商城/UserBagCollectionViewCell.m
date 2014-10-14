@@ -45,7 +45,7 @@
 //    UIImageView *leftCornerBGImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 30, 30) ImageName:@"product_bg2.png"];
 //    [self addSubview:leftCornerBGImageView];
     
-    UILabel *popLabel = [MyControl createLabelWithFrame:CGRectMake(-3, 4, 20, 8) Font:7 Text:@"人气"];
+    UILabel *popLabel = [MyControl createLabelWithFrame:CGRectMake(-2, 4, 20, 9) Font:7 Text:@"人气"];
     popLabel.font = [UIFont boldSystemFontOfSize:7];
     popLabel.textAlignment = NSTextAlignmentCenter;
     popLabel.transform =CGAffineTransformMakeRotation(-45.0*M_PI/180.0);

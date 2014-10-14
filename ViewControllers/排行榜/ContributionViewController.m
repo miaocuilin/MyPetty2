@@ -11,9 +11,10 @@
 #import "PopularityCell.h"
 #import "popularityListModel.h"
 #import "UserInfoViewController.h"
+#import "UserPetListModel.h"
 
 @interface ContributionViewController ()
-@property (nonatomic)NSInteger category;
+
 @end
 
 @implementation ContributionViewController
@@ -30,9 +31,13 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     self.titleArray = [NSMutableArray arrayWithObjects:@"总贡献榜",@"贡献日榜", @"贡献周榜", @"贡献月榜", nil];
 //    self.myCountryRankArray = [NSMutableArray arrayWithObjects:@"10", @"38", @"66", @"88", nil];
+//    self.myCountryRankArray = [NSMutableArray arrayWithCapacity:0];
     self.contributionDataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
 //    self.usr_idsArray = [NSMutableArray arrayWithCapacity:0];
 //    self.myCountryArray = [NSMutableArray arrayWithCapacity:0];
     
@@ -41,18 +46,44 @@
     [self createHeader2];
     [self createFakeNavigation];
     
-    [self createArrow];
+//    [self createArrow];
     
-    [self findMeBtnClick];
     [self loadData];
+//    [self loadCountryList];
 }
+#pragma mark -
+//-(void)loadCountryList
+//{
+//    StartLoading;
+//    
+//    NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+//    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+//    //    NSLog(@"%@", url);
+//    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            [self.userPetListArray removeAllObjects];
+//            NSArray * array = [load.dataDict objectForKey:@"data"];
+//            for (NSDictionary * dict in array) {
+//                UserPetListModel * model = [[UserPetListModel alloc] init];
+//                [model setValuesForKeysWithDictionary:dict];
+//                [self.userPetListArray addObject:model];
+//                [model release];
+//            }
+//            [self loadData];
+//        }else{
+//            LoadingFailed;
+//        }
+//    }];
+//    [request release];
+//}
 - (void)loadData
 {
-    NSString *contributionSig  =[MyMD5 md5:[NSString stringWithFormat:@"aid=%@&category=%ddog&cat",[USER objectForKey:@"aid"],self.category]];
-    NSString *contribution = [NSString stringWithFormat:@"%@%@&category=%d&sig=%@&SID=%@",CONTRIBUTIONAPI,[USER objectForKey:@"aid"],self.category,contributionSig,[ControllerManager getSID]];
+    StartLoading;
+    NSString *contributionSig  =[MyMD5 md5:[NSString stringWithFormat:@"aid=%@&category=%ddog&cat", self.aid, self.category]];
+    NSString *contribution = [NSString stringWithFormat:@"%@%@&category=%d&sig=%@&SID=%@",CONTRIBUTIONAPI, self.aid, self.category, contributionSig,[ControllerManager getSID]];
     NSLog(@"国家贡献排行榜API:%@",contribution);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:contribution Block:^(BOOL isFinish, httpDownloadBlock *load) {
-        NSLog(@"国家贡献排行榜数据：%@",load.dataDict);
+        NSLog(@"国家贡献%d排行榜数据：%@", self.category, load.dataDict);
         if (isFinish) {
             [self.contributionDataArray removeAllObjects];
             NSArray *array = [load.dataDict objectForKey:@"data"];
@@ -61,14 +92,27 @@
                 popularityListModel *model = [[popularityListModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
                 [self.contributionDataArray addObject:model];
+                
                 if ([model.usr_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
                     myRanking = i+1;
                 }
+//                for (int j=0; j<self.userPetListArray.count; j++) {
+//                    UserPetListModel * model = self.userPetListArray[j];
+//
+//                }
+                
                 [model release];
             }
-//            [self loadUserPetsInfo];
+            
+            if (myRanking != 0) {
+                [self findMeBtnClick];
+            }
+            
             [tv reloadData];
-            [tv2 reloadData];
+//            [tv2 reloadData];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
         }
     }];
     [request release];
@@ -131,28 +175,28 @@
 #pragma mark - 创建tableView
 -(void)createTableView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 64+35+50*5) style:UITableViewStylePlain];
-    if (self.view.frame.size.height == 480) {
-        tv.frame = CGRectMake(0, 0, 320, 64+35+50*3);
-    }
+//    CGRectMake(0, 0, 320, 64+35+50*5)
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+//    if (self.view.frame.size.height == 480) {
+//        tv.frame = CGRectMake(0, 0, 320, 64+35+50*3);
+//    }
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
-    tv.scrollEnabled = NO;
     tv.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tv];
     
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64+35)];
     tv.tableHeaderView = tempView;
     
-    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-50*3, 320, 50*3) style:UITableViewStylePlain];
-    tv2.delegate = self;
-    tv2.dataSource = self;
-    tv2.separatorStyle = 0;
-    tv2.showsVerticalScrollIndicator = NO;
-    tv2.scrollEnabled = NO;
-    tv2.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:tv2];
+//    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-50*3, 320, 50*3) style:UITableViewStylePlain];
+//    tv2.delegate = self;
+//    tv2.dataSource = self;
+//    tv2.separatorStyle = 0;
+//    tv2.showsVerticalScrollIndicator = NO;
+//    tv2.scrollEnabled = NO;
+//    tv2.backgroundColor = [UIColor clearColor];
+//    [self.view addSubview:tv2];
 }
 #pragma mark - 创建arrow
 -(void)createArrow
@@ -169,7 +213,7 @@
     
     [UIView animateWithDuration:0.3 animations:^{
         tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
-        tv2.frame = CGRectMake(0, self.view.frame.size.height, 320, 0);
+//        tv2.frame = CGRectMake(0, self.view.frame.size.height, 320, 0);
     }];
 }
 
@@ -196,7 +240,8 @@
     };
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
-    if (tableView == tv2 && indexPath.row == myRanking-1) {
+//    tableView == tv2 && indexPath.row == myRanking-1
+    if (indexPath.row == myRanking-1) {
         cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
         [cell configUIWithName:model.name rq:model.t_contri rank:indexPath.row+1 upOrDown:model.change shouldLarge:YES];
     }else{
@@ -212,7 +257,7 @@
             cell.headImageView.image = image;
         }else{
             httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",USERTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                NSLog(@"load.image:%@",load.dataImage);
+//                NSLog(@"load.image:%@",load.dataImage);
                 if (isFinish) {
                     if (load.dataImage == NULL) {
                         cell.headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
@@ -225,14 +270,14 @@
         }
     }
     
-    if ([titleBtn.currentTitle isEqualToString:@"总人气榜"]) {
-        cell.rqNum.text = model.t_rq;
-    }else if ([titleBtn.currentTitle isEqualToString:@"人气日榜"]){
-        cell.rqNum.text = model.d_rq;
-    }else if ([titleBtn.currentTitle isEqualToString:@"人气周榜"]){
-        cell.rqNum.text = model.w_rq;
-    }else{
-        cell.rqNum.text = model.m_rq;
+    if ([titleBtn.currentTitle isEqualToString:@"总贡献榜"]) {
+        cell.rqNum.text = model.t_contri;
+    }else if ([titleBtn.currentTitle isEqualToString:@"贡献日榜"]){
+        cell.rqNum.text = model.d_contri;
+    }else if ([titleBtn.currentTitle isEqualToString:@"贡献周榜"]){
+        cell.rqNum.text = model.w_contri;
+    }else if ([titleBtn.currentTitle isEqualToString:@"贡献月榜"]){
+        cell.rqNum.text = model.m_contri;
     }
     return cell;
 }
@@ -245,7 +290,7 @@
     if (scrollView == tv) {
 //        arrow.alpha = 0;
 //        arrow.hidden = YES;
-        findMeBtn.userInteractionEnabled = NO;
+//        findMeBtn.userInteractionEnabled = NO;
         
 //        [UIView animateWithDuration:0.3 animations:^{
 //            tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
@@ -290,7 +335,7 @@
     //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
     
-    UILabel * titleBgLabel = [MyControl createLabelWithFrame:CGRectMake(100, 64-39, 120, 30) Font:17 Text:@"国家"];
+    UILabel * titleBgLabel = [MyControl createLabelWithFrame:CGRectMake(100, 64-39, 120, 30) Font:17 Text:@"联萌"];
     titleBgLabel.font = [UIFont boldSystemFontOfSize:17];
     //    titleBgLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.4];
     [navView addSubview:titleBgLabel];
@@ -309,8 +354,8 @@
     UIImageView * findMe = [MyControl createImageViewWithFrame:CGRectMake(320-35, 30, 43/2, 47/2) ImageName:@"findMe.png"];
     [navView addSubview:findMe];
     
-    findMeBtn = [MyControl createButtonWithFrame:CGRectMake(320-41, 24, 51*0.6, 55*0.6) ImageName:@"" Target:self Action:@selector(findMeBtnClick) Title:nil];
-    //    giftBagBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    findMeBtn = [MyControl createButtonWithFrame:CGRectMake(320-45, 24, 40, 35) ImageName:@"" Target:self Action:@selector(findMeBtnClick) Title:nil];
+//    findMeBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     findMeBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:findMeBtn];
     
@@ -349,35 +394,46 @@
 //        myCurrentCountNum = [self.myCountryArray[count++] intValue];
         
 //        NSLog(@"%d", myCurrentCountNum);
-        tv2.contentOffset = CGPointMake(0, myRanking*50-50*2);
-        
+//        tv2.contentOffset = CGPointMake(0, myRanking*50-50*2);
+    
 //        [tv2 reloadData];
 //    }
     
     NSLog(@"findMe");
-    arrow.hidden = NO;
-    tv.scrollEnabled = NO;
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        return;
+    }
+    
+    if (!showMyRank && myRanking == 0) {
+        [self loadData];
+    }
+    showMyRank = 1;
+    
+//    arrow.hidden = NO;
+//    tv.scrollEnabled = NO;
     [UIView animateWithDuration:0.3 animations:^{
-        arrow.alpha = 1;
-        if (self.view.frame.size.height == 480) {
-            tv.frame = CGRectMake(0, 0, 320, 64+35+50*3);
-        }else{
-            tv.frame = CGRectMake(0, 0, 320, 64+35+50*5);
-        }
-        tv2.frame = CGRectMake(0, self.view.frame.size.height-50*3, 320, 50*3);
+        tv.contentOffset = CGPointMake(0, 50*(myRanking-1));
+////        arrow.alpha = 1;
+//        if (self.view.frame.size.height == 480) {
+//            tv.frame = CGRectMake(0, 0, 320, 64+35+50*3);
+//        }else{
+//            tv.frame = CGRectMake(0, 0, 320, 64+35+50*5);
+//        }
+//        tv2.frame = CGRectMake(0, self.view.frame.size.height-50*3, 320, 50*3);
     }];
     
     //控制tv的偏移量为50的整数倍
-    for (int i=0; i<100; i++) {
-        if (tv.contentOffset.y>i*50 && tv.contentOffset.y<(i+1)*50) {
-//            [UIView animateWithDuration:0 animations:^{
-                tv.contentOffset = CGPointMake(0, (i+1)*50);
-//            } completion:^(BOOL finished) {
-                findMeBtn.userInteractionEnabled = YES;
-//            }];
-            break;
-        }
-    }
+//    for (int i=0; i<100; i++) {
+//        if (tv.contentOffset.y>i*50 && tv.contentOffset.y<(i+1)*50) {
+////            [UIView animateWithDuration:0 animations:^{
+//                tv.contentOffset = CGPointMake(0, (i+1)*50);
+////            } completion:^(BOOL finished) {
+//                findMeBtn.userInteractionEnabled = YES;
+////            }];
+//            break;
+//        }
+//    }
 }
 
 #pragma mark - 创建顶栏2

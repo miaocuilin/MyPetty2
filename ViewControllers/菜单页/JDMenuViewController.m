@@ -349,6 +349,10 @@
     
     position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:13 Text:[NSString stringWithFormat:@"%@国祭司", [USER objectForKey:@"a_name"]]];
     [sv3 addSubview:position];
+    if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [USER objectForKey:@"rank"] != nil && [[USER objectForKey:@"rank"] length] != 0) {
+        position.text = [NSString stringWithFormat:@"%@联萌%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];
+    }
+    
     
     //金币
     UIImageView * gold = [MyControl createImageViewWithFrame:CGRectMake(170, sex.frame.origin.y-2, 22, 22) ImageName:@"gold.png"];

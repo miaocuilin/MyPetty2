@@ -309,7 +309,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [users setTitle:name forState:UIControlStateNormal];
             self.usr_ids = idsString;
         }else{
-            [users setTitle:@"点击@用户" forState:UIControlStateNormal];
+            
         }
     };
     [self presentViewController:vc animated:YES completion:nil];
@@ -334,7 +334,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        return;
 //    }
     if (_textView.text.length>40) {
-        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"最多输入40个字哦亲~"];
+        StartLoading;
+        [MyControl loadingFailedWithContent:@"最多输入40个字哦亲~" afterDelay:0.5];
         return;
     }
     
@@ -345,7 +346,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self postData:self.oriImage];
     
     if (s == 1 && w == 0) {
-        BOOL isOauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+//        BOOL isOauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
 //        if (isOauth) {
 //            
 //        }
@@ -450,12 +451,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"]) {
         _textView.text = @"";
     }
+    _textView.textColor = [UIColor blackColor];
 }
 -(void)textViewDidEndEditing:(UITextView *)textView
 {
     isInPublish = NO;
     if (_textView.text.length == 0) {
         _textView.text = @"为您爱宠的靓照写个描述吧~";
+        _textView.textColor = [UIColor colorWithRed:125/255.0 green:125/255.0 blue:125/255.0 alpha:1];
     }
 }
 
@@ -531,6 +534,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 -(void)postData:(UIImage *)image
 {
+    [MyControl startLoadingWithStatus:@"发布中..."];
     NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]];
     //网络上传
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETIMAGEAPI, [USER objectForKey:@"aid"], [MyMD5 md5:code], [ControllerManager getSID]];
@@ -579,7 +583,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [USER setObject:@"1" forKey:@"needRefresh"];
     NSLog(@"success");
     StartLoading;
-    [MMProgressHUD dismissWithSuccess:@"上传成功" title:nil afterDelay:0.5];
+    
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     NSDictionary *dict =[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
     if ([[dict objectForKey:@"errorCode"] intValue] == -1) {
@@ -594,7 +598,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
             
         }
-        LoadingSuccess;
+        [MyControl loadingSuccessWithContent:@"发布成功" afterDelay:0.5f];
+        
         [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
             [self dismissViewControllerAnimated:YES completion:nil];
         } completion:nil];

@@ -162,14 +162,21 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 NSDictionary * dict = array[i];
                 CountryMembersModel *model = [[CountryMembersModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                NSLog(@"model.usr_id:%@",model.usr_id);
-                [self.countryMembersDataArray addObject:model];
+//                NSLog(@"model.usr_id:%@",model.usr_id);
+                //给主人调整位置到第一位
+                if ([model.usr_id isEqualToString:self.master_id]) {
+                    [self.countryMembersDataArray insertObject:model atIndex:0];
+                }else{
+                    [self.countryMembersDataArray addObject:model];
+                }
                 if (i == array.count-1) {
                     self.lastUsr_id = model.usr_id;
                     self.lastRank = model.rank;
                 }
                 [model release];
             }
+            
+            
 //            NSLog(@"%@", [self.countryMembersDataArray[0] usr_id]);
             [self createCountryMembersTableView];
 //            [self loadKingPresentsData];
@@ -263,6 +270,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isFinish) {
             NSLog(@"国王信息:%@", load.dataDict);
             petInfoDict = [load.dataDict objectForKey:@"data"];
+            self.master_id = [petInfoDict objectForKey:@"master_id"];
+            
             self.pet_aid = [petInfoDict objectForKey:@"aid"];
             self.pet_name = [petInfoDict objectForKey:@"name"];
             self.pet_tx = [petInfoDict objectForKey:@"tx"];
@@ -1024,8 +1033,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     //
     NSString * str = [petInfoDict objectForKey:@"name"];
-    CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 100) lineBreakMode:NSLineBreakByCharWrapping];
-    name = [MyControl createLabelWithFrame:CGRectMake(105, 25, size.width+5, 20) Font:15 Text:str];
+    CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(120, 20) lineBreakMode:NSLineBreakByCharWrapping];
+    name = [MyControl createLabelWithFrame:CGRectMake(105, 25, size.width+3, 20) Font:14 Text:str];
     [bgView addSubview:name];
     
     sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 17, 17) ImageName:@"woman"];
@@ -1038,7 +1047,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     int age = [[petInfoDict objectForKey:@"age"] intValue];
 
     cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, 130, 20) Font:14 Text:[NSString stringWithFormat:@"苏格兰折耳猫 | %d岁", age]];
-    cateNameLabel.font = [UIFont boldSystemFontOfSize:13];
+//    cateNameLabel.font = [UIFont boldSystemFontOfSize:13];
 //    cateNameLabel.alpha = 0.65;
     cateNameLabel.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:[petInfoDict objectForKey:@"type"]], [MyControl returnAgeStringWithCountOfMonth:[petInfoDict objectForKey:@"age"]]];
     [bgView addSubview:cateNameLabel];
@@ -1047,8 +1056,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     /*****************************/
     NSString *str2 = [NSString stringWithFormat:@"经纪人 - %@",[petInfoDict objectForKey:@"u_name"]];
 //    NSString *str2 = [NSString stringWithFormat:@"祭司 - %@",[self.userDataArray[0] u_name]];
-    CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
-    UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:15 Text:str2];
+    CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
+    UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:14 Text:str2];
 //    positionAndUserName.font = [UIFont boldSystemFontOfSize:15];
     [bgView addSubview:positionAndUserName];
     
@@ -1126,21 +1135,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)GXListClick
 {
     NSLog(@"跳转贡献榜");
-    if (![[USER objectForKey:@"isSuccess"] intValue]) {
-        ShowAlertView;
-        return;
-    }
+
     ContributionViewController * vc = [[ContributionViewController alloc] init];
+    vc.aid = self.aid;
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
 -(void)RQListClick
 {
     NSLog(@"跳转人气榜");
-    if (![[USER objectForKey:@"isSuccess"] intValue]) {
-        ShowAlertView;
-        return;
-    }
     PopularityListViewController * vc = [[PopularityListViewController alloc] init];
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
@@ -1194,6 +1197,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv3.delegate = self;
     tv3.dataSource = self;
+    tv3.separatorStyle = 0;
 //    [tv3 addFooterWithTarget:self action:@selector(loadKingMembersDataMore)];
     [sv addSubview:tv3];
     
@@ -1475,12 +1479,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
 //            [imageView addSubview:triangle];
             
-            UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-3, 3, 20, 9) Font:8 Text:@"人气"];
+            UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-1, 4, 20, 9) Font:8 Text:@"人气"];
             rq.font = [UIFont boldSystemFontOfSize:8];
             rq.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
             [imageView addSubview:rq];
             
-            UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 10, 25, 10) Font:9 Text:@"+150"];
+            UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 11, 25, 10) Font:8 Text:@"+150"];
+            rqNum.font = [UIFont systemFontOfSize:8];
             if ([[dict objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
                 rqNum.text = [NSString stringWithFormat:@"+%@", [dict objectForKey:@"add_rq"]];
             }else{

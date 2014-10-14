@@ -538,8 +538,8 @@
     
     //
     NSString *str = [NSString stringWithFormat:@"%@",[headerDict objectForKey:@"name"]];
-    CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 100) lineBreakMode:NSLineBreakByCharWrapping];
-    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(105, 25, size.width+5, 20) Font:15 Text:str];
+    CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(120, 20) lineBreakMode:NSLineBreakByCharWrapping];
+    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(105, 25, size.width+3, 20) Font:14 Text:str];
     [bgView addSubview:name];
     
     UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+name.frame.size.width, 25, 17, 17) ImageName:@"man.png"];
@@ -550,15 +550,15 @@
     
     //
     UILabel * cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, 130, 20) Font:14 Text:[ControllerManager returnProvinceAndCityWithCityNum:[headerDict objectForKey:@"city"]]];
-    cateNameLabel.font = [UIFont boldSystemFontOfSize:14];
+//    cateNameLabel.font = [UIFont boldSystemFontOfSize:14];
 //    cateNameLabel.alpha = 0.65;
     [bgView addSubview:cateNameLabel];
     
     //
     
     NSString * str2= [NSString stringWithFormat:@"经纪人 — %@联萌", [headerDict objectForKey:@"a_name"]];
-    CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
-    UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:15 Text:str2];
+    CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
+    UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:14 Text:str2];
     //    positionAndUserName.font = [UIFont boldSystemFontOfSize:15];
     [bgView addSubview:positionAndUserName];
     
@@ -644,11 +644,13 @@
 #pragma mark - 跳转点击事件
 -(void)jumpToUserInfo
 {
-    NSLog(@"%d", self.isFromPetInfo);
+    NSLog(@"isFromPetInfo:%d", self.isFromPetInfo);
     if (self.isFromPetInfo) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }else{
+        NSLog(@"跳到petInfoViewController aid:%@", [headerDict objectForKey:@"aid"]);
 //        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+//        vc.aid = [headerDict objectForKey:@"aid"];
 //        [self presentViewController:vc animated:YES completion:nil];
 //        [vc release];
     }
@@ -979,12 +981,13 @@
 //            UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
 //            [imageView addSubview:triangle];
             
-            UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-3, 3, 20, 9) Font:8 Text:@"人气"];
+            UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-1, 4, 20, 9) Font:8 Text:@"人气"];
             rq.font = [UIFont boldSystemFontOfSize:8];
             rq.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
             [imageView addSubview:rq];
             
-            UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 10, 25, 10) Font:9 Text:nil];
+            UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(-1, 11, 25, 10) Font:8 Text:nil];
+            rqNum.font = [UIFont systemFontOfSize:8];
             if ([[dict objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
                 rqNum.text = [NSString stringWithFormat:@"+%@", [dict objectForKey:@"add_rq"]];
             }else{
@@ -995,7 +998,7 @@
             //            rqNum.backgroundColor = [UIColor redColor];
             [imageView addSubview:rqNum];
             
-            UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 5, 85, 15) Font:11 Text:[dict objectForKey:@"name"]];
+            UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 6, 85, 15) Font:10 Text:[dict objectForKey:@"name"]];
             giftName.textColor = [UIColor grayColor];
             giftName.textAlignment = NSTextAlignmentCenter;
             [imageView addSubview:giftName];
@@ -1090,7 +1093,12 @@
             NSLog(@"%@", [self.userPetListArray[cellIndexPath.row] master_id]);
             if ([self.usr_id isEqualToString:[self.userPetListArray[cellIndexPath.row] master_id]]) {
                 StartLoading;
-                [MMProgressHUD dismissWithError:@"不能退出自己的国家" afterDelay:1];
+                [MMProgressHUD dismissWithError:@"不能退出自己的联萌" afterDelay:1];
+                return;
+            }
+            if (self.userPetListArray.count == 1) {
+                StartLoading;
+                [MyControl loadingFailedWithContent:@"您仅有1个联萌，不能退出" afterDelay:1];
                 return;
             }
             [self quitCountryWithRow:cellIndexPath.row];

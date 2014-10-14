@@ -41,6 +41,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     return self;
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [[IQKeyboardManager sharedManager] setEnable:NO];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -1429,8 +1433,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)loadPetInfo
 {
+    NSLog(@"%@", [USER objectForKey:@"aid"]);
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"petInfo:%@", load.dataDict);
@@ -1553,6 +1559,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
             [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
             [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+            //2代表刚注册
+            [USER setObject:@"2" forKey:@"isNotRegister"];
             [self dismissViewControllerAnimated:NO completion:nil];
         }
     }else{
@@ -1567,6 +1575,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
         [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
         [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+        //2代表刚注册
+        [USER setObject:@"2" forKey:@"isNotRegister"];
         [self dismissViewControllerAnimated:NO completion:nil];
     }
     

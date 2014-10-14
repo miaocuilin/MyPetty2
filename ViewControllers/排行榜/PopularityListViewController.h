@@ -25,7 +25,7 @@
     NIDropDown *dropDown2;
     
     UITableView * tv;
-    UITableView * tv2;
+//    UITableView * tv2;
     
     int myCurrentCountNum;
     int count;
@@ -36,7 +36,14 @@
     
     //是iPhone4s还是5s
     BOOL isiPhone4s;
+    
+    //当我注册完之后回来点找我的时候重新loadData
+    BOOL showMyRank;
+    //是否是首次进入界面
+    BOOL isLoaded;
 }
+@property (nonatomic,copy)NSString * selectedWords;
+
 @property (nonatomic,retain)NSMutableArray * catArray;
 @property (nonatomic,retain)NSMutableArray * dogArray;
 @property (nonatomic,retain)NSMutableArray * otherArray;

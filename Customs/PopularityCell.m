@@ -32,7 +32,7 @@
     
     self.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
     self.name.text = Name;
-    self.rqNum.text = Rq;
+//    self.rqNum.text = Rq;
     
     if (rank == 1) {
         self.medal.hidden = NO;
@@ -69,6 +69,7 @@
         self.headImageView.layer.cornerRadius = self.headImageView.frame.size.width/2.0;
         self.name.frame = CGRectMake(50, 15, 130, 20);
     }
+
 }
 -(void)click
 {

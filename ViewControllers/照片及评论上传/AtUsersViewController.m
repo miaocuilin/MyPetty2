@@ -184,6 +184,11 @@
     }
     NSLog(@"%@--%@", self.selectName, self.userIdsString);
     self.sendNameAndIds(self.selectName, self.userIdsString);
+    if (self.selectName == nil || self.selectName.length == 0) {
+        StartLoading;
+        [MyControl loadingFailedWithContent:@"没有@用户哦~" afterDelay:0.7];
+        return;
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

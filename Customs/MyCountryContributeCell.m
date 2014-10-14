@@ -24,6 +24,7 @@
 }
 -(void)modifyWithBOOL:(BOOL)isThis lineNum:(int)num
 {
+    lineNum = num;
     self.circleBg.hidden = YES;
     
     if (isThis) {
@@ -56,11 +57,20 @@
     //
     self.contribution.text = @"60000";
     self.contribution.textColor = BGCOLOR;
+    
+    UIView * line = [MyControl createViewWithFrame:CGRectMake(0, self.contentView.frame.size.height-0.5, self.contentView.frame.size.width, 0.5)];
+    line.backgroundColor = [UIColor lightGrayColor];
+    [self.contentView addSubview:line];
 }
 -(void)configUI:(CountryMembersModel *)model
 {
     //
-    NSString * str = [NSString stringWithFormat:@"%@ — ", [ControllerManager returnPositionWithRank:model.rank]];
+    NSString * str = nil;
+    if (lineNum == 0) {
+        str = @"经纪人 — ";
+    }else{
+        str = [NSString stringWithFormat:@"%@ — ", [ControllerManager returnPositionWithRank:model.rank]];
+    }
     CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
     self.positionLabel.text = str;
     CGRect rect = self.positionLabel.frame;
@@ -87,7 +97,7 @@
         self.sex.image = [UIImage imageNamed:@"woman.png"];
     }
     NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-    NSLog(@"本地用户头像路径：%@", txUserFilePath);
+//    NSLog(@"本地用户头像路径：%@", txUserFilePath);
     UIImage *User_image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txUserFilePath]];
     if (User_image) {
         [self.headBtn setBackgroundImage:User_image forState:UIControlStateNormal];
@@ -95,7 +105,7 @@
         
         [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
-                NSLog(@"load.dataImage:%@",load.dataImage);
+//                NSLog(@"load.dataImage:%@",load.dataImage);
                 if (load.dataImage == NULL) {
                     [self.headBtn setBackgroundImage:[UIImage imageNamed:@"defaultUserHead.png"] forState:UIControlStateNormal];
                 }else{

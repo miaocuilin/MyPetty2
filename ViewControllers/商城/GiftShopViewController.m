@@ -461,8 +461,8 @@
 //        UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
 //        [imageView addSubview:triangle];
         
-        UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(-3, 2, 20, 9) Font:7 Text:@"人气"];
-        rq.font = [UIFont boldSystemFontOfSize:8];
+        UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(0, 3, 20, 9) Font:7 Text:@"人气"];
+        rq.font = [UIFont boldSystemFontOfSize:7];
         rq.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
         [imageView addSubview:rq];
         

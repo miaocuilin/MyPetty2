@@ -30,7 +30,10 @@
     return self;
 }
 
-
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [[IQKeyboardManager sharedManager] setEnable:NO];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];

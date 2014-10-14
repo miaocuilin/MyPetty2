@@ -31,6 +31,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     if ([[USER objectForKey:@"isChooseFamilyShouldDismiss"]intValue]) {
+        [USER setObject:@"0" forKey:@"isChooseFamilyShouldDismiss"];
         [self dismissViewControllerAnimated:NO completion:nil];
     }
 }
@@ -112,7 +113,7 @@
 
 -(void)getListData
 {
-    NSDictionary * oriDict = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CateNameList" ofType:@"plist"]];;
+    NSDictionary * oriDict = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CateNameList" ofType:@"plist"]];
     //将数据存到数组中
     NSDictionary * dict1 = [oriDict objectForKey:@"1"];
     NSDictionary * dict2 = [oriDict objectForKey:@"2"];

@@ -33,11 +33,25 @@
     }
     return self;
 }
-
+-(void)viewWillAppear:(BOOL)animated
+{
+    
+    if ([[USER objectForKey:@"isSuccess"] intValue] && !isLoaded) {
+        if (!showMyRank) {
+            [self loadData];
+        }
+    }
+}
+-(void)viewDidAppear:(BOOL)animated
+{
+    isLoaded = YES;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     self.catArray = [NSMutableArray arrayWithCapacity:0];
     self.dogArray = [NSMutableArray arrayWithCapacity:0];
     self.otherArray = [NSMutableArray arrayWithCapacity:0];
@@ -48,7 +62,8 @@
     self.myCountryArray = [NSMutableArray arrayWithCapacity:0];
     
     self.titleArray = [NSMutableArray arrayWithObjects:@"总人气榜",@"人气日榜", @"人气周榜", @"人气月榜",  nil];
-    self.myCountryRankArray = [NSMutableArray arrayWithObjects:@"10", @"38", @"66", @"88", nil];
+    self.myCountryRankArray = [NSMutableArray arrayWithCapacity:0];
+    self.selectedWords = @"所有种族";
     
     [self getListData];
     [self createBg];
@@ -57,11 +72,10 @@
     [self createHeader];
     [self createFakeNavigation];
     
-    [self createArrow];
+//    [self createArrow];
 //    [self findMeBtnClick];
     [self loadData];
     
-
 }
 - (void)loadData
 {
@@ -72,7 +86,7 @@
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:rank Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"人气排行数据：%@",load.dataDict);
         if (isFinish) {
-            arrow.hidden = NO;
+//            arrow.hidden = NO;
             [self.rankDataArray removeAllObjects];
             NSArray *array = [load.dataDict objectForKey:@"data"];
             for (int i = 0; i<array.count; i++) {
@@ -82,10 +96,24 @@
                 [self.rankDataArray addObject:model];
                 [model release];
             }
-            [self.limitRankDataArray addObjectsFromArray:self.rankDataArray];
+            if ([self.selectedWords isEqualToString:@"所有种族"]) {
+                [self.limitRankDataArray addObjectsFromArray:self.rankDataArray];
+            }else{
+                for (int i=0; i<self.rankDataArray.count; i++) {
+                    popularityListModel * model = self.rankDataArray[i];
+                    if ([[ControllerManager returnCateNameWithType:[model type]] isEqualToString:self.selectedWords]) {
+                        [self.limitRankDataArray addObject:self.rankDataArray[i]];
+                    }
+                }
+            }
+            
 //            [self createTableView];
-            [self loadUserPetsInfo];
-            [tv reloadData];
+            if ([[USER objectForKey:@"isSuccess"] intValue]) {
+                [self loadUserPetsInfo];
+            }else{
+                [tv reloadData];
+                LoadingSuccess;
+            }
             
 //            [tv2 reloadData];
         }else{
@@ -105,21 +133,26 @@
             [self.aidsArray removeAllObjects];
             [self.myCountryArray removeAllObjects];
             
-            NSArray * array = [load.dataDict objectForKey:@"data"];
-            for (int i=0; i<array.count; i++) {
-                [self.aidsArray addObject:[array[i] objectForKey:@"aid"]];
+            self.myCountryRankArray = [load.dataDict objectForKey:@"data"];
+            for (int i=0; i<self.myCountryRankArray.count; i++) {
+                [self.aidsArray addObject:[self.myCountryRankArray[i] objectForKey:@"aid"]];
             }
             //筛选出我的国家在数组中的位置
-            for (int i=0; i<self.rankDataArray.count; i++) {
-                for (int j=0; j<self.aidsArray.count; j++) {
-                    if ([[self.rankDataArray[i] aid] isEqualToString:self.aidsArray[j]]) {
-                        [self.myCountryArray addObject:[NSString stringWithFormat:@"%d", i+1]];
-                        break;
+//            if ([self.selectedWords isEqualToString:@"所有种族"]) {
+                for (int i=0; i<self.limitRankDataArray.count; i++) {
+                    for (int j=0; j<self.aidsArray.count; j++) {
+                        if ([[self.limitRankDataArray[i] aid] isEqualToString:self.aidsArray[j]]) {
+                            [self.myCountryArray addObject:[NSString stringWithFormat:@"%d", i+1]];
+                            break;
+                        }
                     }
+                    
                 }
-                
-            }
-            NSLog(@"-----%@", self.myCountryArray);
+//            }else{
+//                
+//            }
+            
+            NSLog(@"-----self.myCountryArray:%@", self.myCountryArray);
             count = 0;
             /***************逻辑判断*****************/
 //            if (self.view.frame.size.height == 480) {
@@ -163,8 +196,9 @@
 //                    [self showEntireList];
 //                }
 //            }
-//            [self findMeBtnClick];
             LoadingSuccess;
+            [self findMeBtnClick];
+//            [tv reloadData];
         }else{
             LoadingFailed;
         }
@@ -174,29 +208,34 @@
 
 -(void)getListData
 {
-    NSDictionary * oriDict = [USER objectForKey:@"CateNameList"];
+    NSDictionary * oriDict = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CateNameList" ofType:@"plist"]];
     //将数据存到数组中
     NSDictionary * dict1 = [oriDict objectForKey:@"1"];
     NSDictionary * dict2 = [oriDict objectForKey:@"2"];
-    NSDictionary * dict3 = [oriDict objectForKey:@"3"];
+//    NSDictionary * dict3 = [oriDict objectForKey:@"3"];
     
     [self.totalArray addObject:@"所有种族"];
     
-    for (int i=0; i<[dict1 count]; i++) {
-        NSString * str = [dict1 objectForKey:[NSString stringWithFormat:@"%d", 100+i+1]];
-        [self.catArray addObject:str];
-        [self.totalArray addObject:str];
+    if ([[USER objectForKey:@"planet"] intValue] == 2) {
+        for (int i=0; i<[dict2 count]; i++) {
+            NSString * str = [dict2 objectForKey:[NSString stringWithFormat:@"%d", 200+i+1]];
+            [self.dogArray addObject:str];
+            [self.totalArray addObject:str];
+        }
+    }else{
+        for (int i=0; i<[dict1 count]; i++) {
+            NSString * str = [dict1 objectForKey:[NSString stringWithFormat:@"%d", 100+i+1]];
+            [self.catArray addObject:str];
+            [self.totalArray addObject:str];
+        }
     }
-    for (int i=0; i<[dict2 count]; i++) {
-        NSString * str = [dict2 objectForKey:[NSString stringWithFormat:@"%d", 200+i+1]];
-        [self.dogArray addObject:str];
-        [self.totalArray addObject:str];
-    }
-    for (int i=0; i<[dict3 count]; i++) {
-        NSString * str = [dict3 objectForKey:[NSString stringWithFormat:@"%d", 300+i+1]];
-        [self.otherArray addObject:str];
-        [self.totalArray addObject:str];
-    }
+
+    
+//    for (int i=0; i<[dict3 count]; i++) {
+//        NSString * str = [dict3 objectForKey:[NSString stringWithFormat:@"%d", 300+i+1]];
+//        [self.otherArray addObject:str];
+//        [self.totalArray addObject:str];
+//    }
 }
 -(void)createBg
 {
@@ -217,28 +256,27 @@
 #pragma mark - 创建tableView
 -(void)createTableView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 64+35+35+50*5) style:UITableViewStylePlain];
-    if (self.view.frame.size.height == 480) {
-        tv.frame = CGRectMake(0, 0, 320, 64+35+35+50*3);
-    }
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+//    if (self.view.frame.size.height == 480) {
+//        tv.frame = CGRectMake(0, 0, 320, 64+35+35+50*3);
+//    }
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
     tv.backgroundColor = [UIColor clearColor];
-    tv.scrollEnabled = NO;
     [self.view addSubview:tv];
     
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64+35+35)];
     tv.tableHeaderView = tempView;
     
-    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-50*3, 320, 50*3) style:UITableViewStylePlain];
-    tv2.delegate = self;
-    tv2.dataSource = self;
-    tv2.separatorStyle = 0;
-    tv2.showsVerticalScrollIndicator = NO;
-    tv2.scrollEnabled = NO;
-    tv2.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:tv2];
+//    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-50*3, 320, 50*3) style:UITableViewStylePlain];
+//    tv2.delegate = self;
+//    tv2.dataSource = self;
+//    tv2.separatorStyle = 0;
+//    tv2.showsVerticalScrollIndicator = NO;
+//    tv2.scrollEnabled = NO;
+//    tv2.backgroundColor = [UIColor clearColor];
+//    [self.view addSubview:tv2];
 }
 #pragma mark - 创建arrow
 -(void)createArrow
@@ -258,7 +296,7 @@
     
     [UIView animateWithDuration:0.3 animations:^{
         tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
-        tv2.frame = CGRectMake(0, self.view.frame.size.height, 320, 0);
+//        tv2.frame = CGRectMake(0, self.view.frame.size.height, 320, 0);
     }];
 }
 
@@ -287,15 +325,21 @@
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
     
-    if (tableView == tv2 && indexPath.row == myCurrentCountNum-1) {
-        cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
+//    tableView == tv2 && indexPath.row == myCurrentCountNum-1
+    
+//    if (indexPath.row == myCurrentCountNum-1) {
+//        cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
+//        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:YES];
+//    }else{
+//        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:NO];
+//    }
+    
+//    tableView == tv && markLineNum == indexPath.row && isShow == NO
+    if (indexPath.row == myCurrentCountNum-1) {
         [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:YES];
+        cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
     }else{
         [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:NO];
-    }
-    if (tableView == tv && markLineNum == indexPath.row && isShow == NO) {
-        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:YES];
-        cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
     }
 //    NSLog(@"model.tx:%@",model.tx);
     if ([model.tx isEqualToString:@""]) {
@@ -340,7 +384,7 @@
     if (scrollView == tv) {
 //        arrow.alpha = 0;
 //        arrow.hidden = YES;
-        findMeBtn.userInteractionEnabled = NO;
+//        findMeBtn.userInteractionEnabled = NO;
 //
 //        [UIView animateWithDuration:0.3 animations:^{
 //            tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
@@ -385,6 +429,9 @@
     [navView addSubview:backBtn];
     
     UILabel * titleBgLabel = [MyControl createLabelWithFrame:CGRectMake(100, 64-39, 120, 30) Font:17 Text:@"喵星"];
+    if ([[USER objectForKey:@"planet"] intValue] == 2) {
+        titleBgLabel.text = @"汪星";
+    }
     titleBgLabel.font = [UIFont boldSystemFontOfSize:17];
 //    titleBgLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.4];
     [navView addSubview:titleBgLabel];
@@ -409,7 +456,7 @@
     UIImageView * findMe = [MyControl createImageViewWithFrame:CGRectMake(320-35, 30, 43/2, 47/2) ImageName:@"findMe.png"];
     [navView addSubview:findMe];
     
-    findMeBtn = [MyControl createButtonWithFrame:CGRectMake(320-41, 24, 51*0.6, 55*0.6) ImageName:@"" Target:self Action:@selector(findMeBtnClick) Title:nil];
+    findMeBtn = [MyControl createButtonWithFrame:CGRectMake(320-45, 24, 40, 35) ImageName:@"" Target:self Action:@selector(findMeBtnClick) Title:nil];
 //    giftBagBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     findMeBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:findMeBtn];
@@ -447,6 +494,11 @@
 -(void)findMeBtnClick
 {
     NSLog(@"findMe");
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        return;
+    }
+    
     if (self.limitRankDataArray.count == 0) {
         NSLog(@"没有数据");
         return;
@@ -517,7 +569,7 @@
 //                    float offset = tv.contentOffset.y;
 //                    //offset/50为当前显示的第一个排行名次-1
 //                    if (offset/50 + 5 > [self.myCountryArray[0] intValue]) {
-//                        <#statements#>
+//
 //                    }
 //                }
 //            }
@@ -532,6 +584,9 @@
 //            
 //        }
 //    }
+    
+    
+    showMyRank = 1;
     /******************************/
     
     if (self.myCountryArray.count) {
@@ -540,36 +595,38 @@
         }
         myCurrentCountNum = [self.myCountryArray[count++] intValue];
         
-        NSLog(@"%d", myCurrentCountNum);
-        tv2.contentOffset = CGPointMake(0, myCurrentCountNum*50-50*2);
-        
-        [tv2 reloadData];
+        NSLog(@"myCurrentCountNum:%d", myCurrentCountNum);
+        [tv reloadData];
+//        tv2.contentOffset = CGPointMake(0, myCurrentCountNum*50-50*2);
+//        
+//        [tv2 reloadData];
     }
     
     
-    arrow.hidden = NO;
-    tv.scrollEnabled = NO;
+//    arrow.hidden = NO;
+//    tv.scrollEnabled = NO;
     [UIView animateWithDuration:0.3 animations:^{
-        arrow.alpha = 1;
-        if (self.view.frame.size.height == 480) {
-            tv.frame = CGRectMake(0, 0, 320, 64+35+35+50*3);
-        }else{
-            tv.frame = CGRectMake(0, 0, 320, 64+35+35+50*5);
-        }
+//        arrow.alpha = 1;
+        tv.contentOffset = CGPointMake(0, (myCurrentCountNum-1)*50);
+//        if (self.view.frame.size.height == 480) {
+//            tv.frame = CGRectMake(0, 0, 320, 64+35+35+50*3);
+//        }else{
+//            tv.frame = CGRectMake(0, 0, 320, 64+35+35+50*5);
+//        }
         
-        tv2.frame = CGRectMake(0, self.view.frame.size.height-50*3, 320, 50*3);
+//        tv2.frame = CGRectMake(0, self.view.frame.size.height-50*3, 320, 50*3);
     }];
     
     //控制tv的偏移量为50的整数倍
-    for (int i=0; i<100; i++) {
-        if (tv.contentOffset.y>i*50 && tv.contentOffset.y<(i+1)*50) {
-//            [UIView animateWithDuration:0.3 animations:^{
-                tv.contentOffset = CGPointMake(0, (i+1)*50);
-            findMeBtn.userInteractionEnabled = YES;
-//            }];
-            break;
-        }
-    }
+//    for (int i=0; i<100; i++) {
+//        if (tv.contentOffset.y>i*50 && tv.contentOffset.y<(i+1)*50) {
+////            [UIView animateWithDuration:0.3 animations:^{
+//                tv.contentOffset = CGPointMake(0, (i+1)*50);
+//            findMeBtn.userInteractionEnabled = YES;
+////            }];
+//            break;
+//        }
+//    }
 }
 #pragma mark - 创建顶栏1
 -(void)createHeader
@@ -642,9 +699,11 @@
 -(void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
 {
     NSLog(@"line:%d--words:%@", Line, Words);
+    self.selectedWords = Words;
+    
     if (sender == dropDown) {
         //打开所有排行
-        [self showEntireList];
+//        [self showEntireList];
         
         [self.limitRankDataArray removeAllObjects];
         if ([Words isEqualToString:@"所有种族"]) {
@@ -657,7 +716,9 @@
                 }
             }
         }
-        
+        count = 0;
+        myCurrentCountNum = 0;
+        [self searchMe];
         [tv reloadData];
     }else{
         for (int i =0; i<self.titleArray.count; i++) {
@@ -669,6 +730,25 @@
 //        [raceBtn setTitle:@"所有种族" forState:UIControlStateNormal];
         [self loadData];
     }
+}
+-(void)searchMe
+{
+    //从limitRankDataArray中挑出符合条件的我的联萌的排名
+    [self.aidsArray removeAllObjects];
+    [self.myCountryArray removeAllObjects];
+    for (int i=0; i<self.myCountryRankArray.count; i++) {
+        [self.aidsArray addObject:[self.myCountryRankArray[i] objectForKey:@"aid"]];
+    }
+    //筛选出我的国家在数组中的位置
+    for (int i=0; i<self.limitRankDataArray.count; i++) {
+        for (int j=0; j<self.aidsArray.count; j++) {
+            if ([[self.limitRankDataArray[i] aid] isEqualToString:self.aidsArray[j]]) {
+                [self.myCountryArray addObject:[NSString stringWithFormat:@"%d", i+1]];
+                break;
+            }
+        }
+    }
+    NSLog(@"-----self.myCountryArray:%@", self.myCountryArray);
 }
 -(void)rel
 {

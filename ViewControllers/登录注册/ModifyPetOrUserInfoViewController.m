@@ -38,7 +38,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     return self;
 }
-
+-(void)viewWillAppear:(BOOL)animated
+{
+    [[IQKeyboardManager sharedManager] setEnable:YES];
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [[IQKeyboardManager sharedManager] setEnable:NO];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -239,7 +246,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     sv.contentSize = CGSizeMake(sv.frame.size.width*2, sv.frame.size.height);
     sv.pagingEnabled = YES;
-//    sv.scrollEnabled = NO;
+    sv.scrollEnabled = NO;
     sv.showsHorizontalScrollIndicator = NO;
     [self.view addSubview:sv];
     

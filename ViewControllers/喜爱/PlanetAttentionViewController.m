@@ -44,7 +44,7 @@
     NSLog(@"关注页面的url :%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"%@", load.dataDict);
+//            NSLog(@"%@", load.dataDict);
             [self.dataArray removeAllObjects];
             NSArray * array = [load.dataDict objectForKey:@"data"];
             for (NSDictionary * dict in array) {
@@ -53,6 +53,7 @@
                 [self.dataArray addObject:model];
                 [model release];
             }
+
             [tv reloadData];
             LoadingSuccess;
             [tv headerEndRefreshing];

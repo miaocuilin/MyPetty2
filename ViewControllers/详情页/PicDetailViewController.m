@@ -592,7 +592,7 @@
     [giftBgView addSubview:giftNum];
     
     //评论和分享
-    UIImageView * commentImageView = [MyControl createImageViewWithFrame:CGRectMake(435/2, 13, 35*0.75, 18) ImageName:@"detail_comment.png"];
+    UIImageView * commentImageView = [MyControl createImageViewWithFrame:CGRectMake(435/2, (44-25/44.0*41)/2, 25, 25/44.0*41) ImageName:@"detail_comment.png"];
     [giftBgView addSubview:commentImageView];
     
     commentNum = [MyControl createLabelWithFrame:CGRectMake(commentImageView.frame.origin.x+commentImageView.frame.size.width, 12, 30, 20) Font:10 Text:[NSString stringWithFormat:@"%d", self.nameArray.count]];
@@ -604,7 +604,7 @@
 //    comment.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [giftBgView addSubview:comment];
     /*******************************/
-    UIImageView * shareImageView = [MyControl createImageViewWithFrame:CGRectMake(546/2, 13, 32*(18/30.0), 18) ImageName:@"detail_share.png"];
+    UIImageView * shareImageView = [MyControl createImageViewWithFrame:CGRectMake(546/2, (44-37*(25/43.0))/2, 25, 37*(25/43.0)) ImageName:@"detail_share.png"];
     [giftBgView addSubview:shareImageView];
     
     shareNum = [MyControl createLabelWithFrame:CGRectMake(shareImageView.frame.origin.x+shareImageView.frame.size.width, 12, 20, 20) Font:10 Text:nil];

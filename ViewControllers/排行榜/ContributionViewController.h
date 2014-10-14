@@ -23,18 +23,26 @@
     NIDropDown *dropDown2;
     
     UITableView * tv;
-    UITableView * tv2;
+//    UITableView * tv2;
     
-    int myCurrentCountNum;
-    int count;
-    
+//    int myCurrentCountNum;
+//    int count;
+    //记录我的名次，从1开始
     int myRanking;
+    //用来记录是否展示过我的名次
+    
+    //当我注册完之后回来点找我的时候重新loadData
+    int showMyRank;
 }
+@property (nonatomic,copy)NSString * aid;
+
+@property (nonatomic)int category;
 @property (nonatomic,retain)NSMutableArray * titleArray;
 
-@property (nonatomic,retain)NSMutableArray * myCountryRankArray;
+//@property (nonatomic,retain)NSMutableArray * myCountryRankArray;
 @property (nonatomic,retain)NSMutableArray * contributionDataArray;
 
+//@property (nonatomic,retain)NSMutableArray * userPetListArray;
 //@property (nonatomic,retain)NSMutableArray * usr_idsArray;
 //@property (nonatomic,retain)NSMutableArray * myCountryArray;
 @end

@@ -209,11 +209,12 @@
         
         UILabel *leftCornerLabel1 =[MyControl createLabelWithFrame:CGRectMake(-3, 4, 20, 8) Font:7 Text:@"人气"];
         leftCornerLabel1.textAlignment = NSTextAlignmentCenter;
-        leftCornerLabel1.font = [UIFont boldSystemFontOfSize:8];
+        leftCornerLabel1.font = [UIFont boldSystemFontOfSize:7];
         CGAffineTransform transform =  CGAffineTransformMakeRotation(-45.0 *M_PI / 180.0);
         leftCornerLabel1.transform = transform;
         
-        UILabel *leftCornerLabel2 = [MyControl createLabelWithFrame:CGRectMake(0, 10, 25, 8) Font:9 Text:@"+50"];
+        UILabel *leftCornerLabel2 = [MyControl createLabelWithFrame:CGRectMake(-1, 11, 25, 10) Font:8 Text:@"+50"];
+        leftCornerLabel2.font = [UIFont systemFontOfSize:8];
         leftCornerLabel2.textAlignment = NSTextAlignmentCenter;
         leftCornerLabel2.transform = transform;
         [imageView addSubview:leftCornerLabel1];

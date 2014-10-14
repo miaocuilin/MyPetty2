@@ -12,6 +12,8 @@
 {
 //    UIImageView * sex;
     NSString *usr_id;
+    
+    int lineNum;
 }
 @property (retain, nonatomic) IBOutlet UIImageView *circleBg;
 @property (retain, nonatomic) IBOutlet UIButton *headBtn;

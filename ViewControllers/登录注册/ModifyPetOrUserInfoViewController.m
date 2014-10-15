@@ -1052,13 +1052,31 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
     }else{
         if (component == 0) {
-            return [NSString stringWithFormat:@"%d", row];
+            return [NSString stringWithFormat:@"%2d 岁", row];
         }else{
-            return [NSString stringWithFormat:@"%d", row];
+            return [NSString stringWithFormat:@"%2d 个月", row];
         }
+
     }
     
 }
+//-(UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
+//{
+//    
+//    if (pickerView == picker3) {
+//        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 0, 100, 20) Font:15 Text:nil];
+//        label.textColor = [UIColor blackColor];
+//        label.textAlignment = NSTextAlignmentRight;
+//        if (component == 0) {
+//            label.text = [NSString stringWithFormat:@"%2d 岁", row];
+//        }else{
+//            label.text = [NSString stringWithFormat:@"%2d 个月", row];
+//        }
+//        return label;
+//    }else{
+//        return nil;
+//    }
+//}
 -(CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
     if (pickerView == picker) {

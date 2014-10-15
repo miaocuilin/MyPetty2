@@ -36,7 +36,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     
-    if ([[USER objectForKey:@"isSuccess"] intValue] && !isLoaded) {
+    if ([[USER objectForKey:@"isSuccess"] intValue] && isLoaded) {
         if (!showMyRank) {
             [self loadData];
         }
@@ -84,11 +84,14 @@
     NSString *rank = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@",POPULARRANKAPI,self.category,rankSig,[ControllerManager getSID]];
     NSLog(@"rank:%@",rank);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:rank Block:^(BOOL isFinish, httpDownloadBlock *load) {
-        NSLog(@"人气排行数据：%@",load.dataDict);
         if (isFinish) {
+            NSLog(@"人气排行数据：%@",load.dataDict);
 //            arrow.hidden = NO;
             [self.rankDataArray removeAllObjects];
+            [self.limitRankDataArray removeAllObjects];
+            
             NSArray *array = [load.dataDict objectForKey:@"data"];
+            NSLog(@"%d", array.count);
             for (int i = 0; i<array.count; i++) {
                 NSDictionary *dict = array[i];
                 popularityListModel *model = [[popularityListModel alloc] init];
@@ -96,6 +99,8 @@
                 [self.rankDataArray addObject:model];
                 [model release];
             }
+            
+            NSLog(@"%@", self.selectedWords);
             if ([self.selectedWords isEqualToString:@"所有种族"]) {
                 [self.limitRankDataArray addObjectsFromArray:self.rankDataArray];
             }else{
@@ -370,6 +375,7 @@
         cell.rqNum.text = model.d_rq;
     }else if ([titleBtn.currentTitle isEqualToString:@"人气周榜"]){
         cell.rqNum.text = model.w_rq;
+//        NSLog(@"%@", model.w_rq);
     }else{
         cell.rqNum.text = model.m_rq;
     }
@@ -382,6 +388,7 @@
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView == tv) {
+        NSLog(@"%d----%d", self.rankDataArray.count, self.limitRankDataArray.count);
 //        arrow.alpha = 0;
 //        arrow.hidden = YES;
 //        findMeBtn.userInteractionEnabled = NO;
@@ -393,20 +400,20 @@
 //        
     }
 }
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    if (scrollView == tv) {
-        NSLog(@"endDecelerating");
-        findMeBtn.userInteractionEnabled = YES;
-    }
-}
--(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    if (scrollView == tv) {
-        NSLog(@"endDragging");
-        findMeBtn.userInteractionEnabled = YES;
-    }
-}
+//-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+//{
+//    if (scrollView == tv) {
+//        NSLog(@"endDecelerating");
+//        findMeBtn.userInteractionEnabled = YES;
+//    }
+//}
+//-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+//{
+//    if (scrollView == tv) {
+//        NSLog(@"endDragging");
+//        findMeBtn.userInteractionEnabled = YES;
+//    }
+//}
 
 #pragma mark - 创建导航
 -(void)createFakeNavigation
@@ -699,11 +706,11 @@
 -(void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
 {
     NSLog(@"line:%d--words:%@", Line, Words);
-    self.selectedWords = Words;
     
     if (sender == dropDown) {
         //打开所有排行
 //        [self showEntireList];
+        self.selectedWords = Words;
         
         [self.limitRankDataArray removeAllObjects];
         if ([Words isEqualToString:@"所有种族"]) {
@@ -720,7 +727,7 @@
         myCurrentCountNum = 0;
         [self searchMe];
         [tv reloadData];
-    }else{
+    }else if(sender == dropDown2){
         for (int i =0; i<self.titleArray.count; i++) {
             if ([titleBtn.currentTitle isEqualToString:self.titleArray[i]]) {
                 self.category = i;

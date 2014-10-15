@@ -42,10 +42,12 @@
     [self blackBackGround];
     [[UIApplication sharedApplication] setApplicationSupportsShakeToEdit:YES];
     [self becomeFirstResponder];
+    
     NSString *path = [[NSBundle mainBundle] pathForResource:@"rocking" ofType:@"wav"];
     NSString *path2 = [[NSBundle mainBundle] pathForResource:@"rocked" ofType:@"wav"];
     AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path2], &soundID2);
 	AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path], &soundID);
+    
     if ([self.titleString isEqualToString:@"捣捣乱"]) {
         self.isTrouble = YES;
     }
@@ -71,6 +73,7 @@
 #pragma mark - 加载摇一摇数据
 - (void)loadShakeDataInit
 {
+    StartLoading;
 //    self.animalInfoDict = [USER objectForKey:@"petInfoDict"];
     NSString *shakeSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
     NSString *shakeString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",SHAKEAPI, self.pet_aid, shakeSig,[ControllerManager getSID]];
@@ -90,6 +93,9 @@
                 floating2.frame = CGRectMake(23+self.distance, 90, 70, 25);
                 floating3.frame = CGRectMake(180+self.distance, 180, 70, 25);
             }
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
         }
     }];
     [request release];
@@ -130,16 +136,16 @@
         if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
             int newexp = [[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] intValue];
             int exp = [[USER objectForKey:@"exp"] intValue];
-            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
-            if (exp != newexp && (newexp - exp)>0) {
-                int index = newexp - exp;
+            [USER setObject:[NSString stringWithFormat:@"%d", exp+newexp] forKey:@"exp"];
+//            if (exp != newexp && (newexp - exp)>0) {
+                int index = newexp;
                 self.count--;
                 AudioServicesPlaySystemSound(soundID2);
                 self.isShaking = NO;
                 self.upView.contentOffset = CGPointMake(self.upView.frame.size.width, 0);
                 timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:3];
                 [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
-            }
+//            }
         }else{
             [MyControl createAlertViewWithTitle:[load.dataDict objectForKey:@"errorMessage"]];
         }

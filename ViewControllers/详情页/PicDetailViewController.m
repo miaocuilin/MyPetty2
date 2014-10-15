@@ -861,7 +861,7 @@
     
     int commentsBgViewHeight = 0;
     for(int i=0;i<self.usrIdArray.count;i++){
-        UILabel * cmtUserName = [MyControl createLabelWithFrame:CGRectMake(15, 10+commentsBgViewHeight, 150, 20) Font:15 Text:nil];
+        UILabel * cmtUserName = [MyControl createLabelWithFrame:CGRectMake(15, 10+commentsBgViewHeight, 230, 20) Font:15 Text:nil];
         if ([self.nameArray[i] rangeOfString:@"&"].location == NSNotFound) {
             cmtUserName.text = self.nameArray[i];
             cmtUserName.textColor = BGCOLOR;

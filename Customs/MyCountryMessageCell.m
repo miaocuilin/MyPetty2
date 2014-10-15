@@ -157,7 +157,7 @@
         NSString * str5 = [NSString stringWithFormat:@"+%@", [model.content objectForKey:@"rq"]];
         NSString * str6 = [ControllerManager returnActionStringWithItemId:[model.content objectForKey:@"item_id"]];
         
-        NSString * bodyStr = [NSString stringWithFormat:@"%@— %@ 送了 %@ 一个 %@, %@ %@。人气 %@", str1, str2, str3, str4, str3, str6, str5];
+        NSString * bodyStr = [NSString stringWithFormat:@"%@— %@ 送了 %@ 一个 %@, %@ %@ 人气 %@", str1, str2, str3, str4, str3, str6, str5];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length + 2, str2.length)];
         
@@ -233,7 +233,7 @@
         NSString * str4 = [NSString stringWithFormat:@"%@", [model.content objectForKey:@"rq"]];
         NSString * str5 = [ControllerManager returnActionStringWithItemId:[model.content objectForKey:@"item_id"]];
         
-        NSString * bodyStr = [NSString stringWithFormat:@"路人 %@ 对 %@ 扔了一个 %@, %@ %@。人气 %@", str1, str2, str3, str2, str5, str4];
+        NSString * bodyStr = [NSString stringWithFormat:@"路人 %@ 对 %@ 扔了一个 %@, %@ %@ 人气 %@", str1, str2, str3, str2, str5, str4];
         NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(3, str1.length)];
         
@@ -245,7 +245,7 @@
         
         [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(3+str1.length+3+str2.length+6+str3.length+2+str2.length+1+str5.length+4, str4.length)];
         
-        CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
+        CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 105) lineBreakMode:1];
         
         body.frame = CGRectMake(60, 30, 240, size.height);
         body.attributedText = str;

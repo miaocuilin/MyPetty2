@@ -16,7 +16,8 @@
 #import "UserActivityListModel.h"
 #import "PicDetailViewController.h"
 #import "ModifyPetOrUserInfoViewController.h"
-//@class PetInfoViewController;
+
+#import "PetInfoViewController.h"
 
 @interface UserInfoViewController ()
 {
@@ -556,7 +557,7 @@
     
     //
     
-    NSString * str2= [NSString stringWithFormat:@"经纪人 — %@联萌", [headerDict objectForKey:@"a_name"]];
+    NSString * str2= [NSString stringWithFormat:@"经纪人—%@", [headerDict objectForKey:@"a_name"]];
     CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:14 Text:str2];
     //    positionAndUserName.font = [UIFont boldSystemFontOfSize:15];
@@ -578,7 +579,7 @@
                 //            headImageView.image = image;
             }else{
                 //下载头像
-                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXAPI, [headerDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [headerDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
                         [userImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
                         //                    headImageView.image = load.dataImage;
@@ -600,14 +601,14 @@
     [bgView addSubview:userImageBtn];
     
     //123  164
-    UIImageView * flagImageView = [MyControl createImageViewWithFrame:CGRectMake(240, 0, 123/2, 164/2) ImageName:@"flag_gold.png"];
+    UIImageView * flagImageView = [MyControl createImageViewWithFrame:CGRectMake(240, 0, 123*0.45, 164*0.45) ImageName:@"flag_gold.png"];
     [bgView addSubview:flagImageView];
     
-    UILabel * gold = [MyControl createLabelWithFrame:CGRectMake(0, 10, 60, 20) Font:12 Text:[NSString stringWithFormat:@"%@",[headerDict objectForKey:@"gold"]]];
+    UILabel * gold = [MyControl createLabelWithFrame:CGRectMake(0, 5, flagImageView.frame.size.width, 24) Font:12 Text:[NSString stringWithFormat:@"%@",[headerDict objectForKey:@"gold"]]];
     gold.textAlignment = NSTextAlignmentCenter;
     [flagImageView addSubview:gold];
     
-    UIButton * GXList = [MyControl createButtonWithFrame:CGRectMake(0, 0, 62, 70) ImageName:@"" Target:self Action:@selector(GXListClick) Title:@""];
+    UIButton * GXList = [MyControl createButtonWithFrame:CGRectMake(0, 0, 123*0.45, 164*0.45-5) ImageName:@"" Target:self Action:@selector(GXListClick) Title:@""];
 //    GXList.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [flagImageView addSubview:GXList];
 
@@ -649,10 +650,10 @@
         [self dismissViewControllerAnimated:YES completion:nil];
     }else{
         NSLog(@"跳到petInfoViewController aid:%@", [headerDict objectForKey:@"aid"]);
-//        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
-//        vc.aid = [headerDict objectForKey:@"aid"];
-//        [self presentViewController:vc animated:YES completion:nil];
-//        [vc release];
+        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+        vc.aid = [headerDict objectForKey:@"aid"];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
     }
     
 }
@@ -1083,7 +1084,7 @@
     }
 }
 
-#pragma mark - cell代理
+#pragma mark - cell代理,退出王国和设置默认
 -(void)swipeTableViewCell:(CountryInfoCell *)cell didClickButtonWithIndex:(NSInteger)index
 {
     if (sv.contentOffset.x == 0) {
@@ -1141,13 +1142,13 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-                [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:1];
+                [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
             }else{
-                [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:1];
+                [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
             }
             
         }else{
-            [MMProgressHUD dismissWithError:@"退出失败" afterDelay:1];
+            [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
         }
     }];
     [request release];

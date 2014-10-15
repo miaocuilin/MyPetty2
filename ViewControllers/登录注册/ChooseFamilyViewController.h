@@ -55,4 +55,6 @@
 @property(nonatomic,retain)NSDictionary * cardDict;
 
 @property(nonatomic)BOOL isMi;
+//
+@property(nonatomic,retain)NSArray * userPetsListArray;
 @end

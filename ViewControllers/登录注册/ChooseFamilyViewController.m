@@ -53,7 +53,7 @@
     
     self.systemListArray = [NSMutableArray arrayWithObjects:@"推荐", @"人气", nil];
     self.limitTypeName = @"所有种族";
-    [UIApplication sharedApplication].statusBarHidden = NO;
+//    [UIApplication sharedApplication].statusBarHidden = NO;
     
     
     [self loadRecommandListData];
@@ -84,6 +84,30 @@
             }
 //            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
             pageNum = 1;
+            
+            if ([[USER objectForKey:@"isSuccess"] intValue]) {
+                [self loadUserPetsList];
+            }else{
+                [self createTableView];
+                LoadingSuccess;
+            }
+            
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+-(void)loadUserPetsList
+{
+    NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"UserPetsList:%@", load.dataDict);
+            self.userPetsListArray = [load.dataDict objectForKey:@"data"];
+            [self removeUserPets];
             [self createTableView];
             LoadingSuccess;
         }else{
@@ -92,7 +116,6 @@
     }];
     [request release];
 }
-
 -(void)createBg
 {
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
@@ -268,6 +291,24 @@
     [insertView addSubview:downArrow];
     
 }
+#pragma mark - 剔除用户的宠物
+-(void)removeUserPets
+{
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        return;
+    };
+    //self.limitDataArray
+    for (int i=0; i<self.limitDataArray.count; i++) {
+        for (int j=0; j<self.userPetsListArray.count; j++) {
+            if ([[self.limitDataArray[i] aid] isEqualToString:[self.userPetsListArray[j] objectForKey:@"aid"]]) {
+                [self.limitDataArray removeObjectAtIndex:i];
+                i--;
+                break;
+            }
+        }
+    }
+}
+
 #pragma mark - tableView代理
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -662,6 +703,7 @@
             }
 //            [self.limitDataArray addObjectsFromArray:self.dataArray];
 //            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+            [self removeUserPets];
             pageNum = 1;
             [tv reloadData];
             LoadingSuccess;
@@ -690,6 +732,7 @@
             }
 //            [self.limitDataArray addObjectsFromArray:self.dataArray2];
 //            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
+            [self removeUserPets];
             [tv reloadData];
             pageNum = 1;
             LoadingSuccess;
@@ -729,6 +772,7 @@
 //                }else{
 //                    self.lastAid = @"";
 //                }
+                [self removeUserPets];
                 LoadingSuccess;
                 [tv reloadData];
             }else{
@@ -765,6 +809,7 @@
 //                }else{
 //                    self.lastAid = @"";
 //                }
+                [self removeUserPets];
                 [tv reloadData];
                 LoadingSuccess;
             }else{
@@ -803,6 +848,7 @@
             //排除该种类为空的情况
             if (array.count) {
                 pageNum++;
+                [self removeUserPets];
                 [tv reloadData];
             }
             [tv footerEndRefreshing];
@@ -841,6 +887,7 @@
             //排除该种类为空的情况
             if (array.count) {
                 pageNum++;
+                [self removeUserPets];
                 [tv reloadData];
             }
             

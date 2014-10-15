@@ -673,12 +673,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     woman.backgroundColor = BGCOLOR;
     man.backgroundColor = [UIColor whiteColor];
     isMan = 0;
+    [tfUserName resignFirstResponder];
 }
 -(void)manClick:(UIButton *)button
 {
     woman.backgroundColor = [UIColor whiteColor];
     man.backgroundColor = BGCOLOR;
     isMan = 1;
+    [tfUserName resignFirstResponder];
 }
 -(void)finish2ButtonClick
 {
@@ -953,13 +955,27 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
     }else{
         if (component == 0) {
-            return [NSString stringWithFormat:@"%d", row];
+            return [NSString stringWithFormat:@"%d 岁", row];
         }else{
-            return [NSString stringWithFormat:@"%d", row];
+            return [NSString stringWithFormat:@"%d 个月", row];
         }
     }
     
 }
+//-(UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
+//{
+//    UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 0, 100, 20) Font:15 Text:nil];
+//    label.textColor = [UIColor blackColor];
+//    label.textAlignment = NSTextAlignmentRight;
+//    if (pickerView == picker3) {
+//        if (component == 0) {
+//            label.text = [NSString stringWithFormat:@"%2d 岁", row];
+//        }else{
+//            label.text = [NSString stringWithFormat:@"%2d 个月", row];
+//        }
+//    }
+//    return label;
+//}
 -(CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
     if (pickerView == picker) {
@@ -1165,7 +1181,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         str = [NSString stringWithFormat:@"age=%d&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, gender, type, self.u_city, self.u_gender];
     /****************/
-    if (self.isAdoption || self.isModify) {
+    if (self.isAdoption) {
         str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender];
     }
@@ -1418,13 +1434,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         [self postUserImage];
                     }
                 }else{
-                    if (self.isModify) {
-                        [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
-                    }else{
+//                    if (self.isModify) {
+//                        [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
+//                    }else{
                         [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
-                    }
+//                    }
                     [USER setObject:@"1" forKey:@"Menu"];
+                    //注册完之后直接返回主页
                     [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+                    [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
+                    [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+                    //2代表刚注册
+                    [USER setObject:@"2" forKey:@"isNotRegister"];
                     [self dismissViewControllerAnimated:NO completion:nil];
                 }
             }
@@ -1527,20 +1548,20 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [self getUserData];
 //    alert1.hidden = YES;
     //头像存放在本地
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = DOCDIR;
     
     NSLog(@"%@",docDir);
     NSLog(@"saving png");
     if (request == _request) {
         NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", docDir, [USER objectForKey:@"aid"]];
-        NSData * data = UIImagePNGRepresentation(self.oriImage);
+        NSData * data = UIImageJPEGRepresentation(self.oriImage, 0.1);
         BOOL a = [data writeToFile:pngFilePath atomically:YES];
-        NSLog(@"头像存放结果：%d", a);
+        NSLog(@"宠物头像存放结果：%d", a);
     }else{
         NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_userHeadImage.png.png", docDir, [USER objectForKey:@"usr_id"]];
-        NSData * data = UIImagePNGRepresentation(self.oriUserImage);
+        NSData * data = UIImageJPEGRepresentation(self.oriUserImage, 0.1);
         BOOL a = [data writeToFile:pngFilePath atomically:YES];
-        NSLog(@"头像存放结果：%d", a);
+        NSLog(@"用户头像存放结果：%d", a);
     }
     
     
@@ -1564,11 +1585,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self dismissViewControllerAnimated:NO completion:nil];
         }
     }else{
-        if (self.isModify) {
-            [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
-        }else{
-            [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
-        }
+        [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+        
         [USER setObject:@"1" forKey:@"Menu"];
         
         //注册完之后直接返回主页

@@ -86,20 +86,21 @@
     //穿越API
     #define THROUGHAPI @"http://54.199.161.210:8001/index.php?r=user/planetApi&planet="
 
-    //获取图片未拼接的URL，后面需要加图片的名称
+    //已由头像或图片的名称，获取头像的具体数据，后面需要加图片的名称
     #define IMAGEURL @"http://54.199.161.210:8001/images/upload/"
     #define USERTXURL @"http://54.199.161.210:8001/images/tx/tx_usr/"
     #define PETTXURL @"http://54.199.161.210:8001/images/tx/tx_ani/"
 
     //图片、头像上传API
     #define PETIMAGEAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
-//图片、头像上传API
+
+    //图片、头像上传API
     #define IMAGEAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
 
     #define IMAGEUPLOADAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
     //IMAGEUPLOAD需要POST的数据：comment topic_id(可留空), topic_name, relates(usr_id1,usr_id2...)"
 
-    //获取头像API
+    //头像上传API 宠物参数aid
     #define TXAPI @"http://54.199.161.210:8001/index.php?r=user/txApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
     #define PETTXAPI @"http://54.199.161.210:8001/index.php?r=animal/txApi&aid="
 

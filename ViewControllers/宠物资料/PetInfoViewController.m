@@ -1054,7 +1054,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     
     /*****************************/
-    NSString *str2 = [NSString stringWithFormat:@"经纪人 - %@",[petInfoDict objectForKey:@"u_name"]];
+    NSString *str2 = [NSString stringWithFormat:@"经纪人—%@",[petInfoDict objectForKey:@"u_name"]];
 //    NSString *str2 = [NSString stringWithFormat:@"祭司 - %@",[self.userDataArray[0] u_name]];
     CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:14 Text:str2];
@@ -1095,16 +1095,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
     
     //123  164
-    UIImageView * flagImageView = [MyControl createImageViewWithFrame:CGRectMake(240, 0, 124/2, 164/2) ImageName:@"flag.png"];
+    UIImageView * flagImageView = [MyControl createImageViewWithFrame:CGRectMake(240, 0, 123*0.45, 164*0.45) ImageName:@"flag.png"];
     [bgView addSubview:flagImageView];
     
-    UIButton * GXList = [MyControl createButtonWithFrame:CGRectMake(2, 3, 55, 25) ImageName:@"" Target:self Action:@selector(GXListClick) Title:@""];
+    
+    UIButton * GXList = [MyControl createButtonWithFrame:CGRectMake(2, 5, 52, 24) ImageName:@"" Target:self Action:@selector(GXListClick) Title:@"贡献榜"];
     GXList.titleLabel.font = [UIFont systemFontOfSize:12];
 //    GXList.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     GXList.showsTouchWhenHighlighted = YES;
     [flagImageView addSubview:GXList];
 
-    UIButton * RQList = [MyControl createButtonWithFrame:CGRectMake(2, 32, 55, 25) ImageName:@"" Target:self Action:@selector(RQListClick) Title:@""];
+    UIButton * RQList = [MyControl createButtonWithFrame:CGRectMake(2, 32, 52, 24) ImageName:@"" Target:self Action:@selector(RQListClick) Title:@"人气榜"];
 //    RQList.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     RQList.titleLabel.font = [UIFont systemFontOfSize:12];
     RQList.showsTouchWhenHighlighted = YES;
@@ -1563,7 +1564,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }else if (a == 6) {
             return 90.0f;
         }else{
-            return 85.0f;
+            return 105.0f;
         }
     }else if (tableView == tv2) {
         return 230.0f;

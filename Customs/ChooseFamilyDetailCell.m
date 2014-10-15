@@ -33,7 +33,7 @@
     label1.textColor = [UIColor grayColor];
     [self.contentView addSubview:label1];
     
-    UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(320-80, 5, 70, 15) Font:13 Text:@"主人名片"];
+    UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(320-80, 5, 70, 15) Font:13 Text:@"经纪人"];
     label2.textAlignment = NSTextAlignmentRight;
     label2.textColor = [UIColor grayColor];
     [self.contentView addSubview:label2];

@@ -11,6 +11,7 @@
 #import "PetInfoViewController.h"
 #import "RegisterViewController.h"
 #import "SearchCell.h"
+#import "ChooseFamilyDetailCell.h"
 
 @interface SearchFamilyViewController ()
 
@@ -21,6 +22,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     if ([[USER objectForKey:@"isSearchFamilyShouldDismiss"] intValue]) {
+        [USER setObject:@"0" forKey:@"isSearchFamilyShouldDismiss"];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"af" object:nil];
     }
 }
@@ -28,8 +30,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    didSelected = -1;
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
-//    self.tempDataArray = [NSMutableArray arrayWithArray:self.dataArray];
+
     self.tempDataArray =[NSMutableArray arrayWithCapacity:0];
     
     UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
@@ -39,14 +43,37 @@
 //    [self createFakeNavigation];
     [self createHeader];
     [self createTableView];
-    
+    if ([[USER objectForKey:@"isSuccess"] intValue]) {
+        [self loadUserPetsList];
+    }
     //监听中文输入
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldEditChanged:) name:@"UITextFieldTextChangeNotification" object:tf];
 }
+#pragma mark - 加载用户数据
+-(void)loadUserPetsList
+{
+    StartLoading;
+    NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"UserPetsList:%@", load.dataDict);
+            self.userPetsListArray = [load.dataDict objectForKey:@"data"];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+
 #pragma mark - 加载数据
 //参数name不需要加密
 - (void)loadSearchData:(NSString *)name
 {
+    StartLoading;
+    
     NSString *searchSig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
     NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@", SEARCHAPI, [name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], searchSig,[ControllerManager getSID]];
     NSLog(@"搜索API:%@",searchString);
@@ -61,10 +88,31 @@
                 [self.tempDataArray addObject:model];
                 [model release];
             }
+            [self removeUserPets];
             [tv reloadData];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
         }
     }];
     [request release];
+}
+#pragma mark - 剔除用户的宠物
+-(void)removeUserPets
+{
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        return;
+    };
+    //self.limitDataArray
+    for (int i=0; i<self.tempDataArray.count; i++) {
+        for (int j=0; j<self.userPetsListArray.count; j++) {
+            if ([[self.tempDataArray[i] aid] isEqualToString:[self.userPetsListArray[j] objectForKey:@"aid"]]) {
+                [self.tempDataArray removeObjectAtIndex:i];
+                i--;
+                break;
+            }
+        }
+    }
 }
 -(void)createFakeNavigation
 {
@@ -92,24 +140,7 @@
     line0.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.1];
     [navView addSubview:line0];
 }
-//-(void)createNavigation
-//{
-//    self.navigationController.navigationBar.translucent = 0;
-//    if (1) {
-//        self.title = @"选择王国";
-//    }else{
-//        self.title = @"选择家族";
-//    }
-//    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 56/2, 56/2) ImageName:@"7-7.png" Target:self Action:@selector(backBtnClick) Title:nil];
-//    UIBarButtonItem * leftItem = [[UIBarButtonItem alloc] initWithCustomView:backBtn];
-//    self.navigationItem.leftBarButtonItem = leftItem;
-//    [leftItem release];
-//    
-//    if (iOS7) {
-//        self.navigationController.navigationBar.barTintColor = BGCOLOR;
-//    }
-//    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-//}
+
 -(void)createHeader
 {
     UIView * headerView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
@@ -125,7 +156,7 @@
     
     tf = [MyControl createTextFieldWithFrame:CGRectMake(30, 10+29, 480/2, 20) placeholder:@"" passWord:NO leftImageView:nil rightImageView:nil Font:15];
     tf.borderStyle = 0;
-//    tf.returnKeyType = UIReturnKeySearch;
+    tf.returnKeyType = UIReturnKeyDone;
 //    tf.backgroundColor = BGCOLOR;
     tf.clearButtonMode = UITextFieldViewModeAlways;
     tf.delegate = self;
@@ -155,45 +186,203 @@
 #pragma mark - tableView代理
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (section == didSelected) {
+        return 1;
+    }
+    return 0;
+}
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
     return self.tempDataArray.count;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString * cellID = @"ID";
-    SearchCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    ChooseFamilyDetailCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
-        cell = [[[SearchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
-        cell.selectionStyle = 0;
-        
-        UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 64, cell.frame.size.width, 1)];
-        line.backgroundColor = [UIColor whiteColor];
-        [cell addSubview:line];
+        cell = [[[ChooseFamilyDetailCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
+        UIButton * headBtn = [MyControl createButtonWithFrame:CGRectMake(410/2, 20, 55, 55) ImageName:@"" Target:self Action:@selector(headBtnClick) Title:nil];
+        headBtn.layer.cornerRadius = 55/2;
+        headBtn.layer.masksToBounds = YES;
+        [cell addSubview:headBtn];
     }
-    cell.backgroundColor = [UIColor clearColor];
-    PetInfoModel *model = self.tempDataArray[indexPath.row];
-    [cell configUI:model];
-    
+    cell.selectionStyle = 0;
+    cell.backgroundColor = [ControllerManager colorWithHexString:@"f4c6a2"];
+    /**************/
+    //    NSLog(@"--%@", self.cardDict);
+    [cell configUI:self.cardDict];
     
     return cell;
 }
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    PetInfoModel * model = self.tempDataArray[section];
+    UIView * headerBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 70)];
+    //    headerBgView.backgroundColor = [UIColor whiteColor];
+    
+    UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(20, 10, 50, 50) ImageName:@"defaultPetHead.png"];
+    headImageView.layer.cornerRadius = headImageView.frame.size.width/2;
+    headImageView.layer.masksToBounds = YES;
+    [headerBgView addSubview:headImageView];
+    /**************************/
+    //    NSLog(@"--%@", model.tx);
+    if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            headImageView.image = image;
+        }else{
+            //下载头像
+            NSLog(@"%@", [NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    headImageView.image = load.dataImage;
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+    
+    /**************************/
+    
+    
+    UIImageView * sex = [MyControl createImageViewWithFrame:CGRectMake(80, 10, 34/2, 34/2) ImageName:@"man.png"];
+    if ([model.gender intValue] == 2) {
+        sex.image = [UIImage imageNamed:@"woman.png"];
+    }
+    [headerBgView addSubview:sex];
+    
+    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(100, 10, 150, 20) Font:15 Text:@""];
+    name.textColor = BGCOLOR;
+    name.text = model.name;
+    [headerBgView addSubview:name];
+    
+    UILabel * nameAndAgeLabel = [MyControl createLabelWithFrame:CGRectMake(80, 30, 150, 15) Font:13 Text:@"索马利猫 | 3岁"];
+    nameAndAgeLabel.textColor = [UIColor blackColor];
+    nameAndAgeLabel.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:model.type], [MyControl returnAgeStringWithCountOfMonth:model.age]];
+    [headerBgView addSubview:nameAndAgeLabel];
+    
+    UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(80, 52, 70, 15) Font:12 Text:@"总人气 500"];
+    rq.text = [NSString stringWithFormat:@"总人气 %@", model.t_rq];
+    rq.textColor = [UIColor lightGrayColor];
+    [headerBgView addSubview:rq];
+    
+    UILabel * memberNum = [MyControl createLabelWithFrame:CGRectMake(155, 52, 70, 15) Font:12 Text:@"|    成员 188"];
+    memberNum.text = [NSString stringWithFormat:@"|    成员 %@", model.fans];
+    memberNum.textColor = [UIColor lightGrayColor];
+    [headerBgView addSubview:memberNum];
+    
+    UIButton * showOrHideBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, 65) ImageName:@"" Target:self Action:@selector(showOrHideBtnClick:) Title:nil];
+    showOrHideBtn.tag = 100+section;
+    [headerBgView addSubview:showOrHideBtn];
+    
+    UIButton * join = [MyControl createButtonWithFrame:CGRectMake(320-60, 20, 50, 25) ImageName:@"" Target:self Action:@selector(joinClick:) Title:@"加入"];
+    join.titleLabel.font = [UIFont systemFontOfSize:14];
+    join.backgroundColor = GREEN;
+    join.layer.cornerRadius = 5;
+    join.layer.masksToBounds = YES;
+    [headerBgView addSubview:join];
+    join.tag = 200+section;
+    
+    UIView * whiteLine = [MyControl createViewWithFrame:CGRectMake(0, 69, 320, 1)];
+    whiteLine.backgroundColor = [UIColor whiteColor];
+    [headerBgView addSubview:whiteLine];
+    return headerBgView;
+}
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 65.0f;
+    return 125.0f;
+}
+-(float)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 70.0f;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PetInfoModel *model = self.tempDataArray[indexPath.row];
-    if (![ControllerManager getIsSuccess]) {
-        RegisterViewController *registerVC = [[RegisterViewController alloc] init];
-        registerVC.isAdoption = YES;
-        registerVC.petInfoModel =model;
-        [self presentViewController:registerVC animated:YES completion:^{
-            [registerVC release];
-        }];
-    }
-    NSLog(@"跳转到注册：%@",model.aid);
+//    PetInfoModel *model = self.tempDataArray[indexPath.row];
+//    if (![ControllerManager getIsSuccess]) {
+//        RegisterViewController *registerVC = [[RegisterViewController alloc] init];
+//        registerVC.isAdoption = YES;
+//        registerVC.petInfoModel =model;
+//        [self presentViewController:registerVC animated:YES completion:^{
+//            [registerVC release];
+//        }];
+//    }
+//    NSLog(@"跳转到注册：%@",model.aid);
 }
-
+-(void)showOrHideBtnClick:(UIButton *)button
+{
+    NSLog(@"%d", button.tag);
+    if (didSelected == button.tag-100) {
+        didSelected = -1;
+        [tv reloadData];
+    }else{
+        didSelected = button.tag-100;
+        [self loadCardDataWithTag:didSelected];
+    }
+}
+-(void)loadCardDataWithTag:(int)Tag
+{
+    NSDictionary * dic = [self.detailDict objectForKey:[self.tempDataArray[didSelected] aid]];
+    if (dic) {
+        self.cardDict = dic;
+        [tv reloadData];
+    }else{
+        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [self.tempDataArray[didSelected] aid]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETCARDAPI, [self.tempDataArray[didSelected] aid], [MyMD5 md5:code], [ControllerManager getSID]];
+        NSLog(@"%@", url);
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                [self.detailDict setObject:[load.dataDict objectForKey:@"data"] forKey:[self.tempDataArray[didSelected] aid]];
+                //
+                self.cardDict = [load.dataDict objectForKey:@"data"];
+                [tv reloadData];
+            }
+        }];
+        [request release];
+    }
+}
+-(void)joinClick:(UIButton *)button
+{
+    NSLog(@"join-%d", button.tag-200);
+    
+    if ([[USER objectForKey:@"isSuccess"] intValue]) {
+        [MyControl startLoadingWithStatus:@"加入中..."];
+        
+        PetInfoModel * model = self.tempDataArray[button.tag-200];
+        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", model.aid];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", JOINFAMILYAPI, model.aid, [MyMD5 md5:code], [ControllerManager getSID]];
+        NSLog(@"%@", url);
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"--%@", load.dataDict);
+                [MyControl loadingSuccessWithContent:@"加入成功^_^" afterDelay:0.5f];
+            }else{
+                [MyControl loadingFailedWithContent:@"加入失败-_-!" afterDelay:0.5f];
+            }
+        }];
+        [request release];
+    }else{
+        RegisterViewController * vc = [[RegisterViewController alloc] init];
+        vc.isAdoption = YES;
+        vc.petInfoModel = self.tempDataArray[button.tag-200];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    }
+    
+}
+-(void)headBtnClick
+{
+    NSLog(@"click row:%d", didSelected);
+}
 -(void)backBtnClick
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"af" object:nil];
@@ -226,7 +415,8 @@
 {
     //    have = 1;
     //    [tv reloadData];
-    [self loadSearchData:textField.text];
+    
+//    [self loadSearchData:textField.text];
     [tf resignFirstResponder];
     return YES;
 }
@@ -256,8 +446,9 @@
     }else{
         self.tfString = nil;
     }
-    NSLog(@"%@--%d--%@--%@", textField.text, textField.text.length, string, self.tfString);
-    [self selectData];
+//    NSLog(@"%@--%d--%@--%@", textField.text, textField.text.length, string, self.tfString);
+    
+//    [self selectData];
     return YES;
 }
 -(void)selectData

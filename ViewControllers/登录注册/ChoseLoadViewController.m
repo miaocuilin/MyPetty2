@@ -60,9 +60,12 @@
 //    animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
 //    [animator addBehavior:behavior];
 //    [animator addBehavior:behavior2];
-    [self createUI];
+    if (self.isFromMenu || ![[USER objectForKey:@"planet"] intValue]) {
+        [self createUI];
+        
+        timer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(cloudMove) userInfo:nil repeats:YES];
+    }
     
-    timer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(cloudMove) userInfo:nil repeats:YES];
 }
 
 -(void)createUI

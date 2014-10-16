@@ -87,7 +87,7 @@
 
 -(void)createTableView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64+35, 320, self.view.frame.size.height-64) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
@@ -101,35 +101,50 @@
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.dataArray.count;
+    return self.dataArray.count+1;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString * cellID = @"ID";
-    PlanetAttentionCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-    if (!cell) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"PlanetAttentionCell" owner:self options:nil] objectAtIndex:0];
+    if (indexPath.row == 0) {
+        static NSString * cellID0 = @"ID0";
+        UITableViewCell * cell0 = [tableView dequeueReusableCellWithIdentifier:cellID0];
+        if (!cell0) {
+            cell0 = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID0] autorelease];
+        }
+        cell0.backgroundColor = [UIColor clearColor];
+        cell0.selectionStyle = 0;
+        return cell0;
+    }else{
+        static NSString * cellID = @"ID";
+        PlanetAttentionCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+        if (!cell) {
+            cell = [[[NSBundle mainBundle] loadNibNamed:@"PlanetAttentionCell" owner:self options:nil] objectAtIndex:0];
+        }
+        PhotoModel * model = self.dataArray[indexPath.row-1];
+        [cell configUI:model];
+        cell.jumpToDetail = ^(NSString * img_id){
+            PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+            vc.img_id = img_id;
+            [self presentViewController:vc animated:YES completion:nil];
+            [vc release];
+        };
+        cell.jumpToPetInfo = ^(NSString * aid){
+            PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+            vc.aid = aid;
+            [self presentViewController:vc animated:YES completion:nil];
+            [vc release];
+        };
+        cell.selectionStyle = 0;
+        return cell;
     }
-    PhotoModel * model = self.dataArray[indexPath.row];
-    [cell configUI:model];
-    cell.jumpToDetail = ^(NSString * img_id){
-        PicDetailViewController * vc = [[PicDetailViewController alloc] init];
-        vc.img_id = img_id;
-        [self presentViewController:vc animated:YES completion:nil];
-        [vc release];
-    };
-    cell.jumpToPetInfo = ^(NSString * aid){
-        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
-        vc.aid = aid;
-        [self presentViewController:vc animated:YES completion:nil];
-        [vc release];
-    };
-    cell.selectionStyle = 0;
-    return cell;
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 250.0f;
+    if (indexPath.row == 0) {
+        return 35.0f;
+    }else{
+        return 250.0f;
+    }
 }
 - (void)didReceiveMemoryWarning
 {

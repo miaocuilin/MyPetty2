@@ -67,6 +67,7 @@
     noticeMessage_name.text = name;
     //下载头像
     /**************************/
+    NSLog(@"%@", tx);
     if (!([tx isKindOfClass:[NSNull class]] || tx.length==0)) {
         NSString * docDir = DOCDIR;
         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];

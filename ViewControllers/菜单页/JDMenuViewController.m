@@ -52,6 +52,7 @@
     // Do any additional setup after loading the view.
     self.countryArray = [NSMutableArray arrayWithCapacity:0];
     self.searchArray = [NSMutableArray arrayWithCapacity:0];
+    self.receivedNewMsgArray = [NSMutableArray arrayWithCapacity:0];
     
     [self createBg];
     [self createUI];
@@ -110,6 +111,19 @@
             /**************************/
         }
     };
+    //
+    sideMenu.refreshNewMsgNum = ^(NSArray * array){
+        NSArray * newMsgArray = [NSArray arrayWithArray:array];
+        if (newMsgArray.count) {
+            messageNumBg.hidden = NO;
+            noticeNumLabel.text = [NSString stringWithFormat:@"%d", newMsgArray.count];
+            self.receivedNewMsgArray = [NSMutableArray arrayWithArray:newMsgArray];
+        }else{
+            messageNumBg.hidden = YES;
+            [self.receivedNewMsgArray removeAllObjects];
+        }
+    };
+    
 }
 -(void)refreshCountryList
 {
@@ -244,14 +258,14 @@
     UIButton * messageBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 50, 25, 25) ImageName:@"menu_message.png" Target:self Action:@selector(messageBtnClick) Title:nil];
     [sv3 addSubview:messageBtn];
     
-    UIImageView * messageNum = [MyControl  createImageViewWithFrame:CGRectMake(17, -7., 15, 15) ImageName:@"greenBall.png"];
-    messageNum.tag = 49;
-    messageNum.hidden = YES;
-    [messageBtn addSubview:messageNum];
+    messageNumBg = [MyControl  createImageViewWithFrame:CGRectMake(17, -7., 15, 15) ImageName:@"greenBall.png"];
+    messageNumBg.tag = 49;
+    messageNumBg.hidden = YES;
+    [messageBtn addSubview:messageNumBg];
     
     noticeNumLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 15, 15) Font:14 Text:@"5"];
     noticeNumLabel.textAlignment = NSTextAlignmentCenter;
-    [messageNum addSubview:noticeNumLabel];
+    [messageNumBg addSubview:noticeNumLabel];
     
 //    UIButton * question = [MyControl createButtonWithFrame:CGRectMake(190, 50, 18, 18) ImageName:@"" Target:self Action:@selector(questionClick) Title:@"?"];
 //    question.backgroundColor = [ControllerManager colorWithHexString:@"ecc7bb"];
@@ -318,7 +332,7 @@
         headClickImage.layer.masksToBounds = YES;
         [headBg2 addSubview:headClickImage];
         
-        messageNum.hidden = YES;
+        messageNumBg.hidden = YES;
     }
     
     //等级
@@ -792,9 +806,9 @@
 //}
 #pragma mark - 加载数据
 //参数name不需要加密
-- (void)loadSearchData:(NSString *)name{
+- (void)loadSearchData:(NSString *)nameStr{
     NSString *searchSig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
-    NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@", SEARCHAPI, [name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], searchSig,[ControllerManager getSID]];
+    NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@", SEARCHAPI, [nameStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], searchSig,[ControllerManager getSID]];
     NSLog(@"搜索API:%@",searchString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:searchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
@@ -864,6 +878,7 @@
     //消息
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
         NoticeViewController * vc = [[NoticeViewController alloc] init];
+        vc.newDataArray = self.receivedNewMsgArray;
         [self.sideMenuController setContentController:vc animted:YES];
     }else{
         ShowAlertView;

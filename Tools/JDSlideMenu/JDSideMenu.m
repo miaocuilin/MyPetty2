@@ -52,6 +52,7 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
     
     // add childcontroller
     self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
+    self.newDataArray = [NSMutableArray arrayWithCapacity:0];
     
     [self addChildViewController:self.menuController];
     [self.menuController didMoveToParentViewController:self];
@@ -217,7 +218,7 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
 {
     NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
-//    NSLog(@"%@", url);
+    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            NSLog(@"%@", load.dataDict);
@@ -256,15 +257,69 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
 {
     self.refreshUserData();
 }
+-(void)getNewMessage
+{
+    StartLoading;
+    NSString * url = [NSString stringWithFormat:@"%@%@", GETNEWMSGAPI,[ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"newMsg:%@", load.dataDict);
+//            if (self.newDataArray.count && [[[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"array"] isKindOfClass:[NSArray class]] && [[[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"array"] count]) {
+//                
+//            }else{
+                [self.newDataArray removeAllObjects];
+//            }
+            
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            if (array.count) {
+                self.hasNewMsg = YES;
+                [self.newDataArray addObjectsFromArray:array];
+            }else{
+                self.hasNewMsg = NO;
+            }
+            //如果有除本地外的新消息，存储到本地
+            NSLog(@"%@", [USER objectForKey:@"newMsgArrayDict"]);
+            if ([[[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"msgArray"] isKindOfClass:[NSArray class]] && [[[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"msgArray"] count]) {
+                //
+//                if (self.hasNewMsg) {
+                NSArray * userMsgArray = [[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"msgArray"];
+                
+                [self.newDataArray addObjectsFromArray:userMsgArray];
+                NSLog(@"%@", self.newDataArray);
+                
+                NSDictionary * dict = [NSDictionary dictionaryWithObject:self.newDataArray forKey:@"msgArray"];
+                [USER setObject:dict forKey:@"newMsgArrayDict"];
+//                }
+            }else{
+                if (self.hasNewMsg) {
+                    NSDictionary * dict = [NSDictionary dictionaryWithObject:self.newDataArray forKey:@"msgArray"];
+                    NSLog(@"========%@", dict);
+                    [USER setObject:dict forKey:@"newMsgArrayDict"];
+                }
+            }
+            /**********************/
+            LoadingSuccess;
+            NSLog(@"%@", self.newDataArray);
+            self.refreshNewMsgNum(self.newDataArray);
+            [self.newDataArray removeAllObjects];
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
 - (void)showMenuAnimated:(BOOL)animated;
 {
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
         //请求国家列表API
         [self loadCountryList];
-        //请求消息和活动数API
+        //请求活动数API
         [self getMsgAndActivityNum];
         //刷新个人数据
         [self performSelector:@selector(refreshUData) withObject:nil afterDelay:0.1];
+        //请求新消息API
+        [self getNewMessage];
     }
     
     

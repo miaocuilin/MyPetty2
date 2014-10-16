@@ -36,7 +36,9 @@
 
     #define iOS7 [[[UIDevice currentDevice] systemVersion] floatValue]>=7.0
     //橘色
-    #define BGCOLOR [UIColor colorWithRed:255/255.0 green:116/255.0 blue:88/255.0 alpha:1]
+//    [UIColor colorWithRed:255/255.0 green:116/255.0 blue:88/255.0 alpha:1] 最早的
+//    [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1] 安卓的
+    #define BGCOLOR [UIColor colorWithRed:252/255.0 green:92/255.0 blue:59/255.0 alpha:1]
     //棕黄色
     #define BGCOLOR2 [UIColor colorWithRed:240/255.0 green:235/255.0 blue:230/255.0 alpha:0.8]
     //浅橘色

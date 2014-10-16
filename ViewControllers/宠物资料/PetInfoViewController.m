@@ -142,6 +142,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }
             
             [tv reloadData];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
         }
     }];
     [request release];
@@ -275,13 +278,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             self.pet_aid = [petInfoDict objectForKey:@"aid"];
             self.pet_name = [petInfoDict objectForKey:@"name"];
             self.pet_tx = [petInfoDict objectForKey:@"tx"];
-//            if ([[petInfoDict objectForKey:@"type"] intValue]/100 == 1) {
-//                //猫
-                titleLabel.text = [NSString stringWithFormat:@"%@联萌", [petInfoDict objectForKey:@"name"]];
-//            }else{
-//                //狗
-//                titleLabel.text = [NSString stringWithFormat:@"%@族", [petInfoDict objectForKey:@"name"]];
-//            }
+
+            titleLabel.text = [NSString stringWithFormat:@"%@联萌", [petInfoDict objectForKey:@"name"]];
+
             NSArray * array = [USER objectForKey:@"petAidArray"];
 //            NSLog(@"%@--%@", array, [petInfoDict objectForKey:@"aid"]);
             for (int i=0; i<array.count; i++) {
@@ -302,7 +301,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
             }
             //宠物父类信息字典
-            self.shakeInfoDict = [load.dataDict objectForKey:@"data"];
+//            self.shakeInfoDict = [load.dataDict objectForKey:@"data"];
 //            self.pet_aid = [self.shakeInfoDict objectForKey:@"aid"];
             [self createHeader];
 
@@ -313,7 +312,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.view bringSubviewToFront:self.menuBgView];
             
             [self loadKingDynamicData];
-            LoadingSuccess;
+//            LoadingSuccess;
         }else{
             NSLog(@"用户数据加载失败。");
             LoadingFailed;
@@ -1046,10 +1045,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //
     int age = [[petInfoDict objectForKey:@"age"] intValue];
 
-    cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, 130, 20) Font:14 Text:[NSString stringWithFormat:@"苏格兰折耳猫 | %d岁", age]];
+    NSString * cateStr = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:[petInfoDict objectForKey:@"type"]], [MyControl returnAgeStringWithCountOfMonth:[petInfoDict objectForKey:@"age"]]];
+    CGSize size3 = [cateStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(130, 100) lineBreakMode:NSLineBreakByCharWrapping];
+    cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, 130, size3.height) Font:14 Text:[NSString stringWithFormat:@"苏格兰折耳猫 | %d岁", age]];
 //    cateNameLabel.font = [UIFont boldSystemFontOfSize:13];
 //    cateNameLabel.alpha = 0.65;
-    cateNameLabel.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:[petInfoDict objectForKey:@"type"]], [MyControl returnAgeStringWithCountOfMonth:[petInfoDict objectForKey:@"age"]]];
+    cateNameLabel.text = cateStr;
     [bgView addSubview:cateNameLabel];
     
     

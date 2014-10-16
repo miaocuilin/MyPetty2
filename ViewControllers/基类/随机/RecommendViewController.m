@@ -119,7 +119,7 @@
 #pragma mark - 创建quitView
 -(void)createQtmquitView
 {
-    qtmquitView = [[TMQuiltView alloc] initWithFrame:CGRectMake(0, 64+35, 320, self.view.frame.size.height-[MyControl isIOS7])];
+    qtmquitView = [[TMQuiltView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-[MyControl isIOS7])];
 	qtmquitView.delegate = self;
 	qtmquitView.dataSource = self;
     

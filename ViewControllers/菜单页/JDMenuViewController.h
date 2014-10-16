@@ -43,6 +43,9 @@
     UILabel * exp;
     UILabel * name;
     UIImageView * sex;
+    
+    UIImageView * messageNumBg;
+//    BOOL hasNewMsg;
 }
 @property (nonatomic,copy)NSString * tfString;
 
@@ -50,4 +53,6 @@
 //
 @property(nonatomic,retain)NSMutableArray * countryArray;
 @property(nonatomic,retain)NSMutableArray * searchArray;
+
+@property(nonatomic,retain)NSMutableArray * receivedNewMsgArray;
 @end

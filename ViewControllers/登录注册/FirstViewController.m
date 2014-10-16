@@ -206,7 +206,13 @@
 {
     [UIApplication sharedApplication].statusBarHidden = NO;
     
-    ChoseLoadViewController * vc = [[ChoseLoadViewController alloc] init];
+    if ([[USER objectForKey:@"planet"] intValue]){
+        [self tempLogin];
+    }else{
+        ChoseLoadViewController * vc = [[ChoseLoadViewController alloc] init];
+        [self presentViewController:vc animated:NO completion:nil];
+    }
+    
 //    vc.modalTransitionStyle = 2;
 //    [self presentViewController:vc animated:NO completion:nil];
 //    [vc release];
@@ -214,11 +220,204 @@
 //    UINavigationController * nc = [ControllerManager shareManagerRandom];
 //    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
 ////    [sideMenu setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"30-3" ofType:@"png"]]];
-    vc.modalTransitionStyle = 2;
-    [self presentViewController:vc animated:YES completion:nil];
+//    vc.modalTransitionStyle = 2;
+}
+-(void)tempLogin
+{
+    //一进来先看本地有没有SID，本地有直接请求，过期再请求login
+    //如果本地没有就去网上去SID，如果网上没有--》login，如果有直接用
+    //用着如果过期再去请求SID。
+    if ([USER objectForKey:@"SID"] != nil && [[USER objectForKey:@"SID"] length] != 0) {
+        NSLog(@"%@", [USER objectForKey:@"SID"]);
+        if ([[USER objectForKey:@"isSuccess"] intValue]
+            ) {
+            [ControllerManager setIsSuccess:[[USER objectForKey:@"isSuccess"] intValue]];
+            [ControllerManager setSID:[USER objectForKey:@"SID"]];
+            [self getUserData];
+        }else{
+            [self login];
+        }
+    }else{
+        [self getPreSID];
+        //        return;
+    }
+    NSLog(@"%@--%@", [USER objectForKey:@"isSuccess"], [USER objectForKey:@"SID"]);
+}
+-(void)getPreSID
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"uid=%@dog&cat", [OpenUDID value]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@", GETPRESID, [OpenUDID value], sig];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            if (![[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                //网上也米有SID--》login
+                [self login];
+            }else{
+                if ([[USER objectForKey:@"isSuccess"] intValue]
+                    ) {
+                    [ControllerManager setIsSuccess:[[USER objectForKey:@"isSuccess"] intValue]];
+                    [ControllerManager setSID:[USER objectForKey:@"SID"]];
+                    [self getUserData];
+                }else{
+                    [self login];
+                }
+            }
+        }else{
+            
+        }
+    }];
+    [request release];
+}
+#pragma mark -登录
+-(void)login
+{
+    StartLoading;
+    NSString * code = [NSString stringWithFormat:@"planet=%@&uid=%@dog&cat", [USER objectForKey:@"planet"], [OpenUDID value]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&uid=%@&sig=%@", LOGINAPI, [USER objectForKey:@"planet"], [OpenUDID value], [MyMD5 md5:code]];
+    NSLog(@"login-url:%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if(isFinish){
+            NSLog(@"%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"errorCode"] intValue]) {
+                UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[load.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
+                return;
+            }
+            [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
+            [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
+            if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] isKindOfClass:[NSNull class]]) {
+                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
+            }
+            
+            NSLog(@"isSuccess:%d,SID:%@", [ControllerManager getIsSuccess], [ControllerManager getSID]);
+            if ([ControllerManager getIsSuccess]) {
+                [self getUserData];
+                
+            }else{
+                LoadingSuccess;
+                //跳转到主页
+                [self jumpToMain];
+            }
+        }else{
+            LoadingFailed;
+            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"数据请求失败，是否重新请求？" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+        }
+    }];
+    [request release];
+}
+#pragma mark -获取用户数据
+-(void)getUserData
+{
+    if ([USER objectForKey:@"usr_id"] == nil || [[USER objectForKey:@"usr_id"] length] == 0) {
+        [self login];
+        return;
+    }
+    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+    [MMProgressHUD showWithStatus:@"登陆中..."];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [USER objectForKey:@"usr_id"], sig,[ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            if ([[load.dataDict objectForKey:@"state"] intValue] == 2) {
+                //SID过期,需要重新登录获取SID
+                [self login];
+                //                [self getUserData];
+                return;
+            }else{
+                //SID未过期，直接获取用户数据
+                NSLog(@"用户数据：%@", load.dataDict);
+                NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                
+                [USER setObject:[dict objectForKey:@"a_name"] forKey:@"a_name"];
+                if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
+                    [USER setObject:[dict objectForKey:@"a_tx"] forKey:@"a_tx"];
+                }
+                [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
+                [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
+                [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
+                [USER setObject:[dict objectForKey:@"city"] forKey:@"city"];
+                [USER setObject:[dict objectForKey:@"exp"] forKey:@"oldexp"];
+                [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
+                [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];
+                
+                [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
+                [USER setObject:[dict objectForKey:@"gold"] forKey:@"gold"];
+                [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
+                [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
+                [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
+                [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
+                [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
+                
+                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
+                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
+                }
+                
+                
+                //获取宠物信息，存储到本地
+                [self loadPetInfo];
+                //获取本人所有宠物信息
+                [self loadPetList];
+                
+            }
+        }
+    }];
+    [request release];
+}
+-(void)loadPetInfo
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"petInfo:%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                
+                //记录默认宠物信息
+                [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"petInfoDict"];
+            }
+            
+            [self jumpToMain];
+        }else{
+            
+        }
+    }];
+    [request release];
 }
 
+//
+-(void)loadPetList
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            //获取用户所有宠物，将aid存到本地
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            NSMutableArray * aidArray = [NSMutableArray arrayWithCapacity:0];
+            for (NSDictionary * dict in array) {
+                [aidArray addObject:[dict objectForKey:@"aid"]];
+            }
+            [USER setObject:aidArray forKey:@"petAidArray"];
+            //            NSLog(@"%@", [USER objectForKey:@"petAidArray"]);
+        }else{
+            
+        }
+    }];
+    [request release];
+}
 
+-(void)jumpToMain
+{
+    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+    //                ChooseFamilyViewController * sideMenu = [[ChooseFamilyViewController alloc] init];
+    sideMenu.modalTransitionStyle = 1;
+    [self presentViewController:sideMenu animated:YES completion:nil];
+}
 //#pragma mark -获取用户数据
 //-(void)getUserData
 //{

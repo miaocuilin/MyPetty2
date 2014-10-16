@@ -8,7 +8,6 @@
 
 #import "NoticeViewController.h"
 #import "NoticeCell.h"
-#import "SystemCell.h"
 #import "SystemMessageListModel.h"
 #import "TalkViewController.h"
 #define SelectedColor [UIColor colorWithRed:248/255.0 green:177/255.0 blue:160/255.0 alpha:1]
@@ -34,7 +33,12 @@
         }
     }
 }
-
+-(void)viewDidAppear:(BOOL)animated
+{
+    //加载完后清除本地新消息记录
+    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:0];
+    [USER setObject:dict forKey:@"newMsgArrayDict"];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -53,7 +57,7 @@
     self.keysArray = [NSMutableArray arrayWithCapacity:0];
     self.valuesArray = [NSMutableArray arrayWithCapacity:0];
     //
-    self.newDataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.newDataArray = [NSMutableArray arrayWithCapacity:0];
     //
     self.newMsgArray = [NSMutableArray arrayWithCapacity:0];
     //
@@ -102,16 +106,17 @@
 {
     //请求一个API，传usr_id，获取talk_id，根据talk_id去获取本地历史记录以及新的消息存到本地。
     //聊天里10秒刷一次，侧边栏在侧边栏弹出的时候刷新。
-    NSString * url = [NSString stringWithFormat:@"%@%@", GETNEWMSGAPI,[ControllerManager getSID]];
-    NSLog(@"%@", url);
-    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        if (isFinish) {
-            NSLog(@"newMsg:%@", load.dataDict);
-            if ([load.dataDict objectForKey:@"data"] && [[load.dataDict objectForKey:@"data"] count]) {
-                self.newDataArray = [load.dataDict objectForKey:@"data"];
-                for (int i=0; i<self.newDataArray.count; i++) {
+//    NSString * url = [NSString stringWithFormat:@"%@%@", GETNEWMSGAPI,[ControllerManager getSID]];
+//    NSLog(@"%@", url);
+//    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            NSLog(@"newMsg:%@", load.dataDict);
+//            if ([load.dataDict objectForKey:@"data"] && [[load.dataDict objectForKey:@"data"] count]) {
+//                self.newDataArray = [load.dataDict objectForKey:@"data"];
+//                for (int i=0; i<self.newDataArray.count; i++) {
 //                    NSLog(@"%@", [self.newDataArray[i] objectForKey:<#(id)#>])
-                }
+//                }
+            if (self.newDataArray.count) {
                 //有新消息
                 hasNewMsg = YES;
             }else{
@@ -130,9 +135,25 @@
                 //7.usr_id添加到userIDArray
                 [self.userIDArray addObject:[dict objectForKey:@"usr_id"]];
                 //2.头像，添加到数组
-                [self.userTxArray addObject:[dict objectForKey:@"usr_tx"]];
+                if ([[dict objectForKey:@"usr_tx"] isKindOfClass:[NSNull class]]) {
+                    [self.userTxArray addObject:@""];
+                }else{
+                    [self.userTxArray addObject:[dict objectForKey:@"usr_tx"]];
+                }
+                
                 //3.姓名，添加到数组
-                [self.userNameArray addObject:[dict objectForKey:@"usr_name"]];
+                if ([[dict objectForKey:@"usr_name"] isKindOfClass:[NSNull class]]) {
+                    if ([[dict objectForKey:@"usr_id"] intValue] == 1) {
+                        [self.userNameArray addObject:@"汪汪"];
+                    }else if([[dict objectForKey:@"usr_id"] intValue] == 2){
+                        [self.userNameArray addObject:@"喵喵"];
+                    }else if([[dict objectForKey:@"usr_id"] intValue] == 3){
+                        [self.userNameArray addObject:@"顺风小鸽"];
+                    }
+                }else{
+                    [self.userNameArray addObject:[dict objectForKey:@"usr_name"]];
+                }
+                
                 //4.新消息数
                 NSNumber * number = [dict objectForKey:@"new_msg"];
                 [self.newMsgNumArray addObject:[NSString stringWithFormat:@"%@", number]];
@@ -166,14 +187,14 @@
 //            }else{
 //                NSLog(@"没有新消息");
 //            }
-            LoadingSuccess;
+//            LoadingSuccess;
             [self loadHistoryTalk];
-        }else{
-            LoadingFailed;
-            NSLog(@"fail");
-        }
-    }];
-    [request release];
+//        }else{
+//            LoadingFailed;
+//            NSLog(@"fail");
+//        }
+//    }];
+//    [request release];
 }
 
 -(void)analysisData:(NSDictionary *)dict
@@ -199,7 +220,12 @@
 //    NSLog(@"%@", self.keysArray);
     for (int i=0;i<self.keysArray.count;i++) {
 //        NSLog(@"key:%@--value:%@", self.keysArray[i], [dict objectForKey:self.keysArray[i]]);
-        [self.valuesArray addObject:[dict objectForKey:self.keysArray[i]]];
+        NSString * msg = [dict objectForKey:self.keysArray[i]];
+        if ([msg rangeOfString:@"["].location != NSNotFound && [msg rangeOfString:@"]"].location != NSNotFound) {
+            int x = [msg rangeOfString:@"]"].location;
+            msg = [msg substringFromIndex:x+1];
+        }
+        [self.valuesArray addObject:msg];
     }
 }
 #pragma mark - 加载历史消息

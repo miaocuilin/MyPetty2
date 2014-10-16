@@ -550,14 +550,16 @@
     [bgView addSubview:sex];
     
     //
-    UILabel * cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, 130, 20) Font:14 Text:[ControllerManager returnProvinceAndCityWithCityNum:[headerDict objectForKey:@"city"]]];
+    NSString * str4 = [ControllerManager returnProvinceAndCityWithCityNum:[headerDict objectForKey:@"city"]];
+    CGSize size4 = [str4 sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(130, 100) lineBreakMode:NSLineBreakByCharWrapping];
+    UILabel * cateNameLabel = [MyControl createLabelWithFrame:CGRectMake(105, 55, size4.width, size4.height) Font:14 Text:[ControllerManager returnProvinceAndCityWithCityNum:[headerDict objectForKey:@"city"]]];
 //    cateNameLabel.font = [UIFont boldSystemFontOfSize:14];
 //    cateNameLabel.alpha = 0.65;
     [bgView addSubview:cateNameLabel];
     
     //
     
-    NSString * str2= [NSString stringWithFormat:@"经纪人—%@", [headerDict objectForKey:@"a_name"]];
+    NSString * str2 = [NSString stringWithFormat:@"经纪人—%@", [headerDict objectForKey:@"a_name"]];
     CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:14 Text:str2];
     //    positionAndUserName.font = [UIFont boldSystemFontOfSize:15];
@@ -1075,12 +1077,15 @@
 {
     if (tableView == tv) {
         NSLog(@"%d", indexPath.row);
-//        UserPetListModel * model = self.userPetListArray[indexPath.row];
-//        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
-//
-//        vc.aid = model.aid;
-//        [self presentViewController:vc animated:YES completion:nil];
-//        [vc release];
+        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+        vc.aid = [self.userPetListArray[indexPath.row] aid];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    }else if(tableView == tv2){
+        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+        vc.aid = [self.userAttentionListArray[indexPath.row] aid];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
     }
 }
 

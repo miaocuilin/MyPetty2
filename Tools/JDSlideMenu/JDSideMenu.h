@@ -19,12 +19,16 @@
 
 /****************************/
 @property(nonatomic,retain)NSMutableArray * userPetListArray;
+@property(nonatomic,retain)NSMutableArray * newDataArray;
+@property(nonatomic)BOOL hasNewMsg;
 //下载完宠物列表新数据
 @property(nonatomic,copy)void (^refreshData)(void);
 //下载完活动数 更新
 @property(nonatomic,copy)void (^refreshActNum)(NSString *);
 //刷新个人数据
 @property(nonatomic,copy)void (^refreshUserData)(void);
+//传递新消息数组
+@property(nonatomic,copy)void (^refreshNewMsgNum)(NSArray *);
 /****************************/
 - (id)initWithContentController:(UIViewController*)contentController
                  menuController:(UIViewController*)menuController;

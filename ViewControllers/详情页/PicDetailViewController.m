@@ -926,6 +926,10 @@
     commentTextView.layer.borderWidth = 1.5;
     commentTextView.delegate = self;
     commentTextView.font = [UIFont systemFontOfSize:15];
+//    commentTextView.returnKeyType = UIReturnKeySend;
+    //关闭自动更正及大写
+    commentTextView.autocorrectionType = UITextAutocorrectionTypeNo;
+    commentTextView.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [commentBgView addSubview:commentTextView];
     [commentTextView release];
     
@@ -1515,15 +1519,19 @@
     NSLog(@"request.responseData:%@",[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     //经验弹窗
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
+    NSLog(@"%@", dict);
     int exp = [[USER objectForKey:@"exp"] intValue];
-    
-    [USER setObject:[[dict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
-    int index = [[USER objectForKey:@"exp"] intValue]-exp;
+    int addExp = [[[dict objectForKey:@"data"] objectForKey:@"exp"] intValue];
     if (index>0) {
-        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+        [USER setObject:[NSString stringWithFormat:@"%d", exp+addExp] forKey:@"exp"];
+        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:addExp];
     }
-    NSString * gold = [[dict objectForKey:@"data"] objectForKey:@"gold"];
-    [USER setObject:gold forKey:@"gold"];
+//    int gold = [[[dict objectForKey:@"data"] objectForKey:@"gold"] intValue];
+//    if (gold>0) {
+//        [USER setObject:[NSString stringWithFormat:@"%d", gold+[[USER objectForKey:@"gold"] intValue]] forKey:@"gold"];
+//        [ControllerManager HUDImageIcon:@"gold.png" showView:self.view.window yOffset:0 Number:gold];
+//    }
+    
     [commentTextView resignFirstResponder];
     
     //添加评论

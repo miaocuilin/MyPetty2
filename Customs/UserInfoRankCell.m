@@ -17,6 +17,10 @@
 }
 -(void)modifyUI
 {
+    self.headBtn.userInteractionEnabled = NO;
+    self.gotoKing.userInteractionEnabled = NO;
+    self.gotoOwner.userInteractionEnabled = NO;
+    
     self.headBtn.layer.cornerRadius = self.headBtn.frame.size.width/2;
     self.headBtn.layer.masksToBounds = YES;
     //

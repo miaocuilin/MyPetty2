@@ -53,6 +53,15 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
     // add childcontroller
     self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
     self.newDataArray = [NSMutableArray arrayWithCapacity:0];
+    /**********************/
+    self.talkIDArray = [NSMutableArray arrayWithCapacity:0];
+    self.userIDArray = [NSMutableArray arrayWithCapacity:0];
+    self.userTxArray = [NSMutableArray arrayWithCapacity:0];
+    self.userNameArray = [NSMutableArray arrayWithCapacity:0];
+    self.newMsgNumArray = [NSMutableArray arrayWithCapacity:0];
+    self.keysArray = [NSMutableArray arrayWithCapacity:0];
+    self.valuesArray = [NSMutableArray arrayWithCapacity:0];
+    /**********************/
     
     [self addChildViewController:self.menuController];
     [self.menuController didMoveToParentViewController:self];
@@ -257,6 +266,15 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
 {
     self.refreshUserData();
 }
+/*
+ 1.下载新消息数据
+ 2.将username=null的修复
+ 3.解析新消息，如果没新消息跳到7.
+ 4.查看是否有旧消息，有-》合并
+ 5.增加一个条目：未读数目=未读数目+新消息数目
+ 6.将总的消息存到本地
+ 7.遍历整个消息，将未读数目取出相加的的结果返回给侧边栏显示数目。
+ */
 -(void)getNewMessage
 {
     StartLoading;
@@ -265,50 +283,155 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"newMsg:%@", load.dataDict);
-//            if (self.newDataArray.count && [[[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"array"] isKindOfClass:[NSArray class]] && [[[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"array"] count]) {
-//                
-//            }else{
-                [self.newDataArray removeAllObjects];
-//            }
+
+            [self.newDataArray removeAllObjects];
             
             NSArray * array = [load.dataDict objectForKey:@"data"];
             if (array.count) {
                 self.hasNewMsg = YES;
+
+                for (int i=0; i<array.count; i++) {
+                    NSDictionary * dict = array[i];
+                    NSString * key = [[dict allKeys] objectAtIndex:0];
+                    NSDictionary * dict2 = [dict objectForKey:key];
+                    if ([[dict2 objectForKey:@"usr_name"] isKindOfClass:[NSNull class]]) {
+                        [dict2 setValue:@"" forKey:@"usr_name"];
+                    }
+                    if ([[dict2 objectForKey:@"usr_tx"] isKindOfClass:[NSNull class]]) {
+                        [dict2 setValue:@"" forKey:@"usr_tx"];
+                    }
+                }
+
                 [self.newDataArray addObjectsFromArray:array];
             }else{
                 self.hasNewMsg = NO;
             }
             //如果有除本地外的新消息，存储到本地
-            NSLog(@"%@", [USER objectForKey:@"newMsgArrayDict"]);
-            if ([[[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"msgArray"] isKindOfClass:[NSArray class]] && [[[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"msgArray"] count]) {
-                //
+//            NSLog(@"%@", [USER objectForKey:@"newMsgArrayDict"]);
+//            if ([[[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"msgArray"] isKindOfClass:[NSArray class]] && [[[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"msgArray"] count]) {
+//                //
+////                if (self.hasNewMsg) {
+//                NSArray * userMsgArray = [[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"msgArray"];
+//                
+//                [self.newDataArray addObjectsFromArray:userMsgArray];
+//                NSLog(@"%@", self.newDataArray);
+//                
+//                NSDictionary * dict = [NSDictionary dictionaryWithObject:self.newDataArray forKey:@"msgArray"];
+//                [USER setObject:dict forKey:@"newMsgArrayDict"];
+//                [USER synchronize];
+////                }
+//            }else{
 //                if (self.hasNewMsg) {
-                NSArray * userMsgArray = [[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"msgArray"];
-                
-                [self.newDataArray addObjectsFromArray:userMsgArray];
-                NSLog(@"%@", self.newDataArray);
-                
-                NSDictionary * dict = [NSDictionary dictionaryWithObject:self.newDataArray forKey:@"msgArray"];
-                [USER setObject:dict forKey:@"newMsgArrayDict"];
+//                    NSDictionary * dict = [NSDictionary dictionaryWithObject:self.newDataArray forKey:@"msgArray"];
+//                    NSLog(@"========%@", dict);
+//                    [USER setObject:dict forKey:@"newMsgArrayDict"];
+//                    [USER synchronize];
 //                }
-            }else{
-                if (self.hasNewMsg) {
-                    NSDictionary * dict = [NSDictionary dictionaryWithObject:self.newDataArray forKey:@"msgArray"];
-                    NSLog(@"========%@", dict);
-                    [USER setObject:dict forKey:@"newMsgArrayDict"];
-                }
-            }
+//            }
             /**********************/
-            LoadingSuccess;
-            NSLog(@"%@", self.newDataArray);
-            self.refreshNewMsgNum(self.newDataArray);
-            [self.newDataArray removeAllObjects];
+            if (self.hasNewMsg) {
+                //分解数据添加到7个数组中
+                [self apartNewMsgToArray];
+                //查看是否有旧消息，进行合并
+                
+            }else{
+                LoadingSuccess;
+                //遍历本地消息，取出未读数相加返回
+                
+                //返回
+//            self.refreshNewMsgNum(self.newDataArray);
+            }
+            
+//            NSLog(@"%@", self.newDataArray);
+//            [self.newDataArray removeAllObjects];
         }else{
             LoadingFailed;
         }
     }];
     [request release];
 }
+#pragma mark -
+-(void)apartNewMsgToArray
+{
+    for (int i=0; i<self.newDataArray.count; i++) {
+        //分析数据
+        //1.获得talk_id,添加到数组
+        NSString * talkID = [[self.newDataArray[i] allKeys] objectAtIndex:0];
+        [self.talkIDArray addObject:talkID];
+        
+        NSDictionary * dict = [self.newDataArray[i] objectForKey:talkID];
+        //2.usr_id添加到userIDArray
+        [self.userIDArray addObject:[dict objectForKey:@"usr_id"]];
+        //3.头像，添加到数组
+        if ([[dict objectForKey:@"usr_tx"] isKindOfClass:[NSNull class]]) {
+            [self.userTxArray addObject:@""];
+        }else{
+            [self.userTxArray addObject:[dict objectForKey:@"usr_tx"]];
+        }
+        
+        //4.姓名，添加到数组
+        if ([[dict objectForKey:@"usr_name"] isKindOfClass:[NSNull class]] || [[dict objectForKey:@"usr_name"] length] == 0) {
+            if ([[dict objectForKey:@"usr_id"] intValue] == 1) {
+                [self.userNameArray addObject:@"汪汪"];
+            }else if([[dict objectForKey:@"usr_id"] intValue] == 2){
+                [self.userNameArray addObject:@"喵喵"];
+            }else if([[dict objectForKey:@"usr_id"] intValue] == 3){
+                [self.userNameArray addObject:@"顺风小鸽"];
+            }
+        }else{
+            [self.userNameArray addObject:[dict objectForKey:@"usr_name"]];
+        }
+        
+        //5.新消息数
+        NSNumber * number = [dict objectForKey:@"new_msg"];
+        [self.newMsgNumArray addObject:[NSString stringWithFormat:@"%@", number]];
+        //6.新消息的时间self.keysArray
+        //7.新消息的内容self.valuesArray
+        [self analysisData:[dict objectForKey:@"msg"]];
+
+//        [self.lastTalkTimeArray addObject:self.keysArray[self.keysArray.count-1]];
+//        [self.lastTalkContentArray addObject:self.valuesArray[self.valuesArray.count-1]];
+        //存储newMsgArray
+//        NSMutableDictionary * dict1 = [NSMutableDictionary dictionaryWithCapacity:0];
+//        
+//        [dict1 setObject:[NSArray arrayWithArray:self.keysArray] forKey:@"key"];
+//        [dict1 setObject:[NSArray arrayWithArray:self.valuesArray] forKey:@"value"];
+//        [self.newMsgArray addObject:dict1];
+    }
+}
+-(void)analysisData:(NSDictionary *)dict
+{
+    [self.keysArray removeAllObjects];
+    [self.valuesArray removeAllObjects];
+    //keysArray赋值
+    for (NSString * key in [dict allKeys]) {
+        [self.keysArray addObject:key];
+    }
+    
+    //key值数组冒泡排序
+    for (int i=0; i<self.keysArray.count; i++) {
+        for (int j=0; j<self.keysArray.count-i-1; j++) {
+            if ([self.keysArray[j] intValue] > [self.keysArray[j+1] intValue]) {
+                NSString * str = [NSString stringWithFormat:@"%@", self.keysArray[j]];
+                NSString * str1 = [NSString stringWithFormat:@"%@", self.keysArray[j+1]];
+                self.keysArray[j] = str1;
+                self.keysArray[j+1] = str;
+            }
+        }
+    }
+    //    NSLog(@"%@", self.keysArray);
+    for (int i=0;i<self.keysArray.count;i++) {
+        //        NSLog(@"key:%@--value:%@", self.keysArray[i], [dict objectForKey:self.keysArray[i]]);
+        NSString * msg = [dict objectForKey:self.keysArray[i]];
+        if ([msg rangeOfString:@"["].location != NSNotFound && [msg rangeOfString:@"]"].location != NSNotFound) {
+            int x = [msg rangeOfString:@"]"].location;
+            msg = [msg substringFromIndex:x+1];
+        }
+        [self.valuesArray addObject:msg];
+    }
+}
+#pragma mark -
+/*==============================================================*/
 - (void)showMenuAnimated:(BOOL)animated;
 {
     if ([[USER objectForKey:@"isSuccess"] intValue]) {

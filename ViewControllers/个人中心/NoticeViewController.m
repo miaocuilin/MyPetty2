@@ -33,12 +33,12 @@
         }
     }
 }
--(void)viewDidAppear:(BOOL)animated
-{
-    //加载完后清除本地新消息记录
-    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:0];
-    [USER setObject:dict forKey:@"newMsgArrayDict"];
-}
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    //加载完后清除本地新消息记录
+//    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:0];
+//    [USER setObject:dict forKey:@"newMsgArrayDict"];
+//}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -142,7 +142,7 @@
                 }
                 
                 //3.姓名，添加到数组
-                if ([[dict objectForKey:@"usr_name"] isKindOfClass:[NSNull class]]) {
+                if ([[dict objectForKey:@"usr_name"] isKindOfClass:[NSNull class]] || [[dict objectForKey:@"usr_name"] length] == 0) {
                     if ([[dict objectForKey:@"usr_id"] intValue] == 1) {
                         [self.userNameArray addObject:@"汪汪"];
                     }else if([[dict objectForKey:@"usr_id"] intValue] == 2){
@@ -784,6 +784,25 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //点击某一行后，判断是否有新消息，如果有清除该talk_id在本地的数据
+    if ([self.newMsgNumArray[indexPath.row] intValue]) {
+        NSMutableArray * msgArray = [NSMutableArray arrayWithArray:[[USER objectForKey:@"newMsgArrayDict"] objectForKey:@"msgArray"]];
+        for (int i=0; i<msgArray.count; i++) {
+            NSString * key = [[msgArray[i] allKeys] objectAtIndex:0];
+            if ([self.talkIDArray[indexPath.row] isEqualToString:key]) {
+                [msgArray removeObjectAtIndex:i];
+                break;
+            }
+        }
+        //重新赋值
+        NSMutableDictionary * localDict = [NSMutableDictionary dictionaryWithDictionary:[USER objectForKey:@"newMsgArrayDict"]];
+        [localDict setObject:msgArray forKey:@"msgArray"];
+        
+        [USER setObject:localDict forKey:@"newMsgArrayDict"];
+        [USER synchronize];
+    }
+    
+    
     NSLog(@"和:%@聊天", self.userNameArray[indexPath.row]);
     rowOfTalk = indexPath.row;
     self.newMsgNumArray[indexPath.row] = @"0";

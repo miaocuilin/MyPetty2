@@ -353,12 +353,12 @@
                 //非背包物品
                 [ControllerManager HUDText:[NSString stringWithFormat:@"恭喜您，购买并赠送 %@ 成功!", [[ControllerManager returnGiftDictWithItemId:ItemId] objectForKey:@"name"]] showView:self.view yOffset:-60];
             }
-            int newexp = [[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] intValue];
-            int exp = [[USER objectForKey:@"exp"] intValue];
-            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
-            if (exp != newexp && (newexp - exp)>0) {
-                int index = newexp - exp;
-                [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:index];
+            
+            int addExp = [[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] intValue];
+            if (addExp>0) {
+                int exp = [[USER objectForKey:@"exp"] intValue];
+                [USER setObject:[NSString stringWithFormat:@"%d", addExp+exp] forKey:@"exp"];
+                [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:addExp];
             }
             //送礼block
             self.hasSendGift();

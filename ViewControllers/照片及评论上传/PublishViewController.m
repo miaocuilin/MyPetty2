@@ -590,6 +590,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [MMProgressHUD dismissWithError:[dict objectForKey:@"errorMessage"] afterDelay:1];
         NSLog(@"errorMessage:%@", [dict objectForKey:@"errorMessage"]);
         publishButton.userInteractionEnabled = YES;
+    }else if([[dict objectForKey:@"state"] intValue] == 2){
+        [self login];
     }else{
         int exp = [[USER objectForKey:@"exp"] intValue];
         [USER setObject:[[dict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
@@ -642,7 +644,30 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     LoadingFailed;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
+#pragma mark - login
+-(void)login
+{
+    StartLoading;
+    NSString * code = [NSString stringWithFormat:@"planet=%@&uid=%@dog&cat", [USER objectForKey:@"planet"], [OpenUDID value]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&uid=%@&sig=%@", LOGINAPI, [USER objectForKey:@"planet"], [OpenUDID value], [MyMD5 md5:code]];
+    NSLog(@"login-url:%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if(isFinish){
+            NSLog(@"%@", load.dataDict);
+            [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
+            [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
+            
+            
+            LoadingSuccess;
+            [self publishButtonClick:publishButton];
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
 
 - (void)didReceiveMemoryWarning
 {

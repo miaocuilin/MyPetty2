@@ -97,40 +97,40 @@
     version.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:version];
     
-    UIButton * sina = [MyControl createButtonWithFrame:CGRectMake(0, 268, 320, 47) ImageName:@"" Target:self Action:@selector(sinaClick) Title:@"关注宠物星球新浪微博"];
+    UIButton * sina = [MyControl createButtonWithFrame:CGRectMake(0, 268, 320, 47) ImageName:@"" Target:self Action:@selector(sinaClick) Title:@"新浪微博：宠物星球_宠来宠趣"];
     sina.titleLabel.font = [UIFont systemFontOfSize:16];
-    [sina setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [sina setTitleColor:BGCOLOR forState:UIControlStateNormal];
     sina.backgroundColor = [UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1];
     sina.showsTouchWhenHighlighted = YES;
     [sv addSubview:sina];
     
-    UIButton * wechat = [MyControl createButtonWithFrame:CGRectMake(0, 320, 320, 47) ImageName:@"" Target:self Action:@selector(wechatClick) Title:@"关注宠物星球微信公众平台"];
+    UIButton * wechat = [MyControl createButtonWithFrame:CGRectMake(0, 320, 320, 47) ImageName:@"" Target:self Action:@selector(wechatClick) Title:@"微信公众号：宠物星球"];
     wechat.titleLabel.font = [UIFont systemFontOfSize:16];
-    [wechat setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [wechat setTitleColor:BGCOLOR forState:UIControlStateNormal];
     wechat.backgroundColor = [UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1];
     wechat.showsTouchWhenHighlighted = YES;
     [sv addSubview:wechat];
     
-    UIButton * permit = [MyControl createButtonWithFrame:CGRectMake(70, 394, 180, 20) ImageName:@"" Target:self Action:@selector(permitClick) Title:@"宠物星球软件许可及服务条款"];
-    permit.titleLabel.font = [UIFont systemFontOfSize:13];
+    UIButton * permit = [MyControl createButtonWithFrame:CGRectMake(70, 390, 180, 20) ImageName:@"" Target:self Action:@selector(permitClick) Title:@"宠物星球软件许可及服务条款"];
+    permit.titleLabel.font = [UIFont systemFontOfSize:11];
     [permit setTitleColor:BGCOLOR forState:UIControlStateNormal];
     [sv addSubview:permit];
     
-    UILabel * phone = [MyControl createLabelWithFrame:CGRectMake(57, 420, 200, 20) Font:15 Text:@"联系我们：686868"];
-    phone.textColor = [UIColor blackColor];
+    UILabel * phone = [MyControl createLabelWithFrame:CGRectMake(118/2, 856/2, 200, 20) Font:15 Text:@"联系我们："];
+    phone.textColor = [UIColor colorWithRed:85/255.0 green:85/255.0 blue:85/255.0 alpha:1];
     [sv addSubview:phone];
     
-    UILabel * mail = [MyControl createLabelWithFrame:CGRectMake(57, 450, 220, 20) Font:14 Text:@"邮箱：chongwuxingqiu@li.com"];
-    mail.textColor = [UIColor blackColor];
+    UILabel * mail = [MyControl createLabelWithFrame:CGRectMake(118/2, 450, 220, 20) Font:12 Text:@"邮箱：contact@aidigame.com"];
+    mail.textColor = [UIColor colorWithRed:85/255.0 green:85/255.0 blue:85/255.0 alpha:1];
     [sv addSubview:mail];
     
-    UILabel * fax = [MyControl createLabelWithFrame:CGRectMake(57, 470, 220, 20) Font:14 Text:@"传真：111111111111fafafafa"];
-    fax.textColor = [UIColor blackColor];
-    [sv addSubview:fax];
+//    UILabel * fax = [MyControl createLabelWithFrame:CGRectMake(57, 470, 220, 20) Font:14 Text:@"传真：111111111111fafafafa"];
+//    fax.textColor = [UIColor blackColor];
+//    [sv addSubview:fax];
     
-    UILabel * copyright = [MyControl createLabelWithFrame:CGRectMake(0, 500, 320, 20) Font:12 Text:@"Copyright © 2013-2014 Aidigame.All Rights Reserved."];
-    copyright.textAlignment = NSTextAlignmentCenter;
-    copyright.textColor = [UIColor blackColor];
+    UILabel * copyright = [MyControl createLabelWithFrame:CGRectMake(118/2, 470, self.view.frame.size.width-118/2, 20) Font:12 Text:@"版权所有：北京市爱迪通信有限责任公司"];
+//    copyright.textAlignment = NSTextAlignmentCenter;
+    copyright.textColor = [UIColor colorWithRed:85/255.0 green:85/255.0 blue:85/255.0 alpha:1];
     [sv addSubview:copyright];
     
 }

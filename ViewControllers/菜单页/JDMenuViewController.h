@@ -55,4 +55,5 @@
 @property(nonatomic,retain)NSMutableArray * searchArray;
 
 @property(nonatomic,retain)NSMutableArray * receivedNewMsgArray;
+@property(nonatomic,retain)NSMutableArray * valueArray;
 @end

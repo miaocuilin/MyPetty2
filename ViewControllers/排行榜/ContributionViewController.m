@@ -86,6 +86,12 @@
         NSLog(@"国家贡献%d排行榜数据：%@", self.category, load.dataDict);
         if (isFinish) {
             [self.contributionDataArray removeAllObjects];
+            if (![[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]]) {
+                
+                [MyControl loadingFailedWithContent:@"数据异常" afterDelay:0.7];
+                [tv reloadData];
+                return;
+            }
             NSArray *array = [load.dataDict objectForKey:@"data"];
             for (int i=0; i< array.count; i++) {
                 NSDictionary *dict = array[i];

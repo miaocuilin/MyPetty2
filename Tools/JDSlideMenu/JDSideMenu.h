@@ -48,5 +48,19 @@
 
 -(id)returnContentController;
 
-
+/******************新添加**********************/
+//记录每个对话id
+@property(nonatomic,retain)NSMutableArray * talkIDArray;
+//usr_id
+@property(nonatomic,retain)NSMutableArray * userIDArray;
+//tx
+@property(nonatomic,retain)NSMutableArray * userTxArray;
+//username
+@property(nonatomic,retain)NSMutableArray * userNameArray;
+//新消息数
+@property(nonatomic,retain)NSMutableArray * newMsgNumArray;
+//时间数组
+@property(nonatomic,retain)NSMutableArray * keysArray;
+//内容数组
+@property(nonatomic,retain)NSMutableArray * valuesArray;
 @end

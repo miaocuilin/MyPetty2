@@ -89,7 +89,12 @@
 //            arrow.hidden = NO;
             [self.rankDataArray removeAllObjects];
             [self.limitRankDataArray removeAllObjects];
-            
+            if (![[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]]) {
+                
+                [MyControl loadingFailedWithContent:@"数据异常" afterDelay:0.7];
+                [tv reloadData];
+                return;
+            }
             NSArray *array = [load.dataDict objectForKey:@"data"];
             NSLog(@"%d", array.count);
             for (int i = 0; i<array.count; i++) {

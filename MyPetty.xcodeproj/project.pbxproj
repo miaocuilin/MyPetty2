@@ -512,6 +512,8 @@
 		60BFBC7019B0271300EE3746 /* list_moreArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6919B0271300EE3746 /* list_moreArrow.png */; };
 		60BFBC7119B0271300EE3746 /* list_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6A19B0271300EE3746 /* list_up.png */; };
 		60BFBC7219B0271300EE3746 /* silverMedal.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6B19B0271300EE3746 /* silverMedal.png */; };
+		60D2F35B19F153F800FC5FB2 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D2F35A19F153F800FC5FB2 /* MessageModel.m */; };
+		60D2F35E19F1558900FC5FB2 /* SingleTalkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D2F35D19F1558900FC5FB2 /* SingleTalkModel.m */; };
 		60D62A6B19A4499300224976 /* ControllerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D62A6819A4499300224976 /* ControllerManager.m */; };
 		60D62A6C19A4499300224976 /* MyControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D62A6A19A4499300224976 /* MyControl.m */; };
 		60D62A6F19A46D5900224976 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D62A6E19A46D5900224976 /* MainViewController.m */; };
@@ -1264,6 +1266,10 @@
 		60BFBC6919B0271300EE3746 /* list_moreArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_moreArrow.png; sourceTree = "<group>"; };
 		60BFBC6A19B0271300EE3746 /* list_up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_up.png; sourceTree = "<group>"; };
 		60BFBC6B19B0271300EE3746 /* silverMedal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = silverMedal.png; sourceTree = "<group>"; };
+		60D2F35919F153F800FC5FB2 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
+		60D2F35A19F153F800FC5FB2 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
+		60D2F35C19F1558800FC5FB2 /* SingleTalkModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleTalkModel.h; sourceTree = "<group>"; };
+		60D2F35D19F1558900FC5FB2 /* SingleTalkModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleTalkModel.m; sourceTree = "<group>"; };
 		60D62A6719A4499300224976 /* ControllerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControllerManager.h; sourceTree = "<group>"; };
 		60D62A6819A4499300224976 /* ControllerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControllerManager.m; sourceTree = "<group>"; };
 		60D62A6919A4499300224976 /* MyControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyControl.h; sourceTree = "<group>"; };
@@ -1683,6 +1689,8 @@
 				600D4D6919CFB7FE008DA8E8 /* UserActivityListModel.m */,
 				6061280C19D55D2A0087F642 /* SearchResultModel.h */,
 				6061280D19D55D2A0087F642 /* SearchResultModel.m */,
+				60D2F35919F153F800FC5FB2 /* MessageModel.h */,
+				60D2F35A19F153F800FC5FB2 /* MessageModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1828,6 +1836,8 @@
 		09D989361935C08E00C83C4B = {
 			isa = PBXGroup;
 			children = (
+				60D2F35C19F1558800FC5FB2 /* SingleTalkModel.h */,
+				60D2F35D19F1558900FC5FB2 /* SingleTalkModel.m */,
 				0979B7541941C277007C36A7 /* Model */,
 				09D98AB11935E83200C83C4B /* Customs */,
 				09D98AC11935EC1900C83C4B /* ViewControllers */,
@@ -3143,6 +3153,7 @@
 				49A799FF19B5A075002411FC /* MyCollectionViewLayout.m in Sources */,
 				496CF22019A44F570081BF5E /* AddressViewController.m in Sources */,
 				09D989531935C08E00C83C4B /* AppDelegate.m in Sources */,
+				60D2F35E19F1558900FC5FB2 /* SingleTalkModel.m in Sources */,
 				6024A61B19A18DE0005ED3D3 /* BottomMenuRootViewController.m in Sources */,
 				603A367A19C07F680000E0AD /* PlanetAttentionViewController.m in Sources */,
 				09D989F41935C1FE00C83C4B /* TMQuiltViewController.m in Sources */,
@@ -3229,6 +3240,7 @@
 				0974AB5C19444C7D0010DFE5 /* PhotoModel.m in Sources */,
 				496CF22B19A495070081BF5E /* MassWatchViewController.m in Sources */,
 				09561ACC193829E2008A13EB /* FirstViewController.m in Sources */,
+				60D2F35B19F153F800FC5FB2 /* MessageModel.m in Sources */,
 				0979B7721941C6BF007C36A7 /* SDWebImageManager.m in Sources */,
 				60DDF24C19AF196900CB3042 /* topicCell.m in Sources */,
 				1818E53D195D1CDD001ED167 /* MJRefreshBaseView.m in Sources */,
@@ -3440,8 +3452,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3463,7 +3475,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "dba48338-22b9-4cd7-a953-06ac9fae20b4";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3475,8 +3487,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3498,7 +3510,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "dba48338-22b9-4cd7-a953-06ac9fae20b4";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

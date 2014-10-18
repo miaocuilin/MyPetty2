@@ -480,6 +480,8 @@
 		609D6CCC19D2FB3B005E7144 /* catHead.png in Resources */ = {isa = PBXBuildFile; fileRef = 609D6CC819D2FB3B005E7144 /* catHead.png */; };
 		609D6CCD19D2FB3B005E7144 /* dogAmbassador.png in Resources */ = {isa = PBXBuildFile; fileRef = 609D6CC919D2FB3B005E7144 /* dogAmbassador.png */; };
 		609D6CCE19D2FB3B005E7144 /* dogHead.png in Resources */ = {isa = PBXBuildFile; fileRef = 609D6CCA19D2FB3B005E7144 /* dogHead.png */; };
+		60ACAC1919F200A80049D366 /* SingleTalkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60ACAC1819F200A80049D366 /* SingleTalkModel.m */; };
+		60ACAC1C19F24A8A0049D366 /* NoticeModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60ACAC1B19F24A8A0049D366 /* NoticeModel.m */; };
 		60AD7C6019D79FF200CE2AE4 /* 4和5页面通用.png in Resources */ = {isa = PBXBuildFile; fileRef = 60AD7C5F19D79FF200CE2AE4 /* 4和5页面通用.png */; };
 		60AD7C6219D7ABAD00CE2AE4 /* dogPlanet.png in Resources */ = {isa = PBXBuildFile; fileRef = 60AD7C6119D7ABAD00CE2AE4 /* dogPlanet.png */; };
 		60AD7C6419D7B42D00CE2AE4 /* menu-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 60AD7C6319D7B42D00CE2AE4 /* menu-1.png */; };
@@ -513,7 +515,6 @@
 		60BFBC7119B0271300EE3746 /* list_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6A19B0271300EE3746 /* list_up.png */; };
 		60BFBC7219B0271300EE3746 /* silverMedal.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6B19B0271300EE3746 /* silverMedal.png */; };
 		60D2F35B19F153F800FC5FB2 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D2F35A19F153F800FC5FB2 /* MessageModel.m */; };
-		60D2F35E19F1558900FC5FB2 /* SingleTalkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D2F35D19F1558900FC5FB2 /* SingleTalkModel.m */; };
 		60D62A6B19A4499300224976 /* ControllerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D62A6819A4499300224976 /* ControllerManager.m */; };
 		60D62A6C19A4499300224976 /* MyControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D62A6A19A4499300224976 /* MyControl.m */; };
 		60D62A6F19A46D5900224976 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D62A6E19A46D5900224976 /* MainViewController.m */; };
@@ -1232,6 +1233,10 @@
 		609D6CC819D2FB3B005E7144 /* catHead.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = catHead.png; sourceTree = "<group>"; };
 		609D6CC919D2FB3B005E7144 /* dogAmbassador.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dogAmbassador.png; sourceTree = "<group>"; };
 		609D6CCA19D2FB3B005E7144 /* dogHead.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dogHead.png; sourceTree = "<group>"; };
+		60ACAC1719F200A80049D366 /* SingleTalkModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleTalkModel.h; sourceTree = "<group>"; };
+		60ACAC1819F200A80049D366 /* SingleTalkModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleTalkModel.m; sourceTree = "<group>"; };
+		60ACAC1A19F24A8A0049D366 /* NoticeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoticeModel.h; sourceTree = "<group>"; };
+		60ACAC1B19F24A8A0049D366 /* NoticeModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoticeModel.m; sourceTree = "<group>"; };
 		60AD7C5F19D79FF200CE2AE4 /* 4和5页面通用.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "4和5页面通用.png"; sourceTree = "<group>"; };
 		60AD7C6119D7ABAD00CE2AE4 /* dogPlanet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dogPlanet.png; sourceTree = "<group>"; };
 		60AD7C6319D7B42D00CE2AE4 /* menu-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-1.png"; sourceTree = "<group>"; };
@@ -1268,8 +1273,6 @@
 		60BFBC6B19B0271300EE3746 /* silverMedal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = silverMedal.png; sourceTree = "<group>"; };
 		60D2F35919F153F800FC5FB2 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
 		60D2F35A19F153F800FC5FB2 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
-		60D2F35C19F1558800FC5FB2 /* SingleTalkModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SingleTalkModel.h; sourceTree = "<group>"; };
-		60D2F35D19F1558900FC5FB2 /* SingleTalkModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SingleTalkModel.m; sourceTree = "<group>"; };
 		60D62A6719A4499300224976 /* ControllerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControllerManager.h; sourceTree = "<group>"; };
 		60D62A6819A4499300224976 /* ControllerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControllerManager.m; sourceTree = "<group>"; };
 		60D62A6919A4499300224976 /* MyControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyControl.h; sourceTree = "<group>"; };
@@ -1691,6 +1694,10 @@
 				6061280D19D55D2A0087F642 /* SearchResultModel.m */,
 				60D2F35919F153F800FC5FB2 /* MessageModel.h */,
 				60D2F35A19F153F800FC5FB2 /* MessageModel.m */,
+				60ACAC1719F200A80049D366 /* SingleTalkModel.h */,
+				60ACAC1819F200A80049D366 /* SingleTalkModel.m */,
+				60ACAC1A19F24A8A0049D366 /* NoticeModel.h */,
+				60ACAC1B19F24A8A0049D366 /* NoticeModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1836,8 +1843,6 @@
 		09D989361935C08E00C83C4B = {
 			isa = PBXGroup;
 			children = (
-				60D2F35C19F1558800FC5FB2 /* SingleTalkModel.h */,
-				60D2F35D19F1558900FC5FB2 /* SingleTalkModel.m */,
 				0979B7541941C277007C36A7 /* Model */,
 				09D98AB11935E83200C83C4B /* Customs */,
 				09D98AC11935EC1900C83C4B /* ViewControllers */,
@@ -3153,7 +3158,7 @@
 				49A799FF19B5A075002411FC /* MyCollectionViewLayout.m in Sources */,
 				496CF22019A44F570081BF5E /* AddressViewController.m in Sources */,
 				09D989531935C08E00C83C4B /* AppDelegate.m in Sources */,
-				60D2F35E19F1558900FC5FB2 /* SingleTalkModel.m in Sources */,
+				60ACAC1919F200A80049D366 /* SingleTalkModel.m in Sources */,
 				6024A61B19A18DE0005ED3D3 /* BottomMenuRootViewController.m in Sources */,
 				603A367A19C07F680000E0AD /* PlanetAttentionViewController.m in Sources */,
 				09D989F41935C1FE00C83C4B /* TMQuiltViewController.m in Sources */,
@@ -3169,6 +3174,7 @@
 				09DA9DCB1965400200E219A6 /* NoticeViewController.m in Sources */,
 				601BB36319AB4D660076E051 /* MyHomeViewController.m in Sources */,
 				09D98A021935C26800C83C4B /* TMPhotoQuiltViewCell.m in Sources */,
+				60ACAC1C19F24A8A0049D366 /* NoticeModel.m in Sources */,
 				09176FFF19625E3B002F8502 /* TopicDetailModel.m in Sources */,
 				495FFFEE19AAD38F00976F18 /* ToolTipsViewController.m in Sources */,
 				0908736B1973B2F2004276EF /* MessageCell.m in Sources */,

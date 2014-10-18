@@ -113,24 +113,30 @@
         }
     };
     //
-    sideMenu.refreshNewMsgNum = ^(NSArray * array){
-        NSArray * newMsgArray = [NSArray arrayWithArray:array];
-        if (newMsgArray.count) {
+    sideMenu.refreshNewMsgNum = ^(NSString * num){
+        if ([num intValue]) {
             messageNumBg.hidden = NO;
-            //解析数目
-            int msgCount = 0;
-            for (int i=0; i<newMsgArray.count; i++) {
-                NSDictionary * dict1 = newMsgArray[i];
-                NSString * key = [[dict1 allKeys] objectAtIndex:0];
-                NSDictionary * dict2 = [dict1 objectForKey:key];
-                msgCount += [[dict2 objectForKey:@"new_msg"] intValue];
-            }
-            noticeNumLabel.text = [NSString stringWithFormat:@"%d", msgCount];
-            self.receivedNewMsgArray = [NSMutableArray arrayWithArray:newMsgArray];
+            noticeNumLabel.text = num;
         }else{
             messageNumBg.hidden = YES;
-            [self.receivedNewMsgArray removeAllObjects];
         }
+//        NSArray * newMsgArray = [NSArray arrayWithArray:array];
+//        if (newMsgArray.count) {
+//            messageNumBg.hidden = NO;
+//            //解析数目
+//            int msgCount = 0;
+//            for (int i=0; i<newMsgArray.count; i++) {
+//                NSDictionary * dict1 = newMsgArray[i];
+//                NSString * key = [[dict1 allKeys] objectAtIndex:0];
+//                NSDictionary * dict2 = [dict1 objectForKey:key];
+//                msgCount += [[dict2 objectForKey:@"new_msg"] intValue];
+//            }
+//            noticeNumLabel.text = [NSString stringWithFormat:@"%d", msgCount];
+//            self.receivedNewMsgArray = [NSMutableArray arrayWithArray:newMsgArray];
+//        }else{
+//            messageNumBg.hidden = YES;
+//            [self.receivedNewMsgArray removeAllObjects];
+//        }
     };
     
 }
@@ -267,12 +273,12 @@
     UIButton * messageBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 50, 25, 25) ImageName:@"menu_message.png" Target:self Action:@selector(messageBtnClick) Title:nil];
     [sv3 addSubview:messageBtn];
     
-    messageNumBg = [MyControl  createImageViewWithFrame:CGRectMake(17, -7., 15, 15) ImageName:@"greenBall.png"];
+    messageNumBg = [MyControl  createImageViewWithFrame:CGRectMake(17, -7, 15, 15) ImageName:@"greenBall.png"];
     messageNumBg.tag = 49;
     messageNumBg.hidden = YES;
     [messageBtn addSubview:messageNumBg];
     
-    noticeNumLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 15, 15) Font:14 Text:@"5"];
+    noticeNumLabel = [MyControl createLabelWithFrame:CGRectMake(-2.5, 0, 20, 15) Font:11 Text:@"5"];
     noticeNumLabel.textAlignment = NSTextAlignmentCenter;
     [messageNumBg addSubview:noticeNumLabel];
     
@@ -891,9 +897,9 @@
 //        1413515402 = 11;
 //        1413515405 = 22;
 //        1413515407 = 33;
-        [self combineData];
+//        [self combineData];
         
-        vc.newDataArray = self.valueArray;
+//        vc.newDataArray = self.valueArray;
         [self.sideMenuController setContentController:vc animted:YES];
     }else{
         ShowAlertView;
@@ -919,58 +925,58 @@
     
 //    [vc release];
 }
--(void)combineData
-{
-//    self.receivedNewMsgArray
-    //用来存储只出现过的key值
-    NSMutableArray * keyArray = [NSMutableArray arrayWithCapacity:0];
-    //用来存储合并过的value，将这个数组传到下个界面
-    [self.valueArray removeAllObjects];
-//    NSLog(@"keyArray:%@", keyArray);
-//    NSLog(@"receivedNewMsgArray:%@", self.receivedNewMsgArray);
-    
-    for (int i=0; i<self.receivedNewMsgArray.count; i++) {
-        NSDictionary * dict1 = self.receivedNewMsgArray[i];
-        NSString * key = [[dict1 allKeys] objectAtIndex:0];
-        if (keyArray.count) {
-            //查找
-            for (int j=0; j<keyArray.count; j++) {
-                if ([keyArray[j] isEqualToString:key]) {
-                    //取出原数据
-                    NSMutableDictionary * dict2 = [NSMutableDictionary dictionaryWithDictionary:[self.valueArray[j] objectForKey:key]];
-                    NSMutableDictionary * dict2_msg = [NSMutableDictionary dictionaryWithDictionary:[dict2 objectForKey:@"msg"]];
-                    
-                    //取出新数据
-                    NSDictionary * dict3 = [dict1 objectForKey:key];
-                    NSDictionary * dict3_msg = [dict3 objectForKey:@"msg"];
-                    
-                    //合并消息，新消息数相加
-                    [dict2_msg addEntriesFromDictionary:dict3_msg];
-                    NSString * totalMsgCount = [NSString stringWithFormat:@"%d", [[dict2 objectForKey:@"new_msg"] intValue]+[[dict3 objectForKey:@"new_msg"] intValue]];
-//                    [dict2 setObject:totalMsgCount forKey:@"new_msg"];
-                    [dict2 setValue:totalMsgCount forKey:@"new_msg"];
-                    //合并完成，删除重新加入数组
-                    [self.valueArray removeObjectAtIndex:j];
-                    
-                    NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithObject:dict2 forKey:key];
-                    [self.valueArray insertObject:dic atIndex:j];
-                    
-                    break;
-                }else if(j == keyArray.count-1){
-                    //没找到，直接存储
-                    [self.valueArray addObject:dict1];
-                    [keyArray addObject:key];
-                }
-            }
-        }else{
-            //直接存储
-            [self.valueArray addObject:dict1];
-            [keyArray addObject:key];
-        }
-        
-    }
-//    NSLog(@"")
-}
+//-(void)combineData
+//{
+////    self.receivedNewMsgArray
+//    //用来存储只出现过的key值
+//    NSMutableArray * keyArray = [NSMutableArray arrayWithCapacity:0];
+//    //用来存储合并过的value，将这个数组传到下个界面
+//    [self.valueArray removeAllObjects];
+////    NSLog(@"keyArray:%@", keyArray);
+////    NSLog(@"receivedNewMsgArray:%@", self.receivedNewMsgArray);
+//    
+//    for (int i=0; i<self.receivedNewMsgArray.count; i++) {
+//        NSDictionary * dict1 = self.receivedNewMsgArray[i];
+//        NSString * key = [[dict1 allKeys] objectAtIndex:0];
+//        if (keyArray.count) {
+//            //查找
+//            for (int j=0; j<keyArray.count; j++) {
+//                if ([keyArray[j] isEqualToString:key]) {
+//                    //取出原数据
+//                    NSMutableDictionary * dict2 = [NSMutableDictionary dictionaryWithDictionary:[self.valueArray[j] objectForKey:key]];
+//                    NSMutableDictionary * dict2_msg = [NSMutableDictionary dictionaryWithDictionary:[dict2 objectForKey:@"msg"]];
+//                    
+//                    //取出新数据
+//                    NSDictionary * dict3 = [dict1 objectForKey:key];
+//                    NSDictionary * dict3_msg = [dict3 objectForKey:@"msg"];
+//                    
+//                    //合并消息，新消息数相加
+//                    [dict2_msg addEntriesFromDictionary:dict3_msg];
+//                    NSString * totalMsgCount = [NSString stringWithFormat:@"%d", [[dict2 objectForKey:@"new_msg"] intValue]+[[dict3 objectForKey:@"new_msg"] intValue]];
+////                    [dict2 setObject:totalMsgCount forKey:@"new_msg"];
+//                    [dict2 setValue:totalMsgCount forKey:@"new_msg"];
+//                    //合并完成，删除重新加入数组
+//                    [self.valueArray removeObjectAtIndex:j];
+//                    
+//                    NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithObject:dict2 forKey:key];
+//                    [self.valueArray insertObject:dic atIndex:j];
+//                    
+//                    break;
+//                }else if(j == keyArray.count-1){
+//                    //没找到，直接存储
+//                    [self.valueArray addObject:dict1];
+//                    [keyArray addObject:key];
+//                }
+//            }
+//        }else{
+//            //直接存储
+//            [self.valueArray addObject:dict1];
+//            [keyArray addObject:key];
+//        }
+//        
+//    }
+////    NSLog(@"")
+//}
 -(void)shopBtnClick
 {
     NSLog(@"shop");

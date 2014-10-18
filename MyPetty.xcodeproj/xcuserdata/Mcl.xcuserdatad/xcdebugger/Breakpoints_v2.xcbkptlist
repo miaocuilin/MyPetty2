@@ -441,22 +441,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ViewControllers/&#x4e2a;&#x4eba;&#x4e2d;&#x5fc3;/NoticeViewController.m"
-            timestampString = "435146867.560492"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "285"
-            endingLineNumber = "285"
-            landmarkName = "-loadHistoryTalk"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "&#x52a8;&#x4f5c;&#x4ea4;&#x4e92;/RecordViewController.m"
             timestampString = "434621118.537691"
             startingColumnNumber = "9223372036854775807"
@@ -512,22 +496,6 @@
             startingLineNumber = "91"
             endingLineNumber = "91"
             landmarkName = "-loadMyCountryInfoData"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ViewControllers/&#x4e2a;&#x4eba;&#x4e2d;&#x5fc3;/NoticeViewController.m"
-            timestampString = "435135446.489667"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "30"
-            endingLineNumber = "30"
-            landmarkName = "-viewWillAppear:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -774,31 +742,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Tools/JDSlideMenu/JDSideMenu.m"
-            timestampString = "435217625.282328"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "385"
-            endingLineNumber = "385"
-            landmarkName = "@implementation JDSideMenu"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x83dc;&#x5355;&#x9875;/JDMenuViewController.m"
-            timestampString = "435214556.487149"
+            timestampString = "435293844.442034"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "373"
-            endingLineNumber = "373"
+            startingLineNumber = "379"
+            endingLineNumber = "379"
             landmarkName = "-createUI"
             landmarkType = "5">
          </BreakpointContent>
@@ -810,11 +762,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x83dc;&#x5355;&#x9875;/JDMenuViewController.m"
-            timestampString = "435221076.461961"
+            timestampString = "435293844.442034"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1118"
-            endingLineNumber = "1118"
+            startingLineNumber = "1124"
+            endingLineNumber = "1124"
             landmarkName = "-textField:shouldChangeCharactersInRange:replacementString:"
             landmarkType = "5">
          </BreakpointContent>
@@ -826,11 +778,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x83dc;&#x5355;&#x9875;/JDMenuViewController.m"
-            timestampString = "435221076.461961"
+            timestampString = "435293844.442034"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1123"
-            endingLineNumber = "1123"
+            startingLineNumber = "1129"
+            endingLineNumber = "1129"
             landmarkName = "-textField:shouldChangeCharactersInRange:replacementString:"
             landmarkType = "5">
          </BreakpointContent>
@@ -858,11 +810,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x83dc;&#x5355;&#x9875;/JDMenuViewController.m"
-            timestampString = "435214556.487149"
+            timestampString = "435293844.442034"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "309"
-            endingLineNumber = "309"
+            startingLineNumber = "315"
+            endingLineNumber = "315"
             landmarkName = "-createUI"
             landmarkType = "5">
          </BreakpointContent>
@@ -874,44 +826,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Tools/JDSlideMenu/JDSideMenu.m"
-            timestampString = "435145398.270529"
+            timestampString = "435293041.408858"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "264"
-            endingLineNumber = "264"
-            landmarkName = "@implementation JDSideMenu"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ViewControllers/&#x4e2a;&#x4eba;&#x4e2d;&#x5fc3;/NoticeViewController.m"
-            timestampString = "435146867.560492"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "384"
-            endingLineNumber = "384"
-            landmarkName = "-loadHistoryTalk"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ViewControllers/&#x4e2a;&#x4eba;&#x4e2d;&#x5fc3;/NoticeViewController.m"
-            timestampString = "435146867.560492"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "447"
-            endingLineNumber = "447"
-            landmarkName = "-saveWithUserID:time:msg:Tx:Name:"
+            startingLineNumber = "270"
+            endingLineNumber = "270"
+            landmarkName = "-getMsgAndActivityNum"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -922,11 +842,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Tools/JDSlideMenu/JDSideMenu.m"
-            timestampString = "435217625.282328"
+            timestampString = "435317172.331558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "318"
-            endingLineNumber = "318"
+            startingLineNumber = "328"
+            endingLineNumber = "328"
             landmarkName = "-getNewMessage"
             landmarkType = "5">
          </BreakpointContent>
@@ -938,28 +858,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ViewControllers/&#x83dc;&#x5355;&#x9875;/JDMenuViewController.m"
-            timestampString = "435215280.951575"
+            timestampString = "435293844.442034"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "894"
-            endingLineNumber = "894"
+            startingLineNumber = "900"
+            endingLineNumber = "900"
             landmarkName = "-messageBtnClick"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ViewControllers/&#x83dc;&#x5355;&#x9875;/JDMenuViewController.m"
-            timestampString = "435215284.364097"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "926"
-            endingLineNumber = "926"
-            landmarkName = "-combineData"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -976,6 +880,22 @@
             startingLineNumber = "587"
             endingLineNumber = "587"
             landmarkName = "-requestFinished:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Tools/JDSlideMenu/JDSideMenu.m"
+            timestampString = "435318557.333405"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "435"
+            endingLineNumber = "435"
+            landmarkName = "-loadHistoryMessageAndSaveToLocal"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

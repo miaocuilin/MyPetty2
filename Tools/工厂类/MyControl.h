@@ -56,6 +56,11 @@
 +(void)startLoadingWithStatus:(NSString *)status;
 +(void)loadingSuccessWithContent:(NSString *)content afterDelay:(float)delay;
 +(void)loadingFailedWithContent:(NSString *)content afterDelay:(float)delay;
+
+//字典转data
++(NSData *)returnDataWithDictionary:(NSDictionary *)dict;
+//路径文件转dictonary
++(NSDictionary *)returnDictionaryWithDataPath:(NSString *)path;
 @end
 
 

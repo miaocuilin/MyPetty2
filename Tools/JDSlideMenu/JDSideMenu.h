@@ -28,7 +28,7 @@
 //刷新个人数据
 @property(nonatomic,copy)void (^refreshUserData)(void);
 //传递新消息数组
-@property(nonatomic,copy)void (^refreshNewMsgNum)(NSArray *);
+@property(nonatomic,copy)void (^refreshNewMsgNum)(NSString *);
 /****************************/
 - (id)initWithContentController:(UIViewController*)contentController
                  menuController:(UIViewController*)menuController;
@@ -63,4 +63,7 @@
 @property(nonatomic,retain)NSMutableArray * keysArray;
 //内容数组
 @property(nonatomic,retain)NSMutableArray * valuesArray;
+/******************************************/
+//@property(nonatomic,retain)NSMutableDictionary * totalDataDict;
+@property(nonatomic,retain)NSMutableArray * newMsgDataArray;
 @end

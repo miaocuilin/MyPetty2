@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MessageModel : NSObject
+@interface MessageModel : NSObject <NSCoding>
 
 @property(nonatomic,copy)NSString * msg;
 @property(nonatomic,copy)NSString * time;

@@ -10,7 +10,7 @@
 #import "Message.h"
 #import "MessageCell.h"
 #import "MessageFrame.h"
-#import "NoticeViewController.h";
+//#import "NoticeViewController.h";
 
 @interface TalkViewController ()
 
@@ -46,9 +46,11 @@
     self.valuesArray = [NSMutableArray arrayWithCapacity:0];
     
     [self createBg];
+    
+    [self loadHistoryTalk];
     [self createTableView];
     [self createFakeNavigation];
-    [self loadTalkID];
+//    [self loadTalkID];
 //    [self loadNewMessageData];
 //    [self talkListData];
 //    [self talkSendMessageData];
@@ -84,23 +86,26 @@
         //文件存在
         NSLog(@"文件存在");
         //未读取本地文件
-        isRead = YES;
-        self.totalDataDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
-        if ([self.totalDataDict objectForKey:self.talk_id]) {
-            self.talkDataDict = [self.totalDataDict objectForKey:self.talk_id];
-            self.talkDataArray = [NSMutableArray arrayWithArray:[self.talkDataDict objectForKey:@"data"]];
-            //取出每条信息添加到数组中
-            for (int i=0; i<self.talkDataArray.count; i++) {
-                NSDictionary * dict = self.talkDataArray[i];
-                if ([[dict objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
-                    [self presentNewMessageWithSend:YES time:[dict objectForKey:@"time"] msg:[dict objectForKey:@"msg"]];
-                }else{
-                    [self presentNewMessageWithSend:NO time:[dict objectForKey:@"time"] msg:[dict objectForKey:@"msg"]];
-                }
-                
-            }
-            
-        }
+//        isRead = YES;
+        self.totalDataDict = [NSMutableDictionary dictionaryWithDictionary:[MyControl returnDictionaryWithDataPath:path]];
+        
+        //文件肯定存在，读取文件
+        
+//        if ([self.totalDataDict objectForKey:self.talk_id]) {
+//            self.talkDataDict = [self.totalDataDict objectForKey:self.talk_id];
+//            self.talkDataArray = [NSMutableArray arrayWithArray:[self.talkDataDict objectForKey:@"data"]];
+//            //取出每条信息添加到数组中
+//            for (int i=0; i<self.talkDataArray.count; i++) {
+//                NSDictionary * dict = self.talkDataArray[i];
+//                if ([[dict objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+//                    [self presentNewMessageWithSend:YES time:[dict objectForKey:@"time"] msg:[dict objectForKey:@"msg"]];
+//                }else{
+//                    [self presentNewMessageWithSend:NO time:[dict objectForKey:@"time"] msg:[dict objectForKey:@"msg"]];
+//                }
+//                
+//            }
+//            
+//        }
     }
     [self loadNewMessageData];
     [timer setFireDate:[NSDate distantPast]];
@@ -130,7 +135,7 @@
                     NSLog(@"%@--%@", self.keysArray[i], self.valuesArray[i]);
                     [self saveTalkDataWithUserID:self.usr_id time:self.keysArray[i] msg:self.valuesArray[i]];
                     if (i == self.keysArray.count-1) {
-                        self.noticeVc.lastMessage = self.valuesArray[i];
+//                        self.noticeVc.lastMessage = self.valuesArray[i];
                     }
                 }
                 
@@ -258,8 +263,8 @@
     NSString * timeStamp = [NSString stringWithFormat:@"%d", (int)[date timeIntervalSince1970]];
     [self saveTalkDataWithUserID:[USER objectForKey:@"usr_id"] time:timeStamp msg:self.lastMessage];
     //设置父控制器消息
-    NoticeViewController * vc = self.noticeVc;
-    vc.lastMessage = self.lastMessage;
+//    NoticeViewController * vc = self.noticeVc;
+//    vc.lastMessage = self.lastMessage;
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {

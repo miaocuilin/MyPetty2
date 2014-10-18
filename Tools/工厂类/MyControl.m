@@ -247,4 +247,31 @@
 {
     [MMProgressHUD dismissWithError:content afterDelay:delay];
 }
+
+//字典转data
++(NSData *)returnDataWithDictionary:(NSDictionary *)dict
+{
+    NSMutableData * data = [[NSMutableData alloc] init];
+    NSKeyedArchiver * archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+    [archiver encodeObject:dict forKey:@"talkData"];
+    [archiver finishEncoding];
+
+    [data autorelease];
+    [archiver autorelease];
+    
+    return data;
+}
+//路径文件转dictonary
++(NSDictionary *)returnDictionaryWithDataPath:(NSString *)path
+{
+    NSData * data = [[NSMutableData alloc] initWithContentsOfFile:path];
+    NSKeyedUnarchiver * unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+    NSDictionary * myDictionary = [[unarchiver decodeObjectForKey:@"talkData"] retain];
+    [unarchiver finishDecoding];
+//    NSLog(@"%@", myDictionary);
+    [unarchiver autorelease];
+    [data autorelease];
+
+    return myDictionary;
+}
 @end

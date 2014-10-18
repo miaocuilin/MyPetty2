@@ -31,7 +31,8 @@
     tips.layer.cornerRadius = 10;
     tips.layer.masksToBounds = YES;
     
-    tipsLabel = [MyControl createLabelWithFrame:CGRectMake(6, 2, 10, 15) Font:15 Text:@"3"];
+    tipsLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 20, 20) Font:13 Text:@"13"];
+    tipsLabel.textAlignment = NSTextAlignmentCenter;
     [tips addSubview:tipsLabel];
     [self.contentView addSubview:tips];
     
@@ -54,7 +55,7 @@
     horizontalLine.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:horizontalLine];
 }
--(void)configUIWithTx:(NSString *)tx Name:(NSString *)name Time:(NSString *)time Content:(NSString *)content newMsgNum:(NSString *)newMsgNum
+-(void)configUIWithTx:(NSString *)tx Name:(NSString *)name Time:(NSString *)time Content:(NSString *)content newMsgNum:(NSString *)newMsgNum img_id:(NSString *)img_id
 {
     tips.hidden = YES;
     

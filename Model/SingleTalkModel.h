@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MessageModel.h"
+//#import "MessageModel.h"
 
-@interface SingleTalkModel : NSObject
+@interface SingleTalkModel : NSObject <NSCoding>
 
 @property(nonatomic,copy)NSString * usr_id;
 @property(nonatomic,copy)NSString * usr_name;
 @property(nonatomic,copy)NSString * usr_tx;
-@property(nonatomic,copy)NSString * newMsgNum;
-@property(nonatomic,retain)MessageModel * model;
+@property(nonatomic,copy)NSString * unReadMsgNum;
+@property(nonatomic,retain)NSDictionary * msgDict;
 @end

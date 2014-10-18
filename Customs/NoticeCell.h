@@ -19,5 +19,5 @@
 }
 //-(void)configUI:(SystemMessageListModel *)model;
 //-(void)configUIWithDict:(NSDictionary *)dic;
--(void)configUIWithTx:(NSString *)tx Name:(NSString *)name Time:(NSString *)time Content:(NSString *)content newMsgNum:(NSString *)newMsgNum;
+-(void)configUIWithTx:(NSString *)tx Name:(NSString *)name Time:(NSString *)time Content:(NSString *)content newMsgNum:(NSString *)newMsgNum img_id:(NSString *)img_id;
 @end

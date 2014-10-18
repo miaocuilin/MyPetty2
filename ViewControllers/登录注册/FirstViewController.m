@@ -395,7 +395,7 @@
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"%@", load.dataDict);
+//            NSLog(@"%@", load.dataDict);
             //获取用户所有宠物，将aid存到本地
             NSArray * array = [load.dataDict objectForKey:@"data"];
             NSMutableArray * aidArray = [NSMutableArray arrayWithCapacity:0];

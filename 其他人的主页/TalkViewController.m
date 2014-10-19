@@ -10,10 +10,14 @@
 #import "Message.h"
 #import "MessageCell.h"
 #import "MessageFrame.h"
+#import "SingleTalkModel.h"
+#import "MessageModel.h"
 //#import "NoticeViewController.h";
 
 @interface TalkViewController ()
-
+{
+    SingleTalkModel * talkModel;
+}
 @end
 
 @implementation TalkViewController
@@ -36,7 +40,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.totalDataDict = [NSMutableDictionary dictionaryWithCapacity:0];
-    self.talkDataDict = [NSMutableDictionary dictionaryWithCapacity:0];
+//    self.talkMsgDataDict = [NSMutableDictionary dictionaryWithCapacity:0];
     self.talkDataArray = [NSMutableArray arrayWithCapacity:0];
 //    self.messageDict = [NSMutableDictionary dictionaryWithCapacity:0];
     
@@ -47,10 +51,15 @@
     
     [self createBg];
     
-    [self loadHistoryTalk];
+    if (self.talk_id != nil) {
+        [self loadHistoryTalk];
+    }else{
+        [self loadTalkID];
+    }
+    
     [self createTableView];
     [self createFakeNavigation];
-//    [self loadTalkID];
+    
 //    [self loadNewMessageData];
 //    [self talkListData];
 //    [self talkSendMessageData];
@@ -89,7 +98,31 @@
 //        isRead = YES;
         self.totalDataDict = [NSMutableDictionary dictionaryWithDictionary:[MyControl returnDictionaryWithDataPath:path]];
         
-        //文件肯定存在，读取文件
+        //判断历史记录中有没有历史消息
+        if ([self.totalDataDict objectForKey:self.talk_id]) {
+            //有历史消息
+            
+            talkModel = [self.totalDataDict objectForKey:self.talk_id];
+            NSArray * msgModelArray = [talkModel.msgDict objectForKey:@"msg"];
+            
+            self.talkDataArray = [NSMutableArray arrayWithArray:msgModelArray];
+            for (int i=0; i<msgModelArray.count;i++) {
+                MessageModel * model = msgModelArray[i];
+                if ([model.usr_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                    [self presentNewMessageWithSend:YES time:model.time msg:model.msg];
+                }else{
+                    [self presentNewMessageWithSend:NO time:model.time msg:model.msg];
+                }
+            }
+        }else{
+            talkModel = [[SingleTalkModel alloc] init];
+            talkModel.usr_id = self.usr_id;
+            talkModel.usr_tx = self.otherTX;
+            talkModel.usr_name = self.friendName;
+            talkModel.unReadMsgNum = @"0";
+            //这一句在用户点击返回时再添
+//            talkModel.msgDict = [NSDictionary dictionaryWithObject:self.talkDataArray forKey:@"msg"];
+        }
         
 //        if ([self.totalDataDict objectForKey:self.talk_id]) {
 //            self.talkDataDict = [self.totalDataDict objectForKey:self.talk_id];
@@ -102,7 +135,7 @@
 //                }else{
 //                    [self presentNewMessageWithSend:NO time:[dict objectForKey:@"time"] msg:[dict objectForKey:@"msg"]];
 //                }
-//                
+//
 //            }
 //            
 //        }
@@ -112,6 +145,8 @@
 }
 -(void)loadNewMessageData
 {
+    NSLog(@"==========loadNewMessageData:%d============", test++);
+    
     //请求一个API，传usr_id，获取talk_id，根据talk_id去获取本地历史记录以及新的消息存到本地。
     //聊天里10秒刷一次，侧边栏在侧边栏弹出的时候刷新。
     NSString * url = [NSString stringWithFormat:@"%@%@", GETNEWMSGAPI,[ControllerManager getSID]];
@@ -123,39 +158,41 @@
                 NSLog(@"有新消息");
                 //分析数据
                 NSDictionary * dict = [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] objectForKey:self.talk_id];
-                [self analysisData:[dict objectForKey:@"msg"]];
+                
+                [self analysisDataAndSaveAndPresent:[dict objectForKey:@"msg"]];
                 //self.keysArray里是新消息的时间
                 //self.valuesArray里是新消息的内容
+                
                 
 //                //存储前先清空数组
 //                self.keysArray
                 
                 //存储
-                for (int i=0; i<self.keysArray.count; i++) {
-                    NSLog(@"%@--%@", self.keysArray[i], self.valuesArray[i]);
-                    [self saveTalkDataWithUserID:self.usr_id time:self.keysArray[i] msg:self.valuesArray[i]];
-                    if (i == self.keysArray.count-1) {
-//                        self.noticeVc.lastMessage = self.valuesArray[i];
-                    }
-                }
+//                for (int i=0; i<self.keysArray.count; i++) {
+//                    NSLog(@"%@--%@", self.keysArray[i], self.valuesArray[i]);
+//                    [self saveTalkDataWithUserID:self.usr_id time:self.keysArray[i] msg:self.valuesArray[i]];
+//                    if (i == self.keysArray.count-1) {
+////                        self.noticeVc.lastMessage = self.valuesArray[i];
+//                    }
+//                }
                 
                 //展示
-                NSLog(@"***************present time:%d", self.keysArray.count);
-                for (int i=0; i<self.keysArray.count; i++) {
-                    [self presentNewMessageWithSend:NO time:self.keysArray[i] msg:self.valuesArray[i]];
-                }
+//                NSLog(@"***************present time:%d", self.keysArray.count);
+//                for (int i=0; i<self.keysArray.count; i++) {
+//                    [self presentNewMessageWithSend:NO time:self.keysArray[i] msg:self.valuesArray[i]];
+//                }
             }else{
                 NSLog(@"没有新消息");
             }
-            LoadingSuccess;
+//            LoadingSuccess;
         }else{
-            LoadingFailed;
+//            LoadingFailed;
             NSLog(@"fail");
         }
     }];
     [request release];
 }
--(void)analysisData:(NSDictionary *)dict
+-(void)analysisDataAndSaveAndPresent:(NSDictionary *)dict
 {
     [self.keysArray removeAllObjects];
     [self.valuesArray removeAllObjects];
@@ -178,6 +215,27 @@
     for (int i=0;i<self.keysArray.count;i++) {
         NSLog(@"key:%@--value:%@", self.keysArray[i], [dict objectForKey:self.keysArray[i]]);
         [self.valuesArray addObject:[dict objectForKey:self.keysArray[i]]];
+        //
+        MessageModel * msgModel = [[MessageModel alloc] init];
+        msgModel.time = self.keysArray[i];
+        msgModel.usr_id = self.usr_id;
+        
+        NSString * msg = [dict objectForKey:self.keysArray[i]];
+        NSLog(@"%@", msg);
+        if ([msg rangeOfString:@"["].location != NSNotFound && [msg rangeOfString:@"]"].location != NSNotFound) {
+            int x = [msg rangeOfString:@"]"].location;
+            
+            msgModel.msg = [msg substringFromIndex:x+1];
+            msgModel.img_id = [msg substringWithRange:NSMakeRange(1, x)];
+        }else{
+            msgModel.msg = msg;
+            msgModel.img_id = @"0";
+        }
+        [self.talkDataArray addObject:msgModel];
+        [msgModel release];
+        
+        //展示
+        [self presentNewMessageWithSend:NO time:self.keysArray[i] msg:self.valuesArray[i]];
     }
     
 }
@@ -231,15 +289,23 @@
         [USER setObject:@"0" forKey:@"isFromNotice"];
         [USER setObject:@"1" forKey:@"isBackToTalk"];
     }
+    //存储对话到本地
+    talkModel.msgDict = [NSDictionary dictionaryWithObject:self.talkDataArray forKey:@"msg"];
+    [self.totalDataDict setObject:talkModel forKey:self.talk_id];
+    NSData * data = [MyControl returnDataWithDictionary:self.totalDataDict];
+    NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
+    BOOL a = [data writeToFile:path atomically:YES];
+    NSLog(@"存储结果：%d", a);
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)talkListData
-{
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
-    NSString *listString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=talk/listApi&sig=%@&SID=%@",sig,[ControllerManager getSID]];
-    NSLog(@"listString:%@",listString);
-}
+//- (void)talkListData
+//{
+//    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
+//    NSString *listString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=talk/listApi&sig=%@&SID=%@",sig,[ControllerManager getSID]];
+//    NSLog(@"listString:%@",listString);
+//}
 - (void)talkSendMessageData
 {
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat",self.usr_id]];
@@ -261,7 +327,17 @@
     //将消息存储到本地plist文件
     NSDate * date = [NSDate date];
     NSString * timeStamp = [NSString stringWithFormat:@"%d", (int)[date timeIntervalSince1970]];
-    [self saveTalkDataWithUserID:[USER objectForKey:@"usr_id"] time:timeStamp msg:self.lastMessage];
+    
+    //存到本地
+    MessageModel * model = [[MessageModel alloc] init];
+    model.msg = self.lastMessage;
+    model.time = timeStamp;
+    model.usr_id = [USER objectForKey:@"usr_id"];
+    model.img_id = @"0";
+    [self.dataArray addObject:model];
+    [model release];
+    
+//    [self saveTalkDataWithUserID:[USER objectForKey:@"usr_id"] time:timeStamp msg:self.lastMessage];
     //设置父控制器消息
 //    NoticeViewController * vc = self.noticeVc;
 //    vc.lastMessage = self.lastMessage;
@@ -272,83 +348,83 @@
     NSLog(@"failed");
 }
 #pragma mark - 将消息存储到本地plist文件
--(void)saveTalkDataWithUserID:(NSString *)usrID  time:(NSString *)timeStamp msg:(NSString *)msg
-{
-//    NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
-//    fmt.dateFormat = @"yyyy-MM-dd HH:mm"; // @"yyyy-MM-dd HH:mm:ss"
-//    NSDate * date = [NSDate dateWithTimeIntervalSince1970:[timeStamp intValue]];
-//    NSString *time = [fmt stringFromDate:date];
-    
-    NSFileManager * manager = [[NSFileManager alloc] init];
-    NSString * docDir = DOCDIR;
-    NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
-    if ([manager fileExistsAtPath:path]) {
-        //文件存在
-        NSLog(@"文件存在");
-        if (isNewCreated) {
-            //新创建不读取本地数据
-            //直接存储数据
-            [self saveWithUserID:usrID time:timeStamp msg:msg];
-        }else{
-            //非新创建，读取本地数据
-            if (isRead) {
-                //已经读取本地文件
-            }else{
-                //未读取本地文件
-                isRead = YES;
-                self.totalDataDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
-                if ([self.totalDataDict objectForKey:self.talk_id]) {
-                    self.talkDataDict = [self.totalDataDict objectForKey:self.talk_id];
-                    self.talkDataArray = [NSMutableArray arrayWithArray:[self.talkDataDict objectForKey:@"data"]];
-                }
-//                NSLog(@"%@--%@", self.totalDataDict, self.talkDataDict);
-            }
-            [self saveWithUserID:usrID time:timeStamp msg:msg];
-        }
-    }else{
-        //文件不存在
-        NSLog(@"文件不存在");
-        isNewCreated = YES;
-        
-        NSMutableDictionary * messageDict = [NSMutableDictionary dictionaryWithCapacity:0];
-        [messageDict setObject:timeStamp forKey:@"time"];
-        [messageDict setObject:msg forKey:@"msg"];
-        [messageDict setObject:usrID forKey:@"usr_id"];
-        [self.talkDataArray addObject:messageDict];
-        
-        
-        [self.talkDataDict setObject:self.talkDataArray forKey:@"data"];
-        [self.talkDataDict setObject:self.usr_id forKey:@"usr_id"];
-        [self.talkDataDict setObject:self.friendName forKey:@"usr_name"];
-        [self.talkDataDict setObject:self.otherTX forKey:@"usr_tx"];
-        
-        [self.totalDataDict setObject:self.talkDataDict forKey:self.talk_id];
-        [self.totalDataDict writeToFile:path atomically:YES];
-        
-//        [messageDict release];
-    }
-}
--(void)saveWithUserID:(NSString *)usrID time:(NSString *)timeStamp msg:(NSString *)msg
-{
-    NSString * docDir = DOCDIR;
-    NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
-    
-    NSMutableDictionary * messageDict = [NSMutableDictionary dictionaryWithCapacity:0];
-    [messageDict setObject:timeStamp forKey:@"time"];
-    [messageDict setObject:msg forKey:@"msg"];
-    [messageDict setObject:usrID forKey:@"usr_id"];
-    [self.talkDataArray addObject:messageDict];
-    
-    [self.talkDataDict setObject:self.talkDataArray forKey:@"data"];
-    [self.talkDataDict setObject:self.usr_id forKey:@"usr_id"];
-    [self.talkDataDict setObject:self.friendName forKey:@"usr_name"];
-    [self.talkDataDict setObject:self.otherTX forKey:@"usr_tx"];
-    
-    [self.totalDataDict setObject:self.talkDataDict forKey:self.talk_id];
-    [self.totalDataDict writeToFile:path atomically:YES];
-    
-//    [messageDict release];
-}
+//-(void)saveTalkDataWithUserID:(NSString *)usrID  time:(NSString *)timeStamp msg:(NSString *)msg
+//{
+////    NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+////    fmt.dateFormat = @"yyyy-MM-dd HH:mm"; // @"yyyy-MM-dd HH:mm:ss"
+////    NSDate * date = [NSDate dateWithTimeIntervalSince1970:[timeStamp intValue]];
+////    NSString *time = [fmt stringFromDate:date];
+//    
+//    NSFileManager * manager = [[NSFileManager alloc] init];
+//    NSString * docDir = DOCDIR;
+//    NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
+//    if ([manager fileExistsAtPath:path]) {
+//        //文件存在
+//        NSLog(@"文件存在");
+//        if (isNewCreated) {
+//            //新创建不读取本地数据
+//            //直接存储数据
+//            [self saveWithUserID:usrID time:timeStamp msg:msg];
+//        }else{
+//            //非新创建，读取本地数据
+//            if (isRead) {
+//                //已经读取本地文件
+//            }else{
+//                //未读取本地文件
+//                isRead = YES;
+//                self.totalDataDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
+//                if ([self.totalDataDict objectForKey:self.talk_id]) {
+//                    self.talkDataDict = [self.totalDataDict objectForKey:self.talk_id];
+//                    self.talkDataArray = [NSMutableArray arrayWithArray:[self.talkDataDict objectForKey:@"data"]];
+//                }
+////                NSLog(@"%@--%@", self.totalDataDict, self.talkDataDict);
+//            }
+//            [self saveWithUserID:usrID time:timeStamp msg:msg];
+//        }
+//    }else{
+//        //文件不存在
+//        NSLog(@"文件不存在");
+//        isNewCreated = YES;
+//        
+//        NSMutableDictionary * messageDict = [NSMutableDictionary dictionaryWithCapacity:0];
+//        [messageDict setObject:timeStamp forKey:@"time"];
+//        [messageDict setObject:msg forKey:@"msg"];
+//        [messageDict setObject:usrID forKey:@"usr_id"];
+//        [self.talkDataArray addObject:messageDict];
+//        
+//        
+//        [self.talkDataDict setObject:self.talkDataArray forKey:@"data"];
+//        [self.talkDataDict setObject:self.usr_id forKey:@"usr_id"];
+//        [self.talkDataDict setObject:self.friendName forKey:@"usr_name"];
+//        [self.talkDataDict setObject:self.otherTX forKey:@"usr_tx"];
+//        
+//        [self.totalDataDict setObject:self.talkDataDict forKey:self.talk_id];
+//        [self.totalDataDict writeToFile:path atomically:YES];
+//        
+////        [messageDict release];
+//    }
+//}
+//-(void)saveWithUserID:(NSString *)usrID time:(NSString *)timeStamp msg:(NSString *)msg
+//{
+//    NSString * docDir = DOCDIR;
+//    NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
+//    
+//    NSMutableDictionary * messageDict = [NSMutableDictionary dictionaryWithCapacity:0];
+//    [messageDict setObject:timeStamp forKey:@"time"];
+//    [messageDict setObject:msg forKey:@"msg"];
+//    [messageDict setObject:usrID forKey:@"usr_id"];
+//    [self.talkDataArray addObject:messageDict];
+//    
+//    [self.talkDataDict setObject:self.talkDataArray forKey:@"data"];
+//    [self.talkDataDict setObject:self.usr_id forKey:@"usr_id"];
+//    [self.talkDataDict setObject:self.friendName forKey:@"usr_name"];
+//    [self.talkDataDict setObject:self.otherTX forKey:@"usr_tx"];
+//    
+//    [self.totalDataDict setObject:self.talkDataDict forKey:self.talk_id];
+//    [self.totalDataDict writeToFile:path atomically:YES];
+//    
+////    [messageDict release];
+//}
 //-(void)createFakeNavigation
 //{
 //    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
@@ -546,7 +622,7 @@
     self.lastMessage = tf.text;
     [self talkSendMessageData];
     
-    [self presentNewMessageWithSend:YES time:[NSString stringWithFormat:@"%d", (int)[[NSDate date] timeIntervalSince1970]] msg:self.lastMessage];
+    [self presentNewMessageWithSend:YES time:[NSString stringWithFormat:@"%d", (int)[[NSDate date] timeIntervalSince1970]] msg:tf.text];
     
     return YES;
 }

@@ -28,6 +28,11 @@
     BOOL isNewCreated;
     
     NSTimer * timer;
+    
+    //判断本地是否有该talk_id的历史消息
+//    BOOL hasMyHistoryTalk;
+    
+    int test;
 }
 @property (nonatomic,copy)NSString * friendName;
 @property (nonatomic,copy)NSString * usr_id;
@@ -43,8 +48,8 @@
 /********************/
 //总字典，等同于plist文件
 @property (nonatomic,retain)NSMutableDictionary * totalDataDict;
-//talk_id为key值的value
-@property (nonatomic,retain)NSMutableDictionary * talkDataDict;
+//talk_id为key值的对话字典，key值为msg，
+//@property (nonatomic,retain)NSMutableDictionary * talkMsgDataDict;
 //对话每局的数组 包含多个字典
 @property (nonatomic,retain)NSMutableArray * talkDataArray;
 //每一句话的字典 包含time msg usr_id用来判断是谁说的

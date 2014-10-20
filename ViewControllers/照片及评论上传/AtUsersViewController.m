@@ -8,7 +8,9 @@
 
 #import "AtUsersViewController.h"
 #import "AtUsersCell.h"
-#import "InfoModel.h"
+//#import "InfoModel.h"
+#import "SingleTalkModel.h"
+
 @interface AtUsersViewController ()
 
 @end
@@ -51,15 +53,18 @@
     if ([manager fileExistsAtPath:path]) {
         //文件存在
         NSLog(@"文件存在");
-        NSMutableDictionary * totalDict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
+        NSMutableDictionary * totalDict = [NSMutableDictionary dictionaryWithDictionary:[MyControl returnDictionaryWithDataPath:path]];
         
         [self.dataArray removeAllObjects];
         for (NSString * key in [totalDict allKeys]) {
-            NSDictionary * dic = [totalDict objectForKey:key];
-            InfoModel * model = [[InfoModel alloc] init];
-            [model setValuesForKeysWithDictionary:dic];
+            SingleTalkModel * model = [totalDict objectForKey:key];
+//            InfoModel * model = [[InfoModel alloc] init];
+//            [model setValuesForKeysWithDictionary:dic];
+            if ([model.usr_tx intValue] == 1 || [model.usr_tx intValue] == 2 || [model.usr_tx intValue] == 3) {
+                continue;
+            }
             [self.dataArray addObject:model];
-            [model release];
+//            [model release];
         }
         self.dataArrayTemp = [NSMutableArray arrayWithArray:self.dataArray];
     }else{
@@ -217,7 +222,7 @@
     };
     
     cell.selectionStyle = 0;
-    InfoModel * model = self.dataArrayTemp[indexPath.row];
+    SingleTalkModel * model = self.dataArrayTemp[indexPath.row];
     
     if (self.selectArray.count == 0) {
         [cell modifyWith:model row:indexPath.row selected:NO];
@@ -246,7 +251,7 @@
 {
     self.dataArrayTemp = [NSMutableArray arrayWithArray:self.dataArray];
     if (tf.text.length != 0) {
-        for (InfoModel * model in self.dataArray) {
+        for (SingleTalkModel * model in self.dataArray) {
             if ([model.usr_name rangeOfString:tf.text].location == NSNotFound) {
                 [self.dataArrayTemp removeObject:model];
             }

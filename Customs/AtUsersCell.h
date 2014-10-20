@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "InfoModel.h"
+//#import "InfoModel.h"
+#import "SingleTalkModel.h"
 @interface AtUsersCell : UITableViewCell
 {
     UIImageView * head;
     UILabel * nameLabel;
     UIButton * btn;
 }
--(void)modifyWith:(InfoModel *)model row:(int)row selected:(BOOL)isSelected;
+-(void)modifyWith:(SingleTalkModel *)model row:(int)row selected:(BOOL)isSelected;
 @property(nonatomic,copy)void(^click)(int, BOOL);
 @end

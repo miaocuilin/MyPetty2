@@ -410,7 +410,10 @@
         }
     }else{
         //图片不存在，下载之后调整大小
+        NSString * url = [NSString stringWithFormat:@"%@%@", IMAGEURL, self.imageURL];
+        NSLog(@"%@", url);
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, self.imageURL] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            NSLog(@"%@", load.data);
             if (isFinish) {
                 bigImageView.image = load.dataImage;
                 [self adjustedImage:bigImageView];
@@ -1314,6 +1317,7 @@
                         fish.image = [UIImage imageNamed:@"bone1.png"];
                     }
                     zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
+                    zanLabel.textColor = BGCOLOR;
                     CGRect rect = fish.frame;
                     
                     [UIView animateWithDuration:0.5 animations:^{

@@ -250,6 +250,7 @@
 -(void)notHaveBtnClick
 {
 //    RegisterViewController * vc = [[RegisterViewController alloc] init];
+    [USER setObject:@"0" forKey:@"isChooseFamilyShouldDismiss"];
     ChooseFamilyViewController * vc = [[ChooseFamilyViewController alloc] init];
 //    UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
     vc.isMi = self.isMi;

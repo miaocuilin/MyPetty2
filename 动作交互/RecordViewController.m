@@ -105,14 +105,14 @@
     NSString *downloadRecord = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECORDDOWNLOADAPI, self.pet_aid, sig,[ControllerManager getSID]];
     NSLog(@"下载API:%@",downloadRecord);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:downloadRecord Block:^(BOOL isFinsh, httpDownloadBlock *load) {
-        NSLog(@"isFinsh:%d,load.dataDict:%@",isFinsh,load.dataDict);
         if (isFinsh) {
+            NSLog(@"isFinsh:%d,load.dataDict:%@",isFinsh,load.dataDict);
 //            self.haveRecord = YES;
             self.recordURL = [NSString stringWithFormat:@"http://54.199.161.210:8001/%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
             [self loadRecordData];
         }else{
 //            [self createAlertView];
-            LoadingFailed;
+            [MyControl loadingFailedWithContent:@"音频文件不存在" afterDelay:0.7];
         }
     }];
     [request release];
@@ -145,13 +145,14 @@
         //不存在，去下载
         NSString * sig2 = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECORDDOWNLOADAPI, self.pet_aid, sig2, [ControllerManager getSID]];
+        NSLog(@"%@", url);
         httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 [load.data writeToFile:filePath atomically:YES];
                 [self playRecord2];
             }else{
                 StartLoading;
-                LoadingFailed;
+                [MyControl loadingFailedWithContent:@"音频文件不存在" afterDelay:0.7];
             }
         }];
         [request2 release];

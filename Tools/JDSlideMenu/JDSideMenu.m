@@ -502,12 +502,15 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
         if ([[dict objectForKey:@"usr_name"] isKindOfClass:[NSNull class]] || [[dict objectForKey:@"usr_name"] length] == 0) {
             if ([[dict objectForKey:@"usr_id"] intValue] == 1) {
                 talkModel.usr_name = @"汪汪";
+                talkModel.usr_tx = @"1";
 //                [self.userNameArray addObject:@"汪汪"];
             }else if([[dict objectForKey:@"usr_id"] intValue] == 2){
                 talkModel.usr_name = @"喵喵";
+                talkModel.usr_tx = @"2";
 //                [self.userNameArray addObject:@"喵喵"];
             }else if([[dict objectForKey:@"usr_id"] intValue] == 3){
                 talkModel.usr_name = @"顺风小鸽";
+                talkModel.usr_tx = @"3";
 //                [self.userNameArray addObject:@"顺风小鸽"];
             }
         }else{

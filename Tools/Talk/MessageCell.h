@@ -13,4 +13,5 @@
 
 @property (nonatomic, strong) MessageFrame *messageFrame;
 
+- (void)setMessageFrame:(MessageFrame *)messageFrame;
 @end

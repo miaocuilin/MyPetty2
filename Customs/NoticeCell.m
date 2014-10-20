@@ -49,6 +49,7 @@
     desLabel = [MyControl createLabelWithFrame:CGRectMake(70, 40, self.frame.size.width-70-20, 20) Font:14 Text:@"111111111111111"];
     desLabel.textColor = [UIColor darkGrayColor];
     desLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    desLabel.adjustsFontSizeToFitWidth = NO;
     [self.contentView addSubview:desLabel];
     
     UIView *horizontalLine = [[UIView alloc] initWithFrame:CGRectMake(0, 74, self.frame.size.width, 1)];
@@ -70,26 +71,35 @@
     /**************************/
     NSLog(@"%@", tx);
     if (!([tx isKindOfClass:[NSNull class]] || tx.length==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
-        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-            noticeMessage_tx.image = image;
+        if ([tx intValue] == 1) {
+            noticeMessage_tx.image = [UIImage imageNamed:@"wangwang.png"];
+        }else if([tx intValue] == 2){
+            noticeMessage_tx.image = [UIImage imageNamed:@"miaomiao.png"];
+        }else if([tx intValue] == 3){
+            noticeMessage_tx.image = [UIImage imageNamed:@"xiaoge.png"];
         }else{
-            //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    noticeMessage_tx.image = load.dataImage;
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
-                }
-            }];
-            [request release];
+            NSString * docDir = DOCDIR;
+            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
+            //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+            if (image) {
+                noticeMessage_tx.image = image;
+            }else{
+                //下载头像
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        noticeMessage_tx.image = load.dataImage;
+                        NSString * docDir = DOCDIR;
+                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
+                        [load.data writeToFile:txFilePath atomically:YES];
+                    }else{
+                        NSLog(@"头像下载失败");
+                    }
+                }];
+                [request release];
+            }
         }
+        
     }
     if ([newMsgNum intValue]) {
         tips.hidden = NO;

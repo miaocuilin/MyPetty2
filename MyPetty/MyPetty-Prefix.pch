@@ -11,320 +11,320 @@
 #endif
 
 #ifdef __OBJC__
-    #import <UIKit/UIKit.h>
-    #import <Foundation/Foundation.h>
-    #import "MyControl.h"
-    #import "httpDownloadBlock.h"
-    #import "MyMD5.h"
-    #import "OpenUDID.h"
-    #import "ControllerManager.h"
-    #import "UIImageView+WebCache.h"
-    #import "UIImage+UIImageExtras.h"
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "MyControl.h"
+#import "httpDownloadBlock.h"
+#import "MyMD5.h"
+#import "OpenUDID.h"
+#import "ControllerManager.h"
+#import "UIImageView+WebCache.h"
+#import "UIImage+UIImageExtras.h"
 
-    #import "MJRefresh.h"
-    #import "MMProgressHUD.h"
-    #import "UMSocial.h"
-    #import "JDSideMenu.h"
-    #import "RegisterViewController.h"
-    #import "ChooseInViewController.h"
-    #import "BottomMenuRootViewController.h"
-    #import "UIImage+ImageBlur.h"
-    #import "MBProgressHUD.h"
-    #import "AlertView.h"
+#import "MJRefresh.h"
+#import "MMProgressHUD.h"
+#import "UMSocial.h"
+#import "JDSideMenu.h"
+#import "RegisterViewController.h"
+#import "ChooseInViewController.h"
+#import "BottomMenuRootViewController.h"
+#import "UIImage+ImageBlur.h"
+#import "MBProgressHUD.h"
+#import "AlertView.h"
 
-    #define ShowAlertView AlertView * alert = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];alert.jump = ^(){ChooseInViewController * vc = [[ChooseInViewController alloc] init];[self presentViewController:vc animated:YES completion:nil];[vc release];};[self.view addSubview:alert];[alert release];
+#define ShowAlertView AlertView * alert = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];alert.jump = ^(){ChooseInViewController * vc = [[ChooseInViewController alloc] init];[self presentViewController:vc animated:YES completion:nil];[vc release];};[self.view addSubview:alert];[alert release];
 
-    #define iOS7 [[[UIDevice currentDevice] systemVersion] floatValue]>=7.0
-    //橘色
+#define iOS7 [[[UIDevice currentDevice] systemVersion] floatValue]>=7.0
+//橘色
 //    [UIColor colorWithRed:255/255.0 green:116/255.0 blue:88/255.0 alpha:1] 最早的
 //    [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1] 安卓的
-    #define BGCOLOR [UIColor colorWithRed:252/255.0 green:92/255.0 blue:59/255.0 alpha:1]
-    //棕黄色
-    #define BGCOLOR2 [UIColor colorWithRed:240/255.0 green:235/255.0 blue:230/255.0 alpha:0.8]
-    //浅橘色
-    #define BGCOLOR3 [UIColor colorWithRed:249/255.0 green:162/255.0 blue:133/255.0 alpha:1]
-    //浅绿色
-    #define BGCOLOR4 [UIColor colorWithRed:117/255.0 green:186/255.0 blue:150/255.0 alpha:1]
-    //浅灰
-    #define LineGray [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1]
-    //修改资料背景绿
-    #define BGCOLOR5 [UIColor colorWithRed:147/255.0 green:204/255.0 blue:172/255.0 alpha:1]
+#define BGCOLOR [UIColor colorWithRed:252/255.0 green:92/255.0 blue:59/255.0 alpha:1]
+//棕黄色
+#define BGCOLOR2 [UIColor colorWithRed:240/255.0 green:235/255.0 blue:230/255.0 alpha:0.8]
+//浅橘色
+#define BGCOLOR3 [UIColor colorWithRed:249/255.0 green:162/255.0 blue:133/255.0 alpha:1]
+//浅绿色
+#define BGCOLOR4 [UIColor colorWithRed:117/255.0 green:186/255.0 blue:150/255.0 alpha:1]
+//浅灰
+#define LineGray [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1]
+//修改资料背景绿
+#define BGCOLOR5 [UIColor colorWithRed:147/255.0 green:204/255.0 blue:172/255.0 alpha:1]
 
-    #define USER [ControllerManager shareUserDefault]
-    #define NET [UIApplication sharedApplication].networkActivityIndicatorVisible
-    #define DOCDIR [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
+#define USER [ControllerManager shareUserDefault]
+#define NET [UIApplication sharedApplication].networkActivityIndicatorVisible
+#define DOCDIR [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
 
 
 //    #define StartLoading [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];[MMProgressHUD showWithStatus:@"加载中..."];
 //加载数据
 //    #define StartLoading [MMProgressHUD showProgressWithStyle:0 title:nil status:@"加载中..." confirmationMessage:@"确认取消?" cancelBlock:^{LoadingFailed;} image:[UIImage imageNamed:@"cat2.jpg"]];
-    #define StartLoading [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];[MMProgressHUD showProgressWithStyle:0 title:nil status:@"加载中..." confirmationMessage:@"确认取消?" cancelBlock:^{LoadingFailed;}];
+#define StartLoading [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];[MMProgressHUD showProgressWithStyle:0 title:nil status:@"加载中..." confirmationMessage:@"确认取消?" cancelBlock:^{LoadingFailed;}];
 
 
-    #define LoadingSuccess [MMProgressHUD dismissWithSuccess:@"加载完成" title:nil afterDelay:0.5];
-    #define LoadingFailed [MMProgressHUD dismissWithError:@"加载失败" afterDelay:0.5];
+#define LoadingSuccess [MMProgressHUD dismissWithSuccess:@"加载完成" title:nil afterDelay:0.5];
+#define LoadingFailed [MMProgressHUD dismissWithError:@"加载失败" afterDelay:0.5];
 
-    #define SHOWMENU JDSideMenu * menu = [ControllerManager shareJDSideMenu];[menu showMenuAnimated:YES];
+#define SHOWMENU JDSideMenu * menu = [ControllerManager shareJDSideMenu];[menu showMenuAnimated:YES];
 
-    //IP头API
-    #define IPURL @"http://54.199.161.210/dc/index.php"
-    #define IPURL2 @"http://54.199.161.210:8001/index.php"
+//IP头API
+#define IPURL @"http://54.199.161.210/dc/index.php"
+#define IPURL2 @"http://123.57.39.48/index.php"
 
-    //注册API
-    #define REGISTERAPI @"http://54.199.161.210:8001/index.php?r=user/registerApi&age=&code=&gender=&type=&wechat=&weibo=&sig=%@&SID=%@"
+//注册API
+#define REGISTERAPI @"http://123.57.39.48/index.php?r=user/registerApi&age=&code=&gender=&type=&wechat=&weibo=&sig=%@&SID=%@"
 
-    //修改宠物信息API
-    #define MODIFYPETINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/modifyInfoApi&"
+//修改宠物信息API
+#define MODIFYPETINFOAPI @"http://123.57.39.48/index.php?r=animal/modifyInfoApi&"
 
-    //修改个人信息API
-    #define MODIFYUSERINFOAPI @"http://54.199.161.210:8001/index.php?r=user/modifyInfoApi&"
+//修改个人信息API
+#define MODIFYUSERINFOAPI @"http://123.57.39.48/index.php?r=user/modifyInfoApi&"
 
-    //获取以前的SID
-    #define GETPRESID @"http://54.199.161.210:8001/index.php?r=user/getSIDApi&uid="
+//获取以前的SID
+#define GETPRESID @"http://123.57.39.48/index.php?r=user/getSIDApi&uid="
 
-    //登录API
-    #define LOGINAPI @"http://54.199.161.210:8001/index.php?r=user/loginApi&planet="
+//登录API
+#define LOGINAPI @"http://123.57.39.48/index.php?r=user/loginApi"
 
-    //穿越API
-    #define THROUGHAPI @"http://54.199.161.210:8001/index.php?r=user/planetApi&planet="
+//穿越API
+#define THROUGHAPI @"http://123.57.39.48/index.php?r=user/planetApi&planet="
 
-    //已由头像或图片的名称，获取头像的具体数据，后面需要加图片的名称
-    #define IMAGEURL @"http://54.199.161.210:8001/images/upload/"
-    #define USERTXURL @"http://54.199.161.210:8001/images/tx/tx_usr/"
-    #define PETTXURL @"http://54.199.161.210:8001/images/tx/tx_ani/"
+//已由头像或图片的名称，获取头像的具体数据，后面需要加图片的名称
+#define IMAGEURL @"http://pet4upload.oss-cn-beijing.aliyuncs.com/"
+#define USERTXURL @"http://pet4tx.oss-cn-beijing.aliyuncs.com/usr/"
+#define PETTXURL @"http://pet4tx.oss-cn-beijing.aliyuncs.com/ani/"
 
-    //图片、头像上传API
-    #define PETIMAGEAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
+//图片、头像上传API
+#define PETIMAGEAPI @"http://123.57.39.48/index.php?r=image/uploadApi&aid="
 
-    //图片、头像上传API
-    #define IMAGEAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
+//图片、头像上传API
+#define IMAGEAPI @"http://123.57.39.48/index.php?r=image/uploadApi&aid="
 
-    #define IMAGEUPLOADAPI @"http://54.199.161.210:8001/index.php?r=image/uploadApi&aid="
-    //IMAGEUPLOAD需要POST的数据：comment topic_id(可留空), topic_name, relates(usr_id1,usr_id2...)"
+#define IMAGEUPLOADAPI @"http://123.57.39.48/index.php?r=image/uploadApi&aid="
+//IMAGEUPLOAD需要POST的数据：comment topic_id(可留空), topic_name, relates(usr_id1,usr_id2...)"
 
-    //头像上传API 宠物参数aid
-    #define TXAPI @"http://54.199.161.210:8001/index.php?r=user/txApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    #define PETTXAPI @"http://54.199.161.210:8001/index.php?r=animal/txApi&aid="
+//头像上传API 宠物参数aid
+#define TXAPI @"http://123.57.39.48/index.php?r=user/txApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define PETTXAPI @"http://123.57.39.48/index.php?r=animal/txApi&aid="
 
 
-    //获取用户信息API
-    #define INFOAPI @"http://54.199.161.210:8001/index.php?r=user/infoApi&usr_id=&sig=c47578e3a7aec3b5de510773bfdb9011&SID="
+//获取用户信息API
+#define INFOAPI @"http://123.57.39.48/index.php?r=user/infoApi&usr_id=&sig=c47578e3a7aec3b5de510773bfdb9011&SID="
 
-    //其它用户信息
-    #define USERINFOAPI @"http://54.199.161.210:8001/index.php?r=user/infoApi&usr_id="
+//其它用户信息
+#define USERINFOAPI @"http://123.57.39.48/index.php?r=user/infoApi&usr_id="
 
-    //修改默认宠物信息
-    #define CHANGEDEFAULTPETAPI @"http://54.199.161.210:8001/index.php?r=user/chgDefAniApi&aid="
+//修改默认宠物信息
+#define CHANGEDEFAULTPETAPI @"http://123.57.39.48/index.php?r=user/chgDefAniApi&aid="
 
-    //发布照片 #话题#
-    #define PUBLISHTOPICLISTAPI @"http://54.199.161.210:8001/index.php?r=image/topicApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    /***************************/
-    //用户宠物列表：
-    //参数：usr_id,  另外参数：is_simple,区别
-    //侧边栏里和设置默认宠物里is_simple为1
-    //个人主页里is_simple为0
-    #define USERPETLISTAPI @"http://54.199.161.210:8001/index.php?r=user/petsApi&is_simple="
-    //用户关注列表：
-    #define USERATTENTIONLISTAPI @"http://54.199.161.210:8001/index.php?r=user/followingApi&usr_id="
-    //用户活动列表：
-    #define USERACTLISTAPI @"http://54.199.161.210:8001/index.php?r=user/topicApi&usr_id="
-    //用户物品列表：
-    #define USERGOODSLISTAPI @"http://54.199.161.210:8001/index.php?r=user/itemsApi&usr_id="
-    /***************************/
-    //宠物动态API
+//发布照片 #话题#
+#define PUBLISHTOPICLISTAPI @"http://123.57.39.48/index.php?r=image/topicApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+/***************************/
+//用户宠物列表：
+//参数：usr_id,  另外参数：is_simple,区别
+//侧边栏里和设置默认宠物里is_simple为1
+//个人主页里is_simple为0
+#define USERPETLISTAPI @"http://123.57.39.48/index.php?r=user/petsApi&is_simple="
+//用户关注列表：
+#define USERATTENTIONLISTAPI @"http://123.57.39.48/index.php?r=user/followingApi&usr_id="
+//用户活动列表：
+#define USERACTLISTAPI @"http://123.57.39.48/index.php?r=user/topicApi&usr_id="
+//用户物品列表：
+#define USERGOODSLISTAPI @"http://123.57.39.48/index.php?r=user/itemsApi&usr_id="
+/***************************/
+//宠物动态API
 //1 成为粉丝 2 加入王国 3发图片 4送礼物 5叫一叫 6逗一逗 7捣捣乱
-    #define PETNEWS @"http://54.199.161.210:8001/index.php?r=animal/newsApi&aid="
+#define PETNEWS @"http://123.57.39.48/index.php?r=animal/newsApi&aid="
 
-    //还有一个nid参数用来上拉加载
-    #define PETNEWS2 @"http://54.199.161.210:8001/index.php?r=animal/newsApi&aid="
+//还有一个nid参数用来上拉加载
+#define PETNEWS2 @"http://123.57.39.48/index.php?r=animal/newsApi&aid="
 
-    //宠物背包
-    #define PETGOODSLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/itemsApi&aid="
-    /***************************/
-    //注册王国推荐列表
-    #define RECOMMANDCOUNTRYLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    #define RECOMMANDCOUNTRYLISTAPI2 @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&type="
-    #define RECOMMANDCOUNTRYLISTAPI3 @"http://54.199.161.210:8001/index.php?r=animal/recommendApi&page="
-    //注册王国人气列表  type=  aid=
-    #define TOPICCOUNTRYLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/popularApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    #define TOPICCOUNTRYLISTAPI2 @"http://54.199.161.210:8001/index.php?r=animal/popularApi&type="
-    #define TOPICCOUNTRYLISTAPI3 @"http://54.199.161.210:8001/index.php?r=animal/popularApi&page="
+//宠物背包
+#define PETGOODSLISTAPI @"http://123.57.39.48/index.php?r=animal/itemsApi&aid="
+/***************************/
+//注册王国推荐列表
+#define RECOMMANDCOUNTRYLISTAPI @"http://123.57.39.48/index.php?r=animal/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define RECOMMANDCOUNTRYLISTAPI2 @"http://123.57.39.48/index.php?r=animal/recommendApi&type="
+#define RECOMMANDCOUNTRYLISTAPI3 @"http://123.57.39.48/index.php?r=animal/recommendApi&page="
+//注册王国人气列表  type=  aid=
+#define TOPICCOUNTRYLISTAPI @"http://123.57.39.48/index.php?r=animal/popularApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define TOPICCOUNTRYLISTAPI2 @"http://123.57.39.48/index.php?r=animal/popularApi&type="
+#define TOPICCOUNTRYLISTAPI3 @"http://123.57.39.48/index.php?r=animal/popularApi&page="
 
-    //宠物名片
-    #define PETCARDAPI @"http://54.199.161.210:8001/index.php?r=animal/cardApi&aid="
+//宠物名片
+#define PETCARDAPI @"http://123.57.39.48/index.php?r=animal/cardApi&aid="
 
-    //join家族API
-    #define JOINFAMILYAPI @"http://54.199.161.210:8001/index.php?r=animal/joinApi&aid="
+//join家族API
+#define JOINFAMILYAPI @"http://123.57.39.48/index.php?r=animal/joinApi&aid="
 
-    //退出王国API
-    #define EXITFAMILYAPI @"http://54.199.161.210:8001/index.php?r=animal/exitApi&aid="
-    /***************************/
-    //获取宠物信息API
-    #define PETINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/infoApi&aid="
+//退出王国API
+#define EXITFAMILYAPI @"http://123.57.39.48/index.php?r=animal/exitApi&aid="
+/***************************/
+//获取宠物信息API
+#define PETINFOAPI @"http://123.57.39.48/index.php?r=animal/infoApi&aid="
 
-    /*********活动详情*************/
-    #define PETLISTAPI @"http://54.199.161.210:8001/index.php?r=animal/othersApi&aids="
-    //获取用户照片API
-    #define IMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    #define IMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
+/*********活动详情*************/
+#define PETLISTAPI @"http://123.57.39.48/index.php?r=animal/othersApi&aids="
+//获取用户照片API
+#define IMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define IMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
 
-    #define PETIMAGESAPI @"http://54.199.161.210:8001/index.php?r=animal/imagesApi&aid="
-    #define PETIMAGESAPI2 @"http://54.199.161.210:8001/index.php?r=animal/imagesApi&aid="
+#define PETIMAGESAPI @"http://123.57.39.48/index.php?r=animal/imagesApi&aid="
+#define PETIMAGESAPI2 @"http://123.57.39.48/index.php?r=animal/imagesApi&aid="
 
-    //获取其它用户照片API
-    #define OTHERIMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&usr_id="
-    #define OTHERIMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
+//获取其它用户照片API
+#define OTHERIMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&usr_id="
+#define OTHERIMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
 
-    //首页推荐照片API
-    #define RECOMMENDAPI @"http://54.199.161.210:8001/index.php?r=image/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    #define RECOMMENDAPI2 @"http://54.199.161.210:8001/index.php?r=image/recommendApi&img_id="
-
-
-    //随机照片API
-    #define RANDOMAPI @"http://54.199.161.210:8001/index.php?r=image/randomApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    #define RANDOMAPI2 @"http://54.199.161.210:8001/index.php?r=image/randomApi&img_id="
-
-    //用户喜爱照片API
-    #define FAVORITEAPI @"http://54.199.161.210:8001/index.php?r=image/favoriteApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    #define FAVORITEAPI2 @"http://54.199.161.210:8001/index.php?r=image/favoriteApi&img_id="
-
-    //照片信息
-    #define IMAGEINFOAPI @"http://54.199.161.210:8001/index.php?r=image/infoApi&img_id="
-    //照片分享API
-    #define SHAREIMAGEAPI @"http://54.199.161.210:8001/index.php?r=image/shareApi&img_id="
+//首页推荐照片API
+#define RECOMMENDAPI @"http://123.57.39.48/index.php?r=image/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define RECOMMENDAPI2 @"http://123.57.39.48/index.php?r=image/recommendApi&img_id="
 
 
-    //加关注API
-    #define FOLLOWAPI @"http://54.199.161.210:8001/index.php?r=animal/followApi&aid="
+//随机照片API
+#define RANDOMAPI @"http://123.57.39.48/index.php?r=image/randomApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define RANDOMAPI2 @"http://123.57.39.48/index.php?r=image/randomApi&img_id="
 
-    //取消关注API
-    #define UNFOLLOWAPI @"http://54.199.161.210:8001/index.php?r=animal/unFollowApi&aid="
+//用户喜爱照片API
+#define FAVORITEAPI @"http://123.57.39.48/index.php?r=image/favoriteApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define FAVORITEAPI2 @"http://123.57.39.48/index.php?r=image/favoriteApi&img_id="
+
+//照片信息
+#define IMAGEINFOAPI @"http://123.57.39.48/index.php?r=image/infoApi&img_id="
+//照片分享API
+#define SHAREIMAGEAPI @"http://123.57.39.48/index.php?r=image/shareApi&img_id="
 
 
-    //我关注的API
-    #define FOLLOWINGAPI @"http://54.199.161.210/dc/index.php?r=user/followingApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    #define FOLLOWINGAPI2 @"http://54.199.161.210/dc/index.php?r=user/followingApi&usr_id="
+//加关注API
+#define FOLLOWAPI @"http://123.57.39.48/index.php?r=animal/followApi&aid="
 
-    //被关注的API
-    #define FOLLOWERAPI @"http://54.199.161.210/dc/index.php?r=user/followerApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-    #define FOLLOWERAPI2 @"http://54.199.161.210/dc/index.php?r=user/followerApi&usr_id="
+//取消关注API
+#define UNFOLLOWAPI @"http://123.57.39.48/index.php?r=animal/unFollowApi&aid="
 
-    //点赞API
-    #define LIKEAPI @"http://54.199.161.210:8001/index.php?r=image/likeApi&img_id="
-    //取消赞API
-    #define UNLIKEAPI @"http://54.199.161.210:8001/index.php?r=image/unlikeApi&img_id="
 
-    //宠物类型
-    #define TYPEAPI @"http://54.199.161.210/dc/index.php?r=user/typeApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+//我关注的API
+#define FOLLOWINGAPI @"http://54.199.161.210/dc/index.php?r=user/followingApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define FOLLOWINGAPI2 @"http://54.199.161.210/dc/index.php?r=user/followingApi&usr_id="
 
-    //封面照片
-    #define WELCOMEAPI @"http://54.199.161.210:8001/index.php?r=user/welcomeApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+//被关注的API
+#define FOLLOWERAPI @"http://54.199.161.210/dc/index.php?r=user/followerApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define FOLLOWERAPI2 @"http://54.199.161.210/dc/index.php?r=user/followerApi&usr_id="
 
-    //照片点赞的人的列表
-    #define LIKERSAPI @"http://54.199.161.210:8001/index.php?r=user/othersApi&usr_ids="
+//点赞API
+#define LIKEAPI @"http://123.57.39.48/index.php?r=image/likeApi&img_id="
+//取消赞API
+#define UNLIKEAPI @"http://123.57.39.48/index.php?r=image/unlikeApi&img_id="
 
-    //用户是否绑定微博或微信
-    #define ISBINDEDAPI @"http://54.199.161.210/dc/index.php?r=user/bindApi&wechat=&weibo="
+//宠物类型
+#define TYPEAPI @"http://54.199.161.210/dc/index.php?r=user/typeApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
-    //活动页面API
-    #define TOPICLISTAPI @"http://54.199.161.210:8001/index.php?r=topic/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+//封面照片
+#define WELCOMEAPI @"http://pet4welcome.oss-cn-beijing.aliyuncs.com/index.php?r=user/welcomeApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
-    //活动图片请求API
-    #define TOPICIMAGEAPI @"http://54.199.161.210/dc/images/topic/"
+//照片点赞的人的列表
+#define LIKERSAPI @"http://123.57.39.48/index.php?r=user/othersApi&usr_ids="
 
-    //活动详情API
-    #define TOPICINFOAPI @"http://54.199.161.210:8001/index.php?r=topic/infoApi&topic_id="
+//用户是否绑定微博或微信
+#define ISBINDEDAPI @"http://54.199.161.210/dc/index.php?r=user/bindApi&wechat=&weibo="
 
-    //最热
-    #define POPULARAPI @"http://54.199.161.210:8001/index.php?r=topic/popularApi&topic_id="
-    #define POPULARAPI2 @"http://54.199.161.210:8001/index.php?r=topic/popularApi&topic_id=%@&img_id="
+//活动页面API
+#define TOPICLISTAPI @"http://123.57.39.48/index.php?r=topic/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
-    //最新
-    #define NEWESTAPI @"http://54.199.161.210:8001/index.php?r=topic/newestApi&topic_id="
-    #define NEWESTAPI2 @"http://54.199.161.210:8001/index.php?r=topic/newestApi&topic_id=%@&img_id="
+//活动图片请求API
+#define TOPICIMAGEAPI @"http://54.199.161.210/dc/images/topic/"
 
-    //活动排名
-    #define ACTRANKLISTAPI @"http://54.199.161.210:8001/index.php?r=topic/rankApi&topic_id="
-    #define ACTRANKLISTAPI2 @"http://54.199.161.210:8001/index.php?r=topic/rankApi&topic_id="
+//活动详情API
+#define TOPICINFOAPI @"http://123.57.39.48/index.php?r=topic/infoApi&topic_id="
 
-    //奖品
-    #define REWARDAPI @"http://54.199.161.210:8001/index.php?r=topic/rewardApi&topic_id="
+//最热
+#define POPULARAPI @"http://123.57.39.48/index.php?r=topic/popularApi&topic_id="
+#define POPULARAPI2 @"http://123.57.39.48/index.php?r=topic/popularApi&topic_id=%@&img_id="
 
-    //消息列表 mail_id=&is_system=
-    #define NOTIFYAPI @"http://54.199.161.210:8001/index.php?r=talk/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+//最新
+#define NEWESTAPI @"http://123.57.39.48/index.php?r=topic/newestApi&topic_id="
+#define NEWESTAPI2 @"http://123.57.39.48/index.php?r=topic/newestApi&topic_id=%@&img_id="
+
+//活动排名
+#define ACTRANKLISTAPI @"http://123.57.39.48/index.php?r=topic/rankApi&topic_id="
+#define ACTRANKLISTAPI2 @"http://123.57.39.48/index.php?r=topic/rankApi&topic_id="
+
+//奖品
+#define REWARDAPI @"http://123.57.39.48/index.php?r=topic/rewardApi&topic_id="
+
+//消息列表 mail_id=&is_system=
+#define NOTIFYAPI @"http://123.57.39.48/index.php?r=talk/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 //    #define NOTIFYAPI2 @"http://54.199.161.210/dc/index.php?r=mail/listApi&is_system="
 
-    //发送消息 POST方法 参数为msg
-    #define POSTMESSAGEAPI @"http://54.199.161.210:8001/index.php?r=talk/sendMsgApi&usr_id="
+//发送消息 POST方法 参数为msg
+#define POSTMESSAGEAPI @"http://123.57.39.48/index.php?r=talk/sendMsgApi&usr_id="
 
-    //根据usr_id获取talk_id
-    #define GETTALKIDAPI @"http://54.199.161.210:8001/index.php?r=talk/searchApi&usr_id="
+//根据usr_id获取talk_id
+#define GETTALKIDAPI @"http://123.57.39.48/index.php?r=talk/searchApi&usr_id="
 
-    //获取新消息
-    #define GETNEWMSGAPI @"http://54.199.161.210:8001/index.php?r=talk/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+//获取新消息
+#define GETNEWMSGAPI @"http://123.57.39.48/index.php?r=talk/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
-    //删除消息
-    #define DELMESSAGEAPI @"http://54.199.161.210/dc/index.php?r=mail/deleteApi&mail_id="
+//删除消息
+#define DELMESSAGEAPI @"http://54.199.161.210/dc/index.php?r=mail/deleteApi&mail_id="
 
-    //评论 POST方法  参数img_id 和 body
-    #define COMMENTAPI @"http://54.199.161.210:8001/index.php?r=image/commentApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+//评论 POST方法  参数img_id 和 body
+#define COMMENTAPI @"http://123.57.39.48/index.php?r=image/commentApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
-    //获取活动数和消息数
-    #define ACTIVITYANDNOTIFYAPI @"http://54.199.161.210:8001/index.php?r=user/notifyApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+//获取活动数和消息数
+#define ACTIVITYANDNOTIFYAPI @"http://123.57.39.48/index.php?r=user/notifyApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 //逗一逗
-#define HAVEFUNAPI @"http://54.199.161.210:8001/index.php?r=game/2048&aid="
+#define HAVEFUNAPI @"http://123.57.39.48/index.php?r=game/2048&aid="
 
-    //注销API
-    #define DELETEAPI @"http://54.199.161.210:8001/index.php?r=site/clearUser&name="
+//注销API
+#define DELETEAPI @"http://123.57.39.48/index.php?r=site/clearUser&name="
 
 
 #pragma mark - 张景瑞API
-    //宠物礼物API
-    #define PETPRESENTSAPI @"http://54.199.161.210:8001/index.php?r=animal/itemsApi&aid="
-    //宠物成员API
-    #define PETMEMBERSAPI @"http://54.199.161.210:8001/index.php?r=animal/fansApi&aid="
-    #define  PETMEMBERSAPI2 @"http://54.199.161.210:8001/index.php?r=animal/fansApi&aid="
-    //宠物动态API
-    #define PETNEWSAPI @"http://54.199.161.210:8001/index.php?r=animal/newsApi&aid="
-    #define PETNEWSAPI2 @"http://54.199.161.210:8001/index.php?r=animal/newsApi&aid="
-    //宠物信息API
-    #define ANIMALINFOAPI @"http://54.199.161.210:8001/index.php?r=animal/infoApi&aid="
-    //宠物头像
-    #define ANIMALTXAPI @"http://54.199.161.210:8001/index.php?r=animal/txApi&aid="
-    //加入宠物圈子
-    #define JOINPETCRICLEAPI @"http://54.199.161.210:8001/index.php?r=animal/joinApi&aid="
-    //退出宠物圈子
-    #define EXITPETCRICLEAPI @"http://54.199.161.210:8001/index.php?r=animal/exitApi&aid="
-    //关注宠物圈子
-    #define PETATTENTIONAPI @"http://54.199.161.210:8001/index.php?r=animal/followApi&aid="
-    //取消关注宠物圈子
-    #define PETATTENTIONCANCELAPI @"http://54.199.161.210:8001/index.php?r=animal/unFollowApi&aid="
-    //关注关系
-    #define RELATIONAPI @"http://54.199.161.210:8001/index.php?r=animal/relationApi&aid="
-    //上传录音
-    #define RECORDUPLOADAPI @"http://54.199.161.210:8001/index.php?r=animal/voiceUpApi&aid="
-    //下载录音
-    #define RECORDDOWNLOADAPI @"http://54.199.161.210:8001/index.php?r=animal/voiceDownApi&aid="
-    //地址
-    #define ADDRESSAPI @"http://54.199.161.210:8001/index.php?r=animal/addressApi&aid="
-    //人气排行榜
-    #define POPULARRANKAPI @"http://54.199.161.210:8001/index.php?r=rank/rqRankApi&category="
-    //国家贡献排行榜
-    #define CONTRIBUTIONAPI @"http://54.199.161.210:8001/index.php?r=rank/contributionRankApi&aid="
-    //
-    #define SHOPITEMSAPI @"http://54.199.161.210:8001/index.php?r=item/listApi&code="
-    //搜索  animal/searchApi&name=[&aid=]
-    #define SEARCHAPI @"http://54.199.161.210:8001/index.php?r=animal/searchApi"
-    //摇一摇
-    #define SHAKEAPI @"http://54.199.161.210:8001/index.php?r=animal/shakeApi&aid="
-    //摇一摇物品自动赠送&物品赠送
-    #define SENDSHAKEGIFT @"http://54.199.161.210:8001/index.php?r=animal/sendGiftApi&aid="
-    //是否已经进行过叫一叫
-    #define ISRECORDERAPI @"http://54.199.161.210:8001/index.php?r=animal/isVoicedApi&aid="
-    //摸一摸api
-    #define TOUCHAPI @"http://54.199.161.210:8001/index.php?r=animal/touchApi&aid="
-    //是否已经进行过摸一摸
-    #define ISTOUCHAPI @"http://54.199.161.210:8001/index.php?r=animal/isTouchedApi&aid="
-    //购买礼物
-    #define BUYSHOPGIFTAPI @"http://54.199.161.210:8001/index.php?r=item/buyApi&item_id="
+//宠物礼物API
+#define PETPRESENTSAPI @"http://123.57.39.48/index.php?r=animal/itemsApi&aid="
+//宠物成员API
+#define PETMEMBERSAPI @"http://123.57.39.48/index.php?r=animal/fansApi&aid="
+#define  PETMEMBERSAPI2 @"http://123.57.39.48/index.php?r=animal/fansApi&aid="
+//宠物动态API
+#define PETNEWSAPI @"http://123.57.39.48/index.php?r=animal/newsApi&aid="
+#define PETNEWSAPI2 @"http://123.57.39.48/index.php?r=animal/newsApi&aid="
+//宠物信息API
+#define ANIMALINFOAPI @"http://123.57.39.48/index.php?r=animal/infoApi&aid="
+//宠物头像
+#define ANIMALTXAPI @"http://123.57.39.48/index.php?r=animal/txApi&aid="
+//加入宠物圈子
+#define JOINPETCRICLEAPI @"http://123.57.39.48/index.php?r=animal/joinApi&aid="
+//退出宠物圈子
+#define EXITPETCRICLEAPI @"http://123.57.39.48/index.php?r=animal/exitApi&aid="
+//关注宠物圈子
+#define PETATTENTIONAPI @"http://123.57.39.48/index.php?r=animal/followApi&aid="
+//取消关注宠物圈子
+#define PETATTENTIONCANCELAPI @"http://123.57.39.48/index.php?r=animal/unFollowApi&aid="
+//关注关系
+#define RELATIONAPI @"http://123.57.39.48/index.php?r=animal/relationApi&aid="
+//上传录音
+#define RECORDUPLOADAPI @"http://123.57.39.48/index.php?r=animal/voiceUpApi&aid="
+//下载录音
+#define RECORDDOWNLOADAPI @"http://123.57.39.48/index.php?r=animal/voiceDownApi&aid="
+//地址
+#define ADDRESSAPI @"http://123.57.39.48/index.php?r=animal/addressApi&aid="
+//人气排行榜
+#define POPULARRANKAPI @"http://123.57.39.48/index.php?r=rank/rqRankApi&category="
+//国家贡献排行榜
+#define CONTRIBUTIONAPI @"http://123.57.39.48/index.php?r=rank/contributionRankApi&aid="
+//
+#define SHOPITEMSAPI @"http://123.57.39.48/index.php?r=item/listApi&code="
+//搜索  animal/searchApi&name=[&aid=]
+#define SEARCHAPI @"http://123.57.39.48/index.php?r=animal/searchApi"
+//摇一摇
+#define SHAKEAPI @"http://123.57.39.48/index.php?r=animal/shakeApi&aid="
+//摇一摇物品自动赠送&物品赠送
+#define SENDSHAKEGIFT @"http://123.57.39.48/index.php?r=animal/sendGiftApi&aid="
+//是否已经进行过叫一叫
+#define ISRECORDERAPI @"http://123.57.39.48/index.php?r=animal/isVoicedApi&aid="
+//摸一摸api
+#define TOUCHAPI @"http://123.57.39.48/index.php?r=animal/touchApi&aid="
+//是否已经进行过摸一摸
+#define ISTOUCHAPI @"http://123.57.39.48/index.php?r=animal/isTouchedApi&aid="
+//购买礼物
+#define BUYSHOPGIFTAPI @"http://123.57.39.48/index.php?r=item/buyApi&item_id="
 #endif

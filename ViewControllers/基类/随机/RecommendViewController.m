@@ -25,21 +25,21 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
-    NSLog(@"%f", qtmquitView.frame.origin.y);
-    int oldgold = [[USER objectForKey:@"oldgold"] intValue];
-    int gold = [[USER objectForKey:@"gold"] intValue];
-    [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
-    if (oldgold < gold) {
-        int index = gold - oldgold;
-        ToolTipsViewController * toolTipsVC = [[ToolTipsViewController alloc ]init];
-        [self addChildViewController:toolTipsVC];
-        [toolTipsVC didMoveToParentViewController:self];
-        [self.view addSubview:toolTipsVC.view];
-        toolTipsVC.coinNumber= index;
-        toolTipsVC.nextgold = [[USER objectForKey:@"next_gold"] intValue];
-        toolTipsVC.continuousDay = [[USER objectForKey:@"con_login"] intValue];
-        [toolTipsVC createAlertView];
-    }
+//    NSLog(@"%f", qtmquitView.frame.origin.y);
+//    int oldgold = [[USER objectForKey:@"oldgold"] intValue];
+//    int gold = [[USER objectForKey:@"gold"] intValue];
+//    [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
+//    if (oldgold < gold) {
+//        int index = gold - oldgold;
+//        ToolTipsViewController * toolTipsVC = [[ToolTipsViewController alloc ]init];
+//        [self addChildViewController:toolTipsVC];
+//        [toolTipsVC didMoveToParentViewController:self];
+//        [self.view addSubview:toolTipsVC.view];
+//        toolTipsVC.coinNumber= index;
+//        toolTipsVC.nextgold = [[USER objectForKey:@"next_gold"] intValue];
+//        toolTipsVC.continuousDay = [[USER objectForKey:@"con_login"] intValue];
+//        [toolTipsVC createAlertView];
+//    }
     //    [self RandomTips];
     
 }
@@ -61,6 +61,12 @@
 //    NSLog(@"recommendAPI:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
+//            NSLog(@"%@", load.dataDict);
+//            if ([[load.dataDict objectForKey:@"data"] intValue] == 0) {
+//                [qtmquitView headerEndRefreshing];
+//                LoadingSuccess;
+//                return;
+//            }
             //只包含img_id和图片的url
             //NSLog(@"萌宠推荐数据:%@", load.dataDict);
             [self.dataArray removeAllObjects];

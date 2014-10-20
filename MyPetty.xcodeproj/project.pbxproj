@@ -427,6 +427,9 @@
 		604413A119ED0D2300B7DD24 /* detail_comment.png in Resources */ = {isa = PBXBuildFile; fileRef = 6044139F19ED0D2300B7DD24 /* detail_comment.png */; };
 		604413A219ED0D2300B7DD24 /* detail_share.png in Resources */ = {isa = PBXBuildFile; fileRef = 604413A019ED0D2300B7DD24 /* detail_share.png */; };
 		604413A419ED1BE000B7DD24 /* menu_message.png in Resources */ = {isa = PBXBuildFile; fileRef = 604413A319ED1BE000B7DD24 /* menu_message.png */; };
+		6050CEC419F4E4980049A0B8 /* miaomiao.png in Resources */ = {isa = PBXBuildFile; fileRef = 6050CEC119F4E4980049A0B8 /* miaomiao.png */; };
+		6050CEC519F4E4980049A0B8 /* wangwang.png in Resources */ = {isa = PBXBuildFile; fileRef = 6050CEC219F4E4980049A0B8 /* wangwang.png */; };
+		6050CEC619F4E4980049A0B8 /* xiaoge.png in Resources */ = {isa = PBXBuildFile; fileRef = 6050CEC319F4E4980049A0B8 /* xiaoge.png */; };
 		605195C519B47038005E9E2C /* about.png in Resources */ = {isa = PBXBuildFile; fileRef = 605195C419B47038005E9E2C /* about.png */; };
 		605195CD19B484B3005E9E2C /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 605195CC19B484B3005E9E2C /* AboutViewController.m */; };
 		6056902719A2E54400E04F89 /* switchBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6056901E19A2E54400E04F89 /* switchBg.png */; };
@@ -1170,6 +1173,9 @@
 		6044139F19ED0D2300B7DD24 /* detail_comment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = detail_comment.png; sourceTree = "<group>"; };
 		604413A019ED0D2300B7DD24 /* detail_share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = detail_share.png; sourceTree = "<group>"; };
 		604413A319ED1BE000B7DD24 /* menu_message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_message.png; sourceTree = "<group>"; };
+		6050CEC119F4E4980049A0B8 /* miaomiao.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = miaomiao.png; sourceTree = "<group>"; };
+		6050CEC219F4E4980049A0B8 /* wangwang.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wangwang.png; sourceTree = "<group>"; };
+		6050CEC319F4E4980049A0B8 /* xiaoge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiaoge.png; sourceTree = "<group>"; };
 		605195C419B47038005E9E2C /* about.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = about.png; sourceTree = "<group>"; };
 		605195CB19B484B3005E9E2C /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		605195CC19B484B3005E9E2C /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
@@ -2574,6 +2580,9 @@
 		60EC8FA0198B442F00F1781A /* 2014-08-01 */ = {
 			isa = PBXGroup;
 			children = (
+				6050CEC119F4E4980049A0B8 /* miaomiao.png */,
+				6050CEC219F4E4980049A0B8 /* wangwang.png */,
+				6050CEC319F4E4980049A0B8 /* xiaoge.png */,
 				60AD7C7F19D82F2E00CE2AE4 /* defaultPic.png */,
 				6061281D19D593240087F642 /* ambassador.png */,
 				60B036EA19CD954A00A46DC9 /* act_copper.png */,
@@ -2896,6 +2905,7 @@
 				09C87C7F1951B0A500F41C6A /* 20-3.png in Resources */,
 				49500A4319ADD5C800D175D8 /* reward_desc.png in Resources */,
 				496CF22719A4908D0081BF5E /* IQButtonBarArrowRight@2x.png in Resources */,
+				6050CEC519F4E4980049A0B8 /* wangwang.png in Resources */,
 				60F618011999C884003C34F2 /* page4_selected.png in Resources */,
 				098EA869195473AC00EF0AC6 /* 29-8.png in Resources */,
 				60BFBC7219B0271300EE3746 /* silverMedal.png in Resources */,
@@ -2934,6 +2944,7 @@
 				600376601990AB2500F3107F /* menu-2.png in Resources */,
 				609945FC19EFC47F004F5157 /* haveDog.png in Resources */,
 				6061280319D54FF60087F642 /* bone1.png in Resources */,
+				6050CEC419F4E4980049A0B8 /* miaomiao.png in Resources */,
 				0968263A1936D5A000B0D7A2 /* cat2.jpg in Resources */,
 				6061281A19D5779E0087F642 /* camaraHead.png in Resources */,
 				6033BDF619C99753009552FE /* 1204.png in Resources */,
@@ -3087,6 +3098,7 @@
 				606181BD19B1B3E5009AF63D /* more_friend.png in Resources */,
 				09D989551935C08E00C83C4B /* Images.xcassets in Resources */,
 				60EC8FAE198B444300F1781A /* 1-g.png in Resources */,
+				6050CEC619F4E4980049A0B8 /* xiaoge.png in Resources */,
 				09D98AAF1935D4E900C83C4B /* 相机图标.png in Resources */,
 				60F617FE1999C884003C34F2 /* page2.png in Resources */,
 				096520D01963EFD200A8186D /* wxFriend.png in Resources */,
@@ -3408,7 +3420,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -3444,7 +3456,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -3458,8 +3470,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3481,7 +3493,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "6ABE2DD5-3329-4C3D-B953-F495DC587E14";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3493,8 +3505,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3516,7 +3528,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "6ABE2DD5-3329-4C3D-B953-F495DC587E14";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

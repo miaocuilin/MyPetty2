@@ -33,6 +33,8 @@
 //    BOOL hasMyHistoryTalk;
     
     int test;
+    
+    int newestTime;
 }
 @property (nonatomic,copy)NSString * friendName;
 @property (nonatomic,copy)NSString * usr_id;

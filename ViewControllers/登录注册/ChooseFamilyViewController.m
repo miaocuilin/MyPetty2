@@ -675,10 +675,13 @@
 -(void)searchBtnClick
 {
     NSLog(@"search");
+    [USER setObject:@"0" forKey:@"isSearchFamilyShouldDismiss"];
     SearchFamilyViewController * vc = [[SearchFamilyViewController alloc] init];
+    [self presentViewController:vc animated:NO completion:nil];
+    [vc release];
 //    UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
-    afView = [AFPopupView popupWithView:vc.view];
-    [afView show];
+//    afView = [AFPopupView popupWithView:vc.view];
+//    [afView show];
 }
 
 #pragma mark - reload

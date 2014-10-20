@@ -23,7 +23,8 @@
 {
     if ([[USER objectForKey:@"isSearchFamilyShouldDismiss"] intValue]) {
         [USER setObject:@"0" forKey:@"isSearchFamilyShouldDismiss"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"af" object:nil];
+        [self dismissViewControllerAnimated:NO completion:nil];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"af" object:nil];
     }
 }
 - (void)viewDidLoad
@@ -36,9 +37,10 @@
 
     self.tempDataArray =[NSMutableArray arrayWithCapacity:0];
     
-    UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
-    [self.view addSubview:bgView];
+    [self createBg];
+//    UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+//    bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+//    [self.view addSubview:bgView];
     
 //    [self createFakeNavigation];
     [self createHeader];
@@ -48,6 +50,23 @@
     }
     //监听中文输入
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldEditChanged:) name:@"UITextFieldTextChangeNotification" object:tf];
+}
+-(void)createBg
+{
+    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    [self.view addSubview:bgImageView];
+    //    self.bgImageView.backgroundColor = [UIColor redColor];
+    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+    NSLog(@"%@", filePath);
+    NSData * data = [NSData dataWithContentsOfFile:filePath];
+    //    NSLog(@"%@", data);
+    UIImage * image = [UIImage imageWithData:data];
+    bgImageView.image = image;
+    
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+    [self.view addSubview:tempView];
 }
 #pragma mark - 加载用户数据
 -(void)loadUserPetsList
@@ -392,7 +411,8 @@
     NSLog(@"cancel");
     [tf resignFirstResponder];
     if ([cancelBtn.titleLabel.text isEqualToString:@"取消"]) {
-       [[NSNotificationCenter defaultCenter] postNotificationName:@"af" object:nil];
+//       [[NSNotificationCenter defaultCenter] postNotificationName:@"af" object:nil];
+        [self dismissViewControllerAnimated:NO completion:nil];
     }else{
         NSLog(@"start search!");
         [self loadSearchData:tf.text];
@@ -422,6 +442,7 @@
 }
 -(BOOL)textFieldShouldClear:(UITextField *)textField
 {
+    [tf resignFirstResponder];
     [self.tempDataArray removeAllObjects];
     [self.tempDataArray addObjectsFromArray:self.dataArray];
     [tv reloadData];

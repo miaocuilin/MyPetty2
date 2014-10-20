@@ -38,7 +38,7 @@
     line.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:line];
 }
--(void)modifyWith:(InfoModel *)model row:(int)row selected:(BOOL)isSelected
+-(void)modifyWith:(SingleTalkModel *)model row:(int)row selected:(BOOL)isSelected
 {
     nameLabel.text = model.usr_name;
     btn.tag = 100+row;

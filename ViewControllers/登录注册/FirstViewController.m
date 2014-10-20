@@ -36,9 +36,23 @@
 }
 -(void)downloadLaunchImageInfo
 {
-    NSString * url = [NSString stringWithFormat:@"%@%@", WELCOMEAPI, [ControllerManager getSID]];
+    if (![USER objectForKey:@"SID"]) {
+        [self login];
+        return;
+    }
+//    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:WELCOMEAPI Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            NSLog(@"%@", load.dataDict);
+//        }
+//    }];
+//    [request release];
+    
+    
+    NSString * url = [NSString stringWithFormat:@"%@%@", WELCOMEAPI, [USER objectForKey:@"SID"]];
+    NSLog(@"%@", url);
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
+            NSLog(@"%@", load.dataDict);
             self.launchImageName = [[load.dataDict objectForKey:@"data"] objectForKey:@"url"];
             NSString * docDir = DOCDIR;
             NSString * FilePath = [docDir stringByAppendingPathComponent:self.launchImageName];
@@ -274,8 +288,9 @@
 -(void)login
 {
     StartLoading;
-    NSString * code = [NSString stringWithFormat:@"planet=%@&uid=%@dog&cat", [USER objectForKey:@"planet"], [OpenUDID value]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&uid=%@&sig=%@", LOGINAPI, [USER objectForKey:@"planet"], [OpenUDID value], [MyMD5 md5:code]];
+//    NSString * code = [NSString stringWithFormat:@"planet=%@&uid=%@dog&cat", [USER objectForKey:@"planet"], [OpenUDID value]];
+    NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", [OpenUDID value]];
+    NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@", LOGINAPI, [OpenUDID value], [MyMD5 md5:code]];
     NSLog(@"login-url:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){
@@ -374,6 +389,11 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"petInfo:%@", load.dataDict);
+            if(![[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
+                [self jumpToMain];
+                return;
+            }
+            
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
                 
                 //记录默认宠物信息

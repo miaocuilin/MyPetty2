@@ -1,4 +1,4 @@
-//
+
 //  JDMenuViewController.m
 //  MyPetty
 //
@@ -322,6 +322,8 @@
                 //            headImageView.image = image;
             }else{
                 //下载头像
+                NSString * url = [NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]];
+                NSLog(@"%@", url);
                 httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
                         [headImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
@@ -581,8 +583,8 @@
     [sv3 addSubview:noticeBgView];
     
     /*******************/
-    NSArray * array = @[@"menu-13.png", @"menu-14.png", @"menu-8.png", @"menu-10.png", @"through.png"];
-    NSArray * array2 = @[@"首页", @"商城", @"活动", @"设置", @"穿越"];
+    NSArray * array = @[@"menu-13.png", @"menu-14.png", @"menu-10.png"];
+    NSArray * array2 = @[@"首页", @"商城", @"设置"];
     for(int i=0;i<array.count;i++){
         UIView * bgView = [MyControl createViewWithFrame:CGRectMake(0, i*45-5, OFFSET, 40)];
         [noticeBgView addSubview:bgView];
@@ -591,18 +593,18 @@
         UIImageView * imageView = [MyControl createImageViewWithFrame:CGRectMake(25, 5, 30, 30) ImageName:array[i]];
         [bgView addSubview:imageView];
         
-        if (i == 2) {
-            actGreenBall = [MyControl createImageViewWithFrame:CGRectMake(20, -3, 15, 15) ImageName:@"greenBall.png"];
-            actGreenBall.hidden = YES;
-            actGreenBall.tag = 50;
-            [imageView addSubview:actGreenBall];
-            
-            activityNumLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 15, 15) Font:14 Text:@"1"];
-            activityNumLabel.textAlignment = NSTextAlignmentCenter;
-//            activityNumLabel.hidden = YES;
-            [actGreenBall addSubview:activityNumLabel];
-            
-        }
+//        if (i == 2) {
+//            actGreenBall = [MyControl createImageViewWithFrame:CGRectMake(20, -3, 15, 15) ImageName:@"greenBall.png"];
+//            actGreenBall.hidden = YES;
+//            actGreenBall.tag = 50;
+//            [imageView addSubview:actGreenBall];
+//            
+//            activityNumLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 15, 15) Font:14 Text:@"1"];
+//            activityNumLabel.textAlignment = NSTextAlignmentCenter;
+////            activityNumLabel.hidden = YES;
+//            [actGreenBall addSubview:activityNumLabel];
+//            
+//        }
 //        if (i == 2) {
 //            UIImageView * greenBall = [MyControl createImageViewWithFrame:CGRectMake(20, -3, 15, 15) ImageName:@"29-8.png"];
 ////            greenBall.hidden = YES;
@@ -1001,17 +1003,21 @@
         [self.sideMenuController setContentController:vc animted:YES];
 //        [vc release];
     }else if (button.tag == 1002) {
-        //活动
-        ActivityViewController *vc = [[ActivityViewController alloc] init];
-//        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-        [self.sideMenuController setContentController:vc animted:YES];
-        [vc release];
-    }else if (button.tag == 1003) {
         //设置
-        //        SetViewController * vc = [[SetViewController alloc] init];
         SettingViewController * vc = [[SettingViewController alloc] init];
         vc.modalTransitionStyle = 2;
         [self.sideMenuController setContentController:vc animted:YES];
+        //活动
+//        ActivityViewController *vc = [[ActivityViewController alloc] init];
+////        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+//        [self.sideMenuController setContentController:vc animted:YES];
+//        [vc release];
+    }else if (button.tag == 1003) {
+        //设置
+        //        SetViewController * vc = [[SetViewController alloc] init];
+//        SettingViewController * vc = [[SettingViewController alloc] init];
+//        vc.modalTransitionStyle = 2;
+//        [self.sideMenuController setContentController:vc animted:YES];
         //        [vc release];
     }else{
         //穿越

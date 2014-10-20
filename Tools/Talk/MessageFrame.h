@@ -35,6 +35,8 @@
 
 @property (nonatomic, strong) Message *message;
 
-@property (nonatomic, assign) BOOL showTime;
+@property (nonatomic) BOOL showTime;
+
+- (void)setMessage:(Message *)message;
 
 @end

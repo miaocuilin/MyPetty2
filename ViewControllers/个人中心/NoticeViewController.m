@@ -130,8 +130,9 @@
         model.usr_tx = talkModel.usr_tx;
         model.unReadNum = talkModel.unReadMsgNum;
         
-        NSArray * array = [talkModel.msgDict objectForKey:@"msg"];
-        MessageModel * msgModel = array[array.count-1];
+        NSArray * msgArray = [talkModel.msgDict objectForKey:@"msg"];
+        NSLog(@"%@--%@--%@", talkModel.usr_name, talkModel.msgDict, msgArray);
+        MessageModel * msgModel = msgArray[msgArray.count-1];
         model.time = msgModel.time;
         model.lastMsg = msgModel.msg;
         model.img_id = msgModel.img_id;
@@ -141,18 +142,37 @@
         
         [model release];
     }
+    //先按时间排序
+    for (int i=0; i<self.dataArray.count; i++) {
+        for (int j=0; j<self.dataArray.count-i-1; j++) {
+            if ([[self.dataArray[j] time] intValue] < [[self.dataArray[j+1] time] intValue]) {
+                NoticeModel * model3 = [self.dataArray[j] retain];
+                
+                self.dataArray[j] = self.dataArray[j+1];
+                self.dataArray[j+1] = model3;
+                [model3 release];
+            }
+        }
+    }
+    
     //按消息数进行排序 未读的在前，读了在后
     for (int i=0; i<self.dataArray.count; i++) {
         for (int j=0; j<self.dataArray.count-i-1; j++) {
-            NoticeModel * model1 = self.dataArray[j];
-            NoticeModel * model2 = self.dataArray[j+1];
-            if ([model1.unReadNum intValue] < [model2.unReadNum intValue]) {
-                NoticeModel * model3 = model1;
-                NoticeModel * model4 = model2;
-                model1 = model4;
-                model2 = model3;
+            int a = [[self.dataArray[j] unReadNum] intValue];
+            int b = [[self.dataArray[j+1] unReadNum] intValue];
+            
+            if (a<b && !(a!=0&&b!=0)) {
+                NoticeModel * model3 = [self.dataArray[j] retain];
+
+                self.dataArray[j] = self.dataArray[j+1];
+                self.dataArray[j+1] = model3;
+                [model3 release];
             }
         }
+    }
+    //
+    for (int i=0; i<self.dataArray.count; i++) {
+        NSLog(@"%@", [self.dataArray[i] unReadNum]);
     }
     
 }
@@ -792,6 +812,7 @@
     }
     //传递5个数据，需要5个数组
     NoticeModel * model = self.dataArray[indexPath.row];
+
     [cell configUIWithTx:model.usr_tx Name:model.usr_name Time:model.time Content:model.lastMsg newMsgNum:model.unReadNum img_id:model.img_id];
     cell.backgroundColor = [UIColor clearColor];
     cell.selectionStyle = 0;

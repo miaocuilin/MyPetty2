@@ -1178,8 +1178,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        str = [NSString stringWithFormat:@"age=%d&code=&gender=%d&name=%@&type=%d&wechat=&weibo=", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type];
 //        str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&wechat=&weibo=dog&cat", age, gender, type];
         
-        str = [NSString stringWithFormat:@"age=%d&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, gender, type, self.u_city, self.u_gender];
+        str = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        str2 = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, gender, type, self.u_city, self.u_gender];
     /****************/
     if (self.isAdoption) {
         str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -1245,6 +1245,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     //访问注册API
     NSString * message = [NSString stringWithFormat:@"%@?r=user/registerApi&%@&sig=%@&SID=%@", IPURL2, str, sig, [ControllerManager getSID]];
+    NSLog(@"%@", message);
     //进行注册
     NSLog(@"getIsSuccess:%d", [ControllerManager getIsSuccess]);
     NSLog(@"getSID:%@", [ControllerManager getSID]);
@@ -1363,8 +1364,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -登录
 -(void)login
 {
-    NSString * code = [NSString stringWithFormat:@"planet=%@&uid=%@dog&cat", [USER objectForKey:@"planet"], [OpenUDID value]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&uid=%@&sig=%@&SID=%@", LOGINAPI, [USER objectForKey:@"planet"], [OpenUDID value], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", [OpenUDID value]];
+    NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@&SID=%@", LOGINAPI, [OpenUDID value], [MyMD5 md5:code], [ControllerManager getSID]];
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){
             NSLog(@"登录结果：%@", load.dataDict);

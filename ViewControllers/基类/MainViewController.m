@@ -46,7 +46,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else{
         camara.hidden = NO;
     }
-    
+    self.pet_aid = [USER objectForKey:@"aid"];
+    self.pet_name = [USER objectForKey:@"a_name"];
+    self.pet_tx = [USER objectForKey:@"a_tx"];
 //    if (![self.currentTx isEqualToString:[[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]]) {
         if ([USER objectForKey:@"petInfoDict"] != nil) {
             /**************************/

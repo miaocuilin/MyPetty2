@@ -13,6 +13,7 @@
 #import "SingleTalkModel.h"
 #import "MessageModel.h"
 //#import "NoticeViewController.h";
+#define TimeGap 60
 
 @interface TalkViewController ()
 {
@@ -32,9 +33,16 @@
 }
 //-(void)viewWillAppear:(BOOL)animated
 //{
-//    [UIApplication sharedApplication].statusBarStyle = 0;
+////    [UIApplication sharedApplication].statusBarStyle = 0;
+//    NSLog(@"&&&&&&&&&&&&&&&&&&%f--%f", tv.contentSize.height-tv.frame.size.height, tv.contentOffset.y);
 //}
-
+-(void)viewDidAppear:(BOOL)animated
+{
+    NSLog(@"&&&&&&&&&&&&&&&&&&%f--%f", tv.contentSize.height-tv.frame.size.height, tv.contentOffset.y);
+    if (tv.contentSize.height>=tv.frame.size.height){
+        tv.contentOffset = CGPointMake(0, tv.contentSize.height-tv.frame.size.height);
+    }
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -49,7 +57,10 @@
     self.keysArray = [NSMutableArray arrayWithCapacity:0];
     self.valuesArray = [NSMutableArray arrayWithCapacity:0];
     
+    
     [self createBg];
+    
+    [self createTableView];
     
     if (self.talk_id != nil) {
         [self loadHistoryTalk];
@@ -57,14 +68,13 @@
         [self loadTalkID];
     }
     
-    [self createTableView];
     [self createFakeNavigation];
     
 //    [self loadNewMessageData];
 //    [self talkListData];
 //    [self talkSendMessageData];
-    timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(loadNewMessageData) userInfo:nil repeats:YES];
-    [timer setFireDate:[NSDate distantFuture]];
+    timer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(loadNewMessageData) userInfo:nil repeats:YES];
+//    [timer setFireDate:[NSDate distantFuture]];
 }
 #pragma mark -
 -(void)loadTalkID
@@ -79,7 +89,7 @@
             self.talk_id = [[load.dataDict objectForKey:@"data"] objectForKey:@"talk_id"];
             //下载完talk_id之后查看本地是否有历史聊天记录，有的话调出来
             [self loadHistoryTalk];
-            
+            LoadingSuccess;
         }else{
             LoadingFailed;
         }
@@ -114,6 +124,10 @@
                     [self presentNewMessageWithSend:NO time:model.time msg:model.msg];
                 }
             }
+
+            //
+//            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.dataArray.count-1 inSection:0];
+//            [tv scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
         }else{
             talkModel = [[SingleTalkModel alloc] init];
             talkModel.usr_id = self.usr_id;
@@ -139,14 +153,24 @@
 //            }
 //            
 //        }
+    }else{
+        //没有本地文件的时候
+        talkModel = [[SingleTalkModel alloc] init];
+        talkModel.usr_id = self.usr_id;
+        talkModel.usr_tx = self.otherTX;
+        talkModel.usr_name = self.friendName;
+        talkModel.unReadMsgNum = @"0";
     }
+//    [timer setFireDate:[NSDate date]];
     [self loadNewMessageData];
-    [timer setFireDate:[NSDate distantPast]];
+    
 }
 -(void)loadNewMessageData
 {
     NSLog(@"==========loadNewMessageData:%d============", test++);
-    
+    if (!self.talk_id) {
+        return;
+    }
     //请求一个API，传usr_id，获取talk_id，根据talk_id去获取本地历史记录以及新的消息存到本地。
     //聊天里10秒刷一次，侧边栏在侧边栏弹出的时候刷新。
     NSString * url = [NSString stringWithFormat:@"%@%@", GETNEWMSGAPI,[ControllerManager getSID]];
@@ -334,9 +358,11 @@
     model.time = timeStamp;
     model.usr_id = [USER objectForKey:@"usr_id"];
     model.img_id = @"0";
-    [self.dataArray addObject:model];
+    [self.talkDataArray addObject:model];
+//    NSLog(@"%@", [self.dataArray[self.dataArray.count-1] msg]);
     [model release];
     
+    [self presentNewMessageWithSend:YES time:[NSString stringWithFormat:@"%d", (int)[[NSDate date] timeIntervalSince1970]] msg:self.lastMessage];
 //    [self saveTalkDataWithUserID:[USER objectForKey:@"usr_id"] time:timeStamp msg:self.lastMessage];
     //设置父控制器消息
 //    NoticeViewController * vc = self.noticeVc;
@@ -495,7 +521,7 @@
 #pragma mark - tableView
 -(void)createTableView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40) style:UITableViewStylePlain];
     tv.separatorStyle = UITableViewCellSeparatorStyleNone;
     tv.allowsSelection = NO;
 //    UIImageView * backImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chat_bg_default.jpg"]];
@@ -560,7 +586,8 @@
     }
     
     // 设置数据
-    cell.messageFrame = self.dataArray[indexPath.row];
+    [cell setMessageFrame:self.dataArray[indexPath.row]];
+//    cell.messageFrame = self.dataArray[indexPath.row];
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -573,6 +600,10 @@
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     //滑动让键盘消失，效果同QQ
     [self.view endEditing:YES];
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+//    NSLog(@"%f----%f", tv.contentSize.height-tv.frame.size.height,tv.contentOffset.y);
 }
 
 #pragma mark - 键盘处理
@@ -622,7 +653,6 @@
     self.lastMessage = tf.text;
     [self talkSendMessageData];
     
-    [self presentNewMessageWithSend:YES time:[NSString stringWithFormat:@"%d", (int)[[NSDate date] timeIntervalSince1970]] msg:tf.text];
     
     return YES;
 }
@@ -637,20 +667,33 @@
     NSString *time = [fmt stringFromDate:date];
     NSLog(@"date:%@--time:%@", date, time);
     [fmt release];
-    [self addMessageWithContent:content time:time isSend:isSend];
+    [self addMessageWithContent:content time:time isSend:isSend timeStamp:timeStamp];
     // 2、刷新表格
     [tv reloadData];
     
     [self.view bringSubviewToFront:navView];
     // 3、滚动至当前行
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.dataArray.count - 1 inSection:0];
-    [tv scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+//    NSLog(@"========count:%d=======",self.dataArray.count);
+//    NSLog(@"*******offset:%f********", tv.contentSize.height);
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.dataArray.count-1 inSection:0];
+    [tv scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    
+    [tv reloadData];
+//    NSLog(@"%f--%f", tv.contentSize.height-tv.frame.size.height, tv.contentOffset.y);
+//    if (tv.contentSize.height>=tv.frame.size.height) {
+//        [UIView animateKeyframesWithDuration:0.1 delay:0.2 options:0 animations:^{
+//            tv.contentOffset = CGPointMake(0, tv.contentSize.height-tv.frame.size.height);
+//        } completion:nil];
+//        
+//    }
+    
+//    NSLog(@"&&&&&&&offset:%f&&&&&&&", tv.contentOffset.y);
     // 4、清空文本框内容
     tf.text = nil;
 }
 
 #pragma mark - 给数据源增加内容
-- (void)addMessageWithContent:(NSString *)content time:(NSString *)time isSend:(BOOL)isSend{
+- (void)addMessageWithContent:(NSString *)content time:(NSString *)time isSend:(BOOL)isSend timeStamp:(NSString *)timeStamp{
     
     MessageFrame *mf = [[MessageFrame alloc] init];
     Message *msg = [[Message alloc] init];
@@ -664,7 +707,15 @@
         msg.type = MessageTypeOther;
     }
     mf.message = msg;
-//    mf.showTime = YES;
+    
+    
+//    NSLog(@"%d--%d--%d", [timeStamp intValue], newestTime,[timeStamp intValue]-newestTime);
+    if ([timeStamp intValue]-newestTime>=TimeGap) {
+        mf.showTime = NO;
+        newestTime = [timeStamp intValue];
+    }else{
+        mf.showTime = NO;
+    }
     
     [self.dataArray addObject:mf];
     //这两个不能释放，后面还要用到，都则会崩溃

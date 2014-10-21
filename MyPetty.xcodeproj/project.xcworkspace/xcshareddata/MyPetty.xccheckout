@@ -10,29 +10,29 @@
 	<string>MyPetty</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>36A6F993-B36B-4E3D-A897-103F23F8DCDB</key>
+		<key>748977DF424127E905CCADF5C2AA84834766647A</key>
 		<string>https://github.com/miaocuilin/MyPetty2.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>MyPetty.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>36A6F993-B36B-4E3D-A897-103F23F8DCDB</key>
+		<key>748977DF424127E905CCADF5C2AA84834766647A</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/miaocuilin/MyPetty2.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>36A6F993-B36B-4E3D-A897-103F23F8DCDB</string>
+	<string>748977DF424127E905CCADF5C2AA84834766647A</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>36A6F993-B36B-4E3D-A897-103F23F8DCDB</string>
+			<string>748977DF424127E905CCADF5C2AA84834766647A</string>
 			<key>IDESourceControlWCCName</key>
 			<string>MyPetty2</string>
 		</dict>

@@ -121,28 +121,50 @@
     NSString *touchString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",TOUCHAPI, self.pet_aid, sig,[ControllerManager getSID]];
     NSLog(@"摸一摸api:%@",touchString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:touchString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-        NSLog(@"摸一摸数据：%@",load.dataDict);
         if (isFinish) {
-            int tempGold = [[USER objectForKey:@"gold"] intValue];
-            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] forKey:@"gold"];
-            int tempExp = [[USER objectForKey:@"exp"] intValue];
-            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
-            int gold = [[USER objectForKey:@"gold"] intValue]-tempGold;
-            int exp = [[USER objectForKey:@"exp"] intValue]-tempExp;
-            
-            [ControllerManager HUDImageIcon:@"gold.png" showView:self.view.window yOffset:-50.0 Number:gold];
-            [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:exp];
+            NSLog(@"摸一摸数据：%@",load.dataDict);
+//            int tempGold = [[USER objectForKey:@"gold"] intValue];
+//            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] forKey:@"gold"];
+//            int tempExp = [[USER objectForKey:@"exp"] intValue];
+//            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
+//            int gold = [[USER objectForKey:@"gold"] intValue]-tempGold;
+//            int exp = [[USER objectForKey:@"exp"] intValue]-tempExp;
+//
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary * dict = [load.dataDict objectForKey:@"data"];
+                int exp = [[dict objectForKey:@"exp"] intValue];
+                int gold = [[dict objectForKey:@"gold"] intValue];
+//                [self performSelector:@selector(showRewardWithExp:Gold:) withObject:exp withObject:gold afterDelay:0.2f];
+                if (exp) {
+                    [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:40 Number:exp];
+                }
+                if (gold) {
+                    [ControllerManager HUDImageIcon:@"gold.png" showView:self.view.window yOffset:-40.0 Number:gold];
+                }
+            }
+            [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.1];
+        }else{
+            [MyControl loadingFailedWithContent:@"数据加载失败" afterDelay:0.5f];
         }
-        LoadingSuccess;
+        
     }];
     [request release];
 }
+//-(void)showRewardWithExp:(int)exp Gold:(int)gold
+//{
+//    if (exp) {
+//        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:40 Number:exp];
+//    }
+//    if (gold) {
+//        [ControllerManager HUDImageIcon:@"gold.png" showView:self.view.window yOffset:-40.0 Number:gold];
+//    }
+//}
 #pragma mark - 摸一摸界面
 - (void)createAlertView
 {
     [self shopGiftTitle];
     
-    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, 40) Font:16 Text:@"摸摸萌照，听美妙叫叫"];
+    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, 40) Font:16 Text:@"摸萌照，听萌主叫叫，萌萌印心中~"];
     descLabel.textAlignment = NSTextAlignmentCenter;
     descLabel.textColor = GRAYBLUECOLOR;
     [bodyView addSubview:descLabel];
@@ -328,7 +350,7 @@
     [self.view addSubview:totalView];
     UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
     [totalView addSubview:titleView];
-    UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"摸一摸"];
+    UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"萌印象"];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [totalView addSubview:titleLabel];
     UIImageView *closeImageView = [MyControl createImageViewWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png"];

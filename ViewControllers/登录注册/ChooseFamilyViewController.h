@@ -31,6 +31,8 @@
     
     //记录到第几页，用于上拉刷新
     int pageNum;
+    
+    BOOL isTvCreated;
 }
 //推荐数组
 //@property(nonatomic,retain)NSMutableArray * dataArray;

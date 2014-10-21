@@ -273,7 +273,7 @@
     UIView *upView = [MyControl createViewWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
     [bodyView addSubview:upView];
     
-    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2 - 115, 10, 230, 20) Font:16 Text:@"哎吆运气不错吆~恭喜摇出"];
+    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2 - 115, 10, 230, 20) Font:16 Text:@"哎呦~运气不错哦~为萌主摇出"];
     shakeDescLabel.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel.textColor = GRAYBLUECOLOR;
     [upView addSubview:shakeDescLabel];
@@ -333,7 +333,7 @@
 {
     noChanceHUD = [self alertViewInit:CGSizeMake(300, 425)];
     UIView *totalView =[self shopGiftTitle];
-    [self unfortunatelyUpView:[NSString stringWithFormat:@"摇一摇，摇到外婆桥。%@今天的摇一摇次数用完啦，换个宠物试试吧~",[self.animalInfoDict objectForKey:@"name"]] imageString:@"nochance.png"];
+    [self unfortunatelyUpView:[NSString stringWithFormat:@"摇一摇，摇到外婆桥 %@今天的摇一摇次数用完了，换个萌主试试吧~",[self.animalInfoDict objectForKey:@"name"]] imageString:@"nochance.png"];
     [self addDownView:[NSString stringWithFormat:@"%d",count]];
     noChanceHUD.customView = totalView;
     noChanceHUD.removeFromSuperViewOnHide = NO;
@@ -371,7 +371,7 @@
     UIView *upView = [MyControl createViewWithFrame:CGRectMake(0, 0, bodyViewChance.frame.size.width, bodyViewChance.frame.size.height-70)];
     [bodyViewChance addSubview:upView];
     
-    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2 - 115, 10, 230, 60) Font:16 Text:[NSString stringWithFormat:@"摇一摇，要到外婆桥。%@今天的摇一摇次数用完啦，换个宠物试试吧~",[self.animalInfoDict objectForKey:@"name"]]];
+    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2 - 115, 10, 230, 60) Font:16 Text:[NSString stringWithFormat:@"摇一摇，摇到外婆桥 %@今天的摇一摇次数用完了，换个萌主试试吧~",[self.animalInfoDict objectForKey:@"name"]]];
     shakeDescLabel.textColor = GRAYBLUECOLOR;
     [upView addSubview:shakeDescLabel];
     
@@ -413,7 +413,7 @@
     [downView addSubview:helpPetLabel];
     
     UILabel *timesLabel = [MyControl createLabelWithFrame:CGRectMake(70, 27, 200, 20) Font:12 Text:nil];
-    NSAttributedString *timesString = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",count] insertAtIndex:3];
+    NSAttributedString *timesString = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",count] insertAtIndex:4];
     timesLabel.attributedText = timesString;
     [timesString release];
     [downView addSubview:timesLabel];
@@ -451,7 +451,7 @@
     UIView *upView = [MyControl createViewWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
     [bodyView addSubview:upView];
     
-    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2 - 115, 10, 230, 20) Font:16 Text:@"每天摇一摇，精彩礼品大放送~"];
+    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upView.frame.size.width/2 - 115, 10, 230, 20) Font:16 Text:@"每天摇一摇，精美礼品大放送~"];
     shakeDescLabel.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel.textColor = GRAYBLUECOLOR;
     [upView addSubview:shakeDescLabel];

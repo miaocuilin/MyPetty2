@@ -69,6 +69,8 @@
             }];
             [request release];
         }
+    }else{
+        self.headImage.image = [UIImage imageNamed:@"defaultPetHead.png"];
     }
     /**************************/
 }

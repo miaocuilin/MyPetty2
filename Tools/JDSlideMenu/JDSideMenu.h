@@ -66,4 +66,6 @@
 /******************************************/
 //@property(nonatomic,retain)NSMutableDictionary * totalDataDict;
 @property(nonatomic,retain)NSMutableArray * newMsgDataArray;
+
+-(void)refreshJDMenu;
 @end

@@ -282,7 +282,7 @@
     [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
 #pragma mark - one
     //1
-    UILabel *recordDescLabel1 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 - 115, 10, 230, 20) Font:16 Text:@"为萌萌的TA记录每天的叫声吧~"];
+    UILabel *recordDescLabel1 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 - 115, 10, 230, 20) Font:16 Text:@"为萌萌的TA记录每天的欢乐吧~"];
     recordDescLabel1.textAlignment = NSTextAlignmentCenter;
     recordDescLabel1.textColor = GRAYBLUECOLOR;
     [self.upScrollView addSubview:recordDescLabel1];
@@ -357,7 +357,7 @@
     [self.upScrollView addSubview:timerLabel3];
 #pragma mark - four
     //4
-    UILabel *recordDescLabel4 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2+upViewWidth*3 - 115, 10, 230, 20) Font:16 Text:@"上传成功，期待明天的美妙叫叫"];
+    UILabel *recordDescLabel4 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2+upViewWidth*3 - 115, 10, 230, 20) Font:16 Text:@"上传成功，期待明天的萌叫叫哦~"];
     recordDescLabel4.textAlignment = NSTextAlignmentCenter;
     recordDescLabel4.textColor = GRAYBLUECOLOR;
     [self.upScrollView addSubview:recordDescLabel4];
@@ -383,7 +383,7 @@
     }
     //5
 #pragma mark - five
-    UILabel *recordDescLabel5 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2+upViewWidth*4 - 115, 10, 230, 50) Font:16 Text:[NSString stringWithFormat:@"今天 %@ 录过了哟\n期待明天的美妙叫叫", self.pet_name]];
+    UILabel *recordDescLabel5 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2+upViewWidth*4 - 115, 10, 230, 50) Font:16 Text:[NSString stringWithFormat:@"今天 %@ 的萌叫叫录过了呢，\n去看看其他萌主吧", self.pet_name]];
     recordDescLabel5.textAlignment = NSTextAlignmentCenter;
     recordDescLabel5.textColor = GRAYBLUECOLOR;
     [self.upScrollView addSubview:recordDescLabel5];
@@ -423,7 +423,7 @@
     UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:CGRectMake(8, -2, 60, 60) ImageName:@"head_cricle1.png"];
     [downView addSubview:cricleHeadImageView];
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 5, 200, 20) Font:12 Text:nil];
-    NSAttributedString *helpPetString = [self firstString:@"让叫一叫" formatString: self.pet_name insertAtIndex:1];
+    NSAttributedString *helpPetString = [self firstString:@"听萌萌叫" formatString: self.pet_name insertAtIndex:1];
     helpPetLabel.attributedText = helpPetString;
     [helpPetString release];
     [downView addSubview:helpPetLabel];

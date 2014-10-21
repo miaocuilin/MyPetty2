@@ -212,6 +212,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [navView addSubview:titleLabel];
     if (self.isModify) {
         titleLabel.text = @"资料修改";
+    }else if(self.isOldUser){
+        titleLabel.text = @"创建萌国";
     }
 }
 
@@ -336,7 +338,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [sv addSubview:photoButton];
    
     /**************************/
-    if (!([self.petInfoModel.tx isKindOfClass:[NSNull class]] || [self.petInfoModel.tx length]==0)) {
+    if (!self.isOldUser && !([self.petInfoModel.tx isKindOfClass:[NSNull class]] || [self.petInfoModel.tx length]==0)) {
         NSString * docDir = DOCDIR;
         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.petInfoModel.tx]];
 //        NSLog(@"--%@--", txFilePath);
@@ -476,7 +478,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     photoButton2.layer.masksToBounds = YES;
     [sv addSubview:photoButton2];
     /**************************/
-    if ([ControllerManager getIsSuccess] && !([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
+    if (self.isOldUser && [ControllerManager getIsSuccess] && !([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
         NSString * docDir = DOCDIR;
         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
         //        NSLog(@"--%@--", txFilePath);
@@ -530,7 +532,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             tfUserName.backgroundColor = [UIColor clearColor];
             [bgImageView addSubview:tfUserName];
             
-            if (self.isModify) {
+            if (self.isModify || self.isOldUser) {
                 tfUserName.text = [USER objectForKey:@"name"];
             }
             UIImageView * keyboard = [MyControl createImageViewWithFrame:CGRectMake(150, 6, 25, 17) ImageName:@"3-2-2.png"];
@@ -556,10 +558,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             mLabel.font = [UIFont boldSystemFontOfSize:15];
             [bgImageView addSubview:mLabel];
             
-            if (self.isModify) {
+            if (self.isModify || self.isOldUser) {
                 if ([[USER objectForKey:@"gender"] intValue] == 1) {
                     [self manClick:man];
                 }
+//                else if ([[USER objectForKey:@"gender"] intValue] == 2){
+//                    [self womanClick:woman];
+//                }
             }
         }else{
             tfCity = [MyControl createTextFieldWithFrame:CGRectMake(10, 5, 170, 20) placeholder:@"点击选择城市" passWord:NO leftImageView:nil rightImageView:nil Font:13];
@@ -572,7 +577,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             tfCity.minimumFontSize = w;
             
             [bgImageView addSubview:tfCity];
-            if (self.isModify) {
+            if (self.isModify || self.isOldUser) {
                 NSString * str = [ControllerManager returnProvinceAndCityWithCityNum:[USER objectForKey:@"city"]];
                 NSArray * array = [str componentsSeparatedByString:@" | "];
                 NSMutableString * mutableStr = [NSMutableString stringWithCapacity:0];
@@ -582,6 +587,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 tfCity.text = mutableStr;
             }
         }
+    }
+    if (self.isOldUser) {
+        photoButton2.userInteractionEnabled = NO;
+        tfUserName.userInteractionEnabled = NO;
+        man.userInteractionEnabled = NO;
+        woman.userInteractionEnabled = NO;
+        tfCity.userInteractionEnabled = NO;
     }
     /****************************************/
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -1151,15 +1163,45 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     
     //用户注册
-    [self userRegister];
+    if(self.isOldUser){
+        [self createCountry];
+    }else{
+        [self userRegister];
+    }
+    
 
     //跳到主页
 //    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
 //    [sideMenu setBackgroundImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"30-3" ofType:@"png"]]];
 //    [self presentViewController:sideMenu animated:YES completion:nil];
 }
+#pragma mark - createCountry
+-(void)createCountry
+{
+    StartLoading;
+    NSString * code = [NSString stringWithFormat:@"age=%d&gender=%d&type=%ddog&cat", age, gender, type];
+    
+    NSString * url = [NSString stringWithFormat:@"%@&age=%d&gender=%d&name=%@&type=%d&sig=%@&SID=%@", CREATECOUNTRY, age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
+                
+                [self loadPetInfo];
+            }
+            if (self.oriImage) {
+                [self postImage];
+            }
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
 
-#pragma mark -注册
+#pragma mark - 注册
 -(void)userRegister
 {
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
@@ -1184,6 +1226,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (self.isAdoption) {
         str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender];
+    }else if (self.isOldUser){
+        
     }
     /****************/
         sig = [MyMD5 md5:str2];
@@ -1307,6 +1351,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 }else{
 ////                    [alert0 setTitle:@"注册成功"];
 //                    [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+                    if (self.isOldUser) {
+                        self.isOldUserTxOK = YES;
+                    }
+                    if (self.isAdoption) {
+                        self.isAdoptionTxOK = YES;
+                    }
                     
                     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 //                    alert0.hidden = YES;
@@ -1346,10 +1396,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            NSLog(@"您的网络不佳，注册失败!");
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         }
-        
-        
-
-            
         
     }];
 }
@@ -1419,6 +1465,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
                     [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
                 }
+                
+                if (self.isAdoption) {
+                    [self loadPetInfo];
+                }
+                
                 /****************/
                 if (isNeedPostImage) {
                     if (self.oriImage!= nil && self.oriUserImage == nil) {
@@ -1435,19 +1486,34 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         [self postUserImage];
                     }
                 }else{
-//                    if (self.isModify) {
-//                        [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
-//                    }else{
+                    if (self.isOldUser) {
+                        [MMProgressHUD dismissWithSuccess:@"创建成功" title:nil afterDelay:0.5];
+                        [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+                        self.isOldUserTxOK = 1;
+                        if (self.isOldUserPetInfoOK == 1) {
+                            [self dismissViewControllerAnimated:NO completion:nil];
+                        }
+                    }else{
                         [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
-//                    }
-                    [USER setObject:@"1" forKey:@"Menu"];
-                    //注册完之后直接返回主页
-                    [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
-                    [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
-                    [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
-                    //2代表刚注册
-                    [USER setObject:@"2" forKey:@"isNotRegister"];
-                    [self dismissViewControllerAnimated:NO completion:nil];
+                        
+                        [USER setObject:@"1" forKey:@"Menu"];
+                        
+                        //注册完之后直接返回主页
+                        [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+                        [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
+                        [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+                        //2代表刚注册
+                        [USER setObject:@"2" forKey:@"isNotRegister"];
+                        if (self.isAdoption) {
+                            self.isAdoptionTxOK = YES;
+                            if (self.isAdoptionPetInfoOK == YES) {
+                                [self dismissViewControllerAnimated:NO completion:nil];
+                            }
+                        }else{
+                            [self dismissViewControllerAnimated:NO completion:nil];
+                        }
+                        
+                    }
                 }
             }
         }
@@ -1467,7 +1533,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 //记录默认宠物信息
                 [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"petInfoDict"];
             }
+            self.isOldUserPetInfoOK = YES;
+            if (self.isOldUserTxOK == YES) {
+                [self dismissViewControllerAnimated:NO completion:nil];
+            }
             
+            self.isAdoptionPetInfoOK = YES;
+            if (self.isAdoptionTxOK == YES) {
+                [self dismissViewControllerAnimated:NO completion:nil];
+            }
 //            [self throughPlanet];
         }else{
             
@@ -1586,17 +1660,35 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self dismissViewControllerAnimated:NO completion:nil];
         }
     }else{
-        [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+        if (self.isOldUser) {
+            [MMProgressHUD dismissWithSuccess:@"创建成功" title:nil afterDelay:0.5];
+            [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+            self.isOldUserTxOK = 1;
+            if (self.isOldUserPetInfoOK == 1) {
+                [self dismissViewControllerAnimated:NO completion:nil];
+            }
+        }else{
+            [MMProgressHUD dismissWithSuccess:@"注册成功" title:nil afterDelay:0.5];
+            
+            [USER setObject:@"1" forKey:@"Menu"];
+            
+            //注册完之后直接返回主页
+            [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+            [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
+            [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+            //2代表刚注册
+            [USER setObject:@"2" forKey:@"isNotRegister"];
+            if (self.isAdoption) {
+                self.isAdoptionTxOK = YES;
+                if (self.isAdoptionPetInfoOK == YES) {
+                    [self dismissViewControllerAnimated:NO completion:nil];
+                }
+            }else{
+                [self dismissViewControllerAnimated:NO completion:nil];
+            }
+            
+        }
         
-        [USER setObject:@"1" forKey:@"Menu"];
-        
-        //注册完之后直接返回主页
-        [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
-        [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
-        [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
-        //2代表刚注册
-        [USER setObject:@"2" forKey:@"isNotRegister"];
-        [self dismissViewControllerAnimated:NO completion:nil];
     }
     
 }

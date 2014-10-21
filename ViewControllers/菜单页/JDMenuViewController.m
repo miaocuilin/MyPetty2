@@ -44,8 +44,15 @@
         [self createBg];
         [self createUI];
     }
+    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
+    [menu refreshJDMenu];
+    
 }
-
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    isLoaded = YES;
+//}
+//-(void)viewW
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -261,7 +268,7 @@
     tfSearch.textColor = [UIColor whiteColor];
     tfSearch.backgroundColor = [UIColor clearColor];
     tfSearch.borderStyle = 0;
-    tfSearch.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"搜索萌宠昵称" attributes:@{NSForegroundColorAttributeName:BGCOLOR}];
+    tfSearch.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"搜索萌主爱称~" attributes:@{NSForegroundColorAttributeName:BGCOLOR}];
     [self.view addSubview:tfSearch];
     
     searchBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 37, 38, 20) ImageName:@"" Target:self Action:@selector(searchBtnClick) Title:@"取消"];
@@ -520,11 +527,11 @@
         UIImageView * ambassador = [MyControl createImageViewWithFrame:CGRectMake(12, 15, 158/2, 35) ImageName:@"ambassador.png"];
         [countryBg addSubview:ambassador];
         
-        UILabel * tip1 = [MyControl createLabelWithFrame:CGRectMake(95, 15, 125, 15) Font:11 Text:@"宠物星球，宠来宠趣"];
+        UILabel * tip1 = [MyControl createLabelWithFrame:CGRectMake(95, 15, 125, 15) Font:10 Text:@"宠物星球，宠来宠趣"];
         tip1.textAlignment = NSTextAlignmentCenter;
         [countryBg addSubview:tip1];
         
-        UILabel * tip2 = [MyControl createLabelWithFrame:CGRectMake(95, 35, 125, 15) Font:11 Text:@"快来创建或者加入王国吧"];
+        UILabel * tip2 = [MyControl createLabelWithFrame:CGRectMake(90, 35, 130, 15) Font:10 Text:@"快来加入可爱萌主们的世界吧"];
         tip2.textAlignment = NSTextAlignmentCenter;
         [countryBg addSubview:tip2];
         

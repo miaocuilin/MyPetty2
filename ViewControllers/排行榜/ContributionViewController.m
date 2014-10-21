@@ -249,9 +249,9 @@
 //    tableView == tv2 && indexPath.row == myRanking-1
     if (indexPath.row == myRanking-1) {
         cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
-        [cell configUIWithName:model.name rq:model.t_contri rank:indexPath.row+1 upOrDown:model.change shouldLarge:YES];
+        [cell configUIWithName:model.name rq:model.t_contri rank:indexPath.row+1 upOrDown:model.vary shouldLarge:YES];
     }else{
-        [cell configUIWithName:model.name rq:model.t_contri rank:indexPath.row+1 upOrDown:model.change shouldLarge:NO];
+        [cell configUIWithName:model.name rq:model.t_contri rank:indexPath.row+1 upOrDown:model.vary shouldLarge:NO];
     }
     
     if ([model.tx isEqualToString:@""]) {

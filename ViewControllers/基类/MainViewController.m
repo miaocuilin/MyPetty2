@@ -41,7 +41,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    if (![[[USER objectForKey:@"petInfoDict"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+    [UIApplication sharedApplication].statusBarHidden = NO;
+    
+    if (!([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [[[USER objectForKey:@"petInfoDict"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]])) {
         camara.hidden = YES;
     }else{
         camara.hidden = NO;
@@ -50,13 +52,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.pet_name = [USER objectForKey:@"a_name"];
     self.pet_tx = [USER objectForKey:@"a_tx"];
 //    if (![self.currentTx isEqualToString:[[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]]) {
-        if ([USER objectForKey:@"petInfoDict"] != nil) {
+        if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [USER objectForKey:@"petInfoDict"] != nil) {
             /**************************/
             NSDictionary * dict = [USER objectForKey:@"petInfoDict"];
             if (!([[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[dict objectForKey:@"tx"] length]==0)) {
                 NSString * docDir = DOCDIR;
                 NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"tx"]]];
-                //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+                NSLog(@"--%@--%@", txFilePath, [dict objectForKey:@"tx"]);
                 UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
                 if (image) {
                     [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
@@ -76,13 +78,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     }];
                     [request release];
                 }
+            }else{
+                [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
             }
             /**************************/
+        }else{
+            [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
         }
 //    }
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    
     self.menuBtn.selected = NO;
 //    TipsView *tips = [[TipsView alloc] initWithFrame:self.view.frame tipsName:REGISTER];
 //    [self.view addSubview:tips];

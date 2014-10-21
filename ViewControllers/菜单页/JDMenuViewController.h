@@ -46,6 +46,9 @@
     
     UIImageView * messageNumBg;
 //    BOOL hasNewMsg;
+    
+    //该页面是否已经加载过
+    BOOL isLoaded;
 }
 @property (nonatomic,copy)NSString * tfString;
 

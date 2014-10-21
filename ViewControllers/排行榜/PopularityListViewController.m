@@ -346,10 +346,10 @@
     
 //    tableView == tv && markLineNum == indexPath.row && isShow == NO
     if (indexPath.row == myCurrentCountNum-1) {
-        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:YES];
+        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.vary shouldLarge:YES];
         cell.backgroundColor = [ControllerManager colorWithHexString:@"f9f9f9"];
     }else{
-        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.change shouldLarge:NO];
+        [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.vary shouldLarge:NO];
     }
 //    NSLog(@"model.tx:%@",model.tx);
     if ([model.tx isEqualToString:@""]) {

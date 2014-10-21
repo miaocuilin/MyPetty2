@@ -45,7 +45,7 @@
 
 -(void)createUI
 {
-    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 17, 17) ImageName:@"choosein_back.png"];
     [self.view addSubview:backImageView];
     
     UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
@@ -56,26 +56,26 @@
     statusView.backgroundColor = BGCOLOR;
     [self.view addSubview:statusView];
     
-    ambassadorMessage = [MyControl createLabelWithFrame:CGRectMake(80, 60, 140, 40) Font:15 Text:nil];
-    ambassadorMessage.font = [UIFont boldSystemFontOfSize:15];
-    if (_isMi) {
-        ambassadorMessage.text = @"我 是 喵 星 大 使，\n欢 迎 来 到 喵 星！";
-    }else{
-        ambassadorMessage.text = @"我 是 汪 星 大 使，\n欢 迎 来 到 汪 星！";
-    }
+//    ambassadorMessage = [MyControl createLabelWithFrame:CGRectMake(80, 60, 140, 40) Font:15 Text:nil];
+//    ambassadorMessage.font = [UIFont boldSystemFontOfSize:15];
+//    if (_isMi) {
+//        ambassadorMessage.text = @"我 是 喵 星 大 使，\n欢 迎 来 到 喵 星！";
+//    }else{
+//        ambassadorMessage.text = @"我 是 汪 星 大 使，\n欢 迎 来 到 汪 星！";
+//    }
 //    Timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateAmbassadorMessage) userInfo:nil repeats:YES];
-    [self.view addSubview:ambassadorMessage];
+//    [self.view addSubview:ambassadorMessage];
     
     
-    UIImageView * ambassador = [MyControl createImageViewWithFrame:CGRectMake(370/2, 170/2, 230/2, 206/2) ImageName:@""];
-    if (_isMi) {
-        ambassador.image = [UIImage imageNamed:@"catAmbassador.png"];
-    }else{
-        ambassador.image = [UIImage imageNamed:@"dogAmbassador.png"];
-    }
-    [self.view addSubview:ambassador];
+//    UIImageView * ambassador = [MyControl createImageViewWithFrame:CGRectMake(370/2, 170/2, 230/2, 206/2) ImageName:@""];
+//    if (_isMi) {
+//        ambassador.image = [UIImage imageNamed:@"catAmbassador.png"];
+//    }else{
+//        ambassador.image = [UIImage imageNamed:@"dogAmbassador.png"];
+//    }
+//    [self.view addSubview:ambassador];
     
-    UIImageView * cloud = [MyControl createImageViewWithFrame:CGRectMake(17, 400/2, 572/2, 342/2) ImageName:@"2-c.png"];
+    UIImageView * cloud = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-572/2)/2, self.view.frame.size.height-170-50-342/2, 572/2, 342/2) ImageName:@"2-c.png"];
     [self.view addSubview:cloud];
     
     /************Mi*************/
@@ -96,12 +96,12 @@
 //    }
 //    [haveBg addSubview:haveLable2];
     
-    UIImageView * haveBg = [MyControl createImageViewWithFrame:CGRectMake(55, 175, 434/2, 167/2) ImageName:@""];
-    if (_isMi) {
-        haveBg.image = [UIImage imageNamed:@"haveCat.png"];
-    }else{
-        haveBg.image = [UIImage imageNamed:@"haveDog.png"];
-    }
+    UIImageView * haveBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-434/2)/2, cloud.frame.origin.y-25, 434/2, 167/2) ImageName:@"choosein_havePet.png"];
+//    if (_isMi) {
+//        haveBg.image = [UIImage imageNamed:@"haveCat.png"];
+//    }else{
+//        haveBg.image = [UIImage imageNamed:@"haveDog.png"];
+//    }
     [self.view addSubview:haveBg];
     
     UIButton * haveBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, haveBg.frame.size.width, haveBg.frame.size.height) ImageName:@"" Target:self Action:@selector(haveBtnClick) Title:nil];
@@ -124,12 +124,12 @@
 //    }
 //    [notHaveBg addSubview:notHaveLable2];
     
-    UIImageView * notHaveBg = [MyControl createImageViewWithFrame:CGRectMake(55, 520/2, 434/2, 167/2) ImageName:@""];
-    if (_isMi) {
-        notHaveBg.image = [UIImage imageNamed:@"noCat.png"];
-    }else{
-        notHaveBg.image = [UIImage imageNamed:@"noDog.png"];
-    }
+    UIImageView * notHaveBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-434/2)/2, cloud.frame.origin.y+60, 434/2, 167/2) ImageName:@"choosein_noPet.png"];
+//    if (_isMi) {
+//        notHaveBg.image = [UIImage imageNamed:@"noCat.png"];
+//    }else{
+//        notHaveBg.image = [UIImage imageNamed:@"noDog.png"];
+//    }
     [self.view addSubview:notHaveBg];
     
     UIButton * notHaveBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, haveBg.frame.size.width, haveBg.frame.size.height) ImageName:@"" Target:self Action:@selector(notHaveBtnClick) Title:nil];
@@ -156,13 +156,16 @@
 //    label.textColor = [UIColor colorWithRed:250/255.0 green:162/255.0 blue:134/255.0 alpha:1];
 //    [switchBg addSubview:label];
     
-    UIButton * switchBtn = [MyControl createButtonWithFrame:CGRectMake(0, self.view.frame.size.height-167/2, 275/2, 167/2) ImageName:@"" Target:self Action:@selector(switchBtnClick) Title:nil];
-    if (self.isMi) {
-        [switchBtn setBackgroundImage:[UIImage imageNamed:@"dogHead.png"] forState:UIControlStateNormal];
-    }else{
-        [switchBtn setBackgroundImage:[UIImage imageNamed:@"catHead.png"] forState:UIControlStateNormal];
-    }
-    [self.view addSubview:switchBtn];
+//    UIButton * switchBtn = [MyControl createButtonWithFrame:CGRectMake(0, self.view.frame.size.height-167/2, 275/2, 167/2) ImageName:@"" Target:self Action:@selector(switchBtnClick) Title:nil];
+//    if (self.isMi) {
+//        [switchBtn setBackgroundImage:[UIImage imageNamed:@"dogHead.png"] forState:UIControlStateNormal];
+//    }else{
+//        [switchBtn setBackgroundImage:[UIImage imageNamed:@"catHead.png"] forState:UIControlStateNormal];
+//    }
+//    [self.view addSubview:switchBtn];
+    
+    UIImageView * catAndDog = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-450/2)/2, earth.frame.origin.y-70, 450/2, 203/2) ImageName:@"choosein_cat_dog.png"];
+    [self.view addSubview:catAndDog];
 }
 -(void)backBtnClick
 {
@@ -238,6 +241,9 @@
 //    vc.dismiss = ^(){
 //        [self dismissViewControllerAnimated:YES completion:nil];
 //    };
+    if (self.isOldUser) {
+        vc.isOldUser = YES;
+    }
     [self presentViewController:vc animated:YES completion:nil];
 //    [nc release];
     [vc release];

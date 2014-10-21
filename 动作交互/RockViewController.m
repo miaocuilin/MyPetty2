@@ -340,7 +340,7 @@
         floating1.image = [UIImage imageNamed:@"blackcloud.png"];
         floating2.image = [UIImage imageNamed:@"blackcloud.png"];
         floating3.image = [UIImage imageNamed:@"blackcloud.png"];
-        shakeDescLabel1.text = @"娱乐恶作剧，措手不及减人气";
+        shakeDescLabel1.text = @"小鬼捣捣乱，措手不及减人气";
         shakeImageView1.image = [UIImage imageNamed:@"rock2.png"];
         shakeDescLabel2.text = @"哎呦够坏哟~成功摇出";
         rewardbg.image = [UIImage imageNamed:@"badrewardbg.png"];

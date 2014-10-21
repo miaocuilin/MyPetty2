@@ -27,7 +27,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.array = @[@"星球", @"王国/家族", @"贡献度", @"宠物人气值", @"经验值", @"金币", @"送礼物"];
+    self.array = @[@"萌主与联萌", @"联萌贡献度", @"萌主人气值", @"经验值", @"金币", @"送礼物"];
     self.dataArray = [NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FAQ" ofType:@"plist"]];
 //    NSLog(@"%@", self.dataDict);
     [self createBg];
@@ -110,7 +110,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableView == tv) {
-        return 7;
+        return self.array.count;
     }else{
 //        NSLog(@"----%d", [self.dataArray[rowNum] count]);
         return [self.dataArray[rowNum] count];

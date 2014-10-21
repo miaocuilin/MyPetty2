@@ -688,7 +688,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }];
     }else{
         NSLog(@"微博");
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:@"#宠物星球App#" image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:@"#宠物星球社交应用#" image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
 
@@ -794,22 +794,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }];
             [request release];
         }else{
-            NSString *exitPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-            NSString *exitPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",EXITPETCRICLEAPI,self.aid,exitPetCricleSig,[ControllerManager getSID]];
-            NSLog(@"退出圈子：%@",exitPetCricleString);
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:exitPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                if (isFinish) {
-//                    NSLog(@"退出成功数据：%@",load.dataDict);
-                    if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
-                        addBtn.selected = NO;
-                        [alertView hide:YES];
-                    }
-                    
-                }else{
-                    NSLog(@"退出国家失败");
-                }
-            }];
-            [request release];
+            
+            [self loadMyCountryInfoData];
 
         }
     }else if (sender.tag== 223){
@@ -849,6 +835,48 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [request release];
         }
     }
+}
+-(void)loadMyCountryInfoData
+{
+    StartLoading;
+    //    user/petsApi&usr_id=(若用户为自己则留空不填)
+    NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            //            NSLog(@"%@", load.dataDict);
+//            [self.userPetListArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            if (array.count>1) {
+                NSString *exitPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+                NSString *exitPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",EXITPETCRICLEAPI,self.aid,exitPetCricleSig,[ControllerManager getSID]];
+                NSLog(@"退出圈子：%@",exitPetCricleString);
+                httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:exitPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                    if (isFinish) {
+                        //                    NSLog(@"退出成功数据：%@",load.dataDict);
+                        if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                            addBtn.selected = NO;
+                            [alertView hide:YES];
+                        }
+                        [MyControl loadingSuccessWithContent:@"退出成功" afterDelay:0.5f];
+                    }else{
+                        [MyControl loadingFailedWithContent:@"退出失败" afterDelay:0.5f];
+                        NSLog(@"退出国家失败");
+                    }
+                    
+                }];
+                [request release];
+            }else{
+               //提示不能退
+                [MyControl loadingFailedWithContent:@"您仅有一只萌主，不能退出" afterDelay:0.5f];
+            }
+
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
 }
 - (void)createAttentionAlertView
 {

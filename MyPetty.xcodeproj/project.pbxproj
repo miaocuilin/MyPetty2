@@ -371,7 +371,6 @@
 		602A881319ADFC03004F368C /* AtUsersCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 602A881219ADFC03004F368C /* AtUsersCell.m */; };
 		602A881619ADFEC9004F368C /* atUsers_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 602A881419ADFEC9004F368C /* atUsers_selected.png */; };
 		602A881719ADFEC9004F368C /* atUsers_unSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 602A881519ADFEC9004F368C /* atUsers_unSelected.png */; };
-		602F8EFF19D19BD400AAEC70 /* FAQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 602F8EFE19D19BD400AAEC70 /* FAQ.plist */; };
 		60320BB319B95E190094A6E0 /* UserInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60320BB219B95E190094A6E0 /* UserInfoModel.m */; };
 		60320BB619B994F40094A6E0 /* UserPetListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60320BB519B994F40094A6E0 /* UserPetListModel.m */; };
 		6032630419C1A35A0013A6AA /* FAQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6032630319C1A35A0013A6AA /* FAQViewController.m */; };
@@ -477,6 +476,11 @@
 		609945FC19EFC47F004F5157 /* haveDog.png in Resources */ = {isa = PBXBuildFile; fileRef = 609945F819EFC47F004F5157 /* haveDog.png */; };
 		609945FD19EFC47F004F5157 /* noCat.png in Resources */ = {isa = PBXBuildFile; fileRef = 609945F919EFC47F004F5157 /* noCat.png */; };
 		609945FE19EFC47F004F5157 /* noDog.png in Resources */ = {isa = PBXBuildFile; fileRef = 609945FA19EFC47F004F5157 /* noDog.png */; };
+		609A5B8D19F6039100822B1F /* choosein_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 609A5B8919F6039100822B1F /* choosein_back.png */; };
+		609A5B8E19F6039100822B1F /* choosein_cat_dog.png in Resources */ = {isa = PBXBuildFile; fileRef = 609A5B8A19F6039100822B1F /* choosein_cat_dog.png */; };
+		609A5B8F19F6039100822B1F /* choosein_havePet.png in Resources */ = {isa = PBXBuildFile; fileRef = 609A5B8B19F6039100822B1F /* choosein_havePet.png */; };
+		609A5B9019F6039100822B1F /* choosein_noPet.png in Resources */ = {isa = PBXBuildFile; fileRef = 609A5B8C19F6039100822B1F /* choosein_noPet.png */; };
+		609A5B9219F6268700822B1F /* FAQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 609A5B9119F6268700822B1F /* FAQ.plist */; };
 		609D6CC319D27359005E7144 /* nochance.png in Resources */ = {isa = PBXBuildFile; fileRef = 609D6CC219D27359005E7144 /* nochance.png */; };
 		609D6CC619D2A6FF005E7144 /* SendGiftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 609D6CC519D2A6FF005E7144 /* SendGiftViewController.m */; };
 		609D6CCB19D2FB3B005E7144 /* catAmbassador.png in Resources */ = {isa = PBXBuildFile; fileRef = 609D6CC719D2FB3B005E7144 /* catAmbassador.png */; };
@@ -1109,7 +1113,6 @@
 		602A881219ADFC03004F368C /* AtUsersCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtUsersCell.m; sourceTree = "<group>"; };
 		602A881419ADFEC9004F368C /* atUsers_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = atUsers_selected.png; sourceTree = "<group>"; };
 		602A881519ADFEC9004F368C /* atUsers_unSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = atUsers_unSelected.png; sourceTree = "<group>"; };
-		602F8EFE19D19BD400AAEC70 /* FAQ.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FAQ.plist; sourceTree = "<group>"; };
 		60320BB119B95E190094A6E0 /* UserInfoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoModel.h; sourceTree = "<group>"; };
 		60320BB219B95E190094A6E0 /* UserInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoModel.m; sourceTree = "<group>"; };
 		60320BB419B994F40094A6E0 /* UserPetListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserPetListModel.h; sourceTree = "<group>"; };
@@ -1232,6 +1235,11 @@
 		609945F819EFC47F004F5157 /* haveDog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = haveDog.png; sourceTree = "<group>"; };
 		609945F919EFC47F004F5157 /* noCat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noCat.png; sourceTree = "<group>"; };
 		609945FA19EFC47F004F5157 /* noDog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noDog.png; sourceTree = "<group>"; };
+		609A5B8919F6039100822B1F /* choosein_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = choosein_back.png; sourceTree = "<group>"; };
+		609A5B8A19F6039100822B1F /* choosein_cat_dog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = choosein_cat_dog.png; sourceTree = "<group>"; };
+		609A5B8B19F6039100822B1F /* choosein_havePet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = choosein_havePet.png; sourceTree = "<group>"; };
+		609A5B8C19F6039100822B1F /* choosein_noPet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = choosein_noPet.png; sourceTree = "<group>"; };
+		609A5B9119F6268700822B1F /* FAQ.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FAQ.plist; sourceTree = "<group>"; };
 		609D6CC219D27359005E7144 /* nochance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nochance.png; sourceTree = "<group>"; };
 		609D6CC419D2A6FF005E7144 /* SendGiftViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendGiftViewController.h; sourceTree = "<group>"; };
 		609D6CC519D2A6FF005E7144 /* SendGiftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendGiftViewController.m; sourceTree = "<group>"; };
@@ -1406,6 +1414,7 @@
 		090F046719543187002B1F45 /* 图片素材 */ = {
 			isa = PBXGroup;
 			children = (
+				609A5B8819F6031800822B1F /* 2014-10-21 */,
 				6061281219D56B190087F642 /* 弹窗图片 */,
 				6033BDCC19C99742009552FE /* 礼物 */,
 				49500A3819ADD5A700D175D8 /* 动作交互 */,
@@ -1913,8 +1922,8 @@
 		09D989491935C08E00C83C4B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				602F8EFE19D19BD400AAEC70 /* FAQ.plist */,
 				60186DD619B5714400207ED6 /* CateNameList.plist */,
+				609A5B9119F6268700822B1F /* FAQ.plist */,
 				603B021C1991E68B005A6D30 /* area.plist */,
 				600D4D6B19CFC41C008DA8E8 /* shopGift.plist */,
 				09D9894A1935C08E00C83C4B /* MyPetty-Info.plist */,
@@ -2551,6 +2560,17 @@
 			path = "弹窗图片";
 			sourceTree = "<group>";
 		};
+		609A5B8819F6031800822B1F /* 2014-10-21 */ = {
+			isa = PBXGroup;
+			children = (
+				609A5B8919F6039100822B1F /* choosein_back.png */,
+				609A5B8A19F6039100822B1F /* choosein_cat_dog.png */,
+				609A5B8B19F6039100822B1F /* choosein_havePet.png */,
+				609A5B8C19F6039100822B1F /* choosein_noPet.png */,
+			);
+			path = "2014-10-21";
+			sourceTree = "<group>";
+		};
 		60BFBC6019B00ED200EE3746 /* 排行榜 */ = {
 			isa = PBXGroup;
 			children = (
@@ -2824,7 +2844,6 @@
 				495FFFE619AAD1BD00976F18 /* expLevel_1.png in Resources */,
 				09D98A8D1935D4E900C83C4B /* 3-5.png in Resources */,
 				094B4E8D196F8BD500AAF441 /* comment.png in Resources */,
-				602F8EFF19D19BD400AAEC70 /* FAQ.plist in Resources */,
 				6024A62819A227FD005ED3D3 /* sound.png in Resources */,
 				60F618061999CBBB003C34F2 /* expBg.png in Resources */,
 				609D6CCD19D2FB3B005E7144 /* dogAmbassador.png in Resources */,
@@ -2839,6 +2858,7 @@
 				60B036F119CD954A00A46DC9 /* act_silver.png in Resources */,
 				6033BDFA19C99753009552FE /* 1301.png in Resources */,
 				606127FB19D54DBF0087F642 /* 24-1.png in Resources */,
+				609A5B9219F6268700822B1F /* FAQ.plist in Resources */,
 				605195C519B47038005E9E2C /* about.png in Resources */,
 				606181B319B1856C009AF63D /* DefaultPetCell.xib in Resources */,
 				49FA203019AF3DF50077897D /* recordButton.png in Resources */,
@@ -2923,6 +2943,7 @@
 				09F88495195060500053A6D0 /* UMShareEditViewControlleriPad.xib in Resources */,
 				60AD7C7719D80C8C00CE2AE4 /* tool3_selected.png in Resources */,
 				6042F59E1994D4B100CA2A0E /* menu-13.png in Resources */,
+				609A5B8F19F6039100822B1F /* choosein_havePet.png in Resources */,
 				096520D91964388700A8186D /* DoneDown.png in Resources */,
 				49A562B019CC2D8F00B6080A /* blackcloud.png in Resources */,
 				09D98A821935D4E900C83C4B /* 14-9.png in Resources */,
@@ -2940,6 +2961,7 @@
 				6038618C19A7351500B1312A /* didAttention.png in Resources */,
 				49348AAB19CD434F00EFDC94 /* tipscat.png in Resources */,
 				49A5626019CBF87A00B6080A /* bluecloudbg.png in Resources */,
+				609A5B8D19F6039100822B1F /* choosein_back.png in Resources */,
 				600DA82719E7ABB400DF1905 /* play.png in Resources */,
 				600376601990AB2500F3107F /* menu-2.png in Resources */,
 				609945FC19EFC47F004F5157 /* haveDog.png in Resources */,
@@ -3067,6 +3089,7 @@
 				6033BDF519C99753009552FE /* 1203.png in Resources */,
 				60F6180B1999DCB1003C34F2 /* CountryInfoCell.xib in Resources */,
 				09F88499195060500053A6D0 /* UMSocialSDKResourcesNew.bundle in Resources */,
+				609A5B9019F6039100822B1F /* choosein_noPet.png in Resources */,
 				60BFBC6E19B0271300EE3746 /* goldMedal.png in Resources */,
 				609D6CCC19D2FB3B005E7144 /* catHead.png in Resources */,
 				60F618001999C884003C34F2 /* page3.png in Resources */,
@@ -3101,6 +3124,7 @@
 				6050CEC619F4E4980049A0B8 /* xiaoge.png in Resources */,
 				09D98AAF1935D4E900C83C4B /* 相机图标.png in Resources */,
 				60F617FE1999C884003C34F2 /* page2.png in Resources */,
+				609A5B8E19F6039100822B1F /* choosein_cat_dog.png in Resources */,
 				096520D01963EFD200A8186D /* wxFriend.png in Resources */,
 				606181BF19B1B3E5009AF63D /* more_weixin.png in Resources */,
 				602A881719ADFEC9004F368C /* atUsers_unSelected.png in Resources */,

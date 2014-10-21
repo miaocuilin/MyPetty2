@@ -1227,14 +1227,17 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
-            //返回gold
-            int gold = [[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] intValue];
-            if (gold != [[USER objectForKey:@"gold"] intValue]) {
-                //差值
-                int add = gold-[[USER objectForKey:@"gold"] intValue];
-                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] forKey:@"gold"];
-                [ControllerManager HUDImageIcon:@"gold.png" showView:self.view yOffset:0 Number:add];
+            if(![[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
+                return;
             }
+            //返回gold
+//            int gold = [[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] intValue];
+//            if (gold != [[USER objectForKey:@"gold"] intValue]) {
+//                //差值
+//                int add = gold-[[USER objectForKey:@"gold"] intValue];
+//                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] forKey:@"gold"];
+//                [ControllerManager HUDImageIcon:@"gold.png" showView:self.view yOffset:0 Number:add];
+//            }
         }else{
             
         }

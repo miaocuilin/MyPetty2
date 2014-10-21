@@ -363,8 +363,8 @@
 -(void)login
 {
     StartLoading;
-    NSString * code = [NSString stringWithFormat:@"planet=%d&uid=%@dog&cat", planet, [OpenUDID value]];
-    NSString * url = [NSString stringWithFormat:@"%@%d&uid=%@&sig=%@", LOGINAPI, planet, [OpenUDID value], [MyMD5 md5:code]];
+    NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", [OpenUDID value]];
+    NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@", LOGINAPI, [OpenUDID value], [MyMD5 md5:code]];
     NSLog(@"login-url:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){

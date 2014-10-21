@@ -36,12 +36,14 @@
     [tips addSubview:tipsLabel];
     [self.contentView addSubview:tips];
     
-    noticeMessage_name = [MyControl createLabelWithFrame:CGRectMake(70, 15, 100, 20) Font:15 Text:@"111111"];
+    noticeMessage_name = [MyControl createLabelWithFrame:CGRectMake(70, 15, 135, 20) Font:15 Text:@"111111"];
     noticeMessage_name.textColor = BGCOLOR;
+    noticeMessage_name.lineBreakMode = NSLineBreakByTruncatingTail;
+//    noticeMessage_name.backgroundColor = [UIColor grayColor];
     [self.contentView addSubview:noticeMessage_name];
     
     NSDate * time = [NSDate date];
-    noticeMessage_time = [MyControl createLabelWithFrame:CGRectMake(180, 15, 120, 20) Font:12 Text:[NSString stringWithFormat:@"%@",time]];
+    noticeMessage_time = [MyControl createLabelWithFrame:CGRectMake(185, 15, 120, 20) Font:12 Text:[NSString stringWithFormat:@"%@",time]];
     noticeMessage_time.textColor = [UIColor grayColor];
     noticeMessage_time.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:noticeMessage_time];

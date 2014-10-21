@@ -73,6 +73,9 @@
 //注册API
 #define REGISTERAPI @"http://123.57.39.48/index.php?r=user/registerApi&age=&code=&gender=&type=&wechat=&weibo=&sig=%@&SID=%@"
 
+//创建圈子  age gender name type
+#define CREATECOUNTRY @"http://123.57.39.48/index.php?r=animal/createApi"
+
 //修改宠物信息API
 #define MODIFYPETINFOAPI @"http://123.57.39.48/index.php?r=animal/modifyInfoApi&"
 
@@ -90,8 +93,8 @@
 
 //已由头像或图片的名称，获取头像的具体数据，后面需要加图片的名称
 #define IMAGEURL @"http://pet4upload.oss-cn-beijing.aliyuncs.com/"
-#define USERTXURL @"http://pet4tx.oss-cn-beijing.aliyuncs.com/usr/"
-#define PETTXURL @"http://pet4tx.oss-cn-beijing.aliyuncs.com/ani/"
+#define USERTXURL @"http://pet4tx.oss-cn-beijing.aliyuncs.com/tx_usr/"
+#define PETTXURL @"http://pet4tx.oss-cn-beijing.aliyuncs.com/tx_ani/"
 
 //图片、头像上传API
 #define PETIMAGEAPI @"http://123.57.39.48/index.php?r=image/uploadApi&aid="
@@ -218,7 +221,8 @@
 #define TYPEAPI @"http://54.199.161.210/dc/index.php?r=user/typeApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
 //封面照片
-#define WELCOMEAPI @"http://pet4welcome.oss-cn-beijing.aliyuncs.com/index.php?r=user/welcomeApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define WELCOMEAPI @"http://123.57.39.48/index.php?r=user/welcomeApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define WELCOMEAPI2 @"http://pet4welcome.oss-cn-beijing.aliyuncs.com/"
 
 //照片点赞的人的列表
 #define LIKERSAPI @"http://123.57.39.48/index.php?r=user/othersApi&usr_ids="
@@ -303,8 +307,10 @@
 #define RELATIONAPI @"http://123.57.39.48/index.php?r=animal/relationApi&aid="
 //上传录音
 #define RECORDUPLOADAPI @"http://123.57.39.48/index.php?r=animal/voiceUpApi&aid="
-//下载录音
+//下载录音url
 #define RECORDDOWNLOADAPI @"http://123.57.39.48/index.php?r=animal/voiceDownApi&aid="
+//下载录音文件，后面拼文件名
+#define RECORDDOWNLOADAPI2 @"http://pet4voices.oss-cn-beijing.aliyuncs.com/ani/";
 //地址
 #define ADDRESSAPI @"http://123.57.39.48/index.php?r=animal/addressApi&aid="
 //人气排行榜

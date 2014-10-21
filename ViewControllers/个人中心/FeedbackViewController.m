@@ -9,7 +9,7 @@
 #import "FeedbackViewController.h"
 #import "IQKeyboardManager.h"
 
-#define DefaultText @"请您在此为阿猫阿狗，留下宝贵的意见和建议哦~我们会越来越好的~谢谢~"
+#define DefaultText @"想表扬，想吐槽，有好点子，通通告诉我们吧，宠物星球会在您的帮助下进步的~谢谢~"
 #define UMENG_APPKEY @"538fddca56240b40a105fcfb"
 @interface FeedbackViewController ()
 
@@ -112,7 +112,7 @@
     telLabel.textColor = [UIColor colorWithRed:86/255.0 green:86/255.0 blue:86/255.0 alpha:1];
     [self.view addSubview:telLabel];
     
-    tf = [MyControl createTextFieldWithFrame:CGRectMake(10, 250, 300, 30) placeholder:@"请留下您的邮箱，方便我们联系您~" passWord:NO leftImageView:nil rightImageView:nil Font:15];
+    tf = [MyControl createTextFieldWithFrame:CGRectMake(10, 250, 300, 30) placeholder:@"您的手机号、QQ号或电子邮箱" passWord:NO leftImageView:nil rightImageView:nil Font:15];
     tf.keyboardType = UIKeyboardTypeEmailAddress;
     tf.returnKeyType = UIReturnKeyDone;
     tf.backgroundColor = [UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1];

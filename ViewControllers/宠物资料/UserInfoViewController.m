@@ -1168,6 +1168,7 @@
 {
     NSLog(@"加入国家");
     ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+    vc.isOldUser = YES;
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }

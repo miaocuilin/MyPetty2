@@ -501,11 +501,11 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
         //4.姓名，添加到数组
         if ([[dict objectForKey:@"usr_name"] isKindOfClass:[NSNull class]] || [[dict objectForKey:@"usr_name"] length] == 0) {
             if ([[dict objectForKey:@"usr_id"] intValue] == 1) {
-                talkModel.usr_name = @"汪汪";
+                talkModel.usr_name = @"事务官"; //狗
                 talkModel.usr_tx = @"1";
 //                [self.userNameArray addObject:@"汪汪"];
             }else if([[dict objectForKey:@"usr_id"] intValue] == 2){
-                talkModel.usr_name = @"喵喵";
+                talkModel.usr_name = @"联络官"; //猫
                 talkModel.usr_tx = @"2";
 //                [self.userNameArray addObject:@"喵喵"];
             }else if([[dict objectForKey:@"usr_id"] intValue] == 3){
@@ -587,19 +587,21 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
 }
 #pragma mark -
 /*==============================================================*/
-- (void)showMenuAnimated:(BOOL)animated;
+-(void)refreshJDMenu
 {
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
         //请求国家列表API
         [self loadCountryList];
         //请求活动数API
-        [self getMsgAndActivityNum];
+        //        [self getMsgAndActivityNum];
         //刷新个人数据
         [self performSelector:@selector(refreshUData) withObject:nil afterDelay:0.1];
         //请求新消息API
         [self getNewMessage];
     }
-    
+}
+- (void)showMenuAnimated:(BOOL)animated;
+{
     
     [self showMenuAnimated:animated duration:JDSideMenuDefaultOpenAnimationTime
            initialVelocity:1.0];

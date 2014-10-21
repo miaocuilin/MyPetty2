@@ -317,14 +317,16 @@
         if (_switch.on) {
             //绑定
             NSLog(@"绑定");
-            [MyControl startLoadingWithStatus:@"绑定中..."];
+//            [MyControl startLoadingWithStatus:@"绑定中..."];
             UMSocialSnsPlatform *snsPlatform = [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina];
             snsPlatform.loginClickHandler(self,[UMSocialControllerService defaultControllerService],YES,^(UMSocialResponseEntity *response){
                 NSLog(@"response is %@",response);
                 if (![UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina]) {
-                    [MyControl loadingFailedWithContent:@"绑定失败" afterDelay:0.5];
+                    StartLoading;
+                    [MyControl loadingFailedWithContent:@"绑定失败或取消绑定" afterDelay:0.5];
                     _switch.on = NO;
                 }else{
+                    StartLoading;
                     [MyControl loadingSuccessWithContent:@"绑定成功" afterDelay:0.5];
                     _switch.on = YES;
                 }

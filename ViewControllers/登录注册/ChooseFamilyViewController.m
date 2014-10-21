@@ -108,7 +108,13 @@
             NSLog(@"UserPetsList:%@", load.dataDict);
             self.userPetsListArray = [load.dataDict objectForKey:@"data"];
             [self removeUserPets];
-            [self createTableView];
+            
+            if (isTvCreated) {
+                [tv reloadData];
+            }else{
+                [self createTableView];
+            }
+            
             LoadingSuccess;
         }else{
             LoadingFailed;
@@ -270,6 +276,8 @@
 }
 -(void)createTableView
 {
+    isTvCreated = YES;
+    
     tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
@@ -390,7 +398,7 @@
     name.text = model.name;
     [headerBgView addSubview:name];
     
-    UILabel * nameAndAgeLabel = [MyControl createLabelWithFrame:CGRectMake(80, 30, 150, 15) Font:13 Text:@"索马利猫 | 3岁"];
+    UILabel * nameAndAgeLabel = [MyControl createLabelWithFrame:CGRectMake(80, 30, 175, 15) Font:13 Text:@"索马利猫 | 3岁"];
     nameAndAgeLabel.textColor = [UIColor blackColor];
     nameAndAgeLabel.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:model.type], [MyControl returnAgeStringWithCountOfMonth:model.age]];
     [headerBgView addSubview:nameAndAgeLabel];
@@ -491,6 +499,8 @@
             if (isFinish) {
                 NSLog(@"--%@", load.dataDict);
                 [MMProgressHUD dismissWithSuccess:@"加入成功^_^" title:nil afterDelay:0.5];
+                //刷新列表
+                [self loadUserPetsList];
             }else{
                 [MMProgressHUD dismissWithError:@"加入失败-_-!" afterDelay:0.5];
             }

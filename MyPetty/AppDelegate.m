@@ -158,10 +158,19 @@
     [UMSocialData setAppKey:@"538fddca56240b40a105fcfb"];
     [UMSocialConfig setSupportSinaSSO:YES appRedirectUrl:@"http://sns.whalecloud.com/sina2/callback"];
     
-    [UMSocialWechatHandler setWXAppId:@"wxef59ead737c3c450" url:@"http://aidigame.com"];
+//    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" appSecret:@"a5287571075736dc5760aafc1e5ff34e" url:@"http://aidigame.com"];
+    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" url:@"http://aidigame.com"];
 //    新浪
+//    阿猫阿狗
 //    App Key：3262547447
 //    App Secret：02dac057213bf470aed73f492b39a8aa
+//    宠物星球
+//    App Key：4013993168
+//    App Secret：e3e8a9fde01202ea049095f79ddc904e
+    
+//    微信
+//    AppID：wxc8c5912cc28194b6
+//    AppSecret：a5287571075736dc5760aafc1e5ff34e
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;

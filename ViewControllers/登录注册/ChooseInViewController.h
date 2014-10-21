@@ -17,4 +17,6 @@
 }
 @property(nonatomic)BOOL isMi;
 //@property(nonatomic,copy)NSString * ambString;
+//是否是认养
+@property (nonatomic)BOOL isOldUser;
 @end

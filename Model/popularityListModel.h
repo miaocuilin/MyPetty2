@@ -18,7 +18,7 @@
 
 @property (nonatomic,copy)NSString *name;
 @property (nonatomic,copy)NSString *tx;
-@property (nonatomic,assign)NSInteger change;
+@property (nonatomic,assign)NSInteger vary;
 
 @property (nonatomic,copy)NSString *usr_id;
 @property (nonatomic,copy)NSString *t_contri;

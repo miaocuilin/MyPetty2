@@ -50,27 +50,45 @@
     
     NSString * url = [NSString stringWithFormat:@"%@%@", WELCOMEAPI, [USER objectForKey:@"SID"]];
     NSLog(@"%@", url);
-    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
             self.launchImageName = [[load.dataDict objectForKey:@"data"] objectForKey:@"url"];
-            NSString * docDir = DOCDIR;
-            NSString * FilePath = [docDir stringByAppendingPathComponent:self.launchImageName];
-            UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:FilePath]];
-            if (image) {
-                self.launchImage = image;
-                hadImage = YES;
+//            NSString * docDir = DOCDIR;
+//            NSString * FilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.launchImageName]];
+//            UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:FilePath]];
+//            if (image) {
+//                self.launchImage = image;
+//                hadImage = YES;
+////                [self login];
+//                [self createUI];
+//            }else{
+//                hadImage = NO;
 //                [self login];
-            }else{
-                hadImage = NO;
-//                [self login];
-            }
-            [self createUI];
+                //下载图片
+                NSString * url2 = [NSString stringWithFormat:@"%@%@", WELCOMEAPI2, self.launchImageName];
+                httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url2 Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        self.launchImage = load.dataImage;
+//                        NSData * data = UIImageJPEGRepresentation(load.dataImage, 0.1);
+//                        BOOL a = [data writeToFile:FilePath atomically:YES];
+//                        NSLog(@"存储欢迎图片结果：%d", a);
+                        hadImage = YES;
+                        [self createUI];
+                    }else{
+                        hadImage = NO;
+                        [self createUI];
+                    }
+                }];
+                [request2 release];
+//            }
+            
         }else{
             UIAlertView * alert = [MyControl createAlertViewWithTitle:@"图片信息加载失败"];
             [self jumpToChoose];
         }
     }];
+    [request release];
 }
 
 - (void)viewDidLoad
@@ -78,6 +96,9 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor blackColor];
+    
+    [USER setObject:@"1" forKey:@"planet"];
+    [USER setObject:nil forKey:@"petInfoDict"];
 //    NSLog(@"%f", self.view.frame.size.height);
     //全局变量，存储在本地，用于判断各种条件，以做出相应操作
     [USER setObject:@"0" forKey:@"MyHomeTimes"];

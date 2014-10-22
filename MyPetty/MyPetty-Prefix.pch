@@ -54,6 +54,7 @@
 #define NET [UIApplication sharedApplication].networkActivityIndicatorVisible
 #define DOCDIR [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
 
+#define UDID [USER objectForKey:@"UDID"]
 
 //    #define StartLoading [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];[MMProgressHUD showWithStatus:@"加载中..."];
 //加载数据

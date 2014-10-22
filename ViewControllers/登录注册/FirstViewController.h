@@ -17,6 +17,10 @@
     BOOL isLogined;
     //是否下载完图片并播放
     BOOL isAnimation;
+    
+    BOOL isLoadImage;
+    
+    UIImageView * tempImageView;
 }
 @property(nonatomic,retain)UIImage * launchImage;
 @property(nonatomic,retain)UIImageView * splashView;

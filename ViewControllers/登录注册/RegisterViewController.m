@@ -1327,6 +1327,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 //[USER setObject:@"1" forKey:@"isLogin"];
 //                [self login];
                 [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
+                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
+                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
                 
                 if (self.oriImage || self.self.oriUserImage){
                     isNeedPostImage = YES;
@@ -1410,8 +1412,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -登录
 -(void)login
 {
-    NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", [OpenUDID value]];
-    NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@&SID=%@", LOGINAPI, [OpenUDID value], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", UDID];
+    NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@&SID=%@", LOGINAPI, UDID, [MyMD5 md5:code], [ControllerManager getSID]];
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){
             NSLog(@"登录结果：%@", load.dataDict);
@@ -1430,42 +1432,47 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -获取用户数据
 -(void)getUserData
 {
-    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [USER objectForKey:@"usr_id"], sig,[ControllerManager getSID]];
-    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        if (isFinish) {
-            if ([[load.dataDict objectForKey:@"errorCode"] intValue] == 2) {
-                //SID过期,需要重新登录获取SID
-                [self login];
-                [self getUserData];
-                return;
-            }else{
+//    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+//    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [USER objectForKey:@"usr_id"], sig,[ControllerManager getSID]];
+//    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            if ([[load.dataDict objectForKey:@"errorCode"] intValue] == 2) {
+//                //SID过期,需要重新登录获取SID
+//                [self login];
+//                [self getUserData];
+//                return;
+//            }else{
                 //SID未过期，直接获取用户数据
-                NSLog(@"用户数据：%@", load.dataDict);
-                NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-                
-                [USER setObject:[dict objectForKey:@"a_name"] forKey:@"a_name"];
-                if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
-                    [USER setObject:[dict objectForKey:@"a_tx"] forKey:@"a_tx"];
-                }
-                [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
-                [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
-                [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
-                [USER setObject:[dict objectForKey:@"city"] forKey:@"city"];
-                [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
-                [USER setObject:[dict objectForKey:@"gold"] forKey:@"gold"];
-                [USER setObject:@"0" forKey:@"oldgold"];
-                [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];
-                [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
-                [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
-                [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
-                [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
-                [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
-                
-                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
-                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
-                }
-                
+//                NSLog(@"用户数据：%@", load.dataDict);
+//                NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+    
+                [USER setObject:self.name forKey:@"a_name"];
+//                if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
+//                    [USER setObject:[dict objectForKey:@"a_tx"] forKey:@"a_tx"];
+//                }
+                [USER setObject:[NSString stringWithFormat:@"%d", age] forKey:@"age"];
+                [USER setObject:[NSString stringWithFormat:@"%d", self.u_gender] forKey:@"gender"];
+                [USER setObject:self.u_name forKey:@"name"];
+                [USER setObject:[NSString stringWithFormat:@"%d", self.u_city] forKey:@"city"];
+//                [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
+//                [USER setObject:[dict objectForKey:@"gold"] forKey:@"gold"];
+//                [USER setObject:@"0" forKey:@"oldgold"];
+//                [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];
+//                [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
+//                [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
+//                [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
+//                [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
+    if (self.isAdoption) {
+        [USER setObject:@"1" forKey:@"rank"];
+    }else{
+        [USER setObject:@"0" forKey:@"rank"];
+    }
+//                [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
+    
+//                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
+//                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
+//                }
+    
                 if (self.isAdoption) {
                     [self loadPetInfo];
                 }
@@ -1515,9 +1522,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         
                     }
                 }
-            }
-        }
-    }];
+//            }
+//        }
+//    }];
 }
 -(void)loadPetInfo
 {
@@ -1628,12 +1635,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSLog(@"%@",docDir);
     NSLog(@"saving png");
     if (request == _request) {
-        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_headImage.png.png", docDir, [USER objectForKey:@"aid"]];
+        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", [USER objectForKey:@"a_tx"]]];
+//        [NSString stringWithFormat:@"%@/%@_headImage.png.png", docDir, [USER objectForKey:@"aid"]];
         NSData * data = UIImageJPEGRepresentation(self.oriImage, 0.1);
         BOOL a = [data writeToFile:pngFilePath atomically:YES];
         NSLog(@"宠物头像存放结果：%d", a);
     }else{
-        NSString *pngFilePath = [NSString stringWithFormat:@"%@/%@_userHeadImage.png.png", docDir, [USER objectForKey:@"usr_id"]];
+        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", [USER objectForKey:@"tx"]]];
         NSData * data = UIImageJPEGRepresentation(self.oriUserImage, 0.1);
         BOOL a = [data writeToFile:pngFilePath atomically:YES];
         NSLog(@"用户头像存放结果：%d", a);

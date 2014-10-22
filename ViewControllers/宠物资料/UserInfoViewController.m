@@ -225,10 +225,10 @@
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
     
-    UIImageView * more = [MyControl createImageViewWithFrame:CGRectMake(280, 38, 47/2, 9/2) ImageName:@"threePoint.png"];
+    UIImageView * more = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-17-17, 32, 17, 17) ImageName:@"moreBtn.png"];
     [navView addSubview:more];
     
-    UIButton * moreBtn = [MyControl createButtonWithFrame:CGRectMake(270, 25, 47/2+20, 9/2+16+10) ImageName:@"" Target:self Action:@selector(moreBtnClick) Title:nil];
+    UIButton * moreBtn = [MyControl createButtonWithFrame:CGRectMake(270, 25, 47/2+20, 9/2+16+10+4) ImageName:@"" Target:self Action:@selector(moreBtnClick) Title:nil];
     moreBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     
     moreBtn.showsTouchWhenHighlighted = YES;

@@ -57,6 +57,48 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     return _aid;
 }
+-(void)viewWillAppear:(BOOL)animated
+{
+    if (isLoaded) {
+        [self loadCountryList];
+        //更新头像
+        NSLog(@"%@", [USER objectForKey:@"petInfoDict"]);
+        BOOL a = [[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]];
+        if (a) {
+            if (!([[[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"] length]==0)) {
+                NSString * docDir = DOCDIR;
+                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]]];
+                //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+                UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+                if (image) {
+                    [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
+                    //            headImageView.image = image;
+                }else{
+                    //下载头像
+                    NSString * url = [NSString stringWithFormat:@"%@%@", PETTXURL, [[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]];
+                    NSLog(@"%@", url);
+                    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                        if (isFinish) {
+                            [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                            //                    headImageView.image = load.dataImage;
+                            NSString * docDir = DOCDIR;
+                            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]]];
+                            [load.data writeToFile:txFilePath atomically:YES];
+                        }else{
+                            NSLog(@"头像下载失败");
+                        }
+                    }];
+                    [request release];
+                }
+            }
+        }
+    }
+    
+}
+-(void)viewDidAppear:(BOOL)animated
+{
+    isLoaded = YES;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -262,6 +304,33 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [request release];
 }
 
+#pragma mark -
+-(void)loadCountryList
+{
+    NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            //            [self.userPetListArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for(int i=0;i<array.count;i++){
+                if ([[array[i] objectForKey:@"aid"] isEqualToString:self.aid]) {
+                    self.label1.text = @"摇一摇";
+                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
+                    break;
+                }else if(i == array.count-1){
+                    self.label1.text = @"捣捣乱";
+                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
+                }
+            }
+        }else{
+            
+        }
+    }];
+    [request release];
+}
 #pragma mark - 请求国王数据
 -(void)loadKingData
 {
@@ -281,23 +350,24 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
             titleLabel.text = [NSString stringWithFormat:@"%@联萌", [petInfoDict objectForKey:@"name"]];
 
-            NSArray * array = [USER objectForKey:@"petAidArray"];
+            [self loadCountryList];
+//            NSArray * array = [USER objectForKey:@"petAidArray"];
 //            NSLog(@"%@--%@", array, [petInfoDict objectForKey:@"aid"]);
-            for (int i=0; i<array.count; i++) {
-                if ([array[i] isEqualToString:[petInfoDict objectForKey:@"aid"]]) {
-                    self.label1.text = @"摇一摇";
-                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
-                    break;
-                }else if(i == array.count-1){
-                    self.label1.text = @"捣捣乱";
-                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
-                }
-            }
+//            for (int i=0; i<array.count; i++) {
+//                if ([array[i] isEqualToString:[petInfoDict objectForKey:@"aid"]]) {
+//                    self.label1.text = @"摇一摇";
+//                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
+//                    break;
+//                }else if(i == array.count-1){
+//                    self.label1.text = @"捣捣乱";
+//                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
+//                }
+//            }
             if ([[petInfoDict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
-                self.label3.text = @"叫一叫";
+                self.label3.text = @"萌叫叫";
                 [self.btn3 setBackgroundImage:[UIImage imageNamed:@"sound.png"] forState:UIControlStateNormal];
             }else{
-                self.label3.text = @"摸一摸";
+                self.label3.text = @"萌印象";
                 [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
             }
             //宠物父类信息字典
@@ -418,12 +488,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
     
-    UIImageView * more = [MyControl createImageViewWithFrame:CGRectMake(280, 38, 47/2, 9/2) ImageName:@"threePoint.png"];
+    UIImageView * more = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-17-17, 32, 17, 17) ImageName:@"moreBtn.png"];
     [navView addSubview:more];
     
-    UIButton * moreBtn = [MyControl createButtonWithFrame:CGRectMake(270, 25, 47/2+20, 9/2+16+10) ImageName:@"" Target:self Action:@selector(moreBtnClick) Title:nil];
+    UIButton * moreBtn = [MyControl createButtonWithFrame:CGRectMake(270, 25, 47/2+20, 9/2+16+10+4) ImageName:@"" Target:self Action:@selector(moreBtnClick) Title:nil];
     moreBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-
+//    moreBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     moreBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:moreBtn];
 }

@@ -106,9 +106,9 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
             }
 
             if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]){
-                self.label3.text = @"叫一叫";
+                self.label3.text = @"萌叫叫";
             }else{
-                self.label3.text = @"摸一摸";
+                self.label3.text = @"萌印象";
             }
 
         }
@@ -161,9 +161,9 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     [self.menuBgView addSubview:self.label3];
     
     
-    self.label4 = [MyControl createLabelWithFrame:CGRectMake(90, 140, 40, 15) Font:13 Text:@"逗一逗"];
+    self.label4 = [MyControl createLabelWithFrame:CGRectMake(90, 140, 40, 15) Font:13 Text:@"游乐园"];
     if ([[USER objectForKey:@"planet"] intValue]==2) {
-        self.label4.text = @"遛一遛";
+        self.label4.text = @"游乐园";
     }
     self.label4.textAlignment = NSTextAlignmentCenter;
     [self.menuBgView addSubview:self.label4];
@@ -278,8 +278,8 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         return;
     }
     
-    NSLog(@"录音和摸一摸");
-    if ([self.label3.text isEqualToString:@"叫一叫"]) {
+    NSLog(@"录音和萌印象");
+    if ([self.label3.text isEqualToString:@"萌叫叫"]) {
 //        ShoutViewController *shout = [[ShoutViewController alloc] init];
         RecordViewController *shout = [[RecordViewController alloc] init];
         shout.animalInfoDict = self.animalInfoDict;

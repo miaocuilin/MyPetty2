@@ -234,7 +234,7 @@
     [self.view addSubview:totalView];
     UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
     [totalView addSubview:titleView];
-    UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"叫一叫"];
+    UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"萌叫叫"];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [totalView addSubview:titleLabel];
     

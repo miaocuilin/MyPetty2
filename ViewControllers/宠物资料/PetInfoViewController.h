@@ -39,6 +39,8 @@
     UILabel * name;
     UIImageView * sex;
     UILabel * cateNameLabel;
+    
+    BOOL isLoaded;
 }
 @property (nonatomic,copy)NSString * lastImg_id;
 @property (nonatomic,copy)NSString * lastUsr_id;

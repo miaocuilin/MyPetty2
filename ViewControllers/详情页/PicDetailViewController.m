@@ -33,13 +33,85 @@
     }
     return self;
 }
-//-(void)viewWillAppear:(BOOL)animated
-//{
-////    self.sv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
-//
-//}
+-(void)viewWillAppear:(BOOL)animated
+{
+//    self.sv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
+//    NSLog(@"%@", self.usr_id);
+    //注册完之后更新按钮头像
+    if (isLoaded) {
+//        NSLog(@"%@", self.usr_id);
+        [self loadCountryList];
+        //更新头像
+        NSLog(@"%@", [USER objectForKey:@"petInfoDict"]);
+        BOOL a = [[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]];
+        if (a) {
+            if (!([[[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"] length]==0)) {
+                NSString * docDir = DOCDIR;
+                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]]];
+                //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+                UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+                if (image) {
+                    [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
+                    //            headImageView.image = image;
+                }else{
+                    //下载头像
+                    NSString * url = [NSString stringWithFormat:@"%@%@", PETTXURL, [[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]];
+                    NSLog(@"%@", url);
+                    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                        if (isFinish) {
+                            [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                            //                    headImageView.image = load.dataImage;
+                            NSString * docDir = DOCDIR;
+                            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]]];
+                            [load.data writeToFile:txFilePath atomically:YES];
+                        }else{
+                            NSLog(@"头像下载失败");
+                        }
+                    }];
+                    [request release];
+                }
+            }
+        }
+    }
+    
+}
+#pragma mark -
+-(void)loadCountryList
+{
+    NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+//            [self.userPetListArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for(int i=0;i<array.count;i++){
+                if ([[array[i] objectForKey:@"aid"] isEqualToString:self.aid]) {
+                    self.label1.text = @"摇一摇";
+                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
+                    break;
+                }else if(i == array.count-1){
+                    self.label1.text = @"捣捣乱";
+                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
+                }
+            }
+//            for (NSDictionary * dict in array) {
+//                UserPetListModel * model = [[UserPetListModel alloc] init];
+//                [model setValuesForKeysWithDictionary:dict];
+//                [self.userPetListArray addObject:model];
+//                [model release];
+//            }
+//            self.refreshData();
+        }else{
+            
+        }
+    }];
+    [request release];
+}
 -(void)viewDidAppear:(BOOL)animated
 {
+    isLoaded = YES;
     isInThisController = YES;
 //    NSLog(@"%f--%f--%f", commentTextView.frame.origin.x, commentBgView.frame.origin.x, commentBgView.frame.origin.y);
 }
@@ -266,22 +338,23 @@
             //父类的宠物信息字典
 //            masterID = [dic objectForKey:@"master_id"];
             //
-            NSArray * array = [USER objectForKey:@"petAidArray"];
-            for (int i=0; i<array.count; i++) {
-                if ([array[i] isEqualToString:[dic objectForKey:@"aid"]]) {
-                    self.label1.text = @"摇一摇";
-                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
-                    break;
-                }else if(i == array.count-1){
-                    self.label1.text = @"捣捣乱";
-                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
-                }
-            }
+//            NSArray * array = [USER objectForKey:@"petAidArray"];
+            [self loadCountryList];
+//            for (int i=0; i<array.count; i++) {
+//                if ([array[i] isEqualToString:[dic objectForKey:@"aid"]]) {
+//                    self.label1.text = @"摇一摇";
+//                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
+//                    break;
+//                }else if(i == array.count-1){
+//                    self.label1.text = @"捣捣乱";
+//                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
+//                }
+//            }
             if ([[dic objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
-                self.label3.text = @"叫一叫";
+                self.label3.text = @"萌叫叫";
                 [self.btn3 setBackgroundImage:[UIImage imageNamed:@"sound.png"] forState:UIControlStateNormal];
             }else{
-                self.label3.text = @"摸一摸";
+                self.label3.text = @"萌印象";
                 [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
             }
             

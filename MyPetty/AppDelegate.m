@@ -20,7 +20,10 @@
 #import "ShakeViewController.h"
 
 #import "UMSocial.h"
+#import "UMSocialSinaHandler.h"
 #import "UMSocialWechatHandler.h"
+//#import "UMSocialWechatHandler.h"
+//#import "UMSocialConfig.h"
 //#import "JDMenuViewController.h"
 #import "JDSideMenu.h"
 
@@ -50,6 +53,7 @@
 #import "AboutViewController.h"
 #import "WaterViewController.h"
 #import "UserBagViewController.h"
+#import "Keychain.h"
 
 @implementation AppDelegate
 -(void)dealloc
@@ -63,6 +67,20 @@
     // Override point for customization after application launch.
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
+    
+    NSString * const KEY_UDID = @"uuid4Pet";
+    NSString * uuid = [Keychain load:KEY_UDID];
+    
+    NSLog(@"%@", uuid);
+    if (uuid == nil || uuid.length == 0) {
+        [Keychain save:KEY_UDID data:[OpenUDID value]];
+    }
+    
+    NSLog(@"%@", [Keychain load:KEY_UDID]);
+    
+    [USER setObject:[Keychain load:KEY_UDID] forKey:@"UDID"];
+    
+    NSLog(@"UDID:%@", [USER objectForKey:@"UDID"]);
     NSLog(@"本机UUID:%@", [OpenUDID value]);
     
 //    RandomViewController * rvc = [[RandomViewController alloc] init];
@@ -156,10 +174,14 @@
 //    [nc release];
     
     [UMSocialData setAppKey:@"538fddca56240b40a105fcfb"];
-    [UMSocialConfig setSupportSinaSSO:YES appRedirectUrl:@"http://sns.whalecloud.com/sina2/callback"];
+    //微信
+    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" appSecret:@"a5287571075736dc5760aafc1e5ff34e" url:@"http://aidigame.com"];
+    //微博
+    [UMSocialSinaHandler openSSOWithRedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
     
 //    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" appSecret:@"a5287571075736dc5760aafc1e5ff34e" url:@"http://aidigame.com"];
-    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" url:@"http://aidigame.com"];
+//    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" url:@"http://aidigame.com"];
+//    [UMSocialConfig set];
 //    新浪
 //    阿猫阿狗
 //    App Key：3262547447
@@ -191,7 +213,8 @@
 }
 -(BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-    return [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
+    return [UMSocialSnsService handleOpenURL:url];
+//    return [UMSocialSnsService handleOpenURL:url wxApiDelegate:nil];
 }
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {

@@ -48,6 +48,8 @@
     
 //    NSMutableAttributedString * attString;
     UIView * whiteBgView;
+    
+    BOOL isLoaded;
 }
 @property (retain, nonatomic) UIImageView * bgImageView;
 @property (retain, nonatomic) IBOutlet UIScrollView *sv;

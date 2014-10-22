@@ -29,6 +29,16 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    tempImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@""];
+    if (self.view.frame.size.height == 240) {
+        tempImageView.image = [UIImage imageNamed:@"Default.png"];
+    }else if(self.view.frame.size.height == 480){
+        tempImageView.image = [UIImage imageNamed:@"Default@2x.png"];
+    }else{
+        tempImageView.image = [UIImage imageNamed:@"Default-568@2x.png"];
+    }
+    [self.view addSubview:tempImageView];
+    
     [self downloadLaunchImageInfo];
     
     
@@ -46,7 +56,7 @@
 //        }
 //    }];
 //    [request release];
-    
+    isLoadImage = YES;
     
     NSString * url = [NSString stringWithFormat:@"%@%@", WELCOMEAPI, [USER objectForKey:@"SID"]];
     NSLog(@"%@", url);
@@ -69,6 +79,8 @@
                 NSString * url2 = [NSString stringWithFormat:@"%@%@", WELCOMEAPI2, self.launchImageName];
                 httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url2 Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
+                        [tempImageView removeFromSuperview];
+                        
                         self.launchImage = load.dataImage;
 //                        NSData * data = UIImageJPEGRepresentation(load.dataImage, 0.1);
 //                        BOOL a = [data writeToFile:FilePath atomically:YES];
@@ -131,7 +143,7 @@
 
 -(void)createUI
 {
-    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:bgImageView];
     
     if (hadImage) {
@@ -148,7 +160,7 @@
             height *= h;
         }
         bgImageView.image = self.launchImage;
-        bgImageView.frame = CGRectMake(0, 0, width*0.9, height*0.9);
+//        bgImageView.frame = CGRectMake(0, 0, width*0.9, height*0.9);
         bgImageView.center = self.view.center;
         [self setAnimation:bgImageView];
 //        [self performSelector:@selector(jumpToChoose) withObject:nil afterDelay:2];
@@ -280,8 +292,8 @@
 }
 -(void)getPreSID
 {
-    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"uid=%@dog&cat", [OpenUDID value]]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@", GETPRESID, [OpenUDID value], sig];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"uid=%@dog&cat", UDID]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@", GETPRESID, UDID, sig];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -308,10 +320,13 @@
 #pragma mark -登录
 -(void)login
 {
-    StartLoading;
+    if (isLoadImage) {
+        StartLoading;
+    }
+    
 //    NSString * code = [NSString stringWithFormat:@"planet=%@&uid=%@dog&cat", [USER objectForKey:@"planet"], [OpenUDID value]];
-    NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", [OpenUDID value]];
-    NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@", LOGINAPI, [OpenUDID value], [MyMD5 md5:code]];
+    NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", UDID];
+    NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@", LOGINAPI, UDID, [MyMD5 md5:code]];
     NSLog(@"login-url:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){
@@ -329,6 +344,10 @@
             }
             
             NSLog(@"isSuccess:%d,SID:%@", [ControllerManager getIsSuccess], [ControllerManager getSID]);
+            if (isLoadImage == NO) {
+                [self downloadLaunchImageInfo];
+                return;
+            }
             if ([ControllerManager getIsSuccess]) {
                 [self getUserData];
                 
@@ -557,11 +576,20 @@
 //    if (isLogined) {
 //        [self performSelector:@selector(jumpToRandom) withObject:nil afterDelay:2];
 //    }
+    if(self.view.frame.size.height == 480.0){
+        [bgImageView setFrame:CGRectMake(0, 0, self.view.frame.size.width, 568.0)];
+    }
     [UIView animateWithDuration:2.0f delay:0.0f options:UIViewAnimationOptionCurveLinear                     animations:^
      {
          // 执行的动画code
-         [bgImageView setFrame:CGRectMake(nowView.frame.origin.x- nowView.frame.size.width*0.1, nowView.frame.origin.y-nowView.frame.size.height*0.1, nowView.frame.size.width*1.2, nowView.frame.size.height*1.2)];
+//         [bgImageView setFrame:CGRectMake(nowView.frame.origin.x- nowView.frame.size.width*0.1, nowView.frame.origin.y-nowView.frame.size.height*0.1, nowView.frame.size.width*1.2, nowView.frame.size.height*1.2)];
+         if(self.view.frame.size.height == 480.0){
+             [bgImageView setFrame:CGRectMake(0, 0, self.view.frame.size.width+1, 568.0+1)];
+         }else{
+             [bgImageView setFrame:CGRectMake(0, 0, self.view.frame.size.width+1, self.view.frame.size.height+1)];
+         }
          
+//         bgImageView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
      }completion:^(BOOL finished) {
 //         if (isLogined) {
          if (finished) {

@@ -84,7 +84,7 @@
             int index = [[[load.dataDict objectForKey:@"data"] objectForKey:@"shake_count"] intValue];
             self.count = index;
 
-            timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:3];
+            timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:4];
             
             if (self.count == 0) {
                 self.upView.contentOffset = CGPointMake(300*3, 0);
@@ -143,7 +143,7 @@
                 AudioServicesPlaySystemSound(soundID2);
                 self.isShaking = NO;
                 self.upView.contentOffset = CGPointMake(self.upView.frame.size.width, 0);
-                timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:3];
+                timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:4];
                 [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
 //            }
         }else{
@@ -286,7 +286,7 @@
 
     //4
     
-    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 - 115+upViewWidth*3, 10, 230, 100) Font:16 Text:[NSString stringWithFormat:@"摇一摇，要到外婆桥。\n%@今天的摇一摇次数用完啦~\n换个宠物试试吧~", self.pet_name]];
+    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 - 115+upViewWidth*3, 10, 230, 100) Font:16 Text:[NSString stringWithFormat:@"摇一摇，摇到外婆桥。\n%@今天的摇一摇次数用完啦~\n换个宠物试试吧~", self.pet_name]];
     shakeDescLabel.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel.textColor = GRAYBLUECOLOR;
     [self.upView addSubview:shakeDescLabel];
@@ -331,7 +331,7 @@
     [downView addSubview:helpPetLabel];
     
     timesLabel = [MyControl createLabelWithFrame:CGRectMake(70, 27, 200, 20) Font:12 Text:nil];
-    timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:3];
+    timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:4];
     [downView addSubview:timesLabel];
 #pragma mark - 捣捣乱
     if (self.isTrouble) {

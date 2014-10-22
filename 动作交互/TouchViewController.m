@@ -79,7 +79,7 @@
             self.recordURL = [NSString stringWithFormat:@"http://54.199.161.210:8001/%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
             [self loadRecordData];
         }else{
-            [MMProgressHUD dismissWithError:@"该宠物今天没有叫一叫" afterDelay:1.0];
+            [MMProgressHUD dismissWithError:@"该宠物今天没有萌叫叫" afterDelay:1.0];
             [UIView animateWithDuration:0.1 delay:1.0 options:1 animations:^{
                 [_player stop];
                 [_player release],_player=nil;

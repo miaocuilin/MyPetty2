@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
@@ -53,8 +53,7 @@
 			<key>ans</key>
 			<string>联萌的头衔分为“凉粉、淡粉、狠粉、灰常粉、超级粉、铁杆粉、脑残粉、骨灰粉”8个等级，头衔会和用户昵称一起出现在联萌的各个角落，显示出你的特殊地位，头衔升级时还会获得奖励呦~</string>
 		</dict>
-		</array>
-
+	</array>
 	<array>
 		<dict>
 			<key>que</key>
@@ -86,7 +85,7 @@
 			<key>que</key>
 			<string>如何获得经验值？</string>
 			<key>ans</key>
-			<string>星球里的地球人每天登录应用、发布新照片、评论照片和送礼物、摸一摸、叫一叫、摇一摇都可以获得一定数量的经验值。</string>
+			<string>星球里的地球人每天登录应用、发布新照片、评论照片和送礼物、萌印象、萌叫叫、摇一摇都可以获得一定数量的经验值。</string>
 		</dict>
 		<dict>
 			<key>que</key>
@@ -106,9 +105,9 @@
 			<key>que</key>
 			<string>如何获得金币？</string>
 			<key>ans</key>
-			<string>有两种方式可以获得金币&amp;●登录应用、分享照片、摇一摇、摸一摸、遛一遛、经验等级提升、官衔提升和参与宠物星球丰富的活动均有机会获得金币奖励。&amp;●充值来拥有更多金币！（暂未开放）</string>
+			<string>有两种方式可以获得金币&amp;●登录应用、分享照片、摇一摇、萌印象、游乐园、经验等级提升、官衔提升和参与宠物星球丰富的活动均有机会获得金币奖励。&amp;●充值来拥有更多金币！（暂未开放）</string>
 			<key>ans1</key>
-			<string>登录应用、分享照片、摇一摇、摸一摸、遛一遛、经验等级提升、官衔提升和参与宠物星球丰富的活动均有机会获得金币奖励。</string>
+			<string>登录应用、分享照片、摇一摇、萌印象、游乐园、经验等级提升、官衔提升和参与宠物星球丰富的活动均有机会获得金币奖励。</string>
 			<key>ans2</key>
 			<string>充值来拥有更多金币！（暂未开放）</string>
 		</dict>

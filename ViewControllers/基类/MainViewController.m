@@ -94,12 +94,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    TipsView *tips = [[TipsView alloc] initWithFrame:self.view.frame tipsName:REGISTER];
 //    [self.view addSubview:tips];
     if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [[[USER objectForKey:@"petInfoDict"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
-        self.label3.text = @"叫一叫";
+        self.label3.text = @"萌叫叫";
         [self.btn3 setBackgroundImage:[UIImage imageNamed:@"sound.png"] forState:UIControlStateNormal];
     }else{
-        self.label3.text = @"摸一摸";
+        self.label3.text = @"萌印象";
         [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
     }
+    
 }
 - (void)viewDidLoad
 {

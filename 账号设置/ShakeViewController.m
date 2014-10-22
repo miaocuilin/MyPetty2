@@ -500,7 +500,7 @@
     [downView addSubview:helpPetLabel];
     
     UILabel *timesLabel = [MyControl createLabelWithFrame:CGRectMake(70, 27, 200, 20) Font:12 Text:nil];
-    NSAttributedString *timesString = [self firstString:@"今天还有次机会哦~" formatString:countString insertAtIndex:3];
+    NSAttributedString *timesString = [self firstString:@"今天还有次机会哦~" formatString:countString insertAtIndex:4];
     timesLabel.attributedText = timesString;
     [timesString release];
     [downView addSubview:timesLabel];

@@ -26,7 +26,16 @@
 @end
 
 @implementation UserInfoViewController
-
+-(void)viewWillAppear:(BOOL)animated
+{
+    if (isLoaded) {
+        [self loadMyCountryInfoData];
+    }
+}
+-(void)viewDidAppear:(BOOL)animated
+{
+    isLoaded = YES;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -231,7 +240,7 @@
     UIButton * moreBtn = [MyControl createButtonWithFrame:CGRectMake(270, 25, 47/2+20, 9/2+16+10+4) ImageName:@"" Target:self Action:@selector(moreBtnClick) Title:nil];
     moreBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     
-    moreBtn.showsTouchWhenHighlighted = YES;
+//    moreBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:moreBtn];
 }
 
@@ -418,7 +427,8 @@
         }];
     }else{
         NSLog(@"微博");
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:@"#宠物星球App#" image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        NSString * str = [NSString stringWithFormat:@"我发现了一枚萌萌哒的新伙伴%@，可以一起愉快的玩耍啦！http://home4pet.aidigame.com/（分享自@宠物星球社交应用）", [headerDict objectForKey:@"name"]];
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self cancelBtnClick];
@@ -945,8 +955,11 @@
         UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID3];
         if (!cell) {
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID3] autorelease];
+            //471   307
+            UIImageView * image = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-471/2)/2, 30, 471/2, 307/2) ImageName:@"activity_wait.png"];
+            [cell addSubview:image];
         }
-        
+        cell.selectionStyle = 0;
         return cell;
 //        UserInfoActivityCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID3];
 //        if(!cell){
@@ -1039,10 +1052,32 @@
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == tv2 && editingStyle==UITableViewCellEditingStyleDelete) {
-        [self unFollow:indexPath.row];
-        [self.userAttentionListArray removeObjectAtIndex:indexPath.row];
-        //删除单元格的某一行时，在用动画效果实现删除过程
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+//        [self unFollow:indexPath.row];
+        AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        view.AlertType = 4;
+        [view makeUI];
+        view.jump = ^(){
+            NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [self.userAttentionListArray[indexPath.row] aid]];
+            NSString * sig = [MyMD5 md5:code];
+            NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNFOLLOWAPI, [self.userAttentionListArray[indexPath.row] aid], sig, [ControllerManager getSID]];
+            NSLog(@"unfollowApiurl:%@", url);
+            [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+            [MMProgressHUD showWithStatus:@"取消关注中..."];
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    //            NSLog(@"%@", load.dataDict);
+                    [MMProgressHUD dismissWithSuccess:@"取消关注成功" title:nil afterDelay:1];
+                    [self.userAttentionListArray removeObjectAtIndex:indexPath.row];
+                    //删除单元格的某一行时，在用动画效果实现删除过程
+                    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+                }else{
+                    [MMProgressHUD dismissWithError:@"取消关注失败" afterDelay:1];
+                }
+            }];
+            [request release];
+        };
+        [self.view addSubview:view];
+        [view release];
     }
 //    else if(tableView == tv){
 //        if ([self.usr_id isEqualToString:[self.userPetListArray[indexPath.row] master_id]]) {
@@ -1107,10 +1142,36 @@
                 [MyControl loadingFailedWithContent:@"您仅有1个联萌，不能退出" afterDelay:1];
                 return;
             }
-            [self quitCountryWithRow:cellIndexPath.row];
+//            [self quitCountryWithRow:cellIndexPath.row];
+            /***************************/
+            AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+            view.AlertType = 5;
+            [view makeUI];
+            view.jump = ^(){
+                NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [self.userPetListArray[cellIndexPath.row] aid]];
+                NSString * sig = [MyMD5 md5:code];
+                NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", EXITFAMILYAPI, [self.userPetListArray[cellIndexPath.row] aid], sig, [ControllerManager getSID]];
+                NSLog(@"quitApiurl:%@", url);
+                [MyControl startLoadingWithStatus:@"退出中..."];
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+                            [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
+                            [self.userPetListArray removeObjectAtIndex:cellIndexPath.row];
+                            [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
+                        }else{
+                            [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
+                        }
+                        
+                    }else{
+                        [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
+                    }
+                }];
+                [request release];
+            };
+            [self.view addSubview:view];
+            [view release];
             
-            [self.userPetListArray removeObjectAtIndex:cellIndexPath.row];
-            [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
         }else if(index == 2){
             //切换并置顶
             
@@ -1118,46 +1179,16 @@
     }
 }
 #pragma mark -
--(void)unFollow:(int)row
-{
-    NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [self.userAttentionListArray[row] aid]];
-    NSString * sig = [MyMD5 md5:code];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNFOLLOWAPI, [self.userAttentionListArray[row] aid], sig, [ControllerManager getSID]];
-    NSLog(@"unfollowApiurl:%@", url);
-    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithStatus:@"取消关注中..."];
-    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        if (isFinish) {
-//            NSLog(@"%@", load.dataDict);
-            [MMProgressHUD dismissWithSuccess:@"取消关注成功" title:nil afterDelay:1];
-        }else{
-            [MMProgressHUD dismissWithError:@"取消关注失败" afterDelay:1];
-        }
-    }];
-    [request release];
-}
--(void)quitCountryWithRow:(int)row
-{
-    NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [self.userPetListArray[row] aid]];
-    NSString * sig = [MyMD5 md5:code];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", EXITFAMILYAPI, [self.userPetListArray[row] aid], sig, [ControllerManager getSID]];
-    NSLog(@"quitApiurl:%@", url);
-    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithStatus:@"退出中..."];
-    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        if (isFinish) {
-            if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-                [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
-            }else{
-                [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
-            }
-            
-        }else{
-            [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
-        }
-    }];
-    [request release];
-}
+//-(void)unFollow:(int)row
+//{
+//    
+//}
+//-(void)quitCountryWithRow:(int)row
+//{
+//    
+//    
+//    
+//}
 
 //礼物点击事件
 -(void)buttonClick:(UIButton *)btn
@@ -1167,10 +1198,33 @@
 -(void)addCountry
 {
     NSLog(@"加入国家");
-    ChooseInViewController * vc = [[ChooseInViewController alloc] init];
-    vc.isOldUser = YES;
-    [self presentViewController:vc animated:YES completion:nil];
-    [vc release];
+    //先判断是否已经有10个，是type = 3
+    StartLoading;
+    NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", self.usr_id];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, self.usr_id, [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            LoadingSuccess;
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            if (array.count>=10) {
+                AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                view.AlertType = 3;
+                [view makeUI];
+                [self.view addSubview:view];
+                [view release];
+            }else{
+                ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+                vc.isOldUser = YES;
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            }
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+    
 }
 - (void)didReceiveMemoryWarning
 {

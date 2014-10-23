@@ -41,6 +41,7 @@
 
 @property(nonatomic,retain)NSMutableArray * limitDataArray;
 @property(nonatomic,copy)NSString * type;
+@property(nonatomic,copy)NSString * from;
 //@property(nonatomic,copy)NSString * lastAid;
 
 @property (nonatomic,retain)NSMutableArray * catArray;

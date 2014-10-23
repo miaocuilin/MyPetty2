@@ -122,11 +122,11 @@
 - (void)loadDataAPI
 {
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aids=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *string = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=animal/othersApi&aids=%@&sig=%@&SID=%@",[USER objectForKey:@"aid"],sig,[ControllerManager getSID]];
+    NSString *string = [NSString stringWithFormat:@"http://123.57.39.48/index.php?r=animal/othersApi&aids=%@&sig=%@&SID=%@",[USER objectForKey:@"aid"],sig,[ControllerManager getSID]];
     NSLog(@"string:%@",string);
     
     NSString *sigRecommed = [MyMD5 md5:@"dog&cat"];
-    NSString *recommen = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=animal/recommendApi&sig=%@&SID=%@",sigRecommed,[ControllerManager getSID]];
+    NSString *recommen = [NSString stringWithFormat:@"http://123.57.39.48/index.php?r=animal/recommendApi&sig=%@&SID=%@",sigRecommed,[ControllerManager getSID]];
     NSLog(@"recommend:%@",recommen);
     
     //    rank/rqApi&category=  rank/contributionApi&aid=&category=

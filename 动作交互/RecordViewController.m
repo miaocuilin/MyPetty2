@@ -108,7 +108,7 @@
         if (isFinsh) {
             NSLog(@"isFinsh:%d,load.dataDict:%@",isFinsh,load.dataDict);
 //            self.haveRecord = YES;
-            self.recordURL = [NSString stringWithFormat:@"http://54.199.161.210:8001/%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
+            self.recordURL = [NSString stringWithFormat:@"http://pet4voices.oss-cn-beijing.aliyuncs.com/%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
             [self loadRecordData];
         }else{
 //            [self createAlertView];
@@ -228,10 +228,11 @@
 #pragma mark - 创建界面
 - (void)createUI
 {
-    UIView *totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150,self.view.frame.size.height/2-425/2.0, 300, 425)];
+    totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150,self.view.frame.size.height/2-425/2.0, 300, 425)];
     totalView.layer.cornerRadius = 10;
     totalView.layer.masksToBounds = YES;
     [self.view addSubview:totalView];
+    
     UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
     [totalView addSubview:titleView];
     UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"萌叫叫"];
@@ -252,6 +253,7 @@
     //上方视图
     self.upScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
     self.upScrollView.scrollEnabled = NO;
+    
     [bodyView addSubview:self.upScrollView];
     self.upScrollView.contentSize = CGSizeMake(self.upScrollView.frame.size.width*5, self.upScrollView.frame.size.height);
     self.upScrollView.pagingEnabled = YES;
@@ -378,7 +380,8 @@
     for (int i = 0; i<3; i++) {
         UIButton *shareButton = [MyControl createButtonWithFrame:CGRectMake(0+shareView.frame.size.width/3 * i +(i*12), 15, 40, 40) ImageName:nil Target:self Action:@selector(shareAction:) Title:nil];
         shareButton.tag = 77+i;
-        [shareButton setShowsTouchWhenHighlighted:YES];
+//        shareButton.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+//        [shareButton setShowsTouchWhenHighlighted:YES];
         [shareView addSubview:shareButton];
     }
     //5
@@ -651,7 +654,56 @@
 }
 - (void)shareAction:(UIButton *)sender
 {
+    //截图
+    UIImage * image = [MyControl imageWithView:totalView];
     
+    /**************/
+    if(sender.tag == 77){
+        NSLog(@"微信");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
+    }else if(sender.tag == 78){
+        NSLog(@"朋友圈");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
+    }else if(sender.tag == 79){
+        NSLog(@"微博");
+        NSString * str = [NSString stringWithFormat:@"我家萌宠%@今天乖巧的冲我撒娇，来听听吧。http://home4pet.aidigame.com/（分享自@宠物星球社交应用）", self.pet_name];
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                NSLog(@"失败原因：%@", response);
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
+    }
 }
 #pragma mark - 浮云
 //更新

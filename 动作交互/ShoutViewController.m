@@ -583,7 +583,7 @@
         [shareView addSubview:shareImageView];
         UIButton *shareButton = [MyControl createButtonWithFrame:shareImageView.frame ImageName:nil Target:self Action:@selector(shareAction:) Title:nil];
         shareButton.tag = 77+i;
-        [shareButton setShowsTouchWhenHighlighted:YES];
+//        [shareButton setShowsTouchWhenHighlighted:YES];
         [shareView addSubview:shareButton];
         UILabel *label = [MyControl createLabelWithFrame:CGRectMake(shareImageView.frame.origin.x, 38, 40, 14) Font:10 Text:arrayDesc[i]];
         label.textColor = [UIColor blackColor];

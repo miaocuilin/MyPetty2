@@ -191,10 +191,11 @@
         body.frame = CGRectMake(60, 30, 240, size.height);
         body.attributedText = str;
         
-        touchOne.hidden = NO;
-        touchOne.frame = CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20);
-        [touchOne addTarget:self action:@selector(touchOneClick) forControlEvents:UIControlEventTouchUpInside];
-        [touchOne setBackgroundImage:[UIImage imageNamed:@"touchOne.png"] forState:UIControlStateNormal];
+//        touchOne.hidden = YES;
+//        touchOne.frame = CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20);
+//        [touchOne addTarget:self action:@selector(touchOneClick) forControlEvents:UIControlEventTouchUpInside];
+//        [touchOne setBackgroundImage:[UIImage imageNamed:@"touchOne.png"] forState:UIControlStateNormal];
+        
 //        touchOne = [MyControl createButtonWithFrame:CGRectMake(60, body.frame.origin.y+body.frame.size.height+5, 60, 20) ImageName:@"touchOne.png" Target:self Action:@selector(touchOneClick) Title:nil];
 //        [self.contentView addSubview:touchOne];
     }else if(type == 6){

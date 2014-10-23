@@ -119,6 +119,8 @@
         add_rq = model.add_rq;
     }
     rewardLabel.text = [NSString stringWithFormat:@"%@ X 1",model.name];
+    self.giftName = model.name;
+    
     rewardImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
     descRewardLabel.text = [NSString stringWithFormat:@"%@ 人气 %@",self.pet_name, model.add_rq];
     if ([model.add_rq rangeOfString:@"-"].location == NSNotFound) {
@@ -174,7 +176,7 @@
 #pragma mark - 创建界面
 - (void)createShakeUI
 {
-    UIView *totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150, self.view.frame.size.height/2-212, 300, 425)];
+    totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150, self.view.frame.size.height/2-212, 300, 425)];
     [self.view addSubview:totalView];
     totalView.layer.cornerRadius = 10;
     totalView.layer.masksToBounds = YES;
@@ -237,7 +239,7 @@
     self.timer = [NSTimer timerWithTimeInterval:0.02 target:self selector:@selector(floatingAnimation) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
 //    [self.timer fire];
-    UILabel *shakeDescLabel1 = [MyControl createLabelWithFrame:CGRectMake(self.upView.frame.size.width/2 - 115, 10, 230, 20) Font:16 Text:@"每天摇一摇，精彩礼品大放送~"];
+    UILabel *shakeDescLabel1 = [MyControl createLabelWithFrame:CGRectMake(self.upView.frame.size.width/2 - 115, 10, 230, 20) Font:16 Text:@"每天摇一摇，精美礼品大放送~"];
     shakeDescLabel1.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel1.textColor = GRAYBLUECOLOR;
     [self.upView addSubview:shakeDescLabel1];
@@ -245,7 +247,7 @@
     [self.upView addSubview:shakeImageView1];
 #pragma mark - two
     //2
-    UILabel *shakeDescLabel2 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 +upViewWidth- 115, 10, 230, 20) Font:16 Text:@"哎吆运气不错吆~恭喜摇出"];
+    UILabel *shakeDescLabel2 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 +upViewWidth- 115, 10, 230, 20) Font:16 Text:@"哎呦~运气不错哦~为萌主摇出"];
     shakeDescLabel2.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel2.textColor = GRAYBLUECOLOR;
     [self.upView addSubview:shakeDescLabel2];
@@ -271,7 +273,7 @@
     for (int i = 0; i<3; i++) {
         UIButton *shareButton = [MyControl createButtonWithFrame:CGRectMake(0+shareView.frame.size.width/3 * i +(i*12), 15, 40, 40) ImageName:nil Target:self Action:@selector(shareAction:) Title:nil];
         shareButton.tag = 77+i;
-        [shareButton setShowsTouchWhenHighlighted:YES];
+//        [shareButton setShowsTouchWhenHighlighted:YES];
         [shareView addSubview:shareButton];
     }
 #pragma mark - three
@@ -362,7 +364,61 @@
 }
 - (void)shareAction:(UIButton *)sender
 {
+    //截图
+    UIImage * image = [MyControl imageWithView:totalView];
     
+    /**************/
+    if(sender.tag == 77){
+        NSLog(@"微信");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
+    }else if(sender.tag == 78){
+        NSLog(@"朋友圈");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
+    }else if(sender.tag == 79){
+        NSLog(@"微博");
+        NSString * str = nil;
+        if (!self.isTrouble) {
+            str = [NSString stringWithFormat:@"随便一摇就摇出了一个%@，好惊喜，你也想试试吗？http://home4pet.aidigame.com/（分享自@宠物星球社交应用）", self.giftName];
+        }else{
+            str = [NSString stringWithFormat:@"嘿嘿~我在宠物星球捉弄了萌宠%@，恶作剧的感觉真是妙不可言~http://home4pet.aidigame.com/(分享自@宠物星球社交应用）", self.pet_name];
+        }
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                NSLog(@"失败原因：%@", response);
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
+    }
 }
 //一句话两种颜色
 - (NSAttributedString *)firstString:(NSString *)string1 formatString:(NSString *)string2 insertAtIndex:(NSInteger)number

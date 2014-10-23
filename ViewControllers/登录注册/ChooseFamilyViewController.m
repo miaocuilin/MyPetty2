@@ -40,6 +40,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    if ([self.from intValue] != 1 && [self.from intValue] != 2) {
+        self.from = @"1";
+    }
     didSelected = -1;
 //    self.dataArray = [NSMutableArray arrayWithCapacity:0];
 //    self.dataArray2 = [NSMutableArray arrayWithCapacity:0];
@@ -52,7 +55,8 @@
     self.detailDict = [NSMutableDictionary dictionaryWithCapacity:0];
     
     self.systemListArray = [NSMutableArray arrayWithObjects:@"推荐", @"人气", nil];
-    self.limitTypeName = @"所有种族";
+    self.totalArray = [NSMutableArray arrayWithObjects:@"喵喵", @"汪汪", nil];
+    self.limitTypeName = @"喵喵";
 //    [UIApplication sharedApplication].statusBarHidden = NO;
     
     
@@ -61,7 +65,7 @@
 //    [self createTableView];
     [self createFakeNavigation];
     [self createHeader];
-    [self getListData];
+//    [self getListData];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hidden) name:@"af" object:nil];
     [USER setObject:@"1" forKey:@"isAdopt"];
@@ -140,36 +144,36 @@
     [self.view addSubview:tempView];
 }
 
--(void)getListData
-{
-    NSDictionary * oriDict = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CateNameList" ofType:@"plist"]];
-    //将数据存到数组中
-    NSDictionary * dict1 = [oriDict objectForKey:@"1"];
-    NSDictionary * dict2 = [oriDict objectForKey:@"2"];
-//    NSDictionary * dict3 = [oriDict objectForKey:@"3"];
-    
-    [self.totalArray addObject:@"所有种族"];
-    
-    if (self.isMi) {
-        for (int i=0; i<[dict1 count]; i++) {
-            NSString * str = [dict1 objectForKey:[NSString stringWithFormat:@"%d", 100+i+1]];
-            [self.catArray addObject:str];
-            [self.totalArray addObject:str];
-        }
-    }else{
-        for (int i=0; i<[dict2 count]; i++) {
-            NSString * str = [dict2 objectForKey:[NSString stringWithFormat:@"%d", 200+i+1]];
-            [self.dogArray addObject:str];
-            [self.totalArray addObject:str];
-        }
-    }
-    
-//    for (int i=0; i<[dict3 count]; i++) {
-//        NSString * str = [dict3 objectForKey:[NSString stringWithFormat:@"%d", 300+i+1]];
-//        [self.otherArray addObject:str];
-//        [self.totalArray addObject:str];
+//-(void)getListData
+//{
+//    NSDictionary * oriDict = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"CateNameList" ofType:@"plist"]];
+//    //将数据存到数组中
+//    NSDictionary * dict1 = [oriDict objectForKey:@"1"];
+//    NSDictionary * dict2 = [oriDict objectForKey:@"2"];
+////    NSDictionary * dict3 = [oriDict objectForKey:@"3"];
+//    
+//    [self.totalArray addObject:@"所有种族"];
+//    
+//    if (self.isMi) {
+//        for (int i=0; i<[dict1 count]; i++) {
+//            NSString * str = [dict1 objectForKey:[NSString stringWithFormat:@"%d", 100+i+1]];
+//            [self.catArray addObject:str];
+//            [self.totalArray addObject:str];
+//        }
+//    }else{
+//        for (int i=0; i<[dict2 count]; i++) {
+//            NSString * str = [dict2 objectForKey:[NSString stringWithFormat:@"%d", 200+i+1]];
+//            [self.dogArray addObject:str];
+//            [self.totalArray addObject:str];
+//        }
 //    }
-}
+//    
+////    for (int i=0; i<[dict3 count]; i++) {
+////        NSString * str = [dict3 objectForKey:[NSString stringWithFormat:@"%d", 300+i+1]];
+////        [self.otherArray addObject:str];
+////        [self.totalArray addObject:str];
+////    }
+//}
 -(void)hidden
 {
     [afView hide];
@@ -240,7 +244,7 @@
     headerBgView.alpha = 0.85;
     [headerView addSubview:headerBgView];
     
-    raceBtn = [MyControl createButtonWithFrame:CGRectMake(30, 5, 120, 25) ImageName:@"" Target:self Action:@selector(raceBtnClick) Title:@"所有种族"];
+    raceBtn = [MyControl createButtonWithFrame:CGRectMake(30, 5, 120, 25) ImageName:@"" Target:self Action:@selector(raceBtnClick) Title:@"喵喵"];
     raceBtn.layer.cornerRadius = 5;
     raceBtn.layer.masksToBounds = YES;
     raceBtn.titleLabel.font = [UIFont boldSystemFontOfSize:14];
@@ -268,9 +272,9 @@
 {
     NSLog(@"loadMore");
     if (!isRQ) {
-        [self loadMoreRecommandDataWithType:self.type];
+        [self loadMoreRecommandDataWithType:self.from];
     }else{
-        [self loadMoreTopicDataType:self.type];
+        [self loadMoreTopicDataType:self.from];
     }
 
 }
@@ -489,23 +493,35 @@
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
     
     if ([ControllerManager getIsSuccess]) {
-        [MMProgressHUD showWithStatus:@"加入中..."];
-
-        PetInfoModel * model = self.limitDataArray[button.tag-200];
-        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", model.aid];
-        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", JOINFAMILYAPI, model.aid, [MyMD5 md5:code], [ControllerManager getSID]];
-        NSLog(@"%@", url);
-        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                NSLog(@"--%@", load.dataDict);
-                [MMProgressHUD dismissWithSuccess:@"加入成功^_^" title:nil afterDelay:0.5];
-                //刷新列表
-                [self loadUserPetsList];
-            }else{
-                [MMProgressHUD dismissWithError:@"加入失败-_-!" afterDelay:0.5];
-            }
-        }];
-        [request release];
+        
+        //给出加入提示
+        AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        view.AlertType = 2;
+        [view makeUI];
+        view.jump = ^(){
+            [MMProgressHUD showWithStatus:@"加入中..."];
+            
+            PetInfoModel * model = self.limitDataArray[button.tag-200];
+            NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", model.aid];
+            NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", JOINFAMILYAPI, model.aid, [MyMD5 md5:code], [ControllerManager getSID]];
+            NSLog(@"%@", url);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    NSLog(@"--%@", load.dataDict);
+                    [MMProgressHUD dismissWithSuccess:@"加入成功^_^" title:nil afterDelay:0.5];
+                    //刷新列表
+                    //[self loadUserPetsList];
+                }else{
+                    [MMProgressHUD dismissWithError:@"加入失败-_-!" afterDelay:0.5];
+                }
+            }];
+            [request release];
+            [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+            [self dismissViewControllerAnimated:NO completion:nil];
+        };
+        [self.view addSubview:view];
+        [view release];
+        
     }else{
         RegisterViewController * vc = [[RegisterViewController alloc] init];
         vc.isAdoption = YES;
@@ -593,31 +609,32 @@
     NSLog(@"%d--%@", Line, Words);
     if (sender == dropDown) {
         self.limitTypeName = Words;
-        if (Line == 0) {
-            self.type = @"0";
-        }else{
-            for (int i=1; i<self.totalArray.count; i++) {
-                if (Line == i) {
-                    self.type = [ControllerManager returnCateTypeWithName:self.totalArray[i]];
-                    break;
-                }
-            }
-        }
+//        if (Line == 0) {
+//            self.type = @"0";
+            self.from = [NSString stringWithFormat:@"%d", Line+1];
+//        }else{
+//            for (int i=1; i<self.totalArray.count; i++) {
+//                if (Line == i) {
+//                    self.type = [ControllerManager returnCateTypeWithName:self.totalArray[i]];
+//                    break;
+//                }
+//            }
+//        }
         
         
-        if ([Words isEqualToString:@"所有种族"]) {
-            if (!isRQ) {
-                [self reloadRecommandData];
-            }else{
-                [self reloadTopicData];
-            }
+//        if ([Words isEqualToString:@"所有种族"]) {
+//            if (!isRQ) {
+//                [self reloadRecommandData];
+//            }else{
+//                [self reloadTopicData];
+//            }
 //            [self.limitDataArray removeAllObjects];
 //            [self.limitDataArray addObjectsFromArray:self.dataArray];
-        }else{
+//        }else{
             if (!isRQ) {
-                [self loadRecommandDataWithType:self.type];
+                [self loadRecommandDataWithType:self.from];
             }else{
-                [self loadTopicDataWithType:self.type];
+                [self loadTopicDataWithType:self.from];
             }
 //            NSLog(@"--%d", self.limitDataArray.count);
             //在下拉列表初始化时limitDataArray数组就已经重置了
@@ -631,7 +648,7 @@
 //                    i--;
 //                }
 //            }
-        }
+//        }
         
 //        [tv reloadData];
     }else if(sender == dropDown2){
@@ -644,21 +661,21 @@
             isRQ = YES;
         }
         //请求相应的API
-        if ([self.limitTypeName isEqualToString:@"所有种族"]) {
-            //请求相应api1
-            if (isRQ) {
-                [self reloadTopicData];
-            }else{
-                [self reloadRecommandData];
-            }
-        }else{
+//        if ([self.limitTypeName isEqualToString:@"所有种族"]) {
+//            //请求相应api1
+//            if (isRQ) {
+//                [self reloadTopicData];
+//            }else{
+//                [self reloadRecommandData];
+//            }
+//        }else{
             //请求相应api2
             if (isRQ) {
-                [self loadTopicDataWithType:self.type];
+                [self loadTopicDataWithType:self.from];
             }else{
-                [self loadRecommandDataWithType:self.type];
+                [self loadRecommandDataWithType:self.from];
             }
-        }
+//        }
     }
 }
 -(void)rel
@@ -700,7 +717,8 @@
 -(void)reloadRecommandData
 {
     StartLoading;
-    NSString * url = [NSString stringWithFormat:@"%@%@", RECOMMANDCOUNTRYLISTAPI, [ControllerManager getSID]];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", self.from]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI2, self.from, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -729,7 +747,8 @@
 -(void)reloadTopicData
 {
     StartLoading;
-    NSString * url = [NSString stringWithFormat:@"%@%@", TOPICCOUNTRYLISTAPI, [ControllerManager getSID]];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", self.from]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI, self.from, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -759,11 +778,11 @@
 //当点击推荐还是人气的时候调用
 -(void)loadRecommandDataWithType:(NSString *)type
 {
-    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
-        [self reloadRecommandData];
-    }else{
+//    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
+//        [self reloadRecommandData];
+//    }else{
         StartLoading;
-        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"type=%@dog&cat", type]];
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", type]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI2, type, sig, [ControllerManager getSID]];
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
@@ -793,15 +812,15 @@
             }
         }];
         [request release];
-    }
+//    }
 }
 -(void)loadTopicDataWithType:(NSString *)type
 {
-    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
-        [self reloadTopicData];
-    }else{
+//    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
+//        [self reloadTopicData];
+//    }else{
         StartLoading;
-        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"type=%@dog&cat", type]];
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", type]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI2, type, sig, [ControllerManager getSID]];
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
@@ -830,7 +849,7 @@
             }
         }];
         [request release];
-    }
+//    }
 }
 
 //上拉加载的时候调用
@@ -839,13 +858,13 @@
     NSLog(@"---%d", pageNum);
     NSString * sig = nil;
     NSString * url = nil;
-    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
-        sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%ddog&cat", pageNum]];
-        url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI3, pageNum, sig, [ControllerManager getSID]];
-    }else{
-        sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%d&type=%@dog&cat", pageNum, type]];
-        url = [NSString stringWithFormat:@"%@%d&type=%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI3, pageNum, type, sig, [ControllerManager getSID]];
-    }
+//    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
+//        sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%ddog&cat", pageNum]];
+//        url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI3, pageNum, sig, [ControllerManager getSID]];
+//    }else{
+        sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@&page=%ddog&cat", type, pageNum]];
+        url = [NSString stringWithFormat:@"%@%@&page=%d&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI3, type, pageNum, sig, [ControllerManager getSID]];
+//    }
     //
     StartLoading;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -878,13 +897,13 @@
     NSLog(@"---%d", pageNum);
     NSString * sig = nil;
     NSString * url = nil;
-    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
-        sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%ddog&cat", pageNum]];
-        url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI3, pageNum, sig, [ControllerManager getSID]];
-    }else{
-        sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%d&type=%@dog&cat", pageNum, type]];
-        url = [NSString stringWithFormat:@"%@%d&type=%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI3, pageNum, type, sig, [ControllerManager getSID]];
-    }
+//    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
+//        sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%ddog&cat", pageNum]];
+//        url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI3, pageNum, sig, [ControllerManager getSID]];
+//    }else{
+        sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@&page=%ddog&cat", type, pageNum]];
+        url = [NSString stringWithFormat:@"%@%@&page=%d&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI3, type, pageNum, sig, [ControllerManager getSID]];
+//    }
     //
     StartLoading;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {

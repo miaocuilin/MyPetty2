@@ -15,7 +15,13 @@
 @property(nonatomic,retain)UIImageView * bgImageView;
 @property(nonatomic,retain)UIButton * closeBtn;
 @property(nonatomic,retain)UIButton * confirmBtn;
+@property(nonatomic,retain)UIButton * confirmBtn2;
 
 @property(nonatomic,retain)UIView * alphaView;
 @property(nonatomic,copy)void (^jump)(void);
+
+//1.注册 2.加入 3.加入满了提示 4.取消关注 5.退出国家
+@property(nonatomic)int AlertType;
+
+-(void)makeUI;
 @end

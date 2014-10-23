@@ -76,7 +76,7 @@
         NSLog(@"isFinsh:%d,load.dataDict:%@",isFinsh,load.dataDict);
         if (isFinsh) {
             self.haveRecord = YES;
-            self.recordURL = [NSString stringWithFormat:@"http://54.199.161.210:8001/%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
+            self.recordURL = [NSString stringWithFormat:@"http://123.57.39.48/%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
             [self loadRecordData];
         }else{
             [MMProgressHUD dismissWithError:@"该宠物今天没有萌叫叫" afterDelay:1.0];
@@ -280,7 +280,7 @@
         [shareView addSubview:shareImageView];
         UIButton *shareButton = [MyControl createButtonWithFrame:shareImageView.frame ImageName:nil Target:self Action:@selector(shareAction:) Title:nil];
         shareButton.tag = 77+i;
-        [shareButton setShowsTouchWhenHighlighted:YES];
+//        [shareButton setShowsTouchWhenHighlighted:YES];
         [shareView addSubview:shareButton];
         UILabel *label = [MyControl createLabelWithFrame:CGRectMake(shareImageView.frame.origin.x, 38, 40, 14) Font:10 Text:arrayDesc[i]];
         label.textColor = [UIColor blackColor];
@@ -295,13 +295,55 @@
 //分享
 - (void)shareAction:(UIButton *)sender
 {
-    if (sender.tag == 77) {
+    //截图
+    UIImage * image = [MyControl imageWithView:totalView];
+    
+    /**************/
+    if(sender.tag == 77){
         NSLog(@"微信");
-    }else if (sender.tag == 78){
-        NSLog(@"朋友");
-    }else{
-        NSLog(@"新浪");
-        
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
+    }else if(sender.tag == 78){
+        NSLog(@"朋友圈");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
+    }else if(sender.tag == 79){
+        NSLog(@"微博");
+        NSString * str = [NSString stringWithFormat:@"我在宠物星球里面摸了萌主%@，%@乖巧地冲我叫了一声，真可爱~http://home4pet.aidigame.com/(分享自@宠物星球社交应用）", self.pet_name, self.pet_name];
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                StartLoading;
+                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                NSLog(@"失败原因：%@", response);
+                StartLoading;
+                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
     }
 }
 - (void)audioPlayerCreate
@@ -344,7 +386,7 @@
 }
 - (UIView *)shopGiftTitle
 {
-    UIView *totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150, self.view.frame.size.height/2-425/2.0, 300, 425)];
+    totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150, self.view.frame.size.height/2-425/2.0, 300, 425)];
     totalView.layer.cornerRadius = 10;
     totalView.layer.masksToBounds = YES;
     [self.view addSubview:totalView];

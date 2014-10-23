@@ -1098,6 +1098,7 @@
         SendGiftViewController *quictGiftvc = [[SendGiftViewController alloc] init];
         quictGiftvc.receiver_aid = self.aid;
         quictGiftvc.receiver_img_id = self.img_id;
+        quictGiftvc.receiver_name = self.pet_name;
         
         NSLog(@"%@--%@", self.aid, [USER objectForKey:@"aid"]);
         quictGiftvc.hasSendGift = ^(){
@@ -1275,7 +1276,8 @@
         }];
     }else{
         NSLog(@"微博");
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:self.cmt image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        NSString * str = [NSString stringWithFormat:@"%@%@", self.cmt, @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self loadShareAPI];

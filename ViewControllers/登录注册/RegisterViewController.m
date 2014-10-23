@@ -1432,6 +1432,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -获取用户数据
 -(void)getUserData
 {
+    //注册完，认养完，老用户创建完都会请求
+    
 //    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
 //    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [USER objectForKey:@"usr_id"], sig,[ControllerManager getSID]];
 //    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -1463,8 +1465,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //                [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
 //                [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
     if (self.isAdoption) {
+        [USER setObject:@"505" forKey:@"gold"];
+        [USER setObject:@"1" forKey:@"lv"];
+        [USER setObject:@"1" forKey:@"con_login"];
+        [USER setObject:@"0" forKey:@"exp"];
         [USER setObject:@"1" forKey:@"rank"];
+    }else if(self.isOldUser){
+        [USER setObject:@"0" forKey:@"rank"];
     }else{
+        [USER setObject:@"505" forKey:@"gold"];
+        [USER setObject:@"1" forKey:@"lv"];
+        [USER setObject:@"1" forKey:@"con_login"];
+        [USER setObject:@"0" forKey:@"exp"];
         [USER setObject:@"0" forKey:@"rank"];
     }
 //                [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
@@ -1528,18 +1540,42 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)loadPetInfo
 {
-    NSLog(@"%@", [USER objectForKey:@"aid"]);
-    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
-    NSLog(@"%@", url);
-    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        if (isFinish) {
-            NSLog(@"petInfo:%@", load.dataDict);
-            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
-                
-                //记录默认宠物信息
-                [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"petInfoDict"];
-            }
+//    NSLog(@"%@", [USER objectForKey:@"aid"]);
+//    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
+//    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+//    NSLog(@"%@", url);
+//    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            NSLog(@"petInfo:%@", load.dataDict);
+//            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+    
+    
+//            }
+    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:0];
+    [dict setObject:self.name forKey:@"name"];
+    [dict setObject:[NSString stringWithFormat:@"%d", age] forKey:@"age"];
+    [dict setObject:[NSString stringWithFormat:@"%d", gender] forKey:@"gender"];
+    [dict setObject:[NSString stringWithFormat:@"%d", type] forKey:@"type"];
+    
+    if (self.isAdoption) {
+        if(![self.petInfoModel.tx isKindOfClass:[NSNull class]]){
+            [dict setObject:self.petInfoModel.tx forKey:@"tx"];
+        }else{
+            [dict setObject:@"" forKey:@"tx"];
+        }
+    }else{
+        if([[USER objectForKey:@"a_tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"a_tx"] length]==0){
+            [dict setObject:@"" forKey:@"tx"];
+        }else{
+            [dict setObject:[USER objectForKey:@"a_tx"] forKey:@"tx"];
+        }
+        [dict setObject:[USER objectForKey:@"usr_id"] forKey:@"master_id"];
+    }
+    
+    
+    //记录默认宠物信息
+    [USER setObject:dict forKey:@"petInfoDict"];
+    
             self.isOldUserPetInfoOK = YES;
             if (self.isOldUserTxOK == YES) {
                 [self dismissViewControllerAnimated:NO completion:nil];
@@ -1550,11 +1586,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [self dismissViewControllerAnimated:NO completion:nil];
             }
 //            [self throughPlanet];
-        }else{
-            
-        }
-    }];
-    [request release];
+//        }else{
+//            
+//        }
+//    }];
+//    [request release];
 }
 
 #pragma mark

@@ -361,7 +361,7 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
                 }
                 //返回
 //            self.refreshNewMsgNum(self.newDataArray);
-                LoadingSuccess;
+                [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.2f];
             }
             
 //            NSLog(@"%@", self.newDataArray);

@@ -494,7 +494,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UIButton * moreBtn = [MyControl createButtonWithFrame:CGRectMake(270, 25, 47/2+20, 9/2+16+10+4) ImageName:@"" Target:self Action:@selector(moreBtnClick) Title:nil];
     moreBtn.titleLabel.font = [UIFont systemFontOfSize:15];
 //    moreBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
-    moreBtn.showsTouchWhenHighlighted = YES;
+//    moreBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:moreBtn];
 }
 
@@ -507,10 +507,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)moreBtnClick
 {
     NSLog(@"more");
-    if (![[USER objectForKey:@"isSuccess"] intValue]) {
-        ShowAlertView;
-        return;
-    }
+    
     /********截图***********/
     UIImage * image = [MyControl imageWithView:[UIApplication sharedApplication].keyWindow];
     //存到本地
@@ -527,8 +524,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     //
 //    NSLog(@"%@--%@", self.master_id, [USER objectForKey:@"usr_id"]);
-    if (![[petInfoDict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+    if ([[USER objectForKey:@"isSuccess"] intValue] && ![[petInfoDict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
         [self loadAttentionAPI];
+
     }
     
     [self.view bringSubviewToFront:alphaBtn];
@@ -758,7 +756,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }];
     }else{
         NSLog(@"微博");
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:@"#宠物星球社交应用#" image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+         NSString * str = @"雷达报告发现一只萌宠，火速围观！http://home4pet.aidigame.com/（分享自@宠物星球社交应用）";
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
 
@@ -775,18 +774,121 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)addBtnClick:(UIButton *)button
 {
-    if (!button.selected) {
-        [self createJoinCountryAlertView];
-    }else{
-        [self createExitCountryAlertView];
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        [self cancelBtnClick];
+        return;
     }
+    AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    if (!button.selected) {
+//        [self createJoinCountryAlertView];
+//        StartLoading;
+        //    user/petsApi&usr_id=(若用户为自己则留空不填)
+        NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+        NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+        NSLog(@"%@", url);
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSArray * array = [load.dataDict objectForKey:@"data"];
+                if (array.count >= 10) {
+                    view.AlertType = 3;
+                    [view makeUI];
+                }else{
+                    view.AlertType = 2;
+                    [view makeUI];
+                    view.jump = ^(){
+                        [MyControl startLoadingWithStatus:@"加入中..."];
+                        NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+                        NSString *joinPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,self.aid,joinPetCricleSig,[ControllerManager getSID]];
+                        NSLog(@"加入圈子:%@",joinPetCricleString);
+                        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:joinPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                            if (isFinish) {
+                                NSLog(@"加入成功数据：%@",load.dataDict);
+                                if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                                    addBtn.selected = YES;
+                                    //                        [alertView hide:YES];
+                                    attentionBtn.selected = YES;
+                                }
+                                [MyControl loadingSuccessWithContent:@"加入成功" afterDelay:0.5f];
+                            }else{
+                                [MyControl loadingFailedWithContent:@"加入失败" afterDelay:0.8f];
+                                NSLog(@"加入国家失败");
+                            }
+                        }];
+                        [request release];
+                    };
+                }
+            }
+        }];
+        [request release];
+        //
+        
+        [self.view addSubview:view];
+        [view release];
+    }else{
+//        [self createExitCountryAlertView];
+        view.AlertType = 5;
+        [view makeUI];
+        view.jump = ^(){
+            [self loadMyCountryInfoData];
+        };
+    }
+    [self.view addSubview:view];
+    [view release];
 }
 -(void)attentionBtnClick:(UIButton *)button
 {
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        [self cancelBtnClick];
+        return;
+    }
     if (!button.selected) {
-        [self createAttentionAlertView];
+//        [self createAttentionAlertView];
+        [MyControl startLoadingWithStatus:@"关注中..."];
+        NSString *petAttentionSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+        NSString *petAttentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETATTENTIONAPI,self.aid,petAttentionSig,[ControllerManager getSID]];
+        NSLog(@"关注宠物：%@",petAttentionString);
+        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:petAttentionString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+            if (isFinish) {
+                //                    NSLog(@"关注成功数据：%@",load.dataDict);
+                if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                    attentionBtn.selected = YES;
+//                    [alertView hide:YES];
+                }
+                [MyControl loadingSuccessWithContent:@"关注成功" afterDelay:0.5f];
+            }else{
+                [MyControl loadingFailedWithContent:@"关注失败" afterDelay:0.8f];
+                NSLog(@"关注失败");
+            }
+        }];
+        [request release];
     }else{
-        [self createAttentionCancelAlertView];
+//        [self createAttentionCancelAlertView];
+        AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        view.AlertType = 4;
+        [view makeUI];
+        view.jump = ^(){
+            //取消关注
+            NSString *petAttentionSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+            NSString *petAttentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETATTENTIONCANCELAPI,self.aid,petAttentionSig,[ControllerManager getSID]];
+            NSLog(@"取消关注宠物：%@",petAttentionString);
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:petAttentionString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                if (isFinish) {
+                    NSLog(@"取消关注成功数据：%@",load.dataDict);
+                    if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                        attentionBtn.selected = NO;
+//                        [alertView hide:YES];
+                    }
+                    
+                }else{
+                    NSLog(@"关注失败");
+                }
+            }];
+            [request release];
+        };
+        [self.view addSubview:view];
+        [view release];
     }
 
     
@@ -847,22 +949,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     if (sender.tag == 222) {
         if (!addBtn.selected) {
-            NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-            NSString *joinPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,self.aid,joinPetCricleSig,[ControllerManager getSID]];
-            NSLog(@"加入圈子:%@",joinPetCricleString);
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:joinPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                if (isFinish) {
-                    NSLog(@"加入成功数据：%@",load.dataDict);
-                    if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
-                        addBtn.selected = YES;
-                        [alertView hide:YES];
-                    }
-                    
-                }else{
-                    NSLog(@"加入国家失败");
-                }
-            }];
-            [request release];
+            
         }else{
             
             [self loadMyCountryInfoData];
@@ -870,39 +957,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
     }else if (sender.tag== 223){
         if (!attentionBtn.selected) {
-            NSString *petAttentionSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-            NSString *petAttentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETATTENTIONAPI,self.aid,petAttentionSig,[ControllerManager getSID]];
-            NSLog(@"关注宠物：%@",petAttentionString);
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:petAttentionString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                if (isFinish) {
-//                    NSLog(@"关注成功数据：%@",load.dataDict);
-                    if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
-                        attentionBtn.selected = YES;
-                        [alertView hide:YES];
-                    }
-                    
-                }else{
-                    NSLog(@"关注失败");
-                }
-            }];
-            [request release];
+            
         }else{
-            NSString *petAttentionSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-            NSString *petAttentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETATTENTIONCANCELAPI,self.aid,petAttentionSig,[ControllerManager getSID]];
-            NSLog(@"取消关注宠物：%@",petAttentionString);
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:petAttentionString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                if (isFinish) {
-                    NSLog(@"取消关注成功数据：%@",load.dataDict);
-                    if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
-                        attentionBtn.selected = NO;
-                        [alertView hide:YES];
-                    }
-                    
-                }else{
-                    NSLog(@"关注失败");
-                }
-            }];
-            [request release];
+            
         }
     }
 }
@@ -922,6 +979,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 NSString *exitPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
                 NSString *exitPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",EXITPETCRICLEAPI,self.aid,exitPetCricleSig,[ControllerManager getSID]];
                 NSLog(@"退出圈子：%@",exitPetCricleString);
+                [MyControl startLoadingWithStatus:@"退出中..."];
                 httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:exitPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
                     if (isFinish) {
                         //                    NSLog(@"退出成功数据：%@",load.dataDict);

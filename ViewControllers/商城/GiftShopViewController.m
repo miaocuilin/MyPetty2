@@ -31,7 +31,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.cateArray = [NSMutableArray arrayWithObjects:@"爱心礼物", @"捣乱礼物", nil];
+    self.cateArray = [NSMutableArray arrayWithObjects:@"全部", @"爱心礼物", @"捣乱礼物", nil];
     self.cateArray2 = [NSMutableArray arrayWithObjects:@"喵喵专用", @"汪汪专用", nil];
     self.orderArray = [NSMutableArray arrayWithObjects:@"由高到低", @"由低到高", nil];
     self.totalGoodsDataArray = [NSMutableArray arrayWithCapacity:0];
@@ -42,12 +42,14 @@
     [self createBg];
     [self createFakeNavigation];
     [self createHeader];
-    [self createScrollView2];
+//    [self createScrollView2];
     [self createScrollView];
     [self createBottom];
-    
+//
     [self createAlphaBtn];
-    [self loadData];
+//    [self loadData];
+    
+    
 //    [self buyGiftItemsAPI];
 }
 - (void)viewWillAppear:(BOOL)animated
@@ -156,12 +158,12 @@
         [model release];
     }
 }
-- (void)loadData
-{
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"code=dog&cat"]];
-    NSString *itemsString = [NSString stringWithFormat:@"%@&sig=%@&SID=%@",SHOPITEMSAPI,sig,[ControllerManager getSID]];
-    NSLog(@"itemsString:%@",itemsString);
-}
+//- (void)loadData
+//{
+//    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"code=dog&cat"]];
+//    NSString *itemsString = [NSString stringWithFormat:@"%@&sig=%@&SID=%@",SHOPITEMSAPI,sig,[ControllerManager getSID]];
+//    NSLog(@"itemsString:%@",itemsString);
+//}
 /****************/
 -(void)createAlphaBtn
 {
@@ -220,7 +222,7 @@
     UIButton * titleBtn = [MyControl createButtonWithFrame:CGRectMake(60, 64-20-12-5, 200, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"虚拟礼物"];
     [titleBtn setTitle:@"现实礼物" forState:UIControlStateSelected];
     titleBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17];
-    titleBtn.showsTouchWhenHighlighted = YES;
+//    titleBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:titleBtn];
     
 //    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"虚拟礼物"];
@@ -316,7 +318,7 @@
     headerBgView.alpha = 0.85;
     [headerView addSubview:headerBgView];
     
-    cateBtn = [MyControl createButtonWithFrame:CGRectMake(35, 5, 90, 25) ImageName:@"" Target:self Action:@selector(cateBtnClick) Title:@"爱心礼物"];
+    cateBtn = [MyControl createButtonWithFrame:CGRectMake(35, 5, 90, 25) ImageName:@"" Target:self Action:@selector(cateBtnClick) Title:@"全部"];
     cateBtn.layer.cornerRadius = 5;
     cateBtn.layer.masksToBounds = YES;
     cateBtn.titleLabel.font = [UIFont boldSystemFontOfSize:14];
@@ -387,10 +389,17 @@
 {
     NSLog(@"%d--%@", Line, Words);
     if (sender == dropDown) {
-//        if (Line == 0) {
-            [sv removeFromSuperview];
+        [sv removeFromSuperview];
+        if (Line == 0) {
             self.showArray = self.totalGoodsDataArray;
-//        }
+            self.giftDataArray = self.totalGoodsDataArray;
+        }else if(Line == 1){
+            self.showArray = self.goodGiftDataArray;
+            self.giftDataArray = self.goodGiftDataArray;
+        }else if(Line == 2){
+            self.showArray = self.badGiftDataArray;
+            self.giftDataArray = self.badGiftDataArray;
+        }
         [self createScrollView];
     }else{
         [sv removeFromSuperview];

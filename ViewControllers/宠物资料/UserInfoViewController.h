@@ -38,6 +38,8 @@
     BOOL isOwner;
     
     ClickImage * headImageView;
+    
+    BOOL isLoaded;
 }
 
 @property(nonatomic)int offset;

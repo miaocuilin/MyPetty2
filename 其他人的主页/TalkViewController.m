@@ -327,13 +327,13 @@
 //- (void)talkListData
 //{
 //    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
-//    NSString *listString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=talk/listApi&sig=%@&SID=%@",sig,[ControllerManager getSID]];
+//    NSString *listString = [NSString stringWithFormat:@"http://123.57.39.48/index.php?r=talk/listApi&sig=%@&SID=%@",sig,[ControllerManager getSID]];
 //    NSLog(@"listString:%@",listString);
 //}
 - (void)talkSendMessageData
 {
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat",self.usr_id]];
-    NSString *sendString = [NSString stringWithFormat:@"http://54.199.161.210:8001/index.php?r=talk/sendMsgApi&usr_id=%@&sig=%@&SID=%@", self.usr_id, sig, [ControllerManager getSID]];
+    NSString *sendString = [NSString stringWithFormat:@"http://123.57.39.48/index.php?r=talk/sendMsgApi&usr_id=%@&sig=%@&SID=%@", self.usr_id, sig, [ControllerManager getSID]];
     _requestSend = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:sendString]];
     _requestSend.requestMethod=@"POST";
     _requestSend.timeOutSeconds = 20;

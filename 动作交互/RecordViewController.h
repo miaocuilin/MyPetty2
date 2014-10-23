@@ -13,6 +13,9 @@
 #import "ASIFormDataRequest.h"
 
 @interface RecordViewController : UIViewController<AVAudioPlayerDelegate,AVAudioRecorderDelegate>
+{
+    UIView *totalView;
+}
 @property (nonatomic,strong)NSDictionary *animalInfoDict;
 
 @property(nonatomic,copy)NSString * recordURL;

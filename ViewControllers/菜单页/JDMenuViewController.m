@@ -82,7 +82,8 @@
         NSLog(@"====refreshUserData====");
         if ([[USER objectForKey:@"isSuccess"] intValue]) {
             goldLabel.text = [USER objectForKey:@"gold"];
-            position.text = [NSString stringWithFormat:@"%@联萌%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];;
+            NSLog(@"%@", [USER objectForKey:@"petInfoDict"]);
+            position.text = [NSString stringWithFormat:@"%@联萌%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];
             exp.text = [NSString stringWithFormat:@"Lv.%@", [USER objectForKey:@"lv"]];
             name.text = [USER objectForKey:@"name"];
             sex.hidden = NO;
@@ -1006,13 +1007,13 @@
         [self.sideMenuController setContentController:vc animted:YES];
     }else if (button.tag == 1001) {
         //商城
-        GiftShopViewController *vc = [[GiftShopViewController alloc] init];
+        GiftShopViewController * vc = [[GiftShopViewController alloc] init];
         [self.sideMenuController setContentController:vc animted:YES];
 //        [vc release];
     }else if (button.tag == 1002) {
         //设置
         SettingViewController * vc = [[SettingViewController alloc] init];
-        vc.modalTransitionStyle = 2;
+//        vc.modalTransitionStyle = 2;
         [self.sideMenuController setContentController:vc animted:YES];
         //活动
 //        ActivityViewController *vc = [[ActivityViewController alloc] init];

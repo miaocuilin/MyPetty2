@@ -18,7 +18,8 @@
     BOOL isplaying;
     AudioStreamer *streamer;
 //    NSString * recordURL;
-
+    
+    UIView * totalView;
 }
 @property (nonatomic,strong)NSDictionary *animalInfoDict;
 @property (nonatomic,strong)NSString *recordURL;

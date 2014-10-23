@@ -374,21 +374,35 @@
     NSLog(@"join-%d", button.tag-200);
     
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
-        [MyControl startLoadingWithStatus:@"加入中..."];
         
-        PetInfoModel * model = self.tempDataArray[button.tag-200];
-        NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", model.aid];
-        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", JOINFAMILYAPI, model.aid, [MyMD5 md5:code], [ControllerManager getSID]];
-        NSLog(@"%@", url);
-        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                NSLog(@"--%@", load.dataDict);
-                [MyControl loadingSuccessWithContent:@"加入成功^_^" afterDelay:0.5f];
-            }else{
-                [MyControl loadingFailedWithContent:@"加入失败-_-!" afterDelay:0.5f];
-            }
-        }];
-        [request release];
+        //给出加入提示
+        AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        view.AlertType = 2;
+        [view makeUI];
+        view.jump = ^(){
+            [MyControl startLoadingWithStatus:@"加入中..."];
+            
+            PetInfoModel * model = self.tempDataArray[button.tag-200];
+            NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", model.aid];
+            NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", JOINFAMILYAPI, model.aid, [MyMD5 md5:code], [ControllerManager getSID]];
+            NSLog(@"%@", url);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    NSLog(@"--%@", load.dataDict);
+                    [MyControl loadingSuccessWithContent:@"加入成功^_^" afterDelay:0.5f];
+                    
+                }else{
+                    [MyControl loadingFailedWithContent:@"加入失败-_-!" afterDelay:0.5f];
+                }
+            }];
+            [request release];
+            [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+            [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
+            [self dismissViewControllerAnimated:NO completion:nil];
+        };
+        [self.view addSubview:view];
+        [view release];
+        
     }else{
         RegisterViewController * vc = [[RegisterViewController alloc] init];
         vc.isAdoption = YES;

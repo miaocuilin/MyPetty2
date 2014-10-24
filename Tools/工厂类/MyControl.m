@@ -7,6 +7,7 @@
 //
 
 #import "MyControl.h"
+#import <ImageIO/ImageIO.h>
 #define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue]>=7.0
 
 @implementation MyControl
@@ -273,5 +274,21 @@
     [data autorelease];
 
     return myDictionary;
+}
+
+#pragma mark - 传进NSURL返回图片的宽高字典
++(NSDictionary *)imageSizeFrom:(NSURL *)imageUrl
+{
+    CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)imageUrl, NULL);
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+                             [NSNumber numberWithBool:NO], (NSString *)kCGImageSourceShouldCache,
+                             nil];
+    CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, (__bridge CFDictionaryRef)options);
+        NSLog(@"%@",imageProperties);
+    NSDictionary * imageInfoDict = (NSDictionary *)imageProperties;
+    //    NSLog(@"imageInfoDict%@", imageInfoDict);
+    
+    NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:[imageInfoDict objectForKey:@"PixelWidth"], @"width", [imageInfoDict objectForKey:@"PixelHeight"], @"height", nil];
+    return dict;
 }
 @end

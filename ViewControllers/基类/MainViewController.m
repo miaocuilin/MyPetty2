@@ -18,7 +18,6 @@
 #import <AviarySDK/AviarySDK.h>
 #import "ToolTipsViewController.h"
 #import "ShakeViewController.h"
-#import "WaterViewController.h"
 #import "TipsView.h"
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";

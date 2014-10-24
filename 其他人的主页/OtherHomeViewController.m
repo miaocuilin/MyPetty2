@@ -108,7 +108,7 @@
                 [model release];
             }
 
-            [self createTableView];
+//            [self createTableView];
 //            [self createHeader];
 //            [tv reloadData];
 //            [indicatorView stopAnimating];

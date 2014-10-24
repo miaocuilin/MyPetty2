@@ -1978,7 +1978,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self dismissViewControllerAnimated:YES completion:^{
         PublishViewController * vc = [[PublishViewController alloc] init];
         vc.oriImage = image;
-
+        vc.aid = self.aid;
+        vc.name = [petInfoDict objectForKey:@"name"];
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
     }];

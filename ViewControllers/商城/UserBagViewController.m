@@ -80,7 +80,8 @@
 {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.headerReferenceSize = CGSizeMake(self.view.frame.size.width, 64);
-    layout.itemSize = CGSizeMake(85, 90);
+    layout.itemSize = CGSizeMake(85, 100);
+    
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:layout];
     [self.view addSubview:self.collectionView];
     self.collectionView.backgroundColor = [UIColor clearColor];

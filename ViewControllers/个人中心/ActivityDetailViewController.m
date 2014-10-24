@@ -15,14 +15,14 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
 #import <AviarySDK/AviarySDK.h>
-#import "PSCollectionView.h"
-#import "PSCollectionViewCell.h"
+//#import "PSCollectionView.h"
+//#import "PSCollectionViewCell.h"
 #import "PhotoModel.h"
 #import "PicDetailViewController.h"
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 
-@interface ActivityDetailViewController () <AFPhotoEditorControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIActionSheetDelegate,PSCollectionViewDelegate,PSCollectionViewDataSource,UIScrollViewDelegate>
+@interface ActivityDetailViewController () <AFPhotoEditorControllerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIActionSheetDelegate,UIScrollViewDelegate>
 {
     UIView *segmentView;
     UIView *segmentView2;
@@ -470,18 +470,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         
     }
     /*************************************/
-    cv = [[PSCollectionView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
-    cv.delegate = self;
-    
-    cv.collectionViewDelegate = self;
-    cv.collectionViewDataSource = self;
-    cv.backgroundColor = [UIColor clearColor];
-    cv.autoresizingMask = UIViewAutoresizingNone;
-    cv.numColsPortrait = 2;
-    //    cv.numColsLandscape = 1;
-    cv.headerView = bgView;
-    [cv addFooterWithTarget:self action:@selector(loadRandomNextData)];
-    [self.view addSubview:cv];
+//    cv = [[PSCollectionView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-40)];
+//    cv.delegate = self;
+//    
+//    cv.collectionViewDelegate = self;
+//    cv.collectionViewDataSource = self;
+//    cv.backgroundColor = [UIColor clearColor];
+//    cv.autoresizingMask = UIViewAutoresizingNone;
+//    cv.numColsPortrait = 2;
+//    //    cv.numColsLandscape = 1;
+//    cv.headerView = bgView;
+//    [cv addFooterWithTarget:self action:@selector(loadRandomNextData)];
+//    [self.view addSubview:cv];
     
     if (isEnd) {
         CGRect rect = bgView.frame;
@@ -648,7 +648,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (offset < 380 && isBerth == YES) {
         isBerth = NO;
         [segmentView removeFromSuperview];
-        [cv.headerView addSubview:segmentView];
+//        [cv.headerView addSubview:segmentView];
         segmentView.frame = CGRectMake(0, 380, self.view.frame.size.width, 35);
     }
     if(offset >= 380 && isBerth == NO){
@@ -659,125 +659,125 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
 }
 
-- (Class)collectionView:(PSCollectionView *)collectionView cellClassForRowAtIndex:(NSInteger)index {
-    return [PSCollectionViewCell class];
-}
-
-- (NSInteger)numberOfRowsInCollectionView:(PSCollectionView *)collectionView {
-    return self.randomDataArray.count;
-}
-
-- (UIView *)collectionView:(PSCollectionView *)collectionView cellForRowAtIndex:(NSInteger)index {
-    PSCollectionViewCell *cell = [collectionView dequeueReusableViewForClass:[PSCollectionView class]];
-    if (!cell) {
-        cell = [[PSCollectionViewCell alloc] initWithFrame:CGRectZero];
-    }
-    UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectZero];
-    imageview.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-//    imageview.image = [UIImage imageNamed:@"cat2.jpg"];
-//    [cell addSubview:imageview];
-    
-    PhotoModel * model = self.randomDataArray[index];
-    
-    //图片存放到本地，从本地取
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    if (!docDir) {
-        NSLog(@"Documents 目录未找到");
-    }else{
-        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-        //        NSLog(@"randomFilePath:%@", randomFilePath);
-        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
-        if (image) {
-            imageview.image = image;
-        }else{
-
-            imageview.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"20-1" ofType:@"png"]];
-            
-            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    //本地目录，用于存放favorite下载的原图
-                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                    if (!docDir) {
-                        NSLog(@"Documents 目录未找到");
-                    }else{
-                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-                        //将下载的图片存放到本地
-                        [load.data writeToFile:randomFilePath atomically:YES];
-                        imageview.image = load.dataImage;
-                        [cv reloadData];
-                    }
-
-                }
-            }];
-        }
-    }
-    
-//    if (indexPath.row == self.dataArray.count-1) {
-//        [quiltView footerBeginRefreshing];
+//- (Class)collectionView:(PSCollectionView *)collectionView cellClassForRowAtIndex:(NSInteger)index {
+//    return [PSCollectionViewCell class];
+//}
+//
+//- (NSInteger)numberOfRowsInCollectionView:(PSCollectionView *)collectionView {
+//    return self.randomDataArray.count;
+//}
+//
+//- (UIView *)collectionView:(PSCollectionView *)collectionView cellForRowAtIndex:(NSInteger)index {
+//    PSCollectionViewCell *cell = [collectionView dequeueReusableViewForClass:[PSCollectionView class]];
+//    if (!cell) {
+//        cell = [[PSCollectionViewCell alloc] initWithFrame:CGRectZero];
 //    }
-    imageview.contentMode = UIViewContentModeScaleAspectFill;
-    [cell addSubview:imageview];
-
-    return cell;
-}
-
-- (CGFloat)collectionView:(PSCollectionView *)collectionView heightForRowAtIndex:(NSInteger)index {
-//    return 100;
-    PhotoModel * model = self.randomDataArray[index];
-    //图片存放到本地，从本地取
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    if (!docDir) {
-        NSLog(@"Documents 目录未找到");
-    }else{
-        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-        UIImage * image = [UIImage imageWithContentsOfFile:randomFilePath];
-        if (image) {
-            Height[index] = image.size.height;
-        }else{
-            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    //本地目录，用于存放favorite下载的原图
-                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                    if (!docDir) {
-                        NSLog(@"Documents 目录未找到");
-                    }else{
-                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-                        //将下载的图片存放到本地
-                        [load.data writeToFile:randomFilePath atomically:YES];
-                        Height[index] = load.dataImage.size.height;
-                        
-                    }
-                }
-            }];
-        }
-    }
-    if (Height[index] == 0) {
-        return 100;
-    }else if(Height[index] < 100){
-        return 100;
-    }else if(Height[index] < 300){
-        return Height[index]/1.3;
-    }else{
-        if (Height[index]/4 < 100) {
-            return 100;
-        }
-        return Height[index]/4;
-    }
-}
--(void)collectionView:(PSCollectionView *)collectionView didSelectCell:(PSCollectionViewCell *)cell atIndex:(NSInteger)index
-{
-    NSLog(@"%d", index);
-    PicDetailViewController * vc = [[PicDetailViewController alloc] init];
-    if (!isHotest) {
-        //最新
-        vc.img_id = [self.newDataArray[index] img_id];
-    }else{
-        //最热
-        vc.img_id = [self.hotDataArray[index] img_id];
-    }
-    [self presentViewController:vc animated:YES completion:nil];
-    [vc release];
-}
+//    UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectZero];
+//    imageview.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+////    imageview.image = [UIImage imageNamed:@"cat2.jpg"];
+////    [cell addSubview:imageview];
+//    
+//    PhotoModel * model = self.randomDataArray[index];
+//    
+//    //图片存放到本地，从本地取
+//    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//    if (!docDir) {
+//        NSLog(@"Documents 目录未找到");
+//    }else{
+//        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+//        //        NSLog(@"randomFilePath:%@", randomFilePath);
+//        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
+//        if (image) {
+//            imageview.image = image;
+//        }else{
+//
+//            imageview.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"20-1" ofType:@"png"]];
+//            
+//            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+//                    //本地目录，用于存放favorite下载的原图
+//                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//                    if (!docDir) {
+//                        NSLog(@"Documents 目录未找到");
+//                    }else{
+//                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+//                        //将下载的图片存放到本地
+//                        [load.data writeToFile:randomFilePath atomically:YES];
+//                        imageview.image = load.dataImage;
+//                        [cv reloadData];
+//                    }
+//
+//                }
+//            }];
+//        }
+//    }
+//    
+////    if (indexPath.row == self.dataArray.count-1) {
+////        [quiltView footerBeginRefreshing];
+////    }
+//    imageview.contentMode = UIViewContentModeScaleAspectFill;
+//    [cell addSubview:imageview];
+//
+//    return cell;
+//}
+//
+//- (CGFloat)collectionView:(PSCollectionView *)collectionView heightForRowAtIndex:(NSInteger)index {
+////    return 100;
+//    PhotoModel * model = self.randomDataArray[index];
+//    //图片存放到本地，从本地取
+//    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//    if (!docDir) {
+//        NSLog(@"Documents 目录未找到");
+//    }else{
+//        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+//        UIImage * image = [UIImage imageWithContentsOfFile:randomFilePath];
+//        if (image) {
+//            Height[index] = image.size.height;
+//        }else{
+//            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+//                    //本地目录，用于存放favorite下载的原图
+//                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//                    if (!docDir) {
+//                        NSLog(@"Documents 目录未找到");
+//                    }else{
+//                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+//                        //将下载的图片存放到本地
+//                        [load.data writeToFile:randomFilePath atomically:YES];
+//                        Height[index] = load.dataImage.size.height;
+//                        
+//                    }
+//                }
+//            }];
+//        }
+//    }
+//    if (Height[index] == 0) {
+//        return 100;
+//    }else if(Height[index] < 100){
+//        return 100;
+//    }else if(Height[index] < 300){
+//        return Height[index]/1.3;
+//    }else{
+//        if (Height[index]/4 < 100) {
+//            return 100;
+//        }
+//        return Height[index]/4;
+//    }
+//}
+//-(void)collectionView:(PSCollectionView *)collectionView didSelectCell:(PSCollectionViewCell *)cell atIndex:(NSInteger)index
+//{
+//    NSLog(@"%d", index);
+//    PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+//    if (!isHotest) {
+//        //最新
+//        vc.img_id = [self.newDataArray[index] img_id];
+//    }else{
+//        //最热
+//        vc.img_id = [self.hotDataArray[index] img_id];
+//    }
+//    [self presentViewController:vc animated:YES completion:nil];
+//    [vc release];
+//}
 
 #pragma mark -
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex

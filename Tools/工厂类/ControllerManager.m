@@ -245,7 +245,8 @@ static LevelRank *levelAndRank =nil;
 {
     HUD = [MBProgressHUD showHUDAddedTo:inView animated:YES];
     [inView addSubview:HUD];
-    HUD.minSize = CGSizeMake(string.length * 5, 30);
+    //    HUD.minSize = CGSizeMake(string.length * 5, 30);
+    HUD.minSize = CGSizeMake(200, 30);
     HUD.margin = 10;
     HUD.labelText = string;
     

@@ -61,9 +61,11 @@
 +(NSData *)returnDataWithDictionary:(NSDictionary *)dict;
 //路径文件转dictonary
 +(NSDictionary *)returnDictionaryWithDataPath:(NSString *)path;
+
+//传进NSURL返回图片的宽高字典
++(NSDictionary *)imageSizeFrom:(NSURL *)imageUrl;
+
 @end
-
-
 
 
 

@@ -140,6 +140,7 @@
     //    tf.backgroundColor = BGCOLOR;
     tf.delegate = self;
     tf.textColor = [UIColor whiteColor];
+    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"搜索最近联系的小伙伴~" attributes:@{NSForegroundColorAttributeName:[UIColor colorWithWhite:1 alpha:0.8]}];
     [headerView addSubview:tf];
     
     UIView * lineView = [MyControl createViewWithFrame:CGRectMake(10, 28, 590/2, 2)];

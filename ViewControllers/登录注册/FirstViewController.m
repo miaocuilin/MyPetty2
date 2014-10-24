@@ -10,6 +10,8 @@
 #import "ControllerManager.h"
 #import "ASIFormDataRequest.h"
 #import "ChoseLoadViewController.h"
+#import <ImageIO/ImageIO.h>
+
 @interface FirstViewController () <UIAlertViewDelegate>
 {
   ASIFormDataRequest * _request;
@@ -29,21 +31,32 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self downloadLaunchImageInfo];
+    
     tempImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@""];
     if (self.view.frame.size.height == 240) {
         tempImageView.image = [UIImage imageNamed:@"Default.png"];
     }else if(self.view.frame.size.height == 480){
         tempImageView.image = [UIImage imageNamed:@"Default@2x.png"];
     }else{
-        tempImageView.image = [UIImage imageNamed:@"Default-568@2x.png"];
+        tempImageView.image = [UIImage imageNamed:@"Default-568h@2x.png"];
     }
     [self.view addSubview:tempImageView];
     
-    [self downloadLaunchImageInfo];
-    
-    
-    [UIApplication sharedApplication].statusBarHidden = YES;
 }
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    tempImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@""];
+//    if (self.view.frame.size.height == 240) {
+//        tempImageView.image = [UIImage imageNamed:@"Default.png"];
+//    }else if(self.view.frame.size.height == 480){
+//        tempImageView.image = [UIImage imageNamed:@"Default@2x.png"];
+//    }else{
+//        tempImageView.image = [UIImage imageNamed:@"Default-568h@2x.png"];
+//    }
+//    [self.view addSubview:tempImageView];
+//
+//}
 -(void)downloadLaunchImageInfo
 {
     if (![USER objectForKey:@"SID"]) {
@@ -77,7 +90,19 @@
 //                [self login];
                 //下载图片
                 NSString * url2 = [NSString stringWithFormat:@"%@%@", WELCOMEAPI2, self.launchImageName];
+            
+//            CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL URLWithString:url2], NULL);
+//            NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+//                                     [NSNumber numberWithBool:NO], (NSString *)kCGImageSourceShouldCache,
+//                                     nil];
+//            CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, (__bridge CFDictionaryRef)options);
+//            NSLog(@"%@",imageProperties);
+//            NSDictionary * imageInfoDict = (NSDictionary *)imageProperties;
+//            NSDictionary * dict = [MyControl imageSizeFrom:[NSURL URLWithString:url2]];
+//            NSLog(@"%@", imageInfoDict);
                 httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url2 Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    
+                    [UIApplication sharedApplication].statusBarHidden = YES;
                     if (isFinish) {
                         [tempImageView removeFromSuperview];
                         
@@ -96,6 +121,7 @@
 //            }
             
         }else{
+            [UIApplication sharedApplication].statusBarHidden = NO;
             UIAlertView * alert = [MyControl createAlertViewWithTitle:@"图片信息加载失败"];
             [self jumpToChoose];
         }
@@ -253,12 +279,12 @@
 {
     [UIApplication sharedApplication].statusBarHidden = NO;
     
-    if ([[USER objectForKey:@"planet"] intValue]){
+//    if ([[USER objectForKey:@"planet"] intValue]){
         [self tempLogin];
-    }else{
-        ChoseLoadViewController * vc = [[ChoseLoadViewController alloc] init];
-        [self presentViewController:vc animated:NO completion:nil];
-    }
+//    }else{
+//        ChoseLoadViewController * vc = [[ChoseLoadViewController alloc] init];
+//        [self presentViewController:vc animated:NO completion:nil];
+//    }
     
 //    vc.modalTransitionStyle = 2;
 //    [self presentViewController:vc animated:NO completion:nil];
@@ -370,8 +396,7 @@
         [self login];
         return;
     }
-    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithStatus:@"登陆中..."];
+    [MyControl startLoadingWithStatus:@"登陆中..."];
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [USER objectForKey:@"usr_id"], sig,[ControllerManager getSID]];
     NSLog(@"%@", url);
@@ -405,7 +430,12 @@
                 [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
                 [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
                 [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
-                [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
+                if (!([[dict objectForKey:@"rank"] isKindOfClass:[NSNull class]] || ![[dict objectForKey:@"rank"] length])) {
+                    [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
+                }else{
+                    [USER setObject:@"1" forKey:@"rank"];
+                }
+                
                 
                 if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
                     [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];

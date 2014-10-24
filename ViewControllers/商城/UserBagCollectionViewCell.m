@@ -35,10 +35,10 @@
     self.titleLabel.textColor = [UIColor grayColor];
     [self addSubview:self.titleLabel];
     
-    UIImageView *giftIcon = [MyControl createImageViewWithFrame:CGRectMake(18, self.frame.size.height/2+27, 15, 15) ImageName:@"giftIcon.png"];
+    UIImageView *giftIcon = [MyControl createImageViewWithFrame:CGRectMake(18, 72, 15, 15) ImageName:@"giftIcon.png"];
     [self addSubview:giftIcon];
     
-    self.presentNumberLabel = [MyControl createLabelWithFrame:CGRectMake(38+3, self.frame.size.height/2+25, self.frame.size.width-40, 20) Font:15 Text:@"X 100"];
+    self.presentNumberLabel = [MyControl createLabelWithFrame:CGRectMake(38+3, 70, self.frame.size.width-40, 20) Font:15 Text:@"X 100"];
     self.presentNumberLabel.textColor = BGCOLOR;
     [self addSubview:self.presentNumberLabel];
     

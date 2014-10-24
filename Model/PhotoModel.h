@@ -28,4 +28,7 @@
 @property(nonatomic,copy)NSString * tx;
 @property(nonatomic,copy)NSString * aid;
 @property(nonatomic,copy)NSString * type;
+
+@property(nonatomic)int width;
+@property(nonatomic)int height;
 @end

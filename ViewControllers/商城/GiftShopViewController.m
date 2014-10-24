@@ -83,7 +83,7 @@
             }else{
                 greenBall.hidden = NO;
             }
-            [ControllerManager HUDText:[NSString stringWithFormat:@"恭喜您，购买 %@ 成功！",model.name] showView:self.view yOffset:0];
+            [ControllerManager HUDText:[NSString stringWithFormat:@"大人，您购买的 %@，小的已经给您送到储物箱了", model.name] showView:self.view yOffset:0];
         }
     }];
     [request release];

@@ -155,8 +155,8 @@
 #pragma mark -
 -(void)changeDefaultPet:(NSString *)aid MasterId:(NSString *)master_id
 {
-    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithStatus:@"切换中..."];
+    
+    [MyControl startLoadingWithStatus:@"切换中..."];
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
     NSString * url =[NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", CHANGEDEFAULTPETAPI, aid, sig, [ControllerManager getSID]];
 //    NSLog(@"%@", url);
@@ -183,10 +183,7 @@
 }
 -(void)loadPetInfo
 {
-//    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showProgressWithStyle:0 title:nil status:@"切换成功，更新信息中..." confirmationMessage:@"确认取消?" cancelBlock:^{
-        LoadingFailed;
-    }];
+    [MyControl startLoadingWithStatus:@"切换成功，更新信息中..."];
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {

@@ -438,6 +438,11 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	label.textColor = [UIColor grayColor];
 	label.font = self.labelFont;
 	label.text = self.labelText;
+    label.numberOfLines = 0;
+    CGSize labelSize = [self.labelText sizeWithFont:self.labelFont constrainedToSize:CGSizeMake(300, 100) lineBreakMode:NSLineBreakByCharWrapping];
+    CGRect rect = label.frame;
+    rect.size = labelSize;
+    label.lineBreakMode = NSLineBreakByCharWrapping;
 	[self addSubview:label];
 	
 	detailsLabel = [[UILabel alloc] initWithFrame:self.bounds];
@@ -448,6 +453,12 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 	detailsLabel.backgroundColor = [UIColor grayColor];
 	detailsLabel.textColor = [UIColor whiteColor];
 	detailsLabel.numberOfLines = 0;
+    
+    CGSize labelSize2 = [self.detailsLabelText sizeWithFont:self.detailsLabelFont constrainedToSize:CGSizeMake(300, 100) lineBreakMode:NSLineBreakByCharWrapping];
+    CGRect rect2 = detailsLabel.frame;
+    rect2.size = labelSize2;
+    detailsLabel.lineBreakMode = NSLineBreakByCharWrapping;
+    
 	detailsLabel.font = self.detailsLabelFont;
 	detailsLabel.text = self.detailsLabelText;
 	[self addSubview:detailsLabel];

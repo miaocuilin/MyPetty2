@@ -198,6 +198,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [sv addSubview:users];
     
     publishTo = [MyControl createButtonWithFrame:CGRectMake(users.frame.origin.x+users.frame.size.width+space, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, width, 30) ImageName:@"" Target:self Action:@selector(usersClick) Title:[NSString stringWithFormat:@"发布到%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"]]];
+    if (self.name != nil) {
+        [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", self.name] forState:UIControlStateNormal];
+    }
     publishTo.userInteractionEnabled = NO;
     publishTo.titleLabel.font = [UIFont systemFontOfSize:13];
     publishTo.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
@@ -535,9 +538,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)postData:(UIImage *)image
 {
     [MyControl startLoadingWithStatus:@"发布中..."];
+//    [USER objectForKey:@"aid"]
     NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]];
+    
     //网络上传
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETIMAGEAPI, [USER objectForKey:@"aid"], [MyMD5 md5:code], [ControllerManager getSID]];
+    if (self.aid != nil) {
+        code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
+        url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETIMAGEAPI, self.aid, [MyMD5 md5:code], [ControllerManager getSID]];
+    }
     NSLog(@"postUrl:%@", url);
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:url]];
     _request.requestMethod = @"POST";
@@ -586,6 +595,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     NSDictionary *dict =[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
+    //如果返回正常，将图片存到本地
+    if([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[dict objectForKey:@"data"] objectForKey:@"image"] isKindOfClass:[NSDictionary class]]){
+        NSString * url = [[[dict objectForKey:@"data"] objectForKey:@"image"] objectForKey:@"url"];
+        NSData * data = UIImageJPEGRepresentation(self.oriImage, 0.1);
+        NSString * path = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
+        BOOL a = [data writeToFile:path atomically:YES];
+        NSLog(@"本地存储结果：%d", a);
+    }
+    
     if ([[dict objectForKey:@"errorCode"] intValue] == -1) {
         [MMProgressHUD dismissWithError:[dict objectForKey:@"errorMessage"] afterDelay:1];
         NSLog(@"errorMessage:%@", [dict objectForKey:@"errorMessage"]);

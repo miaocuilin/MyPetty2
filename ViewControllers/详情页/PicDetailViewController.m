@@ -944,6 +944,10 @@
         }else{
             NSString * name = [[self.nameArray[i] componentsSeparatedByString:@"&"] objectAtIndex:0];
             NSString * reply_name = [[self.nameArray[i] componentsSeparatedByString:@"&"] objectAtIndex:1];
+            if([reply_name rangeOfString:@"@"].location != NSNotFound){
+                reply_name = [[reply_name componentsSeparatedByString:@"@"] objectAtIndex:1];
+            }
+                
             NSString * str = [NSString stringWithFormat:@"%@ 回复 %@", name, reply_name];
             NSMutableAttributedString * attString = [[NSMutableAttributedString alloc] initWithString:str];
             [attString addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, name.length)];
@@ -1053,7 +1057,9 @@
         return;
     }
 
-    self.replyPlaceHolder = [NSString stringWithFormat:@"回复%@", self.nameArray[i]];
+    NSString * str = [[self.nameArray[i] componentsSeparatedByString:@"&"] objectAtIndex:0];
+    
+    self.replyPlaceHolder = [NSString stringWithFormat:@"回复 %@", str];
     [self replyClick:i];
 }
 

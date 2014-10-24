@@ -76,7 +76,8 @@
                 [model setValuesForKeysWithDictionary:dict];
                 [self.dataArray addObject:model];
                 
-                [model release];
+//                model.height = [[MyControl imageSizeFrom:[NSURL URLWithString:[IMAGEURL stringByAppendingPathComponent:model.url]]] objectForKey:@"height"];
+//                [model release];
             }
             
             self.lastImg_id = [self.dataArray[self.dataArray.count-1] img_id];

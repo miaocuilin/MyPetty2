@@ -100,7 +100,7 @@
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-//            NSLog(@"%@", load.dataDict);
+            NSLog(@"%@", load.dataDict);
             [self.userPetListArray removeAllObjects];
             NSArray * array = [load.dataDict objectForKey:@"data"];
             for (NSDictionary * dict in array) {
@@ -569,7 +569,7 @@
     
     //
     
-    NSString * str2 = [NSString stringWithFormat:@"经纪人—%@", [headerDict objectForKey:@"a_name"]];
+    NSString * str2 = [NSString stringWithFormat:@"萌主—%@", [headerDict objectForKey:@"a_name"]];
     CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:14 Text:str2];
     //    positionAndUserName.font = [UIFont boldSystemFontOfSize:15];
@@ -1129,10 +1129,11 @@
 {
     if (sv.contentOffset.x == 0) {
         if (index == 1) {
-            //退出国家
+            //退出联萌
             NSIndexPath * cellIndexPath = [tv indexPathForCell:cell];
             NSLog(@"%@", [self.userPetListArray[cellIndexPath.row] master_id]);
-            if ([self.usr_id isEqualToString:[self.userPetListArray[cellIndexPath.row] master_id]]) {
+//            NSLog(@"%@--%@--%@", [self.userPetListArray[cellIndexPath.row] master_id], self.usr_id, [USER objectForKey:@"usr_id"]);
+            if ([[USER objectForKey:@"usr_id"] isEqualToString:[self.userPetListArray[cellIndexPath.row] master_id]]) {
                 StartLoading;
                 [MMProgressHUD dismissWithError:@"不能退出自己的联萌" afterDelay:1];
                 return;
@@ -1140,6 +1141,12 @@
             if (self.userPetListArray.count == 1) {
                 StartLoading;
                 [MyControl loadingFailedWithContent:@"您仅有1个联萌，不能退出" afterDelay:1];
+                return;
+            }
+//            NSLog(@"%@", [USER objectForKey:@"aid"]);
+            if ([[USER objectForKey:@"aid"] isEqualToString:[self.userPetListArray[cellIndexPath.row] aid]]) {
+                StartLoading;
+                [MyControl loadingFailedWithContent:@"不能退出默认宠物" afterDelay:1];
                 return;
             }
 //            [self quitCountryWithRow:cellIndexPath.row];
@@ -1159,10 +1166,10 @@
                             [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
                             [self.userPetListArray removeObjectAtIndex:cellIndexPath.row];
                             [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
+                            [tv reloadData];
                         }else{
                             [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
                         }
-                        
                     }else{
                         [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
                     }
@@ -1173,22 +1180,63 @@
             [view release];
             
         }else if(index == 2){
-            //切换并置顶
-            
+            //设为默认
+            NSIndexPath * cellIndexPath = [tv indexPathForCell:cell];
+            if (![[self.userPetListArray[cellIndexPath.row] aid] isEqualToString:[USER objectForKey:@"aid"]]) {
+                [self changeDefaultPetAid:[self.userPetListArray[cellIndexPath.row] aid] MasterId:[self.userPetListArray[cellIndexPath.row] master_id]];
+            }
         }
     }
 }
 #pragma mark -
-//-(void)unFollow:(int)row
-//{
-//    
-//}
-//-(void)quitCountryWithRow:(int)row
-//{
-//    
-//    
-//    
-//}
+-(void)changeDefaultPetAid:(NSString *)aid MasterId:(NSString *)master_id
+{
+    
+    [MyControl startLoadingWithStatus:@"切换中..."];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
+    NSString * url =[NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", CHANGEDEFAULTPETAPI, aid, sig, [ControllerManager getSID]];
+    //    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                NSLog(@"%@", aid);
+                [USER setObject:aid forKey:@"aid"];
+                [USER setObject:master_id forKey:@"master_id"];
+                NSLog(@"%@--%@--%@", [USER objectForKey:@"aid"], [USER objectForKey:@"master_id"], [USER objectForKey:@"usr_id"]);
+                [tv reloadData];
+                [self loadPetInfo];
+                
+            }else{
+                [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+            }
+            
+        }else{
+            [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+        }
+    }];
+    [request release];
+}
+-(void)loadPetInfo
+{
+    [MyControl startLoadingWithStatus:@"切换成功，更新信息中..."];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"petInfo:%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                
+                //记录默认宠物信息
+                [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"petInfoDict"];
+            }
+            [MMProgressHUD dismissWithSuccess:@"更新成功" title:nil afterDelay:0.5];
+        }else{
+            [MMProgressHUD dismissWithError:@"更新失败" afterDelay:0.5];
+        }
+    }];
+    [request release];
+}
 
 //礼物点击事件
 -(void)buttonClick:(UIButton *)btn

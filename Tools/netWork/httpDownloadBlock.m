@@ -92,6 +92,7 @@
             if([[self.dataDict objectForKey:@"errorCode"] intValue] == -1){
                 if ([[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"余额不足"]) {
                     [ControllerManager HUDText:@"余额不足(⊙o⊙)哦~~" showView:[[UIApplication sharedApplication]keyWindow] yOffset:-50];
+                    [MyControl loadingFailedWithContent:@"购买失败" afterDelay:0.5f];
                     return;
                 }
                 if ([[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"音频文件不存在"]) {

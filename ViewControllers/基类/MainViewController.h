@@ -20,6 +20,7 @@
     UIActionSheet * sheet;
     
     int segmentClickIndex;
+    
 }
 @property(nonatomic,retain)UIButton * alphaBtn;
 

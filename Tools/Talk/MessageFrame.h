@@ -37,6 +37,7 @@
 
 @property (nonatomic) BOOL showTime;
 
+//@property (nonatomic) BOOL hasArrow;
 - (void)setMessage:(Message *)message;
 
 @end

@@ -137,30 +137,31 @@
 {
     //已经录过了，从本地找看是否有录音
     NSFileManager * manager = [[NSFileManager alloc] init];
-    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", self.pet_aid]];
+    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", @"Mp3File"]];
     if ([manager fileExistsAtPath:filePath]) {
         //存在录音，播放
         [self playRecord2];
-    }else{
-        //不存在，去下载
-        NSString * sig2 = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
-        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECORDDOWNLOADAPI, self.pet_aid, sig2, [ControllerManager getSID]];
-        NSLog(@"%@", url);
-        httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                [load.data writeToFile:filePath atomically:YES];
-                [self playRecord2];
-            }else{
-                StartLoading;
-                [MyControl loadingFailedWithContent:@"音频文件不存在" afterDelay:0.7];
-            }
-        }];
-        [request2 release];
     }
+//    else{
+//        //不存在，去下载
+//        NSString * sig2 = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+//        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECORDDOWNLOADAPI, self.pet_aid, sig2, [ControllerManager getSID]];
+//        NSLog(@"%@", url);
+//        httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                [load.data writeToFile:filePath atomically:YES];
+//                [self playRecord2];
+//            }else{
+//                StartLoading;
+//                [MyControl loadingFailedWithContent:@"音频文件不存在" afterDelay:0.7];
+//            }
+//        }];
+//        [request2 release];
+//    }
 }
 -(void)playRecord2
 {
-    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", self.pet_aid]];
+    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", @"Mp3File"]];
     if (_player == nil)
     {
         NSError *playerError;
@@ -184,10 +185,10 @@
     NSLog(@"postUrl:%@", uploadRecordString);
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:uploadRecordString]];
     _request.requestMethod = @"POST";
-    _request.timeOutSeconds = 20;
-    NSString *mp3FileName = @"Mp3File";
-    mp3FileName = [mp3FileName stringByAppendingString:@".mp3"];
-    NSString *mp3FilePath = [[NSHomeDirectory() stringByAppendingFormat:@"/Documents/"] stringByAppendingPathComponent:mp3FileName];
+    _request.timeOutSeconds = 30;
+    NSString *mp3FileName = @"Mp3File.mp3";
+//    mp3FileName = [mp3FileName stringByAppendingString:@".mp3"];
+    NSString *mp3FilePath = [DOCDIR stringByAppendingPathComponent:mp3FileName];
     NSData *data = [NSData dataWithContentsOfFile:mp3FilePath];
     [_request setData:data forKey:@"voice"];
     [_request setUploadProgressDelegate:self];
@@ -443,9 +444,9 @@
 {
     NSString *cafFilePath =[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"];
     
-    NSString *mp3FileName = @"Mp3File";
-    mp3FileName = [mp3FileName stringByAppendingString:@".mp3"];
-    NSString *mp3FilePath = [[NSHomeDirectory() stringByAppendingFormat:@"/Documents/"] stringByAppendingPathComponent:mp3FileName];
+    NSString *mp3FileName = @"Mp3File.mp3";
+//    mp3FileName = [mp3FileName stringByAppendingString:@".mp3"];
+    NSString *mp3FilePath = [DOCDIR stringByAppendingPathComponent:mp3FileName];
     
     @try {
         int read, write;
@@ -528,10 +529,10 @@
     else
         [session setActive:YES error:nil];
     NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:
-                              [NSNumber numberWithFloat: 11025],                  AVSampleRateKey,
+                              [NSNumber numberWithFloat: 44100],                  AVSampleRateKey,
                               [NSNumber numberWithInt: kAudioFormatLinearPCM],                   AVFormatIDKey,
-                              [NSNumber numberWithInt: 2],                              AVNumberOfChannelsKey,
-                              [NSNumber numberWithInt: AVAudioQualityLow],                       AVEncoderAudioQualityKey,
+                              [NSNumber numberWithInt: 2],                              AVNumberOfChannelsKey,[NSNumber numberWithInt:16], AVLinearPCMBitDepthKey,
+                              [NSNumber numberWithInt: AVAudioQualityMin],                       AVEncoderAudioQualityKey,
                               nil];
 //    CFUUIDRef cfuuid = CFUUIDCreate(kCFAllocatorDefault);
 //    NSString *cfuuidString = (NSString*)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, cfuuid));
@@ -541,6 +542,7 @@
         [manager removeItemAtPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"] error:nil];
     }
     [manager release];
+//    recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
     recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
     
     NSLog(@"_recordedFile :%@",recordedFile);
@@ -809,6 +811,7 @@
 }
 - (void)colseGiftAction
 {
+    [self.player stop];
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
     if (self.timer2) {

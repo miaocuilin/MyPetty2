@@ -288,6 +288,7 @@
     NSLog(@"%@", url);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
+            NSLog(@"%@", load.dataDict);
             //user_gold是NSNumber类型
             [USER setObject:[NSString stringWithFormat:@"%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"user_gold"]] forKey:@"gold"];
             

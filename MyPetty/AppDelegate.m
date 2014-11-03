@@ -18,7 +18,7 @@
 
 
 #import "NewWaterFlowViewController.h"
-
+#import "PetRecommendViewController.h"
 @implementation AppDelegate
 -(void)dealloc
 {
@@ -49,6 +49,7 @@
 
     FirstViewController * info = [[FirstViewController alloc] init];
 //    NewWaterFlowViewController * info = [[NewWaterFlowViewController alloc] init];
+//    PetRecommendViewController * info = [[PetRecommendViewController alloc] init];
     self.window.rootViewController = info;
     [info release];
 

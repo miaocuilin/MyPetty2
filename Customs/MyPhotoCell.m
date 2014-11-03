@@ -38,7 +38,7 @@
     
     [zanBgView addSubview:fish];
     
-    UIButton * zanBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 50, 20) ImageName:@"" Target:self Action:@selector(zanBtnClick:) Title:nil];
+    zanBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 50, 20) ImageName:@"" Target:self Action:@selector(zanBtnClick:) Title:nil];
     [zanBgView addSubview:zanBtn];
 //    UIView * bgView = [MyControl createViewWithFrame:CGRectMake(10, 160, 65, 30)];
 //    bgView.alpha = 0.5;
@@ -116,8 +116,13 @@
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKEAPI, self.img_id, sig, [ControllerManager getSID]];
         NSLog(@"likeURL:%@", url);
         
-        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
+                if ([[load.dataDict objectForKey:@"state"] intValue] == 2) {
+                    //过期
+                    [self login];
+                    return;
+                }
                 if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                     btn.enabled = NO;
                     if (isMi) {
@@ -143,7 +148,7 @@
                 NSLog(@"数据请求失败");
             }
         }];
-        
+        [request release];
         
     }else{
         btn.enabled = NO;
@@ -219,6 +224,28 @@
 //    }
 //}
 
+-(void)login
+{
+    StartLoading;
+    NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", UDID];
+    NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@", LOGINAPI, UDID, [MyMD5 md5:code]];
+    NSLog(@"login-url:%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if(isFinish){
+            NSLog(@"%@", load.dataDict);
+            [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
+            [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
+            
+            [self zanBtnClick:zanBtn];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
 
 
 

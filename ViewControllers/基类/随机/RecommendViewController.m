@@ -205,38 +205,45 @@
 - (CGFloat)quiltView:(TMQuiltView *)quiltView heightForCellAtIndexPath:(NSIndexPath *)indexPath
 {
     PhotoModel * model = self.dataArray[indexPath.row];
+    CGSize size = [model.cmt sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(self.view.frame.size.width/2-8, 100) lineBreakMode:NSLineBreakByCharWrapping];
     //图片存放到本地，从本地取
     NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    if (!docDir) {
-        NSLog(@"Documents 目录未找到");
+    if (Height[indexPath.row]) {
+//        NSLog(@"Documents 目录未找到");
+//        return Height[indexPath.row]/3.5+size.height;
     }else{
         NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
         //        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
         UIImage * image = [UIImage imageWithContentsOfFile:randomFilePath];
         if (image) {
             Height[indexPath.row] = image.size.height;
+//            return image.size.height;
         }else{
-            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    //本地目录，用于存放favorite下载的原图
-                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                    if (!docDir) {
-                        NSLog(@"Documents 目录未找到");
-                    }else{
-                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-                        //将下载的图片存放到本地
-                        [load.data writeToFile:randomFilePath atomically:YES];
-                        Height[indexPath.row] = load.dataImage.size.height;
-                        
-                        //每次新下载完一张图片后都刷新瀑布流
-                        //                        if (indexPath.row == self.dataArray.count-1) {
-                        //                            [qtmquitView reloadData];
-                        //                        }
-                        
-                    }
-                }else{
-                }
-            }];
+            //获取图片大小
+            NSDictionary * dict = [MyControl imageSizeFrom:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]]];
+            NSLog(@"%@", dict);
+            Height[indexPath.row] = [[dict objectForKey:@"height"] intValue];
+//            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+//                    //本地目录，用于存放favorite下载的原图
+//                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//                    if (!docDir) {
+//                        NSLog(@"Documents 目录未找到");
+//                    }else{
+//                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+//                        //将下载的图片存放到本地
+//                        [load.data writeToFile:randomFilePath atomically:YES];
+//                        Height[indexPath.row] = load.dataImage.size.height;
+//                        
+//                        //每次新下载完一张图片后都刷新瀑布流
+//                        //                        if (indexPath.row == self.dataArray.count-1) {
+//                        //                            [qtmquitView reloadData];
+//                        //                        }
+//                        
+//                    }
+//                }else{
+//                }
+//            }];
         }
     }
     
@@ -265,18 +272,21 @@
     //        }];
     //    }
     //    return 100;
-    if (Height[indexPath.row] == 0) {
-        return 100;
-    }else if(Height[indexPath.row] < 100){
-        return 100;
-    }else if(Height[indexPath.row] < 300){
-        return Height[indexPath.row]/1.3;
-    }else{
-        if (Height[indexPath.row]/4 < 100) {
-            return 100;
-        }
-        return Height[indexPath.row]/4;
-    }
+//    if (Height[indexPath.row] == 0) {
+//        return 100;
+//    }else if(Height[indexPath.row] < 100){
+//        return 100;
+//    }else if(Height[indexPath.row] < 300){
+//        return Height[indexPath.row]/1.3;
+//    }else{
+//        if (Height[indexPath.row]/4 < 100) {
+//            return 100;
+//        }
+//        return Height[indexPath.row]/4;
+//    }
+//    return Height[indexPath.row]/2.5;
+//    return Height[indexPath.row] / [self quiltViewNumberOfColumns:quiltView];
+    return Height[indexPath.row]/3.5+size.height;
     
     //    return [self imageAtIndexPath:indexPath].size.height / [self quiltViewNumberOfColumns:quiltView]/2.5;
     //    if (height<50) {

@@ -99,7 +99,7 @@
 //            NSLog(@"%@",imageProperties);
 //            NSDictionary * imageInfoDict = (NSDictionary *)imageProperties;
 //            NSDictionary * dict = [MyControl imageSizeFrom:[NSURL URLWithString:url2]];
-//            NSLog(@"%@", imageInfoDict);
+//            NSLog(@"%@", dict);
                 httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url2 Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     
                     [UIApplication sharedApplication].statusBarHidden = YES;

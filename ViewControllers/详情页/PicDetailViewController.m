@@ -486,7 +486,7 @@
         NSString * url = [NSString stringWithFormat:@"%@%@", IMAGEURL, self.imageURL];
         NSLog(@"%@", url);
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, self.imageURL] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            NSLog(@"%@", load.data);
+//            NSLog(@"%@", load.data);
             if (isFinish) {
                 bigImageView.image = load.dataImage;
                 [self adjustedImage:bigImageView];
@@ -1608,53 +1608,55 @@
     //经验弹窗
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
     NSLog(@"%@", dict);
-    int exp = [[USER objectForKey:@"exp"] intValue];
-    int addExp = [[[dict objectForKey:@"data"] objectForKey:@"exp"] intValue];
-    if (index>0) {
-        [USER setObject:[NSString stringWithFormat:@"%d", exp+addExp] forKey:@"exp"];
-        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:addExp];
-    }
-//    int gold = [[[dict objectForKey:@"data"] objectForKey:@"gold"] intValue];
-//    if (gold>0) {
-//        [USER setObject:[NSString stringWithFormat:@"%d", gold+[[USER objectForKey:@"gold"] intValue]] forKey:@"gold"];
-//        [ControllerManager HUDImageIcon:@"gold.png" showView:self.view.window yOffset:0 Number:gold];
-//    }
-    
-    [commentTextView resignFirstResponder];
-    
-    //添加评论
-    NSLog(@"%@", [USER objectForKey:@"usr_id"]);
-    [self.usrIdArray insertObject:[USER objectForKey:@"usr_id"] atIndex:0];
-//    [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];
-    if (isReply) {
-        [self.nameArray insertObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]] atIndex:0];
-//        [self.nameArray addObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]]];
+    if ([[dict objectForKey:@"state"] intValue] == 2) {
+        //过期
+        [self login];
     }else{
-        [self.nameArray insertObject:[USER objectForKey:@"name"] atIndex:0];
-//        [self.nameArray addObject:[USER objectForKey:@"name"]];
+        if ([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+            int exp = [[USER objectForKey:@"exp"] intValue];
+            int addExp = [[[dict objectForKey:@"data"] objectForKey:@"exp"] intValue];
+            if (index>0) {
+                [USER setObject:[NSString stringWithFormat:@"%d", exp+addExp] forKey:@"exp"];
+                [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:addExp];
+            }
+        }
+        
+        [commentTextView resignFirstResponder];
+        
+        //添加评论
+        NSLog(@"%@", [USER objectForKey:@"usr_id"]);
+        [self.usrIdArray insertObject:[USER objectForKey:@"usr_id"] atIndex:0];
+        //    [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];
+        if (isReply) {
+            [self.nameArray insertObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]] atIndex:0];
+            //        [self.nameArray addObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]]];
+        }else{
+            [self.nameArray insertObject:[USER objectForKey:@"name"] atIndex:0];
+            //        [self.nameArray addObject:[USER objectForKey:@"name"]];
+        }
+        NSLog(@"%@", commentTextView.text);
+        [self.bodyArray insertObject:commentTextView.text atIndex:0];
+        //    [self.bodyArray addObject:commentTextView.text];
+        [self.createTimeArray insertObject:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]] atIndex:0];
+        //    [self.createTimeArray addObject:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]];
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            commentBgView.frame = CGRectMake(-self.view.frame.size.width, self.view.frame.size.height-216-40, 320, 40);
+            //评论清空
+            commentTextView.text = @"写个评论呗";
+            commentTextView.textColor = [UIColor lightGrayColor];
+        }];
+        bgButton.hidden = YES;
+        [MMProgressHUD dismissWithSuccess:@"评论成功" title:nil afterDelay:0.2];
+        //
+        commentNum.text = [NSString stringWithFormat:@"%d", self.nameArray.count];
+        
+        [commentsBgView removeFromSuperview];
+        //    if (!([self.likerTxArray isKindOfClass:[NSNull class]] || self.likerTxArray.count == 0)) {
+        //        [txsView removeFromSuperview];
+        //    }
+        [self createCmt];
     }
-    NSLog(@"%@", commentTextView.text);
-    [self.bodyArray insertObject:commentTextView.text atIndex:0];
-//    [self.bodyArray addObject:commentTextView.text];
-    [self.createTimeArray insertObject:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]] atIndex:0];
-//    [self.createTimeArray addObject:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]]];
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        commentBgView.frame = CGRectMake(-self.view.frame.size.width, self.view.frame.size.height-216-40, 320, 40);
-        //评论清空
-        commentTextView.text = @"写个评论呗";
-        commentTextView.textColor = [UIColor lightGrayColor];
-    }];
-    bgButton.hidden = YES;
-    [MMProgressHUD dismissWithSuccess:@"评论成功" title:nil afterDelay:0.2];
-    //
-    commentNum.text = [NSString stringWithFormat:@"%d", self.nameArray.count];
-    
-    [commentsBgView removeFromSuperview];
-//    if (!([self.likerTxArray isKindOfClass:[NSNull class]] || self.likerTxArray.count == 0)) {
-//        [txsView removeFromSuperview];
-//    }
-    [self createCmt];
     
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
@@ -1662,6 +1664,30 @@
     NSLog(@"failed");
     [MMProgressHUD dismissWithError:@"评论失败" afterDelay:1];
 }
+#pragma mark - 
+-(void)login
+{
+    StartLoading;
+    NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", UDID];
+    NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@", LOGINAPI, UDID, [MyMD5 md5:code]];
+    NSLog(@"login-url:%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if(isFinish){
+            NSLog(@"%@", load.dataDict);
+            [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
+            [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
+            [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
+            
+            [self sendButtonClick];
+            LoadingSuccess;
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+
 #pragma mark - textView代理
 -(void)textViewDidBeginEditing:(UITextView *)textView
 {

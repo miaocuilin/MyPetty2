@@ -12,6 +12,8 @@
 #import "MessageFrame.h"
 #import "SingleTalkModel.h"
 #import "MessageModel.h"
+#import "PicDetailViewController.h"
+#import "UserInfoViewController.h"
 //#import "NoticeViewController.h";
 #define TimeGap 60
 
@@ -521,9 +523,12 @@
 #pragma mark - tableView
 -(void)createTableView
 {
+//    UIButton * tvBgButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40) ImageName:@"" Target:self Action:@selector(hideKeyboard) Title:nil];
+//    [self.view addSubview:tvBgButton];
+    
     tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40) style:UITableViewStylePlain];
     tv.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tv.allowsSelection = NO;
+//    tv.allowsSelection = NO;
 //    UIImageView * backImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chat_bg_default.jpg"]];
 //    tv.backgroundView = backImageView;
 //    [backImageView release];
@@ -535,8 +540,6 @@
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
     tv.tableHeaderView = tempView;
     
-    UIButton * tvBgButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, tv.frame.size.width, tv.frame.size.height) ImageName:@"" Target:self Action:@selector(hideKeyboard) Title:nil];
-    [tv addSubview:tvBgButton];
     
     //发送栏
     commentBgView2 = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height-40, 320, 40)];
@@ -582,11 +585,41 @@
     MessageCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
-        cell = [[MessageCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[[MessageCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+    }
+    
+    if ([[self.talkDataArray[indexPath.row] img_id] intValue] > 0) {
+        cell.hasArrow = YES;
+    }else{
+        cell.hasArrow = NO;
     }
     
     // 设置数据
     [cell setMessageFrame:self.dataArray[indexPath.row]];
+    
+    cell.jumpToUserInfo = ^(void){
+        int a = [[self.talkDataArray[indexPath.row] usr_id] intValue];
+        if (a == 1 || a == 2 || a == 3) {
+            return;
+        }
+        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+        //    NSLog(@"%@", petInfoDict);
+        vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
+        vc.modalTransitionStyle = 2;
+//        vc.isFromPetInfo = YES;
+//        vc.petHeadImage = headerImageView.image;
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    };
+    
+    cell.jumpToPicDetail = ^(void){
+        PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+        vc.img_id = [self.talkDataArray[indexPath.row] img_id];
+        vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    };
+    
 //    cell.messageFrame = self.dataArray[indexPath.row];
     return cell;
 }
@@ -716,6 +749,8 @@
     }else{
         mf.showTime = NO;
     }
+    
+//    mf.hasArrow = hasArrow;
     
     [self.dataArray addObject:mf];
     //这两个不能释放，后面还要用到，都则会崩溃

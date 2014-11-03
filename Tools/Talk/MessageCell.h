@@ -13,5 +13,10 @@
 
 @property (nonatomic, strong) MessageFrame *messageFrame;
 
+@property (nonatomic)BOOL hasArrow;
+
+@property (nonatomic, copy)void (^jumpToPicDetail)(void);
+@property (nonatomic, copy)void (^jumpToUserInfo)(void);
+
 - (void)setMessageFrame:(MessageFrame *)messageFrame;
 @end

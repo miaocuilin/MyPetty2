@@ -15,20 +15,33 @@
 
 @interface NewWaterFlowViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
 {
+    UIImageView * bgImageView;
     UIView * navView;
     UITableView * bgTv;
     
-    UITableView * tv;
+//    UITableView * tv;
     UITableView * tv2;
     
     UIButton * camara;
     
+    float height1,height2;
+    
+    //记录self.dataArray的数量，加载更多时需要记录循环开始数
+    int count;
 //    struct size;
+    int tempNum;
+    int tempCount;
 }
+@property (nonatomic,retain) UITableView * tv;
+
 @property (nonatomic,retain) UIButton * menuBtn;
 
 @property (nonatomic,retain) NSMutableArray * dataArray;
 
+@property (nonatomic,retain) NSMutableArray * dataArray1;
+@property (nonatomic,retain) NSMutableArray * dataArray2;
+
+@property (nonatomic,retain) NSMutableArray * tempArray;
 //@property (nonatomic,retain) NSMutableArray * widthArray;
 //@property (nonatomic,retain) NSMutableArray * heightArray;
 

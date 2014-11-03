@@ -12,9 +12,10 @@
 
 @interface MessageCell ()
 {
-    UIButton     *_timeBtn;
-    UIImageView *_iconView;
-    UIButton    *_contentBtn;
+    UIButton * _timeBtn;
+    UIButton * _iconView;
+    UIButton * _contentBtn;
+    UIButton * _arrowBtn;
 }
 
 @end
@@ -41,7 +42,8 @@
         
         
         // 2、创建头像
-        _iconView = [[UIImageView alloc] init];
+//        _iconView = [[UIImageView alloc] init];
+        _iconView = [MyControl createButtonWithFrame:CGRectZero ImageName:@"" Target:self Action:@selector(headBtnClick) Title:nil];
         [self.contentView addSubview:_iconView];
 
         
@@ -54,6 +56,13 @@
         _contentBtn.titleLabel.numberOfLines = 0;
         
         [self.contentView addSubview:_contentBtn];
+        
+        //4、创建箭头
+        _arrowBtn = [MyControl createButtonWithFrame:CGRectMake(10, 10, 1, 1) ImageName:@"talkArrow.png" Target:self Action:@selector(arrowBtnClick) Title:nil];
+        _arrowBtn.showsTouchWhenHighlighted = YES;
+//        _arrowBtn.userInteractionEnabled = YES;
+//        _arrowBtn.backgroundColor = [UIColor grayColor];
+        [self.contentView addSubview:_arrowBtn];
     }
     return self;
 }
@@ -87,25 +96,29 @@
     // 2、设置头像
 //    _iconView.image = [UIImage imageNamed:message.icon];
     if ([message.icon isKindOfClass:[NSNull class]] || message.icon.length==0) {
-        _iconView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+        [_iconView setBackgroundImage:[UIImage imageNamed:@"defaultUserHead.png"] forState:UIControlStateNormal];
+//        _iconView.image = [UIImage imageNamed:@"defaultUserHead.png"];
     }else{
         if ([message.icon intValue] == 1) {
-            _iconView.image = [UIImage imageNamed:@"wangwang.png"];
+            [_iconView setBackgroundImage:[UIImage imageNamed:@"wangwang.png"] forState:UIControlStateNormal];
+//            _iconView.image = [UIImage imageNamed:@"wangwang.png"];
         }else if([message.icon intValue] == 2){
-            _iconView.image = [UIImage imageNamed:@"miaomiao.png"];
+            [_iconView setBackgroundImage:[UIImage imageNamed:@"miaomiao.png"] forState:UIControlStateNormal];
+//            _iconView.image = [UIImage imageNamed:@"miaomiao.png"];
         }else if([message.icon intValue] == 3){
-            _iconView.image = [UIImage imageNamed:@"xiaoge.png"];
+            [_iconView setBackgroundImage:[UIImage imageNamed:@"xiaoge.png"] forState:UIControlStateNormal];
+//            _iconView.image = [UIImage imageNamed:@"xiaoge.png"];
         }else{
             NSString * docDir = DOCDIR;
             NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", message.icon]];
             UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
             if (image) {
-                _iconView.image = image;
+                [_iconView setBackgroundImage:image forState:UIControlStateNormal];
             }else{
                 //下载头像
                 httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, message.icon] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
-                        _iconView.image = load.dataImage;
+                        [_iconView setBackgroundImage:load.dataImage forState:UIControlStateNormal];
                         NSString * docDir = DOCDIR;
                         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", message.icon]];
                         [load.data writeToFile:txFilePath atomically:YES];
@@ -132,24 +145,44 @@
         _contentBtn.contentEdgeInsets = UIEdgeInsetsMake(kContentTop, kContentRight, kContentBottom, kContentLeft);
     }
     
-    UIImage *normal , *focused;
+    UIImage * normal;
+//    UIImage *normal , *focused;
     if (message.type == MessageTypeMe) {
     
         normal = [UIImage imageNamed:@"talkRight.png"];
         normal = [normal stretchableImageWithLeftCapWidth:normal.size.width * 0.5 topCapHeight:normal.size.height * 0.7];
-        focused = [UIImage imageNamed:@"chatto_bg_focused.png"];
-        focused = [focused stretchableImageWithLeftCapWidth:focused.size.width * 0.5 topCapHeight:focused.size.height * 0.7];
+//        focused = [UIImage imageNamed:@"chatto_bg_focused.png"];
+//        focused = [focused stretchableImageWithLeftCapWidth:focused.size.width * 0.5 topCapHeight:focused.size.height * 0.7];
     }else{
         
         normal = [UIImage imageNamed:@"talkLeft.png"];
         normal = [normal stretchableImageWithLeftCapWidth:normal.size.width * 0.5 topCapHeight:normal.size.height * 0.7];
-        focused = [UIImage imageNamed:@"chatfrom_bg_focused.png"];
-        focused = [focused stretchableImageWithLeftCapWidth:focused.size.width * 0.5 topCapHeight:focused.size.height * 0.7];
+//        focused = [UIImage imageNamed:@"chatfrom_bg_focused.png"];
+//        focused = [focused stretchableImageWithLeftCapWidth:focused.size.width * 0.5 topCapHeight:focused.size.height * 0.7];
         
     }
     [_contentBtn setBackgroundImage:normal forState:UIControlStateNormal];
-    [_contentBtn setBackgroundImage:focused forState:UIControlStateHighlighted];
+//    [_contentBtn setBackgroundImage:focused forState:UIControlStateHighlighted];
+    
+    //4.箭头
+    if (!self.hasArrow) {
+        _arrowBtn.hidden = YES;
+    }else{
+        _arrowBtn.hidden = NO;
+        [_arrowBtn setFrame:CGRectMake(_contentBtn.frame.origin.x+_contentBtn.frame.size.width, _contentBtn.frame.origin.y+_contentBtn.frame.size.height/2-12, 24, 24)];
+//        _arrowBtn.frame = CGRectMake(_contentBtn.frame.origin.x+_contentBtn.frame.size.width, _contentBtn.frame.origin.y+_contentBtn.frame.size.height/2-12, 24, 24);
+    }
     
 }
 
+-(void)arrowBtnClick
+{
+    NSLog(@"jumpToDetail");
+    self.jumpToPicDetail();
+}
+-(void)headBtnClick
+{
+    NSLog(@"jumpToUser");
+    self.jumpToUserInfo();
+}
 @end

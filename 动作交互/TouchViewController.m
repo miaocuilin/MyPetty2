@@ -37,7 +37,8 @@
     [self backgroundView];
     _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
 //    [self loadRecordStringData];
-    [self checkIsTouch];
+//    [self checkIsTouch];
+    [self loadRecordStringData];
 }
 - (void)backgroundView
 {
@@ -48,22 +49,22 @@
 }
 #pragma mark - 是否已经摸一摸
 
-- (void)checkIsTouch
-{
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
-    NSString *isTouch = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ISTOUCHAPI, self.pet_aid, sig, [ControllerManager getSID]];
-    NSLog(@"isTouch:%@",isTouch);
-    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:isTouch Block:^(BOOL isFinish, httpDownloadBlock *load) {
-        NSLog(@"是否已经摸过：%@",load.dataDict);
-        if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"is_touched"] intValue]) {
-            [self createTouchEndView];
-        }else{
-            [self loadRecordStringData];
-        }
-    }];
-    [request release];
-    
-}
+//- (void)checkIsTouch
+//{
+//    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+//    NSString *isTouch = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ISTOUCHAPI, self.pet_aid, sig, [ControllerManager getSID]];
+//    NSLog(@"isTouch:%@",isTouch);
+//    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:isTouch Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//        NSLog(@"是否已经摸过：%@",load.dataDict);
+//        if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"is_touched"] intValue]) {
+//            [self createTouchEndView];
+//        }else{
+//            [self loadRecordStringData];
+//        }
+//    }];
+//    [request release];
+//    
+//}
 
 #pragma mark - 下载声音
 - (void)loadRecordStringData
@@ -76,7 +77,8 @@
         NSLog(@"isFinsh:%d,load.dataDict:%@",isFinsh,load.dataDict);
         if (isFinsh) {
             self.haveRecord = YES;
-            self.recordURL = [NSString stringWithFormat:@"http://123.57.39.48/%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
+            self.voiceName = [[load.dataDict objectForKey:@"data"] objectForKey:@"url"];
+            self.recordURL = [NSString stringWithFormat:@"http://pet4voices.oss-cn-beijing.aliyuncs.com/ani/%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
             [self loadRecordData];
         }else{
             [MMProgressHUD dismissWithError:@"该宠物今天没有萌叫叫" afterDelay:1.0];
@@ -94,6 +96,7 @@
 }
 - (void)loadRecordData
 {
+    NSLog(@"%@", self.recordURL);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:self.recordURL Block:^(BOOL isFinish, httpDownloadBlock *load) {
 //        NSLog(@"load.data音频二进制数据:%@",load.data);
 //        NSDate *  senddate=[NSDate date];
@@ -101,7 +104,8 @@
 //        [dateformatter setDateFormat:@"YYYYMMdd"];
 //        NSString *  locationString=[dateformatter stringFromDate:senddate];
         if (isFinish) {
-            [load.data writeToFile:[DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", self.pet_aid]] atomically:YES];
+//            NSLog(@"load.data音频二进制数据:%@",load.data);
+            [load.data writeToFile:[DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", self.voiceName]] atomically:YES];
             //        [dateformatter release];
             _player = [[AVAudioPlayer alloc] initWithData:load.data error:nil];
             [self createAlertView];

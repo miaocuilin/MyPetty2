@@ -21,6 +21,7 @@
     UILabel * zanLabel;
     
     BOOL isMi;
+    UIButton * zanBtn;
 }
 @property(nonatomic,copy)void (^unRegister)(void);
 

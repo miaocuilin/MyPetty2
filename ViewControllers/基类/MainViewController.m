@@ -19,10 +19,16 @@
 #import "ToolTipsViewController.h"
 #import "ShakeViewController.h"
 #import "TipsView.h"
+#import "NewWaterFlowViewController.h"
+
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 @interface MainViewController () <AFPhotoEditorControllerDelegate>
-
+{
+    NewWaterFlowViewController * vc1;
+    RandomViewController * vc2;
+    PlanetAttentionViewController * vc3;
+}
 @property (nonatomic, strong) ALAssetsLibrary * assetLibrary;
 @property (nonatomic, strong) NSMutableArray * sessions;
 @end
@@ -124,6 +130,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [AFOpenGLManager beginOpenGLLoad];
 
     
+    
     segmentClickIndex = 0;
     [self createScrollView];
     [self createFakeNavigation];
@@ -144,8 +151,24 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        self.label3.text = @"摸一摸";
 //        [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
 //    }
+    
+    UIButton * topBtn = [MyControl createButtonWithFrame:CGRectMake(150/2, 20, self.view.frame.size.width-150, 35) ImageName:@"" Target:self Action:@selector(topBtnClick) Title:nil];
+//    topBtn.backgroundColor = [UIColor greenColor];
+    [self.view addSubview:topBtn];
 }
-
+-(void)topBtnClick
+{
+    if (segmentClickIndex == 0) {
+        [UIView animateWithDuration:0.2 animations:^{
+            vc1.tv.contentOffset = CGPointMake(0, 0);
+        }];
+        
+    }else if(segmentClickIndex == 1){
+        
+    }else if (segmentClickIndex == 2){
+        
+    }
+}
 //- (void)loadAnimalInfoData
 //{
 //    NSString *aid = [USER objectForKey:@"aid"];
@@ -281,10 +304,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)createViewControllers
 {
-    RecommendViewController * rvc = [[RecommendViewController alloc] init];
-    [self addChildViewController:rvc];
-    [rvc.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    [sv addSubview:rvc.view];
+//    RecommendViewController * rvc = [[RecommendViewController alloc] init];
+    vc1 = [[NewWaterFlowViewController alloc] init];
+    [self addChildViewController:vc1];
+    [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    [sv addSubview:vc1.view];
     
 //    WaterViewController *water = [[WaterViewController alloc] init];
 //    [self addChildViewController:water];
@@ -352,10 +376,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (a == 320) {
         if (isCreated[1] == NO) {
             isCreated[1] = YES;
-            RandomViewController * svc = [[RandomViewController alloc] init];
-            [self addChildViewController:svc];
-            [svc.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
-            [sv addSubview:svc.view];
+            vc2 = [[RandomViewController alloc] init];
+            [self addChildViewController:vc2];
+            [vc2.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
+            [sv addSubview:vc2.view];
             [self.view bringSubviewToFront:sc];
         }
     }else if(a == 320*2){
@@ -368,10 +392,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         if (isCreated[2] == NO) {
             isCreated[2] = YES;
-            PlanetAttentionViewController * fvc = [[PlanetAttentionViewController alloc] init];
-            [self addChildViewController:fvc];
-            [fvc.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
-            [sv addSubview:fvc.view];
+            vc3 = [[PlanetAttentionViewController alloc] init];
+            [self addChildViewController:vc3];
+            [vc3.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
+            [sv addSubview:vc3.view];
             [self.view bringSubviewToFront:sc];
         }
     }
@@ -381,10 +405,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (scrollView.contentOffset.x == 320) {
         if (isCreated[1] == NO) {
             isCreated[1] = YES;
-            RandomViewController * svc = [[RandomViewController alloc] init];
-            [self addChildViewController:svc];
-            [svc.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
-            [sv addSubview:svc.view];
+            vc2 = [[RandomViewController alloc] init];
+            [self addChildViewController:vc2];
+            [vc2.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
+            [sv addSubview:vc2.view];
             [self.view bringSubviewToFront:sc];
             
             [self.view bringSubviewToFront:self.menuBgBtn];
@@ -402,10 +426,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isCreated[2] == NO) {
             isCreated[2] = YES;
 //            FavoriteViewController * fvc = [[FavoriteViewController alloc] init];
-            PlanetAttentionViewController * fvc = [[PlanetAttentionViewController alloc] init];
-            [self addChildViewController:fvc];
-            [fvc.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
-            [sv addSubview:fvc.view];
+            vc3 = [[PlanetAttentionViewController alloc] init];
+            [self addChildViewController:vc3];
+            [vc3.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
+            [sv addSubview:vc3.view];
             [self.view bringSubviewToFront:sc];
             
             [self.view bringSubviewToFront:self.menuBgBtn];

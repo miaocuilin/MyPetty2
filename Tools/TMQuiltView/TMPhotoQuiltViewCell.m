@@ -55,6 +55,7 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 
 //- (UILabel *)titleLabel {
 //    if (!_titleLabel) {
+//        _titleLabel = [MyControl createLabelWithFrame:CGRectZero Font:15 Text:nil];
 //        _titleLabel = [[UILabel alloc] init];
 //        _titleLabel.backgroundColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.7];
 //        _titleLabel.textColor = [UIColor whiteColor];
@@ -63,9 +64,9 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 //        _titleLabel.textAlignment = NSTextAlignmentRight;
 //        _titleLabel.font = [UIFont boldSystemFontOfSize:15];
 //        _titleLabel.userInteractionEnabled = YES;
-//
+
 //        [self addSubview:_titleLabel];
-//        
+//
 //        self.heart = [MyControl createImageViewWithFrame:CGRectMake(5, 5, 20, 20) ImageName:@"11-1.png"];
 //        [_titleLabel addSubview:self.heart];
 //        

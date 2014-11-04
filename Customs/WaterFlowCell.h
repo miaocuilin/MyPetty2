@@ -16,6 +16,6 @@
     UILabel * desLabel;
 }
 @property(nonatomic,copy)void (^jumpToPicDetail)(void);
-
--(void)configUI:(PhotoModel *)model;
+-(void)adjustOriginalXWithIsLeft:(BOOL)isLeft;
+-(void)configUI:(PhotoModel *)model isLeft:(BOOL)isLeft;
 @end

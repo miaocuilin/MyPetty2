@@ -576,6 +576,91 @@
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
+    
+    UIImageView * threePoint = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-36, 32+17/2.0-9/4.0, 47/2.0, 9/2.0) ImageName:@"threePoint.png"];
+    [navView addSubview:threePoint];
+    
+    UIButton * threePBtn = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-42, 25, 25+8+4, 32) ImageName:@"" Target:self Action:@selector(threePBtnClick) Title:nil];
+    threePBtn.showsTouchWhenHighlighted = YES;
+    
+    [navView addSubview:threePBtn];
+}
+-(void)threePBtnClick
+{
+    if (!isAlertCreated) {
+        [self createBottomAlert];
+    }
+    alphaBtn.hidden = NO;
+    [UIView animateWithDuration:0.2 animations:^{
+        alphaBtn.alpha = 0.5;
+        CGRect rect = moreView2.frame;
+        rect.origin.y = self.view.frame.size.height-rect.size.height;
+        moreView2.frame = rect;
+    }];
+    
+}
+-(void)createBottomAlert
+{
+    alphaBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(cancelBtnClick2) Title:nil];
+    alphaBtn.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:alphaBtn];
+    alphaBtn.alpha = 0;
+    alphaBtn.hidden = YES;
+    
+    // 318*234
+    moreView2 = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 256/2)];
+    moreView2.backgroundColor = [ControllerManager colorWithHexString:@"efefef"];
+    //    [self.view bringSubviewToFront:moreView];
+    [self.view addSubview:moreView2];
+    
+    //orange line
+    UIView * orangeLine = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 3)];
+    orangeLine.backgroundColor = [ControllerManager colorWithHexString:@"fc7b51"];
+    [moreView2 addSubview:orangeLine];
+    
+    UIButton * reportBtn = [MyControl createButtonWithFrame:CGRectMake(55/2, 22, self.view.frame.size.width-55, 76/2) ImageName:@"" Target:self Action:@selector(reportBtnClick) Title:@"举报此照"];
+    reportBtn.titleLabel.font = [UIFont systemFontOfSize:17];
+    reportBtn.layer.cornerRadius = 7;
+    reportBtn.layer.masksToBounds = YES;
+    reportBtn.backgroundColor = [UIColor lightGrayColor];
+    reportBtn.showsTouchWhenHighlighted = YES;
+    [moreView2 addSubview:reportBtn];
+    
+    //grayLine1
+    UIView * grayLine1 = [MyControl createViewWithFrame:CGRectMake(0, 150/2, self.view.frame.size.width, 4)];
+    grayLine1.backgroundColor = [ControllerManager colorWithHexString:@"e3e3e3"];
+    [moreView2 addSubview:grayLine1];
+    
+    UIButton * cancelBtn2 = [MyControl createButtonWithFrame:CGRectMake(0, 150/2+4, self.view.frame.size.width, 90/2) ImageName:@"" Target:self Action:@selector(cancelBtnClick2) Title:@"取消"];
+    cancelBtn2.titleLabel.font = [UIFont systemFontOfSize:17];
+    [cancelBtn2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [moreView2 addSubview:cancelBtn2];
+}
+-(void)reportBtnClick
+{
+    ReportAlertView * report = [[ReportAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    report.AlertType = 4;
+    [report makeUI];
+    [self.view addSubview:report];
+    [UIView animateWithDuration:0.2 animations:^{
+        report.alpha = 1;
+    }];
+    report.confirmClick = ^(){
+        [self reportImage];
+        [self cancelBtnClick2];
+    };
+}
+-(void)cancelBtnClick2
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        alphaBtn.alpha = 0.0;
+        CGRect rect = moreView2.frame;
+        rect.origin.y = self.view.frame.size.height;
+        moreView2.frame = rect;
+    } completion:^(BOOL finished) {
+        alphaBtn.hidden = YES;
+    }];
+
 }
 -(void)createHeader
 {
@@ -978,6 +1063,10 @@
         btn.tag = 1000 + i;
         [commentsBgView addSubview:btn];
         
+        UIButton * reportCmtBtn = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-40, timeStamp.frame.origin.y+25, 31/1.5, 26/1.5) ImageName:@"grayAlert.png" Target:self Action:@selector(reportCmtBtnClick:) Title:@""];
+        reportCmtBtn.tag = 2000+i;
+        [commentsBgView addSubview:reportCmtBtn];
+        
         commentsBgViewHeight = line.frame.origin.y+1;
     }
     commentsBgView.frame = CGRectMake(0, commentsBgView.frame.origin.y, 320, commentsBgViewHeight);
@@ -985,6 +1074,38 @@
     self.sv.contentSize = CGSizeMake(320, usersBgView.frame.origin.y+usersBgView.frame.size.height+commentsBgViewHeight+54);
 //    NSLog(@"%f--%f--%d", usersBgView.frame.origin.y, usersBgView.frame.size.height, commentsBgViewHeight);
 }
+-(void)reportCmtBtnClick:(UIButton *)btn
+{
+//    btn.tag == 2000+i;
+    NSLog(@"%d", btn.tag);
+    ReportAlertView * report = [[ReportAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    report.AlertType = 2;
+    [report makeUI];
+    [self.view addSubview:report];
+    [UIView animateWithDuration:0.2 animations:^{
+        report.alpha = 1;
+    }];
+    report.confirmClick = ^(){
+        [self reportImage];
+    };
+}
+-(void)reportImage
+{
+    StartLoading;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", REPORTIMAGEAPI, self.img_id, sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            [MyControl loadingSuccessWithContent:@"举报成功" afterDelay:0.5];
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+
 -(void)createComment
 {
     bgButton = [MyControl createButtonWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64) ImageName:nil Target:self Action:@selector(bgButtonClick) Title:nil];
@@ -1615,7 +1736,7 @@
         if ([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
             int exp = [[USER objectForKey:@"exp"] intValue];
             int addExp = [[[dict objectForKey:@"data"] objectForKey:@"exp"] intValue];
-            if (index>0) {
+            if (addExp>0) {
                 [USER setObject:[NSString stringWithFormat:@"%d", exp+addExp] forKey:@"exp"];
                 [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:addExp];
             }

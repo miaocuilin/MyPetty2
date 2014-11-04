@@ -13,6 +13,7 @@
 #import "AboutViewController.h"
 #import "FAQViewController.h"
 #import "RegisterViewController.h"
+#import "SetBlackListViewController.h"
 @interface SettingViewController ()
 
 @end
@@ -32,7 +33,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.arr1 = @[@"收货地址", @"设置默认宠物", @"绑定新浪微博"];
+    self.arr1 = @[@"收货地址", @"设置默认宠物", @"设置黑名单", @"绑定新浪微博"];
     self.arr2 = @[@"新浪微博", @"微信朋友圈"];
     self.arr3 = @[@"清除缓存", @"常见问题", @"意见反馈", @"赏个好评", @"关于我们"];
     
@@ -166,7 +167,7 @@
     }
     
     if (indexPath.section == 0) {
-        if (indexPath.row == 2) {
+        if (indexPath.row == 3) {
             sinaBind = [[UISwitch alloc] initWithFrame:CGRectMake(500/2, 7, 0, 0)];
             [sinaBind addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
             [cell addSubview:sinaBind];
@@ -231,7 +232,7 @@
 {
     //右箭头
     UIImageView * arrow = nil;
-    if((indexPath.section == 0 && indexPath.row != 2) ||(indexPath.section == 2 && indexPath.row != 0)){
+    if((indexPath.section == 0 && indexPath.row != 3) ||(indexPath.section == 2 && indexPath.row != 0)){
         arrow = [MyControl createImageViewWithFrame:CGRectMake(570/2, 10, 20, 20) ImageName:@"14-6-2.png"];
 //        [cell addSubview:arrow];
         cell.accessoryView = arrow;
@@ -277,6 +278,11 @@
         }else if (indexPath.row == 1) {
             NSLog(@"设置默认宠物");
             SetDefaultPetViewController * vc = [[SetDefaultPetViewController alloc] init];
+            [self presentViewController:vc animated:YES completion:nil];
+            [vc release];
+        }else if (indexPath.row == 2){
+            NSLog(@"设置黑名单");
+            SetBlackListViewController * vc = [[SetBlackListViewController alloc] init];
             [self presentViewController:vc animated:YES completion:nil];
             [vc release];
         }

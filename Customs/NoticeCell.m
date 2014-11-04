@@ -21,6 +21,14 @@
 }
 - (void)MessageUI
 {
+    UISwipeGestureRecognizer * swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(show)];
+    swipe.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self addGestureRecognizer:swipe];
+    
+    UISwipeGestureRecognizer * swipe2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(hide)];
+    swipe2.direction = UISwipeGestureRecognizerDirectionRight;
+    [self addGestureRecognizer:swipe2];
+    
     noticeMessage_tx = [MyControl createImageViewWithFrame:CGRectMake(10, 15, 50, 50) ImageName:@"defaultUserHead.png"];
     noticeMessage_tx.layer.cornerRadius = 25;
     noticeMessage_tx.layer.masksToBounds = YES;
@@ -54,12 +62,50 @@
     desLabel.adjustsFontSizeToFitWidth = NO;
     [self.contentView addSubview:desLabel];
     
-    UIView *horizontalLine = [[UIView alloc] initWithFrame:CGRectMake(0, 74, self.frame.size.width, 1)];
+    //删除和拉黑
+    deleteBtn = [MyControl createButtonWithFrame:CGRectMake(self.frame.size.width, 0, 75, 74) ImageName:@"" Target:self Action:@selector(deleteBtnClick) Title:@"删除"];
+    deleteBtn.backgroundColor = BGCOLOR;
+    [self addSubview:deleteBtn];
+    
+    balckBtn = [MyControl createButtonWithFrame:CGRectMake(self.frame.size.width+75, 0, 75, 74) ImageName:@"" Target:self Action:@selector(blackBtnClick) Title:@"拉黑"];
+    balckBtn.backgroundColor = [UIColor lightGrayColor];
+    [self addSubview:balckBtn];
+    
+    UIView *horizontalLine = [[UIView alloc] initWithFrame:CGRectMake(0, 74, self.frame.size.width+75*2, 1)];
     horizontalLine.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:horizontalLine];
 }
--(void)configUIWithTx:(NSString *)tx Name:(NSString *)name Time:(NSString *)time Content:(NSString *)content newMsgNum:(NSString *)newMsgNum img_id:(NSString *)img_id
+-(void)show
 {
+    [UIView animateWithDuration:0.2 animations:^{
+        CGRect cellFrame = self.frame;
+        cellFrame.origin.x = -75*2;
+        cellFrame.size.width = cellFrame.size.width+75*2;
+        [self setFrame:cellFrame];
+    }];
+}
+-(void)hide
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        CGRect cellFrame = self.frame;
+        cellFrame.origin.x = 0;
+        cellFrame.size.width = cellFrame.size.width-75*2;
+        [self setFrame:cellFrame];
+    }];
+}
+-(void)deleteBtnClick
+{
+    self.deleteClick(Index);
+    [self hide];
+}
+-(void)blackBtnClick
+{
+    self.blackClick(Index);
+    [self hide];
+}
+-(void)configUIWithTx:(NSString *)tx Name:(NSString *)name Time:(NSString *)time Content:(NSString *)content newMsgNum:(NSString *)newMsgNum img_id:(NSString *)img_id index:(int)index
+{
+    Index = index;
     tips.hidden = YES;
     
     desLabel.text = content;

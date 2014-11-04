@@ -813,21 +813,63 @@
     //传递5个数据，需要5个数组
     NoticeModel * model = self.dataArray[indexPath.row];
 
-    [cell configUIWithTx:model.usr_tx Name:model.usr_name Time:model.time Content:model.lastMsg newMsgNum:model.unReadNum img_id:model.img_id];
+    [cell configUIWithTx:model.usr_tx Name:model.usr_name Time:model.time Content:model.lastMsg newMsgNum:model.unReadNum img_id:model.img_id index:indexPath.row];
     cell.backgroundColor = [UIColor clearColor];
     cell.selectionStyle = 0;
+    
+    cell.deleteClick = ^(int a){
+        //删除本地聊天记录
+        NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
+        [self.totalDataDict removeObjectForKey:[self.dataArray[indexPath.row] talk_id]];
+        NSData * data = [MyControl returnDataWithDictionary:self.totalDataDict];
+        BOOL isDelete = [data writeToFile:path atomically:YES];
+        NSLog(@"isDelete:%d", isDelete);
+        //通过获取的索引值删除数组中的值
+        [self.dataArray removeObjectAtIndex:indexPath.row];
+        //删除单元格的某一行时，在用动画效果实现删除过程
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+    };
+    cell.blackClick = ^(int a){
+        ReportAlertView * report = [[ReportAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        report.AlertType = 1;
+        [report makeUI];
+        [self.view addSubview:report];
+        [UIView animateWithDuration:0.2 animations:^{
+            report.alpha = 1;
+        }];
+        report.confirmClick = ^(){
+            //确定拉黑
+            [self black:a];
+        };
+    };
     return cell;
 }
--(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+-(void)black:(int)a
 {
-    return @"删除";
+    StartLoading;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"talk_id=%@dog&cat", [self.dataArray[a] talk_id]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", BOLCKTALKAPI, [self.dataArray[a] talk_id], sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            [MyControl loadingSuccessWithContent:@"拉黑成功" afterDelay:0.5];
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
 }
--(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return UITableViewCellEditingStyleDelete;
-}
--(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+//-(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return @"删除";
+//}
+//-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return UITableViewCellEditingStyleDelete;
+//}
+//-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+//{
     /*
     if (tableView == messageTableView) {
         NSString * code = [NSString stringWithFormat:@"mail_id=%@dog&cat", [self.messageDataArray[indexPath.row] mail_id]];
@@ -864,20 +906,20 @@
     */
 //    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationBottom];
     
-    if (editingStyle==UITableViewCellEditingStyleDelete) {
-        //删除本地聊天记录
-        NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
-        [self.totalDataDict removeObjectForKey:[self.dataArray[indexPath.row] talk_id]];
-        NSData * data = [MyControl returnDataWithDictionary:self.totalDataDict];
-        BOOL isDelete = [data writeToFile:path atomically:YES];
-        NSLog(@"isDelete:%d", isDelete);
-        //通过获取的索引值删除数组中的值
-        [self.dataArray removeObjectAtIndex:indexPath.row];
-        //删除单元格的某一行时，在用动画效果实现删除过程
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-        
-    }
-}
+//    if (editingStyle==UITableViewCellEditingStyleDelete) {
+//        //删除本地聊天记录
+//        NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
+//        [self.totalDataDict removeObjectForKey:[self.dataArray[indexPath.row] talk_id]];
+//        NSData * data = [MyControl returnDataWithDictionary:self.totalDataDict];
+//        BOOL isDelete = [data writeToFile:path atomically:YES];
+//        NSLog(@"isDelete:%d", isDelete);
+//        //通过获取的索引值删除数组中的值
+//        [self.dataArray removeObjectAtIndex:indexPath.row];
+//        //删除单元格的某一行时，在用动画效果实现删除过程
+//        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+//
+//    }
+//}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {

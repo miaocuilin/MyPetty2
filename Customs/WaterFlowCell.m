@@ -25,40 +25,80 @@
 //    bgView = [MyControl createViewWithFrame:CGRectMake(Margin, Margin/2, self.contentView.frame.size.width/2-Margin*2, 0)];
 //    bgView.layer.borderWidth = 2;
 //    bgView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    
+    bgView = [MyControl createImageViewWithFrame:CGRectMake(Margin/2, Margin/2-0.5, self.contentView.frame.size.width/2-Margin, 0) ImageName:@""];
+    bgView.layer.borderWidth = 0.8;
+    bgView.layer.borderColor = [UIColor colorWithRed:206/255.0 green:206/255.0 blue:206/255.0 alpha:1].CGColor;
+    bgView.layer.cornerRadius = 2;
+    bgView.layer.masksToBounds = YES;
+    //
 //    bgView.layer.shadowOffset = CGSizeMake(1, 1);
-//    bgView.layer.shadowRadius = 5.0;
-//    bgView.layer.shadowColor = [UIColor blackColor].CGColor;
+//    bgView.layer.shadowRadius = 2.0;
+//    bgView.layer.shadowColor = [UIColor colorWithRed:206/255.0 green:206/255.0 blue:206/255.0 alpha:1].CGColor;
 //    bgView.layer.shadowOpacity = 0.8;
-    bgView = [MyControl createImageViewWithFrame:CGRectMake(Margin, Margin/2, self.contentView.frame.size.width/2-Margin*2, 0) ImageName:@""];
-    bgView.image = [[UIImage imageNamed:@"water_cardBg.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
+    
+    bgView.backgroundColor = [UIColor whiteColor];
+//    bgView.image = [[UIImage imageNamed:@"water_cardBg.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
     [self.contentView addSubview:bgView];
     
-    bigImageBtn = [MyControl createButtonWithFrame:CGRectMake(Margin+2, Margin, bgView.frame.size.width-Margin, 0) ImageName:@"20-1.png" Target:self Action:@selector(bigImageBtnClick) Title:nil];
+    bigImageBtn = [MyControl createButtonWithFrame:CGRectMake(Margin, Margin-0.5, bgView.frame.size.width-Margin, 0) ImageName:@"" Target:self Action:@selector(bigImageBtnClick) Title:nil];
     [self.contentView addSubview:bigImageBtn];
     
-    desLabel = [MyControl createLabelWithFrame:CGRectMake(Margin+2, 0, bgView.frame.size.width-Margin, 0) Font:12 Text:nil];
-    desLabel.backgroundColor = [UIColor whiteColor];
+    desLabel = [MyControl createLabelWithFrame:CGRectMake(Margin+2, -0.5, bgView.frame.size.width-Margin*2, 0) Font:12 Text:nil];
+//    desLabel.backgroundColor = [UIColor lightGrayColor];
     desLabel.textColor = [UIColor blackColor];
     [self.contentView addSubview:desLabel];
 }
--(void)configUI:(PhotoModel *)model
+-(void)adjustOriginalXWithIsLeft:(BOOL)isLeft
 {
-    [bigImageBtn setBackgroundImage:[UIImage imageNamed:@"20-1.png"] forState:UIControlStateNormal];
-    
     CGRect rect = bgView.frame;
-    rect.size.height = model.height+model.cmtHeight+Margin;
+    CGRect rect2 = bigImageBtn.frame;
+    CGRect rect3 = desLabel.frame;
+    if (isLeft) {
+        rect.origin.x += 0.5;
+        rect2.origin.x += 0.5;
+        rect3.origin.x += 0.5;
+    }else{
+        rect.origin.x -= 0.5;
+        rect2.origin.x -= 0.5;
+        rect3.origin.x -= 0.5;
+    }
+    bgView.frame = rect;
+    bigImageBtn.frame = rect2;
+    desLabel.frame = rect3;
+}
+-(void)configUI:(PhotoModel *)model isLeft:(BOOL)isLeft
+{
+    CGRect rect = bgView.frame;
+    CGRect rect2 = bigImageBtn.frame;
+    CGRect rect3 = desLabel.frame;
+    
+//    [bigImageBtn setBackgroundImage:[UIImage imageNamed:@"20-1.png"] forState:UIControlStateNormal];
+    
+//    CGRect rect = bgView.frame;
+    rect.size.height = model.height+model.cmtHeight+Margin+1;
     bgView.frame = rect;
     
-    CGRect rect2 = bigImageBtn.frame;
+//    CGRect rect2 = bigImageBtn.frame;
     rect2.size.height = model.height;
     bigImageBtn.frame = rect2;
     
-    CGRect rect3 = desLabel.frame;
+//    CGRect rect3 = desLabel.frame;
     rect3.origin.y = rect2.origin.y+rect2.size.height;
-    rect3.size.height = model.cmtHeight;
+//    rect3.size.width = model.cmtWidth;
+//    NSLog(@"%f--%d", rect3.size.width, model.cmtWidth);
+    if (model.cmtHeight) {
+        rect3.origin.y += 5;
+        rect3.size.height = model.cmtHeight-23+5;
+    }else{
+        rect3.size.height = model.cmtHeight;
+    }
+    
     desLabel.frame = rect3;
 //    NSLog(@"%d", model.cmtHeight);
     desLabel.text = model.cmt;
+//    [desLabel sizeToFit];
+    
     
 //    NSLog(@"%f", self.contentView.frame.size.height);
     

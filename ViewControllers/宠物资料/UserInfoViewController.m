@@ -326,7 +326,7 @@
     UIView * ownerView = [MyControl createViewWithFrame:CGRectMake(0, 127, 320, 76/2)];
     [moreView addSubview:ownerView];
     
-    UIButton * privateMessage = [MyControl createButtonWithFrame:CGRectMake(30, 0, 526/2, 76/2) ImageName:@"" Target:self Action:@selector(sendMessage) Title:@"私信"];
+    UIButton * privateMessage = [MyControl createButtonWithFrame:CGRectMake(20, 0, 250/2, 76/2) ImageName:@"" Target:self Action:@selector(sendMessage) Title:@"私信"];
     privateMessage.backgroundColor = BGCOLOR5;
     privateMessage.showsTouchWhenHighlighted = YES;
     privateMessage.layer.cornerRadius = 5;
@@ -334,7 +334,15 @@
     privateMessage.titleLabel.font = [UIFont systemFontOfSize:15];
     [ownerView addSubview:privateMessage];
     
-    UIButton * modifyUserInfo = [MyControl createButtonWithFrame:privateMessage.frame ImageName:@"" Target:self Action:@selector(modifyUserInfo) Title:@"修改资料"];
+    UIButton * report = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-20-250/2, 0, 250/2, 76/2) ImageName:@"" Target:self Action:@selector(reportClick) Title:@"举报"];
+    report.backgroundColor = [UIColor lightGrayColor];
+    report.showsTouchWhenHighlighted = YES;
+    report.layer.cornerRadius = 5;
+    report.layer.masksToBounds = YES;
+    report.titleLabel.font = [UIFont systemFontOfSize:15];
+    [ownerView addSubview:report];
+    
+    UIButton * modifyUserInfo = [MyControl createButtonWithFrame:CGRectMake(30, 0, 526/2, 76/2) ImageName:@"" Target:self Action:@selector(modifyUserInfo) Title:@"修改资料"];
     modifyUserInfo.titleLabel.font = [UIFont systemFontOfSize:15];
     modifyUserInfo.backgroundColor = [UIColor lightGrayColor];
     modifyUserInfo.layer.cornerRadius = 5;
@@ -358,12 +366,42 @@
     /*************************/
     if (isOwner) {
         privateMessage.hidden = YES;
+        report.hidden = YES;
         modifyUserInfo.hidden = NO;
 //        grayLine1.hidden = YES;
 //        moreView.frame = CGRectMake(0, self.view.frame.size.height, 320, 156);
 //        grayLine2.frame = CGRectMake(0, 104, 320, 4);
 //        cancelBtn.frame = CGRectMake(0, 110, 320, 46);
     }
+}
+-(void)reportClick
+{
+    ReportAlertView * report = [[ReportAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    report.AlertType = 3;
+    [report makeUI];
+    [self.view addSubview:report];
+    [UIView animateWithDuration:0.2 animations:^{
+        report.alpha = 1;
+    }];
+    report.confirmClick = ^(){
+        [self reportIt];
+    };
+}
+-(void)reportIt
+{
+    StartLoading;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", REPORTUSERAPI, self.usr_id, sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            [MyControl loadingSuccessWithContent:@"举报成功" afterDelay:0.5];
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
 }
 -(void)modifyUserInfo
 {

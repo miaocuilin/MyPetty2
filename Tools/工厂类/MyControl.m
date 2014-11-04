@@ -291,4 +291,21 @@
     NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:[imageInfoDict objectForKey:@"PixelWidth"], @"width", [imageInfoDict objectForKey:@"PixelHeight"], @"height", nil];
     return dict;
 }
+
+#pragma mark - 图片大小限制
++ (NSData *)scaleToSize:(UIImage *)sourceImage
+{
+    CGFloat compression = 1.0f;
+    float maxFileSize = 90*1024;
+    
+    NSData *imageData = UIImageJPEGRepresentation(sourceImage, compression);
+    
+    compression = maxFileSize / [imageData length];
+    
+    if (compression < 1) {
+        imageData = UIImageJPEGRepresentation(sourceImage, compression);
+    }
+    
+    return imageData;
+}
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "AboutViewController.h"
-
+#import "PermitViewController.h"
 @interface AboutViewController ()
 
 @end
@@ -145,6 +145,9 @@
 -(void)permitClick
 {
     NSLog(@"permit");
+    PermitViewController * vc = [[PermitViewController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 }
 - (void)didReceiveMemoryWarning
 {

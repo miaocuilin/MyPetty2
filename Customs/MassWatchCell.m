@@ -43,7 +43,7 @@
     self.sexView = [MyControl createImageViewWithFrame:CGRectMake(80, 15, 17, 17) ImageName:@"man.png"];
     [self.contentView addSubview:self.sexView];
     
-    self.watcherName = [MyControl createLabelWithFrame:CGRectMake(103, 15, 100, 20) Font:16 Text:@"羊驼"];
+    self.watcherName = [MyControl createLabelWithFrame:CGRectMake(103, 15, 150, 20) Font:16 Text:@"羊驼"];
     self.watcherName.textColor = BGCOLOR;
     [self.contentView addSubview:self.watcherName];
     

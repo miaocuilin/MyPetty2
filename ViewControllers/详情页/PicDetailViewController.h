@@ -48,8 +48,14 @@
     
 //    NSMutableAttributedString * attString;
     UIView * whiteBgView;
-    
+    //页面是否加载过
     BOOL isLoaded;
+    
+    //是否创建过举报alert
+    BOOL isAlertCreated;
+    
+    UIButton * alphaBtn;
+    UIView * moreView2;
 }
 @property (retain, nonatomic) UIImageView * bgImageView;
 @property (retain, nonatomic) IBOutlet UIScrollView *sv;

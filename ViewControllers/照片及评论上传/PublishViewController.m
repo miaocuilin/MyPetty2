@@ -552,9 +552,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     _request.requestMethod = @"POST";
     _request.timeOutSeconds = 60.0;
     
-    NSData * data = UIImageJPEGRepresentation(image, 0.1);
+//    float p = 1.0;
+//    image.
+    NSData * data = [MyControl scaleToSize:image];
+//    NSData * data = UIImageJPEGRepresentation(image, 1);
+//    NSLog(@"%d", data.length);
+//    while (data.length>100*1024) {
+//        p -= 0.1;
+//        data = UIImageJPEGRepresentation(image, p);
+//        NSLog(@"%d", data.length);
+//    }
     NSTimeInterval  timeInterval = [[NSDate date] timeIntervalSince1970];
-    [_request setData:data withFileName:[NSString stringWithFormat:@"%.0f.png", timeInterval] andContentType:@"image/jpg" forKey:@"image"];
+    [_request setData:data withFileName:[NSString stringWithFormat:@"%.0f_%d&%d.png", timeInterval, (int)image.size.width, (int)image.size.height] andContentType:@"image/jpg" forKey:@"image"];
     //    [_request setPostValue:data forKey:@"image"];
     //图片
     if (![_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"]) {

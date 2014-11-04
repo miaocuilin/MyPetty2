@@ -183,7 +183,7 @@
 {
     StartLoading;
 
-    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RECOMMENDAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             //只包含img_id和图片的url
 //            NSLog(@"宇宙广场数据:%@", load.dataDict);
@@ -222,7 +222,7 @@
     }
     NSString * str = [NSString stringWithFormat:@"img_id=%@dog&cat", self.lastImg_id];
     NSString * sig = [MyMD5 md5:str];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RANDOMAPI2, self.lastImg_id, sig, [ControllerManager getSID]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMENDAPI2, self.lastImg_id, sig, [ControllerManager getSID]];
     NSLog(@"next-url:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {

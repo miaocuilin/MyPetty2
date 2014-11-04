@@ -31,7 +31,7 @@
 #import "UIImage+ImageBlur.h"
 #import "MBProgressHUD.h"
 #import "AlertView.h"
-
+#import "ReportAlertView.h"
 
 #define ShowAlertView AlertView * alert = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];[alert makeUI];alert.jump = ^(){ChooseInViewController * vc = [[ChooseInViewController alloc] init];[self presentViewController:vc animated:YES completion:nil];[vc release];};[self.view addSubview:alert];[alert release];
 
@@ -67,6 +67,12 @@
 #define LoadingFailed [MMProgressHUD dismissWithError:@"加载失败" afterDelay:0.5];
 
 #define SHOWMENU JDSideMenu * menu = [ControllerManager shareJDSideMenu];[menu showMenuAnimated:YES];
+//拉黑举报5个API
+#define REPORTUSERAPI @"http://123.57.39.48/index.php?r=user/reportApi&usr_id="
+#define REPORTIMAGEAPI @"http://123.57.39.48/index.php?r=image/reportApi&img_id="
+#define BOLCKTALKAPI @"http://123.57.39.48/index.php?r=talk/blockApi&talk_id="
+#define UNBOLCKTALKAPI @"http://123.57.39.48/index.php?r=talk/unBlockApi&usr_id="
+#define BLOCKLISTAPI @"http://123.57.39.48/index.php?r=talk/blockListApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
 //IP头API
 #define IPURL @"http://54.199.161.210/dc/index.php"

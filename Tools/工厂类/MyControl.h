@@ -65,6 +65,8 @@
 //传进NSURL返回图片的宽高字典
 +(NSDictionary *)imageSizeFrom:(NSURL *)imageUrl;
 
+//限制图片大小
++(NSData *)scaleToSize:(UIImage *)sourceImage;
 @end
 
 

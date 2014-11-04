@@ -9,6 +9,8 @@
 #import "ChooseInViewController.h"
 #import "RegisterViewController.h"
 #import "ChooseFamilyViewController.h"
+#import "HyperlinksButton.h"
+#import "PermitViewController.h"
 @interface ChooseInViewController ()
 
 @end
@@ -166,6 +168,47 @@
     
     UIImageView * catAndDog = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-450/2)/2, earth.frame.origin.y-70, 450/2, 203/2) ImageName:@"choosein_cat_dog.png"];
     [self.view addSubview:catAndDog];
+    
+    rightBtn = [MyControl createButtonWithFrame:CGRectMake((self.view.frame.size.width-380/2)/2, catAndDog.frame.origin.y-35, 20, 20) ImageName:@"atUsers_unSelected.png" Target:self Action:@selector(rightBtnClick:) Title:nil];
+    [rightBtn setImage:[UIImage imageNamed:@"atUsers_selected.png"] forState:UIControlStateSelected];
+//    rightBtn.selected = YES;
+    [self.view addSubview:rightBtn];
+    
+    UILabel * label = [MyControl createLabelWithFrame:CGRectMake(rightBtn.frame.origin.x+25, catAndDog.frame.origin.y-35, 200, 20) Font:12 Text:@"我已经阅读并同意"];
+//    NSMutableAttributedString * attString = [[NSMutableAttributedString alloc] initWithString:@"我已经阅读并同意《用户协议》"];
+//    [attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:85/255.0 green:134/255.0 blue:156/255.0 alpha:1] range:NSMakeRange(8, 6)];
+//    [attString addAttribute:NSUnderlineStyleAttributeName value:[NSString stringWithFormat:@"%d", NSUnderlineStyleSingle] range:NSMakeRange(8, 6)];
+//    NSDictionary * dic = @{NSFontAttributeName:[UIFont fontWithName:@"" size:12], NSUnderlineStyleSingle:[NSNumber numberWithInteger:NSUnderlineStyleSingle]};
+//    [attString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:NSMakeRange(8, 6)];
+//    label.attributedText = attString;
+    [self.view addSubview:label];
+//    [attString release];
+    CGSize size = [label.text sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
+    
+    NSString * str = @"《用户协议》";
+    CGSize size2 = [str sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
+    
+    HyperlinksButton * hyperBtn = [[HyperlinksButton alloc] initWithFrame:CGRectMake(label.frame.origin.x+size.width, label.frame.origin.y+4, size2.width, size2.height)];
+    [hyperBtn setColor:[UIColor colorWithRed:85/255.0 green:134/255.0 blue:156/255.0 alpha:1]];
+    [hyperBtn setTitleColor:[UIColor colorWithRed:85/255.0 green:134/255.0 blue:156/255.0 alpha:1] forState:UIControlStateNormal];
+    hyperBtn.titleLabel.textAlignment = NSTextAlignmentLeft;
+    [hyperBtn setTitle:@"《用户协议》" forState:UIControlStateNormal];
+    [hyperBtn addTarget:self action:@selector(hyBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    hyperBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+    [self.view addSubview:hyperBtn];
+    
+    
+}
+-(void)hyBtnClick
+{
+//    NSLog(@"111111");
+    PermitViewController * vc = [[PermitViewController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
+}
+-(void)rightBtnClick:(UIButton *)btn
+{
+    btn.selected = !btn.selected;
 }
 -(void)backBtnClick
 {
@@ -235,6 +278,9 @@
 //}
 -(void)haveBtnClick
 {
+    if (!rightBtn.selected) {
+        return;
+    }
     RegisterViewController * vc = [[RegisterViewController alloc] init];
 //    ChooseFamilyViewController * vc = [[ChooseFamilyViewController alloc] init];
 //    UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -255,6 +301,9 @@
 }
 -(void)notHaveBtnClick
 {
+    if (!rightBtn.selected) {
+        return;
+    }
 //    RegisterViewController * vc = [[RegisterViewController alloc] init];
     [USER setObject:@"0" forKey:@"isChooseFamilyShouldDismiss"];
     ChooseFamilyViewController * vc = [[ChooseFamilyViewController alloc] init];

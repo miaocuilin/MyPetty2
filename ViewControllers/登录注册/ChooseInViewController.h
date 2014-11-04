@@ -14,6 +14,8 @@
     NSString * tempString;
     UILabel * ambassadorMessage;
     NSTimer * Timer;
+    
+    UIButton * rightBtn;
 }
 @property(nonatomic)BOOL isMi;
 //@property(nonatomic,copy)NSString * ambString;

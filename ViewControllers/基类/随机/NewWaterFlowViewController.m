@@ -10,7 +10,7 @@
 #import "PhotoModel.h"
 #import "WaterFlowCell.h"
 #import "PicDetailViewController.h"
-#define LabelFont 15
+#define LabelFont 12
 @implementation NewWaterFlowViewController
 
 -(void)viewDidLoad
@@ -22,7 +22,7 @@
     self.tempArray = [NSMutableArray arrayWithCapacity:0];
     
     [self createBg];
-    [self createFakeNavigation];
+//    [self createFakeNavigation];
     [self createTableView];
     [self loadData];
 }
@@ -30,7 +30,7 @@
 #pragma mark -
 -(void)createBg
 {
-    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:bgImageView];
     
     NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -41,35 +41,35 @@
     UIImage * image = [UIImage imageWithData:data];
     bgImageView.image = image;
     
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
-    [self.view addSubview:tempView];
+//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+//    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+//    [self.view addSubview:tempView];
 }
--(void)createFakeNavigation
-{
-    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    [self.view addSubview:navView];
-    
-    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    alphaView.alpha = 0.85;
-    alphaView.backgroundColor = BGCOLOR;
-    [navView addSubview:alphaView];
-    
-    self.menuBtn = [MyControl createButtonWithFrame:CGRectMake(17, 30, 82/2, 54/2) ImageName:@"menu.png" Target:self Action:@selector(menuBtnClick:) Title:nil];
-    self.menuBtn.showsTouchWhenHighlighted = YES;
-    [navView addSubview:self.menuBtn];
-    
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 32, 200, 20) Font:17 Text:@"宠物星球"];
-    titleLabel.font = [UIFont boldSystemFontOfSize:17];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    [navView addSubview:titleLabel];
-    
-    camara = [MyControl createButtonWithFrame:CGRectMake(320-82/2-15, 64-54/2-7, 82/2, 54/2) ImageName:@"相机图标.png" Target:self Action:@selector(camaraClick) Title:nil];
-    camara.showsTouchWhenHighlighted = YES;
-    [navView addSubview:camara];
-}
--(void)menuBtnClick:(UIButton *)btn{}
--(void)camaraClick{}
+//-(void)createFakeNavigation
+//{
+//    navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+//    [self.view addSubview:navView];
+//    
+//    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+//    alphaView.alpha = 0.85;
+//    alphaView.backgroundColor = BGCOLOR;
+//    [navView addSubview:alphaView];
+//    
+//    self.menuBtn = [MyControl createButtonWithFrame:CGRectMake(17, 30, 82/2, 54/2) ImageName:@"menu.png" Target:self Action:@selector(menuBtnClick:) Title:nil];
+//    self.menuBtn.showsTouchWhenHighlighted = YES;
+//    [navView addSubview:self.menuBtn];
+//    
+//    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 32, 200, 20) Font:17 Text:@"宠物星球"];
+//    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+//    titleLabel.textAlignment = NSTextAlignmentCenter;
+//    [navView addSubview:titleLabel];
+//    
+//    camara = [MyControl createButtonWithFrame:CGRectMake(320-82/2-15, 64-54/2-7, 82/2, 54/2) ImageName:@"相机图标.png" Target:self Action:@selector(camaraClick) Title:nil];
+//    camara.showsTouchWhenHighlighted = YES;
+//    [navView addSubview:camara];
+//}
+//-(void)menuBtnClick:(UIButton *)btn{}
+//-(void)camaraClick{}
 
 #pragma mark -
 -(void)createTableView
@@ -233,11 +233,12 @@
     }
     
     if ([model.cmt isKindOfClass:[NSString class]] && model.cmt.length) {
-        CGSize size = [model.cmt sizeWithFont:[UIFont systemFontOfSize:LabelFont] constrainedToSize:CGSizeMake(self.view.frame.size.width/2-8-4, 100) lineBreakMode:1];
-        model.cmtHeight = size.height;
+        CGSize size = [model.cmt sizeWithFont:[UIFont systemFontOfSize:LabelFont] constrainedToSize:CGSizeMake(self.view.frame.size.width/2-4*3, 100) lineBreakMode:1];
+        model.cmtWidth = size.width;
+        model.cmtHeight = size.height+23;
         //                    NSLog(@"%@--%d", model.cmt, model.cmtHeight);
     }else{
-        model.cmtHeight = 0;
+        model.cmtHeight = 35;
     }
     
     //                NSLog(@"%@--%d", model.cmt, model.cmtHeight);
@@ -247,7 +248,7 @@
     UIImage * image = [UIImage imageWithContentsOfFile:path];
     if (image) {
         //比例调整 w=20 h=15    W=15  H=(W/w)*h
-        model.width = self.view.frame.size.width/2-8;
+        model.width = self.view.frame.size.width/2-4-2;
         model.height = (model.width/image.size.width)*image.size.height;
         tempCount++;
         [self check];
@@ -258,7 +259,7 @@
             if (isFinish) {
                 tempCount++;
                 
-                model.width = self.view.frame.size.width/2-8;
+                model.width = self.view.frame.size.width/2-4-2;
                 model.height = (model.width/load.dataImage.size.width)*load.dataImage.size.height;
                 BOOL a = [load.data writeToFile:path atomically:YES];
                 NSLog(@"瀑布流图片存储结果a:%d", a);
@@ -447,11 +448,12 @@
         NSLog(@"lastImg_id:%@", self.lastImg_id);
     }
     if ([model.cmt isKindOfClass:[NSString class]] && model.cmt.length) {
-        CGSize size = [model.cmt sizeWithFont:[UIFont systemFontOfSize:LabelFont] constrainedToSize:CGSizeMake(self.view.frame.size.width/2-8-4, 100) lineBreakMode:1];
-        model.cmtHeight = size.height;
+        CGSize size = [model.cmt sizeWithFont:[UIFont systemFontOfSize:LabelFont] constrainedToSize:CGSizeMake(self.view.frame.size.width/2-4*3, 100) lineBreakMode:1];
+        model.cmtWidth = size.width;
+        model.cmtHeight = size.height+23;
         //                    NSLog(@"%@--%d", model.cmt, model.cmtHeight);
     }else{
-        model.cmtHeight = 0;
+        model.cmtHeight = 35;
     }
     
     //                NSLog(@"%@--%d", model.cmt, model.cmtHeight);
@@ -461,7 +463,7 @@
     UIImage * image = [UIImage imageWithContentsOfFile:path];
     if (image) {
         //比例调整 w=20 h=15    W=15  H=(W/w)*h
-        model.width = self.view.frame.size.width/2-8;
+        model.width = self.view.frame.size.width/2-4-2;
         model.height = (model.width/image.size.width)*image.size.height;
         tempCount++;
         [self check2];
@@ -472,7 +474,7 @@
             if (isFinish) {
                 tempCount++;
                 
-                model.width = self.view.frame.size.width/2-8;
+                model.width = self.view.frame.size.width/2-4-2;
                 model.height = (model.width/load.dataImage.size.width)*load.dataImage.size.height;
                 BOOL a = [load.data writeToFile:path atomically:YES];
                 NSLog(@"瀑布流图片存储结果a:%d", a);
@@ -579,11 +581,12 @@
         WaterFlowCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
         if (!cell) {
             cell = [[[WaterFlowCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
+            [cell adjustOriginalXWithIsLeft:YES];
         }
         cell.backgroundColor = [UIColor clearColor];
         
         PhotoModel * model = self.dataArray1[indexPath.row];
-        [cell configUI:model];
+        [cell configUI:model isLeft:YES];
         cell.selectionStyle = NO;
         cell.jumpToPicDetail = ^(void){
             PhotoModel * model = self.dataArray1[indexPath.row];
@@ -604,10 +607,11 @@
         WaterFlowCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID2];
         if (!cell) {
             cell = [[[WaterFlowCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID2] autorelease];
+            [cell adjustOriginalXWithIsLeft:NO];
         }
         cell.backgroundColor = [UIColor clearColor];
         PhotoModel * model = self.dataArray2[indexPath.row];
-        [cell configUI:model];
+        [cell configUI:model isLeft:NO];
         cell.selectionStyle = NO;
         cell.jumpToPicDetail = ^(void){
             PhotoModel * model = self.dataArray2[indexPath.row];

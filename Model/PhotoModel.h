@@ -31,6 +31,6 @@
 
 @property(nonatomic)int width;
 @property(nonatomic)int height;
-@property(nonatomic)int cmtWidth;
-@property(nonatomic)int cmtHeight;
+@property(nonatomic)float cmtWidth;
+@property(nonatomic)float cmtHeight;
 @end

@@ -24,8 +24,8 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 
 @implementation TMPhotoQuiltViewCell
 
-@synthesize photoView = _photoView;
-@synthesize titleLabel = _titleLabel;
+//@synthesize photoView = _photoView;
+//@synthesize titleLabel = _titleLabel;
 
 - (void)dealloc {
     [_photoView release], _photoView = nil;
@@ -39,64 +39,100 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
     self = [super initWithReuseIdentifier:reuseIdentifier];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
+        [self makeUI];
     }
     return self;
 }
-
-- (UIImageView *)photoView {
-    if (!_photoView) {
-        _photoView = [[UIImageView alloc] init];
-        _photoView.contentMode = UIViewContentModeScaleAspectFill;
-        _photoView.clipsToBounds = YES;
-        [self addSubview:_photoView];
-    }
-    return _photoView;
+-(void)makeUI
+{
+    self.photoView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35)];
+    self.photoView.clipsToBounds = YES;
+    [self addSubview:self.photoView];
+    
+    self.titleLabel = [MyControl createLabelWithFrame:CGRectMake(4, self.frame.size.height - 18, self.frame.size.width-8, 0) Font:12 Text:nil];
+//    self.titleLabel.numberOfLines = 1;
+    self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    self.titleLabel.textColor = [UIColor blackColor];
+    self.titleLabel.font = [UIFont systemFontOfSize:12];
+//    self.titleLabel.adjustsFontSizeToFitWidth = NO;
+    [self addSubview:self.titleLabel];
 }
+//- (UIImageView *)photoView {
+//    if (!_photoView) {
+//        _photoView = [[UIImageView alloc] init];
+//        _photoView.contentMode = UIViewContentModeScaleAspectFill;
+////        _photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-20);
+//        _photoView.clipsToBounds = YES;
+//        [self addSubview:_photoView];
+//    }
+//    return _photoView;
+//}
 
 //- (UILabel *)titleLabel {
 //    if (!_titleLabel) {
-//        _titleLabel = [MyControl createLabelWithFrame:CGRectZero Font:15 Text:nil];
-//        _titleLabel = [[UILabel alloc] init];
-//        _titleLabel.backgroundColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.7];
-//        _titleLabel.textColor = [UIColor whiteColor];
-//        _titleLabel.layer.masksToBounds = YES;
-//        _titleLabel.layer.cornerRadius = 5;
-//        _titleLabel.textAlignment = NSTextAlignmentRight;
-//        _titleLabel.font = [UIFont boldSystemFontOfSize:15];
-//        _titleLabel.userInteractionEnabled = YES;
-
-//        [self addSubview:_titleLabel];
+////        _titleLabel = [MyControl createLabelWithFrame:CGRectZero Font:15 Text:nil];
+//        _titleLabel = [MyControl createLabelWithFrame:CGRectZero Font:12 Text:nil];
+////        _titleLabel.backgroundColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.7];
+//        _titleLabel.textColor = [UIColor blackColor];
+////        _titleLabel.layer.masksToBounds = YES;
+////        _titleLabel.layer.cornerRadius = 5;
+////        _titleLabel.textAlignment = NSTextAlignmentRight;
+//        _titleLabel.font = [UIFont systemFontOfSize:12];
+////        _titleLabel.userInteractionEnabled = YES;
 //
-//        self.heart = [MyControl createImageViewWithFrame:CGRectMake(5, 5, 20, 20) ImageName:@"11-1.png"];
-//        [_titleLabel addSubview:self.heart];
-//        
-//        
-//        self.heartButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 55, 26) ImageName:@"" Target:self Action:@selector(buttonClick:) Title:nil];
-//        [_titleLabel addSubview:self.heartButton];
+//        [self addSubview:_titleLabel];
+////
+////        self.heart = [MyControl createImageViewWithFrame:CGRectMake(5, 5, 20, 20) ImageName:@"11-1.png"];
+////        [_titleLabel addSubview:self.heart];
+////        
+////        
+////        self.heartButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 55, 26) ImageName:@"" Target:self Action:@selector(buttonClick:) Title:nil];
+////        [_titleLabel addSubview:self.heartButton];
 //    }
 //    return _titleLabel;
 //}
 -(void)configUI:(PhotoModel *)model
 {
+    cmtHeight = model.cmtHeight;
+    cmtWidth = model.cmtWidth;
+    
+//    if (!cmtHeight) {
+//        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35);
+//        self.titleLabel.frame = CGRectMake(4, self.frame.size.height - 18, self.frame.size.width-8, 0);
+//    }else{
+//        NSLog(@"%f--%f--%@", cmtHeight, cmtHeight-10-18, self.titleLabel.text);
+//        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-cmtHeight);
+//        self.titleLabel.frame = CGRectMake(4, self.frame.size.height - cmtHeight + 10, self.frame.size.width-8, cmtHeight-10-18);
+//    }
+    
+//    if (!model.cmtHeight) {
+//        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35);
+//    }else{
+//        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-model.cmtHeight);
+//        self.titleLabel.frame = CGRectMake(kTMPhotoQuiltViewMargin+4, self.bounds.size.height - 30 - kTMPhotoQuiltViewMargin, self.frame.size.width-8, 40);
+//    }
+    
+//    NSLog(@"%@", self.titleLabel.text);
+    
     //解析点赞者字符串，与[USER objectForKey:@"usr_id"]对比
-    if(![model.likers isKindOfClass:[NSNull class]]){
-        self.likersArray = [model.likers componentsSeparatedByString:@","];
-        
-        for(NSString * str in self.likersArray){
-            if ([str isEqualToString:[USER objectForKey:@"usr_id"]]) {
-                isLike = YES;
-                break;
-            }
-        }
-    }
+//    if(![model.likers isKindOfClass:[NSNull class]]){
+//        self.likersArray = [model.likers componentsSeparatedByString:@","];
+//        
+//        for(NSString * str in self.likersArray){
+//            if ([str isEqualToString:[USER objectForKey:@"usr_id"]]) {
+//                isLike = YES;
+//                break;
+//            }
+//        }
+//    }
 //    NSLog(@"%@--%@", model.likers, self.likersArray);
     
-    if (isLike) {
-
-        self.heart.image = [UIImage imageNamed:@"11-2.png"];
-        self.heartButton.selected = YES;
-        isLike = NO;
-    }
+//    if (isLike) {
+//
+//        self.heart.image = [UIImage imageNamed:@"11-2.png"];
+//        self.heartButton.selected = YES;
+//        isLike = NO;
+//    }
 }
 
 
@@ -152,8 +188,21 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 }
 
 - (void)layoutSubviews {
-    self.photoView.frame = CGRectInset(self.bounds, kTMPhotoQuiltViewMargin, kTMPhotoQuiltViewMargin);
-//    self.titleLabel.frame = CGRectMake(kTMPhotoQuiltViewMargin+10, self.bounds.size.height - 30 - kTMPhotoQuiltViewMargin,55, 26);
+//    CGSize size = [self.titleLabel.text sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(cmtWidth, 100) lineBreakMode:1];
+//    NSLog(@"%d--%@--%.0f--%f", cmtHeight, self.titleLabel.text, size.height, self.frame.size.height);
+    
+//    self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35);
+//    NSLog(@"%@", self.titleLabel.text);
+    if (!cmtHeight) {
+        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35);
+        self.titleLabel.frame = CGRectMake(4, self.frame.size.height - 18, self.frame.size.width-8, 0);
+    }else{
+//        NSLog(@"%f--%f--%@", cmtHeight, cmtHeight-10-18, self.titleLabel.text);
+        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-cmtHeight);
+        self.titleLabel.frame = CGRectMake(4, self.frame.size.height - cmtHeight + 10, self.frame.size.width-8, cmtHeight-10-18);
+    }
+//    self.ph
+//    self.titleLabel.frame = CGRectMake(kTMPhotoQuiltViewMargin+4, self.bounds.size.height - 30 - kTMPhotoQuiltViewMargin, self.frame.size.width-8, 7);
 }
 
 @end

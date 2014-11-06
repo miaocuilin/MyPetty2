@@ -92,23 +92,23 @@
     title.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:title];
     
-    UILabel * version = [MyControl createLabelWithFrame:CGRectMake(100, 220, 120, 20) Font:16 Text:@"V1.0"];
+    UILabel * version = [MyControl createLabelWithFrame:CGRectMake(100, 220, 120, 20) Font:16 Text:@"V1.0.0"];
     version.textColor = [UIColor blackColor];
     version.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:version];
     
-    UIButton * sina = [MyControl createButtonWithFrame:CGRectMake(0, 268, 320, 47) ImageName:@"" Target:self Action:@selector(sinaClick) Title:@"新浪微博：宠物星球_宠来宠趣"];
+    UIButton * sina = [MyControl createButtonWithFrame:CGRectMake(0, 268, 320, 47) ImageName:@"" Target:self Action:@selector(sinaClick) Title:@"新浪微博：宠物星球社交应用"];
     sina.titleLabel.font = [UIFont systemFontOfSize:16];
     [sina setTitleColor:BGCOLOR forState:UIControlStateNormal];
     sina.backgroundColor = [UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1];
-    sina.showsTouchWhenHighlighted = YES;
+//    sina.showsTouchWhenHighlighted = YES;
     [sv addSubview:sina];
     
     UIButton * wechat = [MyControl createButtonWithFrame:CGRectMake(0, 320, 320, 47) ImageName:@"" Target:self Action:@selector(wechatClick) Title:@"微信公众号：宠物星球"];
     wechat.titleLabel.font = [UIFont systemFontOfSize:16];
     [wechat setTitleColor:BGCOLOR forState:UIControlStateNormal];
     wechat.backgroundColor = [UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1];
-    wechat.showsTouchWhenHighlighted = YES;
+//    wechat.showsTouchWhenHighlighted = YES;
     [sv addSubview:wechat];
     
     UIButton * permit = [MyControl createButtonWithFrame:CGRectMake(70, 390, 180, 20) ImageName:@"" Target:self Action:@selector(permitClick) Title:@"宠物星球软件许可及服务条款"];

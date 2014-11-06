@@ -90,6 +90,7 @@
     self.tv.separatorStyle = 0;
     self.tv.showsVerticalScrollIndicator = NO;
     self.tv.backgroundColor = [UIColor clearColor];
+//    self.tv.bounces = NO;
     [bgTv addSubview:self.tv];
     [self.tv release];
     
@@ -107,7 +108,7 @@
 {
     StartLoading;
     
-    NSString * url = [NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]];
+    NSString * url = [NSString stringWithFormat:@"%@%@", RECOAPI, [ControllerManager getSID]];
     
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -123,6 +124,7 @@
             tempNum = 0;
             tempCount = 0;
             count = 0;
+            page = 0;
             
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             
@@ -178,7 +180,7 @@
                     
 //                    NSInvocationOperation * operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(downloadImage:) object:model];
 //                    [queue addOperation:operation];
-                    
+            
                     
                     
 //                    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -228,15 +230,16 @@
     [self.dataArray addObject:model];
     
     if (self.tempArray.count == 1) {
-        self.lastImg_id = [self.dataArray[self.dataArray.count-1] img_id];
-        NSLog(@"lastImg_id:%@", self.lastImg_id);
+        page++;
+//        self.lastImg_id = [self.dataArray[self.dataArray.count-1] img_id];
+//        NSLog(@"lastImg_id:%@", self.lastImg_id);
     }
     
     if ([model.cmt isKindOfClass:[NSString class]] && model.cmt.length) {
         CGSize size = [model.cmt sizeWithFont:[UIFont systemFontOfSize:LabelFont] constrainedToSize:CGSizeMake(self.view.frame.size.width/2-4*3, 100) lineBreakMode:1];
         model.cmtWidth = size.width;
         model.cmtHeight = size.height+23;
-        //                    NSLog(@"%@--%d", model.cmt, model.cmtHeight);
+//        NSLog(@"%f--%f--%@--%.1f--%.1f", self.view.frame.size.width/2, size.width, model.cmt, size.height, model.cmtHeight);
     }else{
         model.cmtHeight = 35;
     }
@@ -354,9 +357,9 @@
         [bgTv footerEndRefreshing];
         return;
     }
-    NSString * str = [NSString stringWithFormat:@"img_id=%@dog&cat", self.lastImg_id];
+    NSString * str = [NSString stringWithFormat:@"page=%ddog&cat", page];
     NSString * sig = [MyMD5 md5:str];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMENDAPI2, self.lastImg_id, sig, [ControllerManager getSID]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", RECOAPI2, page, sig, [ControllerManager getSID]];
     //    NSLog(@"next-url:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -444,8 +447,9 @@
     
     
     if (self.tempArray.count == 1) {
-        self.lastImg_id = [self.dataArray[self.dataArray.count-1] img_id];
-        NSLog(@"lastImg_id:%@", self.lastImg_id);
+        page++;
+//        self.lastImg_id = [self.dataArray[self.dataArray.count-1] img_id];
+//        NSLog(@"lastImg_id:%@", self.lastImg_id);
     }
     if ([model.cmt isKindOfClass:[NSString class]] && model.cmt.length) {
         CGSize size = [model.cmt sizeWithFont:[UIFont systemFontOfSize:LabelFont] constrainedToSize:CGSizeMake(self.view.frame.size.width/2-4*3, 100) lineBreakMode:1];
@@ -562,6 +566,7 @@
     }else if(scrollView == tv2){
         self.tv.contentOffset = tv2.contentOffset;
     }
+    
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {

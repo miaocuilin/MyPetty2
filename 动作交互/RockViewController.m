@@ -21,8 +21,8 @@
     UIImageView *floating3;
 
 }
-@property (nonatomic,retain)NSMutableArray *goodGiftDataArray;
-@property (nonatomic,retain)NSMutableArray *badGiftDataArray;
+//@property (nonatomic,retain)NSMutableArray *goodGiftDataArray;
+//@property (nonatomic,retain)NSMutableArray *badGiftDataArray;
 
 @property (nonatomic,strong)UIScrollView *upView;
 @property (nonatomic)NSInteger count;
@@ -51,10 +51,10 @@
     if ([self.titleString isEqualToString:@"捣捣乱"]) {
         self.isTrouble = YES;
     }
-    self.goodGiftDataArray = [NSMutableArray arrayWithCapacity:0];
-    self.badGiftDataArray = [NSMutableArray arrayWithCapacity:0];
-    self.goodGiftDataArray = [ControllerManager getGift:NO];
-    self.badGiftDataArray = [ControllerManager getGift:YES];
+//    self.goodGiftDataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.badGiftDataArray = [NSMutableArray arrayWithCapacity:0];
+//    self.goodGiftDataArray = [ControllerManager getGift:NO];
+//    self.badGiftDataArray = [ControllerManager getGift:YES];
     [self loadShakeDataInit];
     [self createShakeUI];
 }
@@ -106,16 +106,42 @@
     if (self.count == 0) {
         self.upView.contentOffset = CGPointMake(300*3, 0);
     }
-    GiftShopModel *model;
-    int index ;
+    GiftShopModel * model = [[GiftShopModel alloc] init];
+    int index=0,a=0;
     NSString * add_rq;
+    
+    index = arc4random()%1000+1;
     if (!self.isTrouble) {
-        index = arc4random()%(self.goodGiftDataArray.count);
-        model = self.goodGiftDataArray[index];
+//        index = arc4random()%(self.goodGiftDataArray.count);
+        if (index<=600) {
+            //1档
+            a = arc4random()%7+1+1100;
+        }else if(index<=870){
+            //2档
+            a = arc4random()%7+1+1200;
+        }else if(index<=970){
+            //3档
+            a = arc4random()%5+1+1300;
+        }else{
+            //4档
+            a = arc4random()%3+1+1400;
+        }
+        NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:[NSString stringWithFormat:@"%d", a]];
+        [model setValuesForKeysWithDictionary:dict];
+//        model = self.goodGiftDataArray[index];
         add_rq = [NSString stringWithFormat:@"+%@",model.add_rq];
     }else{
-        index = arc4random()%(self.badGiftDataArray.count);
-        model = self.badGiftDataArray[index];
+//        index = arc4random()%(self.badGiftDataArray.count);
+        if (index<=800) {
+            //捣乱1档
+            a = arc4random()%4+1+2100;
+        }else {
+            //礼物1档
+            a = arc4random()%7+1+1100;
+        }
+        NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:[NSString stringWithFormat:@"%d", a]];
+        [model setValuesForKeysWithDictionary:dict];
+//        model = self.badGiftDataArray[index];
         add_rq = model.add_rq;
     }
     rewardLabel.text = [NSString stringWithFormat:@"%@ X 1",model.name];
@@ -129,6 +155,7 @@
     AudioServicesPlaySystemSound (soundID);
     //固定礼物1102
 //    NSString *item = @"1102";
+//    NSLog(@"%@--%@", model.name, model.no);
     NSString *item = model.no;
     NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_shake=1&item_id=%@dog&cat", self.pet_aid, item]];
     NSString *sendString = [NSString stringWithFormat:@"%@%@&is_shake=1&item_id=%@&sig=%@&SID=%@",SENDSHAKEGIFT, self.pet_aid,item,sendSig,[ControllerManager getSID]];
@@ -153,7 +180,7 @@
         }
     }];
     [request release];
-    
+    [model release];
 }
 #pragma mark - 通知触发的方法
 - (void)shakeAction

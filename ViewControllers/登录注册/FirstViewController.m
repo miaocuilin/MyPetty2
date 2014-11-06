@@ -100,6 +100,8 @@
 //            NSDictionary * imageInfoDict = (NSDictionary *)imageProperties;
 //            NSDictionary * dict = [MyControl imageSizeFrom:[NSURL URLWithString:url2]];
 //            NSLog(@"%@", dict);
+            NSLog(@"开始下载欢迎图片");
+
                 httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url2 Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     
                     [UIApplication sharedApplication].statusBarHidden = YES;
@@ -117,6 +119,26 @@
                         [self createUI];
                     }
                 }];
+//            request2.overDue = ^(){
+//                httpDownloadBlock * request3 = [[httpDownloadBlock alloc] initWithUrlStr:url2 Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                    
+//                    [UIApplication sharedApplication].statusBarHidden = YES;
+//                    if (isFinish) {
+//                        [tempImageView removeFromSuperview];
+//                        
+//                        self.launchImage = load.dataImage;
+//                        //                        NSData * data = UIImageJPEGRepresentation(load.dataImage, 0.1);
+//                        //                        BOOL a = [data writeToFile:FilePath atomically:YES];
+//                        //                        NSLog(@"存储欢迎图片结果：%d", a);
+//                        hadImage = YES;
+//                        [self createUI];
+//                    }else{
+//                        hadImage = NO;
+//                        [self createUI];
+//                    }
+//                }];
+//                [request3 release];
+//            };
                 [request2 release];
 //            }
             

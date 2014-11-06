@@ -1,18 +1,22 @@
 //
-//  PetRecommendViewController.m
+//  MyStarViewController.m
 //  MyPetty
 //
-//  Created by miaocuilin on 14/11/3.
+//  Created by miaocuilin on 14/11/6.
 //  Copyright (c) 2014年 AidiGame. All rights reserved.
 //
 
-#import "PetRecommendViewController.h"
-#import "PetRecommendCell.h"
-@implementation PetRecommendViewController
+#import "MyStarViewController.h"
+#import "MyStarCell.h"
+@interface MyStarViewController ()
 
--(void)viewDidLoad
-{
+@end
+
+@implementation MyStarViewController
+
+- (void)viewDidLoad {
     [super viewDidLoad];
+    // Do any additional setup after loading the view.
     
     [self createBg];
     [self createTableView];
@@ -55,42 +59,33 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString * cellID = @"ID";
-    PetRecommendCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    MyStarCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
-        cell = [[[PetRecommendCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
+        cell = [[[MyStarCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
     }
-    cell.pBtnClick = ^(int a){
-        AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-        [self.view addSubview:view];
-        if (a == 0) {
-            if (a >= 10) {
-                view.AlertType = 3;
-                [view makeUI];
-            }else{
-                view.AlertType = 2;
-                [view makeUI];
-                view.jump = ^(){
-                    cell.pBtn.selected = YES;
-                };
-            }
-        }else{
-            view.AlertType = 5;
-            [view makeUI];
-            view.jump = ^(){
-                cell.pBtn.selected = NO;
-            };
-        }
-    };
-    cell.imageClick = ^(int a){
-        NSLog(@"跳转到第%d张图片详情页", a);
-    };
-    cell.clipsToBounds = YES;
+    [cell makeUIWithWidth:self.view.frame.size.width Height:322.0f];
+//    cell.clipsToBounds = YES;
     cell.backgroundColor = [UIColor clearColor];
     cell.selectionStyle = 0;
     return cell;
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 300.0f;
+    return 710.0/2;
 }
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
 @end

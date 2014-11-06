@@ -29,4 +29,6 @@
 @property(nonatomic,copy)void(^httpRequestBlock)(BOOL,httpDownloadBlock*);
 -(id)initWithUrlStr:(NSString*)str Block:(void(^)(BOOL,httpDownloadBlock*))a;
 
+/**************************************/
+@property(nonatomic,copy)void(^overDue)(void);
 @end

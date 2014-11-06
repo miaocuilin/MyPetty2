@@ -49,6 +49,10 @@
     
     //该页面是否已经加载过
     BOOL isLoaded;
+    
+    //
+    UIImageView * leftArrow;
+    UIImageView * rightArrow;
 }
 @property (nonatomic,copy)NSString * tfString;
 

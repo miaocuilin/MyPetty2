@@ -433,6 +433,7 @@ NSString *const kDefaultReusableIdentifier = @"kTMQuiltViewDefaultReusableIdenti
         
         
         for(int j = *top; j <= *bottom; j++) {
+//            NSLog(@"J:%d", j);
             TMQuiltViewCell *visibleCell = (TMQuiltViewCell *)[indexPathToView objectForKey:[indexPaths objectAtIndex:j]];
             visibleCell.frame = [self rectForCellAtIndex:j column:i];
         }

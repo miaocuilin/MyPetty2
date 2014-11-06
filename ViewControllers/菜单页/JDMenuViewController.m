@@ -92,7 +92,9 @@
             }else{
                 sex.image = [UIImage imageNamed:@"woman.png"];
             }
+            
             /**************************/
+            NSLog(@"%@--%@", [USER objectForKey:@"tx"], [USER objectForKey:@"name"]);
             if (!([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
                 NSString * docDir = DOCDIR;
                 NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
@@ -160,7 +162,13 @@
     //清空数据
     [self.countryArray removeAllObjects];
     changeNum = 0;
-    
+    if (sideMenu.userPetListArray.count<=3) {
+        leftArrow.hidden = YES;
+        rightArrow.hidden = YES;
+    }else{
+        leftArrow.hidden = NO;
+        rightArrow.hidden = NO;
+    }
     for (int i=0; i<sideMenu.userPetListArray.count; i++) {
         UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake(3+i*SPACE, 12.5, 40, 40);
@@ -480,10 +488,10 @@
     /******创建各个国家的图标在一个scrollView上******/
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
         //添加左右两个箭头
-        UIImageView * leftArrow = [MyControl createImageViewWithFrame:CGRectMake(8, (65-18)/2, 11, 18) ImageName:@"menu_left.png"];
+        leftArrow = [MyControl createImageViewWithFrame:CGRectMake(8, (65-18)/2, 11, 18) ImageName:@"menu_left.png"];
         [countryBg addSubview:leftArrow];
         
-        UIImageView * rightArrow = [MyControl createImageViewWithFrame:CGRectMake(414/2, (65-18)/2, 11, 18) ImageName:@"menu_right.png"];
+        rightArrow = [MyControl createImageViewWithFrame:CGRectMake(414/2, (65-18)/2, 11, 18) ImageName:@"menu_right.png"];
         [countryBg addSubview:rightArrow];
         
         UIView * gestureView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 65)];

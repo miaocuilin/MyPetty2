@@ -20,14 +20,16 @@
 #import "ShakeViewController.h"
 #import "TipsView.h"
 #import "NewWaterFlowViewController.h"
-
+#import "PetRecommendViewController.h"
+#import "MyStarViewController.h"
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 @interface MainViewController () <AFPhotoEditorControllerDelegate>
 {
-    NewWaterFlowViewController * vc1;
+    MyStarViewController * vc1;
     RandomViewController * vc2;
-    PlanetAttentionViewController * vc3;
+//    PlanetAttentionViewController * vc3;
+    PetRecommendViewController * vc3;
 }
 @property (nonatomic, strong) ALAssetsLibrary * assetLibrary;
 @property (nonatomic, strong) NSMutableArray * sessions;
@@ -131,7 +133,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
     
     
-    segmentClickIndex = 0;
+    segmentClickIndex = 1;
     [self createScrollView];
     [self createFakeNavigation];
     [self createViewControllers];
@@ -159,9 +161,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)topBtnClick
 {
     if (segmentClickIndex == 0) {
-        [UIView animateWithDuration:0.2 animations:^{
-            vc1.tv.contentOffset = CGPointMake(0, 0);
-        }];
+//        [UIView animateWithDuration:0.2 animations:^{
+//            vc1.tv.contentOffset = CGPointMake(0, 0);
+//        }];
         
     }else if(segmentClickIndex == 1){
         
@@ -297,7 +299,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
     sv.delegate = self;
     sv.contentSize = CGSizeMake(320*3, self.view.frame.size.height);
-    sv.contentOffset = CGPointMake(0, 0);
+    sv.contentOffset = CGPointMake(320, 0);
     sv.pagingEnabled = YES;
     sv.showsHorizontalScrollIndicator = NO;
     [self.view addSubview:sv];
@@ -305,10 +307,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)createViewControllers
 {
 //    RecommendViewController * rvc = [[RecommendViewController alloc] init];
-    vc1 = [[NewWaterFlowViewController alloc] init];
-    [self addChildViewController:vc1];
-    [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    [sv addSubview:vc1.view];
+    vc2 = [[RandomViewController alloc] init];
+    [self addChildViewController:vc2];
+    [vc2.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
+    [sv addSubview:vc2.view];
     
 //    WaterViewController *water = [[WaterViewController alloc] init];
 //    [self addChildViewController:water];
@@ -321,7 +323,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)createSegment
 {
-    NSArray * scArray = @[@"萌宠推荐", @"宇宙广场", @"星球关注"];
+    NSArray * scArray = @[@"我的萌星", @"最新萌照", @"萌星推荐"];
     sc = [[UISegmentedControl alloc] initWithItems:scArray];
     sc.backgroundColor = [UIColor whiteColor];
     sc.alpha = 0.7;
@@ -330,7 +332,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     sc.frame = CGRectMake(10, 69, 300, 30);
     [sc addTarget:self action:@selector(segmentClick:) forControlEvents:UIControlEventValueChanged];
     //默认选中第二个，宇宙广场
-    sc.selectedSegmentIndex = 0;
+    sc.selectedSegmentIndex = 1;
     sc.tintColor = BGCOLOR;
     [self.view addSubview:sc];
 }
@@ -373,13 +375,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     int a = sv.contentOffset.x;
     sc.selectedSegmentIndex = a/320;
     
-    if (a == 320) {
-        if (isCreated[1] == NO) {
-            isCreated[1] = YES;
-            vc2 = [[RandomViewController alloc] init];
+    if (a == 0) {
+        if (isCreated[0] == NO) {
+            isCreated[0] = YES;
+            vc1 = [[MyStarViewController alloc] init];
             [self addChildViewController:vc2];
-            [vc2.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
-            [sv addSubview:vc2.view];
+            [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+            [sv addSubview:vc1.view];
             [self.view bringSubviewToFront:sc];
         }
     }else if(a == 320*2){
@@ -392,7 +394,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         if (isCreated[2] == NO) {
             isCreated[2] = YES;
-            vc3 = [[PlanetAttentionViewController alloc] init];
+            vc3 = [[PetRecommendViewController alloc] init];
             [self addChildViewController:vc3];
             [vc3.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
             [sv addSubview:vc3.view];
@@ -402,13 +404,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (scrollView.contentOffset.x == 320) {
-        if (isCreated[1] == NO) {
-            isCreated[1] = YES;
-            vc2 = [[RandomViewController alloc] init];
-            [self addChildViewController:vc2];
-            [vc2.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
-            [sv addSubview:vc2.view];
+    if (scrollView.contentOffset.x == 0) {
+        if (isCreated[0] == NO) {
+            isCreated[0] = YES;
+            vc1 = [[MyStarViewController alloc] init];
+            [self addChildViewController:vc1];
+            [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+            [sv addSubview:vc1.view];
             [self.view bringSubviewToFront:sc];
             
             [self.view bringSubviewToFront:self.menuBgBtn];
@@ -426,7 +428,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isCreated[2] == NO) {
             isCreated[2] = YES;
 //            FavoriteViewController * fvc = [[FavoriteViewController alloc] init];
-            vc3 = [[PlanetAttentionViewController alloc] init];
+            vc3 = [[PetRecommendViewController alloc] init];
             [self addChildViewController:vc3];
             [vc3.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
             [sv addSubview:vc3.view];

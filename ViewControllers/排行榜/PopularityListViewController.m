@@ -63,9 +63,9 @@
     
     self.titleArray = [NSMutableArray arrayWithObjects:@"总人气榜",@"人气日榜", @"人气周榜", @"人气月榜",  nil];
     self.myCountryRankArray = [NSMutableArray arrayWithCapacity:0];
-    self.selectedWords = @"所有种族";
-    
-    [self getListData];
+    self.selectedWords = @"所有";
+    self.totalArray = [NSMutableArray arrayWithObjects:@"所有", @"喵", @"汪", nil];
+//    [self getListData];
     [self createBg];
     [self createTableView];
     [self createHeader2];
@@ -106,7 +106,7 @@
             }
             
             NSLog(@"%@", self.selectedWords);
-            if ([self.selectedWords isEqualToString:@"所有种族"]) {
+            if ([self.selectedWords isEqualToString:@"所有"]) {
                 [self.limitRankDataArray addObjectsFromArray:self.rankDataArray];
             }else{
                 for (int i=0; i<self.rankDataArray.count; i++) {
@@ -224,7 +224,7 @@
     NSDictionary * dict2 = [oriDict objectForKey:@"2"];
 //    NSDictionary * dict3 = [oriDict objectForKey:@"3"];
     
-    [self.totalArray addObject:@"所有种族"];
+    [self.totalArray addObject:@"所有"];
     
     if ([[USER objectForKey:@"planet"] intValue] == 2) {
         for (int i=0; i<[dict2 count]; i++) {
@@ -440,13 +440,13 @@
     //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
     
-    UILabel * titleBgLabel = [MyControl createLabelWithFrame:CGRectMake(100, 64-39, 120, 30) Font:17 Text:@"喵星"];
-    if ([[USER objectForKey:@"planet"] intValue] == 2) {
-        titleBgLabel.text = @"汪星";
-    }
-    titleBgLabel.font = [UIFont boldSystemFontOfSize:17];
-//    titleBgLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.4];
-    [navView addSubview:titleBgLabel];
+//    UILabel * titleBgLabel = [MyControl createLabelWithFrame:CGRectMake(100, 64-39, 120, 30) Font:17 Text:@"喵星"];
+//    if ([[USER objectForKey:@"planet"] intValue] == 2) {
+//        titleBgLabel.text = @"汪星";
+//    }
+//    titleBgLabel.font = [UIFont boldSystemFontOfSize:17];
+////    titleBgLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.4];
+//    [navView addSubview:titleBgLabel];
     
 //    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"人气日榜"];
 //    titleBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17];
@@ -456,7 +456,7 @@
 //    [navView addSubview:titleBtn];
     /*****************************/
     
-    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"总人气榜"];
+    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130-10, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"总人气榜"];
     titleBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     [titleBtn setTitleColor:YELLOW forState:UIControlStateNormal];
     [navView addSubview:titleBtn];
@@ -651,14 +651,14 @@
     headerBgView.alpha = 0.85;
     [headerView addSubview:headerBgView];
     
-    raceBtn = [MyControl createButtonWithFrame:CGRectMake(15, 5, 115, 25) ImageName:@"" Target:self Action:@selector(raceBtnClick) Title:@"所有种族"];
+    raceBtn = [MyControl createButtonWithFrame:CGRectMake(15, 5, 115-20, 25) ImageName:@"" Target:self Action:@selector(raceBtnClick) Title:@"所有"];
     raceBtn.layer.cornerRadius = 5;
     raceBtn.layer.masksToBounds = YES;
     raceBtn.titleLabel.font = [UIFont boldSystemFontOfSize:13];
     raceBtn.backgroundColor = [UIColor colorWithRed:246/255.0 green:168/255.0 blue:146/255.0 alpha:0.6];
     [headerView addSubview:raceBtn];
     //小三角
-    UIImageView * triangle1 = [MyControl createImageViewWithFrame:CGRectMake(102, 9, 10, 8) ImageName:@"5-2.png"];
+    UIImageView * triangle1 = [MyControl createImageViewWithFrame:CGRectMake(102-20, 9, 10, 8) ImageName:@"5-2.png"];
     [raceBtn addSubview:triangle1];
 }
 #pragma mark - 创建顶栏2
@@ -718,15 +718,25 @@
         self.selectedWords = Words;
         
         [self.limitRankDataArray removeAllObjects];
-        if ([Words isEqualToString:@"所有种族"]) {
+        if ([Words isEqualToString:@"所有"]) {
             [self.limitRankDataArray addObjectsFromArray:self.rankDataArray];
         }else{
-            for (int i=0; i<self.rankDataArray.count; i++) {
-                popularityListModel * model = self.rankDataArray[i];
-                if ([[ControllerManager returnCateNameWithType:[model type]] isEqualToString:Words]) {
-                    [self.limitRankDataArray addObject:self.rankDataArray[i]];
+            if([Words isEqualToString:@"喵"]){
+                for (int i=0; i<self.rankDataArray.count; i++) {
+                    popularityListModel * model = self.rankDataArray[i];
+                    if ([model.type intValue]/100 == 1) {
+                        [self.limitRankDataArray addObject:self.rankDataArray[i]];
+                    }
+                }
+            }else{
+                for (int i=0; i<self.rankDataArray.count; i++) {
+                    popularityListModel * model = self.rankDataArray[i];
+                    if ([model.type intValue]/100 == 2) {
+                        [self.limitRankDataArray addObject:self.rankDataArray[i]];
+                    }
                 }
             }
+            
         }
         count = 0;
         myCurrentCountNum = 0;

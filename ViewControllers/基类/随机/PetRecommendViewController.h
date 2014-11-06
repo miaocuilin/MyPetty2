@@ -10,6 +10,7 @@
 
 @interface PetRecommendViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
 {
+    UIImageView * bgImageView;
     UITableView * tv;
 }
 @end

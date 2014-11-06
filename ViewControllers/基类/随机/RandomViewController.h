@@ -18,7 +18,14 @@
 //    BOOL isLike[300];
 //    int limitedCount;
     MBProgressHUD *HUD;
+    
+    NSOperationQueue * queue;
+    
+    int threadCount;
+    int page;
 }
+@property(nonatomic,copy)NSString * tempUrl;
+
 @property(nonatomic,retain)UIButton * menuBtn;
 @property(nonatomic,retain)NSMutableArray * dataArray;
 @property(nonatomic,retain)NSMutableArray * likersArray;

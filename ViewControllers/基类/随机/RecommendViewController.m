@@ -187,6 +187,8 @@
             }];
         }
     }
+    NSLog(@"%@", model.cmt);
+    cell.titleLabel.text = model.cmt;
     
     if (indexPath.row == self.dataArray.count-1) {
         [quiltView footerBeginRefreshing];

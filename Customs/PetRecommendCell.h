@@ -12,5 +12,19 @@
 {
     iCarousel * carousel;
     int imageCount;
+    
+    UIButton * headBtn;
+    UIImageView * sex;
+    UILabel * nameLabel;
+    
+    UILabel * ownerLabel;
+    UIImageView * ownerHead;
+    
+//    UIButton * pBtn;
+    UIButton * jumpPetBtn;
+    UIButton * jumpUserBtn;
 }
+@property(nonatomic,retain)UIButton * pBtn;
+@property(nonatomic,copy)void (^pBtnClick)(int);
+@property(nonatomic,copy)void (^imageClick)(int);
 @end

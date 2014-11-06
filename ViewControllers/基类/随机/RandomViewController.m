@@ -55,6 +55,10 @@
 //    self.menuBgView.frame = CGRectMake(50, self.view.frame.size.height-40, 220, 80);
 //    [self.view bringSubviewToFront:self.menuBgBtn];
     
+    //多线程
+//    queue = [[NSOperationQueue alloc] init];
+//    [queue setMaxConcurrentOperationCount:4];
+    
 }
 //-(void)createFakeNavigation
 //{
@@ -182,17 +186,27 @@
 -(void)loadData
 {
     StartLoading;
-
+    
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RECOMMENDAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             //只包含img_id和图片的url
 //            NSLog(@"宇宙广场数据:%@", load.dataDict);
             [self.dataArray removeAllObjects];
+            
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
                 PhotoModel * model = [[PhotoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
                 [self.dataArray addObject:model];
+                
+                if ([model.cmt isKindOfClass:[NSString class]] && model.cmt.length) {
+                    CGSize size = [model.cmt sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(self.view.frame.size.width/2-4*2, 100) lineBreakMode:1];
+                    model.cmtWidth = size.width;
+                    model.cmtHeight = size.height+10+18;
+//                    NSLog(@"%f--%f--%@--%.1f--%.1f", self.view.frame.size.width/2, size.width, model.cmt, size.height, model.cmtHeight);
+                }else{
+                    model.cmtHeight = 0;
+                }
                 
                 [model release];
             }
@@ -212,7 +226,52 @@
     }];
     [request release];
 }
+//-(void)downloadImageWithCell:(TMPhotoQuiltViewCell *)cell
+//{
+//    [cell retain];
+//    
+//    threadCount++;
+//    NSLog(@"+++threadCount:%d--count:%d", threadCount, queue.operationCount);
+//    NSString * url = self.tempUrl;
+////    NSLog(@"--%@", [NSString stringWithFormat:@"%@%@", IMAGEURL, self.tempUrl]);
+//    NSData * data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, self.tempUrl]]];
+//    
+//    NSString * docDir = DOCDIR;
+//    NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
+//    //将下载的图片存放到本地
+//    BOOL a = [data writeToFile:randomFilePath atomically:YES];
+//    NSLog(@"图片存储情况：%d", a);
+//    threadCount--;
+//    NSLog(@"---threadCount:%d--count:%d", threadCount, queue.operationCount);
+//    cell.photoView.image = [UIImage imageWithData:data];
+//    [qtmquitView reloadData];
 
+    
+    
+//    [cell release];
+//    [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, self.tempUrl] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            //本地目录，用于存放favorite下载的原图
+//            NSString * docDir = DOCDIR;
+//            NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
+//            //将下载的图片存放到本地
+//            BOOL a = [load.data writeToFile:randomFilePath atomically:YES];
+//            NSLog(@"图片存储情况：%d", a);
+//            threadCount--;
+//            NSLog(@"---threadCount:%d--count:%d", threadCount, queue.operationCount);
+//            cell.photoView.image = load.dataImage;
+//            [qtmquitView reloadData];
+//            //
+//            //                    [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
+//            //                    [self setFooterView];
+//        }else{
+//            //            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"图片加载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+//            //            [alert show];
+//            //            [alert release];
+//        }
+//    }];
+
+//}
 -(void)loadNextData
 {
     //http://54.199.161.210/dc/index.php?r=image/randomApi&img_id=@&sig=@%SID=@
@@ -231,6 +290,16 @@
                 PhotoModel * model = [[PhotoModel alloc] init];
                 [model setValuesForKeysWithDictionary: dict];
                 [self.dataArray addObject:model];
+                
+                if ([model.cmt isKindOfClass:[NSString class]] && model.cmt.length) {
+                    CGSize size = [model.cmt sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(self.view.frame.size.width/2-4*2, 100) lineBreakMode:1];
+                    model.cmtWidth = size.width;
+                    model.cmtHeight = size.height+10+18;
+                    //                    NSLog(@"%@--%d", model.cmt, model.cmtHeight);
+                }else{
+                    model.cmtHeight = 0;
+                }
+                
                 [model release];
             }
             self.lastImg_id = [self.dataArray[self.dataArray.count-1] img_id];
@@ -254,10 +323,12 @@
     TMPhotoQuiltViewCell *cell = (TMPhotoQuiltViewCell *)[quiltView dequeueReusableCellWithReuseIdentifier:@"PhotoCell"];
     if (!cell) {
         cell = [[[TMPhotoQuiltViewCell alloc] initWithReuseIdentifier:@"PhotoCell"] autorelease];
+        cell.layer.borderWidth = 0.8;
+        cell.layer.borderColor = [UIColor colorWithRed:206/255.0 green:206/255.0 blue:206/255.0 alpha:1].CGColor;
     }
     PhotoModel * model = self.dataArray[indexPath.row];
-    
-    //    [cell configUI:model];
+    self.tempUrl = model.url;
+    [cell configUI:model];
     //解析点赞者字符串，与[USER objectForKey:@"usr_id"]对比
     //    if(![model.likers isKindOfClass:[NSNull class]]){
     //        self.likersArray = [model.likers componentsSeparatedByString:@","];
@@ -292,40 +363,65 @@
         }else{
 //            cell.photoView.image = [UIImage imageNamed:@"20-1.png"];
             cell.photoView.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"20-1" ofType:@"png"]];
-            
             [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     //本地目录，用于存放favorite下载的原图
-                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                    if (!docDir) {
-                        NSLog(@"Documents 目录未找到");
-                    }else{
-                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-                        //将下载的图片存放到本地
-                        [load.data writeToFile:randomFilePath atomically:YES];
-                        cell.photoView.image = load.dataImage;
-                        [qtmquitView reloadData];
-                    }
+                    NSString * docDir = DOCDIR;
+                    NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+                    //将下载的图片存放到本地
+                    BOOL a = [load.data writeToFile:randomFilePath atomically:YES];
+                    NSLog(@"图片存储情况：%d", a);
+//                    threadCount--;
+//                    NSLog(@"---threadCount:%d--count:%d", threadCount, queue.operationCount);
+                    cell.photoView.image = load.dataImage;
+                    [qtmquitView reloadData];
                     //
-//                    [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
-//                    [self setFooterView];
+                    //                    [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
+                    //                    [self setFooterView];
                 }else{
                     //            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"图片加载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
                     //            [alert show];
                     //            [alert release];
                 }
             }];
+
+//            NSInvocationOperation * operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(downloadImageWithCell:) object:cell];
+//            [queue addOperation:operation];
+//            [operation autorelease];
+
+//            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+//                    //本地目录，用于存放favorite下载的原图
+//                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//                    if (!docDir) {
+//                        NSLog(@"Documents 目录未找到");
+//                    }else{
+//                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+//                        //将下载的图片存放到本地
+//                        [load.data writeToFile:randomFilePath atomically:YES];
+//                        cell.photoView.image = load.dataImage;
+//                        [qtmquitView reloadData];
+//                    }
+//                    //
+////                    [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
+////                    [self setFooterView];
+//                }else{
+//                    //            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"图片加载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+//                    //            [alert show];
+//                    //            [alert release];
+//                }
+//            }];
         }
     }
-    
+    cell.titleLabel.text = model.cmt;
     //    NSString * url = [NSString stringWithFormat:@"%@%@", IMAGEURL, model.url];
     //    [cell.photoView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"13-1.png"]];
     
     //    cell.titleLabel.text = model.likes;
 
-    if (indexPath.row == self.dataArray.count-1) {
-        [quiltView footerBeginRefreshing];
-    }
+//    if (indexPath.row == self.dataArray.count-1) {
+//        [quiltView footerBeginRefreshing];
+//    }
     
 //    if (indexPath.row == (int)(self.dataArray.count/3*2-1)-1) {
 //        NSLog(@"--%d", self.dataArray.count);
@@ -378,32 +474,41 @@
 //        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
         UIImage * image = [UIImage imageWithContentsOfFile:randomFilePath];
         if (image) {
-            Height[indexPath.row] = image.size.height;
+//            Height[indexPath.row] = image.size.height;
+            model.width = self.view.frame.size.width/2-4-2;
+            model.height = (model.width/image.size.width)*image.size.height;
+//            Height[indexPath.row] = model.height;
+            if(model.cmtHeight){
+                Height[indexPath.row] = model.height+model.cmtHeight;
+            }else{
+                Height[indexPath.row] = model.height+35;
+            }
+            return Height[indexPath.row];
         }else{
-            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    //本地目录，用于存放favorite下载的原图
-                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                    if (!docDir) {
-                        NSLog(@"Documents 目录未找到");
-                    }else{
-                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-                        //将下载的图片存放到本地
-                        [load.data writeToFile:randomFilePath atomically:YES];
-                        Height[indexPath.row] = load.dataImage.size.height;
-                        
-                        //每次新下载完一张图片后都刷新瀑布流
-//                        if (indexPath.row == self.dataArray.count-1) {
-//                            [qtmquitView reloadData];
-//                        }
-                        
-                    }
-                }else{
-                    //            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"图片加载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-                    //            [alert show];
-                    //            [alert release];
-                }
-            }];
+//            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+//                    //本地目录，用于存放favorite下载的原图
+//                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//                    if (!docDir) {
+//                        NSLog(@"Documents 目录未找到");
+//                    }else{
+//                        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+//                        //将下载的图片存放到本地
+//                        [load.data writeToFile:randomFilePath atomically:YES];
+//                        Height[indexPath.row] = load.dataImage.size.height;
+//                        
+//                        //每次新下载完一张图片后都刷新瀑布流
+////                        if (indexPath.row == self.dataArray.count-1) {
+////                            [qtmquitView reloadData];
+////                        }
+//                        
+//                    }
+//                }else{
+//                    //            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"图片加载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+//                    //            [alert show];
+//                    //            [alert release];
+//                }
+//            }];
         }
     }
     
@@ -433,17 +538,54 @@
     //    }
 //    return 100;
     if (Height[indexPath.row] == 0) {
-        return 100;
-    }else if(Height[indexPath.row] < 100){
-        return 100;
-    }else if(Height[indexPath.row] < 300){
-        return Height[indexPath.row]/1.3;
-    }else{
-        if (Height[indexPath.row]/4 < 100) {
-            return 100;
+        if ([model.url rangeOfString:@"&"].location != NSNotFound) {
+            //有尺寸的照片
+            //解析照片名字，得到尺寸
+            NSArray * arr1 = [model.url componentsSeparatedByString:@"_"];
+            NSString * str1 = [[arr1[arr1.count-1] componentsSeparatedByString:@"."] objectAtIndex:0];
+            NSArray * arr2 = [str1 componentsSeparatedByString:@"&"];
+            float tempWidth = [arr2[0] floatValue];
+            float tempHeight = [arr2[1] floatValue];
+            model.width = self.view.frame.size.width/2-4-2;
+            model.height = (model.width/tempWidth)*tempHeight;
+//            NSLog(@"%@--%f--%f--%d--%d", str1, tempWidth, tempHeight, model.width, model.height);
+            if (model.cmtHeight) {
+                Height[indexPath.row] = model.height+model.cmtHeight;
+            }else{
+                Height[indexPath.row] = model.height+35;
+            }
+            
+        }else{
+            //无尺寸的旧照片
+            if (model.cmtHeight) {
+                Height[indexPath.row] = arc4random()%50+100 +model.cmtHeight+10+18;
+            }else{
+                Height[indexPath.row] = arc4random()%50+100 +35;
+            }
         }
-        return Height[indexPath.row]/4;
+        
+        
+        return Height[indexPath.row];
+    }else{
+        return Height[indexPath.row];
+//        model.width = self.view.frame.size.width/2-4-2;
+//        model.height = (model.width/image.size.width)*image.size.height;
+//        if (model.cmtHeight) {
+//            return Height[indexPath.row]+model.cmtHeight;
+//        }else{
+//            return Height[indexPath.row];
+//        }
     }
+//    }else if(Height[indexPath.row] < 100){
+//        return 100;
+//    }else if(Height[indexPath.row] < 300){
+//        return Height[indexPath.row]/1.3;
+//    }else{
+//        if (Height[indexPath.row]/4 < 100) {
+//            return 100;
+//        }
+//        return Height[indexPath.row]/4;
+//    }
     
     //    return [self imageAtIndexPath:indexPath].size.height / [self quiltViewNumberOfColumns:quiltView]/2.5;
     //    if (height<50) {

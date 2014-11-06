@@ -111,6 +111,7 @@
             if ([[self.dataDict objectForKey:@"state"] intValue] == 2) {
                 //SID过期 login
                 [self login];
+                
                 return;
             }
             if ([[self.dataDict objectForKey:@"state"] intValue] == 3) {
@@ -164,6 +165,8 @@
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
             LoadingSuccess;
+//            self.overDue();
+            NSLog(@"============SID过期============");
         }else{
             LoadingFailed;
         }

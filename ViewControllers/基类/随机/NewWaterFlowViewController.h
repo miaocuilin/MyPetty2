@@ -31,6 +31,8 @@
 //    struct size;
     int tempNum;
     int tempCount;
+    
+    int page;
 }
 @property (nonatomic,retain) UITableView * tv;
 

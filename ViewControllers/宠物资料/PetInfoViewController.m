@@ -808,6 +808,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                                     addBtn.selected = YES;
                                     //                        [alertView hide:YES];
                                     attentionBtn.selected = YES;
+                                    //刷新捣捣乱--》摇一摇
+                                    self.label1.text = @"摇一摇";
+                                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
                                 }
                                 [MyControl loadingSuccessWithContent:@"加入成功" afterDelay:0.5f];
                             }else{
@@ -986,6 +989,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                             addBtn.selected = NO;
                             [alertView hide:YES];
+                            //刷新摇一摇--》捣捣乱
+                            self.label1.text = @"捣捣乱";
+                            [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
                         }
                         [MyControl loadingSuccessWithContent:@"退出成功" afterDelay:0.5f];
                     }else{

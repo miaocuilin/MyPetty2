@@ -22,9 +22,13 @@
 #import "PhotoModel.h"
 @interface TMPhotoQuiltViewCell : TMQuiltViewCell
 {
+//    UIImageView * _photoView;
+//    UILabel * _titleLabel;
 //    UIImageView * heart;
 //    UIButton * heartButton;
     BOOL isLike;
+    float cmtHeight;
+    int cmtWidth;
 }
 @property (nonatomic, retain) UIImageView *photoView;
 @property (nonatomic, retain) UIImageView *heart;

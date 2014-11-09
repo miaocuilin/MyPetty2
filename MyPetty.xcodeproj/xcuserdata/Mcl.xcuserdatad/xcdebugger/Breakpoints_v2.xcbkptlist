@@ -1592,11 +1592,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x52a8;&#x4f5c;&#x4ea4;&#x4e92;/SendGiftViewController.m"
-            timestampString = "436416826.757991"
+            timestampString = "437045693.175778"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "271"
-            endingLineNumber = "271"
+            startingLineNumber = "310"
+            endingLineNumber = "310"
             landmarkName = "-clickBtn:"
             landmarkType = "5">
          </BreakpointContent>

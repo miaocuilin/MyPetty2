@@ -13,4 +13,5 @@
     UIImageView * bgImageView;
     UITableView * tv;
 }
+@property(nonatomic,copy)void (^actClick)(int);
 @end

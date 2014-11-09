@@ -338,9 +338,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)segmentClick:(UISegmentedControl *)seg
 {
-    if (sc.selectedSegmentIndex == 2 && ![ControllerManager getIsSuccess]) {
+//    if (sc.selectedSegmentIndex == 2 && ![ControllerManager getIsSuccess]) {
         /***************************/
-        ShowAlertView;
+//        ShowAlertView;
         /***************************/
         
 //        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
@@ -348,9 +348,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        [self.view addSubview:vc.view];
 //        [vc createLoginAlertView];
         
-        sc.selectedSegmentIndex = segmentClickIndex;
-        return;
-    }
+//        sc.selectedSegmentIndex = segmentClickIndex;
+//        return;
+//    }
 
     int a = sc.selectedSegmentIndex;
     segmentClickIndex = a;
@@ -376,6 +376,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     sc.selectedSegmentIndex = a/320;
     
     if (a == 0) {
+        self.menuBgView.hidden = YES;
         if (isCreated[0] == NO) {
             isCreated[0] = YES;
             vc1 = [[MyStarViewController alloc] init];
@@ -385,13 +386,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.view bringSubviewToFront:sc];
         }
     }else if(a == 320*2){
-        if (![ControllerManager getIsSuccess]) {
-            sv.contentOffset = CGPointMake(320, 0);
-            /***************************/
-            ShowAlertView;
-            /***************************/
-            return;
-        }
+        self.menuBgView.hidden = NO;
+//        if (![ControllerManager getIsSuccess]) {
+//            sv.contentOffset = CGPointMake(320, 0);
+//            /***************************/
+//            ShowAlertView;
+//            /***************************/
+//            return;
+//        }
         if (isCreated[2] == NO) {
             isCreated[2] = YES;
             vc3 = [[PetRecommendViewController alloc] init];
@@ -400,6 +402,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [sv addSubview:vc3.view];
             [self.view bringSubviewToFront:sc];
         }
+    }else{
+        self.menuBgView.hidden = NO;
     }
 }
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -408,6 +412,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isCreated[0] == NO) {
             isCreated[0] = YES;
             vc1 = [[MyStarViewController alloc] init];
+            vc1.actClick = ^(int a){
+                if (a == 0) {
+                    [self btn1Click];
+                }else if (a == 1) {
+                    [self btn2Click];
+                }else if (a == 2) {
+                    [self btn3Click];
+                }else if (a == 3) {
+                    [self btn4Click];
+                }
+            };
             [self addChildViewController:vc1];
             [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
             [sv addSubview:vc1.view];
@@ -418,13 +433,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.view bringSubviewToFront:self.alphaBtn];
         }
     }else if(scrollView.contentOffset.x == 320*2){
-        if (![ControllerManager getIsSuccess]) {
-            sv.contentOffset = CGPointMake(320, 0);
-            /***************************/
-            ShowAlertView;
-            /***************************/
-            return;
-        }
+//        if (![ControllerManager getIsSuccess]) {
+//            sv.contentOffset = CGPointMake(320, 0);
+//            /***************************/
+//            ShowAlertView;
+//            /***************************/
+//            return;
+//        }
         if (isCreated[2] == NO) {
             isCreated[2] = YES;
 //            FavoriteViewController * fvc = [[FavoriteViewController alloc] init];

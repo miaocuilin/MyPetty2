@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "iCarousel.h"
+#import "PetRecomModel.h"
 @interface PetRecommendCell : UITableViewCell <iCarouselDataSource,iCarouselDelegate>
 {
     iCarousel * carousel;
@@ -23,8 +24,17 @@
 //    UIButton * pBtn;
     UIButton * jumpPetBtn;
     UIButton * jumpUserBtn;
+    
+    UILabel * memberNum;
+    UILabel * percent;
 }
+@property(nonatomic,copy)NSString * aid;
+
 @property(nonatomic,retain)UIButton * pBtn;
-@property(nonatomic,copy)void (^pBtnClick)(int);
+@property(nonatomic,copy)void (^pBtnClick)(int,NSString *);
 @property(nonatomic,copy)void (^imageClick)(int);
+@property(nonatomic,copy)void (^jumpPetClick)(NSString *);
+
+@property(nonatomic,retain)NSArray * imagesArray;
+-(void)configUI:(PetRecomModel *)model;
 @end

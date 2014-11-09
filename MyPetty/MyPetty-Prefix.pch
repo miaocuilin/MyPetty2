@@ -79,6 +79,16 @@
 #define RECOAPI @"http://123.57.39.48/index.php?r=image/recoApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 #define RECOAPI2 @"http://123.57.39.48/index.php?r=image/recoApi&page="
 
+//萌星推荐
+#define STARRECOMAPI @"http://123.57.39.48/index.php?r=user/recommendApi&usr_id="
+#define STARRECOMAPI2 @"http://123.57.39.48/index.php?r=user/recommendApi&page="
+
+//我的萌星
+#define MYSTARAPI @"http://123.57.39.48/index.php?r=animal/mineApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+//修改宣言
+#define MODIFYDECLAREAPI @"http://123.57.39.48/index.php?ranimal/modifyMsgApi&aid="
+
 //IP头API
 #define IPURL @"http://54.199.161.210/dc/index.php"
 #define IPURL2 @"http://123.57.39.48/index.php"

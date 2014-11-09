@@ -37,11 +37,11 @@
     [self addSubview:headBtn];
     
     //
-    sex = [MyControl createImageViewWithFrame:CGRectMake(64, 6, 15, 15) ImageName:@"man.png"];
+    sex = [MyControl createImageViewWithFrame:CGRectMake(64, 10, 15, 15) ImageName:@"man.png"];
     [self addSubview:sex];
     
     //
-    nameLabel = [MyControl createLabelWithFrame:CGRectMake(64+15+3, 6, 180, 15) Font:14 Text:@"小熊维尼维尼"];
+    nameLabel = [MyControl createLabelWithFrame:CGRectMake(64+15+3, 10, 180, 15) Font:14 Text:@"小熊维尼维尼"];
     nameLabel.font = [UIFont boldSystemFontOfSize:14];
     nameLabel.textColor = [UIColor blackColor];
     [self addSubview:nameLabel];
@@ -58,7 +58,7 @@
     [self addSubview:ownerLabel];
     
     //
-    ownerHead = [MyControl createImageViewWithFrame:CGRectMake(64+size.width, 22, 24, 24) ImageName:@"defaultUserHead.png"];
+    ownerHead = [MyControl createImageViewWithFrame:CGRectMake(64+size.width, 25, 24, 24) ImageName:@"defaultUserHead.png"];
     ownerHead.layer.cornerRadius = 12;
     ownerHead.layer.masksToBounds = YES;
     [self addSubview:ownerHead];
@@ -73,7 +73,7 @@
     [self addSubview:self.pBtn];
     
     //
-    UIView * view1 = [MyControl createViewWithFrame:CGRectMake(10, 492/2, 504/2, 58/2)];
+    UIView * view1 = [MyControl createViewWithFrame:CGRectMake(10, 492/2, 524/2, 58/2)];
     view1.layer.borderColor = [UIColor whiteColor].CGColor;
     view1.layer.borderWidth = 1;
     view1.layer.cornerRadius = 5;
@@ -90,17 +90,17 @@
     UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(view2.frame.origin.x+10, 4.5, 80, 20) Font:14 Text:@"人气击败了"];
     [view1 addSubview:label2];
     
-    UILabel * label3 = [MyControl createLabelWithFrame:CGRectMake(200, 4.5, 50, 20) Font:14 Text:@"的萌星"];
+    UILabel * label3 = [MyControl createLabelWithFrame:CGRectMake(210, 4.5, 50, 20) Font:14 Text:@"的萌星"];
     [view1 addSubview:label3];
     
     /****************/
-    UILabel * memberNum = [MyControl createLabelWithFrame:CGRectMake(label1.frame.origin.x+25, 4.5, 45, 20) Font:16 Text:@"371"];
+    memberNum = [MyControl createLabelWithFrame:CGRectMake(label1.frame.origin.x+25, 4.5, 45, 20) Font:16 Text:@"3"];
 //    memberNum.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     memberNum.textAlignment = NSTextAlignmentCenter;
     memberNum.textColor = BGCOLOR;
     [view1 addSubview:memberNum];
     
-    UILabel * percent = [MyControl createLabelWithFrame:CGRectMake(label2.frame.origin.x+70, 4.5, 72/2, 20) Font:16 Text:@"99%"];
+    percent = [MyControl createLabelWithFrame:CGRectMake(label2.frame.origin.x+70, 4.5, 92/2, 20) Font:16 Text:@"99%"];
 //    percent.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     percent.textAlignment = NSTextAlignmentCenter;
     percent.textColor = BGCOLOR;
@@ -114,9 +114,95 @@
     [self.contentView addSubview:carousel];
     [carousel release];
 }
+-(void)configUI:(PetRecomModel *)model
+{
+    self.aid = model.aid;
+    ownerHead.image = [UIImage imageNamed:@"defaultUserHead.png"];
+    [headBtn setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
+    if ([model.gender intValue] == 1) {
+        sex.image = [UIImage imageNamed:@"man.png"];
+    }else{
+        sex.image = [UIImage imageNamed:@"woman.png"];
+    }
+    nameLabel.text = model.name;
+    
+    ownerLabel.text = [NSString stringWithFormat:@"经纪人—%@", model.u_name];
+    CGSize size = [ownerLabel.text sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(200, 20) lineBreakMode:1];
+    CGRect rect = ownerLabel.frame;
+    rect.size.width = size.width;
+    ownerLabel.frame = rect;
+    //
+    if ([model.in_circle intValue]) {
+        self.pBtn.selected = YES;
+    }else{
+        self.pBtn.selected = NO;
+    }
+    //
+    memberNum.text = model.fans;
+    percent.text = [NSString stringWithFormat:@"%@%@", model.percent, @"%"];
+    
+    if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            [headBtn setBackgroundImage:image forState:UIControlStateNormal];
+            //            headImageView.image = image;
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                    //                    headImageView.image = load.dataImage;
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+    //
+    CGRect rect2 = ownerHead.frame;
+    rect2.origin.x = ownerLabel.frame.origin.x+ownerLabel.frame.size.width+5;
+    ownerHead.frame = rect2;
+    
+    if (!([model.u_tx isKindOfClass:[NSNull class]] || [model.u_tx length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.u_tx]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+//            [headBtn setBackgroundImage:image forState:UIControlStateNormal];
+            ownerHead.image = image;
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.u_tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+//                    [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                    ownerHead.image = load.dataImage;
+                    NSString * docDir = DOCDIR;
+                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.u_tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+    
+    //
+    self.imagesArray = model.images;
+    [carousel reloadData];
+}
 -(void)headBtnClick
 {
     NSLog(@"jumpToPet");
+    self.jumpPetClick(self.aid);
 }
 -(void)jumpToUser
 {
@@ -125,20 +211,42 @@
 -(void)pBtnClick:(UIButton *)btn
 {
 //    btn.selected = !btn.selected;
-    self.pBtnClick(btn.selected);
+    self.pBtnClick(btn.selected,self.aid);
 }
 
 #pragma mark -
 -(NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    return imageCount;
+    return self.imagesArray.count;
 }
 -(UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index
 {
     UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, 130, 130)];
     view.clipsToBounds = YES;
-    UIImageView * view1 = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 130, 130) ImageName:@"cat2.jpg"];
+    UIImageView * view1 = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 130, 130) ImageName:@"20-1.png"];
     [view addSubview:view1];
+    
+    NSString * url = [self.imagesArray[index] objectForKey:@"url"];
+    NSString * docDir = DOCDIR;
+    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
+
+    UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+    if (image) {
+        view1.image = image;
+    }else{
+        //下载头像
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                view1.image = load.dataImage;
+                NSString * docDir = DOCDIR;
+                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
+                [load.data writeToFile:txFilePath atomically:YES];
+            }else{
+                NSLog(@"头像下载失败");
+            }
+        }];
+        [request release];
+    }
     
 //    UIImageView * refView = [MyControl createImageViewWithFrame:CGRectMake(0, 135, 130, 130) ImageName:@"cat2.jpg"];
 //    [refView setImage:[[UIImage imageNamed:@"cat2.jpg"] reflectionWithAlpha:0.5]];

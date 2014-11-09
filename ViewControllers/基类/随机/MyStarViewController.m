@@ -35,7 +35,7 @@
     bgImageView.image = image;
     
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.5];
     [self.view addSubview:tempView];
 }
 -(void)createTableView
@@ -62,16 +62,24 @@
     MyStarCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
         cell = [[[MyStarCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
+//        [cell makeUIWithWidth:self.view.frame.size.width Height:322.0f];
     }
-    [cell makeUIWithWidth:self.view.frame.size.width Height:322.0f];
-//    cell.clipsToBounds = YES;
+    cell.actClick = ^(int a){
+        self.actClick(a);
+    };
+    [cell adjustCellHeight:indexPath.row%2];
+    cell.clipsToBounds = YES;
     cell.backgroundColor = [UIColor clearColor];
     cell.selectionStyle = 0;
     return cell;
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 710.0/2;
+    if (indexPath.row%2) {
+        return 263.0f;
+    }else{
+        return 710.0/2;
+    }
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

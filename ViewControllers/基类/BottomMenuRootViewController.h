@@ -37,4 +37,9 @@
 -(void)isRegister;
 -(void)hideAll;
 - (void)loadAnimalInfoData;
+
+-(void)btn1Click;
+-(void)btn2Click;
+-(void)btn3Click;
+-(void)btn4Click;
 @end

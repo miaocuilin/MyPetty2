@@ -13,4 +13,6 @@
     UIImageView * bgImageView;
     UITableView * tv;
 }
+
+@property(nonatomic,retain)NSMutableArray * dataArray;
 @end

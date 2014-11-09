@@ -111,7 +111,7 @@
     totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150, self.view.frame.size.height/2-212, 300, 425)];
     totalView.layer.cornerRadius = 10;
     totalView.layer.masksToBounds = YES;
-    totalView.backgroundColor = [UIColor whiteColor];
+    totalView.backgroundColor = [UIColor colorWithRed:252/255.0 green:238/255.0 blue:226/255.0 alpha:1];
     [self.view addSubview:totalView];
     
     UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
@@ -133,14 +133,14 @@
     giftPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, 310+45, 300, 20)];
     giftPageControl.userInteractionEnabled = NO;
     giftPageControl.numberOfPages =ceilf(self.giftArray.count/9.0);
-    giftPageControl.currentPageIndicatorTintColor = BGCOLOR;
+    giftPageControl.currentPageIndicatorTintColor = [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1];
     giftPageControl.pageIndicatorTintColor = [UIColor grayColor];
     [totalView addSubview:giftPageControl];
     [giftPageControl release];
     
     UIButton *giftButton = [MyControl createButtonWithFrame:CGRectMake(40, 335+45, 220, 40) ImageName:nil Target:self Action:@selector(goShopping) Title:@"去商城"];
     giftButton.showsTouchWhenHighlighted = YES;
-    giftButton.backgroundColor = BGCOLOR;
+    giftButton.backgroundColor = [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1];
     giftButton.layer.cornerRadius = 5;
     giftButton.layer.masksToBounds = YES;
     giftButton.titleLabel.font = [UIFont systemFontOfSize:16];
@@ -160,7 +160,45 @@
     int h = 15;//水平间距
     int v = 10;//垂直间距
     
+    /*********************************************/
+//    for (int i=0; i<self.bagItemIdArray.count+self.tempGiftArray.count; i+=2) {
+//        
+//        UIImageView * giftBgImageView = [MyControl createImageViewWithFrame:CGRectMake(25+i/4*300, 10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
+//        [sv addSubview:giftBgImageView];
+//        
+//        UIImageView * giftBgImageView2 = [MyControl createImageViewWithFrame:CGRectMake(324/2+i/4*300, 10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
+//        [sv addSubview:giftBgImageView2];
+//        if ((i+2)%4 == 0) {
+//            giftBgImageView.frame = CGRectMake(25+i/4*300, 10+310/2, 222/2, 190/2);
+//            giftBgImageView2.frame = CGRectMake(324/2+i/4*300, 10+310/2, 222/2, 190/2);
+//        }
+//        
+//        UIImageView * wood = [MyControl createImageViewWithFrame:CGRectMake(i/4*300+(300-546/2)/2.0, giftBgImageView.frame.origin.y+190/2, 546/2, 17/2.0) ImageName:@"giftAlert_wood.png"];
+//        [sv addSubview:wood];
+//        
+//        //
+//        
+//    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /*********************************************/
     for(int i=0;i<self.bagItemIdArray.count+self.tempGiftArray.count;i++){
+    
 //        if (i>=self.bagItemIdArray.count) {
 //            flag = 0;
 //            for (NSString * no in self.bagItemIdArray) {
@@ -172,6 +210,7 @@
 //                continue;
 //            }
 //        }
+    
         UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(h+i%3*(80+h)+300*(i/9), h+(i/3)%3*(90+v), 80, 90)];
         if (i<self.bagItemIdArray.count) {
             //背包
@@ -253,7 +292,7 @@
     }
     /*****************************/
     
-    
+
 }
 #pragma mark - 点击事件
 -(void)goShopping

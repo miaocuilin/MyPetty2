@@ -25,4 +25,7 @@
 @property(nonatomic,copy)NSString * pet_tx;
 
 @property(nonatomic,copy)NSString * giftName;
+
+@property(nonatomic,copy)void (^unShakeNum)(int);
+@property(nonatomic)BOOL isFromStar;
 @end

@@ -217,6 +217,8 @@
         int index = newexp - exp;
         [ControllerManager HUDImageIcon:@"Star" showView:self.view yOffset:0 Number:index];
     }
+    
+    self.recordBack();
     //    NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     
     

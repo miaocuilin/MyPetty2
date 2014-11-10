@@ -174,6 +174,11 @@
                 self.upView.contentOffset = CGPointMake(self.upView.frame.size.width, 0);
                 timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:4];
                 [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+            //
+            if (self.isFromStar) {
+                self.unShakeNum(self.count);
+            }
+            
 //            }
         }else{
             [MyControl createAlertViewWithTitle:[load.dataDict objectForKey:@"errorMessage"]];

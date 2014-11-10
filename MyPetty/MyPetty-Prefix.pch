@@ -86,8 +86,8 @@
 //我的萌星
 #define MYSTARAPI @"http://123.57.39.48/index.php?r=animal/mineApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
-//修改宣言
-#define MODIFYDECLAREAPI @"http://123.57.39.48/index.php?ranimal/modifyMsgApi&aid="
+//修改宣言 参数：aid    post:msg
+#define MODIFYDECLAREAPI @"http://123.57.39.48/index.php?r=animal/modifyMsgApi&aid="
 
 //IP头API
 #define IPURL @"http://54.199.161.210/dc/index.php"

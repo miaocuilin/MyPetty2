@@ -59,7 +59,7 @@
     [navView addSubview:backBtn];
     
     UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"游乐园"];
-    titleLabel.text = self.titleString;
+//    titleLabel.text = self.titleString;
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];

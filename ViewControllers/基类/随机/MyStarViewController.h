@@ -7,11 +7,24 @@
 //
 
 #import <UIKit/UIKit.h>
+//#import "BottomMenuRootViewController.h"
 
 @interface MyStarViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
 {
     UIImageView * bgImageView;
-    UITableView * tv;
+//    UITableView * tv;
+    
+    BOOL isLoaded;
 }
-@property(nonatomic,copy)void (^actClick)(int);
+@property(nonatomic,retain)UITableView * tv;
+
+@property(nonatomic,copy)void (^actClickSend)(NSString *,NSString *,NSString *);
+@property(nonatomic,copy)void (^actClick)(int, int);
+//@property(nonatomic,copy)void (^unShakeNum)(int);
+@property(nonatomic,retain)NSMutableArray * dataArray;
+@property(nonatomic,retain)NSMutableArray * userPetListArray;
+@property(nonatomic,copy)NSString * pet_aid;
+@property(nonatomic,copy)NSString * pet_name;
+@property(nonatomic,copy)NSString * pet_tx;
+//-(void)refreshShakeNum:(int)shakeNum Index:(int)index;
 @end

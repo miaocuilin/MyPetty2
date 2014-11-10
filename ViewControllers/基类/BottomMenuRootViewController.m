@@ -222,6 +222,11 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
         return;
     }
 }
+
+//-(void)changeActIndex:(int)a
+//{
+//    actIndex = a;
+//}
 -(void)btn1Click
 {
     [self isRegister];
@@ -237,7 +242,10 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     shake.pet_aid = self.pet_aid;
     shake.pet_name = self.pet_name;
     shake.pet_tx = self.pet_tx;
-    
+//    shake.unShakeNum = ^(int a){
+//        [self unShakeNum:a index:actIndex];
+//        self.unShakeNum(a, actIndex);
+//    };
     NSLog(@"shakeInfoDict:%@",self.shakeInfoDict);
     [self addChildViewController:shake];
     [shake release];

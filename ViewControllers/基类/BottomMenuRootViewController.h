@@ -12,6 +12,9 @@
 {
     BOOL isOpen;
     UIImageView * headCircle;
+    
+    //我的萌星正在活动的顺序
+//    int actIndex;
 }
 @property(nonatomic,retain)UIButton *menuBgBtn;
 @property(nonatomic,retain)UIView *menuBgView;
@@ -34,6 +37,8 @@
 @property(nonatomic,copy)NSString * pet_name;
 @property(nonatomic,copy)NSString * pet_tx;
 
+//@property(nonatomic)void (^unShakeNum)(int, int);
+//-(void)unShakeNum:(int)num index:(int)index;
 -(void)isRegister;
 -(void)hideAll;
 - (void)loadAnimalInfoData;
@@ -42,4 +47,6 @@
 -(void)btn2Click;
 -(void)btn3Click;
 -(void)btn4Click;
+
+//-(void)changeActIndex:(int)a;
 @end

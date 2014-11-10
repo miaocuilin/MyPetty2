@@ -135,6 +135,8 @@
 //            int exp = [[USER objectForKey:@"exp"] intValue]-tempExp;
 //
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                self.touchBack();
+                
                 NSDictionary * dict = [load.dataDict objectForKey:@"data"];
                 int exp = [[dict objectForKey:@"exp"] intValue];
                 int gold = [[dict objectForKey:@"gold"] intValue];

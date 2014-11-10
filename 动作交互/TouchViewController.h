@@ -30,5 +30,7 @@
 @property(nonatomic,copy)NSString * pet_tx;
 
 @property(nonatomic,copy)NSString * voiceName;
+
+@property(nonatomic,copy)void (^touchBack)(void);
 - (void)createAlertView;
 @end

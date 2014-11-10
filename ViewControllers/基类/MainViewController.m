@@ -338,31 +338,41 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)segmentClick:(UISegmentedControl *)seg
 {
-//    if (sc.selectedSegmentIndex == 2 && ![ControllerManager getIsSuccess]) {
-        /***************************/
-//        ShowAlertView;
-        /***************************/
+    if (sc.selectedSegmentIndex == 0 && ![ControllerManager getIsSuccess]) {
+        //*************************
+        ShowAlertView;
+        //*************************
         
 //        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
 //        [self addChildViewController:vc];
 //        [self.view addSubview:vc.view];
 //        [vc createLoginAlertView];
         
-//        sc.selectedSegmentIndex = segmentClickIndex;
-//        return;
-//    }
-
+        sc.selectedSegmentIndex = segmentClickIndex;
+        return;
+    }
+    
+    
     int a = sc.selectedSegmentIndex;
     segmentClickIndex = a;
     if (a == 0) {
+        if (isCreated[0]) {
+            [vc1.tv headerBeginRefreshing];
+        }
+        self.menuBgView.hidden = YES;
         [UIView animateWithDuration:0.3 animations:^{
             sv.contentOffset = CGPointMake(0, 0);
         }];
     }else if(a == 1){
+        self.menuBgView.hidden = NO;
         [UIView animateWithDuration:0.3 animations:^{
             sv.contentOffset = CGPointMake(320, 0);
         }];
     }else{
+        if (isCreated[2]) {
+            [vc3.tv headerBeginRefreshing];
+        }
+        self.menuBgView.hidden = NO;
         [UIView animateWithDuration:0.3 animations:^{
             sv.contentOffset = CGPointMake(320*2, 0);
         }];
@@ -373,6 +383,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     int a = sv.contentOffset.x;
+    int b = sc.selectedSegmentIndex;
     sc.selectedSegmentIndex = a/320;
     
     if (a == 0) {
@@ -384,6 +395,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
             [sv addSubview:vc1.view];
             [self.view bringSubviewToFront:sc];
+        }else{
+            if (b != sc.selectedSegmentIndex) {
+                [vc1.tv headerBeginRefreshing];
+            }
+            
         }
     }else if(a == 320*2){
         self.menuBgView.hidden = NO;
@@ -401,28 +417,50 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [vc3.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
             [sv addSubview:vc3.view];
             [self.view bringSubviewToFront:sc];
+        }else{
+            if (b != sc.selectedSegmentIndex) {
+                [vc3.tv headerBeginRefreshing];
+            }
+            
         }
     }else{
         self.menuBgView.hidden = NO;
     }
 }
+//-(void)unShakeNum:(int)num index:(int)index
+//{
+//    [vc1 refreshShakeNum:num Index:index];
+//}
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView.contentOffset.x == 0) {
+        
         if (isCreated[0] == NO) {
             isCreated[0] = YES;
             vc1 = [[MyStarViewController alloc] init];
-            vc1.actClick = ^(int a){
-                if (a == 0) {
-                    [self btn1Click];
-                }else if (a == 1) {
-                    [self btn2Click];
-                }else if (a == 2) {
-                    [self btn3Click];
-                }else if (a == 3) {
-                    [self btn4Click];
-                }
-            };
+            
+//            super.unShakeNum = ^(int a, int index){
+//                //index表示第几行
+//                NSLog(@"%d--%d", a, index);
+//                [vc1 refreshShakeNum:a Index:index];
+//            };
+//            vc1.actClick = ^(int a, int index){
+//                [self changeActIndex:index];
+//                if (a == 0) {
+//                    [self btn1Click];
+//                }else if (a == 1) {
+//                    [self btn2Click];
+//                }else if (a == 2) {
+//                    [self btn3Click];
+//                }else if (a == 3) {
+//                    [self btn4Click];
+//                }
+//            };
+//            vc1.actClickSend = ^(NSString * aid, NSString * name, NSString * tx){
+//                self.pet_aid = aid;
+//                self.pet_name = name;
+//                self.pet_tx = tx;
+//            };
             [self addChildViewController:vc1];
             [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
             [sv addSubview:vc1.view];

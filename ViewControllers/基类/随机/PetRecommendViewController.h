@@ -11,8 +11,9 @@
 @interface PetRecommendViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
 {
     UIImageView * bgImageView;
-    UITableView * tv;
+//    UITableView * tv;
+    BOOL isLoaded;
 }
-
+@property(nonatomic,retain)UITableView * tv;
 @property(nonatomic,retain)NSMutableArray * dataArray;
 @end

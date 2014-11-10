@@ -23,4 +23,6 @@
 @property(nonatomic,copy)NSString * pet_aid;
 @property(nonatomic,copy)NSString * pet_name;
 @property(nonatomic,copy)NSString * pet_tx;
+
+@property(nonatomic,copy)void (^recordBack)(void);
 @end

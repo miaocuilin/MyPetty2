@@ -923,9 +923,9 @@
         }
     }
 //    NSLog(@"%@", self.txTypeTotalArray);
-    //txCount最大限制为8
-    if (self.txTotalArray.count > 8) {
-        txCount = 8;
+    //txCount最大限制为7
+    if (self.txTotalArray.count > 7) {
+        txCount = 7;
     }else{
         txCount = self.txTotalArray.count;
     }

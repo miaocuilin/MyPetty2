@@ -14,7 +14,7 @@
 		<string>https://github.com/miaocuilin/MyPetty2.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>MyPetty.xcodeproj/project.xcworkspace</string>
+	<string>MyPetty.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>748977DF424127E905CCADF5C2AA84834766647A</key>

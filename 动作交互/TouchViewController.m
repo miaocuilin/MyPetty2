@@ -170,7 +170,7 @@
 {
     [self shopGiftTitle];
     
-    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, 40) Font:16 Text:@"摸萌照，听萌主叫叫，萌萌印心中~"];
+    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, 40) Font:16 Text:@"摸萌照，听萌星叫叫，萌萌印心中~"];
     descLabel.textAlignment = NSTextAlignmentCenter;
     descLabel.textColor = GRAYBLUECOLOR;
     [bodyView addSubview:descLabel];
@@ -337,7 +337,7 @@
         }];
     }else if(sender.tag == 79){
         NSLog(@"微博");
-        NSString * str = [NSString stringWithFormat:@"我在宠物星球里面摸了萌主%@，%@乖巧地冲我叫了一声，真可爱~http://home4pet.aidigame.com/(分享自@宠物星球社交应用）", self.pet_name, self.pet_name];
+        NSString * str = [NSString stringWithFormat:@"我在宠物星球里面摸了萌星%@，%@乖巧地冲我叫了一声，真可爱~http://home4pet.aidigame.com/(分享自@宠物星球社交应用）", self.pet_name, self.pet_name];
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");

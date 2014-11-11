@@ -115,6 +115,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [navView addSubview:backBtn];
     
     UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"修改资料"];
+    if(!self.isModifyUser){
+        titleLabel.text = @"修改萌星资料";
+    }
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
@@ -298,7 +301,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     /**************************/
     
-    UILabel * miTitle = [MyControl createLabelWithFrame:CGRectMake(100, 205, 120, 20) Font:18 Text:@"宠物信息"];
+    UILabel * miTitle = [MyControl createLabelWithFrame:CGRectMake(100, 205, 120, 20) Font:18 Text:@"萌星档案"];
     miTitle.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:miTitle];
     
@@ -442,7 +445,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     /**************************/
     
-    UILabel * userTitle = [MyControl createLabelWithFrame:CGRectMake(320+100, 205, 120, 20) Font:18 Text:@"用户信息"];
+    UILabel * userTitle = [MyControl createLabelWithFrame:CGRectMake(320+100, 205, 120, 20) Font:18 Text:@"经纪人档案"];
     userTitle.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:userTitle];
     

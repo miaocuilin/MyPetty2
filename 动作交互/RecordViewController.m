@@ -378,6 +378,7 @@
     
     UIImageView *share = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*3, 265, upViewWidth, 40) ImageName:@"threeshare.png"];
     [self.upScrollView addSubview:share];
+    
     UIView *shareView = [MyControl createViewWithFrame:CGRectMake(upViewWidth/2-195/2.0+upViewWidth*3, 250, 195, 50)];
     [self.upScrollView addSubview:shareView];
     for (int i = 0; i<3; i++) {
@@ -389,7 +390,7 @@
     }
     //5
 #pragma mark - five
-    UILabel *recordDescLabel5 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2+upViewWidth*4 - 115, 10, 230, 50) Font:16 Text:[NSString stringWithFormat:@"今天 %@ 的萌叫叫录过了呢，\n去看看其他萌主吧", self.pet_name]];
+    UILabel *recordDescLabel5 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2+upViewWidth*4 - 115, 10, 230, 50) Font:16 Text:[NSString stringWithFormat:@"今天 %@ 的萌叫叫录过了呢，\n去看看其他萌星吧", self.pet_name]];
     recordDescLabel5.textAlignment = NSTextAlignmentCenter;
     recordDescLabel5.textColor = GRAYBLUECOLOR;
     [self.upScrollView addSubview:recordDescLabel5];
@@ -401,6 +402,18 @@
     [self.upScrollView addSubview:recordBg5];
     UIImageView *recordImageView2 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 50, 0, 100, 110) ImageName:@"nochance.png"];
     [recordBg5 addSubview:recordImageView2];
+    
+    UIImageView *share2 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*4, 265, upViewWidth, 40) ImageName:@"threeshare.png"];
+    [self.upScrollView addSubview:share2];
+    UIView *shareView2 = [MyControl createViewWithFrame:CGRectMake(upViewWidth/2-195/2.0+upViewWidth*4, 250, 195, 50)];
+    [self.upScrollView addSubview:shareView2];
+    for (int i = 0; i<3; i++) {
+        UIButton *shareButton = [MyControl createButtonWithFrame:CGRectMake(0+shareView2.frame.size.width/3 * i +(i*12), 15, 40, 40) ImageName:nil Target:self Action:@selector(shareAction:) Title:nil];
+        shareButton.tag = 77+i;
+        //        shareButton.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        //        [shareButton setShowsTouchWhenHighlighted:YES];
+        [shareView2 addSubview:shareButton];
+    }
 #pragma mark - bottom
     //下方视图
     UIView *downView = [MyControl createViewWithFrame:CGRectMake(0, bodyView.frame.size.height-70, bodyView.frame.size.width, 70)];

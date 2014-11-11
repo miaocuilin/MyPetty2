@@ -49,13 +49,13 @@
     //1.注册
     NSArray * array = @[@"地球人，您还木有注册呢~", @"飞船马上起飞", @"办理手续走起啊~"];
     //2.加入
-    NSArray * array2 = @[@"你是否愿意无论顺境或逆境，", @"富裕或贫穷，健康或疾病，快乐或忧愁，", @"你将都毫无保留地爱Ta，对Ta忠诚", @"直到永远么？"];
+    NSArray * array2 = @[@"捧了人家可要对人家负责呀~", @"一定要让TA成为宇宙中", @"最闪亮的萌星~"];
     //3.加入满了提示
-    NSArray * array3 = @[@"加多少是多啊", @"游戏规则是最多同时加入10个联萌", @"您啊~可不能再加入新联萌了"];
+    NSArray * array3 = @[@"星球法则是最多捧10个萌星~", @"萌星们都那么可爱，", @"专一点嘛~"];
     //4.取消关注
     NSArray * array4 = @[@"亲爱的，真的忍心取消关注我么？", @"这是真的么~", @"是么~"];
     //5.退出国家
-    NSArray * array5 = @[@"亲爱的，真的忍心退出联萌么？", @"你舍得放弃你的一切么？", @"感觉不会再爱了~"];
+    NSArray * array5 = @[@"亲爱的，真的忍心不捧了吗？", @"你舍得放弃陪伴你的TA么？", @"真的要这么无情么？"];
     
     NSArray * tempArray = nil;
     
@@ -64,9 +64,9 @@
         [self.confirmBtn setTitle:@"走起" forState:UIControlStateNormal];
         tempArray = array;
     }else if (self.AlertType == 2) {
-        [self.confirmBtn setTitle:@"Yes I do" forState:UIControlStateNormal];
+        [self.confirmBtn setTitle:@"没问题" forState:UIControlStateNormal];
         tempArray = array2;
-        UILabel * tip = [MyControl createLabelWithFrame:CGRectMake(0, self.confirmBtn.frame.origin.y+self.confirmBtn.frame.size.height, self.frame.size.width, 15) Font:10 Text:@"大使提示您：最多加入或创建10个联萌"];
+        UILabel * tip = [MyControl createLabelWithFrame:CGRectMake(0, self.confirmBtn.frame.origin.y+self.confirmBtn.frame.size.height, self.frame.size.width, 15) Font:10 Text:@"温馨提示：每个人只能捧红10个萌星"];
         tip.textColor = [UIColor colorWithRed:188/255.0 green:188/255.0 blue:188/255.0 alpha:1];
         tip.textAlignment = NSTextAlignmentCenter;
         [self addSubview:tip];
@@ -94,19 +94,19 @@
         [self addSubview:self.confirmBtn2];
     }
     
-    if(self.AlertType == 2){
-        for (int i=0; i<4; i++) {
-            UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 10+20*i, self.bgImageView.frame.size.width, 20) Font:14 Text:tempArray[i]];
-            label.textAlignment = NSTextAlignmentCenter;
-            [self.bgImageView addSubview:label];
-        }
-    }else{
+//    if(self.AlertType == 3){
+//        for (int i=0; i<2; i++) {
+//            UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 10+20*i, self.bgImageView.frame.size.width, 20) Font:14 Text:tempArray[i]];
+//            label.textAlignment = NSTextAlignmentCenter;
+//            [self.bgImageView addSubview:label];
+//        }
+//    }else{
         for (int i=0; i<3; i++) {
             UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 18+20*i, self.bgImageView.frame.size.width, 20) Font:15 Text:tempArray[i]];
             label.textAlignment = NSTextAlignmentCenter;
             [self.bgImageView addSubview:label];
         }
-    }
+//    }
     
     
     [UIView animateWithDuration:0.2 animations:^{

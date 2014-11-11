@@ -178,8 +178,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 PetNewsModel * model = [[PetNewsModel alloc] init];
                 [model setValuesForKeysWithDictionary:array[i]];
                 model.content = [array[i] objectForKey:@"content"];
-                
-                [self.newsDataArray addObject:model];
+                if([model.type intValue] != 1){
+                    [self.newsDataArray addObject:model];
+                }
                 [model release];
             }
             
@@ -348,7 +349,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             self.pet_name = [petInfoDict objectForKey:@"name"];
             self.pet_tx = [petInfoDict objectForKey:@"tx"];
 
-            titleLabel.text = [NSString stringWithFormat:@"%@联萌", [petInfoDict objectForKey:@"name"]];
+            titleLabel.text = [NSString stringWithFormat:@"萌星 %@", [petInfoDict objectForKey:@"name"]];
 
             [self loadCountryList];
 //            NSArray * array = [USER objectForKey:@"petAidArray"];
@@ -591,17 +592,21 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         UIView * strangerAndFakeOwnerView = [MyControl createViewWithFrame:CGRectMake(0, 127, 320, 76/2)];
         [moreView addSubview:strangerAndFakeOwnerView];
         
-        addBtn = [MyControl createButtonWithFrame:CGRectMake(20, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(addBtnClick:) Title:@"加入"];
-        [addBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
-        [addBtn setTitle:@"已加入" forState:UIControlStateSelected];
+        addBtn = [MyControl createButtonWithFrame:CGRectMake((self.view.frame.size.width-246)/2.0, 0, 246, 76/2) ImageName:@"" Target:self Action:@selector(addBtnClick:) Title:@"捧TA"];
+        addBtn.layer.cornerRadius = 8;
+        addBtn.layer.masksToBounds = YES;
+        [addBtn setBackgroundImage:[[UIImage imageNamed:@"more_greenBg2.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:25] forState:UIControlStateNormal];
+        [addBtn setBackgroundImage:[[UIImage imageNamed:@"more_orangeBg2.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:25] forState:UIControlStateSelected];
+        [addBtn setTitle:@"捧ing" forState:UIControlStateSelected];
         addBtn.titleLabel.font = [UIFont systemFontOfSize:15];
         [strangerAndFakeOwnerView addSubview:addBtn];
-        attentionBtn = [MyControl createButtonWithFrame:CGRectMake(354/2, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(attentionBtnClick:) Title:@"关注"];
-        [attentionBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
-        NSLog(@"attentionBtn:%d",attentionBtn.selected);
-        [attentionBtn setTitle:@"已关注" forState:UIControlStateSelected];
-        attentionBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-        [strangerAndFakeOwnerView addSubview:attentionBtn];
+        
+//        attentionBtn = [MyControl createButtonWithFrame:CGRectMake(354/2, 0, 124, 76/2) ImageName:@"more_greenBg.png" Target:self Action:@selector(attentionBtnClick:) Title:@"关注"];
+//        [attentionBtn setBackgroundImage:[UIImage imageNamed:@"more_orangeBg.png"] forState:UIControlStateSelected];
+//        NSLog(@"attentionBtn:%d",attentionBtn.selected);
+//        [attentionBtn setTitle:@"已关注" forState:UIControlStateSelected];
+//        attentionBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+//        [strangerAndFakeOwnerView addSubview:attentionBtn];
         //    strangerAndFakeOwnerView.hidden = YES;
         
     }else{

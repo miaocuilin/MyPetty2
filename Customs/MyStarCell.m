@@ -38,7 +38,7 @@
     [bgView addSubview:bgAlphaView];
     
     headView = [MyControl createViewWithFrame:CGRectMake(0, 0, bgView.frame.size.width, 130)];
-    headView.backgroundColor = [ControllerManager colorWithHexString:@"fc7b51"];
+    headView.backgroundColor = [ControllerManager colorWithHexString:@"6f331f"];
     headView.alpha = 0.2;
     [bgView addSubview:headView];
     

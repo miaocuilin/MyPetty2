@@ -77,7 +77,7 @@
                 if (isFinish) {
                     //                    [button setBackgroundImage:load.dataImage forState:UIControlStateNormal];
                     headImage.image = load.dataImage;
-                    NSString * docDir = DOCDIR;
+//                    NSString * docDir = DOCDIR;
 //                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
                     [load.data writeToFile:txFilePath atomically:YES];
                 }else{

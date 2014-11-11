@@ -74,6 +74,7 @@
     NSString * url = [NSString stringWithFormat:@"%@%@", WELCOMEAPI, [USER objectForKey:@"SID"]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        NSLog(@"%@", load.dataDict);
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
             self.launchImageName = [[load.dataDict objectForKey:@"data"] objectForKey:@"url"];

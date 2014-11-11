@@ -277,7 +277,7 @@
     tfSearch.textColor = [UIColor whiteColor];
     tfSearch.backgroundColor = [UIColor clearColor];
     tfSearch.borderStyle = 0;
-    tfSearch.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"搜索萌主爱称~" attributes:@{NSForegroundColorAttributeName:BGCOLOR}];
+    tfSearch.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"搜索萌星~" attributes:@{NSForegroundColorAttributeName:BGCOLOR}];
     [self.view addSubview:tfSearch];
     
     searchBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 37, 38, 20) ImageName:@"" Target:self Action:@selector(searchBtnClick) Title:@"取消"];
@@ -536,11 +536,11 @@
         UIImageView * ambassador = [MyControl createImageViewWithFrame:CGRectMake(12, 15, 158/2, 35) ImageName:@"ambassador.png"];
         [countryBg addSubview:ambassador];
         
-        UILabel * tip1 = [MyControl createLabelWithFrame:CGRectMake(95, 15, 125, 15) Font:10 Text:@"宠物星球，宠来宠趣"];
+        UILabel * tip1 = [MyControl createLabelWithFrame:CGRectMake(95, 15, 125, 15) Font:10 Text:@"宠物星球，我是大萌星"];
         tip1.textAlignment = NSTextAlignmentCenter;
         [countryBg addSubview:tip1];
         
-        UILabel * tip2 = [MyControl createLabelWithFrame:CGRectMake(90, 35, 130, 15) Font:10 Text:@"快来加入可爱萌主们的世界吧"];
+        UILabel * tip2 = [MyControl createLabelWithFrame:CGRectMake(90, 35, 130, 15) Font:10 Text:@"快来打造最闪亮萌星！"];
         tip2.textAlignment = NSTextAlignmentCenter;
         [countryBg addSubview:tip2];
         
@@ -1148,6 +1148,7 @@
     }
     if ([searchBtn.titleLabel.text isEqualToString:@"搜索"]) {
         if ([string isEqualToString:@""]) {
+            //退格
             self.tfString = [self.tfString substringToIndex:textField.text.length-1];
         }else{
             self.tfString = [NSString stringWithFormat:@"%@%@", textField.text, string];

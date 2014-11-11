@@ -22,6 +22,11 @@
 #import "NewWaterFlowViewController.h"
 #import "PetRecommendViewController.h"
 #import "MyStarViewController.h"
+#import "SearchResultModel.h"
+#import "PetSearchCell.h"
+#import "PetInfoViewController.h"
+#define WORDCOLOR [UIColor colorWithRed:86/255.0 green:86/255.0 blue:86/255.0 alpha:1]
+#define BROWNCOLOR [UIColor colorWithRed:226/255.0 green:215/255.0 blue:215/255.0 alpha:1]
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 @interface MainViewController () <AFPhotoEditorControllerDelegate>
@@ -131,18 +136,21 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     // Start the Aviary Editor OpenGL Load
     [AFOpenGLManager beginOpenGLLoad];
 
-    
+    self.searchArray = [NSMutableArray arrayWithCapacity:0];
     
     segmentClickIndex = 1;
     [self createScrollView];
     [self createFakeNavigation];
     [self createViewControllers];
     [self createSegment];
-
+    [self createTableView];
+    [self createSearchView];
+    
     [self.view bringSubviewToFront:self.menuBgBtn];
     [self.view bringSubviewToFront:self.menuBgView];
     
     [self createAlphaBtn];
+    
 //    if ([ControllerManager getIsSuccess]) {
 //        [self loadAnimalInfoData];
 //    }
@@ -154,22 +162,58 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
 //    }
     
-    UIButton * topBtn = [MyControl createButtonWithFrame:CGRectMake(150/2, 20, self.view.frame.size.width-150, 35) ImageName:@"" Target:self Action:@selector(topBtnClick) Title:nil];
-//    topBtn.backgroundColor = [UIColor greenColor];
-    [self.view addSubview:topBtn];
+    
 }
--(void)topBtnClick
+-(void)createTableView
 {
-    if (segmentClickIndex == 0) {
-//        [UIView animateWithDuration:0.2 animations:^{
-//            vc1.tv.contentOffset = CGPointMake(0, 0);
-//        }];
-        
-    }else if(segmentClickIndex == 1){
-        
-    }else if (segmentClickIndex == 2){
-        
+    blurImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"blurBg.png"];
+    [self.view insertSubview:blurImageView belowSubview:navView];
+    blurImageView.hidden = YES;
+    
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64) style:UITableViewStylePlain];
+    tv.dataSource = self;
+    tv.delegate = self;
+    tv.separatorStyle = 0;
+    tv.backgroundColor = [UIColor clearColor];
+    [blurImageView addSubview:tv];
+    [tv release];
+    
+    
+    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, tv.frame.size.width, 35)];
+    tv.tableHeaderView = view;
+}
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSLog(@"%d", self.searchArray.count);
+    return self.searchArray.count;
+}
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString * cellID = @"ID";
+    PetSearchCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if (!cell) {
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"PetSearchCell" owner:self options:nil] objectAtIndex:0];
     }
+    SearchResultModel * model = self.searchArray[indexPath.row];
+    [cell configUI:model];
+    cell.selectionStyle = 0;
+    cell.backgroundColor = [UIColor clearColor];
+    return cell;
+}
+-(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 70.0f;
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%d", indexPath.row);
+    PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+    vc.aid = [self.searchArray[indexPath.row] aid];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
+    
+//    [cancel setTitle:@"取消" forState:UIControlStateNormal];
+//    [self cancelClick:cancel];
 }
 //- (void)loadAnimalInfoData
 //{
@@ -235,7 +279,22 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }];
 }
 
-
+-(void)topBtnClick
+{
+    [tf becomeFirstResponder];
+    sc.hidden = YES;
+    searchBg.hidden = NO;
+    
+//    sv.scrollEnabled = NO;
+//    blurImageView.hidden = NO;
+//    if (segmentClickIndex == 0) {
+//        vc1.view.hidden = YES;
+//    }else if(segmentClickIndex == 1){
+//        vc2.view.hidden = YES;
+//    }else if (segmentClickIndex == 2){
+//        vc3.view.hidden = YES;
+//    }
+}
 -(void)createFakeNavigation
 {
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
@@ -250,10 +309,19 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.menuBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:self.menuBtn];
     
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 32, 200, 20) Font:17 Text:@"宠物星球"];
+    NSString * str = @"宠物星球";
+    CGSize size = [str sizeWithFont:[UIFont boldSystemFontOfSize:17] constrainedToSize:CGSizeMake(200, 20) lineBreakMode:1];
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake((self.view.frame.size.width-size.width)/2.0, 32, size.width, 20) Font:17 Text:@"宠物星球"];
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
+    
+    UIImageView * search = [MyControl createImageViewWithFrame:CGRectMake(titleLabel.frame.origin.x+size.width+5, 32+2.5, 15, 15) ImageName:@"main_search.png"];
+    [navView addSubview:search];
+    
+    UIButton * topBtn = [MyControl createButtonWithFrame:CGRectMake(titleLabel.frame.origin.x, 32, size.width+20, 20) ImageName:@"" Target:self Action:@selector(topBtnClick) Title:nil];
+//    topBtn.backgroundColor = [UIColor greenColor];
+    [self.view addSubview:topBtn];
     
     camara = [MyControl createButtonWithFrame:CGRectMake(320-82/2-15, 64-54/2-7, 82/2, 54/2) ImageName:@"相机图标.png" Target:self Action:@selector(cameraClick) Title:nil];
     camara.showsTouchWhenHighlighted = YES;
@@ -321,12 +389,186 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self.view bringSubviewToFront:self.menuBgBtn];
     [self.view bringSubviewToFront:self.menuBgView];
 }
+
+-(void)createSearchView
+{
+    //532/2  58/2  226 215 215
+    searchBg = [MyControl createViewWithFrame:CGRectMake(0, 69-5, self.view.frame.size.width, 58/2)];
+    searchBg.hidden = YES;
+    [self.view addSubview:searchBg];
+    
+    UIView * brownView = [MyControl createViewWithFrame:CGRectMake(10, 5, 532/2, 58/2)];
+    brownView.backgroundColor = BROWNCOLOR;
+    brownView.alpha = 0.8;
+    brownView.layer.cornerRadius = 13;
+    brownView.layer.masksToBounds = YES;
+    [searchBg addSubview:brownView];
+    
+    typeBtn = [MyControl createButtonWithFrame:CGRectMake(10+5, 4.5+5, 144/2, 20) ImageName:@"" Target:self Action:@selector(typeBtnClick:) Title:@"萌 星"];
+    [typeBtn setTitleColor:WORDCOLOR forState:UIControlStateNormal];
+    typeBtn.titleLabel.font = [UIFont boldSystemFontOfSize:13];
+    [searchBg addSubview:typeBtn];
+
+    UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(typeBtn.frame.origin.x+typeBtn.frame.size.width-7, typeBtn.frame.origin.y+typeBtn.frame.size.height-7, 7, 7) ImageName:@"main_search_triangle.png"];
+    [searchBg addSubview:triangle];
+    
+    tf = [MyControl createTextFieldWithFrame:CGRectMake(typeBtn.frame.origin.x+typeBtn.frame.size.width+5, typeBtn.frame.origin.y, brownView.frame.size.width-15-typeBtn.frame.size.width, 20) placeholder:@"搜索" passWord:NO leftImageView:nil rightImageView:nil Font:13];
+    tf.borderStyle = 0;
+    tf.autocapitalizationType = 0;
+    tf.autocorrectionType = 0;
+    tf.delegate = self;
+    tf.returnKeyType = UIReturnKeySearch;
+//    tf.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    [searchBg addSubview:tf];
+    
+    cancel = [MyControl createButtonWithFrame:CGRectMake(brownView.frame.origin.x+brownView.frame.size.width, brownView.frame.origin.y, 40, 29) ImageName:@"" Target:self Action:@selector(cancelClick:) Title:@"取消"];
+    [cancel setTitleColor:WORDCOLOR forState:UIControlStateNormal];
+    cancel.titleLabel.font = [UIFont systemFontOfSize:14];
+    [searchBg addSubview:cancel];
+    
+}
+-(void)cancelClick:(UIButton *)btn
+{
+    //隐藏searchBg
+    if ([btn.titleLabel.text isEqualToString:@"搜索"]) {
+        //请求搜索API
+        [self textFieldShouldReturn:tf];
+    }else{
+        sv.scrollEnabled = YES;
+        blurImageView.hidden = YES;
+        if (segmentClickIndex == 0) {
+            vc1.view.hidden = NO;
+        }else if(segmentClickIndex == 1){
+            vc2.view.hidden = NO;
+        }else if (segmentClickIndex == 2){
+            vc3.view.hidden = NO;
+        }
+        [tf resignFirstResponder];
+        sc.hidden = NO;
+        searchBg.hidden = YES;
+    }
+}
+#pragma mark - daili
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    //string是最新输入的文字，textField的长度及字符要落后一个操作。
+    if (![string isEqualToString:@""]) {
+        [cancel setTitle:@"搜索" forState:UIControlStateNormal];
+    }else if(textField.text.length == 1){
+        [cancel setTitle:@"取消" forState:UIControlStateNormal];
+    }
+    if ([cancel.titleLabel.text isEqualToString:@"搜索"]) {
+        if ([string isEqualToString:@""]) {
+            //退格
+            self.tfString = [self.tfString substringToIndex:textField.text.length-1];
+        }else{
+            self.tfString = [NSString stringWithFormat:@"%@%@", textField.text, string];
+        }
+        
+    }else{
+        self.tfString = nil;
+    }
+    return YES;
+}
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [tf resignFirstResponder];
+//    [cancel setTitle:@"取消" forState:UIControlStateNormal];
+    if (self.tfString != nil) {
+        //开始搜索
+        NSLog(@"搜索");
+        if ([typeBtn.titleLabel.text isEqualToString:@"萌 星"]) {
+            //搜索宠物
+            StartLoading;
+            NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
+            NSString * url = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@", SEARCHAPI, [tf.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], sig,[ControllerManager getSID]];
+//            NSLog(@"%@--%@--%@", tf.text, self.tfString, url);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if(isFinish){
+//                    NSLog(@"%@", load.dataDict);
+                    [self.searchArray removeAllObjects];
+                    
+                    NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                    for (NSDictionary *dict in array) {
+                        SearchResultModel *model = [[SearchResultModel alloc] init];
+                        [model setValuesForKeysWithDictionary:dict];
+                        [self.searchArray addObject:model];
+                        [model release];
+                    }
+                    LoadingSuccess;
+                    [tv reloadData];
+                    
+                    sv.scrollEnabled = NO;
+                    blurImageView.hidden = NO;
+                    if (segmentClickIndex == 0) {
+                        vc1.view.hidden = YES;
+                    }else if(segmentClickIndex == 1){
+                        vc2.view.hidden = YES;
+                    }else if (segmentClickIndex == 2){
+                        vc3.view.hidden = YES;
+                    }
+
+                }else{
+                    
+                }
+            }];
+            [request release];
+        }else{
+            //搜索经纪人
+            
+        }
+    }
+    return YES;
+}
+-(BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    [cancel setTitle:@"取消" forState:UIControlStateNormal];
+    self.tfString = nil;
+    return YES;
+}
+-(void)typeBtnClick:(UIButton *)btn
+{
+    if (dropDown == nil) {
+        
+        CGFloat f = 80;
+        dropDown = [[NIDropDown alloc] showDropDown:btn :&f :[NSArray arrayWithObjects:@"萌 星", nil]];
+        //        NSLog(@"%@", self.totalArray);
+        [dropDown setCellTextColor:WORDCOLOR Font:[UIFont systemFontOfSize:13] BgColor:BROWNCOLOR lineColor:[UIColor brownColor]];
+        dropDown.alpha = 0.9;
+        CGRect rect = searchBg.frame;
+        rect.size.height += 89;
+        searchBg.frame = rect;
+        
+        dropDown.delegate = self;
+    }else{
+        [dropDown hideDropDown:btn];
+        [self rel];
+    }
+}
+#pragma mark - niDrop代理
+-(void)niDropDownDelegateMethod:(NIDropDown *)sender
+{
+    [self rel];
+}
+-(void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
+{
+    NSLog(@"%d--%@", Line, Words);
+}
+-(void)rel
+{
+    CGRect rect = searchBg.frame;
+    rect.size.height -= 89;
+    searchBg.frame = rect;
+    [dropDown release];
+    dropDown = nil;
+}
 -(void)createSegment
 {
     NSArray * scArray = @[@"我的萌星", @"最新萌照", @"萌星推荐"];
     sc = [[UISegmentedControl alloc] initWithItems:scArray];
     sc.backgroundColor = [UIColor whiteColor];
     sc.alpha = 0.7;
+//    sc.hidden = YES;
     sc.layer.cornerRadius = 4;
     sc.layer.masksToBounds = YES;
     sc.frame = CGRectMake(10, 69, 300, 30);
@@ -382,6 +624,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - scrollViewDelegate
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    if (scrollView == tv) {
+        return;
+    }
     int a = sv.contentOffset.x;
     int b = sc.selectedSegmentIndex;
     sc.selectedSegmentIndex = a/320;
@@ -391,10 +636,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isCreated[0] == NO) {
             isCreated[0] = YES;
             vc1 = [[MyStarViewController alloc] init];
-            [self addChildViewController:vc2];
+            [self addChildViewController:vc1];
             [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
             [sv addSubview:vc1.view];
             [self.view bringSubviewToFront:sc];
+            
+            [self.view bringSubviewToFront:self.menuBgBtn];
+            [self.view bringSubviewToFront:self.menuBgView];
+            [self.view bringSubviewToFront:self.alphaBtn];
         }else{
             if (b != sc.selectedSegmentIndex) {
                 [vc1.tv headerBeginRefreshing];
@@ -417,6 +666,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [vc3.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
             [sv addSubview:vc3.view];
             [self.view bringSubviewToFront:sc];
+            
+            [self.view bringSubviewToFront:self.menuBgBtn];
+            [self.view bringSubviewToFront:self.menuBgView];
+            [self.view bringSubviewToFront:self.alphaBtn];
         }else{
             if (b != sc.selectedSegmentIndex) {
                 [vc3.tv headerBeginRefreshing];
@@ -431,68 +684,68 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //{
 //    [vc1 refreshShakeNum:num Index:index];
 //}
--(void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    if (scrollView.contentOffset.x == 0) {
-        
-        if (isCreated[0] == NO) {
-            isCreated[0] = YES;
-            vc1 = [[MyStarViewController alloc] init];
-            
-//            super.unShakeNum = ^(int a, int index){
-//                //index表示第几行
-//                NSLog(@"%d--%d", a, index);
-//                [vc1 refreshShakeNum:a Index:index];
-//            };
-//            vc1.actClick = ^(int a, int index){
-//                [self changeActIndex:index];
-//                if (a == 0) {
-//                    [self btn1Click];
-//                }else if (a == 1) {
-//                    [self btn2Click];
-//                }else if (a == 2) {
-//                    [self btn3Click];
-//                }else if (a == 3) {
-//                    [self btn4Click];
-//                }
-//            };
-//            vc1.actClickSend = ^(NSString * aid, NSString * name, NSString * tx){
-//                self.pet_aid = aid;
-//                self.pet_name = name;
-//                self.pet_tx = tx;
-//            };
-            [self addChildViewController:vc1];
-            [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-            [sv addSubview:vc1.view];
-            [self.view bringSubviewToFront:sc];
-            
-            [self.view bringSubviewToFront:self.menuBgBtn];
-            [self.view bringSubviewToFront:self.menuBgView];
-            [self.view bringSubviewToFront:self.alphaBtn];
-        }
-    }else if(scrollView.contentOffset.x == 320*2){
-//        if (![ControllerManager getIsSuccess]) {
-//            sv.contentOffset = CGPointMake(320, 0);
-//            /***************************/
-//            ShowAlertView;
-//            /***************************/
-//            return;
+//-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+//{
+//    if (scrollView.contentOffset.x == 0) {
+//        
+//        if (isCreated[0] == NO) {
+//            isCreated[0] = YES;
+//            vc1 = [[MyStarViewController alloc] init];
+//            
+////            super.unShakeNum = ^(int a, int index){
+////                //index表示第几行
+////                NSLog(@"%d--%d", a, index);
+////                [vc1 refreshShakeNum:a Index:index];
+////            };
+////            vc1.actClick = ^(int a, int index){
+////                [self changeActIndex:index];
+////                if (a == 0) {
+////                    [self btn1Click];
+////                }else if (a == 1) {
+////                    [self btn2Click];
+////                }else if (a == 2) {
+////                    [self btn3Click];
+////                }else if (a == 3) {
+////                    [self btn4Click];
+////                }
+////            };
+////            vc1.actClickSend = ^(NSString * aid, NSString * name, NSString * tx){
+////                self.pet_aid = aid;
+////                self.pet_name = name;
+////                self.pet_tx = tx;
+////            };
+//            [self addChildViewController:vc1];
+//            [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+//            [sv addSubview:vc1.view];
+//            [self.view bringSubviewToFront:sc];
+//            
+//            [self.view bringSubviewToFront:self.menuBgBtn];
+//            [self.view bringSubviewToFront:self.menuBgView];
+//            [self.view bringSubviewToFront:self.alphaBtn];
 //        }
-        if (isCreated[2] == NO) {
-            isCreated[2] = YES;
-//            FavoriteViewController * fvc = [[FavoriteViewController alloc] init];
-            vc3 = [[PetRecommendViewController alloc] init];
-            [self addChildViewController:vc3];
-            [vc3.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
-            [sv addSubview:vc3.view];
-            [self.view bringSubviewToFront:sc];
-            
-            [self.view bringSubviewToFront:self.menuBgBtn];
-            [self.view bringSubviewToFront:self.menuBgView];
-            [self.view bringSubviewToFront:self.alphaBtn];
-        }
-    }
-}
+//    }else if(scrollView.contentOffset.x == 320*2){
+////        if (![ControllerManager getIsSuccess]) {
+////            sv.contentOffset = CGPointMake(320, 0);
+////            /***************************/
+////            ShowAlertView;
+////            /***************************/
+////            return;
+////        }
+//        if (isCreated[2] == NO) {
+//            isCreated[2] = YES;
+////            FavoriteViewController * fvc = [[FavoriteViewController alloc] init];
+//            vc3 = [[PetRecommendViewController alloc] init];
+//            [self addChildViewController:vc3];
+//            [vc3.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
+//            [sv addSubview:vc3.view];
+//            [self.view bringSubviewToFront:sc];
+//            
+//            [self.view bringSubviewToFront:self.menuBgBtn];
+//            [self.view bringSubviewToFront:self.menuBgView];
+//            [self.view bringSubviewToFront:self.alphaBtn];
+//        }
+//    }
+//}
 
 //===============================================//
 -(void)cameraClick

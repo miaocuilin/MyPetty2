@@ -67,20 +67,20 @@
     time.text = [MyControl timeFromTimeStamp:model.create_time];
     if (type == 1) {
         //成为粉丝
-        typeImageView.image = [UIImage imageNamed:@"myCountry_heart.png"];
-        
-        NSString * str1 = [model.content objectForKey:@"u_name"];
-        NSString * str2 = petName;
-        NSString * bodyStr = [NSString stringWithFormat:@"%@ 成为了 %@ 的粉丝", str1, str2];
-        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
-        
-        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+5, str2.length)];
-        
-        CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
-        
-        body.frame = CGRectMake(60, 30, 240, size.height);
-        body.attributedText = str;
+//        typeImageView.image = [UIImage imageNamed:@"myCountry_heart.png"];
+//        
+//        NSString * str1 = [model.content objectForKey:@"u_name"];
+//        NSString * str2 = petName;
+//        NSString * bodyStr = [NSString stringWithFormat:@"%@ 成为了 %@ 的粉丝", str1, str2];
+//        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString:bodyStr];
+//        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(0, str1.length)];
+//        
+//        [str addAttribute:NSForegroundColorAttributeName value:BGCOLOR range:NSMakeRange(str1.length+5, str2.length)];
+//        
+//        CGSize size = [bodyStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(240, 100) lineBreakMode:1];
+//        
+//        body.frame = CGRectMake(60, 30, 240, size.height);
+//        body.attributedText = str;
     }else if (type == 2) {
         //加入
         typeImageView.image = [UIImage imageNamed:@"myCountry_join.png"];

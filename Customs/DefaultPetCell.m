@@ -24,6 +24,9 @@
     self.nameLabel.textColor = BGCOLOR;
     //
     self.cateAndAge.textColor = [UIColor lightGrayColor];
+    //
+    self.defaultBtn.layer.cornerRadius = 5;
+    self.defaultBtn.layer.masksToBounds = YES;
 }
 -(void)configUIWithModel:(UserPetListModel *)model Default:(BOOL)isDefault Row:(int)row
 {
@@ -42,9 +45,13 @@
     self.cateAndAge.text = [NSString stringWithFormat:@"%@ | %@岁", [ControllerManager returnCateNameWithType:model.type], model.age];
     if (isDefault) {
         self.crownImage.hidden = NO;
-        [self.defaultBtn setBackgroundImage:[UIImage imageNamed:@"defaultPet.png"] forState:UIControlStateNormal];
+//        [self.defaultBtn setBackgroundImage:[UIImage imageNamed:@"defaultPet.png"] forState:UIControlStateNormal];
+        self.defaultBtn.backgroundColor = [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1];
+        [self.defaultBtn setTitle:@"已是最爱" forState:UIControlStateNormal];
     }else{
-        [self.defaultBtn setBackgroundImage:[UIImage imageNamed:@"setToDefaultPet.png"] forState:UIControlStateNormal];
+//        [self.defaultBtn setBackgroundImage:[UIImage imageNamed:@"setToDefaultPet.png"] forState:UIControlStateNormal];
+        self.defaultBtn.backgroundColor = BGCOLOR5;
+        [self.defaultBtn setTitle:@"设为最爱" forState:UIControlStateNormal];
     }
     
     /**************************/

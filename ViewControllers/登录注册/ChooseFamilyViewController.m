@@ -196,7 +196,7 @@
 //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
     
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"选择萌主"];
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"选择萌星"];
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
@@ -421,7 +421,7 @@
     showOrHideBtn.tag = 100+section;
     [headerBgView addSubview:showOrHideBtn];
     
-    UIButton * join = [MyControl createButtonWithFrame:CGRectMake(320-60, 20, 50, 25) ImageName:@"" Target:self Action:@selector(joinClick:) Title:@"加入"];
+    UIButton * join = [MyControl createButtonWithFrame:CGRectMake(320-60, 20, 50, 25) ImageName:@"" Target:self Action:@selector(joinClick:) Title:@"捧TA"];
     join.titleLabel.font = [UIFont systemFontOfSize:14];
     join.backgroundColor = GREEN;
     join.layer.cornerRadius = 5;

@@ -176,6 +176,9 @@
             shake.pet_name = self.pet_name;
             shake.pet_tx = self.pet_tx;
             shake.unShakeNum = ^(int a){
+                NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
+                [dict setObject:[NSNumber numberWithInt:1] forKey:@"shake_count"];
+                model.dict = dict;
                 model.shake_count = [NSNumber numberWithInt:a];
                 [self.tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             };

@@ -122,14 +122,14 @@
     }
     
     if ([model.aid isEqualToString:[USER objectForKey:@"aid"]]) {
-        self.switchLabel1.text = @"默 认";
-        self.switchLabel2.text = @"宠 物";
+        self.switchLabel1.text = @"最 爱";
+        self.switchLabel2.text = @"萌 星";
     }else{
         self.switchLabel1.text = @"设 为";
-        self.switchLabel2.text = @"默 认";
+        self.switchLabel2.text = @"最 爱";
     }
     
-    self.nameLabel.text = [NSString stringWithFormat:@"%@ — %@联萌", [ControllerManager returnPositionWithRank:model.rank], model.name];
+    self.nameLabel.text = [NSString stringWithFormat:@"萌星 %@ — %@", model.name, [ControllerManager returnPositionWithRank:model.rank]];
     for(int i=0;i<3;i++){
         UILabel * numLabel = (UILabel *)[self.contentView viewWithTag:100+i];
         if (i == 0) {

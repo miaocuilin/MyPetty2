@@ -279,7 +279,7 @@
     [self.upView addSubview:shakeImageView1];
 #pragma mark - two
     //2
-    UILabel *shakeDescLabel2 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 +upViewWidth- 115, 10, 230, 20) Font:16 Text:@"哎呦~运气不错哦~为萌主摇出"];
+    UILabel *shakeDescLabel2 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 +upViewWidth- 115, 10, 230, 20) Font:16 Text:@"哎呦~运气不错哦~为萌星摇出"];
     shakeDescLabel2.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel2.textColor = GRAYBLUECOLOR;
     [self.upView addSubview:shakeDescLabel2];
@@ -320,7 +320,7 @@
 
     //4
     
-    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 - 115+upViewWidth*3, 10, 230, 100) Font:16 Text:[NSString stringWithFormat:@"摇一摇，摇到外婆桥。\n%@今天的摇一摇次数用完啦~\n换个宠物试试吧~", self.pet_name]];
+    UILabel *shakeDescLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 - 115+upViewWidth*3, 10, 230, 100) Font:16 Text:[NSString stringWithFormat:@"摇一摇，摇到外婆桥。\n%@今天的摇一摇次数用完啦~\n换个萌星试试吧~", self.pet_name]];
     shakeDescLabel.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel.textColor = GRAYBLUECOLOR;
     [self.upView addSubview:shakeDescLabel];
@@ -380,7 +380,7 @@
         rewardbg.image = [UIImage imageNamed:@"badrewardbg.png"];
         shakeBg3.image = [UIImage imageNamed:@"troublenothing.png"];
         descNoGiftLabel.text = @"哈哈，上天没给你机会\n恶作剧不是每一个人都可以哟~";
-        shakeDescLabel.text = @"够了~你真是够了！\n你今天的捣捣乱次数用完啦~\n换个宠物继续捣乱吧~";
+        shakeDescLabel.text = @"够了~你真是够了！\n你今天的捣捣乱次数用完啦~\n换个萌主继续捣乱吧~";
         shakeBg4.image = [UIImage imageNamed:@"troublenothing.png"];
         shakeImageView.hidden = YES;
         helpPetLabel.attributedText = [self firstString:@"给  恶作剧" formatString:self.pet_name insertAtIndex:2];

@@ -16,6 +16,7 @@
 {
     UIView *totalView;
 }
+@property(nonatomic)BOOL isFromStar;
 @property (nonatomic,strong)NSDictionary *animalInfoDict;
 
 @property(nonatomic,copy)NSString * recordURL;

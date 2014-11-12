@@ -364,13 +364,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)createScrollView
 {
-    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    sv.delegate = self;
-    sv.contentSize = CGSizeMake(320*3, self.view.frame.size.height);
-    sv.contentOffset = CGPointMake(320, 0);
-    sv.pagingEnabled = YES;
-    sv.showsHorizontalScrollIndicator = NO;
-    [self.view addSubview:sv];
+    self.sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    self.sv.delegate = self;
+    self.sv.contentSize = CGSizeMake(320*3, self.view.frame.size.height);
+    self.sv.contentOffset = CGPointMake(320, 0);
+    self.sv.pagingEnabled = YES;
+    self.sv.showsHorizontalScrollIndicator = NO;
+    [self.view addSubview:self.sv];
 }
 -(void)createViewControllers
 {
@@ -378,7 +378,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     vc2 = [[RandomViewController alloc] init];
     [self addChildViewController:vc2];
     [vc2.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
-    [sv addSubview:vc2.view];
+    [self.sv addSubview:vc2.view];
     
 //    WaterViewController *water = [[WaterViewController alloc] init];
 //    [self addChildViewController:water];
@@ -434,7 +434,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         //请求搜索API
         [self textFieldShouldReturn:tf];
     }else{
-        sv.scrollEnabled = YES;
+        self.sv.scrollEnabled = YES;
         blurImageView.hidden = YES;
         if (segmentClickIndex == 0) {
             vc1.view.hidden = NO;
@@ -498,7 +498,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     LoadingSuccess;
                     [tv reloadData];
                     
-                    sv.scrollEnabled = NO;
+                    self.sv.scrollEnabled = NO;
                     blurImageView.hidden = NO;
                     if (segmentClickIndex == 0) {
                         vc1.view.hidden = YES;
@@ -598,25 +598,49 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     int a = sc.selectedSegmentIndex;
     segmentClickIndex = a;
     if (a == 0) {
-        if (isCreated[0]) {
+        self.menuBgView.hidden = YES;
+        if (isCreated[0] == 0) {
+            isCreated[0] = YES;
+            vc1 = [[MyStarViewController alloc] init];
+            [self addChildViewController:vc1];
+            [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+            [self.sv addSubview:vc1.view];
+            [self.view bringSubviewToFront:sc];
+            
+            [self.view bringSubviewToFront:self.menuBgBtn];
+            [self.view bringSubviewToFront:self.menuBgView];
+            [self.view bringSubviewToFront:self.alphaBtn];
+        }else{
             [vc1.tv headerBeginRefreshing];
         }
-        self.menuBgView.hidden = YES;
+        
         [UIView animateWithDuration:0.3 animations:^{
-            sv.contentOffset = CGPointMake(0, 0);
+            self.sv.contentOffset = CGPointMake(0, 0);
         }];
     }else if(a == 1){
         self.menuBgView.hidden = NO;
         [UIView animateWithDuration:0.3 animations:^{
-            sv.contentOffset = CGPointMake(320, 0);
+            self.sv.contentOffset = CGPointMake(320, 0);
         }];
     }else{
-        if (isCreated[2]) {
+        self.menuBgView.hidden = NO;
+        if (isCreated[2] == 0) {
+            isCreated[2] = YES;
+            vc3 = [[PetRecommendViewController alloc] init];
+            [self addChildViewController:vc3];
+            [vc3.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
+            [self.sv addSubview:vc3.view];
+            [self.view bringSubviewToFront:sc];
+            
+            [self.view bringSubviewToFront:self.menuBgBtn];
+            [self.view bringSubviewToFront:self.menuBgView];
+            [self.view bringSubviewToFront:self.alphaBtn];
+        }else{
             [vc3.tv headerBeginRefreshing];
         }
-        self.menuBgView.hidden = NO;
+        
         [UIView animateWithDuration:0.3 animations:^{
-            sv.contentOffset = CGPointMake(320*2, 0);
+            self.sv.contentOffset = CGPointMake(320*2, 0);
         }];
     }
     sc.selectedSegmentIndex = segmentClickIndex;
@@ -627,7 +651,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (scrollView == tv) {
         return;
     }
-    int a = sv.contentOffset.x;
+    int a = self.sv.contentOffset.x;
     int b = sc.selectedSegmentIndex;
     sc.selectedSegmentIndex = a/320;
     
@@ -638,7 +662,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             vc1 = [[MyStarViewController alloc] init];
             [self addChildViewController:vc1];
             [vc1.view setFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-            [sv addSubview:vc1.view];
+            [self.sv addSubview:vc1.view];
             [self.view bringSubviewToFront:sc];
             
             [self.view bringSubviewToFront:self.menuBgBtn];
@@ -664,7 +688,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             vc3 = [[PetRecommendViewController alloc] init];
             [self addChildViewController:vc3];
             [vc3.view setFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height)];
-            [sv addSubview:vc3.view];
+            [self.sv addSubview:vc3.view];
             [self.view bringSubviewToFront:sc];
             
             [self.view bringSubviewToFront:self.menuBgBtn];

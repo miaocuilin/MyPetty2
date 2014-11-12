@@ -12,10 +12,12 @@
 #import "PicDetailViewController.h"
 #import "PetInfoViewController.h"
 #import "UserInfoViewController.h"
+#import "MainViewController.h"
 @implementation PetRecommendViewController
 -(void)viewWillAppear:(BOOL)animated
 {
-    if (isLoaded) {
+    MainViewController * main = [ControllerManager shareMain];
+    if (isLoaded && main.sv.contentOffset.x == 0) {
         [self.tv headerBeginRefreshing];
     }
 }

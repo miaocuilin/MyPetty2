@@ -18,6 +18,7 @@
 #import "SendGiftViewController.h"
 #import "MainViewController.h"
 #import "UserPetListModel.h"
+
 @interface MyStarViewController ()
 
 @end
@@ -25,7 +26,8 @@
 @implementation MyStarViewController
 -(void)viewWillAppear:(BOOL)animated
 {
-    if (isLoaded) {
+    MainViewController * main = [ControllerManager shareMain];
+    if (isLoaded && main.sv.contentOffset.x == 0) {
         [self.tv headerBeginRefreshing];
     }
 }
@@ -150,7 +152,78 @@
 //        [cell makeUIWithWidth:self.view.frame.size.width Height:322.0f];
     }
     MyStarModel * model = self.dataArray[indexPath.row];
-    
+    cell.inviteClick = ^(){
+        //点击邀请
+        MainViewController * vc = [ControllerManager shareMain];
+        
+        CodeAlertView * codeView = [[CodeAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        codeView.AlertType = 4;
+        codeView.model = model;
+        [codeView makeUI];
+        codeView.shareClick = ^(int a, UIImage * image){
+            if (a == 0) {
+                NSLog(@"微信");
+                //强制分享图片
+                [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+                [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:image location:nil urlResource:nil presentedController:vc completion:^(UMSocialResponseEntity *response){
+                    if (response.responseCode == UMSResponseCodeSuccess) {
+                        NSLog(@"分享成功！");
+                        //                [self loadShareAPI];
+                        //                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
+                        StartLoading;
+                        [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                    }else{
+                        StartLoading;
+                        [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                    }
+                    
+                }];
+            }else if(a == 1){
+                NSLog(@"朋友圈");
+                //强制分享图片
+                [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+                [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:vc completion:^(UMSocialResponseEntity *response){
+                    if (response.responseCode == UMSResponseCodeSuccess) {
+                        NSLog(@"分享成功！");
+                        //                [self loadShareAPI];
+                        //                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
+                        StartLoading;
+                        [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                    }else{
+                        StartLoading;
+                        [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                    }
+                    
+                }];
+            }else{
+                NSLog(@"微博");
+                NSString * str = [NSString stringWithFormat:@"我家萌星最闪亮！小伙伴们快来助力~~邀请码：%@，http://home4pet.aidigame.com/（分享自@宠物星球社交应用）", @"12345567"];
+                [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:vc completion:^(UMSocialResponseEntity *response){
+                    if (response.responseCode == UMSResponseCodeSuccess) {
+                        NSLog(@"分享成功！");
+                        //                [self loadShareAPI];
+                        //                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
+                        StartLoading;
+                        [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                    }else{
+                        NSLog(@"失败原因：%@", response);
+                        StartLoading;
+                        [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                    }
+                    
+                }];
+            }
+        };
+        [vc.view addSubview:codeView];
+        [UIView animateWithDuration:0.2 animations:^{
+            codeView.alpha = 1;
+        }];
+        codeView.confirmClick = ^(){
+//            [self reportImage];
+//            [self cancelBtnClick2];
+        };
+        
+    };
     cell.actClickSend = ^(NSString * aid, NSString * name, NSString * tx){
 //        self.actClickSend(aid, name, tx);
         
@@ -217,6 +290,7 @@
 //                label.text = @"叫一叫";
                 
                 RecordViewController *shout = [[RecordViewController alloc] init];
+                shout.isFromStar = YES;
                 shout.recordBack = ^(void){
                     label.text = @"叫过了";
                     NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
@@ -237,6 +311,7 @@
 //                label.text = @"摸一摸";
                 
                 TouchViewController *touch = [[TouchViewController alloc] init];
+                touch.isFromStar = YES;
                 touch.touchBack = ^(void){
                     label.text = @"摸过了";
                     NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];

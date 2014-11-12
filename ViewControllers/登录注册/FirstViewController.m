@@ -439,6 +439,7 @@
                 if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
                     [USER setObject:[dict objectForKey:@"a_tx"] forKey:@"a_tx"];
                 }
+//                [USER setObject:[dict objectForKey:@"version"] forKey:@"version"];
                 [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
                 [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
                 [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];

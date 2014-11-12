@@ -27,6 +27,7 @@
     [_t_rq release];
     [_tx release];
     [_images release];
+    [_invite_code release];
 }
 
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key

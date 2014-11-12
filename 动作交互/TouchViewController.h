@@ -20,6 +20,9 @@
 //    NSString * recordURL;
     
     UIView * totalView;
+    
+    BOOL notHaveRecord;
+    UIButton *playAndPauseButton;
 }
 @property (nonatomic,strong)NSDictionary *animalInfoDict;
 @property (nonatomic,strong)NSString *recordURL;
@@ -31,6 +34,7 @@
 
 @property(nonatomic,copy)NSString * voiceName;
 
+@property(nonatomic)BOOL isFromStar;
 @property(nonatomic,copy)void (^touchBack)(void);
 - (void)createAlertView;
 @end

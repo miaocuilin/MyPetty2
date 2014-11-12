@@ -607,7 +607,7 @@
     
     //
     
-    NSString * str2 = [NSString stringWithFormat:@"萌主—%@", [headerDict objectForKey:@"a_name"]];
+    NSString * str2 = [NSString stringWithFormat:@"最爱萌星—%@", [headerDict objectForKey:@"a_name"]];
     CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(200, 100) lineBreakMode:NSLineBreakByCharWrapping];
     UILabel * positionAndUserName = [MyControl createLabelWithFrame:CGRectMake(105, 170/2, size2.width, 20) Font:14 Text:str2];
     //    positionAndUserName.font = [UIFont boldSystemFontOfSize:15];

@@ -55,6 +55,14 @@
     contributionLabel.textColor = [UIColor colorWithRed:252/255.0 green:196/255.0 blue:182/255.0 alpha:1];
     [position addSubview:contributionLabel];
     
+    //邀请按钮
+    inviteBtn = [MyControl createButtonWithFrame:CGRectMake(bgView.frame.size.width-10-50, 5, 50, 28) ImageName:@"inviteBtn.png" Target:self Action:@selector(inviteBtnClick) Title:@"邀请"];
+    inviteBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+    [bgView addSubview:inviteBtn];
+//    if([[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"]){
+//        inviteBtn.hidden = YES;
+//    }
+    
     //f79879  50%
     UIView * headBgView = [MyControl createViewWithFrame:CGRectMake((bgView.frame.size.width-44)/2, 5, 44, 44)];
     headBgView.layer.cornerRadius = 22;
@@ -95,7 +103,11 @@
     [hyperBtn addTarget:self action:@selector(hyperBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     hyperBtn.showsTouchWhenHighlighted = YES;
     [bgView addSubview:hyperBtn];
+    hyperBtn.hidden = YES;
     
+    modifyBtn = [MyControl createButtonWithFrame:CGRectMake(hyperBtn.frame.origin.x, hyperBtn.frame.origin.y, 20, 20) ImageName:@"star_modify.png" Target:self Action:@selector(modifyBtnClick) Title:nil];
+    [bgView addSubview:modifyBtn];
+    modifyBtn.hidden = YES;
     //
     dataBgView = [MyControl createViewWithFrame:CGRectMake(0, 90, bgView.frame.size.width, 20)];
     [bgView addSubview:dataBgView];
@@ -167,6 +179,11 @@
         imageBtn.tag = 400+i;
     }
 }
+-(void)inviteBtnClick
+{
+    NSLog(@"inviteClick");
+    self.inviteClick();
+}
 -(void)headBtnClick
 {
     NSLog(@"跳转宠物主页");
@@ -205,14 +222,22 @@
 //    headView.frame = CGRectMake(0, 0, bgView.frame.size.width, 130);
 }
 
+-(void)modifyBtnClick
+{
+    [self hyperBtnClick:hyperBtn];
+}
 -(void)hyperBtnClick:(UIButton *)btn
 {
     NSLog(@"hyper");
     tf.userInteractionEnabled = YES;
     [tf becomeFirstResponder];
     if(btn.selected == YES){
+        hyperBtn.hidden = YES;
+        modifyBtn.hidden = NO;
         [self textFieldShouldReturn:tf];
     }else{
+        hyperBtn.hidden = NO;
+        modifyBtn.hidden = YES;
         btn.selected = YES;
     }
     
@@ -221,11 +246,13 @@
 {
     tf.userInteractionEnabled = NO;
     hyperBtn.hidden = YES;
+    modifyBtn.hidden = YES;
     
     UILabel * la = (UILabel *)[bgView viewWithTag:202];
     UILabel * la2 = (UILabel *)[bgView viewWithTag:302];
     if ([model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
-        hyperBtn.hidden = NO;
+//        hyperBtn.hidden = NO;
+        modifyBtn.hidden = NO;
         
         la.text = @"叫一叫";
         if([[model.dict objectForKey:@"is_voiced"] isKindOfClass:[NSNull class]] || [model.is_voiced intValue] == 0){
@@ -262,6 +289,10 @@
     CGRect hyRect = hyperBtn.frame;
     hyRect.origin.x = tf.frame.origin.x+tfSize.width-10;
     hyperBtn.frame = hyRect;
+    //
+    CGRect modRect = modifyBtn.frame;
+    modRect.origin.x = hyRect.origin.x+15;
+    modifyBtn.frame = modRect;
     
     position.image = [UIImage imageNamed:[NSString stringWithFormat:@"position_%@.png", model.rank]];
     positionLabel.text = [ControllerManager returnPositionWithRank:model.rank];
@@ -391,6 +422,8 @@
     tf.backgroundColor = [UIColor clearColor];
     tf.userInteractionEnabled = NO;
     hyperBtn.selected = NO;
+    hyperBtn.hidden = YES;
+    modifyBtn.hidden = NO;
     [textField resignFirstResponder];
     if (![tf.text isEqualToString:self.tempTfString] && tf.text.length>0) {
         [self postMsg];
@@ -441,6 +474,11 @@
         CGRect hyRect = hyperBtn.frame;
         hyRect.origin.x = tf.frame.origin.x+tfSize.width-10;
         hyperBtn.frame = hyRect;
+        
+        //
+        CGRect modRect = modifyBtn.frame;
+        modRect.origin.x = hyRect.origin.x+15;
+        modifyBtn.frame = modRect;
     }else{
         tf.text = self.tempTfString;
     }

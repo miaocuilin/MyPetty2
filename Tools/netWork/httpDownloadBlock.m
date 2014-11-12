@@ -88,6 +88,10 @@
         //如果不是数组
         if ([result isKindOfClass:[NSDictionary class]]) {
             self.dataDict=result;
+            if ([[self.dataDict objectForKey:@"version"] isKindOfClass:[NSString class]]) {
+                [USER setObject:[self.dataDict objectForKey:@"version"] forKey:@"version"];
+                [USER setObject:[self.dataDict objectForKey:@"confVersion"] forKey:@"confVersion"];
+            }
             //判断errorCode是否为1，为1弹窗提示
             if([[self.dataDict objectForKey:@"errorCode"] intValue] == -1){
                 if ([[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"余额不足"]) {

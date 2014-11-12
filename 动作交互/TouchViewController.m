@@ -82,11 +82,14 @@
             [self loadRecordData];
         }else{
             [MMProgressHUD dismissWithError:@"该宠物今天没有萌叫叫" afterDelay:1.0];
+            //没有录音
+            notHaveRecord = YES;
             [UIView animateWithDuration:0.1 delay:1.0 options:1 animations:^{
                 [_player stop];
                 [_player release],_player=nil;
-                [self.view removeFromSuperview];
-                [self removeFromParentViewController];
+//                [self.view removeFromSuperview];
+//                [self removeFromParentViewController];
+                [self createAlertView];
             } completion:nil];
             
             
@@ -135,7 +138,10 @@
 //            int exp = [[USER objectForKey:@"exp"] intValue]-tempExp;
 //
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
-                self.touchBack();
+                
+                if (self.isFromStar) {
+                    self.touchBack();
+                }
                 
                 NSDictionary * dict = [load.dataDict objectForKey:@"data"];
                 int exp = [[dict objectForKey:@"exp"] intValue];
@@ -150,7 +156,12 @@
             }
             [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.1];
         }else{
-            [MyControl loadingFailedWithContent:@"数据加载失败" afterDelay:0.5f];
+            if (notHaveRecord || self.haveRecord) {
+                [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.1f];
+            }else{
+                [MyControl loadingFailedWithContent:@"加载失败" afterDelay:0.5f];
+            }
+            
         }
         
     }];
@@ -210,7 +221,8 @@
         NSLog(@"%d",self.scratchCardView.isOpen);
         [self touchAPIData];
         [self shareViewCreate];
-        if ([self getRecord]) {
+        playAndPauseButton.userInteractionEnabled = NO;
+        if (!notHaveRecord && [self getRecord]) {
             [self audioPlayerCreate];
         }
     };
@@ -274,7 +286,7 @@
     [self.scratchCardView addSubview:playAndPauseView];
     playAndPauseImageView = [MyControl createImageViewWithFrame:CGRectMake(8, 8, 15, 15) ImageName:@"record_play.png"];
     [playAndPauseView addSubview:playAndPauseImageView];
-    UIButton *playAndPauseButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 30, 30) ImageName:nil Target:self Action:@selector(playAction) Title:nil];
+    playAndPauseButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 30, 30) ImageName:nil Target:self Action:@selector(playAction) Title:nil];
     [playAndPauseView addSubview:playAndPauseButton];
     
     UIView *shareView = [MyControl createViewWithFrame:CGRectMake(bodyView.frame.size.width/2-195/2.0, 250, 195, 50)];

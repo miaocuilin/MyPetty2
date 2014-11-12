@@ -218,7 +218,10 @@
         [ControllerManager HUDImageIcon:@"Star" showView:self.view yOffset:0 Number:index];
     }
     
-    self.recordBack();
+    if (self.isFromStar) {
+        self.recordBack();
+    }
+    
     //    NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     
     

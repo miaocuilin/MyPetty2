@@ -54,7 +54,7 @@
 //    NSLog(@"背包url:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-//            NSLog(@"背包物品数据：%@",load.dataDict);
+            NSLog(@"背包物品数据：%@",load.dataDict);
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
                 for (NSString * key in [[load.dataDict objectForKey:@"data"] allKeys]) {
                     [self.bagItemIdArray addObject:key];
@@ -132,7 +132,7 @@
     
     giftPageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, 310+45, 300, 20)];
     giftPageControl.userInteractionEnabled = NO;
-    giftPageControl.numberOfPages =ceilf(self.giftArray.count/9.0);
+    giftPageControl.numberOfPages =ceilf(self.giftArray.count/4.0);
     giftPageControl.currentPageIndicatorTintColor = [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1];
     giftPageControl.pageIndicatorTintColor = [UIColor grayColor];
     [totalView addSubview:giftPageControl];
@@ -155,145 +155,291 @@
     sv.showsHorizontalScrollIndicator = NO;
     [totalView addSubview:sv];
     
-    CGSize scrollViewSize = CGSizeMake(300 * ceilf(self.giftArray.count/9.0), sv.frame.size.height);
+    CGSize scrollViewSize = CGSizeMake(300 * ceilf(self.giftArray.count/4.0), sv.frame.size.height);
     [sv setContentSize:scrollViewSize];
-    int h = 15;//水平间距
-    int v = 10;//垂直间距
+//    int h = 15;//水平间距
+//    int v = 10;//垂直间距
     
     /*********************************************/
-//    for (int i=0; i<self.bagItemIdArray.count+self.tempGiftArray.count; i+=2) {
-//        
-//        UIImageView * giftBgImageView = [MyControl createImageViewWithFrame:CGRectMake(25+i/4*300, 10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
-//        [sv addSubview:giftBgImageView];
-//        
-//        UIImageView * giftBgImageView2 = [MyControl createImageViewWithFrame:CGRectMake(324/2+i/4*300, 10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
-//        [sv addSubview:giftBgImageView2];
-//        if ((i+2)%4 == 0) {
-//            giftBgImageView.frame = CGRectMake(25+i/4*300, 10+310/2, 222/2, 190/2);
-//            giftBgImageView2.frame = CGRectMake(324/2+i/4*300, 10+310/2, 222/2, 190/2);
-//        }
-//        
-//        UIImageView * wood = [MyControl createImageViewWithFrame:CGRectMake(i/4*300+(300-546/2)/2.0, giftBgImageView.frame.origin.y+190/2, 546/2, 17/2.0) ImageName:@"giftAlert_wood.png"];
-//        [sv addSubview:wood];
-//        
-//        //
-//        
-//    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /*********************************************/
-    for(int i=0;i<self.bagItemIdArray.count+self.tempGiftArray.count;i++){
-    
-//        if (i>=self.bagItemIdArray.count) {
-//            flag = 0;
-//            for (NSString * no in self.bagItemIdArray) {
-//                [[self.giftArray[i] objectForKey:@"no"] isEqualToString:no];
-//                flag = 1;
-//                break;
-//            }
-//            if (flag == 1) {
-//                continue;
-//            }
-//        }
-    
-        UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(h+i%3*(80+h)+300*(i/9), h+(i/3)%3*(90+v), 80, 90)];
+    for (int i=0; i<self.bagItemIdArray.count+self.tempGiftArray.count-1; i+=2) {
+        //白色背景
+        UIImageView * giftBgImageView = [MyControl createImageViewWithFrame:CGRectMake(25+i/4*300, 10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
+        [sv addSubview:giftBgImageView];
+        
+        UIImageView * giftBgImageView2 = [MyControl createImageViewWithFrame:CGRectMake(324/2+i/4*300, 10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
+        [sv addSubview:giftBgImageView2];
+        if ((i+2)%4 == 0) {
+            giftBgImageView.frame = CGRectMake(25+i/4*300, 10+310/2, 222/2, 190/2);
+            giftBgImageView2.frame = CGRectMake(324/2+i/4*300, 10+310/2, 222/2, 190/2);
+        }
+        
+        //礼物图片
+        UIImageView * giftImageView = [MyControl createImageViewWithFrame:CGRectMake((111-90)/2.0, (95-60)/2.0, 90, 60) ImageName:@""];
+        [giftBgImageView addSubview:giftImageView];
+        
+        UIImageView * giftImageView2 = [MyControl createImageViewWithFrame:CGRectMake((111-90)/2.0, (95-60)/2.0, 90, 60) ImageName:@""];
+        [giftBgImageView2 addSubview:giftImageView2];
+        
+        
+        //木板
+        UIImageView * wood = [MyControl createImageViewWithFrame:CGRectMake(i/4*300+(300-546/2)/2.0, giftBgImageView.frame.origin.y+190/2, 546/2, 17/2.0) ImageName:@"giftAlert_wood.png"];
+        [sv addSubview:wood];
+        
+        //
+        UIImageView * hang_tag = [MyControl createImageViewWithFrame:CGRectMake(wood.frame.origin.x+4, wood.frame.origin.y-1, 246/2, 106/2) ImageName:@""];
+        [sv addSubview:hang_tag];
+        
+        UIImageView * hang_tag2 = [MyControl createImageViewWithFrame:CGRectMake(wood.frame.origin.x+wood.frame.size.width-4-246/2, wood.frame.origin.y-1, 246/2, 106/2) ImageName:@""];
+        [sv addSubview:hang_tag2];
+        
+        //礼物名称
+        UILabel * productLabel = [MyControl createLabelWithFrame:CGRectMake(10, 18, 80, 15) Font:12 Text:nil];
+        productLabel.font = [UIFont boldSystemFontOfSize:12];
+        productLabel.textColor = [ControllerManager colorWithHexString:@"5F5E5E"];
+        [hang_tag addSubview:productLabel];
+        
+        UILabel * productLabel2 = [MyControl createLabelWithFrame:CGRectMake(10, 18, 80, 15) Font:12 Text:nil];
+        productLabel2.font = [UIFont boldSystemFontOfSize:12];
+        productLabel2.textColor = [ControllerManager colorWithHexString:@"5F5E5E"];
+        [hang_tag2 addSubview:productLabel2];
+        
+        //人气
+        UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(90, 20, 30, 15) Font:12 Text:@"人气"];
+        rq.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag addSubview:rq];
+        
+        UILabel * rq2 = [MyControl createLabelWithFrame:CGRectMake(90, 20, 30, 15) Font:12 Text:@"人气"];
+        rq2.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag2 addSubview:rq2];
+        
+        //人气值
+        UILabel * rqz = [MyControl createLabelWithFrame:CGRectMake(80, 35, 42, 15) Font:12 Text:@"+100"];
+        rqz.textAlignment = NSTextAlignmentCenter;
+        rqz.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag addSubview:rqz];
+        
+        UILabel * rqz2 = [MyControl createLabelWithFrame:CGRectMake(80, 35, 42, 15) Font:12 Text:@"+100"];
+        rqz2.textAlignment = NSTextAlignmentCenter;
+        rqz2.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag2 addSubview:rqz2];
+        
+        //背包中礼物数量
+        UIImageView * giftIcon = [MyControl createImageViewWithFrame:CGRectMake(10, 35, 15, 15) ImageName:@"giftIcon.png"];
+        [hang_tag addSubview:giftIcon];
+        
+        UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(28, 34, 40, 17) Font:15 Text:nil];
+        giftNum.textColor = BGCOLOR;
+        [hang_tag addSubview:giftNum];
+        
+        UIImageView * giftIcon2 = [MyControl createImageViewWithFrame:CGRectMake(10, 35, 15, 15) ImageName:@"giftIcon.png"];
+        [hang_tag2 addSubview:giftIcon2];
+        
+        UILabel * giftNum2 = [MyControl createLabelWithFrame:CGRectMake(28, 34, 40, 17) Font:15 Text:nil];
+        giftNum2.textColor = BGCOLOR;
+        [hang_tag2 addSubview:giftNum2];
+        
+        //金币图标及价格
+        UIImageView * gold = [MyControl createImageViewWithFrame:CGRectMake(10, 35, 15, 15) ImageName:@"gold.png"];
+        [hang_tag addSubview:gold];
+        
+        UILabel * price = [MyControl createLabelWithFrame:CGRectMake(33, 34, 40, 17) Font:15 Text:nil];
+        price.font = [UIFont boldSystemFontOfSize:13];
+        price.textColor = BGCOLOR;
+        [hang_tag addSubview:price];
+        
+        UIImageView * gold2 = [MyControl createImageViewWithFrame:CGRectMake(10, 35, 15, 15) ImageName:@"gold.png"];
+        [hang_tag2 addSubview:gold2];
+        
+        UILabel * price2 = [MyControl createLabelWithFrame:CGRectMake(33, 34, 40, 17) Font:15 Text:@""];
+        price2.font = [UIFont boldSystemFontOfSize:13];
+        price2.textColor = BGCOLOR;
+        [hang_tag2 addSubview:price2];
+        
+        //
+        CGRect rect = giftBgImageView.frame;
+        CGRect rect2 = giftBgImageView2.frame;
+        UIButton * sendGiftBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height) ImageName:@"" Target:self Action:@selector(sendGiftBtnClick:) Title:nil];
+        sendGiftBtn.tag = 1000+i;
+        [giftBgImageView addSubview:sendGiftBtn];
+        
+        UIButton * sendGiftBtn2 = [MyControl createButtonWithFrame:CGRectMake(0, 0, rect2.size.width, rect2.size.height) ImageName:@"" Target:self Action:@selector(sendGiftBtnClick:) Title:nil];
+        sendGiftBtn2.tag = 1000+i+1;
+        [giftBgImageView2 addSubview:sendGiftBtn2];
+        
+        //
         if (i<self.bagItemIdArray.count) {
             //背包
+            gold.hidden = YES;
+            price.hidden = YES;
             if ([self.bagItemIdArray[i] intValue]>=2000) {
-                imageView.image = [UIImage imageNamed:@"trick_bg.png"];
+                hang_tag.image = [UIImage imageNamed:@"giftAlert_badBg.png"];
             }else{
-                imageView.image = [UIImage imageNamed:@"product_bg.png"];
+                hang_tag.image = [UIImage imageNamed:@"giftAlert_goodBg.png"];
             }
+            giftImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.bagItemIdArray[i]]];
+            NSDictionary * dic = [ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]];
+            productLabel.text = [dic objectForKey:@"name"];
+            rqz.text = [dic objectForKey:@"add_rq"];
+            
+            giftNum.text = [NSString stringWithFormat:@"x %@", self.bagItemNumArray[i]];
         }else{
             //商店
+            giftIcon.hidden = YES;
             if ([[self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"no"] intValue]>2000) {
-                imageView.image = [UIImage imageNamed:@"trick_bg.png"];
+                hang_tag.image = [UIImage imageNamed:@"giftAlert_badBg.png"];
             }else{
-                imageView.image = [UIImage imageNamed:@"product_bg.png"];
+                hang_tag.image = [UIImage imageNamed:@"giftAlert_goodBg.png"];
             }
-        }
-        [sv addSubview:imageView];
-        [imageView release];
-        
-        UIImageView *productImageView = [MyControl createImageViewWithFrame:CGRectMake((imageView.frame.size.width-75)/2, 20, 75, 50) ImageName:[NSString stringWithFormat:@"%@.png",[self.giftArray[i] objectForKey:@"no"]]];
-        [imageView addSubview:productImageView];
-        
-        UILabel * productLabel = [MyControl createLabelWithFrame:CGRectMake(0, 10, imageView.frame.size.width, 10) Font:10 Text:[self.giftArray[i] objectForKey:@"name"]];
-        productLabel.textAlignment = NSTextAlignmentCenter;
-        productLabel.font = [UIFont boldSystemFontOfSize:10];
-        productLabel.textColor = [UIColor grayColor];
-        [imageView addSubview:productLabel];
-        
-        UILabel *numberCoinLabel = [MyControl createLabelWithFrame:CGRectMake(38, 75, 50, 10) Font:13 Text:nil];
-        numberCoinLabel.textColor =BGCOLOR;
-        [imageView addSubview:numberCoinLabel];
-        
-        UIImageView *coinImageView = [MyControl createImageViewWithFrame:CGRectMake(20, 73, 13, 13) ImageName:@"gold.png"];
-        [imageView addSubview:coinImageView];
-        
-        UILabel *leftCornerLabel1 =[MyControl createLabelWithFrame:CGRectMake(-3, 4, 20, 8) Font:7 Text:@"人气"];
-        leftCornerLabel1.textAlignment = NSTextAlignmentCenter;
-        leftCornerLabel1.font = [UIFont boldSystemFontOfSize:7];
-        CGAffineTransform transform =  CGAffineTransformMakeRotation(-45.0 *M_PI / 180.0);
-        leftCornerLabel1.transform = transform;
-        
-        UILabel *leftCornerLabel2 = [MyControl createLabelWithFrame:CGRectMake(-1, 11, 25, 10) Font:8 Text:@"+50"];
-        leftCornerLabel2.font = [UIFont systemFontOfSize:8];
-        leftCornerLabel2.textAlignment = NSTextAlignmentCenter;
-        leftCornerLabel2.transform = transform;
-        [imageView addSubview:leftCornerLabel1];
-        [imageView addSubview:leftCornerLabel2];
-        
-//        GiftShopModel *model = self.giftArray[i];
-        if (i>=self.bagItemIdArray.count) {
-            productImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"no"]]];
-            productLabel.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"name"];
-            numberCoinLabel.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"price"];
-            if ([[self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
-                leftCornerLabel2.text = [NSString stringWithFormat:@"+%@", [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"add_rq"]];
-            }else{
-                leftCornerLabel2.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"add_rq"];
-            }
-            
-        }else{
-            productImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.bagItemIdArray[i]]];
-            productLabel.text = [[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"name"];
-            numberCoinLabel.text = [NSString stringWithFormat:@"X %@", self.bagItemNumArray[i]];
-            coinImageView.image = [UIImage imageNamed:@"giftIcon.png"];
-            if ([[[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
-                leftCornerLabel2.text = [NSString stringWithFormat:@"+%@", [[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"add_rq"]];
-            }else{
-                leftCornerLabel2.text = [[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"add_rq"];
-            }
-        }
-        
-//        NSLog(@"rq:%d",[[self.giftArray[i] objectForKey:@"add_rq"] intValue]);
-        
-        
-        
-        UIButton * button = [MyControl createButtonWithFrame:imageView.frame ImageName:nil Target:self Action:@selector(clickBtn:) Title:nil];
-        [sv addSubview:button];
-        button.tag = 1000+i;
-    }
-    /*****************************/
-    
+            giftImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"no"]]];
 
+            productLabel.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"name"];
+            rqz.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"add_rq"];
+            price.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"price"];
+        }
+        /********************/
+        if (i+1<self.bagItemIdArray.count) {
+            //
+            gold2.hidden = YES;
+            price2.hidden = YES;
+            if ([self.bagItemIdArray[i+1] intValue]>=2000) {
+                hang_tag2.image = [UIImage imageNamed:@"giftAlert_badBg.png"];
+            }else{
+                hang_tag2.image = [UIImage imageNamed:@"giftAlert_goodBg.png"];
+            }
+            giftImageView2.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.bagItemIdArray[i+1]]];
+            NSDictionary * dic = [ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i+1]];
+            productLabel2.text = [dic objectForKey:@"name"];
+            rqz2.text = [dic objectForKey:@"add_rq"];
+            
+            giftNum2.text = [NSString stringWithFormat:@"x %@", self.bagItemNumArray[i+1]];
+        }else{
+            //
+            giftIcon2.hidden = YES;
+            if ([[self.tempGiftArray[i+1-self.bagItemIdArray.count] objectForKey:@"no"] intValue]>2000) {
+                hang_tag2.image = [UIImage imageNamed:@"giftAlert_badBg.png"];
+            }else{
+                hang_tag2.image = [UIImage imageNamed:@"giftAlert_goodBg.png"];
+            }
+            giftImageView2.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [self.tempGiftArray[i+1-self.bagItemIdArray.count] objectForKey:@"no"]]];
+            productLabel2.text = [self.tempGiftArray[i+1-self.bagItemIdArray.count] objectForKey:@"name"];
+            rqz2.text = [self.tempGiftArray[i+1-self.bagItemIdArray.count] objectForKey:@"add_rq"];
+            price2.text = [self.tempGiftArray[i+1-self.bagItemIdArray.count] objectForKey:@"price"];
+        }
+        if ([rqz.text rangeOfString:@"-"].location == NSNotFound) {
+            rqz.text = [NSString stringWithFormat:@"+%@", rqz.text];
+        }
+        if ([rqz2.text rangeOfString:@"-"].location == NSNotFound) {
+            rqz2.text = [NSString stringWithFormat:@"+%@", rqz2.text];
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /*********************************************/
+//    for(int i=0;i<self.bagItemIdArray.count+self.tempGiftArray.count;i++){
+//    
+//        UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(h+i%3*(80+h)+300*(i/9), h+(i/3)%3*(90+v), 80, 90)];
+//        if (i<self.bagItemIdArray.count) {
+//            //背包
+//            if ([self.bagItemIdArray[i] intValue]>=2000) {
+//                imageView.image = [UIImage imageNamed:@"trick_bg.png"];
+//            }else{
+//                imageView.image = [UIImage imageNamed:@"product_bg.png"];
+//            }
+//        }else{
+//            //商店
+//            if ([[self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"no"] intValue]>2000) {
+//                imageView.image = [UIImage imageNamed:@"trick_bg.png"];
+//            }else{
+//                imageView.image = [UIImage imageNamed:@"product_bg.png"];
+//            }
+//        }
+//        [sv addSubview:imageView];
+//        [imageView release];
+//        
+//        UIImageView *productImageView = [MyControl createImageViewWithFrame:CGRectMake((imageView.frame.size.width-75)/2, 20, 75, 50) ImageName:[NSString stringWithFormat:@"%@.png",[self.giftArray[i] objectForKey:@"no"]]];
+//        [imageView addSubview:productImageView];
+//        
+//        UILabel * productLabel = [MyControl createLabelWithFrame:CGRectMake(0, 10, imageView.frame.size.width, 10) Font:10 Text:[self.giftArray[i] objectForKey:@"name"]];
+//        productLabel.textAlignment = NSTextAlignmentCenter;
+//        productLabel.font = [UIFont boldSystemFontOfSize:10];
+//        productLabel.textColor = [UIColor grayColor];
+//        [imageView addSubview:productLabel];
+//
+//        UILabel *numberCoinLabel = [MyControl createLabelWithFrame:CGRectMake(38, 75, 50, 10) Font:13 Text:nil];
+//        numberCoinLabel.textColor =BGCOLOR;
+//        [imageView addSubview:numberCoinLabel];
+//        
+//        UIImageView *coinImageView = [MyControl createImageViewWithFrame:CGRectMake(20, 73, 13, 13) ImageName:@"gold.png"];
+//        [imageView addSubview:coinImageView];
+//        
+//        UILabel *leftCornerLabel1 =[MyControl createLabelWithFrame:CGRectMake(-3, 4, 20, 8) Font:7 Text:@"人气"];
+//        leftCornerLabel1.textAlignment = NSTextAlignmentCenter;
+//        leftCornerLabel1.font = [UIFont boldSystemFontOfSize:7];
+//        CGAffineTransform transform =  CGAffineTransformMakeRotation(-45.0 *M_PI / 180.0);
+//        leftCornerLabel1.transform = transform;
+//        
+//        UILabel *leftCornerLabel2 = [MyControl createLabelWithFrame:CGRectMake(-1, 11, 25, 10) Font:8 Text:@"+50"];
+//        leftCornerLabel2.font = [UIFont systemFontOfSize:8];
+//        leftCornerLabel2.textAlignment = NSTextAlignmentCenter;
+//        leftCornerLabel2.transform = transform;
+//        [imageView addSubview:leftCornerLabel1];
+//        [imageView addSubview:leftCornerLabel2];
+//        
+////        GiftShopModel *model = self.giftArray[i];
+//        if (i>=self.bagItemIdArray.count) {
+//            productImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"no"]]];
+//            productLabel.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"name"];
+//            numberCoinLabel.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"price"];
+//            if ([[self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
+//                leftCornerLabel2.text = [NSString stringWithFormat:@"+%@", [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"add_rq"]];
+//            }else{
+//                leftCornerLabel2.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"add_rq"];
+//            }
+//            
+//        }else{
+//            productImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.bagItemIdArray[i]]];
+//            productLabel.text = [[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"name"];
+//            numberCoinLabel.text = [NSString stringWithFormat:@"X %@", self.bagItemNumArray[i]];
+//            coinImageView.image = [UIImage imageNamed:@"giftIcon.png"];
+//            if ([[[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
+//                leftCornerLabel2.text = [NSString stringWithFormat:@"+%@", [[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"add_rq"]];
+//            }else{
+//                leftCornerLabel2.text = [[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"add_rq"];
+//            }
+//        }
+//        
+////        NSLog(@"rq:%d",[[self.giftArray[i] objectForKey:@"add_rq"] intValue]);
+//        
+//        
+//        
+//        UIButton * button = [MyControl createButtonWithFrame:imageView.frame ImageName:nil Target:self Action:@selector(clickBtn:) Title:nil];
+//        [sv addSubview:button];
+//        button.tag = 1000+i;
+//    }
+    /*****************************/
 }
+
+-(void)sendGiftBtnClick:(UIButton *)btn
+{
+    NSLog(@"btn.tag:%d", btn.tag);
+    [self clickBtn:btn];
+}
+
 #pragma mark - 点击事件
 -(void)goShopping
 {

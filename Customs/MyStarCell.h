@@ -24,6 +24,7 @@
     UILabel * nameLabel;
     UITextField * tf;
     HyperlinksButton * hyperBtn;
+    UIButton * modifyBtn;
 //    UILabel * rqLabel;
 //    UILabel * percentLabel;
     
@@ -33,6 +34,8 @@
     UILabel * lab2;
     UILabel * lab5;
     UILabel * lab3;
+    
+    UIButton * inviteBtn;
 }
 @property(nonatomic,copy)NSString * tempTfString;
 
@@ -44,6 +47,7 @@
 @property(nonatomic,copy)void (^actClick)(int);
 @property(nonatomic,copy)void (^actClickSend)(NSString *,NSString *,NSString *);
 //-(void)makeUIWithWidth:(float)width Height:(float)height;
+@property(nonatomic,copy)void (^inviteClick)(void);
 -(void)adjustCellHeight:(int)a;
 
 -(void)configUI:(MyStarModel *)model;

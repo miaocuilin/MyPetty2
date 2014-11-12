@@ -217,6 +217,7 @@
     //  Disable the keyboard manager.
 	[self setEnable:NO];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super dealloc];
 }
 
 #pragma mark - Property functions

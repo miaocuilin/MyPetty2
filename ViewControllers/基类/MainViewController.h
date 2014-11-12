@@ -14,7 +14,7 @@
 {
     UIButton * camara;
     UIView * navView;
-    UIScrollView * sv;
+//    UIScrollView * sv;
     BOOL isCreated[3];
     UISegmentedControl * sc;
     
@@ -33,6 +33,8 @@
     UIImageView * blurImageView;
     UIButton * typeBtn;
 }
+@property(nonatomic,retain)UIScrollView * sv;
+
 @property(nonatomic,copy)NSString * tfString;
 @property(nonatomic,retain)UIButton * alphaBtn;
 

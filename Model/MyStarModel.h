@@ -23,6 +23,7 @@
 @property(nonatomic,copy)NSString * t_contri;
 @property(nonatomic,copy)NSString * t_rq;
 @property(nonatomic,copy)NSString * tx;
+@property(nonatomic,copy)NSString * invite_code;
 
 @property(nonatomic,retain)NSArray * images;
 @property(nonatomic,retain)NSDictionary * dict;

@@ -446,6 +446,10 @@
 		6050CEC619F4E4980049A0B8 /* xiaoge.png in Resources */ = {isa = PBXBuildFile; fileRef = 6050CEC319F4E4980049A0B8 /* xiaoge.png */; };
 		605195C519B47038005E9E2C /* about.png in Resources */ = {isa = PBXBuildFile; fileRef = 605195C419B47038005E9E2C /* about.png */; };
 		605195CD19B484B3005E9E2C /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 605195CC19B484B3005E9E2C /* AboutViewController.m */; };
+		60564FAC1A135B2600C51E66 /* FAQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 60564FAB1A135B2600C51E66 /* FAQ.plist */; };
+		60564FAF1A136EFC00C51E66 /* CodeAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 60564FAE1A136EFC00C51E66 /* CodeAlertView.m */; };
+		60564FB11A13780600C51E66 /* inviteBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 60564FB01A13780600C51E66 /* inviteBtn.png */; };
+		60564FB31A13802A00C51E66 /* invite_pinkBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 60564FB21A13802A00C51E66 /* invite_pinkBg.png */; };
 		6056902719A2E54400E04F89 /* switchBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 6056901E19A2E54400E04F89 /* switchBg.png */; };
 		6056903919A36D9200E04F89 /* MainTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6056903819A36D9200E04F89 /* MainTabBarViewController.m */; };
 		6057847419B05C14007FAF4C /* PopularityCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6057847219B05C14007FAF4C /* PopularityCell.m */; };
@@ -518,7 +522,6 @@
 		609945F619EFBE01004F5157 /* myCountry_trouble.png in Resources */ = {isa = PBXBuildFile; fileRef = 609945F519EFBE01004F5157 /* myCountry_trouble.png */; };
 		609A5B8D19F6039100822B1F /* choosein_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 609A5B8919F6039100822B1F /* choosein_back.png */; };
 		609A5B8E19F6039100822B1F /* choosein_cat_dog.png in Resources */ = {isa = PBXBuildFile; fileRef = 609A5B8A19F6039100822B1F /* choosein_cat_dog.png */; };
-		609A5B9219F6268700822B1F /* FAQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 609A5B9119F6268700822B1F /* FAQ.plist */; };
 		609D6CC319D27359005E7144 /* nochance.png in Resources */ = {isa = PBXBuildFile; fileRef = 609D6CC219D27359005E7144 /* nochance.png */; };
 		609D6CC619D2A6FF005E7144 /* SendGiftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 609D6CC519D2A6FF005E7144 /* SendGiftViewController.m */; };
 		609D6CCB19D2FB3B005E7144 /* catAmbassador.png in Resources */ = {isa = PBXBuildFile; fileRef = 609D6CC719D2FB3B005E7144 /* catAmbassador.png */; };
@@ -1230,6 +1233,11 @@
 		605195C419B47038005E9E2C /* about.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = about.png; sourceTree = "<group>"; };
 		605195CB19B484B3005E9E2C /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		605195CC19B484B3005E9E2C /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		60564FAB1A135B2600C51E66 /* FAQ.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FAQ.plist; sourceTree = "<group>"; };
+		60564FAD1A136EFC00C51E66 /* CodeAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodeAlertView.h; sourceTree = "<group>"; };
+		60564FAE1A136EFC00C51E66 /* CodeAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CodeAlertView.m; sourceTree = "<group>"; };
+		60564FB01A13780600C51E66 /* inviteBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inviteBtn.png; sourceTree = "<group>"; };
+		60564FB21A13802A00C51E66 /* invite_pinkBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = invite_pinkBg.png; sourceTree = "<group>"; };
 		6056901E19A2E54400E04F89 /* switchBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = switchBg.png; sourceTree = "<group>"; };
 		6056903719A36D9200E04F89 /* MainTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTabBarViewController.h; sourceTree = "<group>"; };
 		6056903819A36D9200E04F89 /* MainTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTabBarViewController.m; sourceTree = "<group>"; };
@@ -1331,7 +1339,6 @@
 		609945F519EFBE01004F5157 /* myCountry_trouble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myCountry_trouble.png; sourceTree = "<group>"; };
 		609A5B8919F6039100822B1F /* choosein_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = choosein_back.png; sourceTree = "<group>"; };
 		609A5B8A19F6039100822B1F /* choosein_cat_dog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = choosein_cat_dog.png; sourceTree = "<group>"; };
-		609A5B9119F6268700822B1F /* FAQ.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FAQ.plist; sourceTree = "<group>"; };
 		609D6CC219D27359005E7144 /* nochance.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nochance.png; sourceTree = "<group>"; };
 		609D6CC419D2A6FF005E7144 /* SendGiftViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendGiftViewController.h; sourceTree = "<group>"; };
 		609D6CC519D2A6FF005E7144 /* SendGiftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendGiftViewController.m; sourceTree = "<group>"; };
@@ -1616,6 +1623,8 @@
 				60492B131A08C5030088AD0B /* ReportAlertView.m */,
 				60492B1F1A0909AB0088AD0B /* HyperlinksButton.h */,
 				60492B201A0909AB0088AD0B /* HyperlinksButton.m */,
+				60564FAD1A136EFC00C51E66 /* CodeAlertView.h */,
+				60564FAE1A136EFC00C51E66 /* CodeAlertView.m */,
 			);
 			path = "基类";
 			sourceTree = "<group>";
@@ -1997,9 +2006,9 @@
 			isa = PBXGroup;
 			children = (
 				60186DD619B5714400207ED6 /* CateNameList.plist */,
-				609A5B9119F6268700822B1F /* FAQ.plist */,
 				603B021C1991E68B005A6D30 /* area.plist */,
 				600D4D6B19CFC41C008DA8E8 /* shopGift.plist */,
+				60564FAB1A135B2600C51E66 /* FAQ.plist */,
 				09D9894A1935C08E00C83C4B /* MyPetty-Info.plist */,
 				497BE7DD19CAE90500E65BB5 /* animalAndPeople.plist */,
 				09D9894B1935C08E00C83C4B /* InfoPlist.strings */,
@@ -2726,6 +2735,8 @@
 		609A5B8819F6031800822B1F /* 2014-10-21 */ = {
 			isa = PBXGroup;
 			children = (
+				60564FB21A13802A00C51E66 /* invite_pinkBg.png */,
+				60564FB01A13780600C51E66 /* inviteBtn.png */,
 				6059AFE01A121468004A60B4 /* star_modify.png */,
 				6059AFD91A11F5C6004A60B4 /* main_search_triangle.png */,
 				6059AFD71A11DB69004A60B4 /* main_search.png */,
@@ -3055,7 +3066,6 @@
 				60B036F119CD954A00A46DC9 /* act_silver.png in Resources */,
 				6033BDFA19C99753009552FE /* 1301.png in Resources */,
 				606127FB19D54DBF0087F642 /* 24-1.png in Resources */,
-				609A5B9219F6268700822B1F /* FAQ.plist in Resources */,
 				605195C519B47038005E9E2C /* about.png in Resources */,
 				606181B319B1856C009AF63D /* DefaultPetCell.xib in Resources */,
 				49FA203019AF3DF50077897D /* recordButton.png in Resources */,
@@ -3130,6 +3140,7 @@
 				496CF22719A4908D0081BF5E /* IQButtonBarArrowRight@2x.png in Resources */,
 				6050CEC519F4E4980049A0B8 /* wangwang.png in Resources */,
 				60F618011999C884003C34F2 /* page4_selected.png in Resources */,
+				60564FAC1A135B2600C51E66 /* FAQ.plist in Resources */,
 				098EA869195473AC00EF0AC6 /* 29-8.png in Resources */,
 				60BFBC7219B0271300EE3746 /* silverMedal.png in Resources */,
 				601716E7198F33FB001E6DE6 /* 5-3.png in Resources */,
@@ -3201,6 +3212,7 @@
 				60937A3419F748F5005FEE38 /* UMSShareListController.xib in Resources */,
 				6033BE0119C99753009552FE /* 1403.png in Resources */,
 				098EA866195473AC00EF0AC6 /* 29-5.png in Resources */,
+				60564FB31A13802A00C51E66 /* invite_pinkBg.png in Resources */,
 				4927D99419AB53B200EBDC88 /* giftIcon.png in Resources */,
 				49348AAC19CD434F00EFDC94 /* tipsdog.png in Resources */,
 				602A880C19ADED08004F368C /* publish_selected.png in Resources */,
@@ -3358,6 +3370,7 @@
 				609D6CC319D27359005E7144 /* nochance.png in Resources */,
 				606127FD19D54DE00087F642 /* gold.png in Resources */,
 				6059AFDF1A1212F6004A60B4 /* PetSearchCell.xib in Resources */,
+				60564FB11A13780600C51E66 /* inviteBtn.png in Resources */,
 				096520CD1963EFD200A8186D /* weibo-1.png in Resources */,
 				6033BE0A19C99753009552FE /* 2302.png in Resources */,
 				49500A3219ADA51D00D175D8 /* product_bg2.png in Resources */,
@@ -3586,6 +3599,7 @@
 				09A0B244195FCBBD0085A39B /* RewardViewController.m in Sources */,
 				09DA9DD1196545BD00E219A6 /* SystemCell.m in Sources */,
 				09E2C89A193740CE002D9E65 /* ASIDownloadCache.m in Sources */,
+				60564FAF1A136EFC00C51E66 /* CodeAlertView.m in Sources */,
 				602A881019ADF009004F368C /* AtUsersViewController.m in Sources */,
 				18D3DC1E195A98FD002F0A62 /* ActivityViewController.m in Sources */,
 				606D5FB61A0B986000DC117F /* MyStarCell.m in Sources */,

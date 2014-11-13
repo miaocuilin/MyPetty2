@@ -1781,7 +1781,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
 }
 
-#pragma - 相机
+#pragma mark - 相机
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (actionSheet.tag == 255) {

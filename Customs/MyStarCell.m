@@ -250,18 +250,21 @@
     
     UILabel * la = (UILabel *)[bgView viewWithTag:202];
     UILabel * la2 = (UILabel *)[bgView viewWithTag:302];
+    UIButton * bt = (UIButton *)[bgView viewWithTag:102];
     if ([model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
 //        hyperBtn.hidden = NO;
         modifyBtn.hidden = NO;
         
-        la.text = @"叫一叫";
+        la.text = @"萌叫叫";
+        [bt setBackgroundImage:[UIImage imageNamed:@"star_shout.png"] forState:UIControlStateNormal];
         if([[model.dict objectForKey:@"is_voiced"] isKindOfClass:[NSNull class]] || [model.is_voiced intValue] == 0){
             la2.text = @"没叫过";
         }else{
             la2.text = @"叫过了";
         }
     }else{
-        la.text = @"摸一摸";
+        la.text = @"萌印象";
+        [bt setBackgroundImage:[UIImage imageNamed:@"star_touch.png"] forState:UIControlStateNormal];
         if([[model.dict objectForKey:@"is_touched"] isKindOfClass:[NSNull class]] || [model.is_touched intValue] == 0){
             la2.text = @"没摸过";
         }else{

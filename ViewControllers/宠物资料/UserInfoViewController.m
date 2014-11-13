@@ -71,6 +71,8 @@
         if (isFinish) {
             NSLog(@"用户信息数据：%@",load.dataDict);
            headerDict=  [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            [USER setObject:[headerDict objectForKey:@"gold"] forKey:@"gold"];
+            
             if ([[headerDict objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
                 titleLabel.text = @"我的档案";
             }else{

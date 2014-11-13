@@ -83,7 +83,7 @@
         if ([[USER objectForKey:@"isSuccess"] intValue]) {
             goldLabel.text = [USER objectForKey:@"gold"];
             NSLog(@"%@", [USER objectForKey:@"petInfoDict"]);
-            position.text = [NSString stringWithFormat:@"%@联萌%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];
+            position.text = [NSString stringWithFormat:@"萌星 %@的%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];
             exp.text = [NSString stringWithFormat:@"Lv.%@", [USER objectForKey:@"lv"]];
             name.text = [USER objectForKey:@"name"];
             sex.hidden = NO;
@@ -540,7 +540,7 @@
         tip1.textAlignment = NSTextAlignmentCenter;
         [countryBg addSubview:tip1];
         
-        UILabel * tip2 = [MyControl createLabelWithFrame:CGRectMake(90, 35, 130, 15) Font:10 Text:@"快来打造最闪亮萌星！"];
+        UILabel * tip2 = [MyControl createLabelWithFrame:CGRectMake(95, 35, 125, 15) Font:10 Text:@"快来打造最闪亮萌星！"];
         tip2.textAlignment = NSTextAlignmentCenter;
         [countryBg addSubview:tip2];
         

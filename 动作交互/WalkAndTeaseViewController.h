@@ -12,5 +12,8 @@
 {
     UIView * navView;
 }
+@property(nonatomic,retain)NSString * URL;
 @property (nonatomic,strong)NSString *titleString;
+
+@property(nonatomic,copy)NSString * aid;
 @end

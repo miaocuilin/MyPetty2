@@ -35,9 +35,10 @@
     [self.view addSubview:protWebView];
     protWebView.delegate = self;
     
-    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
-    NSString * URL = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", HAVEFUNAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
-    NSURL *url = [[NSURL alloc]initWithString:URL];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.aid]];
+    self.URL = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", HAVEFUNAPI, self.aid, sig, [ControllerManager getSID]];
+    NSLog(@"%@", self.URL);
+    NSURL *url = [[NSURL alloc]initWithString:self.URL];
     [protWebView loadRequest:[NSURLRequest requestWithURL:url]];
 }
 -(void)createFakeNavigation
@@ -64,17 +65,35 @@
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
     
-//    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(320-31, 33, 18, 16) ImageName:@"5-5.png"];
+//    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(320-50-10, 33, 100/2, 56/2) ImageName:@"inviteBtn.png"];
 //    [navView addSubview:searchImageView];
     
-//    UIButton * searchBtn = [MyControl createButtonWithFrame:CGRectMake(320-41-5, 25, 35, 30) ImageName:@"" Target:self Action:@selector(searchBtnClick) Title:nil];
-//    //    searchBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
-//    searchBtn.showsTouchWhenHighlighted = YES;
-//    [navView addSubview:searchBtn];
+    UIButton * shareBtn = [MyControl createButtonWithFrame:CGRectMake(320-50-10, 33-5, 100/2, 56/2) ImageName:@"inviteBtn.png" Target:self Action:@selector(shareBtnClick) Title:@"分享"];
+    //    searchBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    shareBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+    shareBtn.showsTouchWhenHighlighted = YES;
+    [navView addSubview:shareBtn];
     
-    UIView * line0 = [MyControl createViewWithFrame:CGRectMake(0, 63, 320, 1)];
-    line0.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.1];
-    [navView addSubview:line0];
+//    UIView * line0 = [MyControl createViewWithFrame:CGRectMake(0, 63, 320, 1)];
+//    line0.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.1];
+//    [navView addSubview:line0];
+}
+-(void)shareBtnClick
+{
+    //强制分享图片
+    [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+    [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", HITBUGS, self.aid];
+    [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:@"痒痒痒，快给本宫挠挠！" image:[UIImage imageNamed:@"oops.png"] location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        if (response.responseCode == UMSResponseCodeSuccess) {
+            NSLog(@"分享成功！");
+            StartLoading;
+            [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+        }else{
+            StartLoading;
+            [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+        }
+        
+    }];
 }
 - (void)backBtnClick
 {

@@ -47,6 +47,7 @@
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
     self.view.backgroundColor = [UIColor whiteColor];
     
+    [self createBg];
     [self createQtmquitView];
 //    [self createFakeNavigation];
     [self loadData];
@@ -59,6 +60,12 @@
 //    queue = [[NSOperationQueue alloc] init];
 //    [queue setMaxConcurrentOperationCount:4];
     
+}
+
+-(void)createBg
+{
+    UIImageView * blur = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"blurBg.png"];
+    [self.view addSubview:blur];
 }
 //-(void)createFakeNavigation
 //{
@@ -362,7 +369,7 @@
 //            [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
         }else{
 //            cell.photoView.image = [UIImage imageNamed:@"20-1.png"];
-            cell.photoView.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"20-1" ofType:@"png"]];
+//            cell.photoView.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"20-1" ofType:@"png"]];
             [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     //本地目录，用于存放favorite下载的原图

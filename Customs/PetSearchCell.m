@@ -62,6 +62,41 @@
         }
     }
 }
+-(void)configUI2:(UserInfoModel *)model
+{
+    if ([model.gender intValue] == 1) {
+        self.sex.image = [UIImage imageNamed:@"man.png"];
+    }else{
+        self.sex.image = [UIImage imageNamed:@"woman.png"];
+    }
+    
+    self.cateAndAgeLabel.text = [ControllerManager returnProvinceAndCityWithCityNum:model.city];
+    self.nameLabel.text = model.name;
+    self.headImage.image = [UIImage imageNamed:@"defaultUserHead.png"];
+    if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            self.headImage.image = image;
+        }else{
+            //下载头像
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    self.headImage.image = load.dataImage;
+                    
+                    //                    NSString * docDir = DOCDIR;
+                    //                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
+        }
+    }
+}
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 

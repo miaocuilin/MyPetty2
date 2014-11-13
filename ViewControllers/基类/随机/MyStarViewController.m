@@ -160,7 +160,7 @@
         codeView.AlertType = 4;
         codeView.model = model;
         [codeView makeUI];
-        codeView.shareClick = ^(int a, UIImage * image){
+        codeView.shareClick = ^(int a, UIImage * image, NSString * code){
             if (a == 0) {
                 NSLog(@"微信");
                 //强制分享图片
@@ -197,7 +197,7 @@
                 }];
             }else{
                 NSLog(@"微博");
-                NSString * str = [NSString stringWithFormat:@"我家萌星最闪亮！小伙伴们快来助力~~邀请码：%@，http://home4pet.aidigame.com/（分享自@宠物星球社交应用）", @"12345567"];
+                NSString * str = [NSString stringWithFormat:@"我家萌星最闪亮！小伙伴们快来助力~~邀请码：%@，http://home4pet.aidigame.com/（分享自@宠物星球社交应用）", code];
                 [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:vc completion:^(UMSocialResponseEntity *response){
                     if (response.responseCode == UMSResponseCodeSuccess) {
                         NSLog(@"分享成功！");
@@ -218,7 +218,7 @@
         [UIView animateWithDuration:0.2 animations:^{
             codeView.alpha = 1;
         }];
-        codeView.confirmClick = ^(){
+        codeView.confirmClick = ^(NSString * code){
 //            [self reportImage];
 //            [self cancelBtnClick2];
         };
@@ -329,6 +329,7 @@
             }
         }else if (a == 3) {
             WalkAndTeaseViewController *walkAndTeasevc = [[WalkAndTeaseViewController alloc] init];
+            walkAndTeasevc.aid = self.pet_aid;
             [self presentViewController:walkAndTeasevc animated:YES completion:nil];
             [walkAndTeasevc release];
         }

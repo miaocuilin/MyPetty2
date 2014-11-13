@@ -14,6 +14,7 @@
 #import "FAQViewController.h"
 #import "RegisterViewController.h"
 #import "SetBlackListViewController.h"
+#import "InviteCodeModel.h"
 @interface SettingViewController ()
 
 @end
@@ -33,7 +34,17 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.arr1 = @[@"收货地址", @"设置默认宠物", @"设置黑名单", @"绑定新浪微博"];
+    
+//    if ([[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"]) {
+//        isConfVersion = YES;
+//    }
+    
+//    if(isConfVersion){
+//        self.arr1 = @[@"收货地址", @"设置默认宠物", @"设置黑名单", @"绑定新浪微博"];
+//    }else{
+        self.arr1 = @[@"收货地址", @"填写邀请码", @"设置默认宠物", @"设置黑名单", @"绑定新浪微博"];
+//    }
+    
     self.arr2 = @[@"新浪微博", @"微信朋友圈"];
     self.arr3 = @[@"清除缓存", @"常见问题", @"意见反馈", @"赏个好评", @"关于我们"];
     
@@ -167,7 +178,13 @@
     }
     
     if (indexPath.section == 0) {
-        if (indexPath.row == 3) {
+        int a = 0;
+        if (isConfVersion) {
+            a = 3;
+        }else{
+            a = 4;
+        }
+        if (indexPath.row == a) {
             sinaBind = [[UISwitch alloc] initWithFrame:CGRectMake(500/2, 7, 0, 0)];
             [sinaBind addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
             [cell addSubview:sinaBind];
@@ -232,7 +249,13 @@
 {
     //右箭头
     UIImageView * arrow = nil;
-    if((indexPath.section == 0 && indexPath.row != 3) ||(indexPath.section == 2 && indexPath.row != 0)){
+    int a = 0;
+    if (isConfVersion) {
+        a = 3;
+    }else{
+        a = 4;
+    }
+    if((indexPath.section == 0 && indexPath.row != a) ||(indexPath.section == 2 && indexPath.row != 0)){
         arrow = [MyControl createImageViewWithFrame:CGRectMake(570/2, 10, 20, 20) ImageName:@"14-6-2.png"];
 //        [cell addSubview:arrow];
         cell.accessoryView = arrow;
@@ -266,25 +289,41 @@
             return;
         }
         if (indexPath.row == 0) {
-//            RegisterViewController * vc = [[RegisterViewController alloc] init];
-//            vc.isModify = YES;
-//            [self presentViewController:vc animated:YES completion:nil];
-//            [vc release];
             NSLog(@"收货地址");
             AddressViewController *address = [[AddressViewController alloc]init];
             [self presentViewController:address animated:YES completion:^{
                 [address release];
             }];
         }else if (indexPath.row == 1) {
-            NSLog(@"设置默认宠物");
-            SetDefaultPetViewController * vc = [[SetDefaultPetViewController alloc] init];
-            [self presentViewController:vc animated:YES completion:nil];
-            [vc release];
+            if (isConfVersion) {
+                NSLog(@"设置默认宠物");
+                SetDefaultPetViewController * vc = [[SetDefaultPetViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            }else{
+                NSLog(@"填写邀请码");
+                [self loadMyPets];
+            }
+            
         }else if (indexPath.row == 2){
-            NSLog(@"设置黑名单");
-            SetBlackListViewController * vc = [[SetBlackListViewController alloc] init];
-            [self presentViewController:vc animated:YES completion:nil];
-            [vc release];
+            if (isConfVersion) {
+                NSLog(@"设置黑名单");
+                SetBlackListViewController * vc = [[SetBlackListViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            }else{
+                NSLog(@"设置默认宠物");
+                SetDefaultPetViewController * vc = [[SetDefaultPetViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            }
+        }else if (indexPath.row == 3){
+            if (!isConfVersion) {
+                NSLog(@"设置黑名单");
+                SetBlackListViewController * vc = [[SetBlackListViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            }
         }
     }else if (indexPath.section == 1){
         
@@ -315,7 +354,112 @@
         }
     }
 }
+#pragma mark -
+-(void)loadMyPets
+{
+    StartLoading;
+    //    user/petsApi&usr_id=(若用户为自己则留空不填)
+    NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]]) {
+                NSArray * array = [load.dataDict objectForKey:@"data"];
+                if (array.count >= 10) {
+                    AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                    view.AlertType = 6;
+                    [view makeUI];
+                    [self.view addSubview:view];
+                    [view release];
+                }else{
+                    [self inputCode];
+                }
+                LoadingSuccess;
+            }else{
+                LoadingFailed;
+            }
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
 
+#pragma mark -
+-(void)inputCode
+{
+    CodeAlertView * codeView = [[CodeAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    codeView.AlertType = 1;
+    [codeView makeUI];
+    [self.view addSubview:codeView];
+    [UIView animateWithDuration:0.2 animations:^{
+        codeView.alpha = 1;
+    }];
+    codeView.confirmClick = ^(NSString * code){
+        //请求API
+        StartLoading;
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"code=%@dog&cat", code]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", INVITECODEAPI, code, sig, [ControllerManager getSID]];
+        NSLog(@"%@", url);
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                InviteCodeModel * model = [[InviteCodeModel alloc] init];
+                [model setValuesForKeysWithDictionary:[load.dataDict objectForKey:@"data"]];
+                
+                
+                [codeView closeBtnClick];
+                //成功提示
+                NSLog(@"%@", [USER objectForKey:@"inviter"]);
+                if ([[USER objectForKey:@"inviter"] isKindOfClass:[NSString class]] && [[USER objectForKey:@"inviter"] intValue]) {
+                    [self codeViewFailed:model];
+                }else{
+                    NSString * gold = [NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]+300];
+                    [USER setObject:gold forKey:@"gold"];
+                    
+                    [self codeViewSuccess:model];
+                    [USER setObject:model.inviter forKey:@"inviter"];
+                }
+                
+                [model release];
+                LoadingSuccess;
+            }else{
+                [MyControl loadingFailedWithContent:@"加载失败" afterDelay:0.2];
+            }
+        }];
+        [request release];
+    };
+}
+-(void)codeViewSuccess:(InviteCodeModel *)model
+{
+    CodeAlertView * codeView = [[CodeAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    codeView.AlertType = 2;
+    codeView.codeModel = model;
+    [codeView makeUI];
+    [self.view addSubview:codeView];
+    [UIView animateWithDuration:0.2 animations:^{
+        codeView.alpha = 1;
+    }];
+    codeView.confirmClick = ^(NSString * code){
+        [codeView closeBtnClick];
+    };
+}
+-(void)codeViewFailed:(InviteCodeModel *)model
+{
+    CodeAlertView * codeView = [[CodeAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    codeView.AlertType = 3;
+    codeView.codeModel = model;
+    [codeView makeUI];
+    [self.view addSubview:codeView];
+    [UIView animateWithDuration:0.2 animations:^{
+        codeView.alpha = 1;
+    }];
+    codeView.confirmClick = ^(NSString * code){
+        [codeView closeBtnClick];
+    };
+}
 #pragma mark - switchChanged
 -(void)switchChanged:(UISwitch *)_switch{
     if (_switch == sinaBind) {

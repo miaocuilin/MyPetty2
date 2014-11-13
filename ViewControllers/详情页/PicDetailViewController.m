@@ -585,13 +585,15 @@
     
     [navView addSubview:threePBtn];
 }
+
+#pragma mark - 点击右上角三个点
 -(void)threePBtnClick
 {
     if (!isAlertCreated) {
         [self createBottomAlert];
     }
     alphaBtn.hidden = NO;
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         alphaBtn.alpha = 0.5;
         CGRect rect = moreView2.frame;
         rect.origin.y = self.view.frame.size.height-rect.size.height;
@@ -599,6 +601,7 @@
     }];
     
 }
+#pragma mark - 创建举报和分享底部view
 -(void)createBottomAlert
 {
     alphaBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(cancelBtnClick2) Title:nil];
@@ -608,7 +611,7 @@
     alphaBtn.hidden = YES;
     
     // 318*234
-    moreView2 = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 256/2)];
+    moreView2 = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 234)];
     moreView2.backgroundColor = [ControllerManager colorWithHexString:@"efefef"];
     //    [self.view bringSubviewToFront:moreView];
     [self.view addSubview:moreView2];
@@ -618,7 +621,31 @@
     orangeLine.backgroundColor = [ControllerManager colorWithHexString:@"fc7b51"];
     [moreView2 addSubview:orangeLine];
     
-    UIButton * reportBtn = [MyControl createButtonWithFrame:CGRectMake(55/2, 22, self.view.frame.size.width-55, 76/2) ImageName:@"" Target:self Action:@selector(reportBtnClick) Title:@"举报此照"];
+    //label
+    UILabel * shareLabel = [MyControl createLabelWithFrame:CGRectMake(15, 10, 80, 15) Font:13 Text:@"分享到"];
+    shareLabel.textColor = [UIColor blackColor];
+    [moreView2 addSubview:shareLabel];
+    //3个按钮
+    NSArray * arr = @[@"more_weixin.png", @"more_friend.png", @"more_sina.png"];
+    NSArray * arr2 = @[@"微信好友", @"朋友圈", @"微博"];
+    for(int i=0;i<3;i++){
+        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(40+i*92, 33, 42, 42) ImageName:arr[i] Target:self Action:@selector(shareClick:) Title:nil];
+        button.tag = 200+i;
+        [moreView2 addSubview:button];
+        
+        CGRect rect = button.frame;
+        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(rect.origin.x-10, rect.origin.y+rect.size.height+5, rect.size.width+20, 15) Font:12 Text:arr2[i]];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor blackColor];
+        //        label.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        [moreView2 addSubview:label];
+    }
+    //grayLine1
+    UIView * grayLine1 = [MyControl createViewWithFrame:CGRectMake(0, 105, 320, 2)];
+    grayLine1.backgroundColor = [ControllerManager colorWithHexString:@"e3e3e3"];
+    [moreView2 addSubview:grayLine1];
+    
+    UIButton * reportBtn = [MyControl createButtonWithFrame:CGRectMake(55/2, 127, self.view.frame.size.width-55, 76/2) ImageName:@"" Target:self Action:@selector(reportBtnClick) Title:@"举报此照"];
     reportBtn.titleLabel.font = [UIFont systemFontOfSize:17];
     reportBtn.layer.cornerRadius = 7;
     reportBtn.layer.masksToBounds = YES;
@@ -626,12 +653,13 @@
     reportBtn.showsTouchWhenHighlighted = YES;
     [moreView2 addSubview:reportBtn];
     
-    //grayLine1
-    UIView * grayLine1 = [MyControl createViewWithFrame:CGRectMake(0, 150/2, self.view.frame.size.width, 4)];
-    grayLine1.backgroundColor = [ControllerManager colorWithHexString:@"e3e3e3"];
-    [moreView2 addSubview:grayLine1];
+    //grayLine2
+    UIView * grayLine2 = [MyControl createViewWithFrame:CGRectMake(0, 180, self.view.frame.size.width, 4)];
+    grayLine2.backgroundColor = [UIColor colorWithRed:226/255.0 green:226/255.0 blue:226/255.0 alpha:1];
+//    grayLine2.backgroundColor = [UIColor redColor];
+    [moreView2 addSubview:grayLine2];
     
-    UIButton * cancelBtn2 = [MyControl createButtonWithFrame:CGRectMake(0, 150/2+4, self.view.frame.size.width, 90/2) ImageName:@"" Target:self Action:@selector(cancelBtnClick2) Title:@"取消"];
+    UIButton * cancelBtn2 = [MyControl createButtonWithFrame:CGRectMake(0, 188, self.view.frame.size.width, 90/2) ImageName:@"" Target:self Action:@selector(cancelBtnClick2) Title:@"取消"];
     cancelBtn2.titleLabel.font = [UIFont systemFontOfSize:17];
     [cancelBtn2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [moreView2 addSubview:cancelBtn2];
@@ -652,7 +680,7 @@
 }
 -(void)cancelBtnClick2
 {
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         alphaBtn.alpha = 0.0;
         CGRect rect = moreView2.frame;
         rect.origin.y = self.view.frame.size.height;

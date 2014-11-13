@@ -1329,6 +1329,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
                 [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
                 [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
+                [USER setObject:@"1" forKey:@"isJustRegister"];
                 
                 if (self.oriImage || self.self.oriUserImage){
                     isNeedPostImage = YES;

@@ -56,6 +56,8 @@
     NSArray * array4 = @[@"亲爱的，真的忍心取消关注我么？", @"这是真的么~", @"是么~"];
     //5.退出国家
     NSArray * array5 = @[@"亲爱的，真的忍心不捧了吗？", @"你舍得放弃陪伴你的TA么？", @"真的要这么无情么？"];
+    //6.邀请码时够10个圈子
+    NSArray * array6 = @[@"暂不能使用邀请码~", @"萌星们都那么可爱，", @"专一点嘛~"];
     
     NSArray * tempArray = nil;
     
@@ -70,9 +72,14 @@
         tip.textColor = [UIColor colorWithRed:188/255.0 green:188/255.0 blue:188/255.0 alpha:1];
         tip.textAlignment = NSTextAlignmentCenter;
         [self addSubview:tip];
-    }else if (self.AlertType == 3) {
+    }else if (self.AlertType == 3 || self.AlertType == 6) {
         [self.confirmBtn setTitle:@"哎~好吧" forState:UIControlStateNormal];
-        tempArray = array3;
+        if (self.AlertType == 3) {
+            tempArray = array3;
+        }else{
+            tempArray = array6;
+        }
+        
     }else if (self.AlertType == 4) {
 //        self.confirmBtn.titleLabel.text = @"额~是的";
         [self.confirmBtn setTitle:@"额~是的" forState:UIControlStateNormal];
@@ -125,9 +132,10 @@
 }
 -(void)confirmBtnClick
 {
-    NSLog(@"跳转注册");
+    
     //本地存储一个值，来记录是否未注册，在注册完之后打开侧边栏的时候判断是否是刚注册完进入侧边栏，然后重新布局侧边栏数据。
     if (self.AlertType == 1) {
+        NSLog(@"跳转注册");
         [USER setObject:@"1" forKey:@"isNotRegister"];
     }else if(self.AlertType == 2){
         //加入
@@ -136,7 +144,7 @@
     }else if(self.AlertType == 5){
         //退出国家
     }
-    if (self.AlertType != 3) {
+    if (self.AlertType != 3 && self.AlertType != 6) {
         self.jump();
     }
     

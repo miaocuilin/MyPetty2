@@ -13,14 +13,14 @@
 {
 //    [[NSNotificationCenter defaultCenter]postNotificationName:UIEventSubtypeMotionShakeNotification object:nil userInfo:nil];
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(demo) name:UIEventSubtypeMotionShakeNotification object:nil];
-    return NO;
+    return YES;
 }
 -(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
     if (motion == UIEventSubtypeMotionShake) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"shake" object:self];
         NSLog(@"window shake");
-
+//
     }
 }
 @end

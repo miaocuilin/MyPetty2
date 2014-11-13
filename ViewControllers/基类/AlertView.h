@@ -20,7 +20,7 @@
 @property(nonatomic,retain)UIView * alphaView;
 @property(nonatomic,copy)void (^jump)(void);
 
-//1.注册 2.加入 3.加入满了提示 4.取消关注 5.退出国家
+//1.注册 2.加入 3.加入满了提示 4.取消关注 5.退出国家 6.邀请码时输入够了10个圈子
 @property(nonatomic)int AlertType;
 
 -(void)makeUI;

@@ -25,6 +25,9 @@
 #import "SearchResultModel.h"
 #import "PetSearchCell.h"
 #import "PetInfoViewController.h"
+#import "UserInfoModel.h"
+#import "UserInfoViewController.h"
+
 #define WORDCOLOR [UIColor colorWithRed:86/255.0 green:86/255.0 blue:86/255.0 alpha:1]
 #define BROWNCOLOR [UIColor colorWithRed:226/255.0 green:215/255.0 blue:215/255.0 alpha:1]
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
@@ -98,9 +101,75 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
         }
 //    }
+    //判断isLoaded和confVersion和是否是刚注册完3项来判断是否要弹出输入邀请码
+    if(isLoaded && [[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"] && [[USER objectForKey:@"isJustRegister"] intValue]){
+        [USER setObject:@"0" forKey:@"isJustRegister"];
+        [self inputCode];
+    }
 }
+#pragma mark -
+-(void)inputCode
+{
+    CodeAlertView * codeView = [[CodeAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    codeView.AlertType = 1;
+    [codeView makeUI];
+    [self.view addSubview:codeView];
+    [UIView animateWithDuration:0.2 animations:^{
+        codeView.alpha = 1;
+    }];
+    codeView.confirmClick = ^(NSString * code){
+        //请求API
+        StartLoading;
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"code=%@dog&cat", code]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", INVITECODEAPI, code, sig, [ControllerManager getSID]];
+        NSLog(@"%@", url);
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                InviteCodeModel * model = [[InviteCodeModel alloc] init];
+                [model setValuesForKeysWithDictionary:[load.dataDict objectForKey:@"data"]];
+                
+                
+                [codeView closeBtnClick];
+                //成功提示
+                NSLog(@"%@", [USER objectForKey:@"inviter"]);
+//                if ([[USER objectForKey:@"inviter"] isKindOfClass:[NSString class]] && [[USER objectForKey:@"inviter"] intValue]) {
+//                    [self codeViewFailed:model];
+//                }else{
+                    NSString * gold = [NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]+300];
+                    [USER setObject:gold forKey:@"gold"];
+                    
+                    [self codeViewSuccess:model];
+//                }
+                
+                [USER setObject:model.inviter forKey:@"inviter"];
+                [model release];
+                LoadingSuccess;
+            }else{
+                [MyControl loadingFailedWithContent:@"加载失败" afterDelay:0.2];
+            }
+        }];
+        [request release];
+    };
+}
+-(void)codeViewSuccess:(InviteCodeModel *)model
+{
+    CodeAlertView * codeView = [[CodeAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    codeView.AlertType = 2;
+    codeView.codeModel = model;
+    [codeView makeUI];
+    [self.view addSubview:codeView];
+    [UIView animateWithDuration:0.2 animations:^{
+        codeView.alpha = 1;
+    }];
+    codeView.confirmClick = ^(NSString * code){
+        [codeView closeBtnClick];
+    };
+}
+#pragma mark -
 -(void)viewDidAppear:(BOOL)animated
 {
+    isLoaded = YES;
     
     self.menuBtn.selected = NO;
 //    TipsView *tips = [[TipsView alloc] initWithFrame:self.view.frame tipsName:REGISTER];
@@ -114,6 +183,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     
 }
+//-(BOOL)canBecomeFirstResponder
+//{
+//    return YES;
+//}
+//-(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
+//{
+//    NSLog(@"========motionBegan");
+//}
+
 - (void)viewDidLoad
 {
     
@@ -137,6 +215,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [AFOpenGLManager beginOpenGLLoad];
 
     self.searchArray = [NSMutableArray arrayWithCapacity:0];
+    self.searchUserArray = [NSMutableArray arrayWithCapacity:0];
     
     segmentClickIndex = 1;
     [self createScrollView];
@@ -164,6 +243,79 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     
 }
+-(void)loadMoreUser
+{
+//    if(!isSearchUser){
+//        [tv footerEndRefreshing];
+//        return;
+//    }
+    StartLoading;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%ddog&cat", page]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&page=%d&sig=%@&SID=%@", SEARCHUSERAPI, [tf.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], page, sig,[ControllerManager getSID]];
+    NSLog(@"%@--%@--%@", tf.text, self.tfString, url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if(isFinish){
+            //NSLog(@"%@", load.dataDict);
+            
+            NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary *dict in array) {
+                UserInfoModel *model = [[UserInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.searchUserArray addObject:model];
+                [model release];
+            }
+            [tv footerEndRefreshing];
+            LoadingSuccess;
+            [tv reloadData];
+            page++;
+            
+        }else{
+            [tv footerEndRefreshing];
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+-(void)loadMorePets
+{
+    StartLoading;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.lastAid]];
+    NSString * url = [NSString stringWithFormat:@"%@&aid=%@&name=%@&sig=%@&SID=%@", SEARCHAPI, self.lastAid, [tf.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], sig,[ControllerManager getSID]];
+//            NSLog(@"%@--%@--%@", tf.text, self.tfString, url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if(isFinish){
+//           NSLog(@"%@", load.dataDict);
+
+            
+            NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            for (NSDictionary *dict in array) {
+                SearchResultModel *model = [[SearchResultModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.searchArray addObject:model];
+                [model release];
+            }
+            self.lastAid = [self.searchArray[self.searchArray.count-1] aid];
+            LoadingSuccess;
+            [tv footerEndRefreshing];
+            [tv reloadData];
+            
+//            self.sv.scrollEnabled = NO;
+//            blurImageView.hidden = NO;
+//            if (segmentClickIndex == 0) {
+//                vc1.view.hidden = YES;
+//            }else if(segmentClickIndex == 1){
+//                vc2.view.hidden = YES;
+//            }else if (segmentClickIndex == 2){
+//                vc3.view.hidden = YES;
+//            }
+            
+        }else{
+            [tv footerEndRefreshing];
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
 -(void)createTableView
 {
     blurImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"blurBg.png"];
@@ -177,7 +329,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     tv.backgroundColor = [UIColor clearColor];
     [blurImageView addSubview:tv];
     [tv release];
-    
+    [tv addFooterWithCallback:^{
+        [self loadMorePets];
+    }];
     
     UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, tv.frame.size.width, 35)];
     tv.tableHeaderView = view;
@@ -185,7 +339,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSLog(@"%d", self.searchArray.count);
-    return self.searchArray.count;
+    if (isSearchUser) {
+        return self.searchUserArray.count;
+    }else{
+        return self.searchArray.count;
+    }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -194,8 +352,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (!cell) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"PetSearchCell" owner:self options:nil] objectAtIndex:0];
     }
-    SearchResultModel * model = self.searchArray[indexPath.row];
-    [cell configUI:model];
+    if (!isSearchUser) {
+        SearchResultModel * model = self.searchArray[indexPath.row];
+        [cell configUI:model];
+    }else{
+        UserInfoModel * model = self.searchUserArray[indexPath.row];
+        [cell configUI2:model];
+    }
+    
+    
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
     return cell;
@@ -207,10 +372,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"%d", indexPath.row);
-    PetInfoViewController * vc = [[PetInfoViewController alloc] init];
-    vc.aid = [self.searchArray[indexPath.row] aid];
-    [self presentViewController:vc animated:YES completion:nil];
-    [vc release];
+    if (isSearchUser) {
+        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+        vc.usr_id = [self.searchUserArray[indexPath.row] usr_id];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    }else{
+        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+        vc.aid = [self.searchArray[indexPath.row] aid];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    }
     
 //    [cancel setTitle:@"取消" forState:UIControlStateNormal];
 //    [self cancelClick:cancel];
@@ -449,6 +621,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
 }
 #pragma mark - daili
+//-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+//{
+//    if(tf.text.length>0){
+//        [cancel setTitle:@"取消" forState:UIControlStateNormal];
+//    }
+//    return YES;
+//}
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     //string是最新输入的文字，textField的长度及字符要落后一个操作。
@@ -473,7 +652,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [tf resignFirstResponder];
-//    [cancel setTitle:@"取消" forState:UIControlStateNormal];
+    [cancel setTitle:@"取消" forState:UIControlStateNormal];
     if (self.tfString != nil) {
         //开始搜索
         NSLog(@"搜索");
@@ -495,6 +674,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         [self.searchArray addObject:model];
                         [model release];
                     }
+                    self.lastAid = [self.searchArray[array.count-1] aid];
                     LoadingSuccess;
                     [tv reloadData];
                     
@@ -509,13 +689,48 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     }
 
                 }else{
-                    
+                    LoadingFailed;
                 }
             }];
             [request release];
         }else{
             //搜索经纪人
-            
+            StartLoading;
+            NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
+            NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", SEARCHUSERAPI, [tf.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], sig,[ControllerManager getSID]];
+            NSLog(@"%@--%@--%@", tf.text, self.tfString, url);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if(isFinish){
+//                    NSLog(@"%@", load.dataDict);
+                    [self.searchUserArray removeAllObjects];
+                    page = 0;
+                    
+                    NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                    for (NSDictionary *dict in array) {
+                        UserInfoModel *model = [[UserInfoModel alloc] init];
+                        [model setValuesForKeysWithDictionary:dict];
+                        [self.searchUserArray addObject:model];
+                        [model release];
+                    }
+                    LoadingSuccess;
+                    [tv reloadData];
+                    page++;
+                    
+                    self.sv.scrollEnabled = NO;
+                    blurImageView.hidden = NO;
+                    if (segmentClickIndex == 0) {
+                        vc1.view.hidden = YES;
+                    }else if(segmentClickIndex == 1){
+                        vc2.view.hidden = YES;
+                    }else if (segmentClickIndex == 2){
+                        vc3.view.hidden = YES;
+                    }
+                    
+                }else{
+                    LoadingFailed;
+                }
+            }];
+            [request release];
         }
     }
     return YES;
@@ -531,7 +746,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (dropDown == nil) {
         
         CGFloat f = 80;
-        dropDown = [[NIDropDown alloc] showDropDown:btn :&f :[NSArray arrayWithObjects:@"萌 星", nil]];
+        dropDown = [[NIDropDown alloc] showDropDown:btn :&f :[NSArray arrayWithObjects:@"萌 星", @"经纪人", nil]];
         //        NSLog(@"%@", self.totalArray);
         [dropDown setCellTextColor:WORDCOLOR Font:[UIFont systemFontOfSize:13] BgColor:BROWNCOLOR lineColor:[UIColor brownColor]];
         dropDown.alpha = 0.9;
@@ -553,6 +768,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
 {
     NSLog(@"%d--%@", Line, Words);
+    if (Line == 0) {
+        isSearchUser = NO;
+        [tv addFooterWithCallback:^{
+            [self loadMoreUser];
+        }];
+    }else{
+        isSearchUser = YES;
+        [tv addFooterWithCallback:^{
+            [self loadMorePets];
+        }];
+    }
 }
 -(void)rel
 {

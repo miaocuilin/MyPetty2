@@ -90,6 +90,15 @@
 //修改宣言 参数：aid    post:msg
 #define MODIFYDECLAREAPI @"http://123.57.39.48/index.php?r=animal/modifyMsgApi&aid="
 
+//输入邀请码API
+#define INVITECODEAPI @"http://123.57.39.48/index.php?r=user/inputCodeApi&code="
+
+//搜索人 name=[&page=]
+#define SEARCHUSERAPI @"http://123.57.39.48/index.php?r=user/searchApi&name="
+
+//打虫子
+#define HITBUGS @"http://123.57.39.48/index.php?r=game/dcz&aid="
+
 //IP头API
 #define IPURL @"http://54.199.161.210/dc/index.php"
 #define IPURL2 @"http://123.57.39.48/index.php"

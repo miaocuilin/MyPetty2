@@ -323,6 +323,7 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     }
     NSLog(@"遛一遛");
     WalkAndTeaseViewController *walkAndTeasevc = [[WalkAndTeaseViewController alloc] init];
+    walkAndTeasevc.aid = self.pet_aid;
     walkAndTeasevc.titleString = self.label4.text;
     [self presentViewController:walkAndTeasevc animated:YES completion:^{
 //        [walkAndTeasevc release];

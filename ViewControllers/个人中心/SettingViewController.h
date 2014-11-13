@@ -20,6 +20,8 @@
     
     UIButton * alphaBtn;
     UIButton * backBtn;
+    
+    BOOL isConfVersion;
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 

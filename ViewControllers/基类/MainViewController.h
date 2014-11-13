@@ -32,7 +32,15 @@
     UITableView * tv;
     UIImageView * blurImageView;
     UIButton * typeBtn;
+    
+    BOOL isLoaded;
+    
+    //判断是搜宠物还是人
+    BOOL isSearchUser;
+    
+    int page;
 }
+@property(nonatomic,copy)NSString * lastAid;
 @property(nonatomic,retain)UIScrollView * sv;
 
 @property(nonatomic,copy)NSString * tfString;
@@ -42,6 +50,7 @@
 @property(nonatomic,retain)UIImage * oriImage;
 
 @property(nonatomic,retain)NSMutableArray * searchArray;
+@property(nonatomic,retain)NSMutableArray * searchUserArray;
 //用来记录当前头像名称，和本地存储的tx对比，如果不等则换头像，等则不换。
 //@property(nonatomic,copy)NSString * currentTx;
 

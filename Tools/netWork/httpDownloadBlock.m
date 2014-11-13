@@ -105,9 +105,14 @@
                     self.httpRequestBlock(NO,self);
                     return;
                 }
-//                UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[self.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
-                StartLoading;
-                [MyControl loadingFailedWithContent:@"网络错误" afterDelay:1.0f];
+                if ([[self.dataDict objectForKey:@"errorMessage"] length]>100) {
+                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:@"网络错误" delegate:nil cancelTitle:nil otherTitles:@"确定"];
+                }else{
+                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[self.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
+                }
+                
+//                StartLoading;
+//                [MyControl loadingFailedWithContent:@"网络错误" afterDelay:1.0f];
                 NSLog(@"%@", [self.dataDict objectForKey:@"errorMessage"]);
                 self.httpRequestBlock(NO,self);
                 return;

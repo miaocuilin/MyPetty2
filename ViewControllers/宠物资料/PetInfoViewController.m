@@ -179,7 +179,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [model setValuesForKeysWithDictionary:array[i]];
                 model.content = [array[i] objectForKey:@"content"];
                 if([model.type intValue] != 1){
-                    [self.newsDataArray addObject:model];
+                    if(!([model.type intValue] == 4 && [[model.content objectForKey:@"item_id"] intValue]%10 >4)){
+                        [self.newsDataArray addObject:model];
+                    }
+                    
                 }
                 [model release];
             }
@@ -273,6 +276,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [self.goodsNumArray removeAllObjects];
                 
                 for (NSString * itemId in [dict allKeys]) {
+                    if ([itemId intValue]%10 >4) {
+                        continue;
+                    }
                     [self.goodsArray addObject:itemId];
                 }
                 //排序
@@ -1670,7 +1676,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             giftName.textAlignment = NSTextAlignmentCenter;
             [imageView addSubview:giftName];
             
-            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(5, 20, 75, 50) ImageName:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"no"]]];
+            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(13, 20, 59, 50) ImageName:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"no"]]];
             [imageView addSubview:giftPic];
             
             UIImageView * gift = [MyControl createImageViewWithFrame:CGRectMake(20, 90-14-5, 12, 14) ImageName:@"detail_gift.png"];

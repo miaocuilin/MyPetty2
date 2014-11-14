@@ -183,7 +183,7 @@ do { \
  @return The full path to the filename.
 */
 static inline NSString *FTPathForFileInDocumentsDirectory(NSString *filename) {
-  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
   NSString *documentsDirectory = [paths objectAtIndex:0];
   NSString *path = [documentsDirectory stringByAppendingPathComponent:filename];
   return path;

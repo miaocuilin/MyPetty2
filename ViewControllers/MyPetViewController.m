@@ -333,7 +333,7 @@
     [bgImageView addSubview:headImageView];
 
     NSFileManager * fileManager = [NSFileManager defaultManager];
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = DOCDIR;
     NSString *pngFilePath = [NSString stringWithFormat:@"%@/headImage.png",docDir];
     if ([fileManager fileExistsAtPath:pngFilePath]) {
         UIImage * headImage = [UIImage imageWithData:[NSData dataWithContentsOfFile:pngFilePath]];
@@ -518,7 +518,7 @@
         [cell configUsrInfo:infoModel];
         
         //本地目录，用于存放下载的原图
-        NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString * docDir = DOCDIR;
         if (!docDir) {
             NSLog(@"Documents 目录未找到");
         }else{
@@ -532,7 +532,7 @@
                 [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
                         //本地目录，用于存放favorite下载的原图
-                        NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                        NSString * docDir = DOCDIR;
                         //                    NSLog(@"docDir:%@", docDir);
                         if (!docDir) {
                             NSLog(@"Documents 目录未找到");
@@ -1105,7 +1105,7 @@
 {
     //头像存放在本地
     NSData * data = UIImageJPEGRepresentation(tempImage, 0.1);
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = DOCDIR;
     
     NSLog(@"%@",docDir);
     NSLog(@"saving png");

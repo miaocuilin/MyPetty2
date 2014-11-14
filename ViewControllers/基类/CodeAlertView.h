@@ -17,6 +17,8 @@
     UITextField * tf;
 
 }
+//@property(nonatomic,copy)
+
 @property(nonatomic,retain)MyStarModel * model;
 @property(nonatomic,retain)InviteCodeModel * codeModel;
 @property(nonatomic,retain)UIImageView * bgImageView;

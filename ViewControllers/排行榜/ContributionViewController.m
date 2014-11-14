@@ -33,7 +33,7 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
-    self.titleArray = [NSMutableArray arrayWithObjects:@"总贡献榜",@"贡献日榜", @"贡献周榜", @"贡献月榜", nil];
+    self.titleArray = [NSMutableArray arrayWithObjects:@"总贡献榜",@"昨日贡献", @"上周贡献", @"上月贡献", nil];
 //    self.myCountryRankArray = [NSMutableArray arrayWithObjects:@"10", @"38", @"66", @"88", nil];
 //    self.myCountryRankArray = [NSMutableArray arrayWithCapacity:0];
     self.contributionDataArray = [NSMutableArray arrayWithCapacity:0];
@@ -167,7 +167,7 @@
     bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
     NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
@@ -278,11 +278,11 @@
     
     if ([titleBtn.currentTitle isEqualToString:@"总贡献榜"]) {
         cell.rqNum.text = model.t_contri;
-    }else if ([titleBtn.currentTitle isEqualToString:@"贡献日榜"]){
+    }else if ([titleBtn.currentTitle isEqualToString:@"昨日贡献"]){
         cell.rqNum.text = model.d_contri;
-    }else if ([titleBtn.currentTitle isEqualToString:@"贡献周榜"]){
+    }else if ([titleBtn.currentTitle isEqualToString:@"上周贡献"]){
         cell.rqNum.text = model.w_contri;
-    }else if ([titleBtn.currentTitle isEqualToString:@"贡献月榜"]){
+    }else if ([titleBtn.currentTitle isEqualToString:@"上月贡献"]){
         cell.rqNum.text = model.m_contri;
     }
     return cell;
@@ -341,14 +341,14 @@
     //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
     
-    UILabel * titleBgLabel = [MyControl createLabelWithFrame:CGRectMake(100, 64-39, 120, 30) Font:17 Text:@"联萌"];
-    titleBgLabel.font = [UIFont boldSystemFontOfSize:17];
-    //    titleBgLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.4];
-    [navView addSubview:titleBgLabel];
+//    UILabel * titleBgLabel = [MyControl createLabelWithFrame:CGRectMake(100, 64-39, 120, 30) Font:17 Text:@"联萌"];
+//    titleBgLabel.font = [UIFont boldSystemFontOfSize:17];
+//    //    titleBgLabel.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.4];
+//    [navView addSubview:titleBgLabel];
 
     /*****************************/
     
-    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"总贡献榜"];
+    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130-10, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"总贡献榜"];
     titleBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     [titleBtn setTitleColor:YELLOW forState:UIControlStateNormal];
     [navView addSubview:titleBtn];

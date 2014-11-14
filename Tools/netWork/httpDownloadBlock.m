@@ -88,10 +88,7 @@
         //如果不是数组
         if ([result isKindOfClass:[NSDictionary class]]) {
             self.dataDict=result;
-            if ([[self.dataDict objectForKey:@"version"] isKindOfClass:[NSString class]]) {
-                [USER setObject:[self.dataDict objectForKey:@"version"] forKey:@"version"];
-                [USER setObject:[self.dataDict objectForKey:@"confVersion"] forKey:@"confVersion"];
-            }
+            
             //判断errorCode是否为1，为1弹窗提示
             if([[self.dataDict objectForKey:@"errorCode"] intValue] == -1){
                 if ([[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"余额不足"]) {
@@ -106,9 +103,11 @@
                     return;
                 }
                 if ([[self.dataDict objectForKey:@"errorMessage"] length]>100) {
-                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:@"网络错误" delegate:nil cancelTitle:nil otherTitles:@"确定"];
+                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:@"网络错误" delegate:nil cancelTitle:nil otherTitles:@"确定"];
                 }else{
-                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[self.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
+                    if(![[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"你今天已经摸过啦！"]){
+                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[self.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
+                    }
                 }
                 
 //                StartLoading;
@@ -128,6 +127,11 @@
                 self.httpRequestBlock(NO, self);
                 return;
             }
+            if ([[self.dataDict objectForKey:@"version"] isKindOfClass:[NSString class]]) {
+                [USER setObject:[self.dataDict objectForKey:@"version"] forKey:@"version"];
+                [USER setObject:[self.dataDict objectForKey:@"confVersion"] forKey:@"confVersion"];
+            }
+            
 //            NSLog(@"self.dataDict = %@",self.dataDict);
         }else{
             
@@ -138,7 +142,7 @@
     }
     //数据保存 下次请求时候判断可否在次使用
 //    [self.data writeToFile:self.FileName atomically:YES];
-    
+
     self.httpRequestBlock(YES,self);
 }
 //失败
@@ -176,10 +180,77 @@
             LoadingSuccess;
 //            self.overDue();
             NSLog(@"============SID过期============");
+            //检查更新
+            [self checkUpdateOutVer:[load.dataDict objectForKey:@"version"] InsideVer:[[load.dataDict objectForKey:@"data"] objectForKey:@"version"]];
         }else{
             LoadingFailed;
         }
     }];
     [request release];
+}
+
+-(void)checkUpdateOutVer:(NSString *)outVer InsideVer:(NSString *)insideVer
+{
+    /*
+     本地保存version作为参考对象，如果login里的外层version与本地不同就是
+     强制更新，如果是里层的不同就不强制，安排取消按钮，取消后不做任何操作。
+     */
+    int type1 = 0;
+    int type2 = 0;
+    if (![outVer isEqualToString:[USER objectForKey:@"version"]]) {
+        //强制更新
+        type1 = 1;
+        isForce = YES;
+    }
+    if (![insideVer isEqualToString:[USER objectForKey:@"version"]]) {
+        type2 = 1;
+    }
+    if (type1 == 1 || type2 == 1) {
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"version=%@dog&cat", [USER objectForKey:@"version"]]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UPDATEAPI, [USER objectForKey:@"version"], sig, [ControllerManager getSID]];
+        NSLog(@"%@", url);
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                self.ios_url = [[load.dataDict objectForKey:@"data"] objectForKey:@"ios_url"];
+                NSString * msg = [[load.dataDict objectForKey:@"data"] objectForKey:@"upgrade_content"];
+                
+                NSString * msg2 = [msg stringByReplacingOccurrencesOfString:@"&" withString:@"\n"];
+                if(type1 == 1){
+                    //强制
+                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"更新提示" message:msg2 delegate:self cancelButtonTitle:nil otherButtonTitles:@"马上更新", nil];
+                    [alert show];
+                    [alert release];
+                }else{
+                    //非强制更新
+                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"更新提示" message:msg2 delegate:self cancelButtonTitle:@"稍后更新" otherButtonTitles:@"马上更新", nil];
+                    [alert show];
+                    [alert release];
+                }
+            }else{
+                StartLoading;
+                LoadingFailed;
+            }
+        }];
+        [request release];
+    }
+}
+#pragma mark - delegate
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"%d", buttonIndex);
+    if(isForce){
+        if (buttonIndex == 0) {
+            //马上更新
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.ios_url]];
+        }
+    }else{
+        if (buttonIndex == 0) {
+            //稍后更新
+            
+        }else{
+            //马上更新
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.ios_url]];
+        }
+    }
 }
 @end

@@ -131,7 +131,7 @@
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:self.bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
     NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
@@ -512,7 +512,8 @@
                     //刷新列表
                     //[self loadUserPetsList];
                 }else{
-                    [MMProgressHUD dismissWithError:@"加入失败-_-!" afterDelay:0.5];
+                    LoadingFailed;
+//                    [MMProgressHUD dismissWithError:@"加入失败-_-!" afterDelay:0.5];
                 }
             }];
             [request release];

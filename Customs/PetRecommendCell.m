@@ -68,7 +68,7 @@
     [self addSubview:jumpUserBtn];
     
     //
-    self.pBtn = [MyControl createButtonWithFrame:CGRectMake(self.frame.size.width-50-10, (55-25)/2, 50, 25) ImageName:@"recom_p.png" Target:self Action:@selector(pBtnClick:) Title:nil];
+    self.pBtn = [MyControl createButtonWithFrame:CGRectMake(self.frame.size.width-56-10, (55-36)/2, 56, 36) ImageName:@"recom_p.png" Target:self Action:@selector(pBtnClick:) Title:nil];
     [self.pBtn setBackgroundImage:[UIImage imageNamed:@"recom_p_ing.png"] forState:UIControlStateSelected];
     [self addSubview:self.pBtn];
     

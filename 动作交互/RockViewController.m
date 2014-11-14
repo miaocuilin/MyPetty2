@@ -113,18 +113,18 @@
     index = arc4random()%1000+1;
     if (!self.isTrouble) {
 //        index = arc4random()%(self.goodGiftDataArray.count);
-        if (index<=600) {
+        if (index<=800) {
             //1档
-            a = arc4random()%7+1+1100;
-        }else if(index<=870){
+            a = arc4random()%4+1+1100;
+        }else if(index<=900){
             //2档
-            a = arc4random()%7+1+1200;
+            a = arc4random()%4+1+1200;
         }else if(index<=970){
             //3档
-            a = arc4random()%5+1+1300;
+            a = arc4random()%4+1+1300;
         }else{
             //4档
-            a = arc4random()%3+1+1400;
+            a = arc4random()%4+1+1400;
         }
         NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:[NSString stringWithFormat:@"%d", a]];
         [model setValuesForKeysWithDictionary:dict];
@@ -144,7 +144,7 @@
 //        model = self.badGiftDataArray[index];
         add_rq = model.add_rq;
     }
-    rewardLabel.text = [NSString stringWithFormat:@"%@ X 1",model.name];
+    rewardLabel.text = [NSString stringWithFormat:@"%@",model.name];
     self.giftName = model.name;
     
     rewardImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
@@ -285,7 +285,7 @@
     [self.upView addSubview:shakeDescLabel2];
     UIImageView *rewardbg = [MyControl createImageViewWithFrame:CGRectMake(self.upView.frame.size.width/2-80+upViewWidth, 50, 160, 185) ImageName:@"rewardbg.png"];
     [self.upView addSubview:rewardbg];
-    rewardLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2-100+upViewWidth, 70, 200, 15) Font:16 Text:@"糖果 X 1"];
+    rewardLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2-100+upViewWidth, 70, 200, 15) Font:16 Text:@"糖果"];
     [self.upView addSubview:rewardLabel];
     rewardLabel.font = [UIFont boldSystemFontOfSize:16];
     rewardLabel.textColor = LIGHTORANGECOLOR;

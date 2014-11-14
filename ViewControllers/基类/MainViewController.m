@@ -63,43 +63,43 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else{
         camara.hidden = NO;
     }
-    self.pet_aid = [USER objectForKey:@"aid"];
-    self.pet_name = [USER objectForKey:@"a_name"];
-    self.pet_tx = [USER objectForKey:@"a_tx"];
+//    self.pet_aid = [USER objectForKey:@"aid"];
+//    self.pet_name = [USER objectForKey:@"a_name"];
+//    self.pet_tx = [USER objectForKey:@"a_tx"];
 //    if (![self.currentTx isEqualToString:[[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]]) {
-        if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [USER objectForKey:@"petInfoDict"] != nil) {
-            /**************************/
-            NSDictionary * dict = [USER objectForKey:@"petInfoDict"];
-            if (!([[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[dict objectForKey:@"tx"] length]==0)) {
-                NSString * docDir = DOCDIR;
-                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"tx"]]];
-                NSLog(@"--%@--%@", txFilePath, [dict objectForKey:@"tx"]);
-                UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-                if (image) {
-                    [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
-                    //            headImageView.image = image;
-                }else{
-                    //下载头像
-                    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [dict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                        if (isFinish) {
-                            [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                            //                    headImageView.image = load.dataImage;
-                            NSString * docDir = DOCDIR;
-                            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"tx"]]];
-                            [load.data writeToFile:txFilePath atomically:YES];
-                        }else{
-                            NSLog(@"头像下载失败");
-                        }
-                    }];
-                    [request release];
-                }
-            }else{
-                [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
-            }
-            /**************************/
-        }else{
-            [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
-        }
+//        if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [USER objectForKey:@"petInfoDict"] != nil) {
+//            /**************************/
+//            NSDictionary * dict = [USER objectForKey:@"petInfoDict"];
+//            if (!([[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[dict objectForKey:@"tx"] length]==0)) {
+//                NSString * docDir = DOCDIR;
+//                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"tx"]]];
+//                NSLog(@"--%@--%@", txFilePath, [dict objectForKey:@"tx"]);
+//                UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+//                if (image) {
+//                    [self.headButton setBackgroundImage:image forState:UIControlStateNormal];
+//                    //            headImageView.image = image;
+//                }else{
+//                    //下载头像
+//                    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [dict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                        if (isFinish) {
+//                            [self.headButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                            //                    headImageView.image = load.dataImage;
+//                            NSString * docDir = DOCDIR;
+//                            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"tx"]]];
+//                            [load.data writeToFile:txFilePath atomically:YES];
+//                        }else{
+//                            NSLog(@"头像下载失败");
+//                        }
+//                    }];
+//                    [request release];
+//                }
+//            }else{
+//                [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
+//            }
+//            /**************************/
+//        }else{
+//            [self.headButton setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
+//        }
 //    }
     //判断isLoaded和confVersion和是否是刚注册完3项来判断是否要弹出输入邀请码
     if(isLoaded && [[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"] && [[USER objectForKey:@"isJustRegister"] intValue]){
@@ -146,7 +146,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [model release];
                 LoadingSuccess;
             }else{
-                [MyControl loadingFailedWithContent:@"加载失败" afterDelay:0.2];
+                [MyControl loadingFailedWithContent:@"加载失败，请检查网络连接" afterDelay:0.2];
             }
         }];
         [request release];
@@ -174,13 +174,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.menuBtn.selected = NO;
 //    TipsView *tips = [[TipsView alloc] initWithFrame:self.view.frame tipsName:REGISTER];
 //    [self.view addSubview:tips];
-    if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [[[USER objectForKey:@"petInfoDict"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
-        self.label3.text = @"萌叫叫";
-        [self.btn3 setBackgroundImage:[UIImage imageNamed:@"sound.png"] forState:UIControlStateNormal];
-    }else{
-        self.label3.text = @"萌印象";
-        [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
-    }
+//    if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [[[USER objectForKey:@"petInfoDict"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+//        self.label3.text = @"萌叫叫";
+//        [self.btn3 setBackgroundImage:[UIImage imageNamed:@"sound.png"] forState:UIControlStateNormal];
+//    }else{
+//        self.label3.text = @"萌印象";
+//        [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
+//    }
     
 }
 //-(BOOL)canBecomeFirstResponder
@@ -195,9 +195,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 - (void)viewDidLoad
 {
     
-    self.pet_aid = [USER objectForKey:@"aid"];
-    self.pet_name = [USER objectForKey:@"a_name"];
-    self.pet_tx = [USER objectForKey:@"a_tx"];
+//    self.pet_aid = [USER objectForKey:@"aid"];
+//    self.pet_name = [USER objectForKey:@"a_name"];
+//    self.pet_tx = [USER objectForKey:@"a_tx"];
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -225,8 +225,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self createTableView];
     [self createSearchView];
     
-    [self.view bringSubviewToFront:self.menuBgBtn];
-    [self.view bringSubviewToFront:self.menuBgView];
+//    [self.view bringSubviewToFront:self.menuBgBtn];
+//    [self.view bringSubviewToFront:self.menuBgView];
     
     [self createAlphaBtn];
     
@@ -241,7 +241,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        [self.btn3 setBackgroundImage:[UIImage imageNamed:@"touch.png"] forState:UIControlStateNormal];
 //    }
     
-    
+//    [self checkUpdateOutVer:@"1.0.1" InsideVer:@"1.0.1"];
 }
 -(void)loadMoreUser
 {
@@ -258,6 +258,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             //NSLog(@"%@", load.dataDict);
             
             NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            if (array.count == 0) {
+                [tv footerEndRefreshing];
+                LoadingSuccess;
+                return;
+            }
             for (NSDictionary *dict in array) {
                 UserInfoModel *model = [[UserInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
@@ -288,6 +293,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
             
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            if (array.count == 0) {
+                LoadingSuccess;
+                [tv footerEndRefreshing];
+                return;
+            }
             for (NSDictionary *dict in array) {
                 SearchResultModel *model = [[SearchResultModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
@@ -558,8 +568,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [sv addSubview:water.view];
 
     
-    [self.view bringSubviewToFront:self.menuBgBtn];
-    [self.view bringSubviewToFront:self.menuBgView];
+//    [self.view bringSubviewToFront:self.menuBgBtn];
+//    [self.view bringSubviewToFront:self.menuBgView];
 }
 
 -(void)createSearchView
@@ -664,10 +674,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            NSLog(@"%@--%@--%@", tf.text, self.tfString, url);
             httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if(isFinish){
-//                    NSLog(@"%@", load.dataDict);
+                    NSLog(@"%@", load.dataDict);
                     [self.searchArray removeAllObjects];
                     
                     NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                    if (array.count == 0) {
+                        LoadingSuccess;
+                        return;
+                    }
                     for (NSDictionary *dict in array) {
                         SearchResultModel *model = [[SearchResultModel alloc] init];
                         [model setValuesForKeysWithDictionary:dict];
@@ -706,6 +720,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     page = 0;
                     
                     NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                    if (array.count == 0) {
+                        LoadingSuccess;
+                        return;
+                    }
                     for (NSDictionary *dict in array) {
                         UserInfoModel *model = [[UserInfoModel alloc] init];
                         [model setValuesForKeysWithDictionary:dict];
@@ -824,7 +842,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     int a = sc.selectedSegmentIndex;
     segmentClickIndex = a;
     if (a == 0) {
-        self.menuBgView.hidden = YES;
+//        self.menuBgView.hidden = YES;
         if (isCreated[0] == 0) {
             isCreated[0] = YES;
             vc1 = [[MyStarViewController alloc] init];
@@ -833,8 +851,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.sv addSubview:vc1.view];
             [self.view bringSubviewToFront:sc];
             
-            [self.view bringSubviewToFront:self.menuBgBtn];
-            [self.view bringSubviewToFront:self.menuBgView];
+//            [self.view bringSubviewToFront:self.menuBgBtn];
+//            [self.view bringSubviewToFront:self.menuBgView];
             [self.view bringSubviewToFront:self.alphaBtn];
         }else{
             [vc1.tv headerBeginRefreshing];
@@ -844,12 +862,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             self.sv.contentOffset = CGPointMake(0, 0);
         }];
     }else if(a == 1){
-        self.menuBgView.hidden = NO;
+//        self.menuBgView.hidden = NO;
         [UIView animateWithDuration:0.3 animations:^{
             self.sv.contentOffset = CGPointMake(320, 0);
         }];
     }else{
-        self.menuBgView.hidden = NO;
+//        self.menuBgView.hidden = NO;
         if (isCreated[2] == 0) {
             isCreated[2] = YES;
             vc3 = [[PetRecommendViewController alloc] init];
@@ -858,8 +876,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.sv addSubview:vc3.view];
             [self.view bringSubviewToFront:sc];
             
-            [self.view bringSubviewToFront:self.menuBgBtn];
-            [self.view bringSubviewToFront:self.menuBgView];
+//            [self.view bringSubviewToFront:self.menuBgBtn];
+//            [self.view bringSubviewToFront:self.menuBgView];
             [self.view bringSubviewToFront:self.alphaBtn];
         }else{
             [vc3.tv headerBeginRefreshing];
@@ -882,7 +900,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     sc.selectedSegmentIndex = a/320;
     
     if (a == 0) {
-        self.menuBgView.hidden = YES;
+//        self.menuBgView.hidden = YES;
         if (isCreated[0] == NO) {
             isCreated[0] = YES;
             vc1 = [[MyStarViewController alloc] init];
@@ -891,8 +909,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.sv addSubview:vc1.view];
             [self.view bringSubviewToFront:sc];
             
-            [self.view bringSubviewToFront:self.menuBgBtn];
-            [self.view bringSubviewToFront:self.menuBgView];
+//            [self.view bringSubviewToFront:self.menuBgBtn];
+//            [self.view bringSubviewToFront:self.menuBgView];
             [self.view bringSubviewToFront:self.alphaBtn];
         }else{
             if (b != sc.selectedSegmentIndex) {
@@ -901,7 +919,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
         }
     }else if(a == 320*2){
-        self.menuBgView.hidden = NO;
+//        self.menuBgView.hidden = NO;
 //        if (![ControllerManager getIsSuccess]) {
 //            sv.contentOffset = CGPointMake(320, 0);
 //            /***************************/
@@ -917,8 +935,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.sv addSubview:vc3.view];
             [self.view bringSubviewToFront:sc];
             
-            [self.view bringSubviewToFront:self.menuBgBtn];
-            [self.view bringSubviewToFront:self.menuBgView];
+//            [self.view bringSubviewToFront:self.menuBgBtn];
+//            [self.view bringSubviewToFront:self.menuBgView];
             [self.view bringSubviewToFront:self.alphaBtn];
         }else{
             if (b != sc.selectedSegmentIndex) {
@@ -927,7 +945,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
         }
     }else{
-        self.menuBgView.hidden = NO;
+//        self.menuBgView.hidden = NO;
     }
 }
 //-(void)unShakeNum:(int)num index:(int)index
@@ -1301,6 +1319,64 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [AFPhotoEditorCustomization setSupportedIpadOrientations:supportedOrientations];
     }
 }
+
+//-(void)checkUpdateOutVer:(NSString *)outVer InsideVer:(NSString *)insideVer
+//{
+//    /*
+//     本地保存version作为参考对象，如果login里的外层version与本地不同就是
+//     强制更新，如果是里层的不同就不强制，安排取消按钮，取消后不做任何操作。
+//     */
+//    int type1 = 0;
+//    int type2 = 0;
+//    if (![outVer isEqualToString:[USER objectForKey:@"version"]]) {
+//        //强制更新
+//        type1 = 1;
+//    }
+//    if (![insideVer isEqualToString:[USER objectForKey:@"version"]]) {
+//        type2 = 1;
+//    }
+//    if (type1 == 1 || type2 == 1) {
+//        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"version=%@dog&cat", [USER objectForKey:@"version"]]];
+//        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UPDATEAPI, [USER objectForKey:@"version"], sig, [ControllerManager getSID]];
+//        NSLog(@"%@", url);
+//        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+////                self.ios_url = [[load.dataDict objectForKey:@"data"] objectForKey:@"ios_url"];
+////                self.ios_url = @"http://www.baidu.com";
+//                NSString * msg = [[load.dataDict objectForKey:@"data"] objectForKey:@"upgrade_content"];
+//                
+//                NSString * msg2 = [msg stringByReplacingOccurrencesOfString:@"&" withString:@"\n"];
+//                if(type1 == 1){
+//                    //强制
+//                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"更新提示" message:msg2 delegate:self cancelButtonTitle:nil otherButtonTitles:@"马上更新", nil];
+//                    [alert show];
+//                    [alert release];
+//                }else{
+//                    //非强制更新
+//                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"更新提示" message:[[load.dataDict objectForKey:@"data"] objectForKey:@"upgrade_content"] delegate:self cancelButtonTitle:@"稍后更新" otherButtonTitles:@"马上更新", nil];
+//                    [alert show];
+//                    [alert release];
+//                }
+//            }else{
+//                StartLoading;
+//                LoadingFailed;
+//            }
+//        }];
+//        [request release];
+//    }
+//}
+//#pragma mark - delegate
+//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    NSLog(@"%d", buttonIndex);
+//    if (buttonIndex == 0) {
+//        //稍后更新
+//        
+//    }else{
+//        //马上更新
+//        
+//    }
+//}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

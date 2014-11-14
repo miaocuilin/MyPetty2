@@ -204,7 +204,7 @@
 
     [self.view addSubview:self.bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
     NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];

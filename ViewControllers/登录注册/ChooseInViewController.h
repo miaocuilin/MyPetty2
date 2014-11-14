@@ -21,4 +21,6 @@
 //@property(nonatomic,copy)NSString * ambString;
 //是否是认养
 @property (nonatomic)BOOL isOldUser;
+
+@property(nonatomic)BOOL isFromAdd;
 @end

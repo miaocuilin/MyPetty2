@@ -44,6 +44,9 @@
                 [self.goodsNumArray removeAllObjects];
                 
                 for (NSString * itemId in [dict allKeys]) {
+                    if ([itemId intValue]%10 >4) {
+                        continue;
+                    }
                     [self.goodsArray addObject:itemId];
                 }
                 //排序
@@ -122,7 +125,7 @@
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:self.bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
 //    NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];

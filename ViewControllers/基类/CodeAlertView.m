@@ -7,7 +7,7 @@
 //
 
 #import "CodeAlertView.h"
-
+#import "UserInfoModel.h"
 @implementation CodeAlertView
 
 -(void)makeUI
@@ -39,11 +39,14 @@
     NSString * tx = nil;
     if (self.alertType == 2 || self.alertType == 3) {
         tx = self.codeModel.tx;
+        if (self.alertType == 3) {
+            self.headImage.image = [UIImage imageNamed:@"defaultUserHead.png"];
+        }
     }else if(self.alertType == 4){
         tx = self.model.tx;
     }
 //    NSLog(@"%@", tx);
-    if (self.alertType != 1) {
+    if (self.alertType == 2) {
         if (!([tx isKindOfClass:[NSNull class]] || [tx length]==0)) {
             NSString * docDir = DOCDIR;
             NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
@@ -55,6 +58,7 @@
             }else{
                 //下载头像
                 NSString * url = [NSString stringWithFormat:@"%@%@", PETTXURL, tx];
+
                 NSLog(@"%@", url);
                 httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
@@ -155,8 +159,29 @@
 
     }else if(self.alertType == 3){
         lab1.hidden = YES;
-        
-        lab2.text = [NSString stringWithFormat:@"您已经接受过%@的邀请啦~", self.codeModel.u_name];
+        //
+        StartLoading;
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.codeModel.inviter]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, self.codeModel.inviter, sig, [ControllerManager getSID]];
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]] && [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary * dic = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                    UserInfoModel * model = [[UserInfoModel alloc] init];
+                    [model setValuesForKeysWithDictionary:dic];
+                    lab2.text = [NSString stringWithFormat:@"您已经接受过%@的邀请啦~", model.name];
+                    [self loadUserTx:model.tx];
+                    
+                    [model release];
+                }
+                LoadingSuccess;
+            }else{
+                LoadingFailed;
+            }
+        }];
+        [request release];
+
         CGRect rect2 = lab2.frame;
         rect2.origin.y += 5;
         lab2.frame = rect2;
@@ -181,6 +206,35 @@
             UIButton * button = [MyControl createButtonWithFrame:CGRectMake(30+i*83, 5, 35, 35) ImageName:imageNameArray[i] Target:self Action:@selector(shareClick:) Title:nil];
             button.tag = 100+i;
             [shareBg addSubview:button];
+        }
+    }
+}
+
+-(void)loadUserTx:(NSString *)tx
+{
+    if (!([tx isKindOfClass:[NSNull class]] || [tx length]==0)) {
+        NSString * docDir = DOCDIR;
+        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
+
+        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (image) {
+            self.headImage.image = image;
+        }else{
+            //下载头像
+            NSString * url = [NSString stringWithFormat:@"%@%@", USERTXURL, tx];
+            
+            NSLog(@"%@", url);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    self.headImage.image = load.dataImage;
+//                    NSString * docDir = DOCDIR;
+//                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
+                    [load.data writeToFile:txFilePath atomically:YES];
+                }else{
+                    NSLog(@"头像下载失败");
+                }
+            }];
+            [request release];
         }
     }
 }

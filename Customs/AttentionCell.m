@@ -110,7 +110,7 @@
                 [MMProgressHUD dismissWithSuccess:@"关注成功" title:nil afterDelay:1];
                 btn.selected = YES;
             }else{
-                [MMProgressHUD dismissWithError:@"关注失败" afterDelay:1];
+                LoadingFailed;
             }
         }];
     }else{
@@ -126,7 +126,8 @@
                 [MMProgressHUD dismissWithSuccess:@"取消关注成功" title:nil afterDelay:1];
                 btn.selected = NO;
             }else{
-                [MMProgressHUD dismissWithError:@"取消关注失败" afterDelay:1];
+                LoadingFailed;
+//                [MMProgressHUD dismissWithError:@"取消关注失败" afterDelay:1];
             }
         }];
     }

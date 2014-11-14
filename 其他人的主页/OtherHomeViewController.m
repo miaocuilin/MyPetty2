@@ -393,7 +393,7 @@
     [cell configUI:model];
     
     //本地目录，用于存放favorite下载的原图
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     //    NSLog(@"docDir:%@", docDir);
     if (!docDir) {
         NSLog(@"Documents 目录未找到");
@@ -408,7 +408,7 @@
             [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     //本地目录，用于存放favorite下载的原图
-                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                    NSString * docDir = DOCDIR;
                     //                    NSLog(@"docDir:%@", docDir);
                     if (!docDir) {
                         NSLog(@"Documents 目录未找到");

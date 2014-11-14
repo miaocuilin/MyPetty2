@@ -644,7 +644,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
                         //本地目录，用于存放favorite下载的原图
-                        NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                        NSString * docDir = DOCDIR;
                         //                    NSLog(@"docDir:%@", docDir);
                         if (!docDir) {
                             NSLog(@"Documents 目录未找到");
@@ -1024,7 +1024,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     //头像存放在本地
     NSData * data = UIImageJPEGRepresentation(self.tempImage, 0.1);
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = DOCDIR;
     
     NSLog(@"%@",docDir);
     NSLog(@"saving png");

@@ -37,8 +37,8 @@
     [self backgroundView];
     _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
 //    [self loadRecordStringData];
-//    [self checkIsTouch];
-    [self loadRecordStringData];
+    [self checkIsTouch];
+//    [self loadRecordStringData];
 }
 - (void)backgroundView
 {
@@ -49,22 +49,34 @@
 }
 #pragma mark - 是否已经摸一摸
 
-//- (void)checkIsTouch
-//{
-//    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
-//    NSString *isTouch = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ISTOUCHAPI, self.pet_aid, sig, [ControllerManager getSID]];
-//    NSLog(@"isTouch:%@",isTouch);
-//    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:isTouch Block:^(BOOL isFinish, httpDownloadBlock *load) {
-//        NSLog(@"是否已经摸过：%@",load.dataDict);
+- (void)checkIsTouch
+{
+    StartLoading;
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+    NSString *isTouch = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ISTOUCHAPI, self.pet_aid, sig, [ControllerManager getSID]];
+    NSLog(@"isTouch:%@",isTouch);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:isTouch Block:^(BOOL isFinish, httpDownloadBlock *load) {
+        NSLog(@"是否已经摸过：%@",load.dataDict);
 //        if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"is_touched"] intValue]) {
 //            [self createTouchEndView];
 //        }else{
-//            [self loadRecordStringData];
+        
 //        }
-//    }];
-//    [request release];
-//    
-//}
+        if (isFinish) {
+            if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"img_url"] isKindOfClass:[NSString class]]) {
+                self.img_url = [[load.dataDict objectForKey:@"data"] objectForKey:@"img_url"];
+            }
+            [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.2];
+            [self loadRecordStringData];
+            
+            
+        }else{
+            LoadingFailed;
+        }
+    }];
+    [request release];
+    
+}
 
 #pragma mark - 下载声音
 - (void)loadRecordStringData
@@ -81,7 +93,8 @@
             self.recordURL = [NSString stringWithFormat:@"http://pet4voices.oss-cn-beijing.aliyuncs.com/ani/%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
             [self loadRecordData];
         }else{
-            [MMProgressHUD dismissWithError:@"该宠物今天没有萌叫叫" afterDelay:1.0];
+            LoadingSuccess;
+//            [MMProgressHUD dismissWithSuccess:@"该宠物今天没有萌叫叫" title:nil afterDelay:0.5];
             //没有录音
             notHaveRecord = YES;
             [UIView animateWithDuration:0.1 delay:1.0 options:1 animations:^{
@@ -182,19 +195,22 @@
     [self shopGiftTitle];
     
     UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, 40) Font:16 Text:@"摸萌照，听萌星叫叫，萌萌印心中~"];
+    if(notHaveRecord){
+        descLabel.text = [NSString stringWithFormat:@"%@还没有萌叫叫", self.pet_name];
+    }
     descLabel.textAlignment = NSTextAlignmentCenter;
     descLabel.textColor = GRAYBLUECOLOR;
     [bodyView addSubview:descLabel];
     
-    UIImageView *touchImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2-130, 40, 260, 180) ImageName:@"cat2.jpg"];
-    
-    if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]==0)) {
-        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
+    UIImageView *touchImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2-130, 40, 260, 180) ImageName:@"defaultPetHead.png"];
+    //看是否有照片
+    if(self.img_url){
+        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.img_url]];
         UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
         if (animalHeaderImage) {
             touchImageView.image = animalHeaderImage;
         }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",IMAGEURL, self.img_url] Block:^(BOOL isFinish, httpDownloadBlock *load) {
                 if (isFinish) {
                     touchImageView.image = load.dataImage;
                     [load.data writeToFile:pngFilePath atomically:YES];
@@ -202,9 +218,25 @@
             }];
             [request release];
         }
+    }else{
+        if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]==0)) {
+            NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
+            UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
+            if (animalHeaderImage) {
+                touchImageView.image = animalHeaderImage;
+            }else{
+                httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                    if (isFinish) {
+                        touchImageView.image = load.dataImage;
+                        [load.data writeToFile:pngFilePath atomically:YES];
+                    }
+                }];
+                [request release];
+            }
+        }
     }
-
     
+
     touchImageView.layer.cornerRadius = 10;
     touchImageView.layer.masksToBounds = YES;
     [bodyView addSubview:touchImageView];
@@ -221,7 +253,7 @@
         NSLog(@"%d",self.scratchCardView.isOpen);
         [self touchAPIData];
         [self shareViewCreate];
-        playAndPauseButton.userInteractionEnabled = NO;
+        
         if (!notHaveRecord && [self getRecord]) {
             [self audioPlayerCreate];
         }
@@ -279,15 +311,19 @@
 
 - (void)shareViewCreate
 {
-    UIView *playAndPauseView = [MyControl createViewWithFrame:CGRectMake(10, 10, 30, 30)];
-    playAndPauseView.layer.cornerRadius = 15;
-    playAndPauseView.layer.masksToBounds = YES;
-    playAndPauseView.backgroundColor = LIGHTORANGECOLOR;
-    [self.scratchCardView addSubview:playAndPauseView];
-    playAndPauseImageView = [MyControl createImageViewWithFrame:CGRectMake(8, 8, 15, 15) ImageName:@"record_play.png"];
-    [playAndPauseView addSubview:playAndPauseImageView];
-    playAndPauseButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 30, 30) ImageName:nil Target:self Action:@selector(playAction) Title:nil];
-    [playAndPauseView addSubview:playAndPauseButton];
+    if(!notHaveRecord){
+        UIView *playAndPauseView = [MyControl createViewWithFrame:CGRectMake(10, 10, 30, 30)];
+        playAndPauseView.layer.cornerRadius = 15;
+        playAndPauseView.layer.masksToBounds = YES;
+        playAndPauseView.backgroundColor = LIGHTORANGECOLOR;
+        [self.scratchCardView addSubview:playAndPauseView];
+        
+        playAndPauseImageView = [MyControl createImageViewWithFrame:CGRectMake(8, 8, 15, 15) ImageName:@"record_play.png"];
+        [playAndPauseView addSubview:playAndPauseImageView];
+        
+        playAndPauseButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 30, 30) ImageName:nil Target:self Action:@selector(playAction) Title:nil];
+        [playAndPauseView addSubview:playAndPauseButton];
+    }
     
     UIView *shareView = [MyControl createViewWithFrame:CGRectMake(bodyView.frame.size.width/2-195/2.0, 250, 195, 50)];
     [bodyView addSubview:shareView];

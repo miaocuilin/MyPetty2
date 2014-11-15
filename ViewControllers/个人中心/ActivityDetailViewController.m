@@ -78,7 +78,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
 //    NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
@@ -158,7 +158,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
         }else{
             LoadingFailed;
-            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"活动详情数据加载失败"];
+//            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"活动详情数据加载失败"];
         }
     }];
 }
@@ -260,6 +260,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        [cv footerEndRefreshing];
 //        return;
 //    }
+    StartLoading;
     NSString * str = [NSString stringWithFormat:@"img_id=%@dog&cat", self.lastImg_id];
     NSString * sig = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RANDOMAPI2, self.lastImg_id, sig, [ControllerManager getSID]];
@@ -277,6 +278,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [cv reloadData];
             [cv footerEndRefreshing];
         }else{
+            LoadingFailed;
+            [cv footerEndRefreshing];
             NSLog(@"数据加载失败");
         }
     }];

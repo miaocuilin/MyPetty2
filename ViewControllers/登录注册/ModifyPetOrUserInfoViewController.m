@@ -84,7 +84,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     bgBlurImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:bgBlurImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
     NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
@@ -767,7 +767,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        NSLog(@"%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]);
     }
     //头像存放在本地
-    NSString *docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *docDir = DOCDIR;
     
     NSLog(@"%@",docDir);
     NSLog(@"saving png");

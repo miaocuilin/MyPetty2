@@ -392,7 +392,7 @@
             }
         }else{
             LoadingFailed;
-            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"数据请求失败，是否重新请求？" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+//            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"数据请求失败，是否重新请求？" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
         }
     }];
     [request release];

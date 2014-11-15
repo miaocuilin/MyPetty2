@@ -286,6 +286,7 @@
         [qtmquitView footerEndRefreshing];
         return;
     }
+    
     NSString * str = [NSString stringWithFormat:@"img_id=%@dog&cat", self.lastImg_id];
     NSString * sig = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMENDAPI2, self.lastImg_id, sig, [ControllerManager getSID]];
@@ -313,6 +314,9 @@
             [qtmquitView reloadData];
             [qtmquitView footerEndRefreshing];
         }else{
+            StartLoading;
+            LoadingFailed;
+            [qtmquitView footerEndRefreshing];
             NSLog(@"数据加载失败");
         }
     }];
@@ -355,7 +359,7 @@
     //        cell.heartButton.selected = NO;
     //    }
     //图片存放到本地，从本地取
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     if (!docDir) {
         NSLog(@"Documents 目录未找到");
     }else{
@@ -473,7 +477,7 @@
 {
     PhotoModel * model = self.dataArray[indexPath.row];
     //图片存放到本地，从本地取
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     if (!docDir) {
         NSLog(@"Documents 目录未找到");
     }else{

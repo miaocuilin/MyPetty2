@@ -157,7 +157,7 @@
     }
     PhotoModel * model = self.dataArray[indexPath.row];
     //图片存放到本地，从本地取
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     if (!docDir) {
         NSLog(@"Documents 目录未找到");
     }else{
@@ -172,7 +172,7 @@
             [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     //本地目录，用于存放favorite下载的原图
-                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                    NSString * docDir = DOCDIR;
                     if (!docDir) {
                         NSLog(@"Documents 目录未找到");
                     }else{
@@ -209,7 +209,7 @@
     PhotoModel * model = self.dataArray[indexPath.row];
     CGSize size = [model.cmt sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(self.view.frame.size.width/2-8, 100) lineBreakMode:NSLineBreakByCharWrapping];
     //图片存放到本地，从本地取
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     if (Height[indexPath.row]) {
 //        NSLog(@"Documents 目录未找到");
 //        return Height[indexPath.row]/3.5+size.height;

@@ -83,7 +83,7 @@
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:self.bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
 //    NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
@@ -238,6 +238,7 @@
 
         }
         cell.textLabel.text =[NSString stringWithFormat:@"     %@",self.arr3[indexPath.row]];
+        cell.textLabel.textColor = [UIColor blackColor];
     }
     cell.textLabel.font = [UIFont systemFontOfSize:15];
     [self normalCell:cell arrow:indexPath];
@@ -390,6 +391,15 @@
 #pragma mark -
 -(void)inputCode
 {
+    if ([[USER objectForKey:@"inviter"] isKindOfClass:[NSString class]] && [[USER objectForKey:@"inviter"] intValue]) {
+        //已经填写过 type=3
+        NSString * inviter = [USER objectForKey:@"inviter"];
+        InviteCodeModel * model = [[InviteCodeModel alloc] init];
+        model.inviter = inviter;
+        [self codeViewFailed:model];
+        return;
+    }
+    
     CodeAlertView * codeView = [[CodeAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     codeView.AlertType = 1;
     [codeView makeUI];
@@ -398,6 +408,10 @@
         codeView.alpha = 1;
     }];
     codeView.confirmClick = ^(NSString * code){
+//        if (type == 3) {
+//            return;
+//        }
+        
         //请求API
         StartLoading;
         NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"code=%@dog&cat", code]];
@@ -413,15 +427,15 @@
                 [codeView closeBtnClick];
                 //成功提示
                 NSLog(@"%@", [USER objectForKey:@"inviter"]);
-                if ([[USER objectForKey:@"inviter"] isKindOfClass:[NSString class]] && [[USER objectForKey:@"inviter"] intValue]) {
-                    [self codeViewFailed:model];
-                }else{
+//                if ([[USER objectForKey:@"inviter"] isKindOfClass:[NSString class]] && [[USER objectForKey:@"inviter"] intValue]) {
+//                    [self codeViewFailed:model];
+//                }else{
                     NSString * gold = [NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]+300];
                     [USER setObject:gold forKey:@"gold"];
                     
                     [self codeViewSuccess:model];
                     [USER setObject:model.inviter forKey:@"inviter"];
-                }
+//                }
                 
                 [model release];
                 LoadingSuccess;

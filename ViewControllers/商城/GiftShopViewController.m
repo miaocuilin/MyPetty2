@@ -105,11 +105,11 @@
     [self addData:level3 isGood:YES];
     
     NSArray *level4 =[[DictData objectForKey:@"bad"] objectForKey:@"level0"];
-    NSArray *level5 =[[DictData objectForKey:@"bad"] objectForKey:@"level1"];
-    NSArray *level6 =[[DictData objectForKey:@"bad"] objectForKey:@"level2"];
+//    NSArray *level5 =[[DictData objectForKey:@"bad"] objectForKey:@"level1"];
+//    NSArray *level6 =[[DictData objectForKey:@"bad"] objectForKey:@"level2"];
     [self addData:level4 isGood:NO];
-    [self addData:level5 isGood:NO];
-    [self addData:level6 isGood:NO];
+//    [self addData:level5 isGood:NO];
+//    [self addData:level6 isGood:NO];
     
 //    NSLog(@"data:%@",DictData);
     [self.totalGoodsDataArray addObjectsFromArray:self.goodGiftDataArray];
@@ -190,7 +190,7 @@
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:self.bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
     NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
@@ -219,7 +219,7 @@
     //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
     
-    UIButton * titleBtn = [MyControl createButtonWithFrame:CGRectMake(60, 64-20-12-5, 200, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"虚拟礼物"];
+    UIButton * titleBtn = [MyControl createButtonWithFrame:CGRectMake(60, 64-20-12-5, 200, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"礼物商城"];
     [titleBtn setTitle:@"现实礼物" forState:UIControlStateSelected];
     titleBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17];
 //    titleBtn.showsTouchWhenHighlighted = YES;
@@ -451,85 +451,200 @@
     [self.view bringSubviewToFront:navView];
     [self.view bringSubviewToFront:headerView];
     int index = self.showArray.count;
-    if (index%3) {
-        sv.contentSize = CGSizeMake(320, 64+35+15+(index/3+1)*100);
+    if (index%2) {
+        sv.contentSize = CGSizeMake(self.view.frame.size.width, 64+35+15+(index/2+1)*160);
     }else{
-        sv.contentSize = CGSizeMake(320, 64+35+15+(index/3)*100);
+        sv.contentSize = CGSizeMake(self.view.frame.size.width, 64+35+15+(index/2)*160);
     }
     NSLog(@"index:%d",index);
     
     /***************************/
-    for(int i=0;i<index;i++){
-        CGRect rect = CGRectMake(20+i%3*100, 64+35+15+i/3*100, 85, 90);
-        UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"product_bg.png"];
-        if ([[self.showArray[i] no] intValue]>=2000) {
-            imageView.image = [UIImage imageNamed:@"trick_bg.png"];
-        }
-        [sv addSubview:imageView];
+    for(int i=0; i<index; i+=2){
+        //白色背景
+        UIImageView * giftBgImageView = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-500/2)/2.0, 64+35+(i/2)*160+10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
+        [sv addSubview:giftBgImageView];
         
-//        UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
-//        [imageView addSubview:triangle];
+        UIImageView * giftBgImageView2 = [MyControl createImageViewWithFrame:CGRectMake(giftBgImageView.frame.origin.x+274/2, 64+35+(i/2)*160+10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
+        [sv addSubview:giftBgImageView2];
+//        if ((i+2)%4 == 0) {
+//            giftBgImageView.frame = CGRectMake(25+i/4*300, 10+310/2, 222/2, 190/2);
+//            giftBgImageView2.frame = CGRectMake(324/2+i/4*300, 10+310/2, 222/2, 190/2);
+//        }
         
-        UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(0, 3, 20, 9) Font:7 Text:@"人气"];
-        rq.font = [UIFont boldSystemFontOfSize:7];
-        rq.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
-        [imageView addSubview:rq];
+        //礼物图片
+        UIImageView * giftImageView = [MyControl createImageViewWithFrame:CGRectMake((111-98)/2.0, (95-93)/2.0, 98, 83) ImageName:@""];
+        [giftBgImageView addSubview:giftImageView];
         
-        UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(0, 10, 25, 8) Font:9 Text:@"+150"];
-        rqNum.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
-        rqNum.textAlignment = NSTextAlignmentCenter;
-        //            rqNum.backgroundColor = [UIColor redColor];
-        [imageView addSubview:rqNum];
+        UIImageView * giftImageView2 = [MyControl createImageViewWithFrame:CGRectMake((111-98)/2.0, (95-93)/2.0, 98, 83) ImageName:@""];
+        [giftBgImageView2 addSubview:giftImageView2];
         
-        UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 5, 85, 15) Font:11 Text:@"汪汪项圈"];
-        giftName.textColor = [UIColor grayColor];
-        giftName.textAlignment = NSTextAlignmentCenter;
-        [imageView addSubview:giftName];
         
-        UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(5, 20, 75, 50) ImageName:[NSString stringWithFormat:@"bother%d_2.png", arc4random()%6+1]];
-        [imageView addSubview:giftPic];
+        //木板
+        UIImageView * wood = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-546/2)/2.0, giftBgImageView.frame.origin.y+190/2, 546/2, 17/2.0) ImageName:@"giftAlert_wood.png"];
+        [sv addSubview:wood];
         
-        UIImageView * gift = [MyControl createImageViewWithFrame:CGRectMake(20, 90-14-5, 15, 15) ImageName:@"gold.png"];
-        [imageView addSubview:gift];
+        //
+        UIImageView * hang_tag = [MyControl createImageViewWithFrame:CGRectMake(wood.frame.origin.x+4, wood.frame.origin.y-1, 246/2, 106/2) ImageName:@""];
+        [sv addSubview:hang_tag];
         
-        UILabel * giftPrice = [MyControl createLabelWithFrame:CGRectMake(42, 90-19, 40, 15) Font:13 Text:[NSString stringWithFormat:@"%d", i*50+50]];
-        giftPrice.textColor = BGCOLOR;
-        [imageView addSubview:giftPrice];
+        UIImageView * hang_tag2 = [MyControl createImageViewWithFrame:CGRectMake(wood.frame.origin.x+wood.frame.size.width-4-246/2, wood.frame.origin.y-1, 246/2, 106/2) ImageName:@""];
+        [sv addSubview:hang_tag2];
         
-        //新品，推荐，热卖标注
-        UIImageView * label = [MyControl createImageViewWithFrame:CGRectMake(62, -6, 73/2, 46/2) ImageName:@"right_corner.png"];
-        [imageView addSubview:label];
-        label.hidden = YES;
+        //礼物名称
+        UILabel * productLabel = [MyControl createLabelWithFrame:CGRectMake(10, 18, 80, 15) Font:12 Text:nil];
+        productLabel.font = [UIFont boldSystemFontOfSize:12];
+        productLabel.textColor = [ControllerManager colorWithHexString:@"5F5E5E"];
+        [hang_tag addSubview:productLabel];
         
-        UILabel * labelLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 73/2, 46/2) Font:12 Text:nil];
-        labelLabel.textAlignment = NSTextAlignmentCenter;
-        [label addSubview:labelLabel];
+        UILabel * productLabel2 = [MyControl createLabelWithFrame:CGRectMake(10, 18, 80, 15) Font:12 Text:nil];
+        productLabel2.font = [UIFont boldSystemFontOfSize:12];
+        productLabel2.textColor = [ControllerManager colorWithHexString:@"5F5E5E"];
+        [hang_tag2 addSubview:productLabel2];
         
-        if (i == 0) {
-            label.hidden = NO;
-            labelLabel.text = @"新品";
-        }else if (i == 2) {
-            label.hidden = NO;
-            labelLabel.text = @"热卖";
-        }else if (i == 3) {
-            label.hidden = NO;
-            labelLabel.text = @"特卖";
-        }
+        //人气
+        UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(90, 20, 30, 15) Font:12 Text:@"人气"];
+        rq.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag addSubview:rq];
         
-        UIButton * button = [MyControl createButtonWithFrame:rect ImageName:@"" Target:self Action:@selector(buttonClick:) Title:nil];
-        [sv addSubview:button];
-        button.tag = 1000+i;
+        UILabel * rq2 = [MyControl createLabelWithFrame:CGRectMake(90, 20, 30, 15) Font:12 Text:@"人气"];
+        rq2.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag2 addSubview:rq2];
         
-        //更换礼物图片
-        GiftShopModel *model = self.showArray[i];
-        if ([model.add_rq rangeOfString:@"-"].location == NSNotFound) {
-            rqNum.text = [NSString stringWithFormat:@"+%@",model.add_rq];
+        //人气值
+        UILabel * rqz = [MyControl createLabelWithFrame:CGRectMake(80, 35, 42, 15) Font:12 Text:@"+100"];
+        rqz.textAlignment = NSTextAlignmentCenter;
+        rqz.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag addSubview:rqz];
+        
+        UILabel * rqz2 = [MyControl createLabelWithFrame:CGRectMake(80, 35, 42, 15) Font:12 Text:@"+100"];
+        rqz2.textAlignment = NSTextAlignmentCenter;
+        rqz2.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag2 addSubview:rqz2];
+        //金币图标及价格
+        UIImageView * gold = [MyControl createImageViewWithFrame:CGRectMake(10, 35, 15, 15) ImageName:@"gold.png"];
+        [hang_tag addSubview:gold];
+        
+        UILabel * price = [MyControl createLabelWithFrame:CGRectMake(33, 34, 40, 17) Font:15 Text:nil];
+        price.font = [UIFont boldSystemFontOfSize:13];
+        price.textColor = BGCOLOR;
+        [hang_tag addSubview:price];
+        
+        UIImageView * gold2 = [MyControl createImageViewWithFrame:CGRectMake(10, 35, 15, 15) ImageName:@"gold.png"];
+        [hang_tag2 addSubview:gold2];
+        
+        UILabel * price2 = [MyControl createLabelWithFrame:CGRectMake(33, 34, 40, 17) Font:15 Text:@""];
+        price2.font = [UIFont boldSystemFontOfSize:13];
+        price2.textColor = BGCOLOR;
+        [hang_tag2 addSubview:price2];
+        
+        //
+        CGRect rect = giftBgImageView.frame;
+        CGRect rect2 = giftBgImageView2.frame;
+        UIButton * sendGiftBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height) ImageName:@"" Target:self Action:@selector(buttonClick:) Title:nil];
+        sendGiftBtn.tag = 1000+i;
+        [giftBgImageView addSubview:sendGiftBtn];
+        
+        UIButton * sendGiftBtn2 = [MyControl createButtonWithFrame:CGRectMake(0, 0, rect2.size.width, rect2.size.height) ImageName:@"" Target:self Action:@selector(buttonClick:) Title:nil];
+        sendGiftBtn2.tag = 1000+i+1;
+        [giftBgImageView2 addSubview:sendGiftBtn2];
+        /*******************i*********************/
+        NSLog(@"%@", self.showArray[i]);
+        if ([[self.showArray[i] no] intValue]>2000) {
+            hang_tag.image = [UIImage imageNamed:@"giftAlert_badBg.png"];
         }else{
-            rqNum.text = [NSString stringWithFormat:@"%@",model.add_rq];
+            hang_tag.image = [UIImage imageNamed:@"giftAlert_goodBg.png"];
         }
-        giftPrice.text = model.price;
-        giftPic.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
-        giftName.text=model.name;
+        giftImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [self.showArray[i] no]]];
+        
+        productLabel.text = [self.showArray[i] name];
+        rqz.text = [self.showArray[i] add_rq];
+        price.text = [self.showArray[i] price];
+        
+        /*******************i+1*********************/
+        
+        if ([[self.showArray[i+1] no] intValue]>2000) {
+            hang_tag2.image = [UIImage imageNamed:@"giftAlert_badBg.png"];
+        }else{
+            hang_tag2.image = [UIImage imageNamed:@"giftAlert_goodBg.png"];
+        }
+        giftImageView2.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [self.showArray[i+1] no]]];
+        
+        productLabel2.text = [self.showArray[i+1] name];
+        rqz2.text = [self.showArray[i+1] add_rq];
+        price2.text = [self.showArray[i+1] price];
+        
+        
+        
+//        CGRect rect = CGRectMake(20+i%3*100, 64+35+15+i/3*100, 85, 90);
+//        UIImageView * imageView = [MyControl createImageViewWithFrame:rect ImageName:@"product_bg.png"];
+//        if ([[self.showArray[i] no] intValue]>=2000) {
+//            imageView.image = [UIImage imageNamed:@"trick_bg.png"];
+//        }
+//        [sv addSubview:imageView];
+//        
+////        UIImageView * triangle = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"gift_triangle.png"];
+////        [imageView addSubview:triangle];
+//        
+//        UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(0, 3, 20, 9) Font:7 Text:@"人气"];
+//        rq.font = [UIFont boldSystemFontOfSize:7];
+//        rq.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
+//        [imageView addSubview:rq];
+//        
+//        UILabel * rqNum = [MyControl createLabelWithFrame:CGRectMake(0, 10, 25, 8) Font:9 Text:@"+150"];
+//        rqNum.transform = CGAffineTransformMakeRotation(-45.0*M_PI/180.0);
+//        rqNum.textAlignment = NSTextAlignmentCenter;
+//        //            rqNum.backgroundColor = [UIColor redColor];
+//        [imageView addSubview:rqNum];
+//        
+//        UILabel * giftName = [MyControl createLabelWithFrame:CGRectMake(0, 5, 85, 15) Font:11 Text:@"汪汪项圈"];
+//        giftName.textColor = [UIColor grayColor];
+//        giftName.textAlignment = NSTextAlignmentCenter;
+//        [imageView addSubview:giftName];
+//        
+//        UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(5, 20, 75, 50) ImageName:[NSString stringWithFormat:@"bother%d_2.png", arc4random()%6+1]];
+//        [imageView addSubview:giftPic];
+//        
+//        UIImageView * gift = [MyControl createImageViewWithFrame:CGRectMake(20, 90-14-5, 15, 15) ImageName:@"gold.png"];
+//        [imageView addSubview:gift];
+//        
+//        UILabel * giftPrice = [MyControl createLabelWithFrame:CGRectMake(42, 90-19, 40, 15) Font:13 Text:[NSString stringWithFormat:@"%d", i*50+50]];
+//        giftPrice.textColor = BGCOLOR;
+//        [imageView addSubview:giftPrice];
+//        
+//        //新品，推荐，热卖标注
+//        UIImageView * label = [MyControl createImageViewWithFrame:CGRectMake(62, -6, 73/2, 46/2) ImageName:@"right_corner.png"];
+//        [imageView addSubview:label];
+//        label.hidden = YES;
+//        
+//        UILabel * labelLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 73/2, 46/2) Font:12 Text:nil];
+//        labelLabel.textAlignment = NSTextAlignmentCenter;
+//        [label addSubview:labelLabel];
+//        
+//        if (i == 0) {
+//            label.hidden = NO;
+//            labelLabel.text = @"新品";
+//        }else if (i == 2) {
+//            label.hidden = NO;
+//            labelLabel.text = @"热卖";
+//        }else if (i == 3) {
+//            label.hidden = NO;
+//            labelLabel.text = @"特卖";
+//        }
+//        
+//        UIButton * button = [MyControl createButtonWithFrame:rect ImageName:@"" Target:self Action:@selector(buttonClick:) Title:nil];
+//        [sv addSubview:button];
+//        button.tag = 1000+i;
+//        
+//        //更换礼物图片
+//        GiftShopModel *model = self.showArray[i];
+//        if ([model.add_rq rangeOfString:@"-"].location == NSNotFound) {
+//            rqNum.text = [NSString stringWithFormat:@"+%@",model.add_rq];
+//        }else{
+//            rqNum.text = [NSString stringWithFormat:@"%@",model.add_rq];
+//        }
+//        giftPrice.text = model.price;
+//        giftPic.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
+//        giftName.text=model.name;
         
     }
     
@@ -591,16 +706,16 @@
         labelLabel.textAlignment = NSTextAlignmentCenter;
         [label addSubview:labelLabel];
         
-        if (i == 0) {
-            label.hidden = NO;
-            labelLabel.text = @"新品";
-        }else if (i == 2) {
-            label.hidden = NO;
-            labelLabel.text = @"热卖";
-        }else if (i == 3) {
-            label.hidden = NO;
-            labelLabel.text = @"特卖";
-        }
+//        if (i == 0) {
+//            label.hidden = NO;
+//            labelLabel.text = @"新品";
+//        }else if (i == 2) {
+//            label.hidden = NO;
+//            labelLabel.text = @"热卖";
+//        }else if (i == 3) {
+//            label.hidden = NO;
+//            labelLabel.text = @"特卖";
+//        }
         
         UIButton * button = [MyControl createButtonWithFrame:rect ImageName:@"" Target:self Action:@selector(buttonClick2:) Title:nil];
         [sv2 addSubview:button];

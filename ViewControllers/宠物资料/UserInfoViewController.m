@@ -177,6 +177,9 @@
                 [self.goodsNumArray removeAllObjects];
                 
                 for (NSString * itemId in [dict allKeys]) {
+                    if ([itemId intValue]%10 >4) {
+                        continue;
+                    }
                     [self.goodsArray addObject:itemId];
                 }
                 //排序
@@ -1059,7 +1062,8 @@
             giftName.textAlignment = NSTextAlignmentCenter;
             [imageView addSubview:giftName];
             
-            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(5, 20, 75, 50) ImageName:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"no"]]];
+            //98*0.6=59  83*0.6=50   85  90
+            UIImageView * giftPic = [MyControl createImageViewWithFrame:CGRectMake(13, 20, 59, 50) ImageName:[NSString stringWithFormat:@"%@.png", [dict objectForKey:@"no"]]];
             [imageView addSubview:giftPic];
             
             UIImageView * gift = [MyControl createImageViewWithFrame:CGRectMake(20, 90-14-5, 12, 14) ImageName:@"detail_gift.png"];
@@ -1304,6 +1308,7 @@
             }else{
                 ChooseInViewController * vc = [[ChooseInViewController alloc] init];
                 vc.isOldUser = YES;
+                vc.isFromAdd = YES;
                 [self presentViewController:vc animated:YES completion:nil];
                 [vc release];
             }

@@ -43,6 +43,7 @@
     
     NSLog(@"%@", [Keychain load:KEY_UDID]);
     
+    
     [USER setObject:[Keychain load:KEY_UDID] forKey:@"UDID"];
     
     NSLog(@"UDID:%@", [USER objectForKey:@"UDID"]);

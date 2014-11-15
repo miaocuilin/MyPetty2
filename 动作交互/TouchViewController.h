@@ -36,5 +36,9 @@
 
 @property(nonatomic)BOOL isFromStar;
 @property(nonatomic,copy)void (^touchBack)(void);
+
+@property(nonatomic,copy)NSString * img_url;
+
 - (void)createAlertView;
+
 @end

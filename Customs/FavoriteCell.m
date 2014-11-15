@@ -170,7 +170,7 @@
 
 -(void)configUsrInfo:(InfoModel *)model
 {
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     if (!docDir) {
         NSLog(@"Documents 目录未找到");
     }else{
@@ -182,7 +182,7 @@
             [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     //本地目录，用于存放favorite下载的原图
-                    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                    NSString * docDir = DOCDIR;
                     //                    NSLog(@"docDir:%@", docDir);
                     if (!docDir) {
                         NSLog(@"Documents 目录未找到");

@@ -6,10 +6,11 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@interface httpDownloadBlock : NSObject<NSURLConnectionDataDelegate>
+#import <UIKit/UIKit.h>
+@interface httpDownloadBlock : NSObject<NSURLConnectionDataDelegate,UIAlertViewDelegate>
 {
     int count;
+    BOOL isForce;
 }
 //创建属性NSMuTableData  以及NSURLConnection
 //保存发起的请求指针  为什么？需要在取消时候使用
@@ -31,4 +32,6 @@
 
 /**************************************/
 @property(nonatomic,copy)void(^overDue)(void);
+
+@property(nonatomic,copy)NSString * ios_url;
 @end

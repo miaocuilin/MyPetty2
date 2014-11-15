@@ -6,11 +6,11 @@
 //  Copyright (c) 2014年 AidiGame. All rights reserved.
 //
 
-//#import <UIKit/UIKit.h>
-#import "BottomMenuRootViewController.h"
+#import <UIKit/UIKit.h>
+//#import "BottomMenuRootViewController.h"
 #import "NIDropDown.h"
 
-@interface MainViewController : BottomMenuRootViewController <UIScrollViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate,NIDropDownDelegate,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>
+@interface MainViewController : UIViewController <UIScrollViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate,NIDropDownDelegate,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     UIButton * camara;
     UIView * navView;

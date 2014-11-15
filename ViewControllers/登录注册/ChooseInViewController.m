@@ -36,7 +36,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = BGCOLOR3;
+    self.view.backgroundColor = [UIColor whiteColor];
     
     if ([[USER objectForKey:@"planet"] intValue] == 1) {
         self.isMi = YES;
@@ -47,16 +47,24 @@
 
 -(void)createUI
 {
-    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 17, 17) ImageName:@"choosein_back.png"];
+    UIImageView * bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"blurBg.png"];
+    [self.view addSubview:bgImageView];
+    
+    UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 18/2, 31/2) ImageName:@"choosein_back2.png"];
     [self.view addSubview:backImageView];
     
     UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [self.view addSubview:backBtn];
+    
+    float w = 159*0.6;
+    float h = 97*0.6;
+    UIImageView * icon = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-w)/2.0, 100, w, h) ImageName:@"choosein_icon.png"];
+    [self.view addSubview:icon];
     /******************************/
-    UIView * statusView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 20)];
-    statusView.backgroundColor = BGCOLOR;
-    [self.view addSubview:statusView];
+//    UIView * statusView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 20)];
+//    statusView.backgroundColor = BGCOLOR;
+//    [self.view addSubview:statusView];
     
 //    ambassadorMessage = [MyControl createLabelWithFrame:CGRectMake(80, 60, 140, 40) Font:15 Text:nil];
 //    ambassadorMessage.font = [UIFont boldSystemFontOfSize:15];
@@ -77,8 +85,8 @@
 //    }
 //    [self.view addSubview:ambassador];
     
-    UIImageView * cloud = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-572/2)/2, self.view.frame.size.height-170-50-342/2, 572/2, 342/2) ImageName:@"2-c.png"];
-    [self.view addSubview:cloud];
+//    UIImageView * cloud = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-572/2)/2, self.view.frame.size.height-170-50-342/2, 572/2, 342/2) ImageName:@"2-c.png"];
+//    [self.view addSubview:cloud];
     
     /************Mi*************/
 //    UIImageView * haveBg = [MyControl createImageViewWithFrame:CGRectMake(130/2-10, 15, 373/2+10, 95/2) ImageName:@""];
@@ -98,16 +106,16 @@
 //    }
 //    [haveBg addSubview:haveLable2];
     
-    UIImageView * haveBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-434/2)/2, cloud.frame.origin.y-25, 434/2, 167/2) ImageName:@"choosein_havePet.png"];
+//    UIImageView * haveBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-520/2)/2.0, (self.view.frame.size.height-117/2.0)/2.0, 520/2, 117/2) ImageName:@"has_star.png"];
 //    if (_isMi) {
 //        haveBg.image = [UIImage imageNamed:@"haveCat.png"];
 //    }else{
 //        haveBg.image = [UIImage imageNamed:@"haveDog.png"];
 //    }
-    [self.view addSubview:haveBg];
+//    [self.view addSubview:haveBg];
     
-    UIButton * haveBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, haveBg.frame.size.width, haveBg.frame.size.height) ImageName:@"" Target:self Action:@selector(haveBtnClick) Title:nil];
-    [haveBg addSubview:haveBtn];
+    UIButton * haveBtn = [MyControl createButtonWithFrame:CGRectMake((self.view.frame.size.width-520/2)/2.0, self.view.frame.size.height-530/2.0, 520/2, 117/2) ImageName:@"has_star.png" Target:self Action:@selector(haveBtnClick) Title:nil];
+    [self.view addSubview:haveBtn];
     /************Wa*************/
 //    UIImageView * notHaveBg = [MyControl createImageViewWithFrame:CGRectMake(130/2-10, 70, 373/2+10, 95/2) ImageName:@""];
 //    notHaveBg.image = [[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2-d" ofType:@"png"]] stretchableImageWithLeftCapWidth:30 topCapHeight:0];
@@ -125,20 +133,20 @@
 //        notHaveLable2.text = @"快 来 加 入 萌 狗 们 的 家 族";
 //    }
 //    [notHaveBg addSubview:notHaveLable2];
-    
-    UIImageView * notHaveBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-434/2)/2, cloud.frame.origin.y+60, 434/2, 167/2) ImageName:@"choosein_noPet.png"];
+//    
+//    UIImageView * notHaveBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-434/2)/2, cloud.frame.origin.y+60, 434/2, 167/2) ImageName:@"choosein_noPet.png"];
 //    if (_isMi) {
 //        notHaveBg.image = [UIImage imageNamed:@"noCat.png"];
 //    }else{
 //        notHaveBg.image = [UIImage imageNamed:@"noDog.png"];
 //    }
-    [self.view addSubview:notHaveBg];
+//    [self.view addSubview:notHaveBg];
     
-    UIButton * notHaveBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, haveBg.frame.size.width, haveBg.frame.size.height) ImageName:@"" Target:self Action:@selector(notHaveBtnClick) Title:nil];
-    [notHaveBg addSubview:notHaveBtn];
+    UIButton * notHaveBtn = [MyControl createButtonWithFrame:CGRectMake((self.view.frame.size.width-520/2)/2.0, self.view.frame.size.height-348/2.0, 520/2, 117/2) ImageName:@"no_star.png" Target:self Action:@selector(notHaveBtnClick) Title:nil];
+    [self.view addSubview:notHaveBtn];
     /******************************/
-    UIImageView * earth = [MyControl createImageViewWithFrame:CGRectMake(0, self.view.frame.size.height-100, 320, 219/2) ImageName:@"2-b.png"];
-    [self.view addSubview:earth];
+//    UIImageView * earth = [MyControl createImageViewWithFrame:CGRectMake(0, self.view.frame.size.height-100, 320, 219/2) ImageName:@"2-b.png"];
+//    [self.view addSubview:earth];
     
 //    UIImageView * switchBg = [MyControl createImageViewWithFrame:CGRectMake(0, self.view.frame.size.height-45, 150, 45) ImageName:@""];
 //    switchBg.image = [[UIImage imageNamed:@"switchBg.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:20];
@@ -166,15 +174,16 @@
 //    }
 //    [self.view addSubview:switchBtn];
     
-    UIImageView * catAndDog = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-450/2)/2, earth.frame.origin.y-70, 450/2, 203/2) ImageName:@"choosein_cat_dog.png"];
-    [self.view addSubview:catAndDog];
+//    UIImageView * catAndDog = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-450/2)/2, earth.frame.origin.y-70, 450/2, 203/2) ImageName:@"choosein_cat_dog.png"];
+//    [self.view addSubview:catAndDog];
     
-    rightBtn = [MyControl createButtonWithFrame:CGRectMake((self.view.frame.size.width-380/2)/2, catAndDog.frame.origin.y-35, 20, 20) ImageName:@"atUsers_unSelected.png" Target:self Action:@selector(rightBtnClick:) Title:nil];
+    rightBtn = [MyControl createButtonWithFrame:CGRectMake(notHaveBtn.frame.origin.x, notHaveBtn.frame.origin.y+117/2+5, 20, 20) ImageName:@"atUsers_unSelected.png" Target:self Action:@selector(rightBtnClick:) Title:nil];
     [rightBtn setImage:[UIImage imageNamed:@"atUsers_selected.png"] forState:UIControlStateSelected];
+    
 //    rightBtn.selected = YES;
     [self.view addSubview:rightBtn];
     
-    UILabel * label = [MyControl createLabelWithFrame:CGRectMake(rightBtn.frame.origin.x+25, catAndDog.frame.origin.y-35, 200, 20) Font:12 Text:@"我已经阅读并同意"];
+    UILabel * label = [MyControl createLabelWithFrame:CGRectMake(rightBtn.frame.origin.x+25, rightBtn.frame.origin.y, 200, 20) Font:12 Text:@"我已经阅读并同意"];
 //    NSMutableAttributedString * attString = [[NSMutableAttributedString alloc] initWithString:@"我已经阅读并同意《用户协议》"];
 //    [attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:85/255.0 green:134/255.0 blue:156/255.0 alpha:1] range:NSMakeRange(8, 6)];
 //    [attString addAttribute:NSUnderlineStyleAttributeName value:[NSString stringWithFormat:@"%d", NSUnderlineStyleSingle] range:NSMakeRange(8, 6)];
@@ -197,6 +206,12 @@
     hyperBtn.titleLabel.font = [UIFont systemFontOfSize:12];
     [self.view addSubview:hyperBtn];
     
+    if (self.isFromAdd) {
+        rightBtn.selected = YES;
+        rightBtn.hidden = YES;
+        label.hidden = YES;
+        hyperBtn.hidden = YES;
+    }
     
 }
 -(void)hyBtnClick

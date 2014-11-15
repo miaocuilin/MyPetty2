@@ -2,464 +2,304 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>good</key>
-	<dict>
-		<key>level0</key>
-		<array>
-			<dict>
-				<key>no</key>
-				<string>1101</string>
-				<key>name</key>
-				<string>毛线球</string>
-				<key>level</key>
-				<string>1</string>
-				<key>price</key>
-				<string>20</string>
-				<key>add_rq</key>
-				<string>20</string>
-				<key>ratio</key>
-				<string>1.2</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1102</string>
-				<key>name</key>
-				<string>飞盘</string>
-				<key>level</key>
-				<string>1</string>
-				<key>price</key>
-				<string>20</string>
-				<key>add_rq</key>
-				<string>20</string>
-				<key>ratio</key>
-				<string>1.2</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1103</string>
-				<key>name</key>
-				<string>铃铛</string>
-				<key>level</key>
-				<string>1</string>
-				<key>price</key>
-				<string>24</string>
-				<key>add_rq</key>
-				<string>28</string>
-				<key>ratio</key>
-				<string>1.2</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1104</string>
-				<key>name</key>
-				<string>蝴蝶结</string>
-				<key>level</key>
-				<string>1</string>
-				<key>price</key>
-				<string>24</string>
-				<key>add_rq</key>
-				<string>28</string>
-				<key>ratio</key>
-				<string>1</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1105</string>
-				<key>name</key>
-				<string>逗猫棒</string>
-				<key>level</key>
-				<string>1</string>
-				<key>price</key>
-				<string>28</string>
-				<key>add_rq</key>
-				<string>33</string>
-				<key>ratio</key>
-				<string>1.2</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1106</string>
-				<key>name</key>
-				<string>棒球</string>
-				<key>level</key>
-				<string>1</string>
-				<key>price</key>
-				<string>28</string>
-				<key>add_rq</key>
-				<string>33</string>
-				<key>ratio</key>
-				<string>1.2</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1107</string>
-				<key>name</key>
-				<string>糖果</string>
-				<key>level</key>
-				<string>1</string>
-				<key>price</key>
-				<string>28</string>
-				<key>add_rq</key>
-				<string>33</string>
-				<key>ratio</key>
-				<string>1</string>
-			</dict>
-		</array>
-		<key>level1</key>
-		<array>
-			<dict>
-				<key>no</key>
-				<string>1201</string>
-				<key>name</key>
-				<string>猫饼干</string>
-				<key>level</key>
-				<string>2</string>
-				<key>price</key>
-				<string>36</string>
-				<key>add_rq</key>
-				<string>48</string>
-				<key>ratio</key>
-				<string>1.33</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1202</string>
-				<key>name</key>
-				<string>肉包子</string>
-				<key>level</key>
-				<string>2</string>
-				<key>price</key>
-				<string>36</string>
-				<key>add_rq</key>
-				<string>48</string>
-				<key>ratio</key>
-				<string>1.33</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1203</string>
-				<key>name</key>
-				<string>宠物小馒头</string>
-				<key>level</key>
-				<string>2</string>
-				<key>price</key>
-				<string>36</string>
-				<key>add_rq</key>
-				<string>48</string>
-				<key>ratio</key>
-				<string>1.33</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1204</string>
-				<key>name</key>
-				<string>磨牙棒</string>
-				<key>level</key>
-				<string>2</string>
-				<key>price</key>
-				<string>36</string>
-				<key>add_rq</key>
-				<string>48</string>
-				<key>ratio</key>
-				<string>1.33</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1205</string>
-				<key>name</key>
-				<string>宠物引绳</string>
-				<key>level</key>
-				<string>2</string>
-				<key>price</key>
-				<string>40</string>
-				<key>add_rq</key>
-				<string>58</string>
-				<key>ratio</key>
-				<string>1.45</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1206</string>
-				<key>name</key>
-				<string>宠物碗</string>
-				<key>level</key>
-				<string>2</string>
-				<key>price</key>
-				<string>40</string>
-				<key>add_rq</key>
-				<string>58</string>
-				<key>ratio</key>
-				<string>1.45</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1207</string>
-				<key>name</key>
-				<string>魔法棒</string>
-				<key>level</key>
-				<string>2</string>
-				<key>price</key>
-				<string>45</string>
-				<key>add_rq</key>
-				<string>68</string>
-				<key>ratio</key>
-				<string>1.5</string>
-			</dict>
-		</array>
-		<key>level2</key>
-		<array>
-			<dict>
-				<key>no</key>
-				<string>1301</string>
-				<key>name</key>
-				<string>围巾</string>
-				<key>level</key>
-				<string>3</string>
-				<key>price</key>
-				<string>58</string>
-				<key>add_rq</key>
-				<string>88</string>
-				<key>ratio</key>
-				<string>1.5</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1302</string>
-				<key>name</key>
-				<string>乔巴帽子</string>
-				<key>level</key>
-				<string>3</string>
-				<key>price</key>
-				<string>58</string>
-				<key>add_rq</key>
-				<string>88</string>
-				<key>ratio</key>
-				<string>1.5</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1303</string>
-				<key>name</key>
-				<string>香波</string>
-				<key>level</key>
-				<string>3</string>
-				<key>price</key>
-				<string>65</string>
-				<key>add_rq</key>
-				<string>100</string>
-				<key>ratio</key>
-				<string>1.55</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1304</string>
-				<key>name</key>
-				<string>护毛素</string>
-				<key>level</key>
-				<string>3</string>
-				<key>price</key>
-				<string>65</string>
-				<key>add_rq</key>
-				<string>100</string>
-				<key>ratio</key>
-				<string>1.55</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1305</string>
-				<key>name</key>
-				<string>宠物服饰</string>
-				<key>level</key>
-				<string>3</string>
-				<key>price</key>
-				<string>70</string>
-				<key>add_rq</key>
-				<string>110</string>
-				<key>ratio</key>
-				<string>1.6</string>
-			</dict>
-		</array>
-		<key>level3</key>
-		<array>
-			<dict>
-				<key>no</key>
-				<string>1401</string>
-				<key>name</key>
-				<string>吹风机</string>
-				<key>level</key>
-				<string>4</string>
-				<key>price</key>
-				<string>85</string>
-				<key>add_rq</key>
-				<string>135</string>
-				<key>ratio</key>
-				<string>1.6</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1402</string>
-				<key>name</key>
-				<string>猫窝</string>
-				<key>level</key>
-				<string>4</string>
-				<key>price</key>
-				<string>100</string>
-				<key>add_rq</key>
-				<string>166</string>
-				<key>ratio</key>
-				<string>1.66</string>
-			</dict>
-			<dict>
-				<key>no</key>
-				<string>1403</string>
-				<key>name</key>
-				<string>狗窝</string>
-				<key>level</key>
-				<string>4</string>
-				<key>price</key>
-				<string>100</string>
-				<key>add_rq</key>
-				<string>166</string>
-				<key>ratio</key>
-				<string>1.66</string>
-			</dict>
-		</array>
-	</dict>
 	<key>bad</key>
 	<dict>
 		<key>level0</key>
 		<array>
 			<dict>
+				<key>add_rq</key>
+				<string>-3</string>
+				<key>level</key>
+				<string>1</string>
+				<key>name</key>
+				<string>蛋蛋的忧伤</string>
 				<key>no</key>
 				<string>2101</string>
-				<key>name</key>
-				<string>臭鸡蛋</string>
-				<key>level</key>
-				<string>1</string>
 				<key>price</key>
-				<string>40</string>
+				<string>12</string>
+				<key>ratio</key>
+				<string>0.25</string>
+			</dict>
+			<dict>
 				<key>add_rq</key>
 				<string>-5</string>
-				<key>ratio</key>
+				<key>level</key>
 				<string>1</string>
-			</dict>
-			<dict>
+				<key>name</key>
+				<string>吓你一大跳</string>
 				<key>no</key>
 				<string>2102</string>
-				<key>name</key>
-				<string>石头</string>
-				<key>level</key>
-				<string>1</string>
 				<key>price</key>
-				<string>42</string>
-				<key>add_rq</key>
-				<string>-8</string>
+				<string>15</string>
 				<key>ratio</key>
-				<string>1</string>
+				<string>0.33</string>
 			</dict>
 			<dict>
+				<key>add_rq</key>
+				<string>-7</string>
+				<key>level</key>
+				<string>1</string>
+				<key>name</key>
+				<string>臭气熏天</string>
 				<key>no</key>
 				<string>2103</string>
-				<key>name</key>
-				<string>水气球</string>
+				<key>price</key>
+				<string>18</string>
+				<key>ratio</key>
+				<string>0.38</string>
+			</dict>
+			<dict>
+				<key>add_rq</key>
+				<string>-10</string>
 				<key>level</key>
 				<string>1</string>
+				<key>name</key>
+				<string>特别小伙伴</string>
+				<key>no</key>
+				<string>2104</string>
 				<key>price</key>
-				<string>42</string>
+				<string>22</string>
+				<key>ratio</key>
+				<string>0.45</string>
+			</dict>
+		</array>
+	</dict>
+	<key>good</key>
+	<dict>
+		<key>level0</key>
+		<array>
+			<dict>
 				<key>add_rq</key>
-				<string>-8</string>
+				<string>28</string>
+				<key>level</key>
+				<string>1</string>
+				<key>name</key>
+				<string>好大一条鱼</string>
+				<key>no</key>
+				<string>1101</string>
+				<key>price</key>
+				<string>24</string>
+				<key>ratio</key>
+				<string>1.2</string>
+			</dict>
+			<dict>
+				<key>add_rq</key>
+				<string>18</string>
+				<key>level</key>
+				<string>1</string>
+				<key>name</key>
+				<string>甜蜜缤纷</string>
+				<key>no</key>
+				<string>1102</string>
+				<key>price</key>
+				<string>18</string>
 				<key>ratio</key>
 				<string>1</string>
 			</dict>
 			<dict>
-				<key>no</key>
-				<string>2104</string>
-				<key>name</key>
-				<string>毛毛虫</string>
+				<key>add_rq</key>
+				<string>18</string>
 				<key>level</key>
 				<string>1</string>
+				<key>name</key>
+				<string>萌铛铛</string>
+				<key>no</key>
+				<string>1103</string>
 				<key>price</key>
-				<string>46</string>
-				<key>add_rq</key>
-				<string>-10</string>
+				<string>18</string>
 				<key>ratio</key>
 				<string>1</string>
+			</dict>
+			<dict>
+				<key>add_rq</key>
+				<string>28</string>
+				<key>level</key>
+				<string>1</string>
+				<key>name</key>
+				<string>女神蝴蝶结</string>
+				<key>no</key>
+				<string>1104</string>
+				<key>price</key>
+				<string>24</string>
+				<key>ratio</key>
+				<string>1.2</string>
 			</dict>
 		</array>
 		<key>level1</key>
 		<array>
 			<dict>
-				<key>no</key>
-				<string>2201</string>
-				<key>name</key>
-				<string>鸡毛掸子</string>
+				<key>add_rq</key>
+				<string>45</string>
 				<key>level</key>
 				<string>2</string>
+				<key>name</key>
+				<string>求陪玩</string>
+				<key>no</key>
+				<string>1201</string>
 				<key>price</key>
-				<string>50</string>
-				<key>add_rq</key>
-				<string>-15</string>
+				<string>36</string>
 				<key>ratio</key>
-				<string>1.1</string>
+				<string>1.25</string>
 			</dict>
 			<dict>
-				<key>no</key>
-				<string>2202</string>
-				<key>name</key>
-				<string>惨叫鸡</string>
+				<key>add_rq</key>
+				<string>45</string>
 				<key>level</key>
 				<string>2</string>
+				<key>name</key>
+				<string>带我飞</string>
+				<key>no</key>
+				<string>1202</string>
 				<key>price</key>
-				<string>50</string>
-				<key>add_rq</key>
-				<string>-15</string>
+				<string>36</string>
 				<key>ratio</key>
-				<string>1.1</string>
+				<string>1.25</string>
 			</dict>
 			<dict>
-				<key>no</key>
-				<string>2203</string>
-				<key>name</key>
-				<string>便便</string>
-				<key>level</key>
-				<string>2</string>
-				<key>price</key>
+				<key>add_rq</key>
 				<string>58</string>
-				<key>add_rq</key>
-				<string>-20</string>
+				<key>level</key>
+				<string>2</string>
+				<key>name</key>
+				<string>土豪零食</string>
+				<key>no</key>
+				<string>1203</string>
+				<key>price</key>
+				<string>45</string>
 				<key>ratio</key>
-				<string>1.09</string>
+				<string>1.28</string>
+			</dict>
+			<dict>
+				<key>add_rq</key>
+				<string>58</string>
+				<key>level</key>
+				<string>2</string>
+				<key>name</key>
+				<string>萌力无边</string>
+				<key>no</key>
+				<string>1204</string>
+				<key>price</key>
+				<string>45</string>
+				<key>ratio</key>
+				<string>1.28</string>
 			</dict>
 		</array>
 		<key>level2</key>
 		<array>
 			<dict>
-				<key>no</key>
-				<string>2301</string>
-				<key>name</key>
-				<string>仙人球</string>
+				<key>add_rq</key>
+				<string>80</string>
 				<key>level</key>
 				<string>3</string>
+				<key>name</key>
+				<string>喷香香</string>
+				<key>no</key>
+				<string>1301</string>
 				<key>price</key>
-				<string>70</string>
-				<key>add_rq</key>
-				<string>-28</string>
+				<string>58</string>
 				<key>ratio</key>
-				<string>1.2</string>
+				<string>1.37</string>
 			</dict>
 			<dict>
-				<key>no</key>
-				<string>2302</string>
-				<key>name</key>
-				<string>炸弹</string>
+				<key>add_rq</key>
+				<string>80</string>
 				<key>level</key>
 				<string>3</string>
+				<key>name</key>
+				<string>撒气小兽</string>
+				<key>no</key>
+				<string>1302</string>
 				<key>price</key>
-				<string>80</string>
-				<key>add_rq</key>
-				<string>-35</string>
+				<string>58</string>
 				<key>ratio</key>
-				<string>1.2</string>
+				<string>1.37</string>
+			</dict>
+			<dict>
+				<key>add_rq</key>
+				<string>95</string>
+				<key>level</key>
+				<string>3</string>
+				<key>name</key>
+				<string>求约会</string>
+				<key>no</key>
+				<string>1303</string>
+				<key>price</key>
+				<string>65</string>
+				<key>ratio</key>
+				<string>1.46</string>
+			</dict>
+			<dict>
+				<key>add_rq</key>
+				<string>95</string>
+				<key>level</key>
+				<string>3</string>
+				<key>name</key>
+				<string>暖男围巾</string>
+				<key>no</key>
+				<string>1304</string>
+				<key>price</key>
+				<string>65</string>
+				<key>ratio</key>
+				<string>1.46</string>
+			</dict>
+		</array>
+		<key>level3</key>
+		<array>
+			<dict>
+				<key>add_rq</key>
+				<string>140</string>
+				<key>level</key>
+				<string>4</string>
+				<key>name</key>
+				<string>温馨小窝</string>
+				<key>no</key>
+				<string>1401</string>
+				<key>price</key>
+				<string>88</string>
+				<key>ratio</key>
+				<string>1.6</string>
+			</dict>
+			<dict>
+				<key>add_rq</key>
+				<string>140</string>
+				<key>level</key>
+				<string>4</string>
+				<key>name</key>
+				<string>金饭碗</string>
+				<key>no</key>
+				<string>1402</string>
+				<key>price</key>
+				<string>88</string>
+				<key>ratio</key>
+				<string>1.6</string>
+			</dict>
+			<dict>
+				<key>add_rq</key>
+				<string>200</string>
+				<key>level</key>
+				<string>4</string>
+				<key>name</key>
+				<string>深情比金坚</string>
+				<key>no</key>
+				<string>1403</string>
+				<key>price</key>
+				<string>100</string>
+				<key>ratio</key>
+				<string>2</string>
+			</dict>
+			<dict>
+				<key>add_rq</key>
+				<string>240</string>
+				<key>level</key>
+				<string>4</string>
+				<key>name</key>
+				<string>宇宙第一萌</string>
+				<key>no</key>
+				<string>1404</string>
+				<key>price</key>
+				<string>120</string>
+				<key>ratio</key>
+				<string>2</string>
 			</dict>
 		</array>
 	</dict>

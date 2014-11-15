@@ -57,6 +57,9 @@
             NSLog(@"背包物品数据：%@",load.dataDict);
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
                 for (NSString * key in [[load.dataDict objectForKey:@"data"] allKeys]) {
+                    if([key intValue]%10 >4){
+                        continue;
+                    }
                     [self.bagItemIdArray addObject:key];
                 }
                 //排序
@@ -174,10 +177,10 @@
         }
         
         //礼物图片
-        UIImageView * giftImageView = [MyControl createImageViewWithFrame:CGRectMake((111-90)/2.0, (95-60)/2.0, 90, 60) ImageName:@""];
+        UIImageView * giftImageView = [MyControl createImageViewWithFrame:CGRectMake((111-98)/2.0, (95-93)/2.0, 98, 83) ImageName:@""];
         [giftBgImageView addSubview:giftImageView];
         
-        UIImageView * giftImageView2 = [MyControl createImageViewWithFrame:CGRectMake((111-90)/2.0, (95-60)/2.0, 90, 60) ImageName:@""];
+        UIImageView * giftImageView2 = [MyControl createImageViewWithFrame:CGRectMake((111-98)/2.0, (95-93)/2.0, 98, 83) ImageName:@""];
         [giftBgImageView2 addSubview:giftImageView2];
         
         

@@ -465,11 +465,11 @@ static LevelRank *levelAndRank =nil;
     
     
     NSArray *level4 =[[DictData objectForKey:@"bad"] objectForKey:@"level0"];
-    NSArray *level5 =[[DictData objectForKey:@"bad"] objectForKey:@"level1"];
-    NSArray *level6 =[[DictData objectForKey:@"bad"] objectForKey:@"level2"];
+//    NSArray *level5 =[[DictData objectForKey:@"bad"] objectForKey:@"level1"];
+//    NSArray *level6 =[[DictData objectForKey:@"bad"] objectForKey:@"level2"];
     [array addObjectsFromArray:level4];
-    [array addObjectsFromArray:level5];
-    [array addObjectsFromArray:level6];
+//    [array addObjectsFromArray:level5];
+//    [array addObjectsFromArray:level6];
     return array;
 }
 +(NSDictionary *)returnGiftDictWithItemId:(NSString *)itemId
@@ -524,97 +524,61 @@ static LevelRank *levelAndRank =nil;
     NSString * actionStr = nil;
     switch (a) {
         case 1101:
-            actionStr = @"惊喜地伸出小爪子拨弄毛线球。";
+            actionStr = @"盯着大鱼，口水流出来了~";
             break;
         case 1102:
-            actionStr = @"纵身一跃，在空中叼住了飞盘，bingo！";
+            actionStr = @"舔了舔糖果，幸福到不行~";
             break;
         case 1103:
-            actionStr = @"好奇的拨弄铃铛，叮铃~叮铃~";
+            actionStr = @"拨弄着铃铛，主人快被烦死了~";
             break;
         case 1104:
-            actionStr = @"乖巧地戴上了蝴蝶结，神气地走了两步。";
-            break;
-        case 1105:
-            actionStr = @"顿时眼前一亮，挥舞着小爪子扑了上去。";
-            break;
-        case 1106:
-            actionStr = @"立刻精神抖擞地去追棒球了。";
-            break;
-        case 1107:
-            actionStr = @"一脸幸福地舔了舔糖果。";
+            actionStr = @"戴上了臭美哒蝴蝶结，照镜子去啦~";
             break;
         case 1201:
-            actionStr = @"闻了闻猫饼干，满意地喵喵叫~";
+            actionStr = @"立刻精神抖擞地去追球球了";
             break;
         case 1202:
-            actionStr = @"闻了闻肉包子，狼吞虎咽地吃了起来。";
+            actionStr = @"纵身一跃，宇宙翱翔~";
             break;
         case 1203:
-            actionStr = @"悠哉地嚼着宠物小馒头。";
-            break;
-        case 1204:
-            actionStr = @"一口咬住了磨牙棒，谁要也不给！";
-            break;
-        case 1205:
-            actionStr = @"发现了新牵引绳，迫不及待地要出门逛逛。";
-            break;
-        case 1206:
-            actionStr = @"疑惑地歪头看，咦~为什么是空的？";
-            break;
-        case 1207:
-            actionStr = @"瞪大了圆滴滴眼睛，好奇地伸爪拨弄。";
+            actionStr = @"的吃货本质终于暴露在你面前啦！";
             break;
         case 1301:
-            actionStr = @"戴上了新围巾，兴奋异常地到处炫耀。";
+            actionStr = @"现在香喷喷哒，快来亲一口！";
             break;
         case 1302:
-            actionStr = @"戴上新帽子活泼地冲你撒了个娇。";
+            actionStr = @"对着小兽撒了一通气，可爽啦！";
             break;
         case 1303:
-            actionStr = @"洗完澡浑身香喷喷的。";
+            actionStr = @"得看你的表现才会决定跟不跟你约会哦！";
             break;
         case 1304:
-            actionStr = @"的毛皮更顺滑了，又干净又漂亮~";
-            break;
-        case 1305:
-            actionStr = @"穿上新衣服，调皮地在地上打了个滚。";
+            actionStr = @"顿时热乎乎的，夸赞你是暖男呢！";
             break;
         case 1401:
-            actionStr = @"懒洋洋地吹着风，还打了个小哈欠。";
+            actionStr = @"满意的躺到了新家里，身子暖暖哒~~";
             break;
         case 1402:
-            actionStr = @"惊奇地看着新窝，满意地钻进去睡觉了。";
+            actionStr = @"捧着金饭碗，再也不愁木得粮食吃啦！";
             break;
         case 1403:
-            actionStr = @"嗅了嗅新窝，放松地打着呼噜睡觉了~";
+            actionStr = @"戴上了新项圈，跑到镜子前臭美去了~~";
+            break;
+        case 1404:
+            actionStr = @"戴上了皇冠，英姿飒爽的叫了一声！";
             break;
         case 2101:
-            actionStr = @"被熏得晕头转向……";
+            actionStr = @"被扔鸡蛋啦，蛋黄碎了一地！";
             break;
         case 2102:
-            actionStr = @"被砸个正着，异常愤怒的叫了起来。";
+            actionStr = @"碰到毛绒绒的虫纸啦，吓尿了！";
             break;
         case 2103:
-            actionStr = @"被溅了一身的水，成了湿漉漉的可怜虫……";
+            actionStr = @"踩到了你扔的便便，顿时昏厥！";
             break;
         case 2104:
-            actionStr = @"警觉地瞅了一眼毛毛虫，嫌恶地跑开了。";
-            break;
-        case 2201:
-            actionStr = @"惊慌的看着鸡毛掸子，畏惧地缩了缩脑袋。";
-            break;
-        case 2202:
-            actionStr = @"被吓了一跳，惊慌地躲进沙发下面了。";
-            break;
-        case 2203:
-            actionStr = @"没有注意到便便，竟然一脚踩了上去！";
-            break;
-        case 2301:
-            actionStr = @"竟一头撞上了仙人球，好痛痛……";
-            break;
-        case 2302:
-            actionStr = @"惊慌失措地尖叫，主人快来保护我！！！";
+            actionStr = @"痒屎了，抓耳挠腮中。。。";
             break;
         default:
             break;

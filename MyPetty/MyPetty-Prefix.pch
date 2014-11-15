@@ -54,7 +54,7 @@
 
 #define USER [ControllerManager shareUserDefault]
 #define NET [UIApplication sharedApplication].networkActivityIndicatorVisible
-#define DOCDIR [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]
+#define DOCDIR [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0]
 
 #define UDID [USER objectForKey:@"UDID"]
 
@@ -65,7 +65,7 @@
 
 
 #define LoadingSuccess [MMProgressHUD dismissWithSuccess:@"加载完成" title:nil afterDelay:0.5];
-#define LoadingFailed [MMProgressHUD dismissWithError:@"加载失败" afterDelay:0.5];
+#define LoadingFailed [MMProgressHUD dismissWithError:@"网络连接异常" afterDelay:1.5];
 
 #define SHOWMENU JDSideMenu * menu = [ControllerManager shareJDSideMenu];[menu showMenuAnimated:YES];
 
@@ -98,6 +98,10 @@
 
 //打虫子
 #define HITBUGS @"http://123.57.39.48/index.php?r=game/dcz&aid="
+
+//检查更新
+#define UPDATEAPI @"http://123.57.39.48/index.php?r=user/upgradeApi&version="
+
 
 //IP头API
 #define IPURL @"http://54.199.161.210/dc/index.php"

@@ -27,6 +27,8 @@
 #import "PetInfoViewController.h"
 #import "ChoseLoadViewController.h"
 #import "JDSideMenuCell.h"
+#import "PopularityListViewController.h"
+
 @interface JDMenuViewController ()
 
 @end
@@ -223,7 +225,7 @@
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:self.bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
 //    NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
@@ -260,33 +262,38 @@
     [sv addSubview:sv3];
     
     //搜索框
-    UIView * searchBgView = [MyControl createViewWithFrame:CGRectMake(15, 15+20, 340/2, 25)];
-    searchBgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
-    searchBgView.alpha = 0.6;
-    searchBgView.layer.cornerRadius = 7;
-    searchBgView.layer.masksToBounds = YES;
-    [self.view addSubview:searchBgView];
-
-    UIImageView * searchView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 25, 12) ImageName:@""];
-    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(3, -1.5, 12, 12) ImageName:@"menu-1.png"];
-    [searchView addSubview:searchImageView];
+    UIButton * rqBtn = [MyControl createButtonWithFrame:CGRectMake(15, 15, 166/2, 51/2) ImageName:@"sidePopular.png" Target:self Action:@selector(rqBtnClick) Title:@"萌星人气榜"];
+    //6 6
+    rqBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+    [sv addSubview:rqBtn];
     
-    tfSearch = [MyControl createTextFieldWithFrame:CGRectMake(15, 15+20+1, 340/2, 25) placeholder:nil passWord:NO leftImageView:searchView rightImageView:nil Font:11];
-    tfSearch.delegate = self;
-    tfSearch.returnKeyType = UIReturnKeySearch;
-    tfSearch.textColor = [UIColor whiteColor];
-    tfSearch.backgroundColor = [UIColor clearColor];
-    tfSearch.borderStyle = 0;
-    tfSearch.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"搜索萌星~" attributes:@{NSForegroundColorAttributeName:BGCOLOR}];
-    [self.view addSubview:tfSearch];
-    
-    searchBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 37, 38, 20) ImageName:@"" Target:self Action:@selector(searchBtnClick) Title:@"取消"];
-    searchBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    searchBtn.hidden = YES;
-    [self.view addSubview:searchBtn];
+//    UIView * searchBgView = [MyControl createViewWithFrame:CGRectMake(15, 15+20, 340/2, 25)];
+//    searchBgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
+//    searchBgView.alpha = 0.6;
+//    searchBgView.layer.cornerRadius = 7;
+//    searchBgView.layer.masksToBounds = YES;
+//    [self.view addSubview:searchBgView];
+//
+//    UIImageView * searchView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 25, 12) ImageName:@""];
+//    UIImageView * searchImageView = [MyControl createImageViewWithFrame:CGRectMake(3, -1.5, 12, 12) ImageName:@"menu-1.png"];
+//    [searchView addSubview:searchImageView];
+//    
+//    tfSearch = [MyControl createTextFieldWithFrame:CGRectMake(15, 15+20+1, 340/2, 25) placeholder:nil passWord:NO leftImageView:searchView rightImageView:nil Font:11];
+//    tfSearch.delegate = self;
+//    tfSearch.returnKeyType = UIReturnKeySearch;
+//    tfSearch.textColor = [UIColor whiteColor];
+//    tfSearch.backgroundColor = [UIColor clearColor];
+//    tfSearch.borderStyle = 0;
+//    tfSearch.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"搜索萌星~" attributes:@{NSForegroundColorAttributeName:BGCOLOR}];
+//    [self.view addSubview:tfSearch];
+//    
+//    searchBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 37, 38, 20) ImageName:@"" Target:self Action:@selector(searchBtnClick) Title:@"取消"];
+//    searchBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+//    searchBtn.hidden = YES;
+//    [self.view addSubview:searchBtn];
     
     //消息
-    UIButton * messageBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 50, 25, 25) ImageName:@"menu_message.png" Target:self Action:@selector(messageBtnClick) Title:nil];
+    UIButton * messageBtn = [MyControl createButtonWithFrame:CGRectMake(370/2, 15, 25, 25) ImageName:@"menu_message.png" Target:self Action:@selector(messageBtnClick) Title:nil];
     [sv3 addSubview:messageBtn];
     
     messageNumBg = [MyControl  createImageViewWithFrame:CGRectMake(17, -7, 15, 15) ImageName:@"greenBall.png"];
@@ -667,6 +674,14 @@
     tv.backgroundColor = [UIColor clearColor];
     tv.separatorStyle = 0;
     [sv addSubview:tv];
+}
+
+-(void)rqBtnClick
+{
+    PopularityListViewController * vc = [[PopularityListViewController alloc] init];
+    
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 }
 #pragma mark -
 -(void)regBtnClick

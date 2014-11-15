@@ -61,7 +61,7 @@
     self.aidsArray = [NSMutableArray arrayWithCapacity:0];
     self.myCountryArray = [NSMutableArray arrayWithCapacity:0];
     
-    self.titleArray = [NSMutableArray arrayWithObjects:@"总人气榜",@"人气日榜", @"人气周榜", @"人气月榜",  nil];
+    self.titleArray = [NSMutableArray arrayWithObjects:@"总人气榜",@"昨日人气", @"上周人气", @"上月人气",  nil];
     self.myCountryRankArray = [NSMutableArray arrayWithCapacity:0];
     self.selectedWords = @"所有";
     self.totalArray = [NSMutableArray arrayWithObjects:@"所有", @"喵", @"汪", nil];
@@ -252,7 +252,7 @@
     bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString * docDir = DOCDIR;
     NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
     NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
@@ -376,9 +376,9 @@
 //    NSLog(@"titleBtn.currentTitle:%@",titleBtn.currentTitle);
     if ([titleBtn.currentTitle isEqualToString:@"总人气榜"]) {
         cell.rqNum.text = model.t_rq;
-    }else if ([titleBtn.currentTitle isEqualToString:@"人气日榜"]){
+    }else if ([titleBtn.currentTitle isEqualToString:@"昨日人气"]){
         cell.rqNum.text = model.d_rq;
-    }else if ([titleBtn.currentTitle isEqualToString:@"人气周榜"]){
+    }else if ([titleBtn.currentTitle isEqualToString:@"上周人气"]){
         cell.rqNum.text = model.w_rq;
 //        NSLog(@"%@", model.w_rq);
     }else{

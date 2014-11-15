@@ -26,8 +26,8 @@
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 85, 90) ImageName:@"product_bg.png"];
     [self.contentView addSubview:self.bgImageView];
     
-    self.presentImageView = [MyControl createImageViewWithFrame:CGRectMake((self.frame.size.height-75)/2, 20, 75, 50) ImageName:@"bother5_2.png"];
-    [self addSubview:self.presentImageView];
+    self.presentImageView = [MyControl createImageViewWithFrame:CGRectMake(13, 20, 59, 50) ImageName:@"bother5_2.png"];
+    [self.bgImageView addSubview:self.presentImageView];
     
     self.titleLabel = [MyControl createLabelWithFrame:CGRectMake(0, 7, self.contentView.frame.size.width, 15) Font:11 Text:@"气球气球"];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;

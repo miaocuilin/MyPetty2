@@ -419,7 +419,7 @@
         [self login];
         return;
     }
-    [MyControl startLoadingWithStatus:@"登陆中..."];
+//    [MyControl startLoadingWithStatus:@"登陆中..."];
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [USER objectForKey:@"usr_id"], sig,[ControllerManager getSID]];
     NSLog(@"%@", url);

@@ -554,6 +554,11 @@
 		60B9FB5F19FA6C5000681CFE /* choosein_noPet.png in Resources */ = {isa = PBXBuildFile; fileRef = 60B9FB5D19FA6C5000681CFE /* choosein_noPet.png */; };
 		60B9FB6619FA708A00681CFE /* RecordAndPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60B9FB6519FA708A00681CFE /* RecordAndPlayViewController.m */; };
 		60B9FDB719F8E4180058A69B /* activity_wait.png in Resources */ = {isa = PBXBuildFile; fileRef = 60B9FDB619F8E4180058A69B /* activity_wait.png */; };
+		60BA07F51A19BB1800229804 /* main_msgNum.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BA07F41A19BB1800229804 /* main_msgNum.png */; };
+		60BA07F81A19EB1E00229804 /* PopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 60BA07F71A19EB1E00229804 /* PopupView.m */; };
+		60BA07FA1A1A1C5600229804 /* recom_percentBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BA07F91A1A1C5600229804 /* recom_percentBg.png */; };
+		60BA07FF1A1A2D8500229804 /* libMobClickLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60BA07FC1A1A2D8500229804 /* libMobClickLibrary.a */; };
+		60BA08011A1A2DBE00229804 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 60BA08001A1A2DBE00229804 /* libz.dylib */; };
 		60BFBC6319B00FCE00EE3746 /* PopularityListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60BFBC6219B00FCE00EE3746 /* PopularityListViewController.m */; };
 		60BFBC6C19B0271300EE3746 /* copperMedal.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6519B0271300EE3746 /* copperMedal.png */; };
 		60BFBC6D19B0271300EE3746 /* findMe.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6619B0271300EE3746 /* findMe.png */; };
@@ -1373,6 +1378,14 @@
 		60B9FB6419FA708A00681CFE /* RecordAndPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordAndPlayViewController.h; sourceTree = "<group>"; };
 		60B9FB6519FA708A00681CFE /* RecordAndPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordAndPlayViewController.m; sourceTree = "<group>"; };
 		60B9FDB619F8E4180058A69B /* activity_wait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = activity_wait.png; sourceTree = "<group>"; };
+		60BA07F41A19BB1800229804 /* main_msgNum.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = main_msgNum.png; sourceTree = "<group>"; };
+		60BA07F61A19EB1E00229804 /* PopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupView.h; sourceTree = "<group>"; };
+		60BA07F71A19EB1E00229804 /* PopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupView.m; sourceTree = "<group>"; };
+		60BA07F91A1A1C5600229804 /* recom_percentBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recom_percentBg.png; sourceTree = "<group>"; };
+		60BA07FC1A1A2D8500229804 /* libMobClickLibrary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMobClickLibrary.a; sourceTree = "<group>"; };
+		60BA07FD1A1A2D8500229804 /* MobClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobClick.h; sourceTree = "<group>"; };
+		60BA07FE1A1A2D8500229804 /* MobClickSocialAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobClickSocialAnalytics.h; sourceTree = "<group>"; };
+		60BA08001A1A2DBE00229804 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		60BFBC6119B00FCE00EE3746 /* PopularityListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopularityListViewController.h; sourceTree = "<group>"; };
 		60BFBC6219B00FCE00EE3746 /* PopularityListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopularityListViewController.m; sourceTree = "<group>"; };
 		60BFBC6519B0271300EE3746 /* copperMedal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = copperMedal.png; sourceTree = "<group>"; };
@@ -1440,6 +1453,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60BA08011A1A2DBE00229804 /* libz.dylib in Frameworks */,
 				4979751219C68AA700B2CFDE /* MediaPlayer.framework in Frameworks */,
 				094A17AD19891E2700FEF385 /* CoreLocation.framework in Frameworks */,
 				60937A3F19F74908005FEE38 /* libSocialSina.a in Frameworks */,
@@ -1459,6 +1473,7 @@
 				60937A2C19F748F5005FEE38 /* libUMSocial_Sdk_4.1.a in Frameworks */,
 				60937A4119F74908005FEE38 /* libWeChatSDK.a in Frameworks */,
 				09D98A0D1935C2DE00C83C4B /* libsqlite3.0.dylib in Frameworks */,
+				60BA07FF1A1A2D8500229804 /* libMobClickLibrary.a in Frameworks */,
 				09D98A0B1935C2D800C83C4B /* CoreData.framework in Frameworks */,
 				09D98A091935C2CB00C83C4B /* Accelerate.framework in Frameworks */,
 				09D98A071935C2C500C83C4B /* QuartzCore.framework in Frameworks */,
@@ -1618,6 +1633,8 @@
 				60492B201A0909AB0088AD0B /* HyperlinksButton.m */,
 				60564FAD1A136EFC00C51E66 /* CodeAlertView.h */,
 				60564FAE1A136EFC00C51E66 /* CodeAlertView.m */,
+				60BA07F61A19EB1E00229804 /* PopupView.h */,
+				60BA07F71A19EB1E00229804 /* PopupView.m */,
 			);
 			path = "基类";
 			sourceTree = "<group>";
@@ -1959,6 +1976,7 @@
 		09D989411935C08E00C83C4B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				60BA08001A1A2DBE00229804 /* libz.dylib */,
 				4979751119C68AA700B2CFDE /* MediaPlayer.framework */,
 				094A17AC19891E2700FEF385 /* CoreLocation.framework */,
 				0957F679198230D300F3DC5C /* AudioToolbox.framework */,
@@ -2034,6 +2052,7 @@
 		09D989711935C0A800C83C4B /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				60BA07FB1A1A2D8500229804 /* UMAnalytics_Sdk_3.1.9 */,
 				606158A31A076D5900C751CF /* Reflection */,
 				6049A0A11A0694A6009C1527 /* iCarousel */,
 				6049A07D1A066700009C1527 /* SDImage */,
@@ -2719,6 +2738,8 @@
 		609A5B8819F6031800822B1F /* 2014-10-21 */ = {
 			isa = PBXGroup;
 			children = (
+				60BA07F91A1A1C5600229804 /* recom_percentBg.png */,
+				60BA07F41A19BB1800229804 /* main_msgNum.png */,
 				60527DF41A161E0A00F359A3 /* has_star.png */,
 				60527DF51A161E0A00F359A3 /* no_star.png */,
 				60527DF21A1618BF00F359A3 /* choosein_icon.png */,
@@ -2764,6 +2785,16 @@
 				60B9FB6519FA708A00681CFE /* RecordAndPlayViewController.m */,
 			);
 			path = "快捷动作";
+			sourceTree = "<group>";
+		};
+		60BA07FB1A1A2D8500229804 /* UMAnalytics_Sdk_3.1.9 */ = {
+			isa = PBXGroup;
+			children = (
+				60BA07FC1A1A2D8500229804 /* libMobClickLibrary.a */,
+				60BA07FD1A1A2D8500229804 /* MobClick.h */,
+				60BA07FE1A1A2D8500229804 /* MobClickSocialAnalytics.h */,
+			);
+			path = UMAnalytics_Sdk_3.1.9;
 			sourceTree = "<group>";
 		};
 		60BFBC6019B00ED200EE3746 /* 排行榜 */ = {
@@ -3014,6 +3045,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09D98A7F1935D4E900C83C4B /* 14-6.png in Resources */,
+				60BA07F51A19BB1800229804 /* main_msgNum.png in Resources */,
 				495FFFEA19AAD1BD00976F18 /* redHeart.png in Resources */,
 				60492B0B1A08B2E00088AD0B /* threePoint.png in Resources */,
 				60492B091A08B2D50088AD0B /* grayAlert.png in Resources */,
@@ -3330,6 +3362,7 @@
 				60AD7C6719D8053200CE2AE4 /* man.png in Resources */,
 				609945F619EFBE01004F5157 /* myCountry_trouble.png in Resources */,
 				0917704C1962A970002F8502 /* 扩展更多图标.png in Resources */,
+				60BA07FA1A1A1C5600229804 /* recom_percentBg.png in Resources */,
 				606181BD19B1B3E5009AF63D /* more_friend.png in Resources */,
 				09D989551935C08E00C83C4B /* Images.xcassets in Resources */,
 				60EC8FAE198B444300F1781A /* 1-g.png in Resources */,
@@ -3545,6 +3578,7 @@
 				60EE6BE519B714CC0055ABEA /* PetInfoModel.m in Sources */,
 				090F046219540278002B1F45 /* LikersLIstViewController.m in Sources */,
 				491C1FBD19B9A96400CA833E /* UserBagViewController.m in Sources */,
+				60BA07F81A19EB1E00229804 /* PopupView.m in Sources */,
 				605195CD19B484B3005E9E2C /* AboutViewController.m in Sources */,
 				09F46AE1196AB34E00209749 /* MBProgressHUD.m in Sources */,
 				497BE7DA19CAB0CF00E65BB5 /* QuickGiftCellectionViewCell.m in Sources */,
@@ -3729,8 +3763,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-3";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3749,6 +3783,7 @@
 					"$(PROJECT_DIR)/Tools/UMSocial_Sdk_4.1",
 					"$(PROJECT_DIR)/Tools/UMSocial_Sdk_4.1/Sina",
 					"$(PROJECT_DIR)/Tools/UMSocial_Sdk_4.1/Wechat",
+					"$(PROJECT_DIR)/Tools/UMAnalytics_Sdk_3.1.9",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -3756,7 +3791,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "dog&cat";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "20695af8-3c6f-4919-a775-06bd14010707";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3769,8 +3804,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-3";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -3789,13 +3824,14 @@
 					"$(PROJECT_DIR)/Tools/UMSocial_Sdk_4.1",
 					"$(PROJECT_DIR)/Tools/UMSocial_Sdk_4.1/Sina",
 					"$(PROJECT_DIR)/Tools/UMSocial_Sdk_4.1/Wechat",
+					"$(PROJECT_DIR)/Tools/UMAnalytics_Sdk_3.1.9",
 				);
 				OTHER_LDFLAGS = (
 					"-Objc",
 					"-all_load",
 				);
 				PRODUCT_NAME = "dog&cat";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "20695af8-3c6f-4919-a775-06bd14010707";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

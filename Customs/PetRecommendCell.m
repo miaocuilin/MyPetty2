@@ -74,17 +74,20 @@
     
     //
     UIView * view1 = [MyControl createViewWithFrame:CGRectMake(10, 492/2, 524/2, 58/2)];
-    view1.layer.borderColor = [UIColor whiteColor].CGColor;
-    view1.layer.borderWidth = 1;
-    view1.layer.cornerRadius = 5;
+//    view1.layer.borderColor = [UIColor whiteColor].CGColor;
+//    view1.layer.borderWidth = 1;
+    view1.layer.cornerRadius = 10;
     view1.layer.masksToBounds = YES;
     [self addSubview:view1];
+    
+    UIImageView * alphaView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, view1.frame.size.width, view1.frame.size.height) ImageName:@"recom_percentBg.png"];
+    [view1 addSubview:alphaView];
     
     UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(10, 4.5, 30, 20) Font:14 Text:@"成员"];
     [view1 addSubview:label1];
     
     UIView * view2 = [MyControl createViewWithFrame:CGRectMake(170/2, 4.5, 1, 20)];
-    view2.backgroundColor = [UIColor whiteColor];
+    view2.backgroundColor = [ControllerManager colorWithHexString:@"4e4e4e"];
     [view1 addSubview:view2];
     
     UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(view2.frame.origin.x+10, 4.5, 80, 20) Font:14 Text:@"人气击败了"];

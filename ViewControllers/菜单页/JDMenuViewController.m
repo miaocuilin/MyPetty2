@@ -85,7 +85,7 @@
         if ([[USER objectForKey:@"isSuccess"] intValue]) {
             goldLabel.text = [USER objectForKey:@"gold"];
             NSLog(@"%@", [USER objectForKey:@"petInfoDict"]);
-            position.text = [NSString stringWithFormat:@"萌星 %@的%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];
+            position.text = [NSString stringWithFormat:@"%@的%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];
             exp.text = [NSString stringWithFormat:@"Lv.%@", [USER objectForKey:@"lv"]];
             name.text = [USER objectForKey:@"name"];
             sex.hidden = NO;
@@ -126,11 +126,18 @@
     };
     //
     sideMenu.refreshNewMsgNum = ^(NSString * num){
+        MainViewController * main = [ControllerManager shareMain];
         if ([num intValue]) {
             messageNumBg.hidden = NO;
             noticeNumLabel.text = num;
+            
+            main.msgNum.hidden = NO;
+            main.numLabel.text = num;
         }else{
             messageNumBg.hidden = YES;
+            
+            main.msgNum.hidden = YES;
+            main.numLabel.text = @"0";
         }
 //        NSArray * newMsgArray = [NSArray arrayWithArray:array];
 //        if (newMsgArray.count) {
@@ -399,7 +406,7 @@
 //    UILabel * kingName = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:[NSString stringWithFormat:@"%@国", [USER objectForKey:@"a_name"]]];
 //    [sv3 addSubview:kingName];
     
-    position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:13 Text:[NSString stringWithFormat:@"%@国祭司", [USER objectForKey:@"a_name"]]];
+    position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:13 Text:[NSString stringWithFormat:@"%@的经纪人", [USER objectForKey:@"a_name"]]];
     [sv3 addSubview:position];
     if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [USER objectForKey:@"rank"] != nil && [[USER objectForKey:@"rank"] length] != 0) {
         position.text = [NSString stringWithFormat:@"%@联萌%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];

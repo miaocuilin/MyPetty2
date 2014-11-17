@@ -50,7 +50,7 @@
     positionLabel.textAlignment = NSTextAlignmentCenter;
     [position addSubview:positionLabel];
     
-    contributionLabel = [MyControl createLabelWithFrame:CGRectMake(0, 20, 65, 15) Font:9 Text:@"贡献度250"];
+    contributionLabel = [MyControl createLabelWithFrame:CGRectMake(0, 20, 65, 15) Font:9 Text:@""];
     contributionLabel.textAlignment = NSTextAlignmentCenter;
     contributionLabel.textColor = [UIColor colorWithRed:252/255.0 green:196/255.0 blue:182/255.0 alpha:1];
     [position addSubview:contributionLabel];
@@ -77,7 +77,7 @@
     [bgView addSubview:headBtn];
     
     //
-    nameLabel = [MyControl createLabelWithFrame:CGRectMake(0, headBgView.frame.origin.y+44+5, bgView.frame.size.width, 15) Font:14 Text:@"小熊维尼维尼联萌"];
+    nameLabel = [MyControl createLabelWithFrame:CGRectMake(0, headBgView.frame.origin.y+44+5, bgView.frame.size.width, 15) Font:14 Text:nil];
     nameLabel.font = [UIFont boldSystemFontOfSize:14];
     nameLabel.textAlignment = NSTextAlignmentCenter;
     [bgView addSubview:nameLabel];
@@ -282,7 +282,7 @@
     if ([model.msg isKindOfClass:[NSString class]] && model.msg.length != 0) {
         tf.text = model.msg;
     }else{
-        tf.text = @"今天天气不错啊！走，出去玩耍！";
+        tf.text = @"点击创建独一无二的萌宣言吧~";
     }
     self.tempTfString = tf.text;
     

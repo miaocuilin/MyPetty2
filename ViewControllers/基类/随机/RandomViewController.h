@@ -23,6 +23,8 @@
     
     int threadCount;
     int page;
+    
+    BOOL isLoaded;
 }
 @property(nonatomic,copy)NSString * tempUrl;
 

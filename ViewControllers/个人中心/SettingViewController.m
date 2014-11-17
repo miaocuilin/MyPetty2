@@ -41,12 +41,14 @@
     
 //    if(isConfVersion){
 //        self.arr1 = @[@"收货地址", @"设置默认宠物", @"设置黑名单", @"绑定新浪微博"];
+//        self.arr3 = @[@"清除缓存", @"常见问题", @"意见反馈", @"赏个好评", @"关于我们"];
 //    }else{
         self.arr1 = @[@"收货地址", @"填写邀请码", @"设置默认宠物", @"设置黑名单", @"绑定新浪微博"];
+        self.arr3 = @[@"清除缓存", @"检查更新", @"常见问题", @"意见反馈", @"赏个好评", @"关于我们"];
 //    }
     
     self.arr2 = @[@"新浪微博", @"微信朋友圈"];
-    self.arr3 = @[@"清除缓存", @"常见问题", @"意见反馈", @"赏个好评", @"关于我们"];
+    
     
     [self createBg];
     [self createTableView];
@@ -332,9 +334,15 @@
         if (indexPath.row == 0) {
             [self clearData];
         }else if(indexPath.row == 1){
-            FAQViewController * vc = [[FAQViewController alloc] init];
-            [self presentViewController:vc animated:YES completion:nil];
-            [vc release];
+            if(isConfVersion){
+                FAQViewController * vc = [[FAQViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            }else{
+                //upgrade
+                
+            }
+            
 //            [USER setObject:@"" forKey:@"isSuccess"];
 //            [USER setObject:@"" forKey:@"SID"];
 //            [ControllerManager setIsSuccess:0];
@@ -342,16 +350,42 @@
 //            StartLoading;
 //            [MMProgressHUD dismissWithSuccess:@"重置成功" title:nil afterDelay:0.5f];
         }if(indexPath.row == 2){
-            FeedbackViewController *feedBackVC = [[FeedbackViewController alloc] init];
-            [self presentViewController:feedBackVC animated:YES completion:^{
-                [feedBackVC release];
-            }];
-        }else if (indexPath.row == 3) {
+            if (isConfVersion) {
+                FeedbackViewController *feedBackVC = [[FeedbackViewController alloc] init];
+                [self presentViewController:feedBackVC animated:YES completion:^{
+                    [feedBackVC release];
+                }];
+            }else{
+                FAQViewController * vc = [[FAQViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            }
             
+        }else if (indexPath.row == 3) {
+            if (isConfVersion) {
+                //好评
+            }else{
+                FeedbackViewController *feedBackVC = [[FeedbackViewController alloc] init];
+                [self presentViewController:feedBackVC animated:YES completion:^{
+                    [feedBackVC release];
+                }];
+            }
         }else if (indexPath.row == 4){
-            AboutViewController * vc = [[AboutViewController alloc] init];
-            [self presentViewController:vc animated:YES completion:nil];
-            [vc release];
+            if (isConfVersion) {
+                AboutViewController * vc = [[AboutViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            }else{
+                //好评
+            }
+        }else if(indexPath.row == 5){
+            if (isConfVersion) {
+                
+            }else{
+                AboutViewController * vc = [[AboutViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            }
         }
     }
 }

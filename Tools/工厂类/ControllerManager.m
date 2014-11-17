@@ -536,7 +536,7 @@ static LevelRank *levelAndRank =nil;
             actionStr = @"戴上了臭美哒蝴蝶结，照镜子去啦~";
             break;
         case 1201:
-            actionStr = @"立刻精神抖擞地去追球球了";
+            actionStr = @"立刻精神抖擞地去追球球了~";
             break;
         case 1202:
             actionStr = @"纵身一跃，宇宙翱翔~";

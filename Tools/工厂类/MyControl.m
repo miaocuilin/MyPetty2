@@ -308,4 +308,103 @@
     
     return imageData;
 }
+
+#pragma mark - 图片缩略图
++ (UIImage *)thumbnailWithImageWithoutScale:(UIImage *)image size:(CGSize)asize
+
+{
+    UIImage *newimage;
+    
+    if (nil == image) {
+        
+        newimage = nil;
+        
+    }else{
+        
+        CGSize oldsize = image.size;
+        
+        CGRect rect;
+        
+        if (asize.width/asize.height > oldsize.width/oldsize.height) {
+            
+            rect.size.width = asize.height*oldsize.width/oldsize.height;
+            
+            rect.size.height = asize.height;
+            
+            rect.origin.x = (asize.width - rect.size.width)/2;
+            
+            rect.origin.y = 0;
+            
+        }else{
+            rect.size.width = asize.width;
+            
+            rect.size.height = asize.width*oldsize.height/oldsize.width;
+            
+            rect.origin.x = 0;
+            
+            rect.origin.y = (asize.height - rect.size.height)/2;
+        }
+        
+        UIGraphicsBeginImageContext(asize);
+        
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        CGContextSetFillColorWithColor(context, [[UIColor clearColor] CGColor]);
+        
+        UIRectFill(CGRectMake(0, 0, asize.width, asize.height));//clear background
+        
+        [image drawInRect:rect];
+        
+        newimage = UIGraphicsGetImageFromCurrentImageContext();
+
+        UIGraphicsEndImageContext();
+        
+    }
+    
+    return newimage;
+}
+
+#pragma mark - 
++ (CGSize) fitSize: (CGSize)thisSize inSize: (CGSize) aSize
+{
+    CGFloat scale;
+    CGSize newsize = thisSize;
+    
+    if (newsize.height && (newsize.height > aSize.height))
+    {
+        scale = aSize.height / newsize.height;
+        newsize.width *= scale;
+        newsize.height *= scale;
+    }
+    
+    if (newsize.width && (newsize.width >= aSize.width))
+    {
+        scale = aSize.width / newsize.width;
+        newsize.width *= scale;
+        newsize.height *= scale;
+    }
+    
+    return newsize;
+}
+
+//返回调整的缩略图
+
++ (UIImage *)image: (UIImage *) image fitInSize: (CGSize) viewsize
+{
+    // calculate the fitted size
+    CGSize size = [self fitSize:image.size inSize:viewsize];
+    
+    UIGraphicsBeginImageContext(viewsize);
+    
+    float dwidth = (viewsize.width - size.width) / 2.0f;
+    float dheight = (viewsize.height - size.height) / 2.0f;
+    
+    CGRect rect = CGRectMake(dwidth, dheight, size.width, size.height);
+    [image drawInRect:rect];
+    
+    UIImage *newimg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newimg;
+}
 @end

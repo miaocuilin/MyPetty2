@@ -318,11 +318,17 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString * cellID = @"ID";
-    PopularityCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-    if (!cell) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"PopularityCell" owner:self options:nil] objectAtIndex:0];
+    static NSString * cellID = @"xibCell";
+    BOOL nibsRegistered = NO;
+    if (!nibsRegistered) {
+        UINib * nib = [UINib nibWithNibName:@"PopularityCell" bundle:nil];
+        [tableView registerNib:nib forCellReuseIdentifier:cellID];
+        nibsRegistered = YES;
     }
+    PopularityCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+//    if (!cell) {
+//        cell = [[[NSBundle mainBundle] loadNibNamed:@"PopularityCell" owner:self options:nil] objectAtIndex:0];
+//    }
     popularityListModel *model = [self.limitRankDataArray objectAtIndex:indexPath.row];
     [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
     cell.cellClick = ^(int num){
@@ -358,7 +364,8 @@
         NSString *headImagePath = [DOCDIR stringByAppendingString:model.tx];
         UIImage *image = [UIImage imageWithContentsOfFile:headImagePath];
         if (image) {
-            cell.headImageView.image = image;
+            cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(32, 32)];
+//            NSLog(@"%f--%f", image.size.width, image.size.height);
         }else{
             httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
 //                NSLog(@"load.image:%@",load.dataImage);
@@ -366,7 +373,7 @@
                     if (load.dataImage == NULL) {
                         cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
                     }else{
-                        cell.headImageView.image =load.dataImage;
+                        cell.headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(32, 32)];
                     }
                 }
             }];

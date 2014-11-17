@@ -231,11 +231,14 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString * cellID = @"ID";
-    PopularityCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-    if (!cell) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"PopularityCell" owner:self options:nil] objectAtIndex:0];
+    static NSString * cellID = @"xibCell";
+    BOOL nibsRegistered = NO;
+    if (!nibsRegistered) {
+        UINib * nib = [UINib nibWithNibName:@"PopularityCell" bundle:nil];
+        [tableView registerNib:nib forCellReuseIdentifier:cellID];
+        nibsRegistered = YES;
     }
+    PopularityCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     popularityListModel *model = self.contributionDataArray[indexPath.row];
     cell.cellClick = ^(int num){
         NSLog(@"跳转到第%d个国家", num);
@@ -260,7 +263,7 @@
         NSString *headImagePath = [DOCDIR stringByAppendingString:model.tx];
         UIImage *image = [UIImage imageWithContentsOfFile:headImagePath];
         if (image) {
-            cell.headImageView.image = image;
+            cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(32, 32)];;
         }else{
             httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",USERTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
 //                NSLog(@"load.image:%@",load.dataImage);
@@ -268,7 +271,7 @@
                     if (load.dataImage == NULL) {
                         cell.headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
                     }else{
-                        cell.headImageView.image =load.dataImage;
+                        cell.headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(32, 32)];;
                     }
                 }
             }];

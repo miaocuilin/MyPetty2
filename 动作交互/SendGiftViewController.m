@@ -28,6 +28,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [MobClick event:@"gift_button"];
+    
     self.bagItemIdArray = [NSMutableArray arrayWithCapacity:0];
     self.bagItemNumArray = [NSMutableArray arrayWithCapacity:0];
     self.giftArray = [NSMutableArray arrayWithArray:[ControllerManager returnAllGiftsArray]];
@@ -477,6 +479,10 @@
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
+            NSString * level = [NSString stringWithFormat:@"%d", ([ItemId intValue]/100)%10];
+            NSString * name = ItemId;
+            [MobClick event:@"send_gift" attributes:@{@"level":level, @"name":name}];
+            
             //user_gold是NSNumber类型
             [USER setObject:[NSString stringWithFormat:@"%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"user_gold"]] forKey:@"gold"];
             
@@ -505,6 +511,11 @@
     NSLog(@"赠送url:%@",url);
     httpDownloadBlock *request  = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
+            [MobClick event:@"gift_suc"];
+            NSString * level = [NSString stringWithFormat:@"%d", ([ItemId intValue]/100)%10];
+            NSString * name = ItemId;
+            [MobClick event:@"send_gift" attributes:@{@"level":level, @"name":name}];
+            
             if (fromBag) {
                 for (int i=0; self.bagItemIdArray.count; i++) {
                     if ([self.bagItemIdArray[i] isEqualToString:ItemId]) {
@@ -550,7 +561,7 @@
                 [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:addExp];
             }
             //送礼block
-            self.hasSendGift();
+            self.hasSendGift(ItemId);
             [MMProgressHUD dismissWithSuccess:@"赠送成功" title:nil afterDelay:0.1];
         }else{
             

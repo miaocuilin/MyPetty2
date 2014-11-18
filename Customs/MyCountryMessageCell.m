@@ -39,8 +39,12 @@
     body.textColor = [UIColor blackColor];
     [self.contentView addSubview:body];
     
-    //clickImage
-    photoImage = [MyControl createButtonWithFrame:CGRectMake(0, 0, 0, 0) ImageName:@"20-1.png" Target:self Action:@selector(photoImageClick) Title:nil];
+    picture = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 0, 0) ImageName:@""];
+    picture.contentMode = UIViewContentModeScaleAspectFill;
+    picture.clipsToBounds = YES;
+    [self.contentView addSubview:picture];
+    //btn
+    photoImage = [MyControl createButtonWithFrame:CGRectMake(0, 0, 0, 0) ImageName:@"" Target:self Action:@selector(photoImageClick) Title:nil];
 //    photoImage.image = [UIImage imageNamed:@"20-1.png"];
     [self.contentView addSubview:photoImage];
     
@@ -58,6 +62,7 @@
 {
     //隐藏4个控件
     photoImage.hidden = YES;
+    picture.hidden = YES;
     sendOne.hidden = YES;
     playOne.hidden = YES;
     touchOne.hidden = YES;
@@ -120,6 +125,9 @@
 //        photoImage = [[ClickImage alloc] initWithFrame:CGRectMake(60, 30+size.height+5, 190/2, 60)];
         photoImage.hidden = NO;
         photoImage.frame = CGRectMake(60, 30+size.height+5, 190/2, 60);
+        picture.hidden = NO;
+        picture.frame = photoImage.frame;
+        
 //        photoImage.image = [UIImage imageNamed:@"cat2.jpg"];
         /**************************/
         if (!([[model.content objectForKey:@"img_url"] isKindOfClass:[NSNull class]] || [[model.content objectForKey:@"img_url"] length]==0)) {
@@ -127,12 +135,14 @@
             NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [model.content objectForKey:@"img_url"]]];
             UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
             if (image) {
-                [photoImage setBackgroundImage:image forState:UIControlStateNormal];
+                picture.image = image;
+//                [photoImage setBackgroundImage:image forState:UIControlStateNormal];
             }else{
                 //下载头像
                 httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, [model.content objectForKey:@"img_url"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
-                        [photoImage setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                        picture.image = load.dataImage;
+//                        [photoImage setBackgroundImage:load.dataImage forState:UIControlStateNormal];
                         NSString * docDir = DOCDIR;
                         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [model.content objectForKey:@"img_url"]]];
                         [load.data writeToFile:txFilePath atomically:YES];

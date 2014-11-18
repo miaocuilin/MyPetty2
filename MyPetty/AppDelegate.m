@@ -16,6 +16,7 @@
 #import "UMSocialSinaHandler.h"
 #import "UMSocialWechatHandler.h"
 
+#import "MobClick.h"
 
 #import "NewWaterFlowViewController.h"
 #import "PetRecommendViewController.h"
@@ -77,10 +78,27 @@
 //    微信
 //    AppID：wxc8c5912cc28194b6
 //    AppSecret：a5287571075736dc5760aafc1e5ff34e
+    
+    //渠道，策略
+//  channelId为nil或@""时默认AppStore
+    [MobClick startWithAppkey:@"538fddca56240b40a105fcfb" reportPolicy:BATCH channelId:nil];
+    //版本
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    [MobClick setAppVersion:version];
+    
+//    Class cls = NSClassFromString(@"UMANUtil");
+//    SEL deviceIDSelector = @selector(openUDIDString);
+//    NSString *deviceID = nil;
+//    if(cls && [cls respondsToSelector:deviceIDSelector]){
+//        deviceID = [cls performSelector:deviceIDSelector];
+//    }
+//    NSLog(@"{\"oid\": \"%@\"}", deviceID);
+    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
 }
+
 //-(void)segmentClick:(UISegmentedControl *)seg
 //{
 //    NSLog(@"%d", seg.selectedSegmentIndex);

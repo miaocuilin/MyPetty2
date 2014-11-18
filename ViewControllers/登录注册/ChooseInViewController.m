@@ -177,11 +177,14 @@
 //    UIImageView * catAndDog = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-450/2)/2, earth.frame.origin.y-70, 450/2, 203/2) ImageName:@"choosein_cat_dog.png"];
 //    [self.view addSubview:catAndDog];
     
-    rightBtn = [MyControl createButtonWithFrame:CGRectMake(notHaveBtn.frame.origin.x, notHaveBtn.frame.origin.y+117/2+5, 20, 20) ImageName:@"atUsers_unSelected.png" Target:self Action:@selector(rightBtnClick:) Title:nil];
+    shakeBgView = [MyControl createViewWithFrame:CGRectMake(notHaveBtn.frame.origin.x, notHaveBtn.frame.origin.y+117/2+5, 300, 20)];
+    [self.view addSubview:shakeBgView];
+    
+    rightBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 20, 20) ImageName:@"atUsers_unSelected.png" Target:self Action:@selector(rightBtnClick:) Title:nil];
     [rightBtn setImage:[UIImage imageNamed:@"atUsers_selected.png"] forState:UIControlStateSelected];
     
 //    rightBtn.selected = YES;
-    [self.view addSubview:rightBtn];
+    [shakeBgView addSubview:rightBtn];
     
     UILabel * label = [MyControl createLabelWithFrame:CGRectMake(rightBtn.frame.origin.x+25, rightBtn.frame.origin.y, 200, 20) Font:12 Text:@"我已经阅读并同意"];
 //    NSMutableAttributedString * attString = [[NSMutableAttributedString alloc] initWithString:@"我已经阅读并同意《用户协议》"];
@@ -190,7 +193,7 @@
 //    NSDictionary * dic = @{NSFontAttributeName:[UIFont fontWithName:@"" size:12], NSUnderlineStyleSingle:[NSNumber numberWithInteger:NSUnderlineStyleSingle]};
 //    [attString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:NSMakeRange(8, 6)];
 //    label.attributedText = attString;
-    [self.view addSubview:label];
+    [shakeBgView addSubview:label];
 //    [attString release];
     CGSize size = [label.text sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
     
@@ -204,7 +207,7 @@
     [hyperBtn setTitle:@"《用户协议》" forState:UIControlStateNormal];
     [hyperBtn addTarget:self action:@selector(hyBtnClick) forControlEvents:UIControlEventTouchUpInside];
     hyperBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-    [self.view addSubview:hyperBtn];
+    [shakeBgView addSubview:hyperBtn];
     
     if (self.isFromAdd) {
         rightBtn.selected = YES;
@@ -224,6 +227,53 @@
 -(void)rightBtnClick:(UIButton *)btn
 {
     btn.selected = !btn.selected;
+    
+}
+- (void)animateIncorrectPassword:(UIView *)view {
+    // Clear the password field
+    
+    
+    // Animate the alert to show that the entered string was wrong
+    // "Shakes" similar to OS X login screen
+    CGAffineTransform moveRight = CGAffineTransformTranslate(CGAffineTransformIdentity, 5, 0);
+    CGAffineTransform moveLeft = CGAffineTransformTranslate(CGAffineTransformIdentity, -5, 0);
+    CGAffineTransform resetTransform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
+    
+    CGAffineTransform transform = CGAffineTransformIdentity;   //申明旋转量
+    transform = CGAffineTransformMakeRotation(-M_PI/2);     //设置旋转量具体值
+    
+    [UIView animateWithDuration:0.05 animations:^{
+        // Translate left
+        view.transform = moveLeft;
+        
+        
+    } completion:^(BOOL finished) {
+        
+        [UIView animateWithDuration:0.05 animations:^{
+            
+            // Translate right
+            view.transform = moveRight;
+            
+        } completion:^(BOOL finished) {
+            
+            [UIView animateWithDuration:0.05 animations:^{
+                
+                
+                // Translate left
+                view.transform = moveLeft;
+                
+            } completion:^(BOOL finished) {
+                
+                [UIView animateWithDuration:0.05 animations:^{
+                    
+                    // Translate to origin
+                    view.transform = resetTransform;
+                }];
+            }];
+            
+        }];
+    }];
+    
 }
 -(void)backBtnClick
 {
@@ -294,6 +344,7 @@
 -(void)haveBtnClick
 {
     if (!rightBtn.selected) {
+        [self animateIncorrectPassword:shakeBgView];
         return;
     }
     RegisterViewController * vc = [[RegisterViewController alloc] init];
@@ -317,6 +368,7 @@
 -(void)notHaveBtnClick
 {
     if (!rightBtn.selected) {
+        [self animateIncorrectPassword:shakeBgView];
         return;
     }
 //    RegisterViewController * vc = [[RegisterViewController alloc] init];

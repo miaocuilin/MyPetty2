@@ -35,6 +35,8 @@
 {
     [super viewDidLoad];
     [self backgroundView];
+    
+    [MobClick event:@"touch_button"];
     _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
 //    [self loadRecordStringData];
     [self checkIsTouch];
@@ -136,6 +138,8 @@
 #pragma mark - 摸一摸api
 - (void)touchAPIData
 {
+    [MobClick event:@"touch"];
+    
     StartLoading;
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
     NSString *touchString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",TOUCHAPI, self.pet_aid, sig,[ControllerManager getSID]];
@@ -151,6 +155,7 @@
 //            int exp = [[USER objectForKey:@"exp"] intValue]-tempExp;
 //
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                [MobClick event:@"touch_suc"];
                 
                 if (self.isFromStar) {
                     self.touchBack();
@@ -203,6 +208,8 @@
     [bodyView addSubview:descLabel];
     
     UIImageView *touchImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2-130, 40, 260, 180) ImageName:@"defaultPetHead.png"];
+//    touchImageView.contentMode = UIViewContentModeScaleAspectFill;
+    
     //看是否有照片
     if(self.img_url){
         NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.img_url]];
@@ -240,6 +247,7 @@
     touchImageView.layer.cornerRadius = 10;
     touchImageView.layer.masksToBounds = YES;
     [bodyView addSubview:touchImageView];
+    
     UIImage *imageDemo = [touchImageView.image applyBlurWithRadius:60.0 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
     
     self.scratchCardView = [[HYScratchCardView alloc]initWithFrame:touchImageView.frame];
@@ -247,6 +255,7 @@
     self.scratchCardView.layer.masksToBounds = YES;
     self.scratchCardView.surfaceImage = imageDemo;
     self.scratchCardView.image = touchImageView.image;
+    self.scratchCardView.contentMode = UIViewContentModeScaleAspectFill;
     [bodyView addSubview:self.scratchCardView];
     
     self.scratchCardView.completion = ^(id userInfo) {
@@ -462,67 +471,67 @@
     return bodyView;
 }
 #pragma mark - 摸完界面
-- (void)createTouchEndView
-{
-    UIView *totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150, self.view.frame.size.height/2-425/2.0, 300, 425)];
-    totalView.layer.cornerRadius = 10;
-    totalView.layer.masksToBounds = YES;
-    totalView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:totalView];
-    UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
-    [totalView addSubview:titleView];
-    UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"摸一摸"];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    [totalView addSubview:titleLabel];
-    UIButton *closeButton = [MyControl createButtonWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png" Target:self Action:@selector(colseGiftAction) Title:nil];
-    [totalView addSubview:closeButton];
-    
-    
-    UIView *endbodyView = [MyControl createViewWithFrame:CGRectMake(0, 40, 300, 385)];
-    [totalView addSubview:endbodyView];
-    
-    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(totalView.frame.size.width/2-85,100,170,60) Font:16 Text:[NSString stringWithFormat:@"今天已经摸过 %@ 啦 期待明天的萌照摸摸吧~", self.pet_name]];
-//    descLabel.textAlignment = NSTextAlignmentCenter;
-    descLabel.textColor = GRAYBLUECOLOR;
-    [totalView addSubview:descLabel];
-    //
-    UIImageView *recordedEndImageView = [MyControl createImageViewWithFrame:CGRectMake(endbodyView.frame.size.width/2 - 96/2,120,96, 110) ImageName:@"nochance.png"];
-    [endbodyView addSubview:recordedEndImageView];
-    //
-    UIView *downView = [MyControl createViewWithFrame:CGRectMake(0, endbodyView.frame.size.height-70, endbodyView.frame.size.width, 70)];
-    [endbodyView addSubview:downView];
-    
-    UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
-    
-    if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]== 0)) {
-        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
-        UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
-        if (animalHeaderImage) {
-            headImageView.image = animalHeaderImage;
-        }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                if (isFinish) {
-                    headImageView.image = load.dataImage;
-                    [load.data writeToFile:pngFilePath atomically:YES];
-                }
-            }];
-            [request release];
-        }
-    }
-    
-    headImageView.layer.cornerRadius = 28;
-    headImageView.layer.masksToBounds = YES;
-    [downView addSubview:headImageView];
-    
-    UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:headImageView.frame ImageName:@"head_cricle.png"];
-    [downView addSubview:cricleHeadImageView];
-    UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 15, 200, 20) Font:12 Text:nil];
-    
-    NSAttributedString *helpPetString = [self firstString:@"摸摸~" formatString:[NSString stringWithFormat:@" %@ ", self.pet_name] insertAtIndex:2];
-    helpPetLabel.attributedText = helpPetString;
-    [helpPetString release];
-    [downView addSubview:helpPetLabel];
-}
+//- (void)createTouchEndView
+//{
+//    UIView *totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150, self.view.frame.size.height/2-425/2.0, 300, 425)];
+//    totalView.layer.cornerRadius = 10;
+//    totalView.layer.masksToBounds = YES;
+//    totalView.backgroundColor = [UIColor whiteColor];
+//    [self.view addSubview:totalView];
+//    UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
+//    [totalView addSubview:titleView];
+//    UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"摸一摸"];
+//    titleLabel.textAlignment = NSTextAlignmentCenter;
+//    [totalView addSubview:titleLabel];
+//    UIButton *closeButton = [MyControl createButtonWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png" Target:self Action:@selector(colseGiftAction) Title:nil];
+//    [totalView addSubview:closeButton];
+//    
+//    
+//    UIView *endbodyView = [MyControl createViewWithFrame:CGRectMake(0, 40, 300, 385)];
+//    [totalView addSubview:endbodyView];
+//    
+//    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(totalView.frame.size.width/2-85,100,170,60) Font:16 Text:[NSString stringWithFormat:@"今天已经摸过 %@ 啦 期待明天的萌照摸摸吧~", self.pet_name]];
+////    descLabel.textAlignment = NSTextAlignmentCenter;
+//    descLabel.textColor = GRAYBLUECOLOR;
+//    [totalView addSubview:descLabel];
+//    //
+//    UIImageView *recordedEndImageView = [MyControl createImageViewWithFrame:CGRectMake(endbodyView.frame.size.width/2 - 96/2,120,96, 110) ImageName:@"nochance.png"];
+//    [endbodyView addSubview:recordedEndImageView];
+//    //
+//    UIView *downView = [MyControl createViewWithFrame:CGRectMake(0, endbodyView.frame.size.height-70, endbodyView.frame.size.width, 70)];
+//    [endbodyView addSubview:downView];
+//    
+//    UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
+//    
+//    if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]== 0)) {
+//        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
+//        UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
+//        if (animalHeaderImage) {
+//            headImageView.image = animalHeaderImage;
+//        }else{
+//            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//                if (isFinish) {
+//                    headImageView.image = load.dataImage;
+//                    [load.data writeToFile:pngFilePath atomically:YES];
+//                }
+//            }];
+//            [request release];
+//        }
+//    }
+//    
+//    headImageView.layer.cornerRadius = 28;
+//    headImageView.layer.masksToBounds = YES;
+//    [downView addSubview:headImageView];
+//    
+//    UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:headImageView.frame ImageName:@"head_cricle.png"];
+//    [downView addSubview:cricleHeadImageView];
+//    UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 15, 200, 20) Font:12 Text:nil];
+//    
+//    NSAttributedString *helpPetString = [self firstString:@"摸摸~" formatString:[NSString stringWithFormat:@" %@ ", self.pet_name] insertAtIndex:2];
+//    helpPetLabel.attributedText = helpPetString;
+//    [helpPetString release];
+//    [downView addSubview:helpPetLabel];
+//}
 
 - (void)colseGiftAction
 {

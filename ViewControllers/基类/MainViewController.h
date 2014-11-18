@@ -54,4 +54,13 @@
 //用来记录当前头像名称，和本地存储的tx对比，如果不等则换头像，等则不换。
 //@property(nonatomic,copy)NSString * currentTx;
 
+/*************************************/
+@property(nonatomic,retain) UIImageView * msgNum;
+@property(nonatomic,retain) UILabel * numLabel;
+@property(nonatomic,retain)NSMutableArray * talkIDArray;
+@property(nonatomic,retain)NSMutableArray * nwDataArray;
+@property(nonatomic,retain)NSMutableArray * nwMsgDataArray;
+@property(nonatomic)BOOL hasNewMsg;
+@property(nonatomic,retain)NSMutableArray * keysArray;
+@property(nonatomic,retain)NSMutableArray * valuesArray;
 @end

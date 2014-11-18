@@ -11,7 +11,10 @@
 @interface UserBagViewController : UIViewController
 {
     UIView * navView;
+    UIScrollView * sv;
 }
+@property(nonatomic,retain)UIImageView * bgImageView;
+
 @property(nonatomic,retain)NSMutableArray * goodsArray;
 @property(nonatomic,retain)NSMutableArray * goodsNumArray;
 @end

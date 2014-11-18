@@ -268,8 +268,17 @@ NSString *animalInfo = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ANIMALIN
     SendGiftViewController * vc = [[SendGiftViewController alloc] init];
     vc.receiver_aid = self.pet_aid;
     vc.receiver_name = self.pet_name;
-    vc.hasSendGift = ^(){
+    vc.hasSendGift = ^(NSString * itemId){
         NSLog(@"赠送礼物给默认宠物成功!");
+        ResultOfBuyView * result = [[ResultOfBuyView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        [UIView animateWithDuration:0.3 animations:^{
+            result.alpha = 1;
+        }];
+        result.confirm = ^(){
+            [vc closeGiftAction];
+        };
+        [result configUIWithName:self.pet_name ItemId:itemId Tx:self.pet_tx];
+        [self.view addSubview:result];
     };
     [self addChildViewController:vc];
     [vc didMoveToParentViewController:self];

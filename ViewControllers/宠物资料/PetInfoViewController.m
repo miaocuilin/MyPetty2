@@ -103,6 +103,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [MobClick event:@"pet_homepage"];
+    
     self.view.backgroundColor = [UIColor whiteColor];
     
     // Allocate Asset Library
@@ -1288,8 +1290,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //人气、成员、粉丝数
     int t_rq = [[petInfoDict objectForKey:@"t_rq"] intValue];
     int fans = [[petInfoDict objectForKey:@"fans"] intValue];
-    int followers = [[petInfoDict objectForKey:@"followers"] intValue];
-    NSString * dataStr = [NSString stringWithFormat:@"总人气 %d  |   成员 %d  |   粉丝 %d",t_rq,fans,followers];
+//    int followers = [[petInfoDict objectForKey:@"followers"] intValue];
+    NSString * dataStr = [NSString stringWithFormat:@"总人气 %d  |   成员 %d", t_rq, fans];
     UILabel * dataLabel = [MyControl createLabelWithFrame:CGRectMake(0, 130, 320, 15) Font:13 Text:dataStr];
     dataLabel.textAlignment = NSTextAlignmentCenter;
     [bgView addSubview:dataLabel];
@@ -1775,7 +1777,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         quictGiftvc.receiver_aid = [petInfoDict objectForKey:@"aid"];
         quictGiftvc.receiver_name = [petInfoDict objectForKey:@"name"];
         //
-        quictGiftvc.hasSendGift = ^(){
+        quictGiftvc.hasSendGift = ^(NSString * itemId){
             [self loadKingDynamicData];
         };
         

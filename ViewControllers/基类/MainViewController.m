@@ -27,9 +27,11 @@
 #import "PetInfoViewController.h"
 #import "UserInfoModel.h"
 #import "UserInfoViewController.h"
+#import "SingleTalkModel.h"
+#import "MessageModel.h"
 
 #define WORDCOLOR [UIColor colorWithRed:86/255.0 green:86/255.0 blue:86/255.0 alpha:1]
-#define BROWNCOLOR [UIColor colorWithRed:226/255.0 green:215/255.0 blue:215/255.0 alpha:1]
+#define BROWNCOLOR [UIColor colorWithRed:247/255.0 green:192/255.0 blue:152/255.0 alpha:1]
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 @interface MainViewController () <AFPhotoEditorControllerDelegate>
@@ -105,6 +107,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if(isLoaded && [[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"] && [[USER objectForKey:@"isJustRegister"] intValue]){
         [USER setObject:@"0" forKey:@"isJustRegister"];
         [self inputCode];
+    }
+    
+    if(isLoaded && [[USER objectForKey:@"isSuccess"] intValue]){
+        [self getNewMessage];
     }
 }
 #pragma mark -
@@ -216,6 +222,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
     self.searchArray = [NSMutableArray arrayWithCapacity:0];
     self.searchUserArray = [NSMutableArray arrayWithCapacity:0];
+    //
+    self.talkIDArray = [NSMutableArray arrayWithCapacity:0];
+    self.nwDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.nwMsgDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.keysArray = [NSMutableArray arrayWithCapacity:0];
+    self.valuesArray = [NSMutableArray arrayWithCapacity:0];
     
     segmentClickIndex = 1;
     [self createScrollView];
@@ -229,6 +241,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [self.view bringSubviewToFront:self.menuBgView];
     
     [self createAlphaBtn];
+    
+    if([[USER objectForKey:@"isSuccess"] intValue]){
+        [self getNewMessage];
+    }
     
 //    if ([ControllerManager getIsSuccess]) {
 //        [self loadAnimalInfoData];
@@ -491,6 +507,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.menuBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:self.menuBtn];
     
+    //新消息数
+    self.msgNum = [MyControl createImageViewWithFrame:CGRectMake(35, -5, 19, 18) ImageName:@"main_msgNum.png"];
+    [self.menuBtn addSubview:self.msgNum];
+    self.msgNum.hidden = YES;
+    
+    self.numLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 19, 18) Font:9 Text:@"0"];
+    self.numLabel.textColor = BGCOLOR;
+    self.numLabel.textAlignment = NSTextAlignmentCenter;
+    [self.msgNum addSubview:self.numLabel];
+    
+    
     NSString * str = @"宠物星球";
     CGSize size = [str sizeWithFont:[UIFont boldSystemFontOfSize:17] constrainedToSize:CGSizeMake(200, 20) lineBreakMode:1];
     UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake((self.view.frame.size.width-size.width)/2.0, 32, size.width, 20) Font:17 Text:@"宠物星球"];
@@ -509,6 +536,293 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     camara.showsTouchWhenHighlighted = YES;
     [navView addSubview:camara];
 }
+#pragma mark - 
+#pragma mark -
+-(void)getNewMessage
+{
+//    StartLoading;
+    NSString * url = [NSString stringWithFormat:@"%@%@", GETNEWMSGAPI,[ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"/*=====================*/");
+            NSLog(@"newMsg:%@", load.dataDict);
+            NSLog(@"/*=====================*/");
+            //【注意】这里需要将talkIDArray每次清空
+            [self.talkIDArray removeAllObjects];
+            [self.nwDataArray removeAllObjects];
+            [self.nwMsgDataArray removeAllObjects];
+            
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            if (array.count) {
+                self.hasNewMsg = YES;
+                
+                for (int i=0; i<array.count; i++) {
+                    NSDictionary * dict = array[i];
+                    NSString * key = [[dict allKeys] objectAtIndex:0];
+                    NSDictionary * dict2 = [dict objectForKey:key];
+                    if ([[dict2 objectForKey:@"usr_name"] isKindOfClass:[NSNull class]]) {
+                        [dict2 setValue:@"" forKey:@"usr_name"];
+                    }
+                    if ([[dict2 objectForKey:@"usr_tx"] isKindOfClass:[NSNull class]]) {
+                        [dict2 setValue:@"" forKey:@"usr_tx"];
+                    }
+                }
+                
+                [self.nwDataArray addObjectsFromArray:array];
+            }else{
+                self.hasNewMsg = NO;
+            }
+            
+            /**********************/
+            NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
+            NSLog(@"%@", [[MyControl returnDictionaryWithDataPath:path] allKeys]);
+            
+            if (self.hasNewMsg) {
+                //分解数据添加到7个数组中
+                [self apartNewMsgToArray];
+                //查看是否有旧消息，进行合并
+                [self loadHistoryMessageAndSaveToLocal];
+                
+                //遍历整个本地字典，拿到消息数之和，返回给侧边栏
+                self.msgNum.hidden = NO;
+                self.numLabel.text = [self getNewMessageNum];
+//                self.refreshNewMsgNum([self getNewMessageNum]);
+//                LoadingSuccess;
+            }else{
+                //遍历本地消息，取出未读数相加返回
+                NSFileManager * fileManager = [[NSFileManager alloc] init];
+                if ([fileManager fileExistsAtPath:path]) {
+                    self.numLabel.text = [self getNewMessageNum];
+                    if ([self.numLabel.text intValue]) {
+                        self.msgNum.hidden = NO;
+                    }else{
+                        self.msgNum.hidden = YES;
+                    }
+//                    self.refreshNewMsgNum([self getNewMessageNum]);
+                }else{
+                    self.msgNum.hidden = YES;
+                    self.numLabel.text = @"0";
+//                    self.refreshNewMsgNum(@"0");
+                }
+                //返回
+                //            self.refreshNewMsgNum(self.newDataArray);
+//                [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.2f];
+            }
+            
+            //            NSLog(@"%@", self.newDataArray);
+            //            [self.newDataArray removeAllObjects];
+        }else{
+            StartLoading;
+            LoadingFailed;
+        }
+    }];
+    [request release];
+}
+#pragma mark -
+-(void)loadHistoryMessageAndSaveToLocal
+{
+    NSFileManager * manager = [[NSFileManager alloc] init];
+    NSString * docDir = DOCDIR;
+    NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
+    if ([manager fileExistsAtPath:path]) {
+        //文件存在
+        NSLog(@"文件存在");
+        NSMutableDictionary * totalDict = [NSMutableDictionary dictionaryWithDictionary:[MyControl returnDictionaryWithDataPath:path]];
+        NSArray * oldTalkIDArray = [totalDict allKeys];
+        
+        //        NSLog(@"/*============================*/");
+        //        SingleTalkModel * model0 = [totalDict objectForKey:oldTalkIDArray[0]];
+        //        NSArray * array0 = [model0.msgDict objectForKey:@"msg"];
+        //        for (int i=0; i<array0.count; i++) {
+        //            MessageModel * mod = array0[i];
+        //            NSLog(@"%@", mod.msg);
+        //        }
+        //        NSLog(@"/*============================*/");
+        //合并
+        for (int i=0; i<self.talkIDArray.count; i++) {
+            
+            for (int j=0; j<oldTalkIDArray.count; j++) {
+                NSString * key = self.talkIDArray[i];
+                
+                if ([key isEqualToString:oldTalkIDArray[j]]) {
+                    //找到相同对话，合并
+                    SingleTalkModel * model = [totalDict objectForKey:key];
+                    NSMutableArray * oldMsgArray = [NSMutableArray arrayWithArray:[model.msgDict objectForKey:@"msg"]];
+                    //
+                    SingleTalkModel * nwModel = self.nwMsgDataArray[i];
+                    NSArray * nwArray = [nwModel.msgDict objectForKey:@"msg"];
+                    
+                    
+                    [oldMsgArray addObjectsFromArray:nwArray];
+                    model.msgDict = [NSDictionary dictionaryWithObject:oldMsgArray forKey:@"msg"];
+                    //2.合并未读消息数
+                    model.unReadMsgNum = [NSString stringWithFormat:@"%d", [model.unReadMsgNum intValue] + [nwModel.unReadMsgNum intValue]];
+                    //3.更新usr_tx
+                    model.usr_tx = nwModel.usr_tx;
+                    //4.更新usr_name
+                    model.usr_name = nwModel.usr_name;
+                    
+                    //合并完毕
+                    break;
+                }else if(j == oldTalkIDArray.count-1){
+                    //将新的添加
+                    [totalDict setObject:self.nwMsgDataArray[i] forKey:key];
+                }
+            }
+        }
+        //新旧消息全部合并完毕，重新存储到本地
+        NSData * data = [MyControl returnDataWithDictionary:totalDict];
+        BOOL a = [data writeToFile:path atomically:YES];
+        NSLog(@"---存储合并后数据结果:%d", a);
+    }else{
+        //本地没有文件
+        //存到本地
+        NSMutableDictionary * nwDataDict = [NSMutableDictionary dictionaryWithCapacity:0];
+        for (int i=0; i<self.talkIDArray.count; i++) {
+            [nwDataDict setObject:self.nwMsgDataArray[i] forKey:self.talkIDArray[i]];
+        }
+        NSString * docDir = DOCDIR;
+        NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
+        //dict-->NSData
+        NSData * data = [MyControl returnDataWithDictionary:nwDataDict];
+        BOOL a = [data writeToFile:path atomically:YES];
+        NSLog(@"---存储新数据结果:%d", a);
+    }
+}
+
+#pragma mark - getNewMessageNum
+-(NSString *)getNewMessageNum
+{
+    NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
+    NSDictionary * dict = [MyControl returnDictionaryWithDataPath:path];
+    int num = 0;
+    NSArray * array = [dict allKeys];
+    for (int i=0; i<array.count; i++) {
+        SingleTalkModel * model = [dict objectForKey:array[i]];
+        num += [model.unReadMsgNum intValue];
+    }
+    return [NSString stringWithFormat:@"%d", num];
+}
+#pragma mark -
+-(void)apartNewMsgToArray
+{
+    for (int i=0; i<self.nwDataArray.count; i++) {
+        //创建对象
+        SingleTalkModel * talkModel = [[SingleTalkModel alloc] init];
+        
+        
+        //分析数据
+        //1.获得talk_id,添加到数组
+        NSString * talkID = [[self.nwDataArray[i] allKeys] objectAtIndex:0];
+        [self.talkIDArray addObject:talkID];
+        
+        
+        NSDictionary * dict = [self.nwDataArray[i] objectForKey:talkID];
+        //2.usr_id添加到userIDArray
+        talkModel.usr_id = [dict objectForKey:@"usr_id"];
+        //        [self.userIDArray addObject:[dict objectForKey:@"usr_id"]];
+        
+        
+        //3.头像，添加到数组
+        if ([[dict objectForKey:@"usr_tx"] isKindOfClass:[NSNull class]]) {
+            talkModel.usr_tx = @"";
+            //            [self.userTxArray addObject:@""];
+        }else{
+            talkModel.usr_tx = [dict objectForKey:@"usr_tx"];
+            //            [self.userTxArray addObject:[dict objectForKey:@"usr_tx"]];
+        }
+        
+        //4.姓名，添加到数组
+        if ([[dict objectForKey:@"usr_name"] isKindOfClass:[NSNull class]] || [[dict objectForKey:@"usr_name"] length] == 0) {
+            if ([[dict objectForKey:@"usr_id"] intValue] == 1) {
+                talkModel.usr_name = @"事务官"; //狗
+                talkModel.usr_tx = @"1";
+                //                [self.userNameArray addObject:@"汪汪"];
+            }else if([[dict objectForKey:@"usr_id"] intValue] == 2){
+                talkModel.usr_name = @"联络官"; //猫
+                talkModel.usr_tx = @"2";
+                //                [self.userNameArray addObject:@"喵喵"];
+            }else if([[dict objectForKey:@"usr_id"] intValue] == 3){
+                talkModel.usr_name = @"顺风小鸽";
+                talkModel.usr_tx = @"3";
+                //                [self.userNameArray addObject:@"顺风小鸽"];
+            }
+        }else{
+            talkModel.usr_name = [dict objectForKey:@"usr_name"];
+            //            [self.userNameArray addObject:[dict objectForKey:@"usr_name"]];
+        }
+        
+        //5.新消息数
+        NSNumber * number = [dict objectForKey:@"new_msg"];
+        talkModel.unReadMsgNum = [NSString stringWithFormat:@"%@", number];
+        //        [self.newMsgNumArray addObject:[NSString stringWithFormat:@"%@", number]];
+        //6.新消息的时间self.keysArray
+        //7.新消息的内容self.valuesArray
+        [self analysisData:[dict objectForKey:@"msg"] usrId:[dict objectForKey:@"usr_id"] talkModel:talkModel];
+        //
+        [self.nwMsgDataArray addObject:talkModel];
+        //        [self.lastTalkTimeArray addObject:self.keysArray[self.keysArray.count-1]];
+        //        [self.lastTalkContentArray addObject:self.valuesArray[self.valuesArray.count-1]];
+        //存储newMsgArray
+        //        NSMutableDictionary * dict1 = [NSMutableDictionary dictionaryWithCapacity:0];
+        //
+        //        [dict1 setObject:[NSArray arrayWithArray:self.keysArray] forKey:@"key"];
+        //        [dict1 setObject:[NSArray arrayWithArray:self.valuesArray] forKey:@"value"];
+        //        [self.newMsgArray addObject:dict1];
+    }
+}
+-(void)analysisData:(NSDictionary *)dict usrId:(NSString *)usrID talkModel:(SingleTalkModel *)model
+{
+    
+    NSMutableArray * tempNewMsgArray = [NSMutableArray arrayWithCapacity:0];
+    
+    [self.keysArray removeAllObjects];
+    [self.valuesArray removeAllObjects];
+    //keysArray赋值
+    for (NSString * key in [dict allKeys]) {
+        [self.keysArray addObject:key];
+    }
+    
+    //key值数组冒泡排序
+    for (int i=0; i<self.keysArray.count; i++) {
+        for (int j=0; j<self.keysArray.count-i-1; j++) {
+            if ([self.keysArray[j] intValue] > [self.keysArray[j+1] intValue]) {
+                NSString * str = [NSString stringWithFormat:@"%@", self.keysArray[j]];
+                NSString * str1 = [NSString stringWithFormat:@"%@", self.keysArray[j+1]];
+                self.keysArray[j] = str1;
+                self.keysArray[j+1] = str;
+            }
+        }
+    }
+    //    NSLog(@"%@", self.keysArray);
+    for (int i=0;i<self.keysArray.count;i++) {
+        //        NSLog(@"key:%@--value:%@", self.keysArray[i], [dict objectForKey:self.keysArray[i]]);
+        MessageModel * msgModel = [[MessageModel alloc] init];
+        msgModel.time = self.keysArray[i];
+        msgModel.usr_id = usrID;
+        
+        NSString * msg = [dict objectForKey:self.keysArray[i]];
+        NSLog(@"%@", msg);
+        if ([msg rangeOfString:@"["].location != NSNotFound && [msg rangeOfString:@"]"].location != NSNotFound) {
+            int x = [msg rangeOfString:@"]"].location;
+            
+            msgModel.msg = [msg substringFromIndex:x+1];
+            msgModel.img_id = [msg substringWithRange:NSMakeRange(1, x)];
+        }else{
+            msgModel.msg = msg;
+            msgModel.img_id = @"0";
+        }
+        [tempNewMsgArray addObject:msgModel];
+        [msgModel release];
+        //        [self.valuesArray addObject:msg];
+    }
+    //
+    model.msgDict = [NSDictionary dictionaryWithObject:tempNewMsgArray forKey:@"msg"];
+}
+
+#pragma mark -
+#pragma mark -
 -(void)menuBtnClick:(UIButton *)button
 {
     /***********/
@@ -603,8 +917,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    tf.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [searchBg addSubview:tf];
     
+    UIView * view = [MyControl createViewWithFrame:CGRectMake(brownView.frame.origin.x+brownView.frame.size.width+3, brownView.frame.origin.y, 40-6, 29)];
+    view.layer.cornerRadius = 7;
+    view.layer.masksToBounds = YES;
+    view.backgroundColor = BROWNCOLOR;
+    view.alpha = 0.8;
+    [searchBg addSubview:view];
+    
     cancel = [MyControl createButtonWithFrame:CGRectMake(brownView.frame.origin.x+brownView.frame.size.width, brownView.frame.origin.y, 40, 29) ImageName:@"" Target:self Action:@selector(cancelClick:) Title:@"取消"];
-    [cancel setTitleColor:WORDCOLOR forState:UIControlStateNormal];
+    [cancel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     cancel.titleLabel.font = [UIFont systemFontOfSize:14];
     [searchBg addSubview:cancel];
     
@@ -614,6 +935,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //隐藏searchBg
     if ([btn.titleLabel.text isEqualToString:@"搜索"]) {
         //请求搜索API
+        [MobClick event:@"search"];
         [self textFieldShouldReturn:tf];
     }else{
         self.sv.scrollEnabled = YES;
@@ -840,6 +1162,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     
     int a = sc.selectedSegmentIndex;
+    if (segmentClickIndex != a) {
+        [self getNewMessage];
+    }
     segmentClickIndex = a;
     if (a == 0) {
 //        self.menuBgView.hidden = YES;
@@ -897,6 +1222,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     int a = self.sv.contentOffset.x;
     int b = sc.selectedSegmentIndex;
+    if (b != a) {
+        [self getNewMessage];
+    }
     sc.selectedSegmentIndex = a/320;
     
     if (a == 0) {

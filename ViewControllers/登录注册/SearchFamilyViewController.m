@@ -251,13 +251,13 @@
         //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
         UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
         if (image) {
-            headImageView.image = image;
+            headImageView.image = [MyControl image:image fitInSize:CGSizeMake(100, 100)];
         }else{
             //下载头像
             NSLog(@"%@", [NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]);
             httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
-                    headImageView.image = load.dataImage;
+                    headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(100, 100)];
                     NSString * docDir = DOCDIR;
                     NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
                     [load.data writeToFile:txFilePath atomically:YES];
@@ -302,11 +302,11 @@
     showOrHideBtn.tag = 100+section;
     [headerBgView addSubview:showOrHideBtn];
     
-    UIButton * join = [MyControl createButtonWithFrame:CGRectMake(320-60, 20, 50, 25) ImageName:@"" Target:self Action:@selector(joinClick:) Title:@"加入"];
-    join.titleLabel.font = [UIFont systemFontOfSize:14];
-    join.backgroundColor = GREEN;
-    join.layer.cornerRadius = 5;
-    join.layer.masksToBounds = YES;
+    UIButton * join = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-56-10, (70-36)/2, 56, 36) ImageName:@"recom_p.png" Target:self Action:@selector(joinClick:) Title:nil];
+    //    join.titleLabel.font = [UIFont systemFontOfSize:14];
+    //    join.backgroundColor = GREEN;
+    //    join.layer.cornerRadius = 5;
+    //    join.layer.masksToBounds = YES;
     [headerBgView addSubview:join];
     join.tag = 200+section;
     

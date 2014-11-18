@@ -40,6 +40,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [MobClick event:@"personal_homepage"];
+    
     self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
     self.userAttentionListArray = [NSMutableArray arrayWithCapacity:0];
     self.userActivityListArray = [NSMutableArray arrayWithCapacity:0];

@@ -125,6 +125,8 @@
                 }
                 if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                     btn.enabled = NO;
+                    
+                    [MobClick event:@"like"];
                     if (isMi) {
                         fish.image = [UIImage imageNamed:@"fish1.png"];
                     }else{

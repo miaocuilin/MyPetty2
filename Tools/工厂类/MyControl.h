@@ -67,6 +67,9 @@
 
 //限制图片大小
 +(NSData *)scaleToSize:(UIImage *)sourceImage;
+
++ (UIImage *)thumbnailWithImageWithoutScale:(UIImage *)image size:(CGSize)asize;
++ (UIImage *)image: (UIImage *) image fitInSize: (CGSize) viewsize;
 @end
 
 

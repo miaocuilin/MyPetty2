@@ -30,5 +30,7 @@
 @property(nonatomic,copy)NSString * receiver_img_id;
 
 
-@property(nonatomic,copy)void (^hasSendGift)(void);
+@property(nonatomic,copy)void (^hasSendGift)(NSString *);
+
+-(void)closeGiftAction;
 @end

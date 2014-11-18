@@ -43,11 +43,30 @@
 //
 //        [self jsonFinishLoading];
 //    }else{
-        self.connection=[NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]] delegate:self];
+    NSURL * url = [NSURL URLWithString:urlStr];
+    [self addSkipBackupAttributeToItemAtURL:url];
+//    [url setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:nil];
+    
+    self.connection=[NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL:url] delegate:self];
 //    }
 //    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
 //    [MMProgressHUD showWithStatus:@"加载中..."];
     
+}
+- (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
+{
+    
+//    assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
+    
+    NSError *error = nil;
+    
+    BOOL success = [URL setResourceValue: [NSNumber numberWithBool: YES] forKey: NSURLIsExcludedFromBackupKey error: &error];
+    
+    if(!success){
+        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+    
+    return success;
 }
 #pragma mark 4个代理方法
 //接收到了服务器给出回应
@@ -90,43 +109,77 @@
             self.dataDict=result;
             
             //判断errorCode是否为1，为1弹窗提示
-            if([[self.dataDict objectForKey:@"errorCode"] intValue] == -1){
-                if ([[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"余额不足"]) {
-                    [ControllerManager HUDText:@"余额不足(⊙o⊙)哦~~" showView:[[UIApplication sharedApplication]keyWindow] yOffset:-50];
-                    [MyControl loadingFailedWithContent:@"购买失败" afterDelay:0.5f];
-                    return;
-                }
-                if ([[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"音频文件不存在"]) {
-//                    StartLoading;
-                    
-                    self.httpRequestBlock(NO,self);
-                    return;
-                }
-                if ([[self.dataDict objectForKey:@"errorMessage"] length]>100) {
-                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:@"网络错误" delegate:nil cancelTitle:nil otherTitles:@"确定"];
-                }else{
-                    if(![[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"你今天已经摸过啦！"]){
-                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[self.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
-                    }
-                }
-                
-//                StartLoading;
-//                [MyControl loadingFailedWithContent:@"网络错误" afterDelay:1.0f];
-                NSLog(@"%@", [self.dataDict objectForKey:@"errorMessage"]);
-                self.httpRequestBlock(NO,self);
-                return;
+//            if([[self.dataDict objectForKey:@"errorCode"] intValue] == -1){
+//                if ([[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"余额不足"]) {
+//                    [ControllerManager HUDText:@"余额不足(⊙o⊙)哦~~" showView:[[UIApplication sharedApplication]keyWindow] yOffset:-50];
+//                    [MyControl loadingFailedWithContent:@"购买失败" afterDelay:0.5f];
+//                    return;
+//                }
+//                if ([[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"音频文件不存在"]) {
+////                    StartLoading;
+//                    
+//                    self.httpRequestBlock(NO,self);
+//                    return;
+//                }
+//                if ([[self.dataDict objectForKey:@"errorMessage"] length]>100) {
+//                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:@"网络错误" delegate:nil cancelTitle:nil otherTitles:@"确定"];
+//                }else{
+//                    if(![[self.dataDict objectForKey:@"errorMessage"] isEqualToString:@"你今天已经摸过啦！"]){
+//                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[self.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
+//                    }
+//                }
+//                
+////                StartLoading;
+////                [MyControl loadingFailedWithContent:@"网络错误" afterDelay:1.0f];
+//                NSLog(@"%@", [self.dataDict objectForKey:@"errorMessage"]);
+//                self.httpRequestBlock(NO,self);
+//                return;
+//            }
+            
+            NSString * msg = nil;
+            
+            
+            if ([[self.dataDict objectForKey:@"state"] intValue] == 1) {
+                //state=1时直接返回errorMessage
+                msg = [self.dataDict objectForKey:@"errorMessage"];
+//                self.httpRequestBlock(NO,self);
+//                return;
             }
             if ([[self.dataDict objectForKey:@"state"] intValue] == 2) {
                 //SID过期 login
+                msg = @"网络异常，请重新操作";
                 [self login];
-                
-                return;
+//                self.httpRequestBlock(NO,self);
+//                return;
             }
+
             if ([[self.dataDict objectForKey:@"state"] intValue] == 3) {
                 //未注册
-                self.httpRequestBlock(NO, self);
+                self.httpRequestBlock(NO,self);
                 return;
             }
+            /****************************/
+            if ([[self.dataDict objectForKey:@"state"] intValue] == 1 || [[self.dataDict objectForKey:@"state"] intValue] == 2) {
+                UIView * keyView = [UIApplication sharedApplication].keyWindow;
+                PopupView * pop = [[PopupView alloc] init];
+                [pop modifyUIWithSize:keyView.frame.size msg:msg];
+                [keyView addSubview:pop];
+                [pop release];
+                
+                [UIView animateWithDuration:0.2 animations:^{
+                    pop.bgView.alpha = 1;
+                } completion:^(BOOL finished) {
+                    [UIView animateKeyframesWithDuration:0.2 delay:2 options:0 animations:^{
+                        pop.bgView.alpha = 0;
+                    } completion:^(BOOL finished) {
+                        [pop removeFromSuperview];
+                    }];
+                }];
+                
+                self.httpRequestBlock(NO,self);
+                return;
+            }
+            /****************************/
             if ([[self.dataDict objectForKey:@"version"] isKindOfClass:[NSString class]]) {
                 [USER setObject:[self.dataDict objectForKey:@"version"] forKey:@"version"];
                 [USER setObject:[self.dataDict objectForKey:@"confVersion"] forKey:@"confVersion"];

@@ -85,7 +85,7 @@
         if ([[USER objectForKey:@"isSuccess"] intValue]) {
             goldLabel.text = [USER objectForKey:@"gold"];
             NSLog(@"%@", [USER objectForKey:@"petInfoDict"]);
-            position.text = [NSString stringWithFormat:@"萌星 %@的%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];
+            position.text = [NSString stringWithFormat:@"%@的%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];
             exp.text = [NSString stringWithFormat:@"Lv.%@", [USER objectForKey:@"lv"]];
             name.text = [USER objectForKey:@"name"];
             sex.hidden = NO;
@@ -126,11 +126,18 @@
     };
     //
     sideMenu.refreshNewMsgNum = ^(NSString * num){
+        MainViewController * main = [ControllerManager shareMain];
         if ([num intValue]) {
             messageNumBg.hidden = NO;
             noticeNumLabel.text = num;
+            
+            main.msgNum.hidden = NO;
+            main.numLabel.text = num;
         }else{
             messageNumBg.hidden = YES;
+            
+            main.msgNum.hidden = YES;
+            main.numLabel.text = @"0";
         }
 //        NSArray * newMsgArray = [NSArray arrayWithArray:array];
 //        if (newMsgArray.count) {
@@ -326,14 +333,14 @@
     headBg2.backgroundColor = [UIColor whiteColor];
     [sv3 addSubview:headBg2];
     
+    headImageBtn = [MyControl createButtonWithFrame:CGRectMake(4, 4, 62, 62) ImageName:@"defaultUserHead.png" Target:self Action:@selector(headImageBtnClick) Title:nil];
+    //    headImageView = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
+    //    headImageView.canClick = YES;
+    //    headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+    headImageBtn.layer.cornerRadius = 31;
+    headImageBtn.layer.masksToBounds = YES;
+    [headBg2 addSubview:headImageBtn];
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
-        headImageBtn = [MyControl createButtonWithFrame:CGRectMake(4, 4, 62, 62) ImageName:@"defaultUserHead.png" Target:self Action:@selector(headImageBtnClick) Title:nil];
-        //    headImageView = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
-        //    headImageView.canClick = YES;
-        //    headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
-        headImageBtn.layer.cornerRadius = 31;
-        headImageBtn.layer.masksToBounds = YES;
-        [headBg2 addSubview:headImageBtn];
         /**************************/
         if (!([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
             NSString * docDir = DOCDIR;
@@ -365,12 +372,12 @@
         /**************************/
     }else{
         //未注册
-        headClickImage = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
-        headClickImage.image = [UIImage imageNamed:@"defaultUserHead.png"];
-        headClickImage.canClick = YES;
-        headClickImage.layer.cornerRadius = 31;
-        headClickImage.layer.masksToBounds = YES;
-        [headBg2 addSubview:headClickImage];
+//        headClickImage = [[ClickImage alloc] initWithFrame:CGRectMake(4, 4, 62, 62)];
+//        headClickImage.image = [UIImage imageNamed:@"defaultUserHead.png"];
+//        headClickImage.canClick = YES;
+//        headClickImage.layer.cornerRadius = 31;
+//        headClickImage.layer.masksToBounds = YES;
+//        [headBg2 addSubview:headClickImage];
         
         messageNumBg.hidden = YES;
     }
@@ -399,7 +406,7 @@
 //    UILabel * kingName = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:14 Text:[NSString stringWithFormat:@"%@国", [USER objectForKey:@"a_name"]]];
 //    [sv3 addSubview:kingName];
     
-    position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:13 Text:[NSString stringWithFormat:@"%@国祭司", [USER objectForKey:@"a_name"]]];
+    position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:13 Text:[NSString stringWithFormat:@"%@的经纪人", [USER objectForKey:@"a_name"]]];
     [sv3 addSubview:position];
     if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [USER objectForKey:@"rank"] != nil && [[USER objectForKey:@"rank"] length] != 0) {
         position.text = [NSString stringWithFormat:@"%@联萌%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];
@@ -547,9 +554,13 @@
         tip1.textAlignment = NSTextAlignmentCenter;
         [countryBg addSubview:tip1];
         
-        UILabel * tip2 = [MyControl createLabelWithFrame:CGRectMake(95, 35, 125, 15) Font:10 Text:@"快来打造最闪亮萌星！"];
-        tip2.textAlignment = NSTextAlignmentCenter;
-        [countryBg addSubview:tip2];
+//        UILabel * tip2 = [MyControl createLabelWithFrame:CGRectMake(95, 35, 125, 15) Font:10 Text:@"快来打造最闪亮萌星！"];
+//        tip2.textAlignment = NSTextAlignmentCenter;
+//        [countryBg addSubview:tip2];
+        UIButton * image = [MyControl createButtonWithFrame:CGRectMake(95+(125-74)/2.0, 35, 74*0.9, 24*0.9) ImageName:@"menu_addBg.png" Target:self Action:@selector(imageClick) Title:@"加入星球"];
+        image.titleLabel.font = [UIFont systemFontOfSize:12];
+        [countryBg addSubview:image];
+        
         
         UIButton * regBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, OFFSET, 65) ImageName:@"" Target:self Action:@selector(regBtnClick) Title:nil];
         [countryBg addSubview:regBtn];
@@ -675,9 +686,11 @@
     tv.separatorStyle = 0;
     [sv addSubview:tv];
 }
-
+-(void)imageClick{}
 -(void)rqBtnClick
 {
+    [MobClick event:@"rank"];
+    
     PopularityListViewController * vc = [[PopularityListViewController alloc] init];
     
     [self presentViewController:vc animated:YES completion:nil];
@@ -690,11 +703,15 @@
 }
 -(void)headImageBtnClick
 {
-    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
-    vc.usr_id = [USER objectForKey:@"usr_id"];
-    vc.modalTransitionStyle = 2;
-    [self presentViewController:vc animated:YES completion:nil];
-    [vc release];
+    if([[USER objectForKey:@"isSuccess"] intValue]){
+        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+        vc.usr_id = [USER objectForKey:@"usr_id"];
+        vc.modalTransitionStyle = 2;
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    }else{
+        ShowAlertView;
+    }
 }
 -(void)searchBtnClick
 {
@@ -925,6 +942,9 @@
     NSLog(@"messageBtnClick");
     //消息
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
+        
+        [MobClick event:@"message"];
+        
         NoticeViewController * vc = [[NoticeViewController alloc] init];
         //整理合并数据，合并的消息按时间从旧到新进行排序
 //        1413515402 = 11;

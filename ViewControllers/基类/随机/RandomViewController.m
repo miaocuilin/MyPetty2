@@ -41,6 +41,13 @@
 //    NSString *string = [NSString stringWithFormat:@"http://123.57.39.48/index.php?r=animal/recommendApi&sig=%@&SID=%@",sig,[ControllerManager getSID]];
 //    NSLog(@"string:%@",string);
 //}
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    if (!isLoaded) {
+//        [self loadData];
+//    }
+//    isLoaded = YES;
+//}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -192,8 +199,6 @@
 }
 -(void)loadData
 {
-    StartLoading;
-    
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RECOMMENDAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             //只包含img_id和图片的url
@@ -223,8 +228,9 @@
             [qtmquitView headerEndRefreshing];
 //            [indicatorView stopAnimating];
             
-            LoadingSuccess;
+//            LoadingSuccess;
         }else{
+            StartLoading;
             LoadingFailed;
 //            [indicatorView stopAnimating];
             [qtmquitView headerEndRefreshing];

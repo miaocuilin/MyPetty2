@@ -33,6 +33,10 @@
 #import "AlertView.h"
 #import "ReportAlertView.h"
 #import "CodeAlertView.h"
+#import "PopupView.h"
+#import "MobClick.h"
+#import "ResultOfBuyView.h"
+
 
 #define ShowAlertView AlertView * alert = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];[alert makeUI];alert.jump = ^(){ChooseInViewController * vc = [[ChooseInViewController alloc] init];[self presentViewController:vc animated:YES completion:nil];[vc release];};[self.view addSubview:alert];[alert release];
 
@@ -51,6 +55,7 @@
 #define LineGray [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1]
 //修改资料背景绿
 #define BGCOLOR5 [UIColor colorWithRed:147/255.0 green:204/255.0 blue:172/255.0 alpha:1]
+
 
 #define USER [ControllerManager shareUserDefault]
 #define NET [UIApplication sharedApplication].networkActivityIndicatorVisible

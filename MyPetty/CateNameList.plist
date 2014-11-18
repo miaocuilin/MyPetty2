@@ -76,6 +76,10 @@
 		<string>东方猫</string>
 		<key>136</key>
 		<string>混血</string>
+		<key>137</key>
+		<string>加菲猫</string>
+		<key>138</key>
+		<string>缅甸猫</string>
 	</dict>
 	<key>2</key>
 	<dict>
@@ -185,6 +189,10 @@
 		<string>吉娃娃</string>
 		<key>253</key>
 		<string>混血</string>
+		<key>254</key>
+		<string>秋田犬</string>
+		<key>255</key>
+		<string>杜宾犬</string>
 	</dict>
 	<key>3</key>
 	<dict>

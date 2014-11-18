@@ -9,9 +9,8 @@
 #import "UserBagViewController.h"
 #import "UserBagCollectionViewCell.h"
 #import "PresentDetailViewController.h"
-@interface UserBagViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
-@property (nonatomic,strong)UICollectionView *collectionView;
-@property(nonatomic,retain)UIImageView * bgImageView;
+@interface UserBagViewController ()
+
 
 @end
 
@@ -26,9 +25,8 @@
     
     [self createBg];
     [self loadData];
-    [self createCollectionView];
     [self createFakeNavigation];
-
+    
 }
 -(void)loadData
 {
@@ -71,7 +69,8 @@
                         i--;
                     }
                 }
-                [self.collectionView reloadData];
+//                [self.collectionView reloadData];
+                [self createScrollView];
             }
         }else{
         
@@ -79,47 +78,47 @@
     }];
     [request release];
 }
-- (void)createCollectionView
-{
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.headerReferenceSize = CGSizeMake(self.view.frame.size.width, 64);
-    layout.itemSize = CGSizeMake(85, 100);
-    
-    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:layout];
-    [self.view addSubview:self.collectionView];
-    self.collectionView.backgroundColor = [UIColor clearColor];
-    self.collectionView.delegate = self;
-    self.collectionView.dataSource = self;
-    [self.collectionView registerClass:[UserBagCollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
-    
-}
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return self.goodsArray.count;
-}
+//- (void)createCollectionView
+//{
+//    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+//    layout.headerReferenceSize = CGSizeMake(self.view.frame.size.width, 64);
+//    layout.itemSize = CGSizeMake(85, 100);
+//    
+//    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:layout];
+//    [self.view addSubview:self.collectionView];
+//    self.collectionView.backgroundColor = [UIColor clearColor];
+//    self.collectionView.delegate = self;
+//    self.collectionView.dataSource = self;
+//    [self.collectionView registerClass:[UserBagCollectionViewCell class] forCellWithReuseIdentifier:@"cell"];
+//    
+//}
+//- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+//{
+//    return self.goodsArray.count;
+//}
 
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *identifer = @"cell";
-    UserBagCollectionViewCell *cell = (UserBagCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:identifer forIndexPath:indexPath];
-    [cell configUIWithItemId:self.goodsArray[indexPath.row] Num:self.goodsNumArray[indexPath.row]];
-    return cell;
-}
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"indexPath.item:%d",indexPath.item);
+//- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    static NSString *identifer = @"cell";
+//    UserBagCollectionViewCell *cell = (UserBagCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:identifer forIndexPath:indexPath];
+//    [cell configUIWithItemId:self.goodsArray[indexPath.row] Num:self.goodsNumArray[indexPath.row]];
+//    return cell;
+//}
+//- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    NSLog(@"indexPath.item:%d",indexPath.item);
 //    PresentDetailViewController *presentDetailVC = [[PresentDetailViewController alloc] init];
 //    [self presentViewController:presentDetailVC animated:YES completion:^{
 //        [presentDetailVC release];
 //    }];
     
-}
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-{
-    return UIEdgeInsetsMake(10, 15, 0, 15);
-//    return UIEdgeInsetsMake(<#CGFloat top#>, <#CGFloat left#>, <#CGFloat bottom#>, <#CGFloat right#>)
-}
+//}
+//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+//{
+//    return UIEdgeInsetsMake(10, 15, 0, 15);
+////    return UIEdgeInsetsMake(<#CGFloat top#>, <#CGFloat left#>, <#CGFloat bottom#>, <#CGFloat right#>)
+//}
 -(void)createBg
 {
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
@@ -163,6 +162,126 @@
     UIView * line0 = [MyControl createViewWithFrame:CGRectMake(0, 63, 320, 1)];
     line0.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.1];
     [navView addSubview:line0];
+}
+#pragma mark - createUI
+-(void)createScrollView
+{
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    //    sv.contentSize = CGSizeMake(320, 64+35+15+(30/3)*100);
+    [self.view addSubview:sv];
+    
+    [self.view bringSubviewToFront:navView];
+    
+    int index = self.goodsArray.count;
+    if (index%2) {
+        sv.contentSize = CGSizeMake(self.view.frame.size.width, 64+15+(index/2+1)*160);
+    }else{
+        sv.contentSize = CGSizeMake(self.view.frame.size.width, 64+15+(index/2)*160);
+    }
+//    NSLog(@"index:%d",index);
+    
+    /***************************/
+    for(int i=0; i<index; i+=2){
+        //白色背景
+        UIImageView * giftBgImageView = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-500/2)/2.0, 64+(i/2)*160+10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
+        [sv addSubview:giftBgImageView];
+        
+        UIImageView * giftBgImageView2 = [MyControl createImageViewWithFrame:CGRectMake(giftBgImageView.frame.origin.x+274/2, 64+(i/2)*160+10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
+        [sv addSubview:giftBgImageView2];
+        //        if ((i+2)%4 == 0) {
+        //            giftBgImageView.frame = CGRectMake(25+i/4*300, 10+310/2, 222/2, 190/2);
+        //            giftBgImageView2.frame = CGRectMake(324/2+i/4*300, 10+310/2, 222/2, 190/2);
+        //        }
+        
+        //礼物图片
+        UIImageView * giftImageView = [MyControl createImageViewWithFrame:CGRectMake((111-98)/2.0, (95-93)/2.0, 98, 83) ImageName:@""];
+        [giftBgImageView addSubview:giftImageView];
+        
+        UIImageView * giftImageView2 = [MyControl createImageViewWithFrame:CGRectMake((111-98)/2.0, (95-93)/2.0, 98, 83) ImageName:@""];
+        [giftBgImageView2 addSubview:giftImageView2];
+        
+        
+        //木板
+        UIImageView * wood = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-546/2)/2.0, giftBgImageView.frame.origin.y+190/2, 546/2, 17/2.0) ImageName:@"giftAlert_wood.png"];
+        [sv addSubview:wood];
+        
+        //
+        UIImageView * hang_tag = [MyControl createImageViewWithFrame:CGRectMake(wood.frame.origin.x+4, wood.frame.origin.y-1, 246/2, 106/2) ImageName:@""];
+        [sv addSubview:hang_tag];
+        
+        UIImageView * hang_tag2 = [MyControl createImageViewWithFrame:CGRectMake(wood.frame.origin.x+wood.frame.size.width-4-246/2, wood.frame.origin.y-1, 246/2, 106/2) ImageName:@""];
+        [sv addSubview:hang_tag2];
+        
+        //礼物名称
+        UILabel * productLabel = [MyControl createLabelWithFrame:CGRectMake(10, 18, 80, 15) Font:12 Text:nil];
+        productLabel.font = [UIFont boldSystemFontOfSize:12];
+        productLabel.textColor = [ControllerManager colorWithHexString:@"5F5E5E"];
+        [hang_tag addSubview:productLabel];
+        
+        UILabel * productLabel2 = [MyControl createLabelWithFrame:CGRectMake(10, 18, 80, 15) Font:12 Text:nil];
+        productLabel2.font = [UIFont boldSystemFontOfSize:12];
+        productLabel2.textColor = [ControllerManager colorWithHexString:@"5F5E5E"];
+        [hang_tag2 addSubview:productLabel2];
+        
+        //人气
+        UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(90, 20, 30, 15) Font:12 Text:@"人气"];
+        rq.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag addSubview:rq];
+        
+        UILabel * rq2 = [MyControl createLabelWithFrame:CGRectMake(90, 20, 30, 15) Font:12 Text:@"人气"];
+        rq2.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag2 addSubview:rq2];
+        
+        //人气值
+        UILabel * rqz = [MyControl createLabelWithFrame:CGRectMake(80, 35, 42, 15) Font:12 Text:@"+100"];
+        rqz.textAlignment = NSTextAlignmentCenter;
+        rqz.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag addSubview:rqz];
+        
+        UILabel * rqz2 = [MyControl createLabelWithFrame:CGRectMake(80, 35, 42, 15) Font:12 Text:@"+100"];
+        rqz2.textAlignment = NSTextAlignmentCenter;
+        rqz2.font = [UIFont boldSystemFontOfSize:12];
+        [hang_tag2 addSubview:rqz2];
+        
+        //
+//        CGRect rect = giftBgImageView.frame;
+//        CGRect rect2 = giftBgImageView2.frame;
+        
+        /*******************i*********************/
+//        NSLog(@"%@", self.goodsArray[i]);
+        if ([self.goodsArray[i] intValue]>2000) {
+            hang_tag.image = [UIImage imageNamed:@"giftAlert_badBg.png"];
+        }else{
+            hang_tag.image = [UIImage imageNamed:@"giftAlert_goodBg.png"];
+        }
+        giftImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.goodsArray[i]]];
+        NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:self.goodsArray[i]];
+        productLabel.text = [dict objectForKey:@"name"];
+        rqz.text = [dict objectForKey:@"add_rq"];
+        
+        /*******************i+1*********************/
+        if (i+1 == self.goodsArray.count) {
+            //超出范围
+            if ([self.goodsArray[i] intValue]>2000) {
+                hang_tag2.image = [UIImage imageNamed:@"giftAlert_badBg.png"];
+            }else{
+                hang_tag2.image = [UIImage imageNamed:@"giftAlert_goodBg.png"];
+            }
+            rq2.text = @"";
+            rqz2.text = @"";
+            return;
+        }
+        if ([self.goodsArray[i+1] intValue]>2000) {
+            hang_tag2.image = [UIImage imageNamed:@"giftAlert_badBg.png"];
+        }else{
+            hang_tag2.image = [UIImage imageNamed:@"giftAlert_goodBg.png"];
+        }
+        giftImageView2.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.goodsArray[i+1]]];
+        NSDictionary * dict2 = [ControllerManager returnGiftDictWithItemId:self.goodsArray[i+1]];
+        productLabel2.text = [dict2 objectForKey:@"name"];
+        rqz2.text = [dict2 objectForKey:@"add_rq"];
+    }
+    
 }
 - (void)backBtnClick
 {

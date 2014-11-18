@@ -16,6 +16,8 @@
     NSTimer * Timer;
     
     UIButton * rightBtn;
+    
+    UIView * shakeBgView;
 }
 @property(nonatomic)BOOL isMi;
 //@property(nonatomic,copy)NSString * ambString;

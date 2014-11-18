@@ -606,8 +606,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSDictionary *dict =[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
     //如果返回正常，将图片存到本地
     if([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[dict objectForKey:@"data"] objectForKey:@"image"] isKindOfClass:[NSDictionary class]]){
+        [MobClick event:@"photo"];
+        
         NSString * url = [[[dict objectForKey:@"data"] objectForKey:@"image"] objectForKey:@"url"];
-        NSData * data = UIImageJPEGRepresentation(self.oriImage, 0.1);
+        NSData * data = [MyControl scaleToSize:self.oriImage];
         NSString * path = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
         BOOL a = [data writeToFile:path atomically:YES];
         NSLog(@"本地存储结果：%d", a);

@@ -59,9 +59,10 @@
     inviteBtn = [MyControl createButtonWithFrame:CGRectMake(bgView.frame.size.width-10-50, 5, 50, 28) ImageName:@"inviteBtn.png" Target:self Action:@selector(inviteBtnClick) Title:@"邀请"];
     inviteBtn.titleLabel.font = [UIFont systemFontOfSize:13];
     [bgView addSubview:inviteBtn];
-//    if([[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"]){
-//        inviteBtn.hidden = YES;
-//    }
+    
+    if([[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"]){
+        inviteBtn.hidden = YES;
+    }
     
     //f79879  50%
     UIView * headBgView = [MyControl createViewWithFrame:CGRectMake((bgView.frame.size.width-44)/2, 5, 44, 44)];
@@ -174,7 +175,11 @@
     
     float spe2 = (bgView.frame.size.width-44-50*4)/3;
     for(int i=0; i<4; i++){
-        UIButton * imageBtn = [MyControl createButtonWithFrame:CGRectMake(22+i*(50+spe2), 230, 50, 50) ImageName:@"20-1.png" Target:self Action:@selector(imageBtnClick:) Title:nil];
+        UIImageView * image = [MyControl createImageViewWithFrame:CGRectMake(22+i*(50+spe2), 230, 50, 50) ImageName:@""];
+        [bgView addSubview:image];
+        image.tag = 500+i;
+        
+        UIButton * imageBtn = [MyControl createButtonWithFrame:CGRectMake(22+i*(50+spe2), 230, 50, 50) ImageName:@"" Target:self Action:@selector(imageBtnClick:) Title:nil];
         [bgView addSubview:imageBtn];
         imageBtn.tag = 400+i;
     }
@@ -275,6 +280,9 @@
     for (int i=0; i<4; i++) {
         UIButton * btn = (UIButton *)[bgView viewWithTag:400+i];
         btn.hidden = YES;
+        
+        UIImageView * imageView = (UIImageView *)[bgView viewWithTag:500+i];
+        imageView.hidden = YES;
     }
     self.aid = model.aid;
     self.model = model;
@@ -282,7 +290,12 @@
     if ([model.msg isKindOfClass:[NSString class]] && model.msg.length != 0) {
         tf.text = model.msg;
     }else{
-        tf.text = @"点击创建独一无二的萌宣言吧~";
+        if([model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]){
+            tf.text = @"点击创建独一无二的萌宣言吧~";
+        }else{
+            tf.text = [NSString stringWithFormat:@"%@暂时沉默中~", model.name];
+        }
+        
     }
     self.tempTfString = tf.text;
     
@@ -386,20 +399,26 @@
         for (int i=0; i<model.images.count; i++) {
             UIButton * btn = (UIButton *)[bgView viewWithTag:400+i];
             btn.hidden = NO;
+            
+            UIImageView * imageView = (UIImageView *)[bgView viewWithTag:500+i];
+            imageView.contentMode = UIViewContentModeScaleAspectFill;
+            imageView.clipsToBounds = YES;
+            imageView.hidden = NO;
+            
             NSString * docDir = DOCDIR;
             NSString * imageUrl = [model.images[i] objectForKey:@"url"];
             NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", imageUrl]];
             //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
             UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
             if (image) {
-                [btn setBackgroundImage:image forState:UIControlStateNormal];
-                //            headImageView.image = image;
+//                [btn setBackgroundImage:image forState:UIControlStateNormal];
+                imageView.image = image;
             }else{
                 //下载图片
                 httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, imageUrl] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
-                        [btn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                        //                    headImageView.image = load.dataImage;
+//                        [btn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                        imageView.image = load.dataImage;
                         NSString * docDir = DOCDIR;
                         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", imageUrl]];
                         [load.data writeToFile:txFilePath atomically:YES];

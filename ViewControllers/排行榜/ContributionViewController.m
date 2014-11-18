@@ -353,7 +353,7 @@
     
     titleBtn = [MyControl createButtonWithFrame:CGRectMake(130-10, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"总贡献榜"];
     titleBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17];
-    [titleBtn setTitleColor:YELLOW forState:UIControlStateNormal];
+    [titleBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [navView addSubview:titleBtn];
     
     //小三角
@@ -379,7 +379,7 @@
         CGFloat f = 200;
         dropDown2 = [[NIDropDown alloc] showDropDown:titleBtn :&f :self.titleArray];
         
-        [dropDown2 setCellTextColor:YELLOW Font:[UIFont boldSystemFontOfSize:15] BgColor:[UIColor colorWithRed:252/255.0 green:120/255.0 blue:85/255.0 alpha:0.6] lineColor:[UIColor colorWithRed:188/255.0 green:188/255.0 blue:188/255.0 alpha:0.6]];
+        [dropDown2 setCellTextColor:[UIColor whiteColor] Font:[UIFont boldSystemFontOfSize:15] BgColor:[UIColor colorWithRed:252/255.0 green:120/255.0 blue:85/255.0 alpha:0.6] lineColor:[UIColor colorWithRed:188/255.0 green:188/255.0 blue:188/255.0 alpha:0.6]];
         dropDown2.delegate = self;
         CGRect rect = navView.frame;
         rect.size.height = 64+160;

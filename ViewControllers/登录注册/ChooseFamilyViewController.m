@@ -55,8 +55,8 @@
     self.detailDict = [NSMutableDictionary dictionaryWithCapacity:0];
     
     self.systemListArray = [NSMutableArray arrayWithObjects:@"推荐", @"人气", nil];
-    self.totalArray = [NSMutableArray arrayWithObjects:@"喵喵", @"汪汪", nil];
-    self.limitTypeName = @"喵喵";
+    self.totalArray = [NSMutableArray arrayWithObjects:@"所有", @"喵喵", @"汪汪", nil];
+    self.limitTypeName = @"所有";
 //    [UIApplication sharedApplication].statusBarHidden = NO;
     
     
@@ -244,7 +244,7 @@
     headerBgView.alpha = 0.85;
     [headerView addSubview:headerBgView];
     
-    raceBtn = [MyControl createButtonWithFrame:CGRectMake(30, 5, 120, 25) ImageName:@"" Target:self Action:@selector(raceBtnClick) Title:@"喵喵"];
+    raceBtn = [MyControl createButtonWithFrame:CGRectMake(30, 5, 120, 25) ImageName:@"" Target:self Action:@selector(raceBtnClick) Title:@"所有"];
     raceBtn.layer.cornerRadius = 5;
     raceBtn.layer.masksToBounds = YES;
     raceBtn.titleLabel.font = [UIFont boldSystemFontOfSize:14];
@@ -370,13 +370,13 @@
         //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
         UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
         if (image) {
-            headImageView.image = image;
+            headImageView.image = [MyControl image:image fitInSize:CGSizeMake(100, 100)];
         }else{
             //下载头像
             NSLog(@"%@", [NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]);
             httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
-                    headImageView.image = load.dataImage;
+                    headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(100, 100)];
                     NSString * docDir = DOCDIR;
                     NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
                     [load.data writeToFile:txFilePath atomically:YES];
@@ -610,9 +610,10 @@
     NSLog(@"%d--%@", Line, Words);
     if (sender == dropDown) {
         self.limitTypeName = Words;
+        self.from = [NSString stringWithFormat:@"%d", Line];
 //        if (Line == 0) {
-//            self.type = @"0";
-            self.from = [NSString stringWithFormat:@"%d", Line+1];
+////            self.type = @"0";
+//            self.from = [NSString stringWithFormat:@"%d", Line+1];
 //        }else{
 //            for (int i=1; i<self.totalArray.count; i++) {
 //                if (Line == i) {
@@ -785,6 +786,7 @@
         StartLoading;
         NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", type]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI2, type, sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 NSLog(@"%@", load.dataDict);

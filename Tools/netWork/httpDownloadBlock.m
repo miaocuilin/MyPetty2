@@ -142,14 +142,14 @@
             if ([[self.dataDict objectForKey:@"state"] intValue] == 1) {
                 //state=1时直接返回errorMessage
                 msg = [self.dataDict objectForKey:@"errorMessage"];
-                self.httpRequestBlock(NO,self);
+//                self.httpRequestBlock(NO,self);
 //                return;
             }
             if ([[self.dataDict objectForKey:@"state"] intValue] == 2) {
                 //SID过期 login
                 msg = @"网络异常，请重新操作";
                 [self login];
-                self.httpRequestBlock(NO,self);
+//                self.httpRequestBlock(NO,self);
 //                return;
             }
 
@@ -176,6 +176,7 @@
                     }];
                 }];
                 
+                self.httpRequestBlock(NO,self);
                 return;
             }
             /****************************/

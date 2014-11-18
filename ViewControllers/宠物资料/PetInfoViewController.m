@@ -103,6 +103,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [MobClick event:@"pet_homepage"];
+    
     self.view.backgroundColor = [UIColor whiteColor];
     
     // Allocate Asset Library
@@ -1775,7 +1777,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         quictGiftvc.receiver_aid = [petInfoDict objectForKey:@"aid"];
         quictGiftvc.receiver_name = [petInfoDict objectForKey:@"name"];
         //
-        quictGiftvc.hasSendGift = ^(){
+        quictGiftvc.hasSendGift = ^(NSString * itemId){
             [self loadKingDynamicData];
         };
         

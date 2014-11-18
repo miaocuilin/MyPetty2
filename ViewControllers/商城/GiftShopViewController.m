@@ -73,6 +73,10 @@
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:buyItemsString Block:^(BOOL isFinish, httpDownloadBlock *load) {
 //        NSLog(@"购买商品结果：%@",load.dataDict);
         if (isFinish) {
+            NSString * level = [NSString stringWithFormat:@"%d", ([item intValue]/100)%10];
+            NSString * name = item;
+            [MobClick event:@"buy_gift" attributes:@{@"level":level, @"name":name}];
+            
             [USER setObject:[NSString stringWithFormat:@"%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"user_gold"]] forKey:@"gold"];
             BottomGold.text = [USER objectForKey:@"gold"];
             int noViewGiftNumber = [[USER objectForKey:@"noViewGift"] intValue];

@@ -369,15 +369,15 @@
 {
     CGFloat scale;
     CGSize newsize = thisSize;
-    
-    if (newsize.height && (newsize.height > aSize.height))
+    if(newsize.height && (newsize.height<newsize.width))
+//    if (newsize.height && (newsize.height > aSize.height))
     {
         scale = aSize.height / newsize.height;
         newsize.width *= scale;
         newsize.height *= scale;
     }
-    
-    if (newsize.width && (newsize.width >= aSize.width))
+    else
+//    if (newsize.width && (newsize.width >= aSize.width))
     {
         scale = aSize.width / newsize.width;
         newsize.width *= scale;

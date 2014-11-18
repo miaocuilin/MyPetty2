@@ -47,6 +47,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [MobClick event:@"shout_button"];
+    
     [self backgroundView];
     [self createUI];
     [self loadIsRecorderData];
@@ -207,6 +209,8 @@
 -(void)requestFinished:(ASIHTTPRequest *)request
 {
     NSLog(@"上传录音结束");
+    [MobClick event:@"shout_suc"];
+    
     self.upScrollView.contentOffset = CGPointMake(self.upScrollView.frame.size.width*3, 0);
     [self floatingFrame:3];
     int exp = [[USER objectForKey:@"exp"] intValue];

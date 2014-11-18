@@ -370,7 +370,7 @@
 -(void)login
 {
     if (isLoadImage) {
-        StartLoading;
+//        StartLoading;
     }
     
 //    NSString * code = [NSString stringWithFormat:@"planet=%@&uid=%@dog&cat", [USER objectForKey:@"planet"], [OpenUDID value]];
@@ -401,7 +401,7 @@
                 [self getUserData];
                 
             }else{
-                LoadingSuccess;
+//                LoadingSuccess;
                 //跳转到主页
                 [self jumpToMain];
             }

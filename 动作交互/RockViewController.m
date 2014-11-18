@@ -43,6 +43,8 @@
     [[UIApplication sharedApplication] setApplicationSupportsShakeToEdit:YES];
     [self becomeFirstResponder];
     
+    [MobClick event:@"shake_button"];
+    
     NSString *path = [[NSBundle mainBundle] pathForResource:@"rocking" ofType:@"wav"];
     NSString *path2 = [[NSBundle mainBundle] pathForResource:@"rocked" ofType:@"wav"];
     AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path2], &soundID2);
@@ -83,7 +85,8 @@
         if (isFinish) {
             int index = [[[load.dataDict objectForKey:@"data"] objectForKey:@"shake_count"] intValue];
             self.count = index;
-
+            
+            [MobClick event:@"shake_suc"];
             timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:4];
             
             if (self.count == 0) {
@@ -163,6 +166,10 @@
     httpDownloadBlock *request  = [[httpDownloadBlock alloc] initWithUrlStr:sendString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"赠送数据：%@",load.dataDict);
         if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+//            NSString * level = [NSString stringWithFormat:@"%d", ([item intValue]/100)%10];
+//            NSString * name = item;
+//            [MobClick event:@"send_gift" attributes:@{@"level":level, @"name":name}];
+            
             int newexp = [[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] intValue];
             int exp = [[USER objectForKey:@"exp"] intValue];
             [USER setObject:[NSString stringWithFormat:@"%d", exp+newexp] forKey:@"exp"];

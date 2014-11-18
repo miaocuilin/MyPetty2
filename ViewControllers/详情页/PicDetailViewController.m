@@ -124,6 +124,9 @@
     
     
     [super viewDidLoad];
+    
+    [MobClick event:@"photopage"];
+    
 //    NSMutableArray * tempArray = [NSMutableArray arrayWithCapacity:0];
 //    NSLog(@"%@--%d", tempArray, tempArray.count);
 //    for (int i=0; i<100; i++) {
@@ -1256,7 +1259,7 @@
         quictGiftvc.receiver_name = self.pet_name;
         
         NSLog(@"%@--%@", self.aid, [USER objectForKey:@"aid"]);
-        quictGiftvc.hasSendGift = ^(){
+        quictGiftvc.hasSendGift = ^(NSString * itemId){
             self.gifts = [NSString stringWithFormat:@"%d", [self.gifts intValue]+1];
             NSString * str = [NSString stringWithFormat:@"已经收到了%@件礼物", self.gifts];
             NSMutableAttributedString * attString = [[NSMutableAttributedString alloc] initWithString:str];
@@ -1287,6 +1290,16 @@
             [commentsBgView removeFromSuperview];
             [self createUsersTx];
             [self createCmt];
+            
+            ResultOfBuyView * result = [[ResultOfBuyView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+            [UIView animateWithDuration:0.3 animations:^{
+                result.alpha = 1;
+            }];
+            result.confirm = ^(){
+                [quictGiftvc closeGiftAction];
+            };
+            [result configUIWithName:self.pet_name ItemId:itemId Tx:self.pet_tx];
+            [self.view addSubview:result];
         };
         [self addChildViewController:quictGiftvc];
         [quictGiftvc didMoveToParentViewController:self];
@@ -1394,6 +1407,8 @@
 //    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
 //    [MMProgressHUD showWithStatus:@"正在分享..."];
     [self cancelBtnClick];
+    
+    [MobClick event:@"photo_share"];
     
     if (button.tag == 200) {
         NSLog(@"微信");
@@ -1531,18 +1546,27 @@
     }
     //
     if (!btn.selected) {
+        
         /*================================*/
         NSString * code = [NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id];
         NSString * sig = [MyMD5 md5:code];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKEAPI, self.img_id, sig, [ControllerManager getSID]];
         NSLog(@"likeURL:%@", url);
-        StartLoading;
+//        StartLoading;
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
-//                NSLog(@"%@", load.dataDict);
-                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+                NSLog(@"%@", load.dataDict);
+//                int a = 
+                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] isKindOfClass:[NSNumber class]]) {
                     [MMProgressHUD dismissWithError:@"点赞失败" afterDelay:1];
                 }else{
+                    [MobClick event:@"like"];
+                    
+                    int a = [[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] intValue];
+                    if (a) {
+                        [ControllerManager HUDImageIcon:@"gold.png" showView:self.view yOffset:0 Number:a];
+                    }
+                    
                     btn.selected = YES;
                     if (isMi) {
                         fish.image = [UIImage imageNamed:@"fish1.png"];
@@ -1609,17 +1633,30 @@
                     [self createUsersTx];
                     [self createCmt];
                     
-                    [MMProgressHUD dismissWithSuccess:@"点赞成功" title:nil afterDelay:0.5];
+//                    [MMProgressHUD dismissWithSuccess:@"点赞成功" title:nil afterDelay:0.5];
                 }
             }else{
-                [MMProgressHUD dismissWithError:@"点赞请求失败" afterDelay:1];
+                LoadingFailed;
+//                [MMProgressHUD dismissWithError:@"点赞请求失败" afterDelay:1];
                 NSLog(@"数据请求失败");
             }
         }];
         [request release];
     }else{
-        StartLoading;
-        [MMProgressHUD dismissWithError:@"您已经点过赞了" afterDelay:0.7];
+        PopupView * pop = [[PopupView alloc] init];
+        [pop modifyUIWithSize:self.view.frame.size msg:@"您已经点过赞了"];
+        [self.view addSubview:pop];
+        [pop release];
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            pop.bgView.alpha = 1;
+        } completion:^(BOOL finished) {
+            [UIView animateKeyframesWithDuration:0.2 delay:2 options:0 animations:^{
+                pop.bgView.alpha = 0;
+            } completion:^(BOOL finished) {
+                [pop removeFromSuperview];
+            }];
+        }];
     }
     
 //    btn.selected = !btn.selected;
@@ -1777,6 +1814,8 @@
         [self.usrIdArray insertObject:[USER objectForKey:@"usr_id"] atIndex:0];
         //    [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];
         if (isReply) {
+            [MobClick event:@"comment"];
+            
             [self.nameArray insertObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]] atIndex:0];
             //        [self.nameArray addObject:[NSString stringWithFormat:@"%@&%@", [USER objectForKey:@"name"], self.nameArray[replyRow]]];
         }else{

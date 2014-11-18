@@ -31,7 +31,7 @@
 #import "MessageModel.h"
 
 #define WORDCOLOR [UIColor colorWithRed:86/255.0 green:86/255.0 blue:86/255.0 alpha:1]
-#define BROWNCOLOR [UIColor colorWithRed:233/255.0 green:178/255.0 blue:142/255.0 alpha:1]
+#define BROWNCOLOR [UIColor colorWithRed:247/255.0 green:192/255.0 blue:152/255.0 alpha:1]
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 @interface MainViewController () <AFPhotoEditorControllerDelegate>
@@ -109,7 +109,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [self inputCode];
     }
     
-    if(isLoaded){
+    if(isLoaded && [[USER objectForKey:@"isSuccess"] intValue]){
         [self getNewMessage];
     }
 }
@@ -242,7 +242,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     [self createAlphaBtn];
     
-    [self getNewMessage];
+    if([[USER objectForKey:@"isSuccess"] intValue]){
+        [self getNewMessage];
+    }
+    
 //    if ([ControllerManager getIsSuccess]) {
 //        [self loadAnimalInfoData];
 //    }
@@ -590,8 +593,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 //遍历本地消息，取出未读数相加返回
                 NSFileManager * fileManager = [[NSFileManager alloc] init];
                 if ([fileManager fileExistsAtPath:path]) {
-                    self.msgNum.hidden = NO;
                     self.numLabel.text = [self getNewMessageNum];
+                    if ([self.numLabel.text intValue]) {
+                        self.msgNum.hidden = NO;
+                    }else{
+                        self.msgNum.hidden = YES;
+                    }
 //                    self.refreshNewMsgNum([self getNewMessageNum]);
                 }else{
                     self.msgNum.hidden = YES;
@@ -888,7 +895,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     UIView * brownView = [MyControl createViewWithFrame:CGRectMake(10, 5, 532/2, 58/2)];
     brownView.backgroundColor = BROWNCOLOR;
-//    brownView.alpha = 0.8;
+    brownView.alpha = 0.8;
     brownView.layer.cornerRadius = 13;
     brownView.layer.masksToBounds = YES;
     [searchBg addSubview:brownView];
@@ -910,8 +917,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    tf.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [searchBg addSubview:tf];
     
+    UIView * view = [MyControl createViewWithFrame:CGRectMake(brownView.frame.origin.x+brownView.frame.size.width+3, brownView.frame.origin.y, 40-6, 29)];
+    view.layer.cornerRadius = 7;
+    view.layer.masksToBounds = YES;
+    view.backgroundColor = BROWNCOLOR;
+    view.alpha = 0.8;
+    [searchBg addSubview:view];
+    
     cancel = [MyControl createButtonWithFrame:CGRectMake(brownView.frame.origin.x+brownView.frame.size.width, brownView.frame.origin.y, 40, 29) ImageName:@"" Target:self Action:@selector(cancelClick:) Title:@"取消"];
-    [cancel setTitleColor:WORDCOLOR forState:UIControlStateNormal];
+    [cancel setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     cancel.titleLabel.font = [UIFont systemFontOfSize:14];
     [searchBg addSubview:cancel];
     
@@ -921,6 +935,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //隐藏searchBg
     if ([btn.titleLabel.text isEqualToString:@"搜索"]) {
         //请求搜索API
+        [MobClick event:@"search"];
         [self textFieldShouldReturn:tf];
     }else{
         self.sv.scrollEnabled = YES;

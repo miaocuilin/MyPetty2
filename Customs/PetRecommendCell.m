@@ -73,14 +73,14 @@
     [self addSubview:self.pBtn];
     
     //
-    UIView * view1 = [MyControl createViewWithFrame:CGRectMake(10, 492/2, 524/2, 58/2)];
+    UIView * view1 = [MyControl createViewWithFrame:CGRectMake(10, 492/2, 524/2+15, 58/2)];
 //    view1.layer.borderColor = [UIColor whiteColor].CGColor;
 //    view1.layer.borderWidth = 1;
     view1.layer.cornerRadius = 10;
     view1.layer.masksToBounds = YES;
     [self addSubview:view1];
     
-    UIImageView * alphaView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, view1.frame.size.width, view1.frame.size.height) ImageName:@"recom_percentBg.png"];
+    UIImageView * alphaView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, view1.frame.size.width+15, view1.frame.size.height) ImageName:@"recom_percentBg.png"];
     [view1 addSubview:alphaView];
     
     UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(10, 4.5, 30, 20) Font:14 Text:@"成员"];
@@ -90,10 +90,10 @@
     view2.backgroundColor = [ControllerManager colorWithHexString:@"4e4e4e"];
     [view1 addSubview:view2];
     
-    UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(view2.frame.origin.x+10, 4.5, 80, 20) Font:14 Text:@"人气击败了"];
+    UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(view2.frame.origin.x+10, 4.5, 80+15, 20) Font:14 Text:@"总人气击败了"];
     [view1 addSubview:label2];
     
-    UILabel * label3 = [MyControl createLabelWithFrame:CGRectMake(210, 4.5, 50, 20) Font:14 Text:@"的萌星"];
+    UILabel * label3 = [MyControl createLabelWithFrame:CGRectMake(210+15, 4.5, 50, 20) Font:14 Text:@"的萌星"];
     [view1 addSubview:label3];
     
     /****************/
@@ -103,7 +103,7 @@
     memberNum.textColor = BGCOLOR;
     [view1 addSubview:memberNum];
     
-    percent = [MyControl createLabelWithFrame:CGRectMake(label2.frame.origin.x+70, 4.5, 92/2, 20) Font:16 Text:@"99%"];
+    percent = [MyControl createLabelWithFrame:CGRectMake(label2.frame.origin.x+70+15, 4.5, 92/2, 20) Font:16 Text:@"99%"];
 //    percent.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     percent.textAlignment = NSTextAlignmentCenter;
     percent.textColor = BGCOLOR;
@@ -227,6 +227,7 @@
     UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, 130, 130)];
     view.clipsToBounds = YES;
     UIImageView * view1 = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 130, 130) ImageName:@"20-1.png"];
+    view1.contentMode = UIViewContentModeScaleAspectFill;
     [view addSubview:view1];
     
     NSString * url = [self.imagesArray[index] objectForKey:@"url"];

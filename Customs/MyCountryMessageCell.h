@@ -15,6 +15,8 @@
     UILabel * time;
     UILabel * body;
     UIImageView * typeImageView;
+    
+    UIImageView * picture;
     UIButton * photoImage;
     
     UIButton * sendOne;

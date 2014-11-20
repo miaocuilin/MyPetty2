@@ -51,7 +51,7 @@
     //2.加入
     NSArray * array2 = @[@"捧了人家可要对人家负责呀~", @"一定要让TA成为宇宙中", @"最闪亮的萌星~"];
     //3.加入满了提示
-    NSArray * array3 = @[@"星球法则是最多捧10个萌星~", @"萌星们都那么可爱，", @"专一点嘛~"];
+    NSArray * array3 = @[@"暂时只能捧10个萌星~", @"你的名额占满了~"];
     //4.取消关注
     NSArray * array4 = @[@"亲爱的，真的忍心取消关注我么？", @"这是真的么~", @"是么~"];
     //5.退出国家
@@ -101,19 +101,19 @@
         [self addSubview:self.confirmBtn2];
     }
     
-//    if(self.AlertType == 3){
-//        for (int i=0; i<2; i++) {
-//            UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 10+20*i, self.bgImageView.frame.size.width, 20) Font:14 Text:tempArray[i]];
-//            label.textAlignment = NSTextAlignmentCenter;
-//            [self.bgImageView addSubview:label];
-//        }
-//    }else{
+    if(self.AlertType == 3){
+        for (int i=0; i<2; i++) {
+            UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 30+20*i, self.bgImageView.frame.size.width, 20) Font:14 Text:tempArray[i]];
+            label.textAlignment = NSTextAlignmentCenter;
+            [self.bgImageView addSubview:label];
+        }
+    }else{
         for (int i=0; i<3; i++) {
             UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 18+20*i, self.bgImageView.frame.size.width, 20) Font:15 Text:tempArray[i]];
             label.textAlignment = NSTextAlignmentCenter;
             [self.bgImageView addSubview:label];
         }
-//    }
+    }
     
     
     [UIView animateWithDuration:0.2 animations:^{

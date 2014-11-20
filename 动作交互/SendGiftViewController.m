@@ -59,7 +59,7 @@
             NSLog(@"背包物品数据：%@",load.dataDict);
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
                 for (NSString * key in [[load.dataDict objectForKey:@"data"] allKeys]) {
-                    if([key intValue]%10 >4){
+                    if([key intValue]%10 >4 || [key intValue]>=2200){
                         continue;
                     }
                     [self.bagItemIdArray addObject:key];

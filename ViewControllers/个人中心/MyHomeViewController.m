@@ -634,7 +634,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (!docDir) {
             NSLog(@"Documents 目录未找到");
         }else{
-            NSString * filePath2 = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_small.png", model.url]];
+            NSString * filePath2 = [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@_small.png", model.url]];
             UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:filePath2]];
             if (image) {
                 cell.bigImageView.image = image;
@@ -650,7 +650,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                             NSLog(@"Documents 目录未找到");
                         }else{
                             NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-                            NSString * filePath2 = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_small.png", model.url]];
+                            NSString * filePath2 = [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@_small.png", model.url]];
                             //将下载的图片存放到本地
                             [load.data writeToFile:filePath atomically:YES];
                             

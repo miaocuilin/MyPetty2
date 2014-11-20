@@ -211,6 +211,10 @@
     
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
+            if ([[load.dataDict objectForKey:@"confVersion"] isEqualToString:@"1.0"]) {
+                isTest = YES;
+            }
+            
             NSLog(@"imageInfo:%@", load.dataDict);
             self.is_follow = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_follow"] intValue];
 //            if (self.is_follow) {
@@ -545,8 +549,8 @@
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:self.bgImageView];
 
-    NSString * docDir = DOCDIR;
-    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+//    NSString * docDir = DOCDIR;
+    NSString * filePath = BLURBG;
     NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
 
@@ -1094,9 +1098,11 @@
         btn.tag = 1000 + i;
         [commentsBgView addSubview:btn];
         
-        UIButton * reportCmtBtn = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-40, timeStamp.frame.origin.y+25, 31/1.5, 26/1.5) ImageName:@"grayAlert.png" Target:self Action:@selector(reportCmtBtnClick:) Title:@""];
-        reportCmtBtn.tag = 2000+i;
-        [commentsBgView addSubview:reportCmtBtn];
+        if (isTest) {
+            UIButton * reportCmtBtn = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-40, timeStamp.frame.origin.y+25, 31/1.5, 26/1.5) ImageName:@"grayAlert.png" Target:self Action:@selector(reportCmtBtnClick:) Title:@""];
+            reportCmtBtn.tag = 2000+i;
+            [commentsBgView addSubview:reportCmtBtn];
+        }
         
         commentsBgViewHeight = line.frame.origin.y+1;
     }
@@ -1149,21 +1155,22 @@
     commentBgView.backgroundColor = [UIColor colorWithRed:248/255.0 green:248/255.0 blue:248/255.0 alpha:1];
     [self.view addSubview:commentBgView];
     
-    commentTextView = [[UITextView alloc] initWithFrame:CGRectMake(5, 5, 250, 30)];
-    commentTextView.textColor = [UIColor lightGrayColor];
-    commentTextView.text = @"写个评论呗";
+//    commentTextView = [[UITextView alloc] initWithFrame:CGRectMake(5, 5, 250, 30)];
+    commentTextView = [MyControl createTextFieldWithFrame:CGRectMake(5, 5, 250, 30) placeholder:@"写个评论呗" passWord:NO leftImageView:nil rightImageView:nil Font:15];
+//    commentTextView.textColor = [UIColor lightGrayColor];
+//    commentTextView.text = @"写个评论呗";
     commentTextView.layer.cornerRadius = 5;
     commentTextView.layer.masksToBounds = YES;
     commentTextView.layer.borderColor = [UIColor colorWithRed:223/255.0 green:223/255.0 blue:223/255.0 alpha:1].CGColor;
     commentTextView.layer.borderWidth = 1.5;
     commentTextView.delegate = self;
-    commentTextView.font = [UIFont systemFontOfSize:15];
+//    commentTextView.font = [UIFont systemFontOfSize:15];
 //    commentTextView.returnKeyType = UIReturnKeySend;
     //关闭自动更正及大写
     commentTextView.autocorrectionType = UITextAutocorrectionTypeNo;
     commentTextView.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [commentBgView addSubview:commentTextView];
-    [commentTextView release];
+//    [commentTextView release];
     
     UIButton * sendButton = [MyControl createButtonWithFrame:CGRectMake(260, 10, 55, 20) ImageName:@"" Target:self Action:@selector(sendButtonClick) Title:@"发送"];
     [sendButton setTitleColor:BGCOLOR forState:UIControlStateNormal];
@@ -1186,7 +1193,7 @@
     isReply = YES;
     replyRow = row;
     bgButton.hidden = NO;
-    commentTextView.text = self.replyPlaceHolder;
+    commentTextView.placeholder = self.replyPlaceHolder;
     [UIView animateWithDuration:0.25 animations:^{
         bgButton.alpha = 0.3;
         commentBgView.frame = CGRectMake(0, self.view.frame.size.height-216-40, 320, 40);
@@ -1330,7 +1337,7 @@
 //    }
     isReply = NO;
     bgButton.hidden = NO;
-    commentTextView.text = @"写个评论呗";
+    commentTextView.placeholder = @"写个评论呗";
     [UIView animateWithDuration:0.25 animations:^{
         bgButton.alpha = 0.3;
         commentBgView.frame = CGRectMake(0, self.view.frame.size.height-216-40, 320, 40);
@@ -1532,8 +1539,8 @@
         bgButton.alpha = 0;
     } completion:^(BOOL finished) {
         bgButton.hidden = YES;
-        commentTextView.text = @"写个评论呗";
-        commentTextView.textColor = [UIColor lightGrayColor];
+//        commentTextView.text = @"写个评论呗";
+//        commentTextView.textColor = [UIColor lightGrayColor];
     }];
 }
 #pragma mark - 点赞！！
@@ -1831,8 +1838,9 @@
         [UIView animateWithDuration:0.3 animations:^{
             commentBgView.frame = CGRectMake(-self.view.frame.size.width, self.view.frame.size.height-216-40, 320, 40);
             //评论清空
-            commentTextView.text = @"写个评论呗";
-            commentTextView.textColor = [UIColor lightGrayColor];
+            commentTextView.placeholder = @"写个评论呗";
+            commentTextView.text = nil;
+//            commentTextView.textColor = [UIColor lightGrayColor];
         }];
         bgButton.hidden = YES;
         [MMProgressHUD dismissWithSuccess:@"评论成功" title:nil afterDelay:0.2];
@@ -1877,27 +1885,27 @@
 }
 
 #pragma mark - textView代理
--(void)textViewDidBeginEditing:(UITextView *)textView
+-(void)textFieldDidBeginEditing:(UITextField *)textField
 {
     isCommentActive = YES;
 }
--(void)textViewDidEndEditing:(UITextView *)textView
+-(void)textFieldDidEndEditing:(UITextField *)textField
 {
     isCommentActive = NO;
 }
--(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
-{
+//-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+//{
 //    NSLog(@"%d--%@", commentTextView.text.length, text);
-    if ([commentTextView.text isEqualToString:@"写个评论呗"] || [commentTextView.text isEqualToString:self.replyPlaceHolder]) {
-        commentTextView.text = @"";
-    }
+//    if ([commentTextView.text isEqualToString:@"写个评论呗"] || [commentTextView.text isEqualToString:self.replyPlaceHolder]) {
+//        commentTextView.text = @"";
+//    }
 //    else if(commentTextView.text.length == 1 && text == nil){
 //        
 //        return YES;
 //    }
-    commentTextView.textColor = [UIColor blackColor];
-    return YES;
-}
+//    commentTextView.textColor = [UIColor blackColor];
+//    return YES;
+//}
 
 - (void)didReceiveMemoryWarning
 {

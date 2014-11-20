@@ -84,8 +84,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     bgBlurImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:bgBlurImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = DOCDIR;
-    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+//    NSString * docDir = DOCDIR;
+    NSString * filePath = BLURBG;
     NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
     //    NSLog(@"%@", data);
@@ -397,7 +397,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     
     finishButton = [MyControl createButtonWithFrame:CGRectMake(20+20, 425, 240, 35) ImageName:@"" Target:self Action:@selector(finishButtonClick:) Title:@"完成"];
-    finishButton.backgroundColor = BGCOLOR;
+    finishButton.backgroundColor = ORANGE;
     finishButton.layer.cornerRadius = 5;
     finishButton.layer.masksToBounds = YES;
     finishButton.showsTouchWhenHighlighted = YES;
@@ -532,7 +532,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     /****************************************/
     finishButton2 = [MyControl createButtonWithFrame:CGRectMake(20+320+20, 425, 240, 35) ImageName:@"" Target:self Action:@selector(finishButtonClick2:) Title:@"完成"];
-    finishButton2.backgroundColor = BGCOLOR;
+    finishButton2.backgroundColor = ORANGE;
     finishButton2.layer.cornerRadius = 5;
     finishButton2.layer.masksToBounds = YES;
     finishButton2.showsTouchWhenHighlighted = YES;

@@ -105,15 +105,19 @@
                 [model release];
             }
             
-            NSLog(@"%@", self.selectedWords);
+            NSLog(@"%@--%d", self.selectedWords, selectLine);
             if ([self.selectedWords isEqualToString:@"所有"]) {
                 [self.limitRankDataArray addObjectsFromArray:self.rankDataArray];
             }else{
                 for (int i=0; i<self.rankDataArray.count; i++) {
                     popularityListModel * model = self.rankDataArray[i];
-                    if ([[ControllerManager returnCateNameWithType:[model type]] isEqualToString:self.selectedWords]) {
+                    
+                    if([[model type] intValue]/100 == selectLine){
                         [self.limitRankDataArray addObject:self.rankDataArray[i]];
                     }
+//                    if ([[ControllerManager returnCateNameWithType:[model type]] isEqualToString:self.selectedWords]) {
+//                        
+//                    }
                 }
             }
             
@@ -252,8 +256,8 @@
     bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = DOCDIR;
-    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+//    NSString * docDir = DOCDIR;
+    NSString * filePath = BLURBG;
     NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
     //    NSLog(@"%@", data);
@@ -723,6 +727,7 @@
         //打开所有排行
 //        [self showEntireList];
         self.selectedWords = Words;
+        selectLine = Line;
         
         [self.limitRankDataArray removeAllObjects];
         if ([Words isEqualToString:@"所有"]) {

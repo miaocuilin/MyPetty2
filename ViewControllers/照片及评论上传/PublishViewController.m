@@ -353,8 +353,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        if (isOauth) {
 //            
 //        }
+        NSString * str = nil;
+        if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"]) {
+            str = @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）";
+        }else{
+            str = [NSString stringWithFormat:@"%@ %@", _textView.text, @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
+        }
         
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:_textView.text image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             NSLog(@"sina-response:%@", response);
             button.userInteractionEnabled = YES;
             if ([response.message isEqualToString:@"user cancel the operation"]) {
@@ -379,7 +385,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }];
 
     }else if(s == 1 && w == 1){
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:_textView.text image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        NSString * str = nil;
+        if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"]) {
+            str = @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）";
+        }else{
+            str = [NSString stringWithFormat:@"%@ %@", _textView.text, @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
+        }
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             button.userInteractionEnabled = YES;
             //分享微信
             [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
@@ -563,7 +575,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        NSLog(@"%d", data.length);
 //    }
     NSTimeInterval  timeInterval = [[NSDate date] timeIntervalSince1970];
-    [_request setData:data withFileName:[NSString stringWithFormat:@"%.0f_%d&%d.png", timeInterval, (int)image.size.width, (int)image.size.height] andContentType:@"image/jpg" forKey:@"image"];
+    [_request setData:data withFileName:[NSString stringWithFormat:@"%.0f%@%d%@_%d&%d.png", timeInterval, @"@", data.length, @"@", (int)image.size.width, (int)image.size.height] andContentType:@"image/jpg" forKey:@"image"];
     //    [_request setPostValue:data forKey:@"image"];
     //图片
     if (![_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"]) {
@@ -687,10 +699,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
-            
-            
+        
             LoadingSuccess;
-            [self publishButtonClick:publishButton];
+//            [self publishButtonClick:publishButton];
         }else{
             LoadingFailed;
         }

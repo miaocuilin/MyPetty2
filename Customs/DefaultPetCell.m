@@ -42,7 +42,7 @@
         self.sexImage.image = [UIImage imageNamed:@"man.png"];
     }
     self.nameLabel.text = model.name;
-    self.cateAndAge.text = [NSString stringWithFormat:@"%@ | %@岁", [ControllerManager returnCateNameWithType:model.type], model.age];
+    self.cateAndAge.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:model.type], [MyControl returnAgeStringWithCountOfMonth:model.age]];
     if (isDefault) {
         self.crownImage.hidden = NO;
 //        [self.defaultBtn setBackgroundImage:[UIImage imageNamed:@"defaultPet.png"] forState:UIControlStateNormal];

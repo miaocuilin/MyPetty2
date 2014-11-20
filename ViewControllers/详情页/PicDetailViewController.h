@@ -10,13 +10,14 @@
 #import "ClickImage.h"
 #import "ASIFormDataRequest.h"
 
-@interface PicDetailViewController : BottomMenuRootViewController <UITextViewDelegate>
+@interface PicDetailViewController : BottomMenuRootViewController <UITextFieldDelegate>
 {
     UIView * navView;
     UIImageView * fish;
     UILabel * zanLabel;
     ClickImage * bigImageView;
-    UITextView * commentTextView;
+//    UITextView * commentTextView;
+    UITextField * commentTextView;
     UIView * commentBgView;
     UIButton * bgButton;
     
@@ -56,6 +57,9 @@
     
     UIButton * alphaBtn;
     UIView * moreView2;
+    
+    //
+    BOOL isTest;
 }
 @property (retain, nonatomic) UIImageView * bgImageView;
 @property (retain, nonatomic) IBOutlet UIScrollView *sv;

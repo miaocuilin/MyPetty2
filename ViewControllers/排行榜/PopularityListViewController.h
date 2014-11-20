@@ -41,6 +41,8 @@
     BOOL showMyRank;
     //是否是首次进入界面
     BOOL isLoaded;
+    
+    int selectLine;
 }
 @property (nonatomic,copy)NSString * selectedWords;
 

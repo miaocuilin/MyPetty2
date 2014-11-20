@@ -36,6 +36,8 @@
     MBProgressHUD *alertView;
 
     ClickImage * headerImageView;
+    UIButton * headBtn;
+    
     UILabel * name;
     UIImageView * sex;
     UILabel * cateNameLabel;

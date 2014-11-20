@@ -37,7 +37,8 @@
     
     BOOL isOwner;
     
-    ClickImage * headImageView;
+    ClickImage * headerImageView;
+    UIButton * headBtn;
     
     BOOL isLoaded;
 }

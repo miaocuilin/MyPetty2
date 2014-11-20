@@ -196,8 +196,8 @@
         }
         /**************************/
         if (!([[self.imagesArray[i] objectForKey:@"url"] isKindOfClass:[NSNull class]] || [[self.imagesArray[i] objectForKey:@"url"] length]==0)) {
-            NSString * docDir = DOCDIR;
-            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_card.png", [self.imagesArray[i] objectForKey:@"url"]]];
+//            NSString * docDir = DOCDIR;
+            NSString * txFilePath = [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@_card.png", [self.imagesArray[i] objectForKey:@"url"]]];
             UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
             if (image) {
                 [btn setBackgroundImage:image forState:UIControlStateNormal];
@@ -235,7 +235,7 @@
                         NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.imagesArray[i] objectForKey:@"url"]]];
                         [load.data writeToFile:txFilePath atomically:YES];
                         //
-                        NSString * txFilePath2 = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_card.png", [self.imagesArray[i] objectForKey:@"url"]]];
+                        NSString * txFilePath2 = [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@_card.png", [self.imagesArray[i] objectForKey:@"url"]]];
                         NSData * data = UIImageJPEGRepresentation(image2, 0.1);
                         [data writeToFile:txFilePath2 atomically:YES];
                     }else{

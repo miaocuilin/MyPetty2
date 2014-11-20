@@ -544,6 +544,9 @@ static LevelRank *levelAndRank =nil;
         case 1203:
             actionStr = @"的吃货本质终于暴露在你面前啦！";
             break;
+        case 1204:
+            actionStr = @"瞪大了圆圆滴眼睛，萌！";
+            break;
         case 1301:
             actionStr = @"现在香喷喷哒，快来亲一口！";
             break;

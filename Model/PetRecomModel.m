@@ -22,6 +22,7 @@
     [_tx release];
     [_u_name release];
     [_u_tx release];
+    [_master_id release];
     [_images release];
 }
 

@@ -173,7 +173,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSLog(@"国王动态API:%@", url);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-//            NSLog(@"国王动态数据：%@",load.dataDict);
+            NSLog(@"国王动态数据：%@",load.dataDict);
             [self.newsDataArray removeAllObjects];
             NSArray * array = [load.dataDict objectForKey:@"data"];
             for (int i=0; i<array.count; i++) {
@@ -181,7 +181,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [model setValuesForKeysWithDictionary:array[i]];
                 model.content = [array[i] objectForKey:@"content"];
                 if([model.type intValue] != 1){
-                    if(!([model.type intValue] == 4 && [[model.content objectForKey:@"item_id"] intValue]%10 >4)){
+                    if(!(([model.type intValue] == 4 || [model.type intValue] == 7) && ([[model.content objectForKey:@"item_id"] intValue]%10 >4 || [[model.content objectForKey:@"item_id"] intValue]>=2200))){
                         [self.newsDataArray addObject:model];
                     }
                     
@@ -278,7 +278,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [self.goodsNumArray removeAllObjects];
                 
                 for (NSString * itemId in [dict allKeys]) {
-                    if ([itemId intValue]%10 >4) {
+                    if ([itemId intValue]%10 >4 || [itemId intValue]>=2200) {
                         continue;
                     }
                     [self.goodsArray addObject:itemId];
@@ -520,7 +520,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     /********截图***********/
     UIImage * image = [MyControl imageWithView:[UIApplication sharedApplication].keyWindow];
     //存到本地
-    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"screenshot_pet.png"]];
+    NSString * filePath = [NSTemporaryDirectory() stringByAppendingString:@"screenshot_pet.png"];
     //将下载的图片存放到本地
     NSData * data = UIImageJPEGRepresentation(image, 0.5);
     BOOL isWriten = [data writeToFile:filePath atomically:YES];
@@ -733,7 +733,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 /******************************/
 -(void)shareClick:(UIButton *)button
 {
-    NSString * imagePath = [DOCDIR stringByAppendingPathComponent:@"screenshot_pet.png"];
+    NSString * imagePath = [NSTemporaryDirectory() stringByAppendingString:@"screenshot_pet.png"];
     UIImage * screenshotImage = [UIImage imageWithContentsOfFile:imagePath];
     if (button.tag == 200) {
         NSLog(@"微信");
@@ -826,6 +826,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                                     [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
                                 }
                                 [MyControl loadingSuccessWithContent:@"加入成功" afterDelay:0.5f];
+                                //捧Ta成功界面
+                                NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                                noClose.confirm = ^(){};
+                                [self.view addSubview:noClose];
+                                NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
+                                [noClose configUIWithTx:[petInfoDict objectForKey:@"tx"] Name:[petInfoDict objectForKey:@"name"] Percent:percent];
+                                [UIView animateWithDuration:0.3 animations:^{
+                                    noClose.alpha = 1;
+                                }];
                             }else{
                                 [MyControl loadingFailedWithContent:@"加入失败" afterDelay:0.8f];
                                 NSLog(@"加入国家失败");
@@ -1169,26 +1178,51 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     alphaView.backgroundColor = [ControllerManager colorWithHexString:@"a85848"];
     [bgView addSubview:alphaView];
 //    ClickImage * headerView = [MyControl createImageViewWithFrame:CGRectMake(10, 25, 70, 70) ImageName:@""];
-    headerImageView = [[ClickImage alloc]initWithFrame:CGRectMake(10, 25, 70, 70)];
-    headerImageView.canClick = YES;
-    headerImageView.layer.cornerRadius = 70/2;
-    headerImageView.layer.masksToBounds = YES;
-    [bgView addSubview:headerImageView];
+    
+    BOOL equal = [self.master_id isEqualToString:[USER objectForKey:@"usr_id"]];
+    if (equal) {
+        headBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 70, 70) ImageName:@"defaultPetHead.png" Target:self Action:@selector(headerClick) Title:nil];
+        headBtn.layer.cornerRadius = 70/2;
+        headBtn.layer.masksToBounds = YES;
+        [bgView addSubview:headBtn];
+    }else{
+        headerImageView = [[ClickImage alloc]initWithFrame:CGRectMake(10, 25, 70, 70)];
+        headerImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+        headerImageView.canClick = YES;
+        headerImageView.layer.cornerRadius = 70/2;
+        headerImageView.layer.masksToBounds = YES;
+        [bgView addSubview:headerImageView];
+        [headerImageView release];
+    }
+    
+    
+
+    
     if (image) {
-        headerImageView.image = image;
+        if(equal){
+            [headBtn setBackgroundImage:image forState:UIControlStateNormal];
+        }else{
+            headerImageView.image = image;
+        }
+        
+        
     }else{
         [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 //本地目录，用于存放favorite下载的原图
                 NSLog(@"宠物头像：%@",load.dataImage);
                 if (load.dataImage == NULL) {
-                    headerImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+//                    headerImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
                 }else{
                     NSString * docDir = DOCDIR;
                     NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
                     //将下载的图片存放到本地
                     [load.data writeToFile:txFilePath atomically:YES];
-                    headerImageView.image = load.dataImage;
+                    if(equal){
+                        [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+                    }else{
+                        headerImageView.image = load.dataImage;
+                    }
                 }
                 
             }else{
@@ -1297,6 +1331,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [bgView addSubview:dataLabel];
     
 }
+-(void)headerClick
+{
+    [self modifyPetInfo];
+}
 #pragma mark - 跳转点击事件
 -(void)jumpToUserInfo
 {
@@ -1305,7 +1343,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     vc.usr_id = [petInfoDict objectForKey:@"master_id"];
     vc.modalTransitionStyle = 2;
     vc.isFromPetInfo = YES;
-    vc.petHeadImage = headerImageView.image;
+    if ([self.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+        vc.petHeadImage = headBtn.currentBackgroundImage;
+    }else{
+        vc.petHeadImage = headerImageView.image;
+    }
+    
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
@@ -1586,7 +1629,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             if (!docDir) {
                 NSLog(@"Documents 目录未找到");
             }else{
-                NSString * filePath2 = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_middle.png", model.url]];
+                NSString * filePath2 = [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@_middle.png", model.url]];
                 UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:filePath2]];
                 if (image) {
                     cell.bigImageView.image = image;
@@ -1599,7 +1642,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                                 NSLog(@"Documents 目录未找到");
                             }else{
                                 NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-                                NSString * filePath2 = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_middle.png", model.url]];
+                                NSString * filePath2 = [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@_middle.png", model.url]];
                                 //将下载的图片存放到本地
                                 [load.data writeToFile:filePath atomically:YES];
                                 

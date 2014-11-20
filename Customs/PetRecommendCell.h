@@ -34,6 +34,7 @@
 @property(nonatomic,copy)void (^pBtnClick)(int,NSString *);
 @property(nonatomic,copy)void (^imageClick)(int);
 @property(nonatomic,copy)void (^jumpPetClick)(NSString *);
+@property(nonatomic,copy)void (^jumpUserClick)();
 
 @property(nonatomic,retain)NSArray * imagesArray;
 -(void)configUI:(PetRecomModel *)model;

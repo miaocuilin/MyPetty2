@@ -139,7 +139,7 @@
 {
     //已经录过了，从本地找看是否有录音
     NSFileManager * manager = [[NSFileManager alloc] init];
-    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", @"Mp3File"]];
+    NSString * filePath = [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@.mp3", @"Mp3File"]];
     if ([manager fileExistsAtPath:filePath]) {
         //存在录音，播放
         [self playRecord2];
@@ -163,7 +163,7 @@
 }
 -(void)playRecord2
 {
-    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp3", @"Mp3File"]];
+    NSString * filePath = [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@.mp3", @"Mp3File"]];
     if (_player == nil)
     {
         NSError *playerError;
@@ -190,7 +190,7 @@
     _request.timeOutSeconds = 30;
     NSString *mp3FileName = @"Mp3File.mp3";
 //    mp3FileName = [mp3FileName stringByAppendingString:@".mp3"];
-    NSString *mp3FilePath = [DOCDIR stringByAppendingPathComponent:mp3FileName];
+    NSString *mp3FilePath = [NSTemporaryDirectory() stringByAppendingString:mp3FileName];
     NSData *data = [NSData dataWithContentsOfFile:mp3FilePath];
     [_request setData:data forKey:@"voice"];
     [_request setUploadProgressDelegate:self];
@@ -379,7 +379,7 @@
     
     UIImageView *recordBg4 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*3, 140, upViewWidth, 120) ImageName:@"grassbg.png"];
     [self.upScrollView addSubview:recordBg4];
-    UIImageView *recordImageView = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 50, 0, 100, 110) ImageName:@"nochance.png"];
+    UIImageView *recordImageView = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 65, 0, 130, 113) ImageName:@"record_upload.png"];
     [recordBg4 addSubview:recordImageView];
     
     
@@ -407,7 +407,7 @@
     
     UIImageView *recordBg5 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*4, 140, upViewWidth, 120) ImageName:@"grassbg.png"];
     [self.upScrollView addSubview:recordBg5];
-    UIImageView *recordImageView2 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 50, 0, 100, 110) ImageName:@"nochance.png"];
+    UIImageView *recordImageView2 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 65, 0, 130, 113) ImageName:@"record_upload.png"];
     [recordBg5 addSubview:recordImageView2];
     
     UIImageView *share2 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*4, 265, upViewWidth, 40) ImageName:@"threeshare.png"];
@@ -468,7 +468,7 @@
     
     NSString *mp3FileName = @"Mp3File.mp3";
 //    mp3FileName = [mp3FileName stringByAppendingString:@".mp3"];
-    NSString *mp3FilePath = [DOCDIR stringByAppendingPathComponent:mp3FileName];
+    NSString *mp3FilePath = [NSTemporaryDirectory() stringByAppendingString:mp3FileName];
     
     @try {
         int read, write;

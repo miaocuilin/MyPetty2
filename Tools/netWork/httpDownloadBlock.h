@@ -11,6 +11,7 @@
 {
     int count;
     BOOL isForce;
+    NSTimer * timer;
 }
 //创建属性NSMuTableData  以及NSURLConnection
 //保存发起的请求指针  为什么？需要在取消时候使用

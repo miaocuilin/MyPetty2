@@ -210,6 +210,7 @@
 -(void)jumpToUser
 {
     NSLog(@"jumpToUser");
+    self.jumpUserClick();
 }
 -(void)pBtnClick:(UIButton *)btn
 {

@@ -48,10 +48,21 @@
 //    [url setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:nil];
     
     self.connection=[NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL:url] delegate:self];
+    
+    if (timer == NULL) {
+        timer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(cancelConnection:) userInfo:nil repeats:NO];
+        [timer retain];
+    }
 //    }
 //    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
 //    [MMProgressHUD showWithStatus:@"加载中..."];
     
+}
+-(void)cancelConnection:(NSTimer *)timerP
+{
+    [self.connection cancel];
+    self.httpRequestBlock(NO,self);
+    [timer invalidate];
 }
 - (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
 {
@@ -94,6 +105,8 @@
     
 }
 -(void)jsonFinishLoading{
+    [timer invalidate];
+    
     //成功后进行解析 无论是否是图片，都进行解析
     //如果是图片，返回nil，即解析失败 这样写会略微影响效率
 //    [self.alert setTitle:@"正在解析数据"];
@@ -149,8 +162,8 @@
                 //SID过期 login
                 msg = @"网络异常，请重新操作";
                 [self login];
-//                self.httpRequestBlock(NO,self);
-//                return;
+                self.httpRequestBlock(NO,self);
+                return;
             }
 
             if ([[self.dataDict objectForKey:@"state"] intValue] == 3) {
@@ -159,7 +172,7 @@
                 return;
             }
             /****************************/
-            if ([[self.dataDict objectForKey:@"state"] intValue] == 1 || [[self.dataDict objectForKey:@"state"] intValue] == 2) {
+            if ([[self.dataDict objectForKey:@"state"] intValue] == 1) {
                 UIView * keyView = [UIApplication sharedApplication].keyWindow;
                 PopupView * pop = [[PopupView alloc] init];
                 [pop modifyUIWithSize:keyView.frame.size msg:msg];

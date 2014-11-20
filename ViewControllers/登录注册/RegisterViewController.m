@@ -176,8 +176,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:self.bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = DOCDIR;
-    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+//    NSString * docDir = DOCDIR;
+    NSString * filePath = BLURBG;
     NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
     //    NSLog(@"%@", data);
@@ -416,7 +416,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 tf.text = self.petInfoModel.name;
             }
             
-            UIImageView * keyboard = [MyControl createImageViewWithFrame:CGRectMake(180, 6, 25, 17) ImageName:@"3-2-2.png"];
+            UIButton * keyboard = [MyControl createButtonWithFrame:CGRectMake(180, 6, 25, 17) ImageName:@"3-2-2.png" Target:self Action:@selector(keyboardClick) Title:nil];
+//            UIImageView * keyboard = [MyControl createImageViewWithFrame:CGRectMake(180, 6, 25, 17) ImageName:@"3-2-2.png"];
             [bgImageView addSubview:keyboard];
         }else if(i == 1){
             fromTF = [MyControl createTextFieldWithFrame:CGRectMake(40, 5, 140, 20) placeholder:@"点击选择爱宠种类" passWord:NO leftImageView:nil rightImageView:nil Font:13];
@@ -429,7 +430,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 fromTF.text = [ControllerManager returnCateNameWithType:self.petInfoModel.type];
             }
             
-            UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(185, 5, 15, 20) ImageName:@"扩展更多图标.png"];
+            UIButton * arrow = [MyControl createButtonWithFrame:CGRectMake(185, 5, 15, 20) ImageName:@"扩展更多图标.png" Target:self Action:@selector(arrowClick1) Title:nil];
+//            UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(185, 5, 15, 20) ImageName:@"扩展更多图标.png"];
             [bgImageView addSubview:arrow];
         }else{
             UIView * keyboardBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 40)];
@@ -448,7 +450,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             if (self.isAdoption) {
                 ageTextField.text = [MyControl returnAgeStringWithCountOfMonth:self.petInfoModel.age];
             }
-            UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(185, 5, 15, 20) ImageName:@"扩展更多图标.png"];
+            
+            UIButton * arrow = [MyControl createButtonWithFrame:CGRectMake(185, 5, 15, 20) ImageName:@"扩展更多图标.png" Target:self Action:@selector(arrowClick2) Title:nil];
+//            UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(185, 5, 15, 20) ImageName:@"扩展更多图标.png"];
             [bgImageView addSubview:arrow];
         }
     }
@@ -535,7 +539,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             if (self.isModify || self.isOldUser) {
                 tfUserName.text = [USER objectForKey:@"name"];
             }
-            UIImageView * keyboard = [MyControl createImageViewWithFrame:CGRectMake(150, 6, 25, 17) ImageName:@"3-2-2.png"];
+            
+            UIButton * keyboard = [MyControl createButtonWithFrame:CGRectMake(150, 6, 25, 17) ImageName:@"3-2-2.png" Target:self Action:@selector(keyboardClick2) Title:nil];
+//            UIImageView * keyboard = [MyControl createImageViewWithFrame:CGRectMake(150, 6, 25, 17) ImageName:@"3-2-2.png"];
             [bgImageView addSubview:keyboard];
         }else if(i == 1){
             woman = [MyControl createButtonWithFrame:CGRectMake(10, 5, 20, 20) ImageName:@"" Target:self Action:@selector(womanClick:) Title:nil];
@@ -678,6 +684,24 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        }
 //    }
 }
+#pragma mark -
+-(void)keyboardClick
+{
+    [tf becomeFirstResponder];
+}
+-(void)arrowClick1
+{
+    [fromTF becomeFirstResponder];
+}
+-(void)arrowClick2
+{
+    [ageTextField becomeFirstResponder];
+}
+-(void)keyboardClick2
+{
+    [tfUserName becomeFirstResponder];
+}
+
 
 #pragma mark - 男女性别选择按钮
 -(void)womanClick:(UIButton *)button
@@ -1838,7 +1862,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     sheet.tag = 255;
     
     [sheet showInView:self.view];
-    [self completeButton];
+//    [self completeButton];
 }
 
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex

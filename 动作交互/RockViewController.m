@@ -298,7 +298,8 @@
     rewardLabel.textColor = LIGHTORANGECOLOR;
     rewardLabel.textAlignment = NSTextAlignmentCenter;
     
-    rewardImage = [MyControl createImageViewWithFrame:CGRectMake(rewardbg.frame.size.width/2-54, rewardbg.frame.size.height/2-36, 108, 72) ImageName:@"1102.png"];
+    //196  167
+    rewardImage = [MyControl createImageViewWithFrame:CGRectMake(rewardbg.frame.size.width/2-54, rewardbg.frame.size.height/2-36, 196/2, 166/2) ImageName:@"1102.png"];
     [rewardbg addSubview:rewardImage];
     
     descRewardLabel = [MyControl createLabelWithFrame:CGRectMake(0, 140, rewardbg.frame.size.width, 30) Font:12 Text:@"猫君 人气 +10"];
@@ -333,7 +334,9 @@
     [self.upView addSubview:shakeDescLabel];
     UIImageView *shakeBg4 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*3, 150, upViewWidth, 120) ImageName:@"grassbg.png"];
     [self.upView addSubview:shakeBg4];
-    UIImageView *shakeImageView = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 50, 0, 100, 110) ImageName:@"nochance.png"];
+    
+    //259  227
+    UIImageView *shakeImageView = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 65, 0, 130, 113) ImageName:@"shake_nochance.png"];
     [shakeBg4 addSubview:shakeImageView];
     //底部视图
     

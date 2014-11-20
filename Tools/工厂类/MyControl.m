@@ -184,7 +184,7 @@
 //    UIImage * image = [MyControl imageWithView:view];
     
 //    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString * filePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+    NSString * filePath = BLURBG;
     //将下载的图片存放到本地
     NSData * data = UIImageJPEGRepresentation(image, 0.5);
 //    NSData * data = UIImagePNGRepresentation(image);

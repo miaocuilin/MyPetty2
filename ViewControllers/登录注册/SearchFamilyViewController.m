@@ -56,8 +56,8 @@
     bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
     [self.view addSubview:bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
-    NSString * docDir = DOCDIR;
-    NSString * filePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"blurBg.png"]];
+//    NSString * docDir = DOCDIR;
+    NSString * filePath = BLURBG;
     NSLog(@"%@", filePath);
     NSData * data = [NSData dataWithContentsOfFile:filePath];
     //    NSLog(@"%@", data);
@@ -390,15 +390,25 @@
                 if (isFinish) {
                     NSLog(@"--%@", load.dataDict);
                     [MyControl loadingSuccessWithContent:@"加入成功^_^" afterDelay:0.5f];
-                    
+                    //捧Ta成功界面
+                    NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                    noClose.confirm = ^(){
+                        [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+                        [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
+                        [self dismissViewControllerAnimated:NO completion:nil];
+                    };
+                    [self.view addSubview:noClose];
+                    NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
+                    [noClose configUIWithTx:model.tx Name:model.name Percent:percent];
+                    [UIView animateWithDuration:0.3 animations:^{
+                        noClose.alpha = 1;
+                    }];
                 }else{
                     [MyControl loadingFailedWithContent:@"加入失败-_-!" afterDelay:0.5f];
                 }
             }];
             [request release];
-            [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
-            [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
-            [self dismissViewControllerAnimated:NO completion:nil];
+            
         };
         [self.view addSubview:view];
         [view release];

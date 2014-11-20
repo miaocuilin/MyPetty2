@@ -104,7 +104,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        }
 //    }
     //判断isLoaded和confVersion和是否是刚注册完3项来判断是否要弹出输入邀请码
-    if(isLoaded && [[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"] && [[USER objectForKey:@"isJustRegister"] intValue]){
+    if(isLoaded && ![[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"] && [[USER objectForKey:@"isJustRegister"] intValue]){
         [USER setObject:@"0" forKey:@"isJustRegister"];
         [self inputCode];
     }
@@ -613,8 +613,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             //            NSLog(@"%@", self.newDataArray);
             //            [self.newDataArray removeAllObjects];
         }else{
-            StartLoading;
-            LoadingFailed;
+//            StartLoading;
+//            LoadingFailed;
         }
     }];
     [request release];

@@ -127,7 +127,7 @@
     
     //
 //    if ([model.type intValue]/100 == 1) {
-        self.planet.text = @"联萌人气";
+        self.planet.text = @"萌星人气";
 //    }else{
 //        self.position.text = [NSString stringWithFormat:@"%@ — ", @"族长"];
 //        self.planet.text = @"家族人气";

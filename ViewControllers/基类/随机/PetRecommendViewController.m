@@ -57,6 +57,9 @@
                 PetRecomModel * model = [[PetRecomModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
                 model.images = [dict objectForKey:@"images"];
+                if(!model.images.count){
+                    continue;
+                }
                 [self.dataArray addObject:model];
                 [model release];
             }
@@ -123,6 +126,12 @@
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
     };
+    cell.jumpUserClick = ^(){
+        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+        vc.usr_id = model.master_id;
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    };
     cell.pBtnClick = ^(int a, NSString * aid){
         if (![[USER objectForKey:@"isSuccess"] intValue]) {
             ShowAlertView;
@@ -156,6 +165,16 @@
                                         cell.pBtn.selected = YES;
                                     }
                                     [MyControl loadingSuccessWithContent:@"加入成功" afterDelay:0.5f];
+                                    //捧Ta成功界面
+                                    NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                                    noClose.confirm = ^(){};
+                                    [self.view addSubview:noClose];
+                                    NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
+                                    [noClose configUIWithTx:model.tx Name:model.name Percent:percent];
+                                    [UIView animateWithDuration:0.3 animations:^{
+                                        noClose.alpha = 1;
+                                    }];
+                                    
                                 }else{
                                     [MyControl loadingFailedWithContent:@"加入失败" afterDelay:0.8f];
                                     NSLog(@"加入国家失败");

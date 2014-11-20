@@ -45,6 +45,7 @@
     NSLog(@"%@", [Keychain load:KEY_UDID]);
 //    NSLog(@"%@", NSTemporaryDirectory());
 //    [NSSearchPathForDirectoriesInDomains(NSTemporaryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        
     
     [USER setObject:[Keychain load:KEY_UDID] forKey:@"UDID"];
     

@@ -67,6 +67,7 @@
             [self.tv reloadData];
             LoadingSuccess;
         }else{
+            [self.tv headerEndRefreshing];
             LoadingFailed;
         }
     }];
@@ -168,7 +169,8 @@
                                     //捧Ta成功界面
                                     NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
                                     noClose.confirm = ^(){};
-                                    [self.view addSubview:noClose];
+                                    MainViewController * main = [ControllerManager shareMain];
+                                    [main.view addSubview:noClose];
                                     NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
                                     [noClose configUIWithTx:model.tx Name:model.name Percent:percent];
                                     [UIView animateWithDuration:0.3 animations:^{

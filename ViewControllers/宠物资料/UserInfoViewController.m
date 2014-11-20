@@ -371,7 +371,7 @@
     [moreView addSubview:cancelBtn];
     
     /*************************/
-    if (isOwner) {
+    if (isOwner || self.isFromSideMenu) {
         privateMessage.hidden = YES;
         report.hidden = YES;
         modifyUserInfo.hidden = NO;
@@ -428,7 +428,10 @@
         isOwner = 0;
         [self viewDidLoad];
     };
-    [self cancelBtnClick];
+    if(!isFromHeader){
+        [self cancelBtnClick];
+    }
+    isFromHeader = NO;
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
@@ -716,6 +719,7 @@
 }
 -(void)headerClick
 {
+    isFromHeader = YES;
     [self modifyUserInfo];
 }
 #pragma mark - 跳转点击事件

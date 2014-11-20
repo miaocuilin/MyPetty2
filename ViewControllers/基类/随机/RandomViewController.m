@@ -67,6 +67,15 @@
 //    queue = [[NSOperationQueue alloc] init];
 //    [queue setMaxConcurrentOperationCount:4];
     
+//    @try{
+//        
+//    }
+//    @catch(NSException *exception) {
+//        NSLog(@"exception:%@", exception);
+//    }
+//    @finally {
+//        
+//    }
 }
 
 -(void)createBg
@@ -369,11 +378,13 @@
     if (!docDir) {
         NSLog(@"Documents 目录未找到");
     }else{
+        cell.photoView.image = nil;
         NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
 //        NSLog(@"randomFilePath:%@", randomFilePath);
         UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
         if (image) {
             cell.photoView.image = image;
+//            cell.photoView.image = [MyControl image:image fitInSize:CGSizeMake(self.view.frame.size.width/2-4-2, Height[indexPath.row])];
             //            [self refreshView];
 //            [self setFooterView];
 //            [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
@@ -391,6 +402,7 @@
 //                    threadCount--;
 //                    NSLog(@"---threadCount:%d--count:%d", threadCount, queue.operationCount);
                     cell.photoView.image = load.dataImage;
+//                    cell.photoView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(self.view.frame.size.width/2-4-2, Height[indexPath.row])];
                     [qtmquitView reloadData];
                     //
                     //                    [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];

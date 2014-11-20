@@ -22,7 +22,10 @@
 -(void)makeUI
 {
     self.alpha = 0;
-    
+
+    UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    alphaView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
+    [self addSubview:alphaView];
     //577  678
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake((self.frame.size.width-577/2.0)/2.0, (self.frame.size.height-678/2)/2.0, 577/2.0, 678/2) ImageName:@"alertBg_noClose.png"];
     [self addSubview:self.bgImageView];

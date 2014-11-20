@@ -216,6 +216,9 @@
 {
 //    [MMProgressHUD dismissWithError:@"加载失败" afterDelay:0.5];
 //    [self.alert setTitle:@"服务器响应失败"];
+    [self.connection cancel];
+//    self.httpRequestBlock(NO,self);
+    [timer invalidate];
     self.httpRequestBlock(NO,self);
 }
 

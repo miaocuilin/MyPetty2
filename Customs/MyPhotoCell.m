@@ -118,6 +118,7 @@
         
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
+//                NSLog(@"%@", load.dataDict);
                 if ([[load.dataDict objectForKey:@"state"] intValue] == 2) {
                     //过期
                     [self login];

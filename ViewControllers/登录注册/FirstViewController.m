@@ -118,6 +118,7 @@
                     }else{
                         hadImage = NO;
                         [self createUI];
+                        
 //                        PopupView * pop = [[PopupView alloc] init];
 //                        [pop modifyUIWithSize:self.view.frame.size msg:@"网络连接异常"];
 //                        [self.view addSubview:pop];
@@ -177,6 +178,7 @@
 //            }];
 //            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络连接异常"];
             [self jumpToChoose];
+//            [self jumpToMain];
         }
     }];
     [request release];
@@ -244,36 +246,37 @@
         [self setAnimation:bgImageView];
 //        [self performSelector:@selector(jumpToChoose) withObject:nil afterDelay:2];
     }else{
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, self.launchImageName] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                bgImageView.image = load.dataImage;
-                float width = load.dataImage.size.width;
-                float height = load.dataImage.size.height;
-                if (width>320) {
-                    float w = 320/width;
-                    width *= w;
-                    height *= w;
-                }
-                if (height>568) {
-                    float h = 568/height;
-                    width *= h;
-                    height *= h;
-                }
-                bgImageView.frame = CGRectMake(0, 0, width*0.9, height*0.9);
-                bgImageView.center = self.view.center;
-                NSString * docDir = DOCDIR;
-                NSString * FilePath = [docDir stringByAppendingPathComponent:self.launchImageName];
-                [load.data writeToFile:FilePath atomically:YES];
-                [self setAnimation:bgImageView];
-//                [self performSelector:@selector(jumpToChoose) withObject:nil afterDelay:2];
-            }else{
-                [self setAnimation:bgImageView];
-//                [self performSelector:@selector(jumpToChoose) withObject:nil afterDelay:2];
-                UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络连接异常"];
-                [self jumpToChoose];
-            }
-//            [self performSelector:@selector(jumpToRandom) withObject:nil afterDelay:2];
-        }];
+        [self jumpToChoose];
+//        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, self.launchImageName] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                bgImageView.image = load.dataImage;
+//                float width = load.dataImage.size.width;
+//                float height = load.dataImage.size.height;
+//                if (width>320) {
+//                    float w = 320/width;
+//                    width *= w;
+//                    height *= w;
+//                }
+//                if (height>568) {
+//                    float h = 568/height;
+//                    width *= h;
+//                    height *= h;
+//                }
+//                bgImageView.frame = CGRectMake(0, 0, width*0.9, height*0.9);
+//                bgImageView.center = self.view.center;
+//                NSString * docDir = DOCDIR;
+//                NSString * FilePath = [docDir stringByAppendingPathComponent:self.launchImageName];
+//                [load.data writeToFile:FilePath atomically:YES];
+//                [self setAnimation:bgImageView];
+////                [self performSelector:@selector(jumpToChoose) withObject:nil afterDelay:2];
+//            }else{
+//                [self setAnimation:bgImageView];
+////                [self performSelector:@selector(jumpToChoose) withObject:nil afterDelay:2];
+//                UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络连接异常"];
+//                [self jumpToChoose];
+//            }
+////            [self performSelector:@selector(jumpToRandom) withObject:nil afterDelay:2];
+//        }];
     }
     
 //    for(int i=0;i<3;i++){
@@ -371,6 +374,8 @@
 }
 -(void)getPreSID
 {
+    reloadType = 3;
+    
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"uid=%@dog&cat", UDID]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@", GETPRESID, UDID, sig];
     NSLog(@"%@", url);
@@ -391,7 +396,8 @@
                 }
             }
         }else{
-            
+            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+            alert.delegate = self;
         }
     }];
     [request release];
@@ -399,6 +405,7 @@
 #pragma mark -登录
 -(void)login
 {
+    reloadType = 2;
     if (isLoadImage) {
 //        StartLoading;
     }
@@ -437,7 +444,8 @@
             }
         }else{
             LoadingFailed;
-//            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"数据请求失败，是否重新请求？" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+            alert.delegate = self;
         }
     }];
     [request release];
@@ -445,6 +453,7 @@
 #pragma mark -获取用户数据
 -(void)getUserData
 {
+    reloadType = 1;
     if ([USER objectForKey:@"usr_id"] == nil || [[USER objectForKey:@"usr_id"] length] == 0) {
         [self login];
         return;
@@ -502,12 +511,17 @@
                 [self loadPetList];
                 
             }
+        }else{
+            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+            alert.delegate = self;
         }
     }];
     [request release];
 }
+
 -(void)loadPetInfo
 {
+    reloadType = 4;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -526,7 +540,8 @@
             
             [self jumpToMain];
         }else{
-            
+            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+            alert.delegate = self;
         }
     }];
     [request release];
@@ -676,14 +691,31 @@
 //         bgImageView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
      }completion:^(BOOL finished) {
 //         if (isLogined) {
-         if (finished) {
+//         if (finished) {
             [self performSelector:@selector(jumpToChoose) withObject:nil];
-         }
+//         }
          
 //         }else{
 //             isAnimation = 1;
 //         }
      }];
 }
-
+#pragma mark -
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"%d", buttonIndex);
+    if (buttonIndex == 0) {
+        
+    }else{
+        if (reloadType == 1) {
+            [self getUserData];
+        }else if (reloadType == 2) {
+            [self login];
+        }else if (reloadType == 3) {
+            [self getPreSID];
+        }else if (reloadType == 4) {
+            [self loadPetInfo];
+        }
+    }
+}
 @end

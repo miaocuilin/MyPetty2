@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FirstViewController : UIViewController
+@interface FirstViewController : UIViewController 
 {
     BOOL hadImage;
     UIImageView * bgImageView;
@@ -21,6 +21,10 @@
     BOOL isLoadImage;
     
     UIImageView * tempImageView;
+    
+    //加载失败后重新加载的类型
+    //1.getUser 2.login  3.getPreSID  4.loadPetInfo
+    int reloadType;
 }
 @property(nonatomic,retain)UIImage * launchImage;
 @property(nonatomic,retain)UIImageView * splashView;

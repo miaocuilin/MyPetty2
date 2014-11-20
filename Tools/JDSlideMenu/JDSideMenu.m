@@ -586,6 +586,61 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
     model.msgDict = [NSDictionary dictionaryWithObject:tempNewMsgArray forKey:@"msg"];
 }
 #pragma mark -
+-(void)loadUserData
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [USER objectForKey:@"usr_id"], sig,[ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            if ([[load.dataDict objectForKey:@"state"] intValue] == 2) {
+                //SID过期,需要重新登录获取SID
+                [self login];
+                //                [self getUserData];
+                return;
+            }else{
+                //SID未过期，直接获取用户数据
+                NSLog(@"用户数据：%@", load.dataDict);
+                NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                
+                [USER setObject:[dict objectForKey:@"a_name"] forKey:@"a_name"];
+                if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
+                    [USER setObject:[dict objectForKey:@"a_tx"] forKey:@"a_tx"];
+                }
+                [USER setObject:[dict objectForKey:@"inviter"] forKey:@"inviter"];
+                [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
+                [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
+                [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
+                [USER setObject:[dict objectForKey:@"city"] forKey:@"city"];
+                [USER setObject:[dict objectForKey:@"exp"] forKey:@"oldexp"];
+                [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
+                [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];
+                
+                [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
+                [USER setObject:[dict objectForKey:@"gold"] forKey:@"gold"];
+                [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
+                [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
+                [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
+                [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
+                if (!([[dict objectForKey:@"rank"] isKindOfClass:[NSNull class]] || ![[dict objectForKey:@"rank"] length])) {
+                    [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
+                }else{
+                    [USER setObject:@"1" forKey:@"rank"];
+                }
+                
+                
+                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
+                    [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
+                }
+                self.refreshUserData();
+                
+            }
+        }
+    }];
+    [request release];
+}
+
+#pragma mark -
 /*==============================================================*/
 -(void)refreshJDMenu
 {
@@ -595,7 +650,12 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
         //请求活动数API
         //        [self getMsgAndActivityNum];
         //刷新个人数据
-        [self performSelector:@selector(refreshUData) withObject:nil afterDelay:0.1];
+        if ([[USER objectForKey:@"isSuccess"] intValue]) {
+            [self loadUserData];
+        }
+        
+        
+//        [self performSelector:@selector(refreshUData) withObject:nil afterDelay:0.1];
         //请求新消息API
         [self getNewMessage];
     }

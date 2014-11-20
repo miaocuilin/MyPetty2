@@ -699,7 +699,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
         }else{
-            [MMProgressHUD dismissWithError:@"修改失败" afterDelay:0.5];
+            [MyControl loadingFailedWithContent:@"修改失败" afterDelay:0.1];
+//            [MMProgressHUD dismissWithError:@"修改失败" afterDelay:0.5];
         }
     }];
     [request release];

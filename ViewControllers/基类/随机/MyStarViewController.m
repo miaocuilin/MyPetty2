@@ -93,6 +93,7 @@
             [self.tv reloadData];
             LoadingSuccess;
         }else{
+            [self.tv headerEndRefreshing];
             LoadingFailed;
         }
     }];

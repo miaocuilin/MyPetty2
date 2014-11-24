@@ -166,7 +166,17 @@
     }
     return result;
 }
-
+#pragma mark - 时间戳转时间2014年11月1日
++(NSString *)timeStringFromStamp:(NSString *)timeStamp
+{
+    NSDateFormatter * fmt = [[NSDateFormatter alloc] init];
+    fmt.dateFormat = @"yyyy年MM月dd日";
+    NSDate * date = [NSDate dateWithTimeIntervalSince1970:[timeStamp intValue]];
+    NSString * time = [fmt stringFromDate:date];
+    [fmt release];
+    
+    return time;
+}
 #pragma mark - 屏幕截图
 +(UIImage *)imageWithView:(UIView *)view {
     
@@ -406,5 +416,24 @@
     UIGraphicsEndImageContext();
     
     return newimg;
+}
+
+#pragma mark -
++(void)popAlertWithView:(UIView *)keyView Msg:(NSString *)msg
+{
+    PopupView * pop = [ControllerManager sharePopView];
+    [pop modifyUIWithSize:keyView.frame.size msg:msg];
+    [keyView addSubview:pop];
+//    [pop release];
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        pop.bgView.alpha = 1;
+    } completion:^(BOOL finished) {
+        [UIView animateKeyframesWithDuration:0.2 delay:2 options:0 animations:^{
+            pop.bgView.alpha = 0;
+        } completion:^(BOOL finished) {
+            [pop removeFromSuperview];
+        }];
+    }];
 }
 @end

@@ -283,7 +283,7 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
  */
 -(void)getNewMessage
 {
-    StartLoading;
+    LOADING;
     NSString * url = [NSString stringWithFormat:@"%@%@", GETNEWMSGAPI,[ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -350,7 +350,7 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
                 
                 //遍历整个本地字典，拿到消息数之和，返回给侧边栏
                 self.refreshNewMsgNum([self getNewMessageNum]);
-                LoadingSuccess;
+                ENDLOADING;
             }else{
                 //遍历本地消息，取出未读数相加返回
                 NSFileManager * fileManager = [[NSFileManager alloc] init];
@@ -361,13 +361,14 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
                 }
                 //返回
 //            self.refreshNewMsgNum(self.newDataArray);
-                [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.2f];
+                ENDLOADING;
+//                [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.2f];
             }
             
 //            NSLog(@"%@", self.newDataArray);
 //            [self.newDataArray removeAllObjects];
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];

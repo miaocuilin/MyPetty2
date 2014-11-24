@@ -42,6 +42,8 @@
     // Do any additional setup after loading the view.
     [MobClick event:@"personal_homepage"];
     
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
     self.userAttentionListArray = [NSMutableArray arrayWithCapacity:0];
     self.userActivityListArray = [NSMutableArray arrayWithCapacity:0];
@@ -51,20 +53,19 @@
     
     cellNum = 15;
 //    isOwner = YES;
-    [self loadUserInfoData];
-    [self loadMyCountryInfoData];
     
     [self createScrollView];
     [self createFakeNavigation];
 //    [self createHeader];
     [self createTableView1];
-    
+    [self loadUserInfoData];
+    [self loadMyCountryInfoData];
 }
 
 #pragma mark - 用户信息
 - (void)loadUserInfoData
 {
-    StartLoading;
+    LOADING;
 //    user/infoApi&usr_id=
     NSString *userInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
     NSString *userInfoString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, self.usr_id, userInfoSig,[ControllerManager getSID]];
@@ -83,13 +84,12 @@
             if ([[headerDict objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
                 isOwner = YES;
             }
-            LoadingSuccess;
+            ENDLOADING;
             [self createHeader];
             //
             
-            
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
         
     }];
@@ -99,6 +99,7 @@
 -(void)loadMyCountryInfoData
 {
 //    user/petsApi&usr_id=(若用户为自己则留空不填)
+    LOADING;
     NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", self.usr_id];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, self.usr_id, [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"%@", url);
@@ -114,8 +115,9 @@
                 [model release];
             }
             [tv reloadData];
+            ENDLOADING;
         }else{
-        
+            LOADFAILED;
         }
     }];
     [request release];
@@ -897,7 +899,7 @@
     }else if(a == 202) {
         if (!isCreated[a-200]) {
             [self loadBagData];
-//            [self createTableView3];
+            [self createTableView3];
 //            [self loadActData];
         }
     }

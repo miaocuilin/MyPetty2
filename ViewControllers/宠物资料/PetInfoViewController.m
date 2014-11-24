@@ -126,7 +126,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.goodsArray = [NSMutableArray arrayWithCapacity:0];
     self.goodsNumArray = [NSMutableArray arrayWithCapacity:0];
     
-    [self loadKingData];
+    
     
     
     [self createFakeNavigation];
@@ -134,6 +134,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
     [self createNewsTableView];
     [self createToolsView];
+    
+    [self loadKingData];
 //    [self loadAttentionAPI];
 //    [self.view bringSubviewToFront:self.menuBgBtn];
 //    [self.view bringSubviewToFront:self.menuBgView];
@@ -190,9 +192,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }
             
             [tv reloadData];
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -343,7 +345,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - 请求国王数据
 -(void)loadKingData
 {
-    StartLoading;
+    LOADING;
     NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
     NSString *animalInfoAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ANIMALINFOAPI,self.aid,animalInfoSig, [ControllerManager getSID]];
 //    NSLog(@"国王信息API:%@", animalInfoAPI);
@@ -394,7 +396,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            LoadingSuccess;
         }else{
             NSLog(@"用户数据加载失败。");
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
 }

@@ -15,6 +15,8 @@
 #import "UIImageView+WebCache.h"
 #import "PicDetailViewController.h"
 #import "ToolTipsViewController.h"
+#import "FrontImageDetailViewController.h"
+#import "MainViewController.h"
 @interface RandomViewController () <TMQuiltViewDataSource,TMQuiltViewDelegate>
 {
     TMQuiltView *qtmquitView;
@@ -642,14 +644,18 @@
 //    }
     PhotoModel * model = self.dataArray[indexPath.row];
     //跳转到详情页，并传值
-    PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+//    PicDetailViewController * vc = [[PicDetailViewController alloc] init];
 //    DetailViewController * vc = [[DetailViewController alloc] init];
+    FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
     vc.img_id = model.img_id;
-    vc.usr_id = model.usr_id;
+//    vc.usr_id = model.usr_id;
 //    if ([ControllerManager getIsSuccess]) {
 //        vc.aid = [model.url substringToIndex:10];
 //    }
-    [self presentViewController:vc animated:YES completion:nil];
+    MainViewController * main = [ControllerManager shareMain];
+    [main.view addSubview:vc.view];
+    
+//    [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
 

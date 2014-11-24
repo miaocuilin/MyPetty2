@@ -21,6 +21,7 @@
 #import "MainViewController.h"
 #import <CoreText/CoreText.h>
 #import "LevelRank.h"
+
 @implementation ControllerManager
 
 static RandomViewController * rvc = nil;
@@ -37,6 +38,9 @@ static NSString * SID = nil;
 static int isSuccess;
 
 static JDSideMenu * sideMenu = nil;
+static LoadingView * load = nil;
+static PopupView * pop = nil;
+
 //static NTSlidingViewController * sliding = nil;
 static MainViewController * main = nil;
 MBProgressHUD *HUD;
@@ -151,6 +155,26 @@ static LevelRank *levelAndRank =nil;
     });
     
     return sideMenu;
+}
+
++(id)shareLoading
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        load = [[LoadingView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+//        load.frame = [UIScreen mainScreen].bounds;
+//        [load makeUI];
+    });
+    [load startAnimation];
+    return load;
+}
++(id)sharePopView
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        pop = [[PopupView alloc] init];
+    });
+    return pop;
 }
 //+(id)shareSliding
 //{

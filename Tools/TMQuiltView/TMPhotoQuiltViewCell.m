@@ -136,18 +136,18 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 }
 
 
--(void)buttonClick:(UIButton *)button
-{
-    button.selected = !button.selected;
+//-(void)buttonClick:(UIButton *)button
+//{
+//    button.selected = !button.selected;
 //    button.userInteractionEnabled = NO;
     
 //    NSString * code = [NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id];
 //    NSString * sig = [MyMD5 md5:code];
     
-    if (button.selected) {
-        self.heart.image = [UIImage imageNamed:@"11-2.png"];
-        _titleLabel.text = [NSString stringWithFormat:@"%d", [_titleLabel.text intValue]+1];
-        
+//    if (button.selected) {
+//        self.heart.image = [UIImage imageNamed:@"11-2.png"];
+//        _titleLabel.text = [NSString stringWithFormat:@"%d", [_titleLabel.text intValue]+1];
+
         //赞
 //        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKEAPI, self.img_id, sig, [ControllerManager getSID]];
 //        NSLog(@"likeURL:%@", url);
@@ -164,10 +164,10 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 //            }
 //            button.userInteractionEnabled = YES;
 //        }];
-    }else{
-        self.heart.image = [UIImage imageNamed:@"11-1.png"];
-        _titleLabel.text = [NSString stringWithFormat:@"%d", [_titleLabel.text intValue]-1];
-        
+//    }else{
+//        self.heart.image = [UIImage imageNamed:@"11-1.png"];
+//        _titleLabel.text = [NSString stringWithFormat:@"%d", [_titleLabel.text intValue]-1];
+
         //取消赞
 //        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNLIKEAPI, self.img_id, sig, [ControllerManager getSID]];
 //        NSLog(@"likeURL:%@", url);
@@ -184,8 +184,8 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 //            }
 //            button.userInteractionEnabled = YES;
 //        }];
-    }
-}
+//    }
+//}
 
 - (void)layoutSubviews {
 //    CGSize size = [self.titleLabel.text sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(cmtWidth, 100) lineBreakMode:1];

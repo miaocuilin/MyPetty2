@@ -39,6 +39,7 @@
 +(UIAlertView *)createAlertViewWithTitle:(NSString *)title Message:(NSString *)message delegate:(id)delegate cancelTitle:(NSString *)cancelTitle otherTitles:(NSString *)otherTitles;
 
 +(NSString *)timeFromTimeStamp:(NSString *)timeStamp;
++(NSString *)timeStringFromStamp:(NSString *)timeStamp;
 
 #pragma mark - 屏幕截图
 +(UIImage *)imageWithView:(UIView *)view;
@@ -70,6 +71,8 @@
 
 + (UIImage *)thumbnailWithImageWithoutScale:(UIImage *)image size:(CGSize)asize;
 + (UIImage *)image: (UIImage *) image fitInSize: (CGSize) viewsize;
+
++(void)popAlertWithView:(UIView *)keyView Msg:(NSString *)msg;
 @end
 
 

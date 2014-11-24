@@ -50,7 +50,7 @@
 #pragma mark - 背包数据
 - (void)loadBagData
 {
-    StartLoading;
+    LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERGOODSLISTAPI, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
 //    NSLog(@"背包url:%@", url);
@@ -101,11 +101,11 @@
             }
 //            NSLog(@"%d", self.tempGiftArray.count);
             //
-            LoadingSuccess;
+            ENDLOADING;
             [self createBgView];
             [self createUI];
         }else{
-            LoadingFailed;
+            ENDLOADING;
         }
     }];
     [request release];
@@ -472,7 +472,7 @@
 #pragma mark - 买礼物
 -(void)buyGiftWithItemId:(NSString *)ItemId
 {
-    StartLoading;
+    LOADING;
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=%@&num=1dog&cat", ItemId]];
     NSString * url = [NSString stringWithFormat:@"%@%@&num=1&sig=%@&SID=%@",BUYSHOPGIFTAPI, ItemId, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
@@ -488,7 +488,7 @@
             
             [self sendGiftWithItemId:ItemId fromBag:NO];
         }else{
-            
+            ENDLOADING;
         }
     }];
     [request release];
@@ -497,7 +497,7 @@
 #pragma mark - 送礼物
 -(void)sendGiftWithItemId:(NSString *)ItemId fromBag:(BOOL)fromBag
 {
-    StartLoading;
+    LOADING;
     NSString * url = nil;
     
     if (self.receiver_img_id) {
@@ -562,9 +562,10 @@
             }
             //送礼block
             self.hasSendGift(ItemId);
-            [MMProgressHUD dismissWithSuccess:@"赠送成功" title:nil afterDelay:0.1];
+            ENDLOADING;
+//            [MMProgressHUD dismissWithSuccess:@"赠送成功" title:nil afterDelay:0.1];
         }else{
-            
+            ENDLOADING;
         }
     }];
     [request release];

@@ -50,7 +50,7 @@
     self.connection=[NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL:url] delegate:self];
     
     if (timer == NULL) {
-        timer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(cancelConnection:) userInfo:nil repeats:NO];
+        timer = [NSTimer scheduledTimerWithTimeInterval:20 target:self selector:@selector(cancelConnection:) userInfo:nil repeats:NO];
         [timer retain];
     }
 //    }
@@ -174,20 +174,21 @@
             /****************************/
             if ([[self.dataDict objectForKey:@"state"] intValue] == 1) {
                 UIView * keyView = [UIApplication sharedApplication].keyWindow;
-                PopupView * pop = [[PopupView alloc] init];
-                [pop modifyUIWithSize:keyView.frame.size msg:msg];
-                [keyView addSubview:pop];
-                [pop release];
-                
-                [UIView animateWithDuration:0.2 animations:^{
-                    pop.bgView.alpha = 1;
-                } completion:^(BOOL finished) {
-                    [UIView animateKeyframesWithDuration:0.2 delay:2 options:0 animations:^{
-                        pop.bgView.alpha = 0;
-                    } completion:^(BOOL finished) {
-                        [pop removeFromSuperview];
-                    }];
-                }];
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:msg];
+//                PopupView * pop = [[PopupView alloc] init];
+//                [pop modifyUIWithSize:keyView.frame.size msg:msg];
+//                [keyView addSubview:pop];
+//                [pop release];
+//                
+//                [UIView animateWithDuration:0.2 animations:^{
+//                    pop.bgView.alpha = 1;
+//                } completion:^(BOOL finished) {
+//                    [UIView animateKeyframesWithDuration:0.2 delay:2 options:0 animations:^{
+//                        pop.bgView.alpha = 0;
+//                    } completion:^(BOOL finished) {
+//                        [pop removeFromSuperview];
+//                    }];
+//                }];
                 
                 self.httpRequestBlock(NO,self);
                 return;
@@ -216,6 +217,9 @@
 {
 //    [MMProgressHUD dismissWithError:@"加载失败" afterDelay:0.5];
 //    [self.alert setTitle:@"服务器响应失败"];
+    [self.connection cancel];
+//    self.httpRequestBlock(NO,self);
+    [timer invalidate];
     self.httpRequestBlock(NO,self);
 }
 
@@ -232,7 +236,7 @@
 #pragma mark - login
 -(void)login
 {
-    StartLoading;
+    LOADING;
     NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", UDID];
     NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@", LOGINAPI, UDID, [MyMD5 md5:code]];
     NSLog(@"login-url:%@", url);
@@ -243,13 +247,13 @@
             [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
-            LoadingSuccess;
+            ENDLOADING;
 //            self.overDue();
             NSLog(@"============SID过期============");
             //检查更新
             [self checkUpdateOutVer:[load.dataDict objectForKey:@"version"] InsideVer:[[load.dataDict objectForKey:@"data"] objectForKey:@"version"]];
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];

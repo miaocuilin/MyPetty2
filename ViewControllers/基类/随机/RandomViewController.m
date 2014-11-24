@@ -15,6 +15,8 @@
 #import "UIImageView+WebCache.h"
 #import "PicDetailViewController.h"
 #import "ToolTipsViewController.h"
+#import "FrontImageDetailViewController.h"
+#import "MainViewController.h"
 @interface RandomViewController () <TMQuiltViewDataSource,TMQuiltViewDelegate>
 {
     TMQuiltView *qtmquitView;
@@ -67,6 +69,15 @@
 //    queue = [[NSOperationQueue alloc] init];
 //    [queue setMaxConcurrentOperationCount:4];
     
+//    @try{
+//        
+//    }
+//    @catch(NSException *exception) {
+//        NSLog(@"exception:%@", exception);
+//    }
+//    @finally {
+//        
+//    }
 }
 
 -(void)createBg
@@ -369,11 +380,13 @@
     if (!docDir) {
         NSLog(@"Documents 目录未找到");
     }else{
+        cell.photoView.image = nil;
         NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
 //        NSLog(@"randomFilePath:%@", randomFilePath);
         UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
         if (image) {
             cell.photoView.image = image;
+//            cell.photoView.image = [MyControl image:image fitInSize:CGSizeMake(self.view.frame.size.width/2-4-2, Height[indexPath.row])];
             //            [self refreshView];
 //            [self setFooterView];
 //            [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
@@ -391,6 +404,7 @@
 //                    threadCount--;
 //                    NSLog(@"---threadCount:%d--count:%d", threadCount, queue.operationCount);
                     cell.photoView.image = load.dataImage;
+//                    cell.photoView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(self.view.frame.size.width/2-4-2, Height[indexPath.row])];
                     [qtmquitView reloadData];
                     //
                     //                    [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
@@ -630,14 +644,18 @@
 //    }
     PhotoModel * model = self.dataArray[indexPath.row];
     //跳转到详情页，并传值
-    PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+//    PicDetailViewController * vc = [[PicDetailViewController alloc] init];
 //    DetailViewController * vc = [[DetailViewController alloc] init];
+    FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
     vc.img_id = model.img_id;
-    vc.usr_id = model.usr_id;
+//    vc.usr_id = model.usr_id;
 //    if ([ControllerManager getIsSuccess]) {
 //        vc.aid = [model.url substringToIndex:10];
 //    }
-    [self presentViewController:vc animated:YES completion:nil];
+    MainViewController * main = [ControllerManager shareMain];
+    [main.view addSubview:vc.view];
+    
+//    [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
 

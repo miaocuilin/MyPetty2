@@ -53,7 +53,7 @@
 
 - (void)checkIsTouch
 {
-    StartLoading;
+    LOADING;
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
     NSString *isTouch = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ISTOUCHAPI, self.pet_aid, sig, [ControllerManager getSID]];
     NSLog(@"isTouch:%@",isTouch);
@@ -68,12 +68,12 @@
             if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"img_url"] isKindOfClass:[NSString class]]) {
                 self.img_url = [[load.dataDict objectForKey:@"data"] objectForKey:@"img_url"];
             }
-            [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.2];
+//            [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.2];
             [self loadRecordStringData];
             
             
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -83,7 +83,7 @@
 #pragma mark - 下载声音
 - (void)loadRecordStringData
 {
-    StartLoading;
+//    StartLoading;
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
     NSString *downloadRecord = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RECORDDOWNLOADAPI, self.pet_aid, sig,[ControllerManager getSID]];
     NSLog(@"下载API:%@",downloadRecord);
@@ -95,7 +95,7 @@
             self.recordURL = [NSString stringWithFormat:@"http://pet4voices.oss-cn-beijing.aliyuncs.com/ani/%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"url"]];
             [self loadRecordData];
         }else{
-            LoadingSuccess;
+            ENDLOADING;
 //            [MMProgressHUD dismissWithSuccess:@"该宠物今天没有萌叫叫" title:nil afterDelay:0.5];
             //没有录音
             notHaveRecord = YES;
@@ -127,10 +127,10 @@
             //        [dateformatter release];
             _player = [[AVAudioPlayer alloc] initWithData:load.data error:nil];
             [self createAlertView];
-            LoadingSuccess;
+            ENDLOADING;
 
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -140,7 +140,7 @@
 {
     [MobClick event:@"touch"];
     
-    StartLoading;
+    LOADING;
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
     NSString *touchString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",TOUCHAPI, self.pet_aid, sig,[ControllerManager getSID]];
     NSLog(@"摸一摸api:%@",touchString);
@@ -172,13 +172,15 @@
                     [ControllerManager HUDImageIcon:@"gold.png" showView:self.view.window yOffset:-40.0 Number:gold];
                 }
             }
-            [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.1];
+            ENDLOADING;
+//            [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.1];
         }else{
-            if (notHaveRecord || self.haveRecord) {
-                [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.1f];
-            }else{
-                [MyControl loadingFailedWithContent:@"加载失败" afterDelay:0.5f];
-            }
+            LOADFAILED;
+//            if (notHaveRecord || self.haveRecord) {
+//                [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.1f];
+//            }else{
+//                [MyControl loadingFailedWithContent:@"加载失败" afterDelay:0.5f];
+//            }
             
         }
         

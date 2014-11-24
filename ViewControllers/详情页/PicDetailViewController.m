@@ -121,8 +121,6 @@
 }
 - (void)viewDidLoad
 {
-    
-    
     [super viewDidLoad];
     
     [MobClick event:@"photopage"];
@@ -301,6 +299,7 @@
             }else{
                 NSString * name = [[[[arr1[i] componentsSeparatedByString:@",reply_id"] objectAtIndex:0] componentsSeparatedByString:@",name:"] objectAtIndex:1];
                 NSString * reply_name = [[[[arr1[i] componentsSeparatedByString:@",body"] objectAtIndex:0] componentsSeparatedByString:@",reply_name:"] objectAtIndex:1];
+                NSLog(@"%@", reply_name);
                 NSString * str = [NSString stringWithFormat:@"%@&%@", name, reply_name];
                 [self.nameArray addObject:str];
             }
@@ -1783,7 +1782,17 @@
 //        NSLog(@"%@--%@--%@", self.usrIdArray[replyRow],self.nameArray[replyRow],[self.nameArray[replyRow] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
         [_request setPostValue:self.usrIdArray[replyRow] forKey:@"reply_id"];
         NSLog(@"%@", self.nameArray[replyRow]);
-        [_request setPostValue:[self.nameArray[replyRow] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] forKey:@"reply_name"];
+        NSString * str = self.nameArray[replyRow];
+        //分割&
+        if ([str rangeOfString:@"&"].location != NSNotFound) {
+            str = [[str componentsSeparatedByString:@"&"] objectAtIndex:0];
+        }else if([str rangeOfString:@"@"].location != NSNotFound){
+            //分割@
+            str = [[str componentsSeparatedByString:@"@"] objectAtIndex:0];
+        }
+        
+        NSLog(@"%@", str);
+        [_request setPostValue:[str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] forKey:@"reply_name"];
     }
     _request.delegate = self;
     [_request startAsynchronous];

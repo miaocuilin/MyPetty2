@@ -1210,14 +1210,20 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
+            LoadingSuccess;
+            
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
                 [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
                 
                 [self loadPetInfo];
             }
+            
             if (self.oriImage) {
                 [self postImage];
+            }else{
+                self.isOldUserTxOK = YES;
             }
+            
         }else{
             LoadingFailed;
         }
@@ -1603,6 +1609,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
             self.isOldUserPetInfoOK = YES;
             if (self.isOldUserTxOK == YES) {
+                [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
                 [self dismissViewControllerAnimated:NO completion:nil];
             }
             
@@ -1696,6 +1703,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSLog(@"%@",docDir);
     NSLog(@"saving png");
     if (request == _request) {
+        NSLog(@"%@", [USER objectForKey:@"a_tx"]);
         NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@", [USER objectForKey:@"a_tx"]]];
 //        [NSString stringWithFormat:@"%@/%@_headImage.png.png", docDir, [USER objectForKey:@"aid"]];
         NSData * data = UIImageJPEGRepresentation(self.oriImage, 0.1);

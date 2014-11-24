@@ -30,6 +30,9 @@
 +(id)shareMain;
 +(id)shareJDSideMenu;
 //+(id)shareSliding;
++(id)shareLoading;
++(id)sharePopView;
+
 
 + (UIColor *)colorWithHexString: (NSString *) stringToConvert;
 + (NSArray *)getSeparatedLinesFromLabel:(UILabel *)label;

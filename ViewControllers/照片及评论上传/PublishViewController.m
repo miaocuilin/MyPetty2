@@ -343,12 +343,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     
     button.userInteractionEnabled = NO;
-    int s = [[USER objectForKey:@"sina"] intValue];
-    int w = [[USER objectForKey:@"weChat"] intValue];
+    s = [[USER objectForKey:@"sina"] intValue];
+    w = [[USER objectForKey:@"weChat"] intValue];
     
     [self postData:self.oriImage];
-    
-    if (s == 1 && w == 0) {
+    if (s == 0 && w == 0) {
+        shareSuc = YES;
+        if (publishSuc) {
+            [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                [self dismissViewControllerAnimated:YES completion:nil];
+            } completion:nil];
+        }
+    }else if (s == 1 && w == 0) {
 //        BOOL isOauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
 //        if (isOauth) {
 //            
@@ -362,6 +368,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             NSLog(@"sina-response:%@", response);
+            shareSuc = YES;
+            if (publishSuc) {
+                [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                    [self dismissViewControllerAnimated:YES completion:nil];
+                } completion:nil];
+            }
+            
             button.userInteractionEnabled = YES;
             if ([response.message isEqualToString:@"user cancel the operation"]) {
                 return;
@@ -378,6 +391,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:_textView.text image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             NSLog(@"weChat-response:%@", response);
+            shareSuc = YES;
+            if (publishSuc) {
+                [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                    [self dismissViewControllerAnimated:YES completion:nil];
+                } completion:nil];
+            }
+            
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
 //                [self postData:self.oriImage];
@@ -396,6 +416,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             //分享微信
             [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
             [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:_textView.text image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+                shareSuc = YES;
+                if (publishSuc) {
+                    [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                        [self dismissViewControllerAnimated:YES completion:nil];
+                    } completion:nil];
+                }
+                
                 NSLog(@"weChat-response:%@", response);
                 if (response.responseCode == UMSResponseCodeSuccess) {
                     NSLog(@"分享成功！");
@@ -410,8 +437,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }
             
         }];
-    }else{
-//        [self postData:self.oriImage];
     }
     
 }
@@ -643,9 +668,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         [MyControl loadingSuccessWithContent:@"发布成功" afterDelay:0.5f];
         
-        [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-            [self dismissViewControllerAnimated:YES completion:nil];
-        } completion:nil];
+        publishSuc = YES;
+        if (shareSuc) {
+            [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                [self dismissViewControllerAnimated:YES completion:nil];
+            } completion:nil];
+        }
+        
     }
     
     //分享到微博

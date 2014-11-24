@@ -20,6 +20,9 @@
 
 #import "NewWaterFlowViewController.h"
 #import "PetRecommendViewController.h"
+
+//
+#import "FrontImageDetailViewController.h"
 //#import "DSImagesViewController.h"
 @implementation AppDelegate
 -(void)dealloc
@@ -45,6 +48,7 @@
     NSLog(@"%@", [Keychain load:KEY_UDID]);
 //    NSLog(@"%@", NSTemporaryDirectory());
 //    [NSSearchPathForDirectoriesInDomains(NSTemporaryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        
     
     [USER setObject:[Keychain load:KEY_UDID] forKey:@"UDID"];
     
@@ -52,6 +56,7 @@
     NSLog(@"本机UUID:%@", [OpenUDID value]);
 
     FirstViewController * info = [[FirstViewController alloc] init];
+//    FrontImageDetailViewController * info = [[FrontImageDetailViewController alloc] init];
 //    NewWaterFlowViewController * info = [[NewWaterFlowViewController alloc] init];
 //    PetRecommendViewController * info = [[PetRecommendViewController alloc] init];
 //    DSImagesViewController * info = [[DSImagesViewController alloc] init];

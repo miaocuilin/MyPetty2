@@ -971,7 +971,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if ([cancel.titleLabel.text isEqualToString:@"搜索"]) {
         if ([string isEqualToString:@""]) {
             //退格
-            self.tfString = [self.tfString substringToIndex:textField.text.length-1];
+            NSLog(@"%d--%d", textField.text.length, self.tfString.length);
+            if (self.tfString.length>=textField.text.length-1) {
+                self.tfString = [self.tfString substringToIndex:textField.text.length-1];
+            }
         }else{
             self.tfString = [NSString stringWithFormat:@"%@%@", textField.text, string];
         }
@@ -1146,7 +1149,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)segmentClick:(UISegmentedControl *)seg
 {
-    if (sc.selectedSegmentIndex == 0 && ![ControllerManager getIsSuccess]) {
+    if (sc.selectedSegmentIndex == 0 && ![ControllerManager getIsSuccess] && [ControllerManager getSID] != nil) {
         //*************************
         ShowAlertView;
         //*************************
@@ -1220,7 +1223,16 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (scrollView == tv) {
         return;
     }
+    
+    
     int a = self.sv.contentOffset.x;
+    if(a == 0){
+        if (![ControllerManager getIsSuccess] && [ControllerManager getSID] != nil) {
+            self.sv.contentOffset = CGPointMake(sc.selectedSegmentIndex*self.view.frame.size.width, 0);
+            ShowAlertView;
+            return;
+        }
+    }
     int b = sc.selectedSegmentIndex;
     if (b != a) {
         [self getNewMessage];

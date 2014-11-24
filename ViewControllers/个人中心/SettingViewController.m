@@ -614,12 +614,16 @@
             //            NSDictionary *fileAttributeDic=[fileManager attributesOfFileSystemForPath:fullPath error:nil];
             size += fileAttributeDic.fileSize/ 1024.0/1024.0;
         }
-        else
-        {
-            [self fileSizeForDir:fullPath];
-        }
+//        else
+//        {
+//            [self fileSizeForDir:fullPath];
+//        }
     }
     [fileManager release];
+    
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    size += [cache getSize]/1024.0/1024.0;
+    
     return size;
 }
 #pragma mark -清除数据
@@ -647,7 +651,11 @@
         }
     }
     fileSize = [self fileSizeForDir:DOCDIR];
-    cacheLabel.text = [NSString stringWithFormat:@"%.1fMB", fileSize];
+    
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearDisk];
+    
+    cacheLabel.text = [NSString stringWithFormat:@"%.1fMB", 0.0];
     NSLog(@"%f", fileSize);
     
     [MMProgressHUD dismissWithSuccess:@"清除成功"];

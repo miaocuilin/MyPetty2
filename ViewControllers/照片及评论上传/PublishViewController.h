@@ -30,6 +30,13 @@
     
     //用于限制键盘change的通知
     BOOL isInPublish;
+    
+    //s=sina  w=weChat
+    int s;
+    int w;
+    
+    BOOL publishSuc;
+    BOOL shareSuc;
 }
 //@property (nonatomic,retain)UIImageView * bgImageView;
 @property (nonatomic,retain)UIImage * oriImage;

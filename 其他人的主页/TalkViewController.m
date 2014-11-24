@@ -49,6 +49,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     self.totalDataDict = [NSMutableDictionary dictionaryWithCapacity:0];
 //    self.talkMsgDataDict = [NSMutableDictionary dictionaryWithCapacity:0];
     self.talkDataArray = [NSMutableArray arrayWithCapacity:0];
@@ -298,7 +300,7 @@
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"喵喵咪咪"];
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"私信对话"];
     if (!([self.friendName isEqualToString:@""] || self.friendName == nil)) {
         titleLabel.text = self.friendName;
     }
@@ -316,12 +318,15 @@
         [USER setObject:@"1" forKey:@"isBackToTalk"];
     }
     //存储对话到本地
-    talkModel.msgDict = [NSDictionary dictionaryWithObject:self.talkDataArray forKey:@"msg"];
-    [self.totalDataDict setObject:talkModel forKey:self.talk_id];
-    NSData * data = [MyControl returnDataWithDictionary:self.totalDataDict];
-    NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
-    BOOL a = [data writeToFile:path atomically:YES];
-    NSLog(@"存储结果：%d", a);
+    if (self.talkDataArray.count>0) {
+        talkModel.msgDict = [NSDictionary dictionaryWithObject:self.talkDataArray forKey:@"msg"];
+        [self.totalDataDict setObject:talkModel forKey:self.talk_id];
+        NSData * data = [MyControl returnDataWithDictionary:self.totalDataDict];
+        NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
+        BOOL a = [data writeToFile:path atomically:YES];
+        NSLog(@"存储结果：%d", a);
+    }
+    
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }

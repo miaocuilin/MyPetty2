@@ -47,7 +47,7 @@
     }
     
     NSLog(@"%@", url);
-    StartLoading;
+    LOADING;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
@@ -65,9 +65,11 @@
             }
             [self.tv headerEndRefreshing];
             [self.tv reloadData];
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            [self.tv headerEndRefreshing];
+            LOADFAILED;
+            
         }
     }];
     [request release];
@@ -168,7 +170,8 @@
                                     //捧Ta成功界面
                                     NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
                                     noClose.confirm = ^(){};
-                                    [self.view addSubview:noClose];
+                                    MainViewController * main = [ControllerManager shareMain];
+                                    [main.view addSubview:noClose];
                                     NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
                                     [noClose configUIWithTx:model.tx Name:model.name Percent:percent];
                                     [UIView animateWithDuration:0.3 animations:^{
@@ -201,9 +204,11 @@
     };
     cell.imageClick = ^(int a){
         NSLog(@"跳转到第%d张图片详情页", a);
-        PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+        FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = [[[self.dataArray[indexPath.row] images] objectAtIndex:a] objectForKey:@"img_id"];
-        [self presentViewController:vc animated:YES completion:nil];
+        MainViewController * main = [ControllerManager shareMain];
+        [main.view addSubview:vc.view];
+        //        [self presentViewController:vc animated:YES completion:nil];
         [vc release];
     };
     cell.clipsToBounds = YES;

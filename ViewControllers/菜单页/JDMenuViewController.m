@@ -86,6 +86,9 @@
             goldLabel.text = [USER objectForKey:@"gold"];
             NSLog(@"%@", [USER objectForKey:@"petInfoDict"]);
             position.text = [NSString stringWithFormat:@"%@的%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];
+            if ([[USER objectForKey:@"petInfoDict"] objectForKey:@"name"] == nil) {
+                position.text = @"经纪人";
+            }
             exp.text = [NSString stringWithFormat:@"Lv.%@", [USER objectForKey:@"lv"]];
             name.text = [USER objectForKey:@"name"];
             sex.hidden = NO;
@@ -407,6 +410,10 @@
 //    [sv3 addSubview:kingName];
     
     position = [MyControl createLabelWithFrame:CGRectMake(25, sex.frame.origin.y+20, 125, 20) Font:13 Text:[NSString stringWithFormat:@"%@的经纪人", [USER objectForKey:@"a_name"]]];
+//    NSLog(@"%@", [USER objectForKey:@"a_name"]);
+    if([USER objectForKey:@"a_name"] == nil){
+        position.text = @"经纪人";
+    }
     [sv3 addSubview:position];
     if ([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [USER objectForKey:@"rank"] != nil && [[USER objectForKey:@"rank"] length] != 0) {
         position.text = [NSString stringWithFormat:@"%@的%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"], [ControllerManager returnPositionWithRank:[USER objectForKey:@"rank"]]];
@@ -501,50 +508,52 @@
     
     /******创建各个国家的图标在一个scrollView上******/
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
-        //添加左右两个箭头
-        leftArrow = [MyControl createImageViewWithFrame:CGRectMake(8, (65-18)/2, 11, 18) ImageName:@"menu_left.png"];
-        [countryBg addSubview:leftArrow];
-        
-        rightArrow = [MyControl createImageViewWithFrame:CGRectMake(414/2, (65-18)/2, 11, 18) ImageName:@"menu_right.png"];
-        [countryBg addSubview:rightArrow];
-        
-        UIView * gestureView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 65)];
-        [countryBg addSubview:gestureView];
-        
-        countryCount = 3;
-        selectedNum = 1;
-        
-        /*****************国家循环*******************/
-        UIView * view = [[UIView alloc] initWithFrame:CGRectMake(25-3, 0, 176+6, 65)];
-        //    view.backgroundColor = [UIColor lightGrayColor];
-        view.clipsToBounds = YES;
-        view.tag = 99;
-        [countryBg addSubview:view];
-        
-        for (int i=0; i<countryCount; i++) {
-            UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.frame = CGRectMake(3+i*SPACE, 12.5, 40, 40);
-            button.layer.cornerRadius = 20;
-            button.layer.masksToBounds = YES;
-            [button setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
-            [button addTarget:self action:@selector(countryButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-            button.tag = 100+i;
-            [view addSubview:button];
+        if ([ControllerManager getSID] != nil) {
+            //添加左右两个箭头
+            leftArrow = [MyControl createImageViewWithFrame:CGRectMake(8, (65-18)/2, 11, 18) ImageName:@"menu_left.png"];
+            [countryBg addSubview:leftArrow];
             
-            [self.countryArray addObject:button];
+            rightArrow = [MyControl createImageViewWithFrame:CGRectMake(414/2, (65-18)/2, 11, 18) ImageName:@"menu_right.png"];
+            [countryBg addSubview:rightArrow];
+            
+            UIView * gestureView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 65)];
+            [countryBg addSubview:gestureView];
+            
+            countryCount = 3;
+            selectedNum = 1;
+            
+            /*****************国家循环*******************/
+            UIView * view = [[UIView alloc] initWithFrame:CGRectMake(25-3, 0, 176+6, 65)];
+            //    view.backgroundColor = [UIColor lightGrayColor];
+            view.clipsToBounds = YES;
+            view.tag = 99;
+            [countryBg addSubview:view];
+            
+            for (int i=0; i<countryCount; i++) {
+                UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+                button.frame = CGRectMake(3+i*SPACE, 12.5, 40, 40);
+                button.layer.cornerRadius = 20;
+                button.layer.masksToBounds = YES;
+                [button setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
+                [button addTarget:self action:@selector(countryButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+                button.tag = 100+i;
+                [view addSubview:button];
+                
+                [self.countryArray addObject:button];
+            }
+            //王冠
+            UIButton * button = self.countryArray[selectedNum-1];
+            crown = [MyControl createImageViewWithFrame:CGRectMake(button.frame.origin.x+25, button.frame.origin.y+27, 18, 18) ImageName:@"crown.png"];
+            [view addSubview:crown];
+            
+            UISwipeGestureRecognizer * swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft)];
+            [swipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+            [view addGestureRecognizer:swipeLeft];
+            
+            UISwipeGestureRecognizer * swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight)];
+            [swipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
+            [view addGestureRecognizer:swipeRight];
         }
-        //王冠
-        UIButton * button = self.countryArray[selectedNum-1];
-        crown = [MyControl createImageViewWithFrame:CGRectMake(button.frame.origin.x+25, button.frame.origin.y+27, 18, 18) ImageName:@"crown.png"];
-        [view addSubview:crown];
-        
-        UISwipeGestureRecognizer * swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft)];
-        [swipeLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
-        [view addGestureRecognizer:swipeLeft];
-        
-        UISwipeGestureRecognizer * swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight)];
-        [swipeRight setDirection:UISwipeGestureRecognizerDirectionRight];
-        [view addGestureRecognizer:swipeRight];
     }else{
         //未注册
         UIImageView * ambassador = [MyControl createImageViewWithFrame:CGRectMake(12, 15, 158/2, 35) ImageName:@"ambassador.png"];
@@ -704,7 +713,9 @@
 -(void)headImageBtnClick
 {
     if([[USER objectForKey:@"isSuccess"] intValue]){
+        
         UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+        vc.isFromSideMenu = YES;
         vc.usr_id = [USER objectForKey:@"usr_id"];
         vc.modalTransitionStyle = 2;
         [self presentViewController:vc animated:YES completion:nil];

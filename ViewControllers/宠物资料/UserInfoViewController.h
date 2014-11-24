@@ -41,10 +41,17 @@
     UIButton * headBtn;
     
     BOOL isLoaded;
+    
+    //判断修改头像时是否是点击的头像进行的修改，来决定
+    //是否要cancelClick
+    BOOL isFromHeader;
 }
 
 @property(nonatomic)int offset;
 @property(nonatomic)BOOL isFromPetInfo;
+
+//是否是通过侧边栏进入我自己的主页
+@property(nonatomic)BOOL isFromSideMenu;
 
 @property(nonatomic,retain)UIImage * petHeadImage;
 @property(nonatomic,copy)NSString * usr_id;

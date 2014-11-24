@@ -79,7 +79,7 @@
 }
 - (void)loadData
 {
-    StartLoading;
+    LOADING;
     NSString *rankSig = [MyMD5 md5:[NSString stringWithFormat:@"category=%ddog&cat",self.category]];
     NSString *rank = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@",POPULARRANKAPI,self.category,rankSig,[ControllerManager getSID]];
     NSLog(@"rank:%@",rank);
@@ -126,12 +126,12 @@
                 [self loadUserPetsInfo];
             }else{
                 [tv reloadData];
-                LoadingSuccess;
+                ENDLOADING;
             }
             
 //            [tv2 reloadData];
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -210,11 +210,11 @@
 //                    [self showEntireList];
 //                }
 //            }
-            LoadingSuccess;
+            ENDLOADING;
             [self findMeBtnClick];
 //            [tv reloadData];
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -361,29 +361,31 @@
     }else{
         [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.vary shouldLarge:NO];
     }
+    
+    [cell.headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
 //    NSLog(@"model.tx:%@",model.tx);
-    if ([model.tx isEqualToString:@""]) {
-        cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-    }else{
-        NSString *headImagePath = [DOCDIR stringByAppendingString:model.tx];
-        UIImage *image = [UIImage imageWithContentsOfFile:headImagePath];
-        if (image) {
-            cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(32, 32)];
-//            NSLog(@"%f--%f", image.size.width, image.size.height);
-        }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-//                NSLog(@"load.image:%@",load.dataImage);
-                if (isFinish) {
-                    if (load.dataImage == NULL) {
-                        cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-                    }else{
-                        cell.headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(64, 64)];
-                    }
-                }
-            }];
-            [request release];
-        }
-    }
+//    if ([model.tx isEqualToString:@""]) {
+//        cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+//    }else{
+//        NSString *headImagePath = [DOCDIR stringByAppendingString:model.tx];
+//        UIImage *image = [UIImage imageWithContentsOfFile:headImagePath];
+//        if (image) {
+//            cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(32, 32)];
+////            NSLog(@"%f--%f", image.size.width, image.size.height);
+//        }else{
+//            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+////                NSLog(@"load.image:%@",load.dataImage);
+//                if (isFinish) {
+//                    if (load.dataImage == NULL) {
+//                        cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+//                    }else{
+//                        cell.headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(64, 64)];
+//                    }
+//                }
+//            }];
+//            [request release];
+//        }
+//    }
 //    NSLog(@"titleBtn.currentTitle:%@",titleBtn.currentTitle);
     if ([titleBtn.currentTitle isEqualToString:@"总人气榜"]) {
         cell.rqNum.text = model.t_rq;

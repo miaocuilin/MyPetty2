@@ -288,12 +288,12 @@
     nameAndAgeLabel.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:model.type], [MyControl returnAgeStringWithCountOfMonth:model.age]];
     [headerBgView addSubview:nameAndAgeLabel];
     
-    UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(80, 52, 70, 15) Font:12 Text:@"总人气 500"];
+    UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(80, 52, 90, 15) Font:12 Text:@"总人气 500"];
     rq.text = [NSString stringWithFormat:@"总人气 %@", model.t_rq];
     rq.textColor = [UIColor lightGrayColor];
     [headerBgView addSubview:rq];
     
-    UILabel * memberNum = [MyControl createLabelWithFrame:CGRectMake(155, 52, 70, 15) Font:12 Text:@"|    成员 188"];
+    UILabel * memberNum = [MyControl createLabelWithFrame:CGRectMake(165, 52, 70, 15) Font:12 Text:@"|    成员 188"];
     memberNum.text = [NSString stringWithFormat:@"|    成员 %@", model.fans];
     memberNum.textColor = [UIColor lightGrayColor];
     [headerBgView addSubview:memberNum];

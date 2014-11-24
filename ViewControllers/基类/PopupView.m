@@ -22,6 +22,10 @@
 
 -(void)makeUI
 {
+//    UIView * view = [MyControl createViewWithFrame:[UIScreen mainScreen].bounds];
+//    alphaView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:1];
+//    [self addSubview:view];
+    
     self.bgView = [MyControl createViewWithFrame:CGRectMake(100, 100, 100, 40)];
     self.bgView.layer.cornerRadius = 10;
     self.bgView.layer.masksToBounds = YES;
@@ -39,6 +43,10 @@
 
 -(void)modifyUIWithSize:(CGSize)viewSize msg:(NSString *)msg
 {
+//    UIView * view = [MyControl createViewWithFrame:[UIScreen mainScreen].bounds];
+    //    alphaView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:1];
+//    [self addSubview:view];
+    
     float w = 0;
 //    float h = 0;
     if (viewSize.width/2.0<200) {

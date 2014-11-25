@@ -58,7 +58,7 @@
 +(UIView*)createViewWithFrame:(CGRect)frame
 {
     UIView*view=[[UIView alloc]initWithFrame:frame];
-    
+    view.userInteractionEnabled = YES;
     return [view autorelease];
 
 }

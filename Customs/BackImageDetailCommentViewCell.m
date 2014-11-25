@@ -50,8 +50,15 @@
     line.backgroundColor = [ControllerManager colorWithHexString:@"dddddd"];
     [self addSubview:line];
 }
--(void)configUIWithName:(NSString *)nameStr Cmt:(NSString *)cmt Time:(NSString *)timeStr CellHeight:(float)cellHeight textSize:(CGSize)textSize
+-(void)configUIWithName:(NSString *)nameStr Cmt:(NSString *)cmt Time:(NSString *)timeStr CellHeight:(float)cellHeight textSize:(CGSize)textSize Tx:(NSString *)tx
 {
+    if (![tx isEqualToString:@"0"]) {
+        [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, tx]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"]];
+    }else{
+        headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+    }
+    
+    
     CGRect lineRect = line.frame;
     lineRect.origin.y = cellHeight-1;
     line.frame = lineRect;

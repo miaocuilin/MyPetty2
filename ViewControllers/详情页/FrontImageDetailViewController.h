@@ -57,6 +57,12 @@
     
     BOOL isReply;
     int replyRow;
+    
+    //评论及回复框的起始Y值
+    float originalY;
+    
+    //4项是否都加载过数据了
+    BOOL isLoaded[4];
 }
 @property(nonatomic,retain)NSDictionary * picDict;
 @property(nonatomic,retain)NSDictionary * imageDict;
@@ -70,9 +76,16 @@
 @property (nonatomic,retain)NSMutableArray * nameArray;
 @property (nonatomic,retain)NSMutableArray * bodyArray;
 @property (nonatomic,retain)NSMutableArray * createTimeArray;
+
+@property (nonatomic,retain)NSMutableArray * cmtTxArray;
 //
 @property (nonatomic,retain)NSMutableArray * likerTxArray;
 @property (nonatomic,retain)NSMutableArray * senderTxArray;
 @property (nonatomic,retain)NSMutableArray * likerIdArray;
 @property (nonatomic,retain)NSMutableArray * senderIdArray;
+
+@property (nonatomic,retain)NSMutableArray * likersArray;
+@property (nonatomic,retain)NSMutableArray * sendersArray;
+@property (nonatomic,retain)NSMutableArray * commentersArray;
+@property (nonatomic,retain)NSMutableArray * sharersArray;
 @end

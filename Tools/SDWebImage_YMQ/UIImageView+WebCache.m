@@ -51,6 +51,8 @@ static char operationArrayKey;
 
 - (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedBlock)completedBlock dealedBlock:(MJWebImageDealedBlock)dealedBlock
 {
+    [self addSkipBackupAttributeToItemAtURL:url];
+    
     [self cancelCurrentImageLoad];
 
     self.image = placeholder;
@@ -142,4 +144,20 @@ static char operationArrayKey;
     objc_setAssociatedObject(self, &operationArrayKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+/**************************************/
+- (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
+{
+    
+    //    assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
+    
+    NSError *error = nil;
+    
+    BOOL success = [URL setResourceValue: [NSNumber numberWithBool: YES] forKey: NSURLIsExcludedFromBackupKey error: &error];
+    
+    if(!success){
+        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+    
+    return success;
+}
 @end

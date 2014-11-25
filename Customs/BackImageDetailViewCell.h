@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import "UserInfoModel.h"
+#import "UserInfoModel.h"
 @interface BackImageDetailViewCell : UITableViewCell
 {
     UIImageView * headImageView;
     UILabel * name;
 }
 
--(void)configUIWithTx:(NSString *)tx Name:(NSString *)userName;
+-(void)configUI:(UserInfoModel *)model;
 @end

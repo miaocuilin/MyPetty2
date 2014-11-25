@@ -29,11 +29,12 @@
     [bigImageView release];
     [super dealloc];
 }
--(void)viewWillAppear:(BOOL)animated
+
+-(void)viewDidAppear:(BOOL)animated
 {
     isInThisController = YES;
 }
--(void)viewDidAppear:(BOOL)animated
+-(void)viewDidDisappear:(BOOL)animated
 {
     isInThisController = NO;
 }
@@ -48,12 +49,17 @@
     self.nameArray = [NSMutableArray arrayWithCapacity:0];
     self.bodyArray = [NSMutableArray arrayWithCapacity:0];
     self.createTimeArray = [NSMutableArray arrayWithCapacity:0];
+    self.cmtTxArray = [NSMutableArray arrayWithCapacity:0];
     //
     self.likerTxArray = [NSMutableArray arrayWithCapacity:0];
     self.senderTxArray = [NSMutableArray arrayWithCapacity:0];
     self.likerIdArray = [NSMutableArray arrayWithCapacity:0];
     self.senderIdArray = [NSMutableArray arrayWithCapacity:0];
-    
+    //
+    self.likersArray = [NSMutableArray arrayWithCapacity:0];
+    self.sendersArray = [NSMutableArray arrayWithCapacity:0];
+    self.commentersArray = [NSMutableArray arrayWithCapacity:0];
+    self.sharersArray = [NSMutableArray arrayWithCapacity:0];
     
     //加手势
     swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
@@ -70,6 +76,11 @@
     [self createUI];
     
     [self loadImageData];
+    
+    self.view.alpha = 0;
+    [UIView animateWithDuration:0.5 animations:^{
+        self.view.alpha = 1;
+    }];
     
 }
 -(void)loadImageData
@@ -95,21 +106,22 @@
             self.imageDict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
             
             //likerId
-            self.likerIdArray = [NSMutableArray arrayWithArray:[[self.imageDict objectForKey:@"likers"] componentsSeparatedByString:@","]];
+//            self.likerIdArray = [NSMutableArray arrayWithArray:[[self.imageDict objectForKey:@"likers"] componentsSeparatedByString:@","]];
             
             //senderId
-            self.senderIdArray = [NSMutableArray arrayWithArray:[[self.imageDict objectForKey:@"senders"] componentsSeparatedByString:@","]];
+//            self.senderIdArray = [NSMutableArray arrayWithArray:[[self.imageDict objectForKey:@"senders"] componentsSeparatedByString:@","]];
             
             //likerTx
-            if ([[[self.picDict objectForKey:@"data"] objectForKey:@"liker_tx"] isKindOfClass:[NSArray class]]) {
-                self.likerTxArray = [[self.picDict objectForKey:@"data"] objectForKey:@"liker_tx"];
-            }
+//            if ([[[self.picDict objectForKey:@"data"] objectForKey:@"liker_tx"] isKindOfClass:[NSArray class]]) {
+//                self.likerTxArray = [[self.picDict objectForKey:@"data"] objectForKey:@"liker_tx"];
+//            }
 //            NSLog(@"%@--%@", [[self.picDict objectForKey:@"data"] objectForKey:@"liker_tx"], self.likerTxArray);
             //senderTx
-            if ([[[self.picDict objectForKey:@"data"] objectForKey:@"sender_tx"] isKindOfClass:[NSArray class]]) {
-                self.senderTxArray = [[self.picDict objectForKey:@"data"] objectForKey:@"sender_tx"];
-            }
-            [tv reloadData];
+//            if ([[[self.picDict objectForKey:@"data"] objectForKey:@"sender_tx"] isKindOfClass:[NSArray class]]) {
+//                self.senderTxArray = [[self.picDict objectForKey:@"data"] objectForKey:@"sender_tx"];
+//            }
+//            [tv reloadData];
+            [self loadLikersData];
             
             [self analyseComments];
             
@@ -125,6 +137,129 @@
     }];
     [request release];
 }
+-(void)loadLikersData
+{
+    LOADING;
+    NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", [self.imageDict objectForKey:@"likers"]];
+    NSString * code = [MyMD5 md5:str];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, [self.imageDict objectForKey:@"likers"], code, [ControllerManager getSID]];
+    NSLog(@"赞列表：%@", url);
+    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            ENDLOADING;
+            
+            NSArray * array = [load.dataDict objectForKey:@"data"] ;
+            for (NSDictionary * dict in array) {
+                UserInfoModel * model = [[UserInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.likersArray addObject:model];
+                [model release];
+            }
+            [tv reloadData];
+        }else{
+            LOADFAILED;
+        }
+    }];
+}
+-(void)loadSendersData
+{
+    
+    LOADING;
+    NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", [self.imageDict objectForKey:@"senders"]];
+    NSString * code = [MyMD5 md5:str];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, [self.imageDict objectForKey:@"senders"], code, [ControllerManager getSID]];
+    NSLog(@"送礼列表：%@", url);
+    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            ENDLOADING;
+            
+            NSArray * array = [load.dataDict objectForKey:@"data"] ;
+            for (NSDictionary * dict in array) {
+                UserInfoModel * model = [[UserInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.sendersArray addObject:model];
+                [model release];
+            }
+            [tv reloadData];
+        }else{
+            LOADFAILED;
+        }
+    }];
+}
+-(void)loadCommentersData
+{
+    if (!self.usrIdArray.count) {
+        return;
+    }
+    LOADING;
+    
+    NSMutableString * mutableStr = [NSMutableString stringWithCapacity:0];
+    for (int i=0; i<self.usrIdArray.count; i++) {
+//        if([mutableStr rangeOfString:self.usrIdArray[i]].location != NSNotFound){
+//            continue;
+//        }
+        [mutableStr appendString:self.usrIdArray[i]];
+        if (i != self.usrIdArray.count-1) {
+            [mutableStr appendString:@","];
+        }
+    }
+    NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", mutableStr];
+    NSString * code = [MyMD5 md5:str];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, mutableStr, code, [ControllerManager getSID]];
+    NSLog(@"评论列表：%@", url);
+    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            ENDLOADING;
+            
+            NSArray * array = [load.dataDict objectForKey:@"data"] ;
+            for (NSDictionary * dict in array) {
+                UserInfoModel * model = [[UserInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.commentersArray addObject:model];
+                [model release];
+            }
+            for (int i=0; i<self.commentersArray.count; i++) {
+                for (int j=0; j<self.usrIdArray.count; j++) {
+                    if ([[self.commentersArray[i] usr_id] isEqualToString:self.usrIdArray[j]]) {
+                        self.cmtTxArray[j] = [self.commentersArray[i] tx];
+                    }
+                }
+            }
+            [desTv reloadData];
+        }else{
+            LOADFAILED;
+        }
+    }];
+}
+-(void)loadSharersData
+{
+//    if (!self.sharersArray.count) {
+//        return;
+//    }
+    LOADING;
+    NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", [self.imageDict objectForKey:@"sharers"]];
+    NSString * code = [MyMD5 md5:str];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, [self.imageDict objectForKey:@"sharers"], code, [ControllerManager getSID]];
+    NSLog(@"送礼列表：%@", url);
+    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            ENDLOADING;
+            
+            NSArray * array = [load.dataDict objectForKey:@"data"] ;
+            for (NSDictionary * dict in array) {
+                UserInfoModel * model = [[UserInfoModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.sharersArray addObject:model];
+                [model release];
+            }
+            [tv reloadData];
+        }else{
+            LOADFAILED;
+        }
+    }];
+}
+/******************************************/
+#pragma mark -
 -(void)analyseComments
 {
     if (!([[self.imageDict objectForKey:@"comments"] isKindOfClass:[NSNull class]] || [[self.imageDict objectForKey:@"comments"] length] == 0)) {
@@ -140,6 +275,7 @@
             [self.usrIdArray addObject:usrId];
             //            [usrId release];
             
+            [self.cmtTxArray addObject:@"0"];
             //
             if ([arr1[i] rangeOfString:@"reply_id"].location == NSNotFound) {
                 NSString * name = [[[[arr1[i] componentsSeparatedByString:@",body"] objectAtIndex:0] componentsSeparatedByString:@"name:"] objectAtIndex:1];
@@ -195,6 +331,7 @@
     LOADING;
     [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.imageDict objectForKey:@"url"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         ENDLOADING;
+        sv.hidden = NO;
         
         CGRect rect = bigImageView.frame;
         
@@ -206,7 +343,13 @@
         CGRect rect2 = desLabel.frame;
         if ([[self.imageDict objectForKey:@"cmt"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"cmt"] length]>0) {
             desLabel.text = [self.imageDict objectForKey:@"cmt"];
-            CGSize size = [desLabel.text boundingRectWithSize:CGSizeMake(rect2.size.width, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]} context:nil].size;
+            CGSize size;
+            if ([MyControl isIOS7]) {
+                size = [desLabel.text boundingRectWithSize:CGSizeMake(rect2.size.width, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]} context:nil].size;
+            }else{
+                size = [desLabel.text sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(rect2.size.width, 100) lineBreakMode:1];
+            }
+            
             rect2.size.height = size.height;
             rect2.origin.y = rect.origin.y+rect.size
             .height+10;
@@ -222,7 +365,14 @@
         CGRect rect3 = topicLabel.frame;
         if ([[self.imageDict objectForKey:@"topic_name"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"topic_name"] length]>0) {
             topicLabel.text = [NSString stringWithFormat: @"#%@#", [self.imageDict objectForKey:@"topic_name"]];
-            CGSize size = [topicLabel.text boundingRectWithSize:CGSizeMake(rect3.size.width, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]} context:nil].size;
+            
+            CGSize size;
+            if ([MyControl isIOS7]) {
+                size = [topicLabel.text boundingRectWithSize:CGSizeMake(rect3.size.width, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]} context:nil].size;
+            }else{
+                size = [topicLabel.text sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(rect3.size.width, 100) lineBreakMode:1];
+            }
+//            CGSize size = [topicLabel.text boundingRectWithSize:CGSizeMake(rect3.size.width, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]} context:nil].size;
             rect3.size.height = size.height;
             rect3.origin.y = rect2.origin.y+rect2.size
             .height+5;
@@ -238,7 +388,14 @@
         CGRect rect4 = timeLabel.frame;
         if ([[self.imageDict objectForKey:@"create_time"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"create_time"] length]>0) {
             timeLabel.text = [MyControl timeStringFromStamp:[self.imageDict objectForKey:@"create_time"]];
-            CGSize size = [timeLabel.text boundingRectWithSize:CGSizeMake(rect4.size.width, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+            
+            CGSize size;
+            if ([MyControl isIOS7]) {
+                size = [timeLabel.text boundingRectWithSize:CGSizeMake(rect4.size.width, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+            }else{
+                size = [timeLabel.text sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(rect4.size.width, 100) lineBreakMode:1];
+            }
+//            CGSize size = [timeLabel.text boundingRectWithSize:CGSizeMake(rect4.size.width, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
             rect4.size.height = size.height;
             rect4.origin.y = rect3.origin.y+rect3.size
             .height+5;
@@ -251,7 +408,7 @@
         }
         
         CGRect rect5 = imageBgView.frame;
-        rect5.size.height = rect4.origin.y+rect4.size.height+10;
+        rect5.size.height = rect4.origin.y+rect4.size.height+10+20;
         imageBgView.frame = rect5;
         
         sv.contentSize = CGSizeMake(sv.frame.size.width, rect5.origin.y + rect5.size.height+50);
@@ -281,9 +438,9 @@
     desTv.frame = rect2;
     
     
-    [headBtn setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.petDict objectForKey:@"tx"]]] forState:UIControlStateNormal];
+    [headBtn setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.petDict objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
     
-    [userTx setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [self.petDict objectForKey:@"u_tx"]]]];
+    [userTx setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [self.petDict objectForKey:@"u_tx"]]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"]];
     
     if ([[self.petDict objectForKey:@"gender"] intValue] == 1) {
         sex.image = [UIImage imageNamed:@"man.png"];
@@ -320,17 +477,29 @@
     alphaView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
     [bgView addSubview:alphaView];
     
+    
+    
     /****************正面*******************/
     sv = [[UIScrollView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     sv.showsVerticalScrollIndicator = NO;
     [bgView addSubview:sv];
+    sv.hidden = YES;
     
+    
+    //手势
+    UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+    [sv addGestureRecognizer:tap];
+    [tap release];
     
     imageBgView = [MyControl createViewWithFrame:CGRectMake(13, 30, self.view.frame.size.width-13*2, 400)];
     imageBgView.backgroundColor = [UIColor whiteColor];
     imageBgView.layer.borderWidth = 0.8;
     imageBgView.layer.borderColor = [UIColor colorWithRed:206/255.0 green:206/255.0 blue:206/255.0 alpha:1].CGColor;
     [sv addSubview:imageBgView];
+    
+    UITapGestureRecognizer * tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap2:)];
+    [imageBgView addGestureRecognizer:tap2];
+    [tap2 release];
     
 //    bigImageView = [[ClickImage alloc] initWithFrame:CGRectMake(8, 5, imageBgView.frame.size.width-16, 300)];
 //    bigImageView.canClick = YES;
@@ -365,12 +534,19 @@
     [bgView addSubview:sv2];
     sv2.hidden = YES;
     
+//    UITapGestureRecognizer * tap3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+//    [sv2 addGestureRecognizer:tap3];
+//    [tap3 release];
     
     imageBgView2 = [MyControl createViewWithFrame:CGRectMake(13, 30, self.view.frame.size.width-13*2, 350)];
     imageBgView2.backgroundColor = [UIColor whiteColor];
     imageBgView2.layer.borderWidth = 0.8;
     imageBgView2.layer.borderColor = [UIColor colorWithRed:206/255.0 green:206/255.0 blue:206/255.0 alpha:1].CGColor;
     [sv2 addSubview:imageBgView2];
+    
+//    UITapGestureRecognizer * tap4 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap2:)];
+//    [imageBgView2 addGestureRecognizer:tap4];
+//    [tap4 release];
     
     headBtn = [MyControl createButtonWithFrame:CGRectMake(5, 12, 46, 46) ImageName:@"defaultPetHead.png" Target:self Action:@selector(headBtnClick) Title:nil];
     headBtn.layer.cornerRadius = 23;
@@ -417,6 +593,10 @@
         numLabel.textColor = GRAY;
         [imageBgView2 addSubview:numLabel];
         numLabel.tag = 300+i;
+        
+        UIButton * btn2 = [MyControl createButtonWithFrame:CGRectMake(20+i*(space2+23.5), line.frame.origin.y+15, 23.5+space2-5, 22) ImageName:@"" Target:self Action:@selector(backClick:) Title:nil];
+        [imageBgView2 addSubview:btn2];
+        btn2.tag = 500+i;
     }
     
     UIButton * zanBtn = (UIButton *)[imageBgView2 viewWithTag:200];
@@ -465,6 +645,15 @@
     
 }
 
+-(void)tap:(UIGestureRecognizer *)tap
+{
+    NSLog(@"tap");
+    [self closeClick];
+}
+-(void)tap2:(UIGestureRecognizer *)tap
+{
+    NSLog(@"tap2");
+}
 #pragma mark - 
 -(void)jumpToUserClick
 {
@@ -506,10 +695,16 @@
                         [ControllerManager HUDImageIcon:@"gold.png" showView:self.view yOffset:0 Number:a];
                     }
                     
-                    [self.likerIdArray insertObject:[USER objectForKey:@"usr_id"] atIndex:0];
-                    [self.likerTxArray insertObject:[USER objectForKey:@"tx"] atIndex:0];
+                    UserInfoModel * model = [[UserInfoModel alloc] init];
+                    model.name = [USER objectForKey:@"name"];
+                    model.tx = [USER objectForKey:@"tx"];
+                    model.usr_id = [USER objectForKey:@"usr_id"];
+                    [self.likersArray insertObject:model atIndex:0];
+                    [model release];
+//                    [self.likerIdArray insertObject:[USER objectForKey:@"usr_id"] atIndex:0];
+//                    [self.likerTxArray insertObject:[USER objectForKey:@"tx"] atIndex:0];
                     UILabel * label = (UILabel *)[imageBgView2 viewWithTag:300];
-                    label.text = [NSString stringWithFormat:@"%d", self.likerTxArray.count];
+                    label.text = [NSString stringWithFormat:@"%d", self.likersArray.count];
                     if (triangleIndex == 0) {
                         [tv reloadData];
                     }
@@ -596,13 +791,19 @@
         SendGiftViewController * vc = [[SendGiftViewController alloc] init];
         vc.receiver_aid = [self.petDict objectForKey:@"aid"];
         vc.receiver_name = [self.petDict objectForKey:@"name"];
+        vc.receiver_img_id = [self.imageDict objectForKey:@"img_id"];
         vc.hasSendGift = ^(NSString * itemId){
             NSLog(@"赠送礼物给默认宠物成功!");
             
-            [self.senderIdArray insertObject:[USER objectForKey:@"usr_id"] atIndex:0];
-            [self.senderTxArray insertObject:[USER objectForKey:@"tx"] atIndex:0];
+            UserInfoModel * model = [[UserInfoModel alloc] init];
+            model.name = [USER objectForKey:@"name"];
+            model.tx = [USER objectForKey:@"tx"];
+            model.usr_id = [USER objectForKey:@"usr_id"];
+            [self.sendersArray insertObject:model atIndex:0];
+            [model release];
+            
             UILabel * label = (UILabel *)[imageBgView2 viewWithTag:301];
-            label.text = [NSString stringWithFormat:@"%d", self.senderTxArray.count];
+            label.text = [NSString stringWithFormat:@"%d", self.sendersArray.count];
             if(triangleIndex == 1){
                 [tv reloadData];
             }
@@ -675,7 +876,7 @@
     
     [UIView animateWithDuration:0.25 animations:^{
         bgButton.alpha = 0.3;
-        commentBgView.frame = CGRectMake(0, self.view.frame.size.height-216-40, 320, 40);
+        commentBgView.frame = CGRectMake(0, originalY, 320, 40);
     }];
     [commentTextField becomeFirstResponder];
 }
@@ -688,6 +889,7 @@
     [self.view addSubview:bgButton];
     
     commentBgView = [MyControl createViewWithFrame:CGRectMake(-self.view.frame.size.width, self.view.frame.size.height-216-40, 320, 40)];
+    originalY = commentBgView.frame.origin.y;
     commentBgView.backgroundColor = [UIColor colorWithRed:248/255.0 green:248/255.0 blue:248/255.0 alpha:1];
     [self.view addSubview:commentBgView];
     
@@ -778,6 +980,12 @@
         
         //添加评论
         NSLog(@"%@", [USER objectForKey:@"usr_id"]);
+        [self.cmtTxArray insertObject:[USER objectForKey:@"tx"] atIndex:0];
+//        UserInfoModel * model = [[UserInfoModel alloc] init];
+//        model.tx = [USER objectForKey:@"tx"];
+//        [self.commentersArray insertObject:model atIndex:0];
+//        [model release];
+        
         [self.usrIdArray insertObject:[USER objectForKey:@"usr_id"] atIndex:0];
         //    [self.usrIdArray addObject:[USER objectForKey:@"usr_id"]];
         if (isReply) {
@@ -866,10 +1074,12 @@
         
         [UIView animateWithDuration:0.25 animations:^{
             commentBgView.frame = CGRectMake(0, self.view.frame.size.height-height-commentBgView.frame.size.height, 320, commentBgView.frame.size.height);
+            originalY = commentBgView.frame.origin.y;
         }];
     }else{
         [UIView animateWithDuration:0.25 animations:^{
             commentBgView.frame = CGRectMake(0, self.view.frame.size.height-height-commentBgView.frame.size.height, 320, commentBgView.frame.size.height);
+            originalY = commentBgView.frame.origin.y;
         }];
     }
 }
@@ -877,7 +1087,7 @@
 {
     [commentTextField resignFirstResponder];
     [UIView animateWithDuration:0.3 animations:^{
-        commentBgView.frame = CGRectMake(-self.view.frame.size.width, self.view.frame.size.height-216-40, 320, 40);
+        commentBgView.frame = CGRectMake(-self.view.frame.size.width, originalY, 320, 40);
         bgButton.alpha = 0;
     } completion:^(BOOL finished) {
         bgButton.hidden = YES;
@@ -890,6 +1100,10 @@
     if (actionSheet.tag == 401) {
         if (buttonIndex == 0) {
             //查看大图
+            LargeImage * large = [[LargeImage alloc] initWithFrame:[UIScreen mainScreen].bounds];
+            [self.view addSubview:large];
+            [large modifyUIWithImage:bigImageView.image];
+            [large release];
         }else if (buttonIndex == 1) {
             //私信
             [self sendMessage];
@@ -1024,6 +1238,18 @@
             if(![[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
                 return;
             }
+            UserInfoModel * model = [[UserInfoModel alloc] init];
+            model.name = [USER objectForKey:@"name"];
+            model.tx = [USER objectForKey:@"tx"];
+            model.usr_id = [USER objectForKey:@"usr_id"];
+            [self.sharersArray insertObject:model atIndex:0];
+            [model release];
+            
+            UILabel * label = (UILabel *)[imageBgView2 viewWithTag:303];
+            label.text = [NSString stringWithFormat:@"%d", self.sharersArray.count];
+            if (triangleIndex == 3) {
+                [tv reloadData];
+            }
             //返回gold
             //            int gold = [[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] intValue];
             //            if (gold != [[USER objectForKey:@"gold"] intValue]) {
@@ -1041,10 +1267,37 @@
 -(void)backClick:(UIButton *)btn
 {
     NSLog(@"%d", btn.tag);
-    triangleIndex = btn.tag-200;
+    
+    triangleIndex = btn.tag%100;
+    
+    UIButton * tempBtn = nil;
+    if (btn.tag/100 == 2) {
+        tempBtn = btn;
+    }else if(btn.tag/100 == 5){
+        tempBtn = (UIButton *)[imageBgView2 viewWithTag:200+triangleIndex];
+        if (btn.tag == 501) {
+            if (!isLoaded[1]) {
+                isLoaded[1] = 1;
+                [self loadSendersData];
+            }
+        }else if (btn.tag == 502) {
+            if (!isLoaded[2]) {
+                isLoaded[2] = 1;
+                [self loadCommentersData];
+            }
+        }else if (btn.tag == 503) {
+            if (!isLoaded[3]) {
+                isLoaded[3] = 1;
+                if ([[self.imageDict objectForKey:@"sharers"] isKindOfClass:[NSString class]]) {
+                    [self loadSharersData];
+                }
+                
+            }
+        }
+    }
     
     CGRect rect = triangle.frame;
-    rect.origin.x = btn.frame.origin.x+btn.frame.size.width/2.0-rect.size.width/2.0;
+    rect.origin.x = tempBtn.frame.origin.x+tempBtn.frame.size.width/2.0-rect.size.width/2.0;
     
     [UIView animateWithDuration:0.1 animations:^{
         triangle.frame = rect;
@@ -1074,7 +1327,11 @@
 -(void)closeClick
 {
     NSLog(@"close");
-    [self.view removeFromSuperview];
+    [UIView animateWithDuration:0.5 animations:^{
+        self.view.alpha = 0;
+    }completion:^(BOOL finished) {
+        [self.view removeFromSuperview];
+    }];
 //    [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)headBtnClick
@@ -1088,14 +1345,14 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (triangleIndex == 0) {
-        return self.likerTxArray.count;
+        return self.likersArray.count;
     }else if(triangleIndex == 1){
-        return self.senderTxArray.count;
+        return self.sendersArray.count;
     }else if(triangleIndex == 2){
 //        NSLog(@"%d", self.usrIdArray.count);
         return self.usrIdArray.count;
     }else{
-        return 0;
+        return self.sharersArray.count;
     }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1107,7 +1364,8 @@
             cell = [[[BackImageDetailViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
         }
 //        NSLog(@"%@", self.likerTxArray);
-        [cell configUIWithTx:self.likerTxArray[indexPath.row] Name:@"米钩钩"];
+        UserInfoModel * model = self.likersArray[indexPath.row];
+        [cell configUI:model];
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = 0;
         return cell;
@@ -1117,7 +1375,8 @@
         if (!cell) {
             cell = [[[BackImageDetailViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID2] autorelease];
         }
-        [cell configUIWithTx:self.senderTxArray[indexPath.row] Name:@"米钩钩"];
+        UserInfoModel * model = self.sendersArray[indexPath.row];
+        [cell configUI:model];
         
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = 0;
@@ -1135,14 +1394,20 @@
         float textWidth = [UIScreen mainScreen].bounds.size.width-13*2-10*2-40-10;
         float cellHeight = 0;
         
-        CGSize size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+        CGSize size;
+        if ([MyControl isIOS7]) {
+            size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+        }else{
+            size = [self.bodyArray[indexPath.row] sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(textWidth, 100) lineBreakMode:1];
+        }
+//        CGSize size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
         if (size.height>15.0) {
             cellHeight = 53+size.height-15;
         }else{
             cellHeight = 53.0;
         }
 //        NSLog(@"%f", cellHeight);
-        [cell configUIWithName:self.nameArray[indexPath.row] Cmt:self.bodyArray[indexPath.row] Time:self.createTimeArray[indexPath.row] CellHeight:cellHeight textSize:size];
+        [cell configUIWithName:self.nameArray[indexPath.row] Cmt:self.bodyArray[indexPath.row] Time:self.createTimeArray[indexPath.row] CellHeight:cellHeight textSize:size Tx:self.cmtTxArray[indexPath.row]];
         return cell;
     }else{
         static NSString * cellID4 = @"ID4";
@@ -1150,6 +1415,8 @@
         if (!cell) {
             cell = [[[BackImageDetailViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID4] autorelease];
         }
+        UserInfoModel * model = self.sharersArray[indexPath.row];
+        [cell configUI:model];
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = 0;
         return cell;
@@ -1164,7 +1431,14 @@
         if (self.bodyArray[indexPath.row] == nil) {
             return 53.0;
         }
-        CGSize size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+        
+        CGSize size;
+        if ([MyControl isIOS7]) {
+            size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+        }else{
+            size = [self.bodyArray[indexPath.row] sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(textWidth, 100) lineBreakMode:1];
+        }
+//        CGSize size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
         if (size.height>15.0) {
             return 53+size.height-15;
         }else{
@@ -1179,10 +1453,10 @@
 {
     UserInfoViewController * vc = [[UserInfoViewController alloc] init];
     if (triangleIndex == 0) {
-        vc.usr_id = self.likerIdArray[indexPath.row];
+        vc.usr_id = [self.likersArray[indexPath.row] usr_id];
         [self presentViewController:vc animated:YES completion:nil];
     }else if (triangleIndex == 1) {
-        vc.usr_id = self.senderIdArray[indexPath.row];
+        vc.usr_id = [self.sendersArray[indexPath.row] usr_id];
         [self presentViewController:vc animated:YES completion:nil];
     }else if (triangleIndex == 2) {
         isReply = YES;
@@ -1191,7 +1465,8 @@
 //        vc.usr_id = self.usrIdArray[indexPath.row];
 //        [self presentViewController:vc animated:YES completion:nil];
     }else{
-        
+        vc.usr_id = [self.sharersArray[indexPath.row] usr_id];
+        [self presentViewController:vc animated:YES completion:nil];
     }
     
     [vc release];

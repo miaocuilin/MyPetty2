@@ -79,8 +79,18 @@
 }
 -(void)configUIWithName:(NSString *)name ItemId:(NSString *)itemId Tx:(NSString *)tx
 {
+    if (self.isFromShake) {
+        [self.pickMore setTitle:@"就送这个" forState:UIControlStateNormal];
+        [self.confirmBtn setTitle:@"再摇1次" forState:UIControlStateNormal];
+    }
+    
     NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:itemId];
-    self.titleLabel.text = [NSString stringWithFormat:@"给%@送个礼物", name];
+    if (self.isFromShake) {
+        self.titleLabel.text = @"摇一摇";
+    }else{
+        self.titleLabel.text = [NSString stringWithFormat:@"给%@送个礼物", name];
+    }
+    
     self.giftNameLabel.text = [NSString stringWithFormat:@"%@ x 1", [dict objectForKey:@"name"]];
     
     if ([itemId intValue]>=2000) {
@@ -91,6 +101,10 @@
         self.rqLabel.text = [NSString stringWithFormat:@"人气 +%@", [dict objectForKey:@"add_rq"]];
     }
     self.actLabel.text = [NSString stringWithFormat:@"%@%@", name,  [ControllerManager returnActionStringWithItemId:itemId]];
+    if(self.isFromShake){
+        self.actLabel.text = [NSString stringWithFormat:@"还有 %d 次机会\n每天只能送 1 个礼物哦~", self.leftShakeTimes];
+    }
+    
     self.giftImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", itemId]];
     
     NSString * path = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
@@ -111,6 +125,9 @@
 }
 -(void)closeClick
 {
+    if(!isNotTrue && self.isFromShake){
+        self.closeBlock();
+    }
     [UIView animateWithDuration:0.3 animations:^{
         self.alpha = 0;
     } completion:^(BOOL finished) {
@@ -119,11 +136,23 @@
 }
 -(void)pickMoreClick
 {
+    if (self.isFromShake) {
+        //跳到下个页面
+        self.sendThis();
+    }
+    isNotTrue = YES;
     [self closeClick];
+    
 }
 -(void)confirmClick
 {
-    self.confirm();
+    if (self.isFromShake) {
+        //返回摇动页面
+        self.shakeMore();
+    }else{
+        self.confirm();
+    }
+    isNotTrue = YES;
     [self closeClick];
 }
 /*

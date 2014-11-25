@@ -57,7 +57,7 @@
 #pragma mark - 是否已经上传录音
 - (void)loadIsRecorderData
 {
-    StartLoading;
+    LOADING;
 //    NSLog(@"%@", self.pet_aid);
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
     
@@ -94,8 +94,12 @@
 //                    [request2 release];
                 }
             }
+            ENDLOADING;
+        }else{
+            LOADFAILED;
         }
-        LoadingSuccess;
+        
+        
     }];
     [request release];
 }

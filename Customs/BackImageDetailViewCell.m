@@ -39,12 +39,12 @@
     line.backgroundColor = [ControllerManager colorWithHexString:@"dddddd"];
     [self addSubview:line];
 }
--(void)configUIWithTx:(NSString *)tx Name:(NSString *)userName
+-(void)configUI:(UserInfoModel *)model
 {
-    name.text = userName;
+    name.text = model.name;
     
-    headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-    [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, tx]]];
+//    headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+    [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"]];
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

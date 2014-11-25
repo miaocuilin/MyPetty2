@@ -10,6 +10,8 @@
 #import "GiftShopModel.h"
 #define GRAYBLUECOLOR [UIColor colorWithRed:127/255.0 green:151/255.0 blue:179/255.0 alpha:1]
 #define LIGHTORANGECOLOR [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1]
+#import "ResultOfSendViewController.h"
+
 @interface RockViewController ()
 {
     UILabel *timesLabel;
@@ -75,7 +77,7 @@
 #pragma mark - 加载摇一摇数据
 - (void)loadShakeDataInit
 {
-    StartLoading;
+    LOADING;
 //    self.animalInfoDict = [USER objectForKey:@"petInfoDict"];
     NSString *shakeSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
     NSString *shakeString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",SHAKEAPI, self.pet_aid, shakeSig,[ControllerManager getSID]];
@@ -95,16 +97,18 @@
                 floating1.frame = CGRectMake(230+self.distance, 40, 70, 25);
                 floating2.frame = CGRectMake(23+self.distance, 90, 70, 25);
                 floating3.frame = CGRectMake(180+self.distance, 180, 70, 25);
+                timesLabel.attributedText = nil;
+                timesLabel.text = @"每日第一次成功分享后可以多送1个礼物~";
             }
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
 }
 #pragma mark - 赠送礼物界面
-- (void)sendGiftData
+- (void)pickGift
 {
     if (self.count == 0) {
         self.upView.contentOffset = CGPointMake(300*3, 0);
@@ -147,52 +151,107 @@
 //        model = self.badGiftDataArray[index];
         add_rq = model.add_rq;
     }
-    rewardLabel.text = [NSString stringWithFormat:@"%@",model.name];
-    self.giftName = model.name;
-    
-    rewardImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
-    descRewardLabel.text = [NSString stringWithFormat:@"%@ 人气 %@",self.pet_name, model.add_rq];
-    if ([model.add_rq rangeOfString:@"-"].location == NSNotFound) {
-        descRewardLabel.text = [NSString stringWithFormat:@"%@ 人气 +%@",self.pet_name, model.add_rq];
-    }
+//    rewardLabel.text = [NSString stringWithFormat:@"%@",model.name];
+//    self.giftName = model.name;
+//    
+//    rewardImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",model.no]];
+//    descRewardLabel.text = [NSString stringWithFormat:@"%@ 人气 %@",self.pet_name, model.add_rq];
+//    if ([model.add_rq rangeOfString:@"-"].location == NSNotFound) {
+//        descRewardLabel.text = [NSString stringWithFormat:@"%@ 人气 +%@",self.pet_name, model.add_rq];
+//    }
     AudioServicesPlaySystemSound (soundID);
     //固定礼物1102
 //    NSString *item = @"1102";
 //    NSLog(@"%@--%@", model.name, model.no);
+    AudioServicesPlaySystemSound(soundID2);
+    
+    
+    //跳转到摇完结果页面
+    ResultOfBuyView * result = [[ResultOfBuyView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    result.isFromShake = YES;
+    [UIView animateWithDuration:0.3 animations:^{
+        result.alpha = 1;
+    }];
+    result.leftShakeTimes = self.count-1;
+    [result configUIWithName:self.pet_name ItemId:model.no Tx:self.pet_tx];
+    [self.view addSubview:result];
+    result.sendThis = ^(){
+        //送礼
+        [self sendGift:model];
+    };
+    
+    result.shakeMore = ^(){
+        [UIView animateWithDuration:0.3 animations:^{
+            self.upView.contentOffset = CGPointMake(0, 0);
+        }completion:^(BOOL finished) {
+            self.isShaking = NO;
+        }];
+        timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:4];
+    };
+    
+    result.closeBlock = ^(){
+        [self colseGiftAction];
+    };
+    [model release];
+    
+    
+    if (self.isFromStar) {
+        self.unShakeNum(--self.count);
+    }
+}
+
+
+-(void)sendGift:(GiftShopModel *)model
+{
+    LOADING;
     NSString *item = model.no;
     NSString *sendSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_shake=1&item_id=%@dog&cat", self.pet_aid, item]];
     NSString *sendString = [NSString stringWithFormat:@"%@%@&is_shake=1&item_id=%@&sig=%@&SID=%@",SENDSHAKEGIFT, self.pet_aid,item,sendSig,[ControllerManager getSID]];
     NSLog(@"赠送url:%@",sendString);
     httpDownloadBlock *request  = [[httpDownloadBlock alloc] initWithUrlStr:sendString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"赠送数据：%@",load.dataDict);
-        if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
-//            NSString * level = [NSString stringWithFormat:@"%d", ([item intValue]/100)%10];
-//            NSString * name = item;
-//            [MobClick event:@"send_gift" attributes:@{@"level":level, @"name":name}];
+        if (isFinish) {
+            ENDLOADING;
             
-            int newexp = [[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] intValue];
-            int exp = [[USER objectForKey:@"exp"] intValue];
-            [USER setObject:[NSString stringWithFormat:@"%d", exp+newexp] forKey:@"exp"];
-//            if (exp != newexp && (newexp - exp)>0) {
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                ResultOfSendViewController * send = [[ResultOfSendViewController alloc] init];
+                send.giftName = model.name;
+                
+                [self.view addSubview:send.view];
+                [send configUIWithName:self.pet_name ItemId:model.no Tx:self.pet_tx];
+                [UIView animateWithDuration:0.3 animations:^{
+                    send.view.alpha = 1;
+                }];
+                
+                send.closeBlock = ^(){
+                    [self colseGiftAction];
+                    [send release];
+                };
+
+                
+                int newexp = [[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] intValue];
+                int exp = [[USER objectForKey:@"exp"] intValue];
+                [USER setObject:[NSString stringWithFormat:@"%d", exp+newexp] forKey:@"exp"];
+
                 int index = newexp;
-                self.count--;
-                AudioServicesPlaySystemSound(soundID2);
-                self.isShaking = NO;
-                self.upView.contentOffset = CGPointMake(self.upView.frame.size.width, 0);
-                timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:4];
+                //            AudioServicesPlaySystemSound(soundID2);
+//                self.isShaking = NO;
+//                self.upView.contentOffset = CGPointMake(self.upView.frame.size.width, 0);
+//                timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:4];
                 [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
-            //
-            if (self.isFromStar) {
-                self.unShakeNum(self.count);
+                //
+                if (self.isFromStar) {
+                    self.unShakeNum(self.count);
+                }
+
             }
-            
-//            }
         }else{
-            [MyControl createAlertViewWithTitle:[load.dataDict objectForKey:@"errorMessage"]];
+            LOADFAILED;
         }
+        
     }];
     [request release];
-    [model release];
+    
 }
 #pragma mark - 通知触发的方法
 - (void)shakeAction
@@ -201,7 +260,8 @@
         if (!self.isShaking) {
             AudioServicesPlaySystemSound (soundID);
             self.isShaking = YES;
-            [self sendGiftData];
+            [self pickGift];
+            self.count -= 1;
         }
     }else{
         self.upView.contentOffset = CGPointMake(self.upView.frame.size.width*3, 0);
@@ -209,7 +269,8 @@
         floating1.frame = CGRectMake(230+self.distance, 40, 70, 25);
         floating2.frame = CGRectMake(23+self.distance, 90, 70, 25);
         floating3.frame = CGRectMake(180+self.distance, 180, 70, 25);
-
+        timesLabel.attributedText = nil;
+        timesLabel.text = @"每日第一次成功分享后可以多送1个礼物~";
     }
 }
 #pragma mark - 创建界面
@@ -332,12 +393,38 @@
     shakeDescLabel.textAlignment = NSTextAlignmentCenter;
     shakeDescLabel.textColor = GRAYBLUECOLOR;
     [self.upView addSubview:shakeDescLabel];
-    UIImageView *shakeBg4 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*3, 150, upViewWidth, 120) ImageName:@"grassbg.png"];
+    
+    UIView * shakeBg4 = [MyControl createViewWithFrame:CGRectMake(upViewWidth*3, 140, upViewWidth, 120+53)];
     [self.upView addSubview:shakeBg4];
     
+    UIImageView * grassBg4 = [MyControl createImageViewWithFrame:CGRectMake(0, 0, upViewWidth, 120) ImageName:@"grassbg.png"];
+    [shakeBg4 addSubview:grassBg4];
+    
     //259  227
-    UIImageView *shakeImageView = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 65, 0, 130, 113) ImageName:@"shake_nochance.png"];
+    UIImageView *shakeImageView = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth/2 - 65, 0, 130, 113) ImageName:@"record_upload.png"];
     [shakeBg4 addSubview:shakeImageView];
+    
+    //分享
+    UIView * shareBg = [MyControl createViewWithFrame:CGRectMake(0, 120, upViewWidth, 53)];
+    [shakeBg4 addSubview:shareBg];
+    
+    UIView * shareAlphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, shareBg.frame.size.width, shareBg.frame.size.height)];
+    shareAlphaView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
+    [shareBg addSubview:shareAlphaView];
+    
+    UILabel * shareLabel = [MyControl createLabelWithFrame:CGRectMake(15, 0, 50, shareBg.frame.size.height) Font:12 Text:@"分享"];
+    shareLabel.textColor = BGCOLOR;
+    [shareBg addSubview:shareLabel];
+    
+    NSArray * array = @[@"more_weixin.png", @"more_friend.png", @"more_sina.png"];
+    float space = (upViewWidth-50-50-37*3)/2.0;
+    
+    for (int i=0; i<3; i++) {
+        UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(50+(space+37)*i, 8, 37, 37) ImageName:array[i] Target:self Action:@selector(shareClick:) Title:nil];
+        [shareBg addSubview:btn];
+        btn.tag = 100+i;
+    }
+    
     //底部视图
     
     
@@ -374,7 +461,8 @@
     [helpPetString release];
     [downView addSubview:helpPetLabel];
     
-    timesLabel = [MyControl createLabelWithFrame:CGRectMake(70, 27, 200, 20) Font:12 Text:nil];
+    timesLabel = [MyControl createLabelWithFrame:CGRectMake(70, 27, 220, 20) Font:12 Text:nil];
+    timesLabel.textColor = GRAYBLUECOLOR;
     timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:4];
     [downView addSubview:timesLabel];
 #pragma mark - 捣捣乱
@@ -391,12 +479,60 @@
         shakeBg3.image = [UIImage imageNamed:@"troublenothing.png"];
         descNoGiftLabel.text = @"哈哈，上天没给你机会\n恶作剧不是每一个人都可以哟~";
         shakeDescLabel.text = @"够了~你真是够了！\n你今天的捣捣乱次数用完啦~\n换个萌主继续捣乱吧~";
-        shakeBg4.image = [UIImage imageNamed:@"troublenothing.png"];
+        grassBg4.image = [UIImage imageNamed:@"troublenothing.png"];
         shakeImageView.hidden = YES;
         helpPetLabel.attributedText = [self firstString:@"给  恶作剧" formatString:self.pet_name insertAtIndex:2];
     }
 }
 #pragma mark - button点击事件
+//分享
+- (void)shareClick:(UIButton *)sender
+{
+    //截图
+    UIImage * image = [MyControl imageWithView:totalView];
+    
+    /**************/
+    if(sender.tag == 100){
+        NSLog(@"微信");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+            }else{
+                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+            }
+            
+        }];
+    }else if(sender.tag == 101){
+        NSLog(@"朋友圈");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+            }else{
+                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+            }
+            
+        }];
+    }else if(sender.tag == 102){
+        NSLog(@"微博");
+        NSString * str = [NSString stringWithFormat:@"木有摇一摇次数了，好忧桑，你也想试试吗？http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+            }else{
+                NSLog(@"失败原因：%@", response);
+                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+            }
+            
+        }];
+    }
+}
 - (void)colseGiftAction
 {
     [self.view removeFromSuperview];

@@ -47,6 +47,7 @@
     [self createFakeNavigation];
     
 //    [self createArrow];
+    self.category = 1;
     
     [self loadData];
 //    [self loadCountryList];
@@ -257,27 +258,35 @@
         [cell configUIWithName:model.name rq:model.t_contri rank:indexPath.row+1 upOrDown:model.vary shouldLarge:NO];
     }
     
-    if ([model.tx isEqualToString:@""]) {
-        cell.headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
-    }else{
-        NSString *headImagePath = [DOCDIR stringByAppendingString:model.tx];
-        UIImage *image = [UIImage imageWithContentsOfFile:headImagePath];
-        if (image) {
-            cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(32, 32)];;
-        }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",USERTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-//                NSLog(@"load.image:%@",load.dataImage);
-                if (isFinish) {
-                    if (load.dataImage == NULL) {
-                        cell.headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
-                    }else{
-                        cell.headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(32, 32)];;
-                    }
-                }
-            }];
-            [request release];
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    cell.headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+    [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx]] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+        cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(64, 64)];
+        if (!image) {
+            cell.headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
         }
-    }
+    }];
+//    if ([model.tx isEqualToString:@""]) {
+//        cell.headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+//    }else{
+//        NSString *headImagePath = [DOCDIR stringByAppendingString:model.tx];
+//        UIImage *image = [UIImage imageWithContentsOfFile:headImagePath];
+//        if (image) {
+//            cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(32, 32)];;
+//        }else{
+//            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",USERTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+////                NSLog(@"load.image:%@",load.dataImage);
+//                if (isFinish) {
+//                    if (load.dataImage == NULL) {
+//                        cell.headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
+//                    }else{
+//                        cell.headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(32, 32)];;
+//                    }
+//                }
+//            }];
+//            [request release];
+//        }
+//    }
     
     if ([titleBtn.currentTitle isEqualToString:@"总贡献榜"]) {
         cell.rqNum.text = model.t_contri;
@@ -351,7 +360,7 @@
 
     /*****************************/
     
-    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130-10, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"总贡献榜"];
+    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130-10, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"昨日贡献"];
     titleBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     [titleBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [navView addSubview:titleBtn];

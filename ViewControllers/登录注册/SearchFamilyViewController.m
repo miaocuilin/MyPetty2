@@ -377,11 +377,17 @@
         
         //给出加入提示
         AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-        view.AlertType = 2;
+        int a = [[USER objectForKey:@"countryNum"] intValue];
+        if(a>=10){
+            view.AlertType = 3;
+            view.AlertType = a+1;
+        }else{
+            view.AlertType = 2;
+        }
         [view makeUI];
         view.jump = ^(){
-            [MyControl startLoadingWithStatus:@"加入中..."];
-            
+//            [MyControl startLoadingWithStatus:@"加入中..."];
+            LOADING;
             PetInfoModel * model = self.tempDataArray[button.tag-200];
             NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", model.aid];
             NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", JOINFAMILYAPI, model.aid, [MyMD5 md5:code], [ControllerManager getSID]];
@@ -389,7 +395,11 @@
             httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     NSLog(@"--%@", load.dataDict);
-                    [MyControl loadingSuccessWithContent:@"加入成功^_^" afterDelay:0.5f];
+                    ENDLOADING;
+//                    [MyControl loadingSuccessWithContent:@"加入成功^_^" afterDelay:0.5f];
+                    if (a>=10) {
+                        [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-(a+1)*5] forKey:@"gold"];
+                    }
                     //捧Ta成功界面
                     NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
                     noClose.confirm = ^(){
@@ -404,7 +414,8 @@
                         noClose.alpha = 1;
                     }];
                 }else{
-                    [MyControl loadingFailedWithContent:@"加入失败-_-!" afterDelay:0.5f];
+                    LOADFAILED;
+//                    [MyControl loadingFailedWithContent:@"加入失败-_-!" afterDelay:0.5f];
                 }
             }];
             [request release];

@@ -36,7 +36,7 @@
     
     float Width = [UIScreen mainScreen].bounds.size.width-13*2-10*2;
     
-    desLabel = [MyControl createLabelWithFrame:CGRectMake(45, 30, Width-40-10, 15) Font:12 Text:nil];
+    desLabel = [MyControl createLabelWithFrame:CGRectMake(45, 30, Width-40-10-35, 15) Font:12 Text:nil];
     desLabel.textColor = [ControllerManager colorWithHexString:@"3d3d3d"];
     [self addSubview:desLabel];
     
@@ -49,9 +49,23 @@
     line = [MyControl createViewWithFrame:CGRectMake(40, 53-1, Width-40, 1)];
     line.backgroundColor = [ControllerManager colorWithHexString:@"dddddd"];
     [self addSubview:line];
+    
+    reportBtn = [MyControl createButtonWithFrame:CGRectMake(Width-5-25, 28, 18*31/26.0, 18) ImageName:@"grayAlert.png" Target:self Action:@selector(report) Title:nil];
+    [self addSubview:reportBtn];
 }
--(void)configUIWithName:(NSString *)nameStr Cmt:(NSString *)cmt Time:(NSString *)timeStr CellHeight:(float)cellHeight textSize:(CGSize)textSize Tx:(NSString *)tx
+-(void)report
 {
+    NSLog(@"report");
+    self.reportBlock();
+}
+-(void)configUIWithName:(NSString *)nameStr Cmt:(NSString *)cmt Time:(NSString *)timeStr CellHeight:(float)cellHeight textSize:(CGSize)textSize Tx:(NSString *)tx isTest:(BOOL)isTest
+{
+    if (!isTest) {
+        reportBtn.hidden = YES;
+    }else{
+        reportBtn.hidden = NO;
+    }
+    
     if (![tx isEqualToString:@"0"]) {
         [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, tx]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"]];
     }else{
@@ -64,6 +78,7 @@
     line.frame = lineRect;
     
 //    NSLog(@"%f", self.frame.size.height);
+    
     NSString * name1 = nil;
     NSString * name2 = nil;
     NSString * combineStr = nil;

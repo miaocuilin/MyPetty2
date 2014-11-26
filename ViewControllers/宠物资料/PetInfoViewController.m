@@ -140,6 +140,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [self.view bringSubviewToFront:self.menuBgBtn];
 //    [self.view bringSubviewToFront:self.menuBgView];
 //    [self loadAttentionAPI];
+    self.menuBgBtn.hidden = YES;
+    self.menuBgView.hidden = YES;
 }
 #pragma mark - 关系API
 - (void)loadAttentionAPI
@@ -190,10 +192,51 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 }
                 [model release];
             }
+            if (array.count) {
+                self.lastNid = [self.newsDataArray[self.newsDataArray.count-1] nid];
+            }
+            
             
             [tv reloadData];
             ENDLOADING;
         }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
+}
+- (void)loadMoreKingDynamicData
+{
+    //1 成为粉丝 2 加入王国 3发图片 4送礼物 5叫一叫 6逗一逗 7捣捣乱
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&nid=%@dog&cat", self.aid, self.lastNid]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&nid=%@&sig=%@&SID=%@", PETNEWSAPI2, self.aid, self.lastNid, sig, [ControllerManager getSID]];
+    NSLog(@"国王动态API2:%@", url);
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"国王动态数据2：%@",load.dataDict);
+//            [self.newsDataArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for (int i=0; i<array.count; i++) {
+                PetNewsModel * model = [[PetNewsModel alloc] init];
+                [model setValuesForKeysWithDictionary:array[i]];
+                model.content = [array[i] objectForKey:@"content"];
+                if([model.type intValue] != 1){
+                    if(!(([model.type intValue] == 4 || [model.type intValue] == 7) && ([[model.content objectForKey:@"item_id"] intValue]%10 >4 || [[model.content objectForKey:@"item_id"] intValue]>=2200))){
+                        [self.newsDataArray addObject:model];
+                    }
+                    
+                }
+                [model release];
+            }
+            if (array.count) {
+                self.lastNid = [self.newsDataArray[self.newsDataArray.count-1] nid];
+            }
+            [tv footerEndRefreshing];
+            [tv reloadData];
+            ENDLOADING;
+            
+        }else{
+            [tv footerEndRefreshing];
             LOADFAILED;
         }
     }];
@@ -806,45 +849,59 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             if (isFinish) {
                 NSArray * array = [load.dataDict objectForKey:@"data"];
                 if (array.count >= 10) {
+                    if((array.count+1)*5>[[USER objectForKey:@"gold"] intValue]){
+                        //余额不足
+                        [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                        return;
+                    }
                     view.AlertType = 3;
+                    view.CountryNum = array.count+1;
                     [view makeUI];
                 }else{
                     view.AlertType = 2;
                     [view makeUI];
-                    view.jump = ^(){
-                        [MyControl startLoadingWithStatus:@"加入中..."];
-                        NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-                        NSString *joinPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,self.aid,joinPetCricleSig,[ControllerManager getSID]];
-                        NSLog(@"加入圈子:%@",joinPetCricleString);
-                        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:joinPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                            if (isFinish) {
-                                NSLog(@"加入成功数据：%@",load.dataDict);
-                                if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
-                                    addBtn.selected = YES;
-                                    //                        [alertView hide:YES];
-                                    attentionBtn.selected = YES;
-                                    //刷新捣捣乱--》摇一摇
-                                    self.label1.text = @"摇一摇";
-                                    [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
-                                }
-                                [MyControl loadingSuccessWithContent:@"加入成功" afterDelay:0.5f];
-                                //捧Ta成功界面
-                                NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-                                noClose.confirm = ^(){};
-                                [self.view addSubview:noClose];
-                                NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
-                                [noClose configUIWithTx:[petInfoDict objectForKey:@"tx"] Name:[petInfoDict objectForKey:@"name"] Percent:percent];
-                                [UIView animateWithDuration:0.3 animations:^{
-                                    noClose.alpha = 1;
-                                }];
-                            }else{
-                                [MyControl loadingFailedWithContent:@"加入失败" afterDelay:0.8f];
-                                NSLog(@"加入国家失败");
-                            }
-                        }];
-                        [request release];
-                    };
+                    
                 }
+                view.jump = ^(){
+//                    [MyControl startLoadingWithStatus:@"加入中..."];
+                    LOADING;
+                    NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+                    NSString *joinPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,self.aid,joinPetCricleSig,[ControllerManager getSID]];
+                    NSLog(@"加入圈子:%@",joinPetCricleString);
+                    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:joinPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                        if (isFinish) {
+                            NSLog(@"加入成功数据：%@",load.dataDict);
+                            if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                                addBtn.selected = YES;
+                                //                        [alertView hide:YES];
+                                attentionBtn.selected = YES;
+                                //刷新捣捣乱--》摇一摇
+                                self.label1.text = @"摇一摇";
+                                [self.btn1 setBackgroundImage:[UIImage imageNamed:@"shake.png"] forState:UIControlStateNormal];
+                                if (array.count>=10) {
+                                    [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-(array.count+1)*5] forKey:@"gold"];
+                                }
+
+                            }
+//                            [MyControl loadingSuccessWithContent:@"加入成功" afterDelay:0.5f];
+                            ENDLOADING;
+                            //捧Ta成功界面
+                            NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                            noClose.confirm = ^(){};
+                            [self.view addSubview:noClose];
+                            NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
+                            [noClose configUIWithTx:[petInfoDict objectForKey:@"tx"] Name:[petInfoDict objectForKey:@"name"] Percent:percent];
+                            [UIView animateWithDuration:0.3 animations:^{
+                                noClose.alpha = 1;
+                            }];
+                        }else{
+//                            [MyControl loadingFailedWithContent:@"加入失败" afterDelay:0.8f];
+                            LOADFAILED;
+                            NSLog(@"加入国家失败");
+                        }
+                    }];
+                    [request release];
+                };
             }
         }];
         [request release];
@@ -1394,6 +1451,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     tv.dataSource = self;
     tv.separatorStyle = 0;
     [sv addSubview:tv];
+    [tv addFooterWithCallback:^{
+        [self loadMoreKingDynamicData];
+    }];
     
     UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
     tv.tableHeaderView = tvHeaderView;
@@ -1598,10 +1658,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [cell modifyWithModel:model PetName:[petInfoDict objectForKey:@"name"]];
     
         cell.clickImage = ^(){
-            PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+            FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
             vc.img_id = [[model content] objectForKey:@"img_id"];
-            vc.usr_id = [[model content] objectForKey:@"usr_id"];
-            [self presentViewController:vc animated:YES completion:nil];
+//            vc.usr_id = [[model content] objectForKey:@"usr_id"];
+//            [self presentViewController:vc animated:YES completion:nil];
+            [self.view addSubview:vc.view];
             [vc release];
         };
         cell.sendGift = ^(){
@@ -1667,10 +1728,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         return cell;
     }else if (tableView == tv3) {
         static NSString * cellID3 = @"ID3";
-        MyCountryContributeCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID3];
-        if(!cell){
-            cell = [[[NSBundle mainBundle] loadNibNamed:@"MyCountryContributeCell" owner:self options:nil] objectAtIndex:0];
+        BOOL nibsRegistered = NO;
+        if (!nibsRegistered) {
+            UINib * nib = [UINib nibWithNibName:@"MyCountryContributeCell" bundle:nil];
+            [tableView registerNib:nib forCellReuseIdentifier:cellID3];
+            nibsRegistered = YES;
         }
+        MyCountryContributeCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID3];
+//        static NSString * cellID3 = @"ID3";
+//        MyCountryContributeCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID3];
+//        if(!cell){
+//            cell = [[[NSBundle mainBundle] loadNibNamed:@"MyCountryContributeCell" owner:self options:nil] objectAtIndex:0];
+//        }
         cell.selectionStyle = 0;
         
         if (indexPath.row == 0) {

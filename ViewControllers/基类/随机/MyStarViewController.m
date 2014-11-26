@@ -73,7 +73,7 @@
 //}
 -(void)loadData
 {
-    StartLoading;
+    LOADING;
     NSString * url = [NSString stringWithFormat:@"%@%@", MYSTARAPI, [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * requset = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -91,10 +91,10 @@
             }
             [self.tv headerEndRefreshing];
             [self.tv reloadData];
-            LoadingSuccess;
+            ENDLOADING;
         }else{
             [self.tv headerEndRefreshing];
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [requset release];
@@ -351,9 +351,11 @@
         }
     };
     cell.imageClick = ^(NSString * img_id){
-        PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+        FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = img_id;
-        [self presentViewController:vc animated:YES completion:nil];
+        
+        MainViewController * main = [ControllerManager shareMain];
+        [main.view addSubview:vc.view];
         [vc release];
     };
     [cell adjustCellHeight:model.images.count];

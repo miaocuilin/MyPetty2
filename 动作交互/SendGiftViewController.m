@@ -343,16 +343,7 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
     
     /*********************************************/
 //    for(int i=0;i<self.bagItemIdArray.count+self.tempGiftArray.count;i++){

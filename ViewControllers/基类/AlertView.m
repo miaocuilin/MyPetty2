@@ -51,7 +51,7 @@
     //2.加入
     NSArray * array2 = @[@"捧了人家可要对人家负责呀~", @"一定要让TA成为宇宙中", @"最闪亮的萌星~"];
     //3.加入满了提示
-    NSArray * array3 = @[@"暂时只能捧10个萌星~", @"你的名额占满了~"];
+    NSArray * array3 = @[@"本次成功捧星或创建萌星", @"会消耗您100金币哦~"];
     //4.取消关注
     NSArray * array4 = @[@"亲爱的，真的忍心取消关注我么？", @"这是真的么~", @"是么~"];
     //5.退出国家
@@ -65,20 +65,43 @@
         
         [self.confirmBtn setTitle:@"走起" forState:UIControlStateNormal];
         tempArray = array;
-    }else if (self.AlertType == 2) {
+    }else if (self.AlertType == 3 || self.AlertType == 2) {
         [self.confirmBtn setTitle:@"没问题" forState:UIControlStateNormal];
-        tempArray = array2;
-        UILabel * tip = [MyControl createLabelWithFrame:CGRectMake(0, self.confirmBtn.frame.origin.y+self.confirmBtn.frame.size.height, self.frame.size.width, 15) Font:10 Text:@"温馨提示：每个人只能捧红10个萌星"];
+        
+        UILabel * tip = [MyControl createLabelWithFrame:CGRectMake(0, self.confirmBtn.frame.origin.y+self.confirmBtn.frame.size.height, self.frame.size.width, 15) Font:10 Text:@"温馨提示：每人可免费捧10个萌星~"];
         tip.textColor = [UIColor colorWithRed:188/255.0 green:188/255.0 blue:188/255.0 alpha:1];
+        
+        if(self.AlertType == 2){
+            tempArray = array2;
+        }else{
+//            tempArray = array3;
+            tip.text = nil;
+            NSString * goldNum = nil;
+            if (self.CountryNum<20) {
+                goldNum = [NSString stringWithFormat:@"%d", self.CountryNum*5];
+            }else{
+                goldNum = @"100";
+            }
+            NSString * str2 = [NSString stringWithFormat:@"会消耗您%@金币哦~", goldNum];
+            tempArray = @[@"本次成功捧星或创建萌星", str2];
+            
+            NSMutableAttributedString * mutableString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"温馨提示：本次会消耗您%@金币哦！！！", goldNum]];
+            [mutableString addAttributes:@{NSForegroundColorAttributeName:[UIColor redColor]} range:NSMakeRange(11, goldNum.length)];
+            tip.attributedText = mutableString;
+            [mutableString release];
+            
+        }
+
         tip.textAlignment = NSTextAlignmentCenter;
         [self addSubview:tip];
-    }else if (self.AlertType == 3 || self.AlertType == 6) {
-        [self.confirmBtn setTitle:@"哎~好吧" forState:UIControlStateNormal];
-        if (self.AlertType == 3) {
-            tempArray = array3;
-        }else{
+    }else if (self.AlertType == 6) {
+//        if (self.AlertType == 3) {
+//            tempArray = array3;
+//            [self.confirmBtn setTitle:@"没问题" forState:UIControlStateNormal];
+//        }else{
             tempArray = array6;
-        }
+            [self.confirmBtn setTitle:@"哎~好吧" forState:UIControlStateNormal];
+//        }
         
     }else if (self.AlertType == 4) {
 //        self.confirmBtn.titleLabel.text = @"额~是的";
@@ -144,7 +167,7 @@
     }else if(self.AlertType == 5){
         //退出国家
     }
-    if (self.AlertType != 3 && self.AlertType != 6) {
+    if (self.AlertType != 6) {
         self.jump();
     }
     

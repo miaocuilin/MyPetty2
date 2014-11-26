@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import "ClickImage.h"
+#import "ClickImage.h"
 @interface FrontImageDetailViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UITextFieldDelegate>
 {
     UIView * bgView;
@@ -18,7 +18,7 @@
     UIView * imageBgView;
     UIView * imageBgView2;
     //
-    UIImageView * bigImageView;
+    ClickImage * bigImageView;
     UILabel * desLabel;
     UILabel * topicLabel;
     UILabel * timeLabel;
@@ -36,6 +36,9 @@
     
     UISwipeGestureRecognizer * swipeLeft;
     UISwipeGestureRecognizer * swipeRight;
+    
+    UISwipeGestureRecognizer * swipeLeft2;
+    UISwipeGestureRecognizer * swipeRight2;
     //是否在第二页
     BOOL isBackSide;
     
@@ -88,4 +91,6 @@
 @property (nonatomic,retain)NSMutableArray * sendersArray;
 @property (nonatomic,retain)NSMutableArray * commentersArray;
 @property (nonatomic,retain)NSMutableArray * sharersArray;
+
+
 @end

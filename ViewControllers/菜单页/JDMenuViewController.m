@@ -275,7 +275,7 @@
     UIButton * rqBtn = [MyControl createButtonWithFrame:CGRectMake(15, 15, 166/2, 51/2) ImageName:@"sidePopular.png" Target:self Action:@selector(rqBtnClick) Title:@"萌星人气榜"];
     //6 6
     rqBtn.titleLabel.font = [UIFont systemFontOfSize:13];
-    [sv addSubview:rqBtn];
+    [sv3 addSubview:rqBtn];
     
 //    UIView * searchBgView = [MyControl createViewWithFrame:CGRectMake(15, 15+20, 340/2, 25)];
 //    searchBgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
@@ -674,6 +674,26 @@
         button.tag = 1000+i;
     }
     /*************************/
+    //切换账号与添加萌星
+//    UIButton * changeAccount = [MyControl createButtonWithFrame:CGRectMake(15, [UIScreen mainScreen].bounds.size.height-15-28-20, 83, 28) ImageName:@"" Target:self Action:@selector(changeAccountClick) Title:@"切换账号"];
+//    changeAccount.titleLabel.font = [UIFont systemFontOfSize:15];
+//    changeAccount.layer.cornerRadius = 13;
+//    changeAccount.layer.masksToBounds = YES;
+//    changeAccount.layer.borderColor = [UIColor whiteColor].CGColor;
+//    changeAccount.layer.borderWidth = 1;
+//    changeAccount.showsTouchWhenHighlighted = YES;
+//    [sv3 addSubview:changeAccount];
+    
+    //83  28
+    UIButton * addPetBtn = [MyControl createButtonWithFrame:CGRectMake(OFFSET-10-83, [UIScreen mainScreen].bounds.size.height-15-28-20, 83, 28) ImageName:@"" Target:self Action:@selector(addPetClick) Title:@"添加萌星"];
+    addPetBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    addPetBtn.layer.cornerRadius = 13;
+    addPetBtn.layer.masksToBounds = YES;
+    addPetBtn.layer.borderColor = [UIColor whiteColor].CGColor;
+    addPetBtn.layer.borderWidth = 1;
+    addPetBtn.showsTouchWhenHighlighted = YES;
+    [sv3 addSubview:addPetBtn];
+    
     //猫狗切换
 //    UIView * switchView = [MyControl createImageViewWithFrame:CGRectMake(350/2, sv.contentSize.height-40, 30, 30) ImageName:@""];
 //    switchView.backgroundColor = [ControllerManager colorWithHexString:@"944131"];
@@ -694,6 +714,58 @@
     tv.backgroundColor = [UIColor clearColor];
     tv.separatorStyle = 0;
     [sv addSubview:tv];
+}
+-(void)changeAccountClick
+{
+    NSLog(@"changeAccount");
+}
+-(void)addPetClick
+{
+    if (![ControllerManager getIsSuccess]) {
+        ShowAlertView;
+        return;
+    }
+    LOADING;
+    NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            ENDLOADING;
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            [USER setObject:[NSString stringWithFormat:@"%d", array.count] forKey:@"countryNum"];
+            if (array.count>=10) {
+                NSLog(@"%@", [USER objectForKey:@"gold"]);
+                if((array.count+1)*5>[[USER objectForKey:@"gold"] intValue]){
+                    //余额不足
+                    [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                    return;
+                }
+                AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                view.AlertType = 3;
+                view.CountryNum = array.count;
+                view.jump = ^(){
+                    ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+                    vc.isOldUser = YES;
+                    vc.isFromAdd = YES;
+                    [self presentViewController:vc animated:YES completion:nil];
+                    [vc release];
+                };
+                [view makeUI];
+                [self.view addSubview:view];
+                [view release];
+            }else{
+                ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+                vc.isOldUser = YES;
+                vc.isFromAdd = YES;
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            }
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
 }
 -(void)imageClick{}
 -(void)rqBtnClick

@@ -120,6 +120,8 @@
 //检查更新
 #define UPDATEAPI @"http://123.57.39.48/index.php?r=user/upgradeApi&version="
 
+//
+#define SHAKESHAREAPI @"http://123.57.39.48/index.php?r=animal/shakeShareApi&aid="
 
 //IP头API
 #define IPURL @"http://54.199.161.210/dc/index.php"

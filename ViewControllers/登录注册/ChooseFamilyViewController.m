@@ -490,16 +490,24 @@
 {
     NSLog(@"join-%d", button.tag-200);
     
-    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
     
     if ([ControllerManager getIsSuccess]) {
         
         //给出加入提示
         AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-        view.AlertType = 2;
+        int a = [[USER objectForKey:@"countryNum"] intValue];
+        if(a>=10){
+            view.AlertType = 3;
+            view.AlertType = a+1;
+        }else{
+            view.AlertType = 2;
+        }
+        
         [view makeUI];
         view.jump = ^(){
-            [MMProgressHUD showWithStatus:@"加入中..."];
+//            [MMProgressHUD showWithStatus:@"加入中..."];
+            LOADING;
             
             PetInfoModel * model = self.limitDataArray[button.tag-200];
             NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", model.aid];
@@ -508,7 +516,11 @@
             httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     NSLog(@"--%@", load.dataDict);
-                    [MMProgressHUD dismissWithSuccess:@"加入成功^_^" title:nil afterDelay:0.5];
+                    ENDLOADING;
+                    if (a>=10) {
+                        [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-(a+1)*5] forKey:@"gold"];
+                    }
+//                    [MMProgressHUD dismissWithSuccess:@"加入成功^_^" title:nil afterDelay:0.5];
                     //刷新列表
                     //[self loadUserPetsList];
                     //捧Ta成功界面
@@ -524,7 +536,7 @@
                         noClose.alpha = 1;
                     }];
                 }else{
-                    LoadingFailed;
+                    LOADFAILED;
 //                    [MMProgressHUD dismissWithError:@"加入失败-_-!" afterDelay:0.5];
                 }
             }];

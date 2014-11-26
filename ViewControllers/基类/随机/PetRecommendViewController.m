@@ -47,7 +47,7 @@
     }
     
     NSLog(@"%@", url);
-    StartLoading;
+    LOADING;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
@@ -65,10 +65,10 @@
             }
             [self.tv headerEndRefreshing];
             [self.tv reloadData];
-            LoadingSuccess;
+            ENDLOADING;
         }else{
             [self.tv headerEndRefreshing];
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -149,42 +149,55 @@
                 if (isFinish) {
                     NSArray * array = [load.dataDict objectForKey:@"data"];
                     if (array.count >= 10) {
+                        if((array.count+1)*5>[[USER objectForKey:@"gold"] intValue]){
+                            //余额不足
+                            [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                            return;
+                        }
                         view.AlertType = 3;
+                        view.CountryNum = array.count+1;
                         [view makeUI];
                     }else{
                         view.AlertType = 2;
                         [view makeUI];
-                        view.jump = ^(){
-                            [MyControl startLoadingWithStatus:@"加入中..."];
-                            NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",aid]];
-                            NSString *joinPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,aid,joinPetCricleSig,[ControllerManager getSID]];
-                            NSLog(@"加入圈子:%@",joinPetCricleString);
-                            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:joinPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                                if (isFinish) {
-                                    NSLog(@"加入成功数据：%@",load.dataDict);
-                                    if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
-                                        cell.pBtn.selected = YES;
-                                    }
-                                    [MyControl loadingSuccessWithContent:@"加入成功" afterDelay:0.5f];
-                                    //捧Ta成功界面
-                                    NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-                                    noClose.confirm = ^(){};
-                                    MainViewController * main = [ControllerManager shareMain];
-                                    [main.view addSubview:noClose];
-                                    NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
-                                    [noClose configUIWithTx:model.tx Name:model.name Percent:percent];
-                                    [UIView animateWithDuration:0.3 animations:^{
-                                        noClose.alpha = 1;
-                                    }];
-                                    
-                                }else{
-                                    [MyControl loadingFailedWithContent:@"加入失败" afterDelay:0.8f];
-                                    NSLog(@"加入国家失败");
-                                }
-                            }];
-                            [request release];
-                        };
                     }
+                    view.jump = ^(){
+//                        [MyControl startLoadingWithStatus:@"加入中..."];
+                        LOADING;
+                        NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",aid]];
+                        NSString *joinPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,aid,joinPetCricleSig,[ControllerManager getSID]];
+                        NSLog(@"加入圈子:%@",joinPetCricleString);
+                        httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:joinPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                            if (isFinish) {
+                                NSLog(@"加入成功数据：%@",load.dataDict);
+                                if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                                    if (array.count>=10) {
+                                        [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-(array.count+1)*5] forKey:@"gold"];
+                                    }
+                                    
+                                    cell.pBtn.selected = YES;
+                                }
+                                ENDLOADING;
+//                                [MyControl loadingSuccessWithContent:@"加入成功" afterDelay:0.5f];
+                                //捧Ta成功界面
+                                NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                                noClose.confirm = ^(){};
+                                MainViewController * main = [ControllerManager shareMain];
+                                [main.view addSubview:noClose];
+                                NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
+                                [noClose configUIWithTx:model.tx Name:model.name Percent:percent];
+                                [UIView animateWithDuration:0.3 animations:^{
+                                    noClose.alpha = 1;
+                                }];
+                                
+                            }else{
+                                LOADFAILED;
+//                                [MyControl loadingFailedWithContent:@"加入失败" afterDelay:0.8f];
+                                NSLog(@"加入国家失败");
+                            }
+                        }];
+                        [request release];
+                    };
                 }
             }];
             [request release];
@@ -203,9 +216,10 @@
     };
     cell.imageClick = ^(int a){
         NSLog(@"跳转到第%d张图片详情页", a);
-        PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+        FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = [[[self.dataArray[indexPath.row] images] objectAtIndex:a] objectForKey:@"img_id"];
-        [self presentViewController:vc animated:YES completion:nil];
+        MainViewController * main = [ControllerManager shareMain];
+        [main.view addSubview:vc.view];
         [vc release];
     };
     cell.clipsToBounds = YES;

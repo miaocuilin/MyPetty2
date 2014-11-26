@@ -61,14 +61,14 @@
     self.commentersArray = [NSMutableArray arrayWithCapacity:0];
     self.sharersArray = [NSMutableArray arrayWithCapacity:0];
     
-    //加手势
-    swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
-    swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:swipeLeft];
-    
-    swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
-    swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:swipeRight];
+//    //加手势
+//    swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
+//    swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+//    [self.view addGestureRecognizer:swipeLeft];
+//    
+//    swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
+//    swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+//    [self.view addGestureRecognizer:swipeRight];
     
 //    UIImageView * image = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"cat2.jpg"];
 //    [self.view addSubview:image];
@@ -139,14 +139,17 @@
 }
 -(void)loadLikersData
 {
-    LOADING;
+//    LOADING;
+    if (![[self.imageDict objectForKey:@"likers"] isKindOfClass:[NSString class]] || [[self.imageDict objectForKey:@"likers"] length] == 0) {
+        return;
+    }
     NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", [self.imageDict objectForKey:@"likers"]];
     NSString * code = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, [self.imageDict objectForKey:@"likers"], code, [ControllerManager getSID]];
     NSLog(@"赞列表：%@", url);
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            ENDLOADING;
+//            ENDLOADING;
             
             NSArray * array = [load.dataDict objectForKey:@"data"] ;
             for (NSDictionary * dict in array) {
@@ -157,13 +160,15 @@
             }
             [tv reloadData];
         }else{
-            LOADFAILED;
+//            LOADFAILED;
         }
     }];
 }
 -(void)loadSendersData
 {
-    
+    if (![[self.imageDict objectForKey:@"senders"] isKindOfClass:[NSString class]] || [[self.imageDict objectForKey:@"senders"] length] == 0) {
+        return;
+    }
     LOADING;
     NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", [self.imageDict objectForKey:@"senders"]];
     NSString * code = [MyMD5 md5:str];
@@ -233,6 +238,9 @@
 }
 -(void)loadSharersData
 {
+    if (![[self.imageDict objectForKey:@"sharers"] isKindOfClass:[NSString class]] || [[self.imageDict objectForKey:@"sharers"] length] == 0) {
+        return;
+    }
 //    if (!self.sharersArray.count) {
 //        return;
 //    }
@@ -279,11 +287,20 @@
             //
             if ([arr1[i] rangeOfString:@"reply_id"].location == NSNotFound) {
                 NSString * name = [[[[arr1[i] componentsSeparatedByString:@",body"] objectAtIndex:0] componentsSeparatedByString:@"name:"] objectAtIndex:1];
+                if ([name rangeOfString:@",tx"].location != NSNotFound) {
+                    name = [[name componentsSeparatedByString:@",tx"] objectAtIndex:0];
+                }
                 [self.nameArray addObject:name];
                 //            [name release];
             }else{
                 NSString * name = [[[[arr1[i] componentsSeparatedByString:@",reply_id"] objectAtIndex:0] componentsSeparatedByString:@",name:"] objectAtIndex:1];
+                if ([name rangeOfString:@",tx"].location != NSNotFound) {
+                    name = [[name componentsSeparatedByString:@",tx"] objectAtIndex:0];
+                }
                 NSString * reply_name = [[[[arr1[i] componentsSeparatedByString:@",body"] objectAtIndex:0] componentsSeparatedByString:@",reply_name:"] objectAtIndex:1];
+                if ([reply_name rangeOfString:@",tx"].location != NSNotFound) {
+                    reply_name = [[reply_name componentsSeparatedByString:@",tx"] objectAtIndex:0];
+                }
                 NSLog(@"%@", reply_name);
                 NSString * str = [NSString stringWithFormat:@"%@&%@", name, reply_name];
                 [self.nameArray addObject:str];
@@ -316,9 +333,9 @@
             self.petDict = [load.dataDict objectForKey:@"data"];
             
             [self modifyBackPage];
-            ENDLOADING;
+//            ENDLOADING;
         }else{
-            LOADFAILED;
+//            LOADFAILED;
             NSLog(@"请求宠物数据失败");
         }
     }];
@@ -422,6 +439,15 @@
             image2Rect.size.height = 350;
         }
         imageBgView2.frame = image2Rect;
+        
+        //back
+        CGRect rect11 = tv.frame;
+        rect11.size.height = imageBgView2.frame.size.height-rect11.origin.y-15;
+        tv.frame = rect11;
+        
+        CGRect rect22 = desTv.frame;
+        rect22.size.height = imageBgView2.frame.size.height-rect22.origin.y-15;
+        desTv.frame = rect22;
     }];
     
     
@@ -429,13 +455,13 @@
 -(void)modifyBackPage
 {
     //back
-    CGRect rect1 = tv.frame;
-    rect1.size.height = imageBgView2.frame.size.height-rect1.origin.y-15;
-    tv.frame = rect1;
-    
-    CGRect rect2 = desTv.frame;
-    rect2.size.height = imageBgView2.frame.size.height-rect2.origin.y-15;
-    desTv.frame = rect2;
+//    CGRect rect1 = tv.frame;
+//    rect1.size.height = imageBgView2.frame.size.height-rect1.origin.y-15;
+//    tv.frame = rect1;
+//    
+//    CGRect rect2 = desTv.frame;
+//    rect2.size.height = imageBgView2.frame.size.height-rect2.origin.y-15;
+//    desTv.frame = rect2;
     
     
     [headBtn setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.petDict objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
@@ -485,6 +511,14 @@
     [bgView addSubview:sv];
     sv.hidden = YES;
     
+    //加手势
+    swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
+    swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+    [sv addGestureRecognizer:swipeLeft];
+    
+    swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
+    swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+    [sv addGestureRecognizer:swipeRight];
     
     //手势
     UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
@@ -501,9 +535,9 @@
     [imageBgView addGestureRecognizer:tap2];
     [tap2 release];
     
-//    bigImageView = [[ClickImage alloc] initWithFrame:CGRectMake(8, 5, imageBgView.frame.size.width-16, 300)];
-//    bigImageView.canClick = YES;
-    bigImageView = [MyControl createImageViewWithFrame:CGRectMake(8, 5, imageBgView.frame.size.width-16, 300) ImageName:@""];
+    bigImageView = [[ClickImage alloc] initWithFrame:CGRectMake(8, 5, imageBgView.frame.size.width-16, 300)];
+    bigImageView.canClick = YES;
+//    bigImageView = [MyControl createImageViewWithFrame:CGRectMake(8, 5, imageBgView.frame.size.width-16, 300) ImageName:@""];
     [imageBgView addSubview:bigImageView];
     
     
@@ -533,6 +567,15 @@
     sv2.showsVerticalScrollIndicator = NO;
     [bgView addSubview:sv2];
     sv2.hidden = YES;
+    
+    //加手势
+    swipeLeft2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
+    swipeLeft2.direction = UISwipeGestureRecognizerDirectionLeft;
+    [sv2 addGestureRecognizer:swipeLeft2];
+    
+    swipeRight2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
+    swipeLeft2.direction = UISwipeGestureRecognizerDirectionLeft;
+    [sv2 addGestureRecognizer:swipeRight2];
     
 //    UITapGestureRecognizer * tap3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
 //    [sv2 addGestureRecognizer:tap3];
@@ -611,6 +654,10 @@
     tv.dataSource = self;
     tv.delegate = self;
     [imageBgView2 addSubview:tv];
+    
+//    UITapGestureRecognizer * tap5 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap2:)];
+//    [tv addGestureRecognizer:tap5];
+//    [tap5 release];
     
     desTv = [[UITableView alloc] initWithFrame:CGRectMake(10, triangle.frame.origin.y+14, imageBgView2.frame.size.width-20, 53*4) style:UITableViewStylePlain];
     desTv.backgroundColor = [ControllerManager colorWithHexString:@"eaeaea"];
@@ -836,7 +883,7 @@
         sheet.tag = 400;
         [sheet release];
     }else if(btn.tag == 104){
-        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"更多" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"查看大图", @"私信", @"举报此照", nil];
+        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"更多" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"私信", @"举报此照", nil];
         [sheet showInView:self.view];
         sheet.tag = 401;
         [sheet release];
@@ -1098,16 +1145,17 @@
 {
     NSLog(@"%d", buttonIndex);
     if (actionSheet.tag == 401) {
+//        if (buttonIndex == 0) {
+//            //查看大图
+//            LargeImage * large = [[LargeImage alloc] initWithFrame:[UIScreen mainScreen].bounds];
+//            [self.view addSubview:large];
+//            [large modifyUIWithImage:bigImageView.image];
+//            [large release];
+//        }else
         if (buttonIndex == 0) {
-            //查看大图
-            LargeImage * large = [[LargeImage alloc] initWithFrame:[UIScreen mainScreen].bounds];
-            [self.view addSubview:large];
-            [large modifyUIWithImage:bigImageView.image];
-            [large release];
-        }else if (buttonIndex == 1) {
             //私信
             [self sendMessage];
-        }else if (buttonIndex == 2) {
+        }else if (buttonIndex == 1) {
             //举报此照
             [self reportImage];
         }
@@ -1390,8 +1438,21 @@
         
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = 0;
+        cell.reportBlock = ^(){
+            ReportAlertView * report = [[ReportAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+            report.AlertType = 4;
+            [report makeUI];
+            [self.view addSubview:report];
+            [UIView animateWithDuration:0.2 animations:^{
+                report.alpha = 1;
+            }];
+            report.confirmClick = ^(){
+                [self reportImage];
+//                [self cancelBtnClick2];
+            };
+        };
         
-        float textWidth = [UIScreen mainScreen].bounds.size.width-13*2-10*2-40-10;
+        float textWidth = [UIScreen mainScreen].bounds.size.width-13*2-10*2-40-10-35;
         float cellHeight = 0;
         
         CGSize size;
@@ -1407,7 +1468,7 @@
             cellHeight = 53.0;
         }
 //        NSLog(@"%f", cellHeight);
-        [cell configUIWithName:self.nameArray[indexPath.row] Cmt:self.bodyArray[indexPath.row] Time:self.createTimeArray[indexPath.row] CellHeight:cellHeight textSize:size Tx:self.cmtTxArray[indexPath.row]];
+        [cell configUIWithName:self.nameArray[indexPath.row] Cmt:self.bodyArray[indexPath.row] Time:self.createTimeArray[indexPath.row] CellHeight:cellHeight textSize:size Tx:self.cmtTxArray[indexPath.row] isTest:isTest];
         return cell;
     }else{
         static NSString * cellID4 = @"ID4";
@@ -1426,7 +1487,7 @@
 {
 //    return 53.0f;
     if (triangleIndex == 2) {
-        float textWidth = [UIScreen mainScreen].bounds.size.width-13*2-10*2-40-10;
+        float textWidth = [UIScreen mainScreen].bounds.size.width-13*2-10*2-40-10-35;
 //        NSLog(@"%d--%@", indexPath.row, self.bodyArray[indexPath.row]);
         if (self.bodyArray[indexPath.row] == nil) {
             return 53.0;

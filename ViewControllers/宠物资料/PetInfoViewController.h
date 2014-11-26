@@ -48,6 +48,8 @@
 @property (nonatomic,copy)NSString * lastUsr_id;
 @property (nonatomic,copy)NSString * lastRank;
 
+@property (nonatomic,copy)NSString * lastNid;
+
 @property (nonatomic,retain)NSMutableArray * newsDataArray;
 @property (nonatomic,retain)NSMutableArray * photosDataArray;
 //@property (nonatomic,retain)NSMutableArray * userDataArray;

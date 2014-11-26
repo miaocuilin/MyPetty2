@@ -74,6 +74,8 @@
     
 //    [self createArrow];
 //    [self findMeBtnClick];
+    self.category = 1;
+    
     [self loadData];
     
 }
@@ -361,8 +363,16 @@
     }else{
         [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.vary shouldLarge:NO];
     }
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+    [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx]] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+        cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(64, 64)];
+        if (!image) {
+            cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+        }
+    }];
+//    [cell.headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
     
-    [cell.headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
 //    NSLog(@"model.tx:%@",model.tx);
 //    if ([model.tx isEqualToString:@""]) {
 //        cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
@@ -469,7 +479,7 @@
 //    [navView addSubview:titleBtn];
     /*****************************/
     
-    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130-10, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"总人气榜"];
+    titleBtn = [MyControl createButtonWithFrame:CGRectMake(130-10, 64-38, 90, 30) ImageName:@"" Target:self Action:@selector(titleBtnClick:) Title:@"昨日人气"];
     titleBtn.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     [titleBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [navView addSubview:titleBtn];

@@ -14,6 +14,7 @@
 #import "MessageModel.h"
 #import "PicDetailViewController.h"
 #import "UserInfoViewController.h"
+#import "FrontImageDetailViewController.h"
 //#import "NoticeViewController.h";
 #define TimeGap 60
 
@@ -83,7 +84,7 @@
 #pragma mark -
 -(void)loadTalkID
 {
-    StartLoading;
+    LOADING;
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat",self.usr_id]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", GETTALKIDAPI, self.usr_id, sig, [ControllerManager getSID]];
 //    NSLog(@"%@", url);
@@ -93,9 +94,9 @@
             self.talk_id = [[load.dataDict objectForKey:@"data"] objectForKey:@"talk_id"];
             //下载完talk_id之后查看本地是否有历史聊天记录，有的话调出来
             [self loadHistoryTalk];
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -618,10 +619,10 @@
     };
     
     cell.jumpToPicDetail = ^(void){
-        PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+        FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = [self.talkDataArray[indexPath.row] img_id];
-        vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
-        [self presentViewController:vc animated:YES completion:nil];
+//        vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
+        [self.view addSubview:vc.view];
         [vc release];
     };
     

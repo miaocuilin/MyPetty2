@@ -107,21 +107,23 @@
     
     self.giftImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", itemId]];
     
-    NSString * path = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
-    UIImage * image = [UIImage imageWithContentsOfFile:path];
-    if (image) {
-        self.headImage.image = image;
-    }else{
-        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                self.headImage.image = load.dataImage;
-                [load.data writeToFile:path atomically:YES];
-            }else{
-                //            LoadingFailed;
-            }
-        }];
-        [request release];
-    }
+    [self.headImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
+    
+//    NSString * path = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
+//    UIImage * image = [UIImage imageWithContentsOfFile:path];
+//    if (image) {
+//        self.headImage.image = image;
+//    }else{
+//        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                self.headImage.image = load.dataImage;
+//                [load.data writeToFile:path atomically:YES];
+//            }else{
+//                //            LoadingFailed;
+//            }
+//        }];
+//        [request release];
+//    }
 }
 -(void)closeClick
 {

@@ -13,6 +13,9 @@
     UILabel * label1;
     UILabel * label2;
     UILabel * label3;
+    
+    //剩余摇动次数，用于回传
+    int count;
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 @property(nonatomic,retain)UIImageView * headImageView;
@@ -23,8 +26,10 @@
 @property(nonatomic,retain)UIImageView * headImage;
 @property(nonatomic,retain)UILabel * actLabel;
 
+@property(nonatomic,copy)NSString * pet_aid;
+
 @property(nonatomic,copy)NSString * giftName;
 @property(nonatomic,copy)void (^closeBlock)(void);
-
+@property(nonatomic,copy)void (^share)(int);
 -(void)configUIWithName:(NSString *)name ItemId:(NSString *)itemId Tx:(NSString *)tx;
 @end

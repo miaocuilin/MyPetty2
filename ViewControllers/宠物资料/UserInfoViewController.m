@@ -1253,25 +1253,37 @@
                 }];
                 return;
             }
+            
 //            NSLog(@"%@", [USER objectForKey:@"aid"]);
             if ([[USER objectForKey:@"aid"] isEqualToString:[self.userPetListArray[cellIndexPath.row] aid]]) {
+                [self.userPetListArray removeObjectAtIndex:cellIndexPath.row];
+                //其他中贡献度最高的一个
+                Index = 0;
+                Contri = [[self.userPetListArray[0] t_contri] intValue];
+                for(int i=1;i<self.userPetListArray.count;i++){
+                    if ([[self.userPetListArray[i] t_contri]intValue]>Contri) {
+                        Index = i;
+                        Contri = [[self.userPetListArray[i] t_contri] intValue];
+                    }
+                }
+                
 //                StartLoading;
 //                [MyControl loadingFailedWithContent:@"不能退出默认宠物" afterDelay:1];
-                PopupView * pop = [[PopupView alloc] init];
-                [pop modifyUIWithSize:self.view.frame.size msg:@"不能不捧最爱萌星，请将其他萌星设为最爱"];
-                [self.view addSubview:pop];
-                [pop release];
-                
-                [UIView animateWithDuration:0.2 animations:^{
-                    pop.bgView.alpha = 1;
-                } completion:^(BOOL finished) {
-                    [UIView animateKeyframesWithDuration:0.2 delay:2 options:0 animations:^{
-                        pop.bgView.alpha = 0;
-                    } completion:^(BOOL finished) {
-                        [pop removeFromSuperview];
-                    }];
-                }];
-                return;
+//                PopupView * pop = [[PopupView alloc] init];
+//                [pop modifyUIWithSize:self.view.frame.size msg:@"不能不捧最爱萌星，请将其他萌星设为最爱"];
+//                [self.view addSubview:pop];
+//                [pop release];
+//                
+//                [UIView animateWithDuration:0.2 animations:^{
+//                    pop.bgView.alpha = 1;
+//                } completion:^(BOOL finished) {
+//                    [UIView animateKeyframesWithDuration:0.2 delay:2 options:0 animations:^{
+//                        pop.bgView.alpha = 0;
+//                    } completion:^(BOOL finished) {
+//                        [pop removeFromSuperview];
+//                    }];
+//                }];
+//                return;
             }
 //            [self quitCountryWithRow:cellIndexPath.row];
             /***************************/
@@ -1290,7 +1302,12 @@
                             [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
                             [self.userPetListArray removeObjectAtIndex:cellIndexPath.row];
                             [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
-                            [tv reloadData];
+                            if (Index) {
+                                [self changeDefaultPetAid:[self.userPetListArray[Index] aid] MasterId:[self.userPetListArray[Index] master_id]];
+                            }else{
+                                [tv reloadData];
+                            }
+                            
                         }else{
                             [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
                         }
@@ -1328,6 +1345,8 @@
                 [USER setObject:aid forKey:@"aid"];
                 [USER setObject:master_id forKey:@"master_id"];
                 NSLog(@"%@--%@--%@", [USER objectForKey:@"aid"], [USER objectForKey:@"master_id"], [USER objectForKey:@"usr_id"]);
+                Index = 0;
+                Contri = 0;
                 [tv reloadData];
                 [self loadPetInfo];
                 
@@ -1371,17 +1390,31 @@
 {
     NSLog(@"加入国家");
     //先判断是否已经有10个，是type = 3
-    StartLoading;
+    LOADING;
     NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", self.usr_id];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, self.usr_id, [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            LoadingSuccess;
+            ENDLOADING;
             NSArray * array = [load.dataDict objectForKey:@"data"];
+            [USER setObject:[NSString stringWithFormat:@"%d", array.count] forKey:@"countryNum"];
             if (array.count>=10) {
+                if((array.count+1)*5>[[USER objectForKey:@"gold"] intValue]){
+                    //余额不足
+                    [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                    return;
+                }
                 AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
                 view.AlertType = 3;
+                view.CountryNum = array.count;
+                view.jump = ^(){
+                    ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+                    vc.isOldUser = YES;
+                    vc.isFromAdd = YES;
+                    [self presentViewController:vc animated:YES completion:nil];
+                    [vc release];
+                };
                 [view makeUI];
                 [self.view addSubview:view];
                 [view release];
@@ -1393,7 +1426,7 @@
                 [vc release];
             }
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];

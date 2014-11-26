@@ -17,7 +17,9 @@
     UILabel * time;
     
     UIView * line;
+    UIButton * reportBtn;
 }
+@property (nonatomic,copy)void (^reportBlock)(void);
 
--(void)configUIWithName:(NSString *)nameStr Cmt:(NSString *)cmt Time:(NSString *)timeStr CellHeight:(float)cellHeight textSize:(CGSize)textSize Tx:(NSString *)tx;
+-(void)configUIWithName:(NSString *)nameStr Cmt:(NSString *)cmt Time:(NSString *)timeStr CellHeight:(float)cellHeight textSize:(CGSize)textSize Tx:(NSString *)tx isTest:(BOOL)isTest;
 @end

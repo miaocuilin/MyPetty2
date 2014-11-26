@@ -144,15 +144,17 @@
 {
     //截图
     UIImage * image = [MyControl imageWithView:self.bgImageView];
-    
+
     /**************/
     if(sender.tag == 100){
         NSLog(@"微信");
         //强制分享图片
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
+                [self loadShakeShare];
                 [MyControl popAlertWithView:self.view Msg:@"分享成功"];
             }else{
                 [MyControl popAlertWithView:self.view Msg:@"分享失败"];
@@ -164,8 +166,10 @@
         //强制分享图片
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
+                [self loadShakeShare];
                 [MyControl popAlertWithView:self.view Msg:@"分享成功"];
             }else{
                 [MyControl popAlertWithView:self.view Msg:@"分享失败"];
@@ -176,8 +180,10 @@
         NSLog(@"微博");
         NSString * str = [NSString stringWithFormat:@"随便一摇就摇出了一个%@，好惊喜，你也想试试吗？http://home4pet.aidigame.com/（分享自@宠物星球社交应用）", self.giftName];
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
+                [self loadShakeShare];
                 [MyControl popAlertWithView:self.view Msg:@"分享成功"];
             }else{
                 NSLog(@"失败原因：%@", response);
@@ -186,6 +192,25 @@
             
         }];
     }
+}
+-(void)loadShakeShare
+{
+    LOADING;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", SHAKESHAREAPI, self.pet_aid, sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                count = [[[load.dataDict objectForKey:@"data"] objectForKey:@"shake_count"] intValue];
+                self.share(count);
+            }
+            ENDLOADING;
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -45,6 +45,9 @@
     //判断修改头像时是否是点击的头像进行的修改，来决定
     //是否要cancelClick
     BOOL isFromHeader;
+    
+    int Index;
+    int Contri;
 }
 
 @property(nonatomic)int offset;

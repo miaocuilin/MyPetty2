@@ -232,26 +232,28 @@
     [view addSubview:view1];
     
     NSString * url = [self.imagesArray[index] objectForKey:@"url"];
-    NSString * docDir = DOCDIR;
-    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
-
-    UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-    if (image) {
-        view1.image = image;
-    }else{
-        //下载头像
-        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                view1.image = load.dataImage;
-                NSString * docDir = DOCDIR;
-                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
-                [load.data writeToFile:txFilePath atomically:YES];
-            }else{
-                NSLog(@"头像下载失败");
-            }
-        }];
-        [request release];
-    }
+    
+    [view1 setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, url]]];
+//    NSString * docDir = DOCDIR;
+//    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
+//
+//    UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+//    if (image) {
+//        view1.image = image;
+//    }else{
+//        //下载头像
+//        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                view1.image = load.dataImage;
+//                NSString * docDir = DOCDIR;
+//                NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
+//                [load.data writeToFile:txFilePath atomically:YES];
+//            }else{
+//                NSLog(@"头像下载失败");
+//            }
+//        }];
+//        [request release];
+//    }
     
 //    UIImageView * refView = [MyControl createImageViewWithFrame:CGRectMake(0, 135, 130, 130) ImageName:@"cat2.jpg"];
 //    [refView setImage:[[UIImage imageNamed:@"cat2.jpg"] reflectionWithAlpha:0.5]];

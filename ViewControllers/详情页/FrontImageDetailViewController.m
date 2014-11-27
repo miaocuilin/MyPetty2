@@ -1019,7 +1019,7 @@
             int addExp = [[[dict objectForKey:@"data"] objectForKey:@"exp"] intValue];
             if (addExp>0) {
                 [USER setObject:[NSString stringWithFormat:@"%d", exp+addExp] forKey:@"exp"];
-                [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:addExp];
+//                [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:addExp];
             }
         }
         
@@ -1058,7 +1058,7 @@
             //            commentTextView.textColor = [UIColor lightGrayColor];
         }];
         bgButton.hidden = YES;
-        [MyControl popAlertWithView:self.view Msg:@"评论成功"];
+//        [MyControl popAlertWithView:self.view Msg:@"评论成功"];
         //
         UILabel * label = (UILabel *)[imageBgView2 viewWithTag:302];
         label.text = [NSString stringWithFormat:@"%d", self.nameArray.count];
@@ -1253,7 +1253,13 @@
         }];
     }else if(index == 2){
         NSLog(@"微博");
-        NSString * str = [NSString stringWithFormat:@"%@%@", [self.imageDict objectForKey:@"cmt"], @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
+        NSString * str = nil;
+        if([[self.imageDict objectForKey:@"topic_name"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"topic_name"] length]){
+            str = [NSString stringWithFormat:@"%@ #%@# %@", [self.imageDict objectForKey:@"cmt"], [self.imageDict objectForKey:@"topic_name"], @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
+        }else{
+            str = [NSString stringWithFormat:@"%@%@", [self.imageDict objectForKey:@"cmt"], @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
+        }
+        
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
@@ -1440,7 +1446,7 @@
         cell.selectionStyle = 0;
         cell.reportBlock = ^(){
             ReportAlertView * report = [[ReportAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-            report.AlertType = 4;
+            report.AlertType = 2;
             [report makeUI];
             [self.view addSubview:report];
             [UIView animateWithDuration:0.2 animations:^{

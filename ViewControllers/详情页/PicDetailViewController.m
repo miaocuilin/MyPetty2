@@ -1819,7 +1819,7 @@
             int addExp = [[[dict objectForKey:@"data"] objectForKey:@"exp"] intValue];
             if (addExp>0) {
                 [USER setObject:[NSString stringWithFormat:@"%d", exp+addExp] forKey:@"exp"];
-                [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:addExp];
+//                [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:addExp];
             }
         }
         

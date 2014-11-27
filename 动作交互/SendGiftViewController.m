@@ -549,7 +549,7 @@
             if (addExp>0) {
                 int exp = [[USER objectForKey:@"exp"] intValue];
                 [USER setObject:[NSString stringWithFormat:@"%d", addExp+exp] forKey:@"exp"];
-                [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:addExp];
+//                [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:addExp];
             }
             //送礼block
             self.hasSendGift(ItemId);

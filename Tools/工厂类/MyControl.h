@@ -73,6 +73,9 @@
 + (UIImage *)image: (UIImage *) image fitInSize: (CGSize) viewsize;
 
 +(void)popAlertWithView:(UIView *)keyView Msg:(NSString *)msg;
+
+//为URL添加不备份标签
++ (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 @end
 
 

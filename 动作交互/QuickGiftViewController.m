@@ -93,7 +93,7 @@
         [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
         if (exp != newexp && (newexp - exp)>0) {
             int index = newexp - exp;
-            [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:index];
+//            [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:index];
         }
        //重新请求背包数据
 //        if (!isBuy) {

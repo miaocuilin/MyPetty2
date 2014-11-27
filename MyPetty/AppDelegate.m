@@ -154,7 +154,14 @@
 //    [USER setObject:@"0" forKey:@"isSuccess"];
 //    NSLog(@"%@", [USER objectForKey:@"SID"]);
 }
-
+- (void)didReceiveMemoryWarning
+{
+//    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
+}
 @end
 //820174868e10024d4eeb2933e2e355b25505ed2e
 //isSuccess:0,SID:j19otbd5ojknvjdu4rodn7kgs2

@@ -105,7 +105,7 @@
 //    }
         isGoods = YES;
         [self createGoodsAlertView];
-    [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+//    [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
 }
 - (void)soundAction
 {

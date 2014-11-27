@@ -499,7 +499,7 @@
         int a = [[USER objectForKey:@"countryNum"] intValue];
         if(a>=10){
             view.AlertType = 3;
-            view.AlertType = a+1;
+            view.CountryNum = a+1;
         }else{
             view.AlertType = 2;
         }
@@ -518,7 +518,9 @@
                     NSLog(@"--%@", load.dataDict);
                     ENDLOADING;
                     if (a>=10) {
+                        NSLog(@"%@", [USER objectForKey:@"gold"]);
                         [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-(a+1)*5] forKey:@"gold"];
+                        NSLog(@"%@", [USER objectForKey:@"gold"]);
                     }
 //                    [MMProgressHUD dismissWithSuccess:@"加入成功^_^" title:nil afterDelay:0.5];
                     //刷新列表

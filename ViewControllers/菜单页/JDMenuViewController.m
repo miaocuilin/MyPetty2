@@ -725,47 +725,47 @@
         ShowAlertView;
         return;
     }
-    LOADING;
-    NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
-    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
-    NSLog(@"%@", url);
-    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        if (isFinish) {
-            ENDLOADING;
-            NSArray * array = [load.dataDict objectForKey:@"data"];
-            [USER setObject:[NSString stringWithFormat:@"%d", array.count] forKey:@"countryNum"];
-            if (array.count>=10) {
-                NSLog(@"%@", [USER objectForKey:@"gold"]);
-                if((array.count+1)*5>[[USER objectForKey:@"gold"] intValue]){
-                    //余额不足
-                    [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
-                    return;
-                }
-                AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-                view.AlertType = 3;
-                view.CountryNum = array.count;
-                view.jump = ^(){
-                    ChooseInViewController * vc = [[ChooseInViewController alloc] init];
-                    vc.isOldUser = YES;
-                    vc.isFromAdd = YES;
-                    [self presentViewController:vc animated:YES completion:nil];
-                    [vc release];
-                };
-                [view makeUI];
-                [self.view addSubview:view];
-                [view release];
-            }else{
+//    LOADING;
+//    NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+//    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+//    NSLog(@"%@", url);
+//    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            ENDLOADING;
+//            NSArray * array = [load.dataDict objectForKey:@"data"];
+//            [USER setObject:[NSString stringWithFormat:@"%d", array.count] forKey:@"countryNum"];
+//            if (array.count>=10) {
+//                NSLog(@"%@", [USER objectForKey:@"gold"]);
+//                if((array.count+1)*5>[[USER objectForKey:@"gold"] intValue]){
+//                    //余额不足
+//                    [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+//                    return;
+//                }
+//                AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+//                view.AlertType = 3;
+//                view.CountryNum = array.count;
+//                view.jump = ^(){
+//                    ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+//                    vc.isOldUser = YES;
+//                    vc.isFromAdd = YES;
+//                    [self presentViewController:vc animated:YES completion:nil];
+//                    [vc release];
+//                };
+//                [view makeUI];
+//                [self.view addSubview:view];
+//                [view release];
+//            }else{
                 ChooseInViewController * vc = [[ChooseInViewController alloc] init];
                 vc.isOldUser = YES;
                 vc.isFromAdd = YES;
                 [self presentViewController:vc animated:YES completion:nil];
                 [vc release];
-            }
-        }else{
-            LOADFAILED;
-        }
-    }];
-    [request release];
+//            }
+//        }else{
+//            LOADFAILED;
+//        }
+//    }];
+//    [request release];
 }
 -(void)imageClick{}
 -(void)rqBtnClick

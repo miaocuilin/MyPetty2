@@ -48,6 +48,10 @@
     
     int Index;
     int Contri;
+    //需要退出的圈子在数组中的序号
+    int quitIndex;
+    //是不是需要先换默认再退圈子
+    BOOL isNeedChangeDefault;
 }
 
 @property(nonatomic)int offset;

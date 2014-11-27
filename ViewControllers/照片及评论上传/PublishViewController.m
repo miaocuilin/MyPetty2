@@ -663,7 +663,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [USER setObject:[[dict objectForKey:@"data"] objectForKey:@"exp"] forKey:@"exp"];
         int index = [[USER objectForKey:@"exp"] intValue]-exp;
         if (index > 0) {
-            [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
+//            [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
             
         }
         [MyControl loadingSuccessWithContent:@"发布成功" afterDelay:0.5f];

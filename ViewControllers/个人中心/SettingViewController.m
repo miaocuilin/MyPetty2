@@ -431,15 +431,15 @@
             NSLog(@"%@", load.dataDict);
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]]) {
                 NSArray * array = [load.dataDict objectForKey:@"data"];
-                if (array.count >= 10) {
-                    AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-                    view.AlertType = 6;
-                    [view makeUI];
-                    [self.view addSubview:view];
-                    [view release];
-                }else{
+//                if (array.count >= 10) {
+//                    AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+//                    view.AlertType = 6;
+//                    [view makeUI];
+//                    [self.view addSubview:view];
+//                    [view release];
+//                }else{
                     [self inputCode];
-                }
+//                }
                 LoadingSuccess;
             }else{
                 LoadingFailed;

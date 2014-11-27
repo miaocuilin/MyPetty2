@@ -166,7 +166,7 @@
                 int gold = [[dict objectForKey:@"gold"] intValue];
 //                [self performSelector:@selector(showRewardWithExp:Gold:) withObject:exp withObject:gold afterDelay:0.2f];
                 if (exp) {
-                    [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:40 Number:exp];
+//                    [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:40 Number:exp];
                 }
                 if (gold) {
                     [ControllerManager HUDImageIcon:@"gold.png" showView:self.view.window yOffset:-40.0 Number:gold];

@@ -380,7 +380,7 @@
         int a = [[USER objectForKey:@"countryNum"] intValue];
         if(a>=10){
             view.AlertType = 3;
-            view.AlertType = a+1;
+            view.CountryNum = a+1;
         }else{
             view.AlertType = 2;
         }

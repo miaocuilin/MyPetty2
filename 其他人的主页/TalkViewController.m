@@ -264,7 +264,8 @@
         [msgModel release];
         
         //展示
-        [self presentNewMessageWithSend:NO time:self.keysArray[i] msg:self.valuesArray[i]];
+//        [self presentNewMessageWithSend:NO time:self.keysArray[i] msg:self.valuesArray[i]];
+        [self presentNewMessageWithSend:NO time:[self.talkDataArray[self.talkDataArray.count-1] time] msg:[self.talkDataArray[self.talkDataArray.count-1] msg]];
     }
     
 }
@@ -710,7 +711,8 @@
     // 2、刷新表格
     [tv reloadData];
     
-    [self.view bringSubviewToFront:navView];
+    [self.view insertSubview:navView aboveSubview:tv];
+//    [self.view bringSubviewToFront:navView];
     // 3、滚动至当前行
 //    NSLog(@"========count:%d=======",self.dataArray.count);
 //    NSLog(@"*******offset:%f********", tv.contentSize.height);

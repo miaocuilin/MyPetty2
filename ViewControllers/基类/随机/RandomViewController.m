@@ -144,7 +144,7 @@
     [USER setObject:[USER objectForKey:@"exp"] forKey:@"oldexp"];
     int index = exp - oldexp;
     if (oldexp < exp) {
-        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:index];
+//        [ControllerManager HUDImageIcon:@"Star.png" showView:self.view yOffset:0 Number:index];
     }
     
     BOOL islevel = [ControllerManager levelPOP:[USER objectForKey:@"oldexp"] addExp:index];
@@ -376,14 +376,21 @@
     //        cell.heartButton.selected = NO;
     //    }
     //图片存放到本地，从本地取
-    NSString * docDir = DOCDIR;
-    if (!docDir) {
-        NSLog(@"Documents 目录未找到");
-    }else{
+//    NSString * docDir = DOCDIR;
+//    if (!docDir) {
+//        NSLog(@"Documents 目录未找到");
+//    }else{
         cell.photoView.image = nil;
-        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-//        NSLog(@"randomFilePath:%@", randomFilePath);
-        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
+    
+    NSURL * URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]];
+    [MyControl addSkipBackupAttributeToItemAtURL:URL];
+    NSString * key = [[SDWebImageManager sharedManager] cacheKeyForURL:URL];
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    UIImage * image = [cache imageFromDiskCacheForKey:key];
+    
+//        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+////        NSLog(@"randomFilePath:%@", randomFilePath);
+//        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
         if (image) {
             cell.photoView.image = image;
 //            cell.photoView.image = [MyControl image:image fitInSize:CGSizeMake(self.view.frame.size.width/2-4-2, Height[indexPath.row])];
@@ -391,30 +398,49 @@
 //            [self setFooterView];
 //            [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
         }else{
+            [cell.photoView setImageWithURL:URL placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                NSLog(@"下载完了第%d个图片", indexPath.row);
+                model.width = self.view.frame.size.width/2-4-2;
+                model.height = (model.width/image.size.width)*image.size.height;
+                //            Height[indexPath.row] = model.height;
+                float tempHeight = 0;
+                if(model.cmtHeight){
+                    tempHeight = model.height+model.cmtHeight;
+                }else{
+                    tempHeight = model.height+35;
+                }
+                if (Height[indexPath.row] != tempHeight) {
+                    NSLog(@"刷新瀑布流-%d", indexPath.row);
+                    Height[indexPath.row] = tempHeight;
+                    [quiltView reloadData];
+                }
+                //                [self reloadQuiltView];
+                
+            }];
 //            cell.photoView.image = [UIImage imageNamed:@"20-1.png"];
 //            cell.photoView.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"20-1" ofType:@"png"]];
-            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    //本地目录，用于存放favorite下载的原图
-                    NSString * docDir = DOCDIR;
-                    NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-                    //将下载的图片存放到本地
-                    BOOL a = [load.data writeToFile:randomFilePath atomically:YES];
-                    NSLog(@"图片存储情况：%d", a);
+//            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+//                    //本地目录，用于存放favorite下载的原图
+//                    NSString * docDir = DOCDIR;
+//                    NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+//                    //将下载的图片存放到本地
+//                    BOOL a = [load.data writeToFile:randomFilePath atomically:YES];
+//                    NSLog(@"图片存储情况：%d", a);
 //                    threadCount--;
 //                    NSLog(@"---threadCount:%d--count:%d", threadCount, queue.operationCount);
-                    cell.photoView.image = load.dataImage;
+//                    cell.photoView.image = load.dataImage;
 //                    cell.photoView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(self.view.frame.size.width/2-4-2, Height[indexPath.row])];
-                    [qtmquitView reloadData];
+//                    [qtmquitView reloadData];
                     //
                     //                    [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
                     //                    [self setFooterView];
-                }else{
+//                }else{
                     //            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"图片加载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
                     //            [alert show];
                     //            [alert release];
-                }
-            }];
+//                }
+//            }];
 
 //            NSInvocationOperation * operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(downloadImageWithCell:) object:cell];
 //            [queue addOperation:operation];
@@ -443,7 +469,7 @@
 //                }
 //            }];
         }
-    }
+//    }
     cell.titleLabel.text = model.cmt;
     //    NSString * url = [NSString stringWithFormat:@"%@%@", IMAGEURL, model.url];
     //    [cell.photoView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"13-1.png"]];
@@ -497,25 +523,25 @@
 {
     PhotoModel * model = self.dataArray[indexPath.row];
     //图片存放到本地，从本地取
-    NSString * docDir = DOCDIR;
-    if (!docDir) {
-        NSLog(@"Documents 目录未找到");
-    }else{
-        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-//        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
-        UIImage * image = [UIImage imageWithContentsOfFile:randomFilePath];
-        if (image) {
-//            Height[indexPath.row] = image.size.height;
-            model.width = self.view.frame.size.width/2-4-2;
-            model.height = (model.width/image.size.width)*image.size.height;
-//            Height[indexPath.row] = model.height;
-            if(model.cmtHeight){
-                Height[indexPath.row] = model.height+model.cmtHeight;
-            }else{
-                Height[indexPath.row] = model.height+35;
-            }
-            return Height[indexPath.row];
-        }else{
+//    NSString * docDir = DOCDIR;
+//    if (!docDir) {
+//        NSLog(@"Documents 目录未找到");
+//    }else{
+//        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+////        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
+//        UIImage * image = [UIImage imageWithContentsOfFile:randomFilePath];
+//        if (image) {
+////            Height[indexPath.row] = image.size.height;
+//            model.width = self.view.frame.size.width/2-4-2;
+//            model.height = (model.width/image.size.width)*image.size.height;
+////            Height[indexPath.row] = model.height;
+//            if(model.cmtHeight){
+//                Height[indexPath.row] = model.height+model.cmtHeight;
+//            }else{
+//                Height[indexPath.row] = model.height+35;
+//            }
+//            return Height[indexPath.row];
+//        }else{
 //            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
 //                if (isFinish) {
 //                    //本地目录，用于存放favorite下载的原图
@@ -540,8 +566,8 @@
 //                    //            [alert release];
 //                }
 //            }];
-        }
-    }
+//        }
+//    }
     
     //    if (!didLoad[indexPath.row]) {
     //        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.dataArray[indexPath.row] url]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -587,11 +613,31 @@
             }
             
         }else{
-            //无尺寸的旧照片
-            if (model.cmtHeight) {
-                Height[indexPath.row] = arc4random()%50+100 +model.cmtHeight+10+18;
+            //无尺寸的旧照片，查看本地是否有其照片，有取出来拿尺寸，没有就随机
+            /*为了获取图片高度，如果本地有缓存图片，拿到其高度，并
+             赋值，如果没有图片*/
+            NSURL * URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]];
+            [MyControl addSkipBackupAttributeToItemAtURL:URL];
+            NSString * key = [[SDWebImageManager sharedManager] cacheKeyForURL:URL];
+            SDImageCache * cache = [SDImageCache sharedImageCache];
+            UIImage * image = [cache imageFromDiskCacheForKey:key];
+            if (image) {
+                //            Height[indexPath.row] = image.size.height;
+                model.width = self.view.frame.size.width/2-4-2;
+                model.height = (model.width/image.size.width)*image.size.height;
+                //            Height[indexPath.row] = model.height;
+                if(model.cmtHeight){
+                    Height[indexPath.row] = model.height+model.cmtHeight;
+                }else{
+                    Height[indexPath.row] = model.height+35;
+                }
+                //                return Height[indexPath.row];
             }else{
-                Height[indexPath.row] = arc4random()%50+100 +35;
+                if(model.cmtHeight) {
+                    Height[indexPath.row] = arc4random()%50+100 +model.cmtHeight+10+18;
+                }else{
+                    Height[indexPath.row] = arc4random()%50+100 +35;
+                }
             }
         }
         

@@ -51,7 +51,7 @@
     //2.加入
     NSArray * array2 = @[@"捧了人家可要对人家负责呀~", @"一定要让TA成为宇宙中", @"最闪亮的萌星~"];
     //3.加入满了提示
-    NSArray * array3 = @[@"本次成功捧星或创建萌星", @"会消耗您100金币哦~"];
+    NSArray * array3 = @[@"捧了人家可要对人家负责呀~", @"一定要让TA成为宇宙中", @"最闪亮的萌星~"];
     //4.取消关注
     NSArray * array4 = @[@"亲爱的，真的忍心取消关注我么？", @"这是真的么~", @"是么~"];
     //5.退出国家
@@ -74,7 +74,7 @@
         if(self.AlertType == 2){
             tempArray = array2;
         }else{
-//            tempArray = array3;
+            tempArray = array3;
             tip.text = nil;
             NSString * goldNum = nil;
             if (self.CountryNum<20) {
@@ -82,8 +82,8 @@
             }else{
                 goldNum = @"100";
             }
-            NSString * str2 = [NSString stringWithFormat:@"会消耗您%@金币哦~", goldNum];
-            tempArray = @[@"本次成功捧星或创建萌星", str2];
+//            NSString * str2 = [NSString stringWithFormat:@"会消耗您%@金币哦~", goldNum];
+//            tempArray = @[@"本次成功捧星或创建萌星", str2];
             
             NSMutableAttributedString * mutableString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"温馨提示：本次会消耗您%@金币哦！！！", goldNum]];
             [mutableString addAttributes:@{NSForegroundColorAttributeName:[UIColor redColor]} range:NSMakeRange(11, goldNum.length)];
@@ -124,19 +124,19 @@
         [self addSubview:self.confirmBtn2];
     }
     
-    if(self.AlertType == 3){
-        for (int i=0; i<2; i++) {
-            UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 30+20*i, self.bgImageView.frame.size.width, 20) Font:14 Text:tempArray[i]];
-            label.textAlignment = NSTextAlignmentCenter;
-            [self.bgImageView addSubview:label];
-        }
-    }else{
+//    if(self.AlertType == 3){
+//        for (int i=0; i<2; i++) {
+//            UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 30+20*i, self.bgImageView.frame.size.width, 20) Font:14 Text:tempArray[i]];
+//            label.textAlignment = NSTextAlignmentCenter;
+//            [self.bgImageView addSubview:label];
+//        }
+//    }else{
         for (int i=0; i<3; i++) {
             UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 18+20*i, self.bgImageView.frame.size.width, 20) Font:15 Text:tempArray[i]];
             label.textAlignment = NSTextAlignmentCenter;
             [self.bgImageView addSubview:label];
         }
-    }
+//    }
     
     
     [UIView animateWithDuration:0.2 animations:^{

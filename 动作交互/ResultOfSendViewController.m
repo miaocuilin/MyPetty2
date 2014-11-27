@@ -33,7 +33,7 @@
     [self.bgImageView addSubview:self.titleLabel];
     
     //close
-    self.closeBtn = [MyControl createButtonWithFrame:CGRectMake(self.bgImageView.frame.size.width-15-8, 11, 15, 15) ImageName:@"alert_x.png" Target:self Action:@selector(closeClick) Title:nil];
+    self.closeBtn = [MyControl createButtonWithFrame:CGRectMake(self.bgImageView.frame.size.width-20-10, 8.5, 20, 20) ImageName:@"alert_x.png" Target:self Action:@selector(closeClick) Title:nil];
     [self.bgImageView addSubview:self.closeBtn];
     
     //

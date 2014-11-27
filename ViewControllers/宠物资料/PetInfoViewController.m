@@ -192,7 +192,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 }
                 [model release];
             }
-            if (array.count) {
+            if (self.newsDataArray.count) {
                 self.lastNid = [self.newsDataArray[self.newsDataArray.count-1] nid];
             }
             
@@ -914,7 +914,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         view.AlertType = 5;
         [view makeUI];
         view.jump = ^(){
-            [self loadMyCountryInfoData];
+            [self loadMyCountryInfoData:button];
         };
     }
     [self.view addSubview:view];
@@ -1047,7 +1047,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
     }
 }
--(void)loadMyCountryInfoData
+-(void)loadMyCountryInfoData:(UIButton *)btn
 {
     StartLoading;
     //    user/petsApi&usr_id=(若用户为自己则留空不填)
@@ -1059,33 +1059,74 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             //            NSLog(@"%@", load.dataDict);
 //            [self.userPetListArray removeAllObjects];
             NSArray * array = [load.dataDict objectForKey:@"data"];
-            if (array.count>1) {
-                NSString *exitPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
-                NSString *exitPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",EXITPETCRICLEAPI,self.aid,exitPetCricleSig,[ControllerManager getSID]];
-                NSLog(@"退出圈子：%@",exitPetCricleString);
-                [MyControl startLoadingWithStatus:@"退出中..."];
-                httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:exitPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                    if (isFinish) {
-                        //                    NSLog(@"退出成功数据：%@",load.dataDict);
-                        if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
-                            addBtn.selected = NO;
-                            [alertView hide:YES];
-                            //刷新摇一摇--》捣捣乱
-                            self.label1.text = @"捣捣乱";
-                            [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
-                        }
-                        [MyControl loadingSuccessWithContent:@"退出成功" afterDelay:0.5f];
-                    }else{
-                        [MyControl loadingFailedWithContent:@"退出失败" afterDelay:0.5f];
-                        NSLog(@"退出国家失败");
-                    }
-                    
-                }];
-                [request release];
-            }else{
-               //提示不能退
-                [MyControl loadingFailedWithContent:@"您仅有一只萌主，不能退出" afterDelay:0.5f];
+            NSMutableArray * countryArray = [NSMutableArray arrayWithCapacity:0];
+            for (NSDictionary * dict in array) {
+                UserPetListModel * model = [[UserPetListModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                if ([model.aid isEqualToString:self.aid]) {
+                    continue;
+                }
+                [countryArray addObject:model];
+                [model release];
             }
+            if ([[USER objectForKey:@"usr_id"] isEqualToString:self.master_id]) {
+                [MyControl popAlertWithView:self.view Msg:@"不能不捧自己创建的萌星"];
+                return;
+            }
+            if (array.count == 1) {
+            [MyControl popAlertWithView:self.view Msg:@"就剩一个啦~不能不捧啊~"];
+                return;
+            }
+            if ([[USER objectForKey:@"aid"] isEqualToString:self.aid]) {
+                NSMutableArray * tempArray = [NSMutableArray arrayWithArray:countryArray];
+//                [tempArray removeObjectAtIndex:row];
+                //其他中贡献度最高的一个
+                NSLog(@"退出的圈子aid：%@", [USER objectForKey:@"aid"]);
+                int Index = 0;
+                int Contri = [[tempArray[0] t_contri] intValue];
+                for(int i=1;i<tempArray.count;i++){
+                    if ([[tempArray[i] t_contri]intValue]>Contri) {
+                        Index = i;
+                        Contri = [[tempArray[i] t_contri] intValue];
+                    }
+                }
+                NSLog(@"需要切换到默认aid：%@", [tempArray[Index] aid]);
+                [self changeDefaultPetAid:[tempArray[Index] aid] MasterId:[tempArray[Index] master_id] Btn:btn];
+                return;
+            }
+            
+            
+            
+            
+            
+            
+//            if (array.count>1) {
+//                NSString *exitPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
+//                NSString *exitPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",EXITPETCRICLEAPI,self.aid,exitPetCricleSig,[ControllerManager getSID]];
+//                NSLog(@"退出圈子：%@",exitPetCricleString);
+//                [MyControl startLoadingWithStatus:@"退出中..."];
+//                httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:exitPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//                    if (isFinish) {
+//                        //                    NSLog(@"退出成功数据：%@",load.dataDict);
+//                        if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+//                            addBtn.selected = NO;
+//                            [alertView hide:YES];
+//                            //刷新摇一摇--》捣捣乱
+//                            self.label1.text = @"捣捣乱";
+//                            [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
+//                        }
+//                        [MyControl loadingSuccessWithContent:@"退出成功" afterDelay:0.5f];
+//                    }else{
+//                        [MyControl loadingFailedWithContent:@"退出失败" afterDelay:0.5f];
+//                        NSLog(@"退出国家失败");
+//                    }
+//                    
+//                }];
+//                [request release];
+//            }else{
+//               //提示不能退
+//                [MyControl loadingFailedWithContent:@"您仅有一只萌主，不能退出" afterDelay:0.5f];
+//            }
 
         }else{
             LoadingFailed;
@@ -1093,6 +1134,67 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }];
     [request release];
 }
+#pragma mark -
+-(void)changeDefaultPetAid:(NSString *)aid MasterId:(NSString *)master_id Btn:(UIButton *)btn
+{
+    
+    [MyControl startLoadingWithStatus:@"切换中..."];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
+    NSString * url =[NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", CHANGEDEFAULTPETAPI, aid, sig, [ControllerManager getSID]];
+    //    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                NSLog(@"%@", aid);
+                
+                
+                //退出圈子
+                NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]];
+                NSString * sig2 = [MyMD5 md5:code];
+                NSString * url2 = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", EXITFAMILYAPI, [USER objectForKey:@"aid"], sig2, [ControllerManager getSID]];
+                NSLog(@"quitApiurl:%@", url2);
+                [MyControl startLoadingWithStatus:@"退出中..."];
+                [USER setObject:aid forKey:@"aid"];
+                [USER setObject:master_id forKey:@"master_id"];
+                NSLog(@"%@--%@--%@", [USER objectForKey:@"aid"], [USER objectForKey:@"master_id"], [USER objectForKey:@"usr_id"]);
+                httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url2 Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+                            [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
+                            btn.selected = NO;
+                            //                            [self.userPetListArray removeObjectAtIndex:quitIndex];
+                            //                                [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
+                            //                            if (Index) {
+                            //                                [self changeDefaultPetAid:[self.userPetListArray[Index] aid] MasterId:[self.userPetListArray[Index] master_id]];
+                            //                            }else{
+                            //                                [tv reloadData];
+                            
+                            //                                [self loadPetInfo];
+                            //                            }
+                            
+                        }else{
+                            [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
+                        }
+                    }else{
+                        [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
+                    }
+                }];
+                [request2 release];
+                
+                
+            }else{
+                [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+            }
+            
+        }else{
+            [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+        }
+    }];
+    [request release];
+}
+
+
 - (void)createAttentionAlertView
 {
     alertView = [self alertViewInit:CGSizeMake(290, 215)];
@@ -1256,39 +1358,44 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     
 
-    
-    if (image) {
-        if(equal){
-            [headBtn setBackgroundImage:image forState:UIControlStateNormal];
-        }else{
-            headerImageView.image = image;
-        }
-        
-        
+    if (equal) {
+        [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
     }else{
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                //本地目录，用于存放favorite下载的原图
-                NSLog(@"宠物头像：%@",load.dataImage);
-                if (load.dataImage == NULL) {
-//                    headerImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-                }else{
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
-                    //将下载的图片存放到本地
-                    [load.data writeToFile:txFilePath atomically:YES];
-                    if(equal){
-                        [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                    }else{
-                        headerImageView.image = load.dataImage;
-                    }
-                }
-                
-            }else{
-                NSLog(@"download failed");
-            }
-        }];
+        [headerImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
     }
+    
+//    if (image) {
+//        if(equal){
+//            [headBtn setBackgroundImage:image forState:UIControlStateNormal];
+//        }else{
+//            headerImageView.image = image;
+//        }
+//        
+//        
+//    }else{
+//        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                //本地目录，用于存放favorite下载的原图
+//                NSLog(@"宠物头像：%@",load.dataImage);
+//                if (load.dataImage == NULL) {
+////                    headerImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+//                }else{
+//                    NSString * docDir = DOCDIR;
+//                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
+//                    //将下载的图片存放到本地
+//                    [load.data writeToFile:txFilePath atomically:YES];
+//                    if(equal){
+//                        [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                    }else{
+//                        headerImageView.image = load.dataImage;
+//                    }
+//                }
+//                
+//            }else{
+//                NSLog(@"download failed");
+//            }
+//        }];
+//    }
     
 //    UIButton * attentionBtn = [MyControl createButtonWithFrame:CGRectMake(60, 75, 20, 20) ImageName:@"" Target:self Action:@selector(attentionBtnClick) Title:@"关注"];
 //    attentionBtn.titleLabel.font = [UIFont systemFontOfSize:10];
@@ -1336,31 +1443,33 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     userImageBtn.layer.masksToBounds = YES;
     [bgView addSubview:userImageBtn];
     
-    NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"u_tx"]]];
-//    NSLog(@"本地用户头像路径：%@", txUserFilePath);
-    UIImage *User_image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txUserFilePath]];
-    if (User_image) {
-        [userImageBtn setBackgroundImage:User_image forState:UIControlStateNormal];
-    }else{
-        
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL,[petInfoDict objectForKey:@"u_tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                NSLog(@"load.dataImage:%@",load.dataImage);
-                if (load.dataImage == NULL) {
-                    [userImageBtn setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
-                }else{
-                    //本地目录，用于存放favorite下载的原图
-                    NSString * docDir = DOCDIR;
-                    NSString * txUserFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"u_tx"]]];
-                    //将下载的图片存放到本地
-                    [load.data writeToFile:txUserFilePath atomically:YES];
-                    [userImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                }
-            }else{
-                NSLog(@"download failed");
-            }
-        }];
-    }
+    [userImageBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL,[petInfoDict objectForKey:@"u_tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"]];
+    
+//    NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"u_tx"]]];
+////    NSLog(@"本地用户头像路径：%@", txUserFilePath);
+//    UIImage *User_image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txUserFilePath]];
+//    if (User_image) {
+//        [userImageBtn setBackgroundImage:User_image forState:UIControlStateNormal];
+//    }else{
+//        
+//        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL,[petInfoDict objectForKey:@"u_tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                NSLog(@"load.dataImage:%@",load.dataImage);
+//                if (load.dataImage == NULL) {
+//                    [userImageBtn setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
+//                }else{
+//                    //本地目录，用于存放favorite下载的原图
+//                    NSString * docDir = DOCDIR;
+//                    NSString * txUserFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"u_tx"]]];
+//                    //将下载的图片存放到本地
+//                    [load.data writeToFile:txUserFilePath atomically:YES];
+//                    [userImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                }
+//            }else{
+//                NSLog(@"download failed");
+//            }
+//        }];
+//    }
 
     
     //123  164

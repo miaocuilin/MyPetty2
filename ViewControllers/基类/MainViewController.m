@@ -993,7 +993,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         NSLog(@"搜索");
         if ([typeBtn.titleLabel.text isEqualToString:@"萌 星"]) {
             //搜索宠物
-            StartLoading;
+            LOADING;
             NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
             NSString * url = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@", SEARCHAPI, [tf.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], sig,[ControllerManager getSID]];
 //            NSLog(@"%@--%@--%@", tf.text, self.tfString, url);
@@ -1004,7 +1004,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     
                     NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
                     if (array.count == 0) {
-                        LoadingSuccess;
+                        ENDLOADING;
                         return;
                     }
                     for (NSDictionary *dict in array) {
@@ -1014,7 +1014,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         [model release];
                     }
                     self.lastAid = [self.searchArray[array.count-1] aid];
-                    LoadingSuccess;
+                    ENDLOADING;
                     [tv reloadData];
                     
                     self.sv.scrollEnabled = NO;
@@ -1028,13 +1028,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     }
 
                 }else{
-                    LoadingFailed;
+                    LOADFAILED;
                 }
             }];
             [request release];
         }else{
             //搜索经纪人
-            StartLoading;
+            LOADING;
             NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
             NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", SEARCHUSERAPI, [tf.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], sig,[ControllerManager getSID]];
             NSLog(@"%@--%@--%@", tf.text, self.tfString, url);
@@ -1046,7 +1046,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     
                     NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
                     if (array.count == 0) {
-                        LoadingSuccess;
+                        ENDLOADING;
                         return;
                     }
                     for (NSDictionary *dict in array) {
@@ -1055,7 +1055,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         [self.searchUserArray addObject:model];
                         [model release];
                     }
-                    LoadingSuccess;
+                    ENDLOADING;
                     [tv reloadData];
                     page++;
                     
@@ -1070,7 +1070,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     }
                     
                 }else{
-                    LoadingFailed;
+                    LOADFAILED;
                 }
             }];
             [request release];

@@ -363,14 +363,25 @@
     }else{
         [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.vary shouldLarge:NO];
     }
-    SDWebImageManager *manager = [SDWebImageManager sharedManager];
-    cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-    [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx]] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-        cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(64, 64)];
-        if (!image) {
-            cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+    
+    [cell.headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (image) {
+            cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(64, 64)];
+        }else{
+            
         }
     }];
+//    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+//    cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+//    
+//    [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx]] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+//        cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(64, 64)];
+//        if (!image) {
+//            cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
+//        }
+//    }];
+    
+    
 //    [cell.headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
     
 //    NSLog(@"model.tx:%@",model.tx);

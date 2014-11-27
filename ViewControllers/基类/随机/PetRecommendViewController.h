@@ -16,4 +16,6 @@
 }
 @property(nonatomic,retain)UITableView * tv;
 @property(nonatomic,retain)NSMutableArray * dataArray;
+
+@property(nonatomic,retain)NSMutableArray * myCountryArray;
 @end

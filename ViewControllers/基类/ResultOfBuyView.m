@@ -37,8 +37,31 @@
     [self.bgImageView addSubview:self.titleLabel];
     
     //close
-    self.closeBtn = [MyControl createButtonWithFrame:CGRectMake(304-20-10, 8.5, 20, 20) ImageName:@"alert_x.png" Target:self Action:@selector(closeClick) Title:nil];
+    self.closeBtn = [MyControl createButtonWithFrame:CGRectMake(304-20-10, 8.5, 20, 20) ImageName:@"" Target:self Action:@selector(closeClick) Title:nil];
     [self.bgImageView addSubview:self.closeBtn];
+    
+    //good转动动画
+    rollView = [MyControl createViewWithFrame:CGRectMake(0, 75/2.0, self.bgImageView.frame.size.width, self.bgImageView.frame.size.height-75/2.0)];
+    rollView.layer.cornerRadius = 10;
+    rollView.layer.masksToBounds = YES;
+    [self.bgImageView addSubview:rollView];
+    
+    rollImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 500*1.2, 940/2*1.2) ImageName:@"send_shine.png"];
+    rollImageView.center = CGPointMake(rollView.center.x, rollView.center.y-75/4.0-60);
+    [rollView addSubview:rollImageView];
+    
+    //bad拉伸图片
+    badLineImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 75/2.0, self.bgImageView.frame.size.width, 157/2.0) ImageName:@"send_notShine.png"];
+    [self.bgImageView addSubview:badLineImageView];
+    
+    //礼物名称背景
+    giftNameBg = [MyControl createImageViewWithFrame:CGRectMake(-3, 37, 351/2.0, 93/2.0) ImageName:@"send_giftName_bg.png"];
+    [self.bgImageView addSubview:giftNameBg];
+    
+    //
+    txBg = [MyControl createImageViewWithFrame:CGRectMake((self.bgImageView.frame.size.width-482/2)/2.0, 90-35, 482/2.0, 497/2.0) ImageName:@"send_txBg.png"];
+    [self.bgImageView addSubview:txBg];
+    
     
     self.giftNameLabel = [MyControl createLabelWithFrame:CGRectMake(0, 45, 160, 38) Font:17 Text:nil];
     self.giftNameLabel.textAlignment = NSTextAlignmentCenter;
@@ -94,10 +117,27 @@
     self.giftNameLabel.text = [NSString stringWithFormat:@"%@ x 1", [dict objectForKey:@"name"]];
     
     if ([itemId intValue]>=2000) {
-        self.bgImageView.image = [UIImage imageNamed:@"alertBg_bad.png"];
+        rollView.hidden = YES;
+        giftNameBg.image = [UIImage imageNamed:@"send_giftName_bg_bad.png"];
+        txBg.image = [UIImage imageNamed:@"send_txBg_bad.png"];
+        
+        [self badLineAnimation];
+        timer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(badLineAnimation) userInfo:nil repeats:YES];
+        
+        self.bgImageView.image = [UIImage imageNamed:@"alert_sendGift_bad.png"];
         self.rqLabel.text = [NSString stringWithFormat:@"人气 %@", [dict objectForKey:@"add_rq"]];
     }else{
-        self.bgImageView.image = [UIImage imageNamed:@"alertBg_good.png"];
+        badLineImageView.hidden = YES;
+        if(!self.isFromShake){
+            CABasicAnimation* rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+            rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0 ];
+            rotationAnimation.duration = 10;
+            //    rotationAnimation.cumulative = YES;
+            rotationAnimation.repeatCount = NSUIntegerMax;
+            [rollImageView.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+        }
+        
+        self.bgImageView.image = [UIImage imageNamed:@"alert_sendGift_good.png"];
         self.rqLabel.text = [NSString stringWithFormat:@"人气 +%@", [dict objectForKey:@"add_rq"]];
     }
     self.actLabel.text = [NSString stringWithFormat:@"%@%@", name,  [ControllerManager returnActionStringWithItemId:itemId]];
@@ -125,6 +165,14 @@
 //        [request release];
 //    }
 }
+-(void)badLineAnimation
+{
+//    NSLog(@"start~~~~");
+    badLineImageView.frame = CGRectMake(0, 75/2.0, self.bgImageView.frame.size.width, 157/2.0);
+    [UIView animateWithDuration:1 animations:^{
+        badLineImageView.frame = CGRectMake(0, 75/2.0, self.bgImageView.frame.size.width, 260);
+    }];
+}
 -(void)closeClick
 {
     if(!isNotTrue && self.isFromShake){
@@ -133,6 +181,9 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.alpha = 0;
     } completion:^(BOOL finished) {
+//        timer = nil;
+        [timer invalidate];
+        timer = nil;
         [self removeFromSuperview];
     }];
 }

@@ -1921,13 +1921,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == tv2) {
-        PhotoModel * model = self.photosDataArray[indexPath.row];
-        //跳转到详情页，并传值
-        PicDetailViewController * vc = [[PicDetailViewController alloc] init];
-        vc.img_id = model.img_id;
-        vc.usr_id = model.usr_id;
-        [self presentViewController:vc animated:YES completion:nil];
+        FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
+        vc.img_id = [self.photosDataArray[indexPath.row] img_id];
+        [self.view addSubview:vc.view];
         [vc release];
+//        PhotoModel * model = self.photosDataArray[indexPath.row];
+//        //跳转到详情页，并传值
+//        PicDetailViewController * vc = [[PicDetailViewController alloc] init];
+//        vc.img_id = model.img_id;
+//        vc.usr_id = model.usr_id;
+//        [self presentViewController:vc animated:YES completion:nil];
+//        [vc release];
     }
     if (tableView == tv3) {
 //        NSLog(@"%@--%@", [self.countryMembersDataArray[0] name], [self.countryMembersDataArray[0] usr_id]);

@@ -78,19 +78,26 @@
     line.frame = lineRect;
     
 //    NSLog(@"%f", self.frame.size.height);
-    
+    //发言者
     NSString * name1 = nil;
+    //被回复者
     NSString * name2 = nil;
     NSString * combineStr = nil;
+    NSLog(@"%@", nameStr);
     if ([nameStr rangeOfString:@"&"].location == NSNotFound) {
         combineStr = nameStr;
     }else{
         name1 = [[nameStr componentsSeparatedByString:@"&"] objectAtIndex:0];
-        if ([nameStr rangeOfString:@"@"].location == NSNotFound) {
-            name2 = [[nameStr componentsSeparatedByString:@"&"] objectAtIndex:1];
-        }else{
-            name2 = [[[[nameStr componentsSeparatedByString:@"&"] objectAtIndex:1] componentsSeparatedByString:@"@"] objectAtIndex:1];
+        name2 = [[nameStr componentsSeparatedByString:@"&"] objectAtIndex:1];
+        if ([name2 rangeOfString:@"@"].location != NSNotFound) {
+            name2 = [[name2 componentsSeparatedByString:@"@"] objectAtIndex:1];
         }
+//        if ([nameStr rangeOfString:@"@"].location == NSNotFound) {
+//            name2 = [[nameStr componentsSeparatedByString:@"&"] objectAtIndex:1];
+//        }else{
+//            //1099&阿汤叔&阿汤叔@1100p  应该是1099p回复阿汤哥
+//            name2 = [[[[nameStr componentsSeparatedByString:@"&"] objectAtIndex:1] componentsSeparatedByString:@"@"] objectAtIndex:1];
+//        }
         combineStr = [NSString stringWithFormat:@"%@ 回复 %@", name1, name2];
     }
     

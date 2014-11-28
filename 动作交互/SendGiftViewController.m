@@ -263,13 +263,15 @@
         //
         CGRect rect = giftBgImageView.frame;
         CGRect rect2 = giftBgImageView2.frame;
-        UIButton * sendGiftBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height) ImageName:@"" Target:self Action:@selector(sendGiftBtnClick:) Title:nil];
+        UIButton * sendGiftBtn = [MyControl createButtonWithFrame:CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height+50) ImageName:@"" Target:self Action:@selector(sendGiftBtnClick:) Title:nil];
         sendGiftBtn.tag = 1000+i;
-        [giftBgImageView addSubview:sendGiftBtn];
+//        sendGiftBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        [sv addSubview:sendGiftBtn];
         
-        UIButton * sendGiftBtn2 = [MyControl createButtonWithFrame:CGRectMake(0, 0, rect2.size.width, rect2.size.height) ImageName:@"" Target:self Action:@selector(sendGiftBtnClick:) Title:nil];
+        UIButton * sendGiftBtn2 = [MyControl createButtonWithFrame:CGRectMake(rect2.origin.x, rect2.origin.y, rect2.size.width, rect2.size.height+50) ImageName:@"" Target:self Action:@selector(sendGiftBtnClick:) Title:nil];
         sendGiftBtn2.tag = 1000+i+1;
-        [giftBgImageView2 addSubview:sendGiftBtn2];
+//        sendGiftBtn2.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        [sv addSubview:sendGiftBtn2];
         
         //
         if (i<self.bagItemIdArray.count) {

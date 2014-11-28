@@ -70,10 +70,10 @@
     [self resignFirstResponder];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"shake" object:nil];
 }
-- (BOOL)canBecomeFirstResponder
-{
-    return NO;
-}
+//- (BOOL)canBecomeFirstResponder
+//{
+//    return NO;
+//}
 #pragma mark - 加载摇一摇数据
 - (void)loadShakeDataInit
 {
@@ -110,6 +110,7 @@
 -(void)shake
 {
     LOADING;
+    AudioServicesPlaySystemSound (soundID);
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_shake=%ddog&cat", self.pet_aid, 1]];
     NSString *url = [NSString stringWithFormat:@"%@%@&is_shake=%d&sig=%@&SID=%@",SHAKEAPI, self.pet_aid, 1, sig,[ControllerManager getSID]];
     NSLog(@"摇一摇shake：%@",url);
@@ -179,7 +180,7 @@
 //    if ([model.add_rq rangeOfString:@"-"].location == NSNotFound) {
 //        descRewardLabel.text = [NSString stringWithFormat:@"%@ 人气 +%@",self.pet_name, model.add_rq];
 //    }
-    AudioServicesPlaySystemSound (soundID);
+//    AudioServicesPlaySystemSound (soundID);
     //固定礼物1102
 //    NSString *item = @"1102";
 //    NSLog(@"%@--%@", model.name, model.no);
@@ -237,6 +238,9 @@
             ENDLOADING;
             
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                //更新贡献度
+                self.updateContri(model.add_rq);
+                
                 ResultOfSendViewController * send = [[ResultOfSendViewController alloc] init];
                 send.giftName = model.name;
                 send.pet_aid = self.pet_aid;
@@ -282,6 +286,14 @@
     
 }
 #pragma mark - 通知触发的方法
+//-(BOOL)canBecomeFirstResponder
+//{
+//    return YES;
+//}
+//-(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
+//{
+//    NSLog(@"shake>>");
+//}
 - (void)shakeAction
 {
     if (self.count >0) {

@@ -175,4 +175,5 @@ SDWebImageManager *manager = [SDWebImageManager sharedManager];
  */
 - (BOOL)isRunning;
 
+- (NSString *)cacheKeyForURL:(NSURL *)url;
 @end

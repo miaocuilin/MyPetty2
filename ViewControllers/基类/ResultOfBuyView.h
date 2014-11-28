@@ -12,6 +12,14 @@
 {
     //是否真的是点击了X
     BOOL isNotTrue;
+    
+    
+    UIView * rollView;
+    UIImageView * rollImageView;
+    UIImageView * badLineImageView;
+    NSTimer * timer;
+    UIImageView * giftNameBg;
+    UIImageView * txBg;
 }
 //@property(nonatomic,retain)UIView * alphaBgView;
 @property(nonatomic,retain)UIImageView * bgImageView;

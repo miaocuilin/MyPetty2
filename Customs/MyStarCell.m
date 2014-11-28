@@ -50,10 +50,10 @@
     positionLabel.textAlignment = NSTextAlignmentCenter;
     [position addSubview:positionLabel];
     
-    contributionLabel = [MyControl createLabelWithFrame:CGRectMake(0, 20, 65, 15) Font:9 Text:@""];
-    contributionLabel.textAlignment = NSTextAlignmentCenter;
-    contributionLabel.textColor = [UIColor colorWithRed:252/255.0 green:196/255.0 blue:182/255.0 alpha:1];
-    [position addSubview:contributionLabel];
+    self.contributionLabel = [MyControl createLabelWithFrame:CGRectMake(0, 20, 65, 15) Font:9 Text:@""];
+    self.contributionLabel.textAlignment = NSTextAlignmentCenter;
+    self.contributionLabel.textColor = [UIColor colorWithRed:252/255.0 green:196/255.0 blue:182/255.0 alpha:1];
+    [position addSubview:self.contributionLabel];
     
     //邀请按钮
     inviteBtn = [MyControl createButtonWithFrame:CGRectMake(bgView.frame.size.width-10-50, 5, 50, 28) ImageName:@"inviteBtn.png" Target:self Action:@selector(inviteBtnClick) Title:@"邀请"];
@@ -312,7 +312,7 @@
     
     position.image = [UIImage imageNamed:[NSString stringWithFormat:@"position_%@.png", model.rank]];
     positionLabel.text = [ControllerManager returnPositionWithRank:model.rank];
-    contributionLabel.text = [NSString stringWithFormat:@"贡献度%@", model.t_contri];
+    self.contributionLabel.text = [NSString stringWithFormat:@"贡献度%@", model.t_contri];
     nameLabel.text = model.name;
     lab4.text = model.t_rq;
     lab5.text = [NSString stringWithFormat:@"%@%@", model.percent, @"%"];

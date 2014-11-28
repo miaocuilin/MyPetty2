@@ -227,13 +227,13 @@
 {
     UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, 130, 130)];
     view.clipsToBounds = YES;
-    UIImageView * view1 = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 130, 130) ImageName:@"20-1.png"];
+    UIImageView * view1 = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 130, 130) ImageName:@""];
     view1.contentMode = UIViewContentModeScaleAspectFill;
     [view addSubview:view1];
     
     NSString * url = [self.imagesArray[index] objectForKey:@"url"];
     
-    [view1 setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, url]]];
+    [view1 setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, url]] placeholderImage:[UIImage imageNamed:@"20-1.png"]];
 //    NSString * docDir = DOCDIR;
 //    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
 //

@@ -19,7 +19,7 @@
     //
     UIImageView * position;
     UILabel * positionLabel;
-    UILabel * contributionLabel;
+//    UILabel * contributionLabel;
     UIButton * headBtn;
     UILabel * nameLabel;
     UITextField * tf;
@@ -37,6 +37,8 @@
     
     UIButton * inviteBtn;
 }
+@property(nonatomic,retain)UILabel * contributionLabel;
+
 @property(nonatomic,copy)NSString * tempTfString;
 
 @property(nonatomic,retain)MyStarModel * model;

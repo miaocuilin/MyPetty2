@@ -23,6 +23,8 @@
 
 //
 #import "FrontImageDetailViewController.h"
+#import "SendResultViewController.h"
+#import "ResultOfSendViewController.h"
 //#import "DSImagesViewController.h"
 @implementation AppDelegate
 -(void)dealloc
@@ -56,6 +58,8 @@
     NSLog(@"本机UUID:%@", [OpenUDID value]);
 
     FirstViewController * info = [[FirstViewController alloc] init];
+//    SendResultViewController * info = [[SendResultViewController alloc] initWithNibName:@"SendResultViewController" bundle:[NSBundle mainBundle]];
+//    ResultOfSendViewController * info = [[ResultOfSendViewController alloc] init];
 //    FrontImageDetailViewController * info = [[FrontImageDetailViewController alloc] init];
 //    NewWaterFlowViewController * info = [[NewWaterFlowViewController alloc] init];
 //    PetRecommendViewController * info = [[PetRecommendViewController alloc] init];
@@ -104,7 +108,10 @@
     [self.window makeKeyAndVisible];
     return YES;
 }
-
+//-(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
+//{
+//    NSLog(@"shake>>");
+//}
 //-(void)segmentClick:(UISegmentedControl *)seg
 //{
 //    NSLog(@"%d", seg.selectedSegmentIndex);

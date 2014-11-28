@@ -153,6 +153,7 @@
 //        [cell makeUIWithWidth:self.view.frame.size.width Height:322.0f];
     }
     MyStarModel * model = self.dataArray[indexPath.row];
+    
     cell.inviteClick = ^(){
         //点击邀请
         MainViewController * vc = [ControllerManager shareMain];
@@ -258,7 +259,14 @@
                 model.shake_count = [NSNumber numberWithInt:a];
                 [self.tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             };
-           
+            shake.updateContri = ^(NSString * add_rq){
+//                NSLog(@"%@--%@", add_rq, cell.contributionLabel.text);
+                int contri = [[cell.contributionLabel.text substringFromIndex:3] intValue];
+//                cell.contributionLabel.text = [NSString stringWithFormat:@"贡献度%d", contri+[add_rq intValue]];
+                model.t_contri = [NSString stringWithFormat:@"%d", contri+[add_rq intValue]];
+                [self.tv reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:0];
+//                NSLog(@"%@--%d", cell.contributionLabel.text, contri+[add_rq intValue]);
+            };
             [mvc addChildViewController:shake];
             [shake release];
             [shake didMoveToParentViewController:mvc];
@@ -279,6 +287,9 @@
                 }else{
                     model.gift_count = [NSNumber numberWithInt:[model.gift_count intValue]+1];
                 }
+                int contri = [[cell.contributionLabel.text substringFromIndex:3] intValue];
+
+                model.t_contri = [NSString stringWithFormat:@"%d", contri+[[[ControllerManager returnGiftDictWithItemId:itemId] objectForKey:@"add_rq"] intValue]];
                 [self.tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
                 //
                 MainViewController * main = [ControllerManager shareMain];

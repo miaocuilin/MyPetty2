@@ -22,9 +22,9 @@
 }
 -(void)makeUI
 {
-    self.view.alpha = 0;
-    //600 852
-    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-304)/2.0, (self.view.frame.size.height-426)/2.0, 304, 426) ImageName:@"shake_sendBg.png"];
+//    self.view.alpha = 0;
+    //596 852  有效宽度596
+    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-304)/2.0, (self.view.frame.size.height-426)/2.0, 304, 426) ImageName:@"alert_sendGift_good.png"];
     [self.view addSubview:self.bgImageView];
     
     //title
@@ -33,9 +33,25 @@
     [self.bgImageView addSubview:self.titleLabel];
     
     //close
-    self.closeBtn = [MyControl createButtonWithFrame:CGRectMake(self.bgImageView.frame.size.width-20-10, 8.5, 20, 20) ImageName:@"alert_x.png" Target:self Action:@selector(closeClick) Title:nil];
+    self.closeBtn = [MyControl createButtonWithFrame:CGRectMake(self.bgImageView.frame.size.width-20-10, 8.5, 20, 20) ImageName:@"" Target:self Action:@selector(closeClick) Title:nil];
     [self.bgImageView addSubview:self.closeBtn];
     
+    //转动动画
+    UIView * rollView = [MyControl createViewWithFrame:CGRectMake(0, 75/2.0, self.bgImageView.frame.size.width, self.bgImageView.frame.size.height-75/2.0)];
+    rollView.layer.cornerRadius = 10;
+    rollView.layer.masksToBounds = YES;
+    [self.bgImageView addSubview:rollView];
+    
+    UIImageView * rollImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 500*1.2, 940/2*1.2) ImageName:@"send_shine.png"];
+    rollImageView.center = CGPointMake(rollView.center.x, rollView.center.y-75/4.0-60);
+    [rollView addSubview:rollImageView];
+    
+    CABasicAnimation* rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0 ];
+    rotationAnimation.duration = 10;
+//    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = NSUIntegerMax;
+    [rollImageView.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
     //
     label1 = [MyControl createLabelWithFrame:CGRectMake(0, 60, self.bgImageView.frame.size.width, 15) Font:13 Text:nil];
     label1.textColor = BGCOLOR;

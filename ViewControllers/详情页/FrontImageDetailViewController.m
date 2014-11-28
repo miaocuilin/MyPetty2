@@ -131,7 +131,8 @@
             
             [self modifyUI];
         }else{
-            LOADFAILED
+            sv.hidden = NO;
+            LOADFAILED;
             NSLog(@"数据加载失败");
         }
     }];
@@ -147,10 +148,10 @@
     NSString * code = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, [self.imageDict objectForKey:@"likers"], code, [ControllerManager getSID]];
     NSLog(@"赞列表：%@", url);
-    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            ENDLOADING;
-            
+            NSLog(@"zan:%@", load.dataDict);
             NSArray * array = [load.dataDict objectForKey:@"data"] ;
             for (NSDictionary * dict in array) {
                 UserInfoModel * model = [[UserInfoModel alloc] init];
@@ -163,6 +164,7 @@
 //            LOADFAILED;
         }
     }];
+    [request release];
 }
 -(void)loadSendersData
 {
@@ -177,6 +179,7 @@
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             ENDLOADING;
+            isLoaded[1] = 1;
             
             NSArray * array = [load.dataDict objectForKey:@"data"] ;
             for (NSDictionary * dict in array) {
@@ -212,9 +215,10 @@
     NSString * code = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, mutableStr, code, [ControllerManager getSID]];
     NSLog(@"评论列表：%@", url);
-    [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             ENDLOADING;
+            isLoaded[2] = 1;
             
             NSArray * array = [load.dataDict objectForKey:@"data"] ;
             for (NSDictionary * dict in array) {
@@ -235,6 +239,7 @@
             LOADFAILED;
         }
     }];
+    [request release];
 }
 -(void)loadSharersData
 {
@@ -252,6 +257,7 @@
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             ENDLOADING;
+            isLoaded[3] = 1;
             
             NSArray * array = [load.dataDict objectForKey:@"data"] ;
             for (NSDictionary * dict in array) {
@@ -327,7 +333,7 @@
     NSLog(@"PetInfoAPI:%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-//            NSLog(@"照片详情页宠物信息：%@", load.dataDict);
+            NSLog(@"照片详情页宠物信息：%@", load.dataDict);
             //            PetInfoModel * model = [[PetInfoModel alloc] init];
 
             self.petDict = [load.dataDict objectForKey:@"data"];
@@ -347,14 +353,21 @@
 {
     LOADING;
     [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.imageDict objectForKey:@"url"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if(error){
+            NSLog(@"%@", error);
+        }
         ENDLOADING;
         sv.hidden = NO;
         
-        CGRect rect = bigImageView.frame;
         
-        float p = rect.size.width*image.size.height/image.size.width;
-        rect.size.height = p;
-        bigImageView.frame = rect;
+        CGRect rect = bigImageView.frame;
+        if(!error){
+            
+            float p = rect.size.width*image.size.height/image.size.width;
+            rect.size.height = p;
+            bigImageView.frame = rect;
+        }
+        
         
         //
         CGRect rect2 = desLabel.frame;
@@ -1331,19 +1344,21 @@
         tempBtn = (UIButton *)[imageBgView2 viewWithTag:200+triangleIndex];
         if (btn.tag == 501) {
             if (!isLoaded[1]) {
-                isLoaded[1] = 1;
+//                isLoaded[1] = 1;
                 [self loadSendersData];
             }
         }else if (btn.tag == 502) {
             if (!isLoaded[2]) {
-                isLoaded[2] = 1;
+//                isLoaded[2] = 1;
                 [self loadCommentersData];
             }
         }else if (btn.tag == 503) {
             if (!isLoaded[3]) {
-                isLoaded[3] = 1;
+//                isLoaded[3] = 1;
                 if ([[self.imageDict objectForKey:@"sharers"] isKindOfClass:[NSString class]]) {
                     [self loadSharersData];
+                }else{
+                    isLoaded[3] = 1;
                 }
                 
             }

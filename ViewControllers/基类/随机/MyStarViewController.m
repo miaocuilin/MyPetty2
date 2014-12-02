@@ -81,6 +81,7 @@
 //            NSLog(@"我的萌星：%@", load.dataDict);
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             [self.dataArray removeAllObjects];
+            
             for (NSDictionary * dict in array) {
                 MyStarModel * model = [[MyStarModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
@@ -89,6 +90,20 @@
                 [self.dataArray addObject:model];
                 [model release];
             }
+//            NSLog(@"%d", self.dataArray.count);
+            //
+            NSMutableArray * tempArray = [NSMutableArray arrayWithArray:self.dataArray];
+            [self.dataArray removeAllObjects];
+            for (int i=0; i<tempArray.count; i++) {
+                if ([[tempArray[i] master_id] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                    [self.dataArray addObject:tempArray[i]];
+                    [tempArray removeObjectAtIndex:i];
+                    i--;
+                }
+            }
+            [self.dataArray addObjectsFromArray:tempArray];
+//            NSLog(@"%d", self.dataArray.count);
+            
             [self.tv headerEndRefreshing];
             [self.tv reloadData];
 //            ENDLOADING;

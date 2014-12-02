@@ -676,7 +676,7 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
     
     // animate
     __weak typeof(self) blockSelf = self;
-    if([MyControl isIOS7]){
+    if([[[UIDevice currentDevice] systemVersion] floatValue]>=7.0){
         [UIView animateWithDuration:animated ? duration : 0.0 delay:0
              usingSpringWithDamping:JDSideMenuDefaultDamping initialSpringVelocity:velocity options:UIViewAnimationOptionAllowUserInteraction animations:^{
                  //这里-self.menuWidth设置当前层向左偏移

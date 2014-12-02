@@ -166,10 +166,11 @@
         [bgView addSubview:label];
         label.tag = 200+i;
         
-        UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(label.frame.origin.x, label.frame.origin.y+15, 44, 12) Font:12 Text:array3[i]];
+        UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(label.frame.origin.x-10, label.frame.origin.y+15, 64, 12) Font:12 Text:array3[i]];
         label2.textColor = [UIColor lightGrayColor];
         label2.textAlignment = NSTextAlignmentCenter;
         [bgView addSubview:label2];
+//        label2.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
         label2.tag = 300+i;
     }
     

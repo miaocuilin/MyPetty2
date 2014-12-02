@@ -736,7 +736,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"] || tfUserName.text.length == 0 || tfUserName.text.length >10 || tfCity.text.length == 0 || (boy.selected == NO && girl.selected == NO)) {
         finishButton.backgroundColor = [UIColor grayColor];
     }else{
-        finishButton.backgroundColor = BGCOLOR;
+        finishButton.backgroundColor = ORANGE;
 
     }
 }
@@ -1234,8 +1234,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - 注册
 -(void)userRegister
 {
-    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithStatus:@"注册中..."];
+    LOADING;
+//    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//    [MMProgressHUD showWithStatus:@"注册中..."];
 //    alert0 = [[UIAlertView alloc] initWithTitle:@"正在注册，请稍后..." message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
 //    [alert0 show];
 //    [alert0 release];
@@ -1328,6 +1329,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSLog(@"url:%@", message);
     [[httpDownloadBlock alloc] initWithUrlStr:message Block:^(BOOL isFinish, httpDownloadBlock * load) {
         NSLog(@"%@", load.dataDict);
+        ENDLOADING;
 //        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 //        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
 //        [MMProgressHUD showWithStatus:@"正在下载注册返回信息"];
@@ -1420,7 +1422,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
             }
         }else{
-            [MMProgressHUD dismissWithError:@"注册失败%>_<%" afterDelay:0.5];
+//            LOADFAILED;
+//            [MMProgressHUD dismissWithError:@"注册失败%>_<%" afterDelay:0.5];
 //            [alert0 setTitle:@"数据下载失败"];
 //            alert0.hidden = YES;
 //            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"数据下载失败" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
@@ -1629,6 +1632,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -ASI
 -(void)postImage
 {
+    LOADING;
     //宠物头像上传
     
     //网络上传
@@ -1676,6 +1680,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)requestFinished:(ASIHTTPRequest *)request
 {
+    ENDLOADING;
     [USER setObject:@"1" forKey:@"needRefresh"];
     
 //    alert1.hidden = YES;
@@ -1771,11 +1776,52 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
+    ENDLOADING;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     if (request == _request) {
-        [MMProgressHUD dismissWithError:@"宠物头像上传失败" afterDelay:0.5];
+        [MyControl popAlertWithView:self.view Msg:@"宠物头像上传失败"];
+//        [MMProgressHUD dismissWithError:@"宠物头像上传失败" afterDelay:0.5];
     }else{
-        [MMProgressHUD dismissWithError:@"用户头像上传失败" afterDelay:0.5];
+        [MyControl popAlertWithView:self.view Msg:@"用户头像上传失败"];
+//        [MMProgressHUD dismissWithError:@"用户头像上传失败" afterDelay:0.5];
+    }
+    
+    
+    if (doubleNeedPost) {
+        [USER setObject:@"1" forKey:@"Menu"];
+        
+        //注册完之后直接返回主页
+        [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+        [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
+        [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+        //2代表刚注册
+        [USER setObject:@"2" forKey:@"isNotRegister"];
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }else{
+        if (self.isOldUser) {
+            [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+            self.isOldUserTxOK = 1;
+            if (self.isOldUserPetInfoOK == 1) {
+                [self dismissViewControllerAnimated:NO completion:nil];
+            }
+        }else{
+            [USER setObject:@"1" forKey:@"Menu"];
+            
+            //注册完之后直接返回主页
+            [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+            [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
+            [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+            //2代表刚注册
+            [USER setObject:@"2" forKey:@"isNotRegister"];
+            if (self.isAdoption) {
+                self.isAdoptionTxOK = YES;
+                if (self.isAdoptionPetInfoOK == YES) {
+                    [self dismissViewControllerAnimated:NO completion:nil];
+                }
+            }else{
+                [self dismissViewControllerAnimated:NO completion:nil];
+            }
+        }
     }
 //    [alert0 setTitle:@"头像上传失败"];
 //    alert1.hidden = YES;

@@ -1431,7 +1431,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         else {
             if (buttonIndex == 0) {
-                sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+                sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
                 isCamara = NO;
             } else {
                 return;
@@ -1464,13 +1464,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (isCamara) {
             [self lauchEditorWithImage:image];
         }else{
-            [[self assetLibrary] assetForURL:assetURL resultBlock:^(ALAsset *asset) {
-                if (asset){
-                    [self launchEditorWithAsset:asset];
-                }
-            } failureBlock:^(NSError *error) {
-                [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enable access to your device's photos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-            }];
+            [self lauchEditorWithImage:image];
+//            [[self assetLibrary] assetForURL:assetURL resultBlock:^(ALAsset *asset) {
+//                if (asset){
+//                    [self launchEditorWithAsset:asset];
+//                }
+//            } failureBlock:^(NSError *error) {
+//                [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enable access to your device's photos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+//            }];
         }};
     
     [self dismissViewControllerAnimated:NO completion:completion];

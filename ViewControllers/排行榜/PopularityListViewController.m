@@ -272,7 +272,7 @@
 #pragma mark - 创建tableView
 -(void)createTableView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
 //    if (self.view.frame.size.height == 480) {
 //        tv.frame = CGRectMake(0, 0, 320, 64+35+35+50*3);
 //    }
@@ -281,7 +281,7 @@
     tv.separatorStyle = 0;
     tv.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tv];
-    
+
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64+35+35)];
     tv.tableHeaderView = tempView;
     

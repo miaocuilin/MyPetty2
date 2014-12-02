@@ -676,12 +676,21 @@ const CGFloat JDSideMenuDefaultCloseAnimationTime = 0.4;
     
     // animate
     __weak typeof(self) blockSelf = self;
-    [UIView animateWithDuration:animated ? duration : 0.0 delay:0
-         usingSpringWithDamping:JDSideMenuDefaultDamping initialSpringVelocity:velocity options:UIViewAnimationOptionAllowUserInteraction animations:^{
-             //这里-self.menuWidth设置当前层向左偏移
-             blockSelf.containerView.transform = CGAffineTransformMakeTranslation(self.menuWidth, 0);
-//             [self statusBarView].transform = blockSelf.containerView.transform;
-         } completion:nil];
+    if([MyControl isIOS7]){
+        [UIView animateWithDuration:animated ? duration : 0.0 delay:0
+             usingSpringWithDamping:JDSideMenuDefaultDamping initialSpringVelocity:velocity options:UIViewAnimationOptionAllowUserInteraction animations:^{
+                 //这里-self.menuWidth设置当前层向左偏移
+                 blockSelf.containerView.transform = CGAffineTransformMakeTranslation(self.menuWidth, 0);
+                 //             [self statusBarView].transform = blockSelf.containerView.transform;
+             } completion:nil];
+    }else{
+        [UIView animateWithDuration:0.5 animations:^{
+            //这里-self.menuWidth设置当前层向左偏移
+            blockSelf.containerView.transform = CGAffineTransformMakeTranslation(self.menuWidth, 0);
+            //             [self statusBarView].transform = blockSelf.containerView.transform;
+        }];
+    }
+    
 }
 
 - (void)hideMenuAnimated:(BOOL)animated;

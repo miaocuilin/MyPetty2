@@ -874,6 +874,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     vc2 = [[RandomViewController alloc] init];
     [self addChildViewController:vc2];
     [vc2.view setFrame:CGRectMake(320, 0, 320, self.view.frame.size.height)];
+    vc2.reloadRandom = ^(){
+        if([ControllerManager getIsSuccess]){
+            [self getNewMessage];
+        }
+    };
     [self.sv addSubview:vc2.view];
     
 //    WaterViewController *water = [[WaterViewController alloc] init];
@@ -1194,6 +1199,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [UIView animateWithDuration:0.3 animations:^{
             self.sv.contentOffset = CGPointMake(320, 0);
         }];
+        [vc2 headerRefresh];
     }else{
 //        self.menuBgView.hidden = NO;
         if (isCreated[2] == 0) {
@@ -1254,11 +1260,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.view bringSubviewToFront:self.alphaBtn];
         }else{
             if (b != sc.selectedSegmentIndex) {
-                [vc1.tv headerBeginRefreshing];
+//                [vc1.tv headerBeginRefreshing];
             }
             
         }
-    }else if(a == 320*2){
+    }else if(a == self.view.frame.size.width){
+//        [vc2 headerRefresh];
+    }else if(a == self.view.frame.size.width*2){
 //        self.menuBgView.hidden = NO;
 //        if (![ControllerManager getIsSuccess]) {
 //            sv.contentOffset = CGPointMake(320, 0);
@@ -1280,7 +1288,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [self.view bringSubviewToFront:self.alphaBtn];
         }else{
             if (b != sc.selectedSegmentIndex) {
-                [vc3.tv headerBeginRefreshing];
+//                [vc3.tv headerBeginRefreshing];
             }
             
         }

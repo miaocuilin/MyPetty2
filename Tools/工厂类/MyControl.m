@@ -306,7 +306,7 @@
 + (NSData *)scaleToSize:(UIImage *)sourceImage
 {
     CGFloat compression = 1.0f;
-    float maxFileSize = 90*1024;
+    float maxFileSize = 120*1024;
     
     NSData *imageData = UIImageJPEGRepresentation(sourceImage, compression);
     

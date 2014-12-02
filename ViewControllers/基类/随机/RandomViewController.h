@@ -13,8 +13,8 @@
 {
     UIView * navView;
     BOOL isMenuBgViewAppear;
-    float Height[1000];
-    BOOL didLoad[1000];
+    float Height[2000];
+//    BOOL didLoad[1000];
 //    BOOL isLike[300];
 //    int limitedCount;
     MBProgressHUD *HUD;
@@ -32,4 +32,10 @@
 @property(nonatomic,retain)NSMutableArray * dataArray;
 @property(nonatomic,retain)NSMutableArray * likersArray;
 @property(nonatomic,copy)NSString * lastImg_id;
+
+//@property(nonatomic,retain)NSMutableDictionary * heightDict;
+
+@property(nonatomic,copy)void (^reloadRandom)(void);
+
+-(void)headerRefresh;
 @end

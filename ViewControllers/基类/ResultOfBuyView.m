@@ -103,8 +103,8 @@
 -(void)configUIWithName:(NSString *)name ItemId:(NSString *)itemId Tx:(NSString *)tx
 {
     if (self.isFromShake) {
-        [self.pickMore setTitle:@"就送这个" forState:UIControlStateNormal];
-        [self.confirmBtn setTitle:@"再摇1次" forState:UIControlStateNormal];
+        [self.pickMore setTitle:@"再摇1次" forState:UIControlStateNormal];
+        [self.confirmBtn setTitle:@"就送这个" forState:UIControlStateNormal];
     }
     
     NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:itemId];
@@ -190,8 +190,9 @@
 -(void)pickMoreClick
 {
     if (self.isFromShake) {
-        //跳到下个页面
-        self.sendThis();
+        //返回摇动页面
+        self.shakeMore();
+        
     }
     isNotTrue = YES;
     [self closeClick];
@@ -200,8 +201,8 @@
 -(void)confirmClick
 {
     if (self.isFromShake) {
-        //返回摇动页面
-        self.shakeMore();
+        //跳到下个页面
+        self.sendThis();
     }else{
         self.confirm();
     }

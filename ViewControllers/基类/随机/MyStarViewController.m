@@ -73,7 +73,7 @@
 //}
 -(void)loadData
 {
-    LOADING;
+//    LOADING;
     NSString * url = [NSString stringWithFormat:@"%@%@", MYSTARAPI, [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * requset = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -91,10 +91,10 @@
             }
             [self.tv headerEndRefreshing];
             [self.tv reloadData];
-            ENDLOADING;
+//            ENDLOADING;
         }else{
             [self.tv headerEndRefreshing];
-            LOADFAILED;
+//            LOADFAILED;
         }
     }];
     [requset release];

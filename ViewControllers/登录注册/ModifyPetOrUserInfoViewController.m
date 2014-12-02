@@ -712,8 +712,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //宠物头像上传
     
     //网络上传
-    NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [[USER objectForKey:@"petInfoDict"] objectForKey:@"aid"]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETTXAPI, [[USER objectForKey:@"petInfoDict"] objectForKey:@"aid"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.petInfoModel.aid];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETTXAPI, self.petInfoModel.aid, [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"%@--%@", code, url);
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:url]];
     _request.requestMethod = @"POST";

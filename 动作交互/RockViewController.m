@@ -61,9 +61,25 @@
 //    self.badGiftDataArray = [ControllerManager getGift:YES];
     [self loadShakeDataInit];
     [self createShakeUI];
-}
-- (void)viewDidAppear:(BOOL)animated{
+    
+//    BOOL flag = [self.view becomeFirstResponder];
+//    if (flag) {
+//        NSLog(@"当前视图是第一响应对象");
+//    } else {
+//        NSLog(@"不是第一响应对象");
+//    }
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(shakeAction) name:@"shake" object:nil];
+}
+//-(BOOL)canBecomeFirstResponder
+//{
+//    return YES;
+//}
+//-(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
+//{
+//    NSLog(@"shake+++++++++++++++++");
+//}
+- (void)viewDidAppear:(BOOL)animated{
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(shakeAction) name:@"shake" object:nil];
 }
 - (void)viewDidDisappear:(BOOL)animated
 {

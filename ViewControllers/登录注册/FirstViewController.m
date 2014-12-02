@@ -60,9 +60,10 @@
 -(void)downloadLaunchImageInfo
 {
     if (![USER objectForKey:@"SID"]) {
-        [self login];
+        [self tempLogin];
         return;
     }
+    
 //    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:WELCOMEAPI Block:^(BOOL isFinish, httpDownloadBlock * load) {
 //        if (isFinish) {
 //            NSLog(@"%@", load.dataDict);
@@ -386,11 +387,17 @@
                 //网上也米有SID--》login
                 [self login];
             }else{
-                if ([[USER objectForKey:@"isSuccess"] intValue]
+                
+                if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] intValue]
                     ) {
+                    [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
+                    [USER setObject:@"1" forKey:@"isSuccess"];
+                    [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"sid"] forKey:@"SID"];
                     [ControllerManager setIsSuccess:[[USER objectForKey:@"isSuccess"] intValue]];
                     [ControllerManager setSID:[USER objectForKey:@"SID"]];
-                    [self getUserData];
+                    
+                    [self downloadLaunchImageInfo];
+//                    [self getUserData];
                 }else{
                     [self login];
                 }

@@ -49,7 +49,7 @@
     }
     
     NSLog(@"%@", url);
-    LOADING;
+//    LOADING;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
@@ -67,10 +67,10 @@
             }
             [self.tv headerEndRefreshing];
             [self.tv reloadData];
-            ENDLOADING;
+//            ENDLOADING;
         }else{
             [self.tv headerEndRefreshing];
-            LOADFAILED;
+//            [MyControl popAlertWithView:self.view Msg:@""];
         }
     }];
     [request release];

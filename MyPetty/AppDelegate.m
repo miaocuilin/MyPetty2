@@ -25,6 +25,7 @@
 #import "FrontImageDetailViewController.h"
 #import "SendResultViewController.h"
 #import "ResultOfSendViewController.h"
+#import "FoodFirstViewController.h"
 //#import "DSImagesViewController.h"
 @implementation AppDelegate
 -(void)dealloc
@@ -50,7 +51,8 @@
     NSLog(@"%@", [Keychain load:KEY_UDID]);
 //    NSLog(@"%@", NSTemporaryDirectory());
 //    [NSSearchPathForDirectoriesInDomains(NSTemporaryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        
+    
+//    http://itunes.apple.com/us/app/id932758265
     
     [USER setObject:[Keychain load:KEY_UDID] forKey:@"UDID"];
     
@@ -58,6 +60,7 @@
     NSLog(@"本机UUID:%@", [OpenUDID value]);
 
     FirstViewController * info = [[FirstViewController alloc] init];
+//    UIViewController * info = [[FoodFirstViewController alloc] init];
 //    SendResultViewController * info = [[SendResultViewController alloc] initWithNibName:@"SendResultViewController" bundle:[NSBundle mainBundle]];
 //    ResultOfSendViewController * info = [[ResultOfSendViewController alloc] init];
 //    FrontImageDetailViewController * info = [[FrontImageDetailViewController alloc] init];
@@ -108,10 +111,12 @@
     [self.window makeKeyAndVisible];
     return YES;
 }
-//-(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
-//{
-//    NSLog(@"shake>>");
-//}
+-(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    NSLog(@"shake>>");
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"shake" object:self];
+}
+
 //-(void)segmentClick:(UISegmentedControl *)seg
 //{
 //    NSLog(@"%d", seg.selectedSegmentIndex);

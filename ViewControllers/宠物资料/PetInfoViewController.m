@@ -705,6 +705,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     ModifyPetOrUserInfoViewController * vc = [[ModifyPetOrUserInfoViewController alloc] init];
     PetInfoModel * model = [[PetInfoModel alloc] init];
     [model setValuesForKeysWithDictionary:petInfoDict];
+//    NSLog(@"%@", model.aid);
     vc.petInfoModel = model;
     [model release];
     
@@ -1309,26 +1310,29 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //
     bgImageView1 = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 200)];
     /************************/
-    NSString * txPetFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
+//    NSString * txPetFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
 //    NSLog(@"本地宠物头像路径：%@", txPetFilePath);
-    UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txPetFilePath]];
-    if (image) {
+    [bgImageView1 setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [petInfoDict objectForKey:@"tx"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         bgImageView1.image = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
-    }else{
-
-        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                //本地目录，用于存放favorite下载的原图
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
-                    //将下载的图片存放到本地
-                    [load.data writeToFile:txFilePath atomically:YES];
-                    bgImageView1.image = [load.dataImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
-            }else{
-                NSLog(@"download failed");
-            }
-        }];
-    }
+    }];
+//    UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:txPetFilePath]];
+//    if (image) {
+//        bgImageView1.image = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+//    }else{
+//
+//        [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                //本地目录，用于存放favorite下载的原图
+//                    NSString * docDir = DOCDIR;
+//                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"tx"]]];
+//                    //将下载的图片存放到本地
+//                    [load.data writeToFile:txFilePath atomically:YES];
+//                    bgImageView1.image = [load.dataImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+//            }else{
+//                NSLog(@"download failed");
+//            }
+//        }];
+//    }
     /************************/
     [bgView addSubview:bgImageView1];
     [bgImageView1 release];

@@ -33,6 +33,37 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     isInThisController = YES;
+    //底部4个球跳动动画
+    UIButton * b1 = (UIButton *)[self.view viewWithTag:100];
+    UIButton * b2 = (UIButton *)[self.view viewWithTag:101];
+    UIButton * b3 = (UIButton *)[self.view viewWithTag:102];
+    UIButton * b4 = (UIButton *)[self.view viewWithTag:103];
+    CGRect r1 = b1.frame;
+    CGRect r2 = b2.frame;
+    CGRect r3 = b3.frame;
+    CGRect r4 = b4.frame;
+    
+    [self animationWithView:b1 Size:r1];
+    [self animationWithView:b2 Size:r2];
+    [self animationWithView:b3 Size:r3];
+    [self animationWithView:b4 Size:r4];
+}
+-(void)animationWithView:(UIView *)view Size:(CGRect)r
+{
+//    [UIView animateWithDuration:0.3 animations:^{
+//        view.frame = CGRectMake(r.origin.x-5, r.origin.y-10, r.size.width+10, r.size.height+10);
+//    } completion:^(BOOL finished) {
+//        [UIView animateWithDuration:0.4 animations:^{
+//            view.frame = r;
+//        } completion:nil];
+//    }];
+    [UIView animateWithDuration:0.3 delay:0.3 options:0 animations:^{
+        view.frame = CGRectMake(r.origin.x-5, r.origin.y-10, r.size.width+10, r.size.height+10);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.4 animations:^{
+            view.frame = r;
+        } completion:nil];
+    }];
 }
 -(void)viewDidDisappear:(BOOL)animated
 {
@@ -78,7 +109,7 @@
     [self loadImageData];
     
     self.view.alpha = 0;
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.4 animations:^{
         self.view.alpha = 1;
     }];
     
@@ -99,12 +130,17 @@
             
             NSLog(@"imageInfo:%@", load.dataDict);
 //            self.is_follow = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_follow"] intValue];
+            
             //            if (self.is_follow) {
             //                self.attentionBtn.selected = YES;
             //            }
             self.picDict = load.dataDict;
             self.imageDict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
             
+            if([[self.imageDict objectForKey:@"likers"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"likers"] rangeOfString:[USER objectForKey:@"usr_id"]].location != NSNotFound){
+                UIButton * button = (UIButton *)[self.view viewWithTag:100];
+                button.selected = YES;
+            }
             //likerId
 //            self.likerIdArray = [NSMutableArray arrayWithArray:[[self.imageDict objectForKey:@"likers"] componentsSeparatedByString:@","]];
             
@@ -121,7 +157,8 @@
 //                self.senderTxArray = [[self.picDict objectForKey:@"data"] objectForKey:@"sender_tx"];
 //            }
 //            [tv reloadData];
-            [self loadLikersData];
+            
+//            [self loadLikersData];
             
             [self analyseComments];
             
@@ -151,6 +188,8 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            ENDLOADING;
+            isLoaded[0] = 1;
+            
             NSLog(@"zan:%@", load.dataDict);
             NSArray * array = [load.dataDict objectForKey:@"data"] ;
             for (NSDictionary * dict in array) {
@@ -477,9 +516,17 @@
 //    desTv.frame = rect2;
     
     
-    [headBtn setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.petDict objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
+    [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.petDict objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (image) {
+            [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+        }
+    }];
     
-    [userTx setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [self.petDict objectForKey:@"u_tx"]]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"]];
+    [userTx setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [self.petDict objectForKey:@"u_tx"]]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (image) {
+            [userTx setImage:[MyControl returnSquareImageWithImage:image]];
+        }
+    }];
     
     if ([[self.petDict objectForKey:@"gender"] intValue] == 1) {
         sex.image = [UIImage imageNamed:@"man.png"];
@@ -502,6 +549,30 @@
     
     UILabel * share = (UILabel *)[imageBgView2 viewWithTag:303];
     share.text = [self.imageDict objectForKey:@"shares"];
+    
+    //照片详情页反过来以后，能不能默认先显示评论，如果评论为0显示礼物，礼物为0显示点赞，点赞也为0显示转发，都是0的话就还是显示评论~
+    if (self.usrIdArray.count) {
+        UIButton * btn = (UIButton *)[imageBgView2 viewWithTag:502];
+        tv.hidden = YES;
+        desTv.hidden = NO;
+        [self backClick:btn];
+    }else{
+        tv.hidden = NO;
+        desTv.hidden = YES;
+        UIButton * btn = nil;
+        if ([gift.text intValue]) {
+            btn = (UIButton *)[imageBgView2 viewWithTag:501];
+        }else if([zan.text intValue]){
+            btn = (UIButton *)[imageBgView2 viewWithTag:500];
+        }else if([share.text intValue]){
+            btn = (UIButton *)[imageBgView2 viewWithTag:503];
+        }else{
+            tv.hidden = YES;
+            desTv.hidden = NO;
+            btn = (UIButton *)[imageBgView2 viewWithTag:502];
+        }
+        [self backClick:btn];
+    }
 }
 
 #pragma mark -
@@ -687,24 +758,147 @@
     
     /***********************************/
     //底部按钮
-    bottomBgView = [MyControl createImageViewWithFrame:CGRectMake(0, self.view.frame.size.height-47, self.view.frame.size.width, 47) ImageName:@""];
-    bottomBgView.image = [[UIImage imageNamed:@"front_bottomBg.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:5];
-    [bgView addSubview:bottomBgView];
+    [self createBottom];
+//    bottomBgView = [MyControl createImageViewWithFrame:CGRectMake(0, self.view.frame.size.height-47, self.view.frame.size.width, 47) ImageName:@""];
+//    bottomBgView.image = [[UIImage imageNamed:@"front_bottomBg.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:5];
+//    [bgView addSubview:bottomBgView];
     
     //
     
     //63/2 60/2
     //左右间隔20 中间间隔(width-40-5*31.5)/4
-    float space = (self.view.frame.size.width-40-5*31.5)/4;
-    NSArray * imageArray = @[@"front_zan.png", @"front_gift.png", @"front_comment.png", @"front_share.png", @"front_more.png"];
-    for (int i=0; i<imageArray.count; i++) {
-        UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(20+i*(space+31.5), 9, 31.5, 30) ImageName:imageArray[i] Target:self Action:@selector(bottomClick:) Title:nil];
-        [bottomBgView addSubview:btn];
-        btn.tag = 100+i;
-    }
+//    float space = (self.view.frame.size.width-40-5*31.5)/4;
+//    NSArray * imageArray = @[@"front_zan.png", @"front_gift.png", @"front_comment.png", @"front_share.png", @"front_more.png"];
+//    for (int i=0; i<imageArray.count; i++) {
+//        UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(20+i*(space+31.5), 9, 31.5, 30) ImageName:imageArray[i] Target:self Action:@selector(bottomClick:) Title:nil];
+//        [bottomBgView addSubview:btn];
+//        btn.tag = 100+i;
+//    }
     
 }
+#pragma mark -
+-(void)createBottom
+{
+    UIView * bottomBg = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height-50, self.view.frame.size.width, 50)];
+    [bgView addSubview:bottomBg];
+    
+    NSArray * selectedArray = @[@"front_zan_select", @"front_gift_select", @"front_comment_select", @"front_more_select"];
+    NSArray * unSelectedArray = @[@"front_zan_unSelect", @"front_gift_unSelect", @"front_comment_unSelect", @"front_more_unSelect"];
+    for (int i=0; i<selectedArray.count; i++) {
+        UIImageView * halfBall = [MyControl createImageViewWithFrame:CGRectMake(i*(self.view.frame.size.width/4.0), bottomBg.frame.size.height-50, self.view.frame.size.width/4.0, 50) ImageName:@"food_bottom_halfBall.png"];
+        [bottomBg addSubview:halfBall];
+        
+        UIButton * ballBtn = [MyControl createButtonWithFrame:CGRectMake(halfBall.frame.origin.x+halfBall.frame.size.width/2.0-42.5/2.0, 2, 85/2.0, 85/2.0) ImageName:unSelectedArray[i] Target:self Action:@selector(ballBtnClick:) Title:nil];
+        ballBtn.tag = 100+i;
+        
+        [ballBtn setBackgroundImage:[UIImage imageNamed:selectedArray[i]] forState:UIControlStateHighlighted];
+        [bottomBg addSubview:ballBtn];
+        if (i == 0) {
+            [ballBtn setBackgroundImage:[UIImage imageNamed:selectedArray[i]] forState:UIControlStateSelected];
+        }else{
+            [ballBtn setBackgroundImage:[UIImage imageNamed:selectedArray[i]] forState:UIControlStateHighlighted];
+        }
+    }
+}
+-(void)ballBtnClick:(UIButton *)btn
+{
+    [self ballAnimation:btn];
+    
+//    if (![[USER objectForKey:@"isSuccess"] intValue] && btn.tag == 100) {
+//        ShowAlertView;
+//        return;
+//    }
+    
+//    for (int i=0; i<4; i++) {
+//        UIButton * button = (UIButton *)[self.view viewWithTag:100+i];
+//        button.selected = NO;
+//    }
+//    btn.selected = YES;
+    int a = btn.tag-100;
+    if (a == 0) {
+        //zan
+        [self zanBtnClick:btn];
+    }else if (a == 1) {
+        //gift
+        if (![ControllerManager getIsSuccess]) {
+            //提示注册
+            ShowAlertView;
+            return;
+        }
+        
+        SendGiftViewController * vc = [[SendGiftViewController alloc] init];
+        vc.receiver_aid = [self.petDict objectForKey:@"aid"];
+        vc.receiver_name = [self.petDict objectForKey:@"name"];
+        vc.receiver_img_id = [self.imageDict objectForKey:@"img_id"];
+        vc.hasSendGift = ^(NSString * itemId){
+            NSLog(@"赠送礼物给默认宠物成功!");
+            
+            UserInfoModel * model = [[UserInfoModel alloc] init];
+            model.name = [USER objectForKey:@"name"];
+            model.tx = [USER objectForKey:@"tx"];
+            model.usr_id = [USER objectForKey:@"usr_id"];
+            [self.sendersArray insertObject:model atIndex:0];
+            [model release];
+            
+            UILabel * label = (UILabel *)[imageBgView2 viewWithTag:301];
+            label.text = [NSString stringWithFormat:@"%d", self.sendersArray.count];
+            if(triangleIndex == 1){
+                [tv reloadData];
+            }
+            //
+            
+            ResultOfBuyView * result = [[ResultOfBuyView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+            [UIView animateWithDuration:0.3 animations:^{
+                result.alpha = 1;
+            }];
+            result.confirm = ^(){
+                [vc closeGiftAction];
+            };
+            [result configUIWithName:[self.petDict objectForKey:@"name"] ItemId:itemId Tx:[self.petDict objectForKey:@"tx"]];
+            [self.view addSubview:result];
+            
+            
+        };
+        [self addChildViewController:vc];
+        [vc didMoveToParentViewController:self];
+        
+        [self.view addSubview:vc.view];
+        [vc release];
+    }else if (a == 2) {
+        //comment
+        isReply = NO;
+        [self commentClick];
+    }else if (a == 3) {
+        //more
+        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"更多" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"分享", @"私信", @"举报此照", nil];
+        [sheet showInView:self.view];
+        sheet.tag = 401;
+        [sheet release];
+    }
 
+}
+
+//气泡动画
+-(void)ballAnimation:(UIView *)view
+{
+    CGRect rect = view.frame;
+    [UIView animateWithDuration:0.1 animations:^{
+        view.frame = CGRectMake(rect.origin.x-rect.size.width*0.1, rect.origin.y, rect.size.width*1.2, rect.size.height);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.1 animations:^{
+            view.frame = rect;
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.1 animations:^{
+                view.frame = CGRectMake(rect.origin.x, rect.origin.y-rect.size.height*0.1, rect.size.width, rect.size.height*1.2);
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:0.1 animations:^{
+                    view.frame = rect;
+                }];
+            }];
+        }];
+    }];
+}
+#pragma mark -
 -(void)tap:(UIGestureRecognizer *)tap
 {
     NSLog(@"tap");
@@ -749,7 +943,7 @@
 //                    [MMProgressHUD dismissWithError:@"点赞失败" afterDelay:1];
                 }else{
                     [MobClick event:@"like"];
-                    
+                    btn.selected = YES;
                     int a = [[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] intValue];
                     if (a) {
                         [ControllerManager HUDImageIcon:@"gold.png" showView:self.view yOffset:0 Number:a];
@@ -1166,9 +1360,15 @@
 //            [large release];
 //        }else
         if (buttonIndex == 0) {
+            //分享
+            UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"分享" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"微信好友", @"朋友圈", @"微博", nil];
+            [sheet showInView:self.view];
+            sheet.tag = 400;
+            [sheet release];
+        }else if (buttonIndex == 1) {
             //私信
             [self sendMessage];
-        }else if (buttonIndex == 1) {
+        }else if(buttonIndex == 2){
             //举报此照
             [self reportImage];
         }
@@ -1342,7 +1542,12 @@
         tempBtn = btn;
     }else if(btn.tag/100 == 5){
         tempBtn = (UIButton *)[imageBgView2 viewWithTag:200+triangleIndex];
-        if (btn.tag == 501) {
+        if (btn.tag == 500) {
+            if (!isLoaded[1]) {
+                //                isLoaded[0] = 1;
+                [self loadLikersData];
+            }
+        }else if (btn.tag == 501) {
             if (!isLoaded[1]) {
 //                isLoaded[1] = 1;
                 [self loadSendersData];
@@ -1396,7 +1601,7 @@
 -(void)closeClick
 {
     NSLog(@"close");
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.4 animations:^{
         self.view.alpha = 0;
     }completion:^(BOOL finished) {
         [self.view removeFromSuperview];

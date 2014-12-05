@@ -68,7 +68,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [super viewDidLoad];
     
     //清空topic
-    [USER setObject:@"点击添加话题" forKey:@"topic"];
+    if (self.isBeg) {
+        [USER setObject:@"挣口粮" forKey:@"topic"];
+    }else{
+        [USER setObject:@"点击添加话题" forKey:@"topic"];
+    }
+    
     
     // Do any additional setup after loading the view.
     // Allocate Asset Library
@@ -111,8 +116,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self.view addSubview:navView];
     
     UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    alphaView.alpha = 0.85;
-    alphaView.backgroundColor = BGCOLOR;
+    alphaView.alpha = 0.2;
+    alphaView.backgroundColor = ORANGE;
     [navView addSubview:alphaView];
     
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
@@ -241,7 +246,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [textBgView addSubview:_textView];
     
     publishButton = [MyControl createButtonWithFrame:CGRectMake(10, textBgView.frame.origin.y+textBgView.frame.size.height+5, 300, 35) ImageName:@"" Target:self Action:@selector(publishButtonClick:) Title:@"发布"];
-    publishButton.backgroundColor = BGCOLOR;
+    publishButton.backgroundColor = ORANGE;
     publishButton.layer.cornerRadius = 5;
     publishButton.layer.masksToBounds = YES;
     [sv addSubview:publishButton];
@@ -599,6 +604,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        data = UIImageJPEGRepresentation(image, p);
 //        NSLog(@"%d", data.length);
 //    }
+    if (self.isBeg) {
+        [_request setPostValue:@"1" forKey:@"is_food"];
+    }
+    
+    
     NSTimeInterval  timeInterval = [[NSDate date] timeIntervalSince1970];
     [_request setData:data withFileName:[NSString stringWithFormat:@"%.0f%@%d%@_%d&%d.png", timeInterval, @"@", data.length, @"@", (int)image.size.width, (int)image.size.height] andContentType:@"image/jpg" forKey:@"image"];
     //    [_request setPostValue:data forKey:@"image"];
@@ -710,9 +720,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"failed");
-    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
-    LoadingFailed;
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [MyControl popAlertWithView:self.view Msg:@"上传失败"];
+//    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
+//    LoadingFailed;
+//    [self dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark - login
 -(void)login

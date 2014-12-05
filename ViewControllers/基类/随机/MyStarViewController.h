@@ -11,10 +11,13 @@
 
 @interface MyStarViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
 {
-    UIImageView * bgImageView;
+    UIView * navView;
 //    UITableView * tv;
     
     BOOL isLoaded;
+    
+    //是否是求口粮
+    BOOL isBeg;
 }
 @property(nonatomic,retain)UITableView * tv;
 

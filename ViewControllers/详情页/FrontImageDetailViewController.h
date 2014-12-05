@@ -74,6 +74,8 @@
 
 @property(nonatomic,retain)NSString * img_id;
 
+//@property (nonatomic)BOOL is_follow;
+
 //评论解析数组
 @property (nonatomic,retain)NSMutableArray * usrIdArray;
 @property (nonatomic,retain)NSMutableArray * nameArray;

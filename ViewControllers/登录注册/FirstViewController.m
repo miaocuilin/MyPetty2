@@ -11,7 +11,8 @@
 #import "ASIFormDataRequest.h"
 #import "ChoseLoadViewController.h"
 #import <ImageIO/ImageIO.h>
-
+//#import "FoodFirstViewController.h"
+#import "MainTabBarViewController.h"
 @interface FirstViewController () <UIAlertViewDelegate>
 {
   ASIFormDataRequest * _request;
@@ -79,6 +80,9 @@
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
             self.launchImageName = [[load.dataDict objectForKey:@"data"] objectForKey:@"url"];
+            
+            self.animalNum = [[load.dataDict objectForKey:@"data"] objectForKey:@"animal"];
+            self.foodNum = [[load.dataDict objectForKey:@"data"] objectForKey:@"food"];
 //            NSString * docDir = DOCDIR;
 //            NSString * FilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.launchImageName]];
 //            UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:FilePath]];
@@ -496,6 +500,7 @@
                 
                 [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
                 [USER setObject:[dict objectForKey:@"gold"] forKey:@"gold"];
+                [USER setObject:[dict objectForKey:@"food"] forKey:@"food"];
                 [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
                 [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
                 [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
@@ -579,10 +584,20 @@
 
 -(void)jumpToMain
 {
-    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
+    MainTabBarViewController * mainTab = [[MainTabBarViewController alloc] init];
+//    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
     //                ChooseFamilyViewController * sideMenu = [[ChooseFamilyViewController alloc] init];
-    sideMenu.modalTransitionStyle = 1;
-    [self presentViewController:sideMenu animated:YES completion:nil];
+    if (hadImage) {
+        mainTab.preImage = self.launchImage;
+    }
+    mainTab.animalNum = self.animalNum;
+    mainTab.foodNum = self.foodNum;
+    mainTab.modalTransitionStyle = 1;
+    
+    mainTab.selectedIndex = 1;
+    
+    [self presentViewController:mainTab animated:YES completion:nil];
+    [mainTab release];
 }
 //#pragma mark -获取用户数据
 //-(void)getUserData

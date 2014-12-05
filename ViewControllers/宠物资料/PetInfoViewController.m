@@ -128,7 +128,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     
     
-    
+    [self createBg];
     [self createFakeNavigation];
     [self createScrollView];
 
@@ -520,14 +520,19 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }];
 
 }
+-(void)createBg
+{
+    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    [self.view addSubview:imageView];
+}
 -(void)createFakeNavigation
 {
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
     [self.view addSubview:navView];
     
     UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    alphaView.alpha = 0.85;
-    alphaView.backgroundColor = BGCOLOR;
+    alphaView.alpha = 0.2;
+    alphaView.backgroundColor = ORANGE;
     [navView addSubview:alphaView];
     
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
@@ -1363,9 +1368,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
 
     if (equal) {
-        [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
+        [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if (image) {
+                [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+            }
+        }];
     }else{
-        [headerImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
+        [headerImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL,[petInfoDict objectForKey:@"tx"]]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if (image) {
+                headerImageView.image = [MyControl returnSquareImageWithImage:image];
+            }
+        }];
     }
     
 //    if (image) {
@@ -1447,7 +1460,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     userImageBtn.layer.masksToBounds = YES;
     [bgView addSubview:userImageBtn];
     
-    [userImageBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL,[petInfoDict objectForKey:@"u_tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"]];
+    [userImageBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL,[petInfoDict objectForKey:@"u_tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (image) {
+            [userImageBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+        }
+    }];
     
 //    NSString * txUserFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [petInfoDict objectForKey:@"u_tx"]]];
 ////    NSLog(@"本地用户头像路径：%@", txUserFilePath);
@@ -1563,6 +1580,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
+    tv.backgroundColor = [UIColor clearColor];
     [sv addSubview:tv];
     [tv addFooterWithCallback:^{
         [self loadMoreKingDynamicData];
@@ -1579,6 +1597,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     tv2.delegate = self;
     tv2.dataSource = self;
     tv2.separatorStyle = 0;
+    tv2.backgroundColor = [UIColor clearColor];
     [tv2 addFooterWithTarget:self action:@selector(loadPhotoDataMore)];
     [sv addSubview:tv2];
     
@@ -1593,6 +1612,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     tv3.delegate = self;
     tv3.dataSource = self;
     tv3.separatorStyle = 0;
+    tv3.backgroundColor = [UIColor clearColor];
 //    [tv3 addFooterWithTarget:self action:@selector(loadKingMembersDataMore)];
     [sv addSubview:tv3];
     
@@ -1606,6 +1626,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     tv4.delegate = self;
     tv4.dataSource = self;
     tv4.separatorStyle = 0;
+    tv4.backgroundColor = [UIColor clearColor];
     [sv addSubview:tv4];
     
     UIView * tvHeaderView4 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];

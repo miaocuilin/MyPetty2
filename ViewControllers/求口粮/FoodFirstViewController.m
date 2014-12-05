@@ -7,7 +7,8 @@
 //
 
 #import "FoodFirstViewController.h"
-
+//#import "FoodViewController.h"
+#import "MainTabBarViewController.h"
 @interface FoodFirstViewController ()
 
 @end
@@ -66,7 +67,10 @@
 -(void)btnClick
 {
     //跳转求口粮
-    
+    MainTabBarViewController * main = [[MainTabBarViewController alloc] init];
+    main.selectedIndex = 1;
+    [self presentViewController:main animated:YES completion:nil];
+    [main release];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

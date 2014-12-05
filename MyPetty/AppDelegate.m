@@ -67,6 +67,10 @@
 //    NewWaterFlowViewController * info = [[NewWaterFlowViewController alloc] init];
 //    PetRecommendViewController * info = [[PetRecommendViewController alloc] init];
 //    DSImagesViewController * info = [[DSImagesViewController alloc] init];
+    /*****************************/
+//    UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    ViewController1* vc =  [board instantiateInitialViewController];
+//    [self presentViewController:vc animated:YES completion:nil];
     self.window.rootViewController = info;
     [info release];
 

@@ -128,20 +128,22 @@
 }
 -(void)createBg
 {
-    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
-    [self.view addSubview:self.bgImageView];
-    //    self.bgImageView.backgroundColor = [UIColor redColor];
-//    NSString * docDir = DOCDIR;
-    NSString * filePath = BLURBG;
-    NSLog(@"%@", filePath);
-    NSData * data = [NSData dataWithContentsOfFile:filePath];
-    //    NSLog(@"%@", data);
-    UIImage * image = [UIImage imageWithData:data];
-    self.bgImageView.image = image;
-
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
-    [self.view addSubview:tempView];
+    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    [self.view addSubview:imageView];
+//    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+//    [self.view addSubview:self.bgImageView];
+//    //    self.bgImageView.backgroundColor = [UIColor redColor];
+////    NSString * docDir = DOCDIR;
+//    NSString * filePath = BLURBG;
+//    NSLog(@"%@", filePath);
+//    NSData * data = [NSData dataWithContentsOfFile:filePath];
+//    //    NSLog(@"%@", data);
+//    UIImage * image = [UIImage imageWithData:data];
+//    self.bgImageView.image = image;
+//
+//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+//    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+//    [self.view addSubview:tempView];
 }
 
 //-(void)getListData
@@ -184,8 +186,8 @@
     [self.view addSubview:navView];
     
     UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    alphaView.alpha = 0.85;
-    alphaView.backgroundColor = BGCOLOR;
+    alphaView.alpha = 0.2;
+    alphaView.backgroundColor = ORANGE;
     [navView addSubview:alphaView];
     
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
@@ -240,8 +242,8 @@
     [self.view addSubview:headerView];
     
     UIView * headerBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 35)];
-    headerBgView.backgroundColor = BGCOLOR;
-    headerBgView.alpha = 0.85;
+    headerBgView.backgroundColor = ORANGE;
+    headerBgView.alpha = 0.2;
     [headerView addSubview:headerBgView];
     
     raceBtn = [MyControl createButtonWithFrame:CGRectMake(30, 5, 120, 25) ImageName:@"" Target:self Action:@selector(raceBtnClick) Title:@"所有"];

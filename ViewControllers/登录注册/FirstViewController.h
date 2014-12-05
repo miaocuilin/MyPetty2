@@ -25,7 +25,11 @@
     //加载失败后重新加载的类型
     //1.getUser 2.login  3.getPreSID  4.loadPetInfo
     int reloadType;
+    
 }
+@property(nonatomic,copy)NSString * animalNum;
+@property(nonatomic,copy)NSString * foodNum;
+
 @property(nonatomic,retain)UIImage * launchImage;
 @property(nonatomic,retain)UIImageView * splashView;
 @property(nonatomic,copy)NSString * launchImageName;

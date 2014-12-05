@@ -177,6 +177,19 @@
     
     return time;
 }
++(NSString *)leftTimeFromStamp:(NSString *)timeStamp
+{
+    NSDate * date = [NSDate date];
+    NSString * stamp = [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
+    //t为时间差
+    //24小时为期限
+    int t = 24*60*60-([stamp intValue]-[timeStamp intValue]);
+    int h = t/60/60;
+    int m = (t-h*3600)/60;
+    int s = t-h*3600-m*60;
+    return [NSString stringWithFormat:@"%.2d:%.2d:%.2d", h, m, s];
+}
+
 #pragma mark - 屏幕截图
 +(UIImage *)imageWithView:(UIView *)view {
     
@@ -416,6 +429,22 @@
     UIGraphicsEndImageContext();
     
     return newimg;
+}
+
+#pragma mark - 返回正方形的中心裁剪图片
++(UIImage *)returnSquareImageWithImage:(UIImage *)image
+{
+    float w = image.size.width;
+    float h = image.size.height;
+    if (w == h) {
+        return image;
+    }else if(w<h){
+        UIImage * img = [self imageFromImage:image inRect:CGRectMake(0, (h-w)/2, w, w)];
+        return img;
+    }else{
+        UIImage * img = [self imageFromImage:image inRect:CGRectMake((w-h)/2, 0, h, h)];
+        return img;
+    }
 }
 
 #pragma mark -

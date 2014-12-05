@@ -39,6 +39,7 @@
     BOOL shareSuc;
 }
 //@property (nonatomic,retain)UIImageView * bgImageView;
+@property(nonatomic)BOOL isBeg;
 @property (nonatomic,retain)UIImage * oriImage;
 //@property (nonatomic,retain)AFPhotoEditorController * af;
 @property (nonatomic,copy)NSString * usr_ids;

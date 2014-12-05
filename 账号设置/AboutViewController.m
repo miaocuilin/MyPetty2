@@ -33,19 +33,21 @@
 }
 -(void)createBg
 {
-    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
-    [self.view addSubview:bgImageView];
-    //    self.bgImageView.backgroundColor = [UIColor redColor];
-//    NSString * docDir = DOCDIR;
-    NSString * filePath = BLURBG;
-    NSLog(@"%@", filePath);
-    NSData * data = [NSData dataWithContentsOfFile:filePath];
-    //    NSLog(@"%@", data);
-    UIImage * image = [UIImage imageWithData:data];
-    bgImageView.image = image;
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
-    [self.view addSubview:tempView];
+    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    [self.view addSubview:imageView];
+//    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+//    [self.view addSubview:bgImageView];
+//    //    self.bgImageView.backgroundColor = [UIColor redColor];
+////    NSString * docDir = DOCDIR;
+//    NSString * filePath = BLURBG;
+//    NSLog(@"%@", filePath);
+//    NSData * data = [NSData dataWithContentsOfFile:filePath];
+//    //    NSLog(@"%@", data);
+//    UIImage * image = [UIImage imageWithData:data];
+//    bgImageView.image = image;
+//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+//    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+//    [self.view addSubview:tempView];
 }
 #pragma mark - 创建导航
 -(void)createFakeNavigation

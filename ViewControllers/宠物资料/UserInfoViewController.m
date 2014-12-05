@@ -42,7 +42,8 @@
     // Do any additional setup after loading the view.
     [MobClick event:@"personal_homepage"];
     
-    self.view.backgroundColor = [UIColor whiteColor];
+//    self.view.backgroundColor = [UIColor whiteColor];
+    [self createBg];
     
     self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
     self.userAttentionListArray = [NSMutableArray arrayWithCapacity:0];
@@ -221,14 +222,19 @@
 #pragma mark - 用户列表
 
 #pragma mark - 
+-(void)createBg
+{
+    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    [self.view addSubview:imageView];
+}
 -(void)createFakeNavigation
 {
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
     [self.view addSubview:navView];
     
     UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    alphaView.alpha = 0.85;
-    alphaView.backgroundColor = BGCOLOR;
+    alphaView.alpha = 0.2;
+    alphaView.backgroundColor = ORANGE;
     [navView addSubview:alphaView];
     
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
@@ -562,36 +568,52 @@
 
     /**************************/
     if (!([[headerDict objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[headerDict objectForKey:@"tx"] length]==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"tx"]]];
+//        NSString * docDir = DOCDIR;
+//        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"tx"]]];
         //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-            if(equal){
-                [headBtn setBackgroundImage:image forState:UIControlStateNormal];
-            }else{
-                headerImageView.image = image;
-            }
-            bgImageView1.image = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
-        }else{
-            //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [headerDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    if(equal){
-                        [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                    }else{
-                        headerImageView.image = load.dataImage;
-                    }
-                    bgImageView1.image = [load.dataImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"tx"]]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
+//        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+        if (equal) {
+            [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [headerDict objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                if (image) {
+                    [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+                    bgImageView1.image = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
                 }
             }];
-            [request release];
+        }else{
+            [headerImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [headerDict objectForKey:@"tx"]]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                if (image) {
+                    headerImageView.image = [MyControl returnSquareImageWithImage:image];
+                    bgImageView1.image = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+                }
+            }];
         }
+        
+//        if (image) {
+//            if(equal){
+//                [headBtn setBackgroundImage:image forState:UIControlStateNormal];
+//            }else{
+//                headerImageView.image = image;
+//            }
+//            bgImageView1.image = [image applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+//        }else{
+//            //下载头像
+//            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [headerDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+//                    if(equal){
+//                        [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                    }else{
+//                        headerImageView.image = load.dataImage;
+//                    }
+//                    bgImageView1.image = [load.dataImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+//                    NSString * docDir = DOCDIR;
+//                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"tx"]]];
+//                    [load.data writeToFile:txFilePath atomically:YES];
+//                }else{
+//                    NSLog(@"头像下载失败");
+//                }
+//            }];
+//            [request release];
+//        }
     }
     /**************************/
     
@@ -648,28 +670,34 @@
     }else{
         /**************************/
         if (!([[headerDict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]] || [[headerDict objectForKey:@"a_tx"] length]==0)) {
-            NSString * docDir = DOCDIR;
-            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"a_tx"]]];
-            //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-            if (image) {
-                [userImageBtn setBackgroundImage:image forState:UIControlStateNormal];
-                //            headImageView.image = image;
-            }else{
-                //下载头像
-                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [headerDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                    if (isFinish) {
-                        [userImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                        //                    headImageView.image = load.dataImage;
-                        NSString * docDir = DOCDIR;
-                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"a_tx"]]];
-                        [load.data writeToFile:txFilePath atomically:YES];
-                    }else{
-                        NSLog(@"头像下载失败");
-                    }
-                }];
-                [request release];
-            }
+            
+            [userImageBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [headerDict objectForKey:@"a_tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                if (image) {
+                    [userImageBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+                }
+            }];
+//            NSString * docDir = DOCDIR;
+//            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"a_tx"]]];
+//            //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+//            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+//            if (image) {
+//                [userImageBtn setBackgroundImage:image forState:UIControlStateNormal];
+//                //            headImageView.image = image;
+//            }else{
+//                //下载头像
+//                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, [headerDict objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                    if (isFinish) {
+//                        [userImageBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                        //                    headImageView.image = load.dataImage;
+//                        NSString * docDir = DOCDIR;
+//                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [headerDict objectForKey:@"a_tx"]]];
+//                        [load.data writeToFile:txFilePath atomically:YES];
+//                    }else{
+//                        NSLog(@"头像下载失败");
+//                    }
+//                }];
+//                [request release];
+//            }
         }
         /**************************/
     }
@@ -764,6 +792,7 @@
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
+    tv.backgroundColor = [UIColor clearColor];
     [sv addSubview:tv];
     
     UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 264)];
@@ -817,6 +846,7 @@
     tv2.delegate = self;
     tv2.dataSource = self;
     tv2.separatorStyle = 0;
+    tv2.backgroundColor = [UIColor clearColor];
     [sv addSubview:tv2];
     
     UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
@@ -834,6 +864,7 @@
     tv3.delegate = self;
     tv3.dataSource = self;
     tv3.separatorStyle = 0;
+    tv3.backgroundColor = [UIColor clearColor];
     [sv addSubview:tv3];
     
     UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];

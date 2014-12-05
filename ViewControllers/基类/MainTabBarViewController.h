@@ -8,9 +8,23 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MainTabBarViewController : UITabBarController
+@interface MainTabBarViewController : UITabBarController <UIScrollViewDelegate>
 {
 //    UITabBarController * tbc;
-    UISegmentedControl * sc;
+//    UISegmentedControl * sc;
+    UILabel * label1;
+    UILabel * label2;
+    UILabel * label3;
+    
+    UIScrollView * sv;
+    
+    BOOL isLoaded;
+    
 }
+@property(nonatomic,assign)UIImage * preImage;
+
+@property(nonatomic,copy)NSString * animalNum;
+@property(nonatomic,copy)NSString * foodNum;
+
+-(void)modifyUI;
 @end

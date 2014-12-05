@@ -120,8 +120,14 @@
 //检查更新
 #define UPDATEAPI @"http://123.57.39.48/index.php?r=user/upgradeApi&version="
 
-//
+//摇一摇API
 #define SHAKESHAREAPI @"http://123.57.39.48/index.php?r=animal/shakeShareApi&aid="
+
+//求口粮列表
+#define BEGFOODAPI @"http://123.57.39.48/index.php?r=image/ask4FoodApi&page="
+
+//赏口粮API  img_id=&n=
+#define REWARDFOODAPI @"http://123.57.39.48/index.php?r=image/rewardFoodApi&img_id="
 
 //IP头API
 #define IPURL @"http://54.199.161.210/dc/index.php"

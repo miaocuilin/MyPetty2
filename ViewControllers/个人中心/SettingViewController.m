@@ -82,19 +82,21 @@
 }
 -(void)createBg
 {
-    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
-    [self.view addSubview:self.bgImageView];
-    //    self.bgImageView.backgroundColor = [UIColor redColor];
-//    NSString * docDir = DOCDIR;
-    NSString * filePath = BLURBG;
-//    NSLog(@"%@", filePath);
-    NSData * data = [NSData dataWithContentsOfFile:filePath];
-    //    NSLog(@"%@", data);
-    UIImage * image = [UIImage imageWithData:data];
-    self.bgImageView.image = image;
-
+    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    [self.view addSubview:imageView];
+//    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+//    [self.view addSubview:self.bgImageView];
+//    //    self.bgImageView.backgroundColor = [UIColor redColor];
+////    NSString * docDir = DOCDIR;
+//    NSString * filePath = BLURBG;
+////    NSLog(@"%@", filePath);
+//    NSData * data = [NSData dataWithContentsOfFile:filePath];
+//    //    NSLog(@"%@", data);
+//    UIImage * image = [UIImage imageWithData:data];
+//    self.bgImageView.image = image;
+//
     UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
     [self.view addSubview:tempView];
 }
 
@@ -116,8 +118,8 @@
     [self.view addSubview:navView];
     
     UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    alphaView.alpha = 0.85;
-    alphaView.backgroundColor = BGCOLOR;
+    alphaView.alpha = 0.2;
+    alphaView.backgroundColor = ORANGE;
     [navView addSubview:alphaView];
     
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
@@ -134,22 +136,23 @@
 }
 -(void)backBtnClick:(UIButton *)button
 {
-    button.selected = !button.selected;
-    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
-    if (button.selected) {
-        [menu showMenuAnimated:YES];
-        alphaBtn.hidden = NO;
-        [UIView animateWithDuration:0.25 animations:^{
-            alphaBtn.alpha = 0.5;
-        }];
-    }else{
-        [menu hideMenuAnimated:YES];
-        [UIView animateWithDuration:0.25 animations:^{
-            alphaBtn.alpha = 0;
-        } completion:^(BOOL finished) {
-            alphaBtn.hidden = YES;
-        }];
-    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+//    button.selected = !button.selected;
+//    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
+//    if (button.selected) {
+//        [menu showMenuAnimated:YES];
+//        alphaBtn.hidden = NO;
+//        [UIView animateWithDuration:0.25 animations:^{
+//            alphaBtn.alpha = 0.5;
+//        }];
+//    }else{
+//        [menu hideMenuAnimated:YES];
+//        [UIView animateWithDuration:0.25 animations:^{
+//            alphaBtn.alpha = 0;
+//        } completion:^(BOOL finished) {
+//            alphaBtn.hidden = YES;
+//        }];
+//    }
 }
 
 #pragma mark - tableViewDelegate

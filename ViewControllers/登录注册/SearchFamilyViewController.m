@@ -139,8 +139,8 @@
     [self.view addSubview:navView];
     
     UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    alphaView.alpha = 0.85;
-    alphaView.backgroundColor = BGCOLOR;
+    alphaView.alpha = 0.2;
+    alphaView.backgroundColor = ORANGE;
     [navView addSubview:alphaView];
     
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
@@ -166,8 +166,8 @@
     [self.view addSubview:headerView];
     
     UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    alphaView.backgroundColor = BGCOLOR;
-    alphaView.alpha = 0.85;
+    alphaView.backgroundColor = ORANGE;
+    alphaView.alpha = 0.2;
     [headerView addSubview:alphaView];
     
     UIImageView * search = [MyControl createImageViewWithFrame:CGRectMake(10, 13+29, 14, 13) ImageName:@"5-5.png"];

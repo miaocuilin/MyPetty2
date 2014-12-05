@@ -40,6 +40,7 @@
 
 +(NSString *)timeFromTimeStamp:(NSString *)timeStamp;
 +(NSString *)timeStringFromStamp:(NSString *)timeStamp;
++(NSString *)leftTimeFromStamp:(NSString *)timeStamp;
 
 #pragma mark - 屏幕截图
 +(UIImage *)imageWithView:(UIView *)view;
@@ -71,6 +72,7 @@
 
 + (UIImage *)thumbnailWithImageWithoutScale:(UIImage *)image size:(CGSize)asize;
 + (UIImage *)image: (UIImage *) image fitInSize: (CGSize) viewsize;
++(UIImage *)returnSquareImageWithImage:(UIImage *)image;
 
 +(void)popAlertWithView:(UIView *)keyView Msg:(NSString *)msg;
 

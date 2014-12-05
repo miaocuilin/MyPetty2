@@ -55,9 +55,9 @@
     [super viewDidLoad];
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
     
-    self.view.backgroundColor = [UIColor whiteColor];
+//    self.view.backgroundColor = [UIColor whiteColor];
     
-    [self createBg];
+//    [self createBg];
     [self createQtmquitView];
 //    [self createFakeNavigation];
     [self loadData];
@@ -174,7 +174,7 @@
 #pragma mark - 创建qtmquitView
 -(void)createQtmquitView
 {
-    qtmquitView = [[TMQuiltView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-[MyControl isIOS7])];
+    qtmquitView = [[TMQuiltView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64-25)];
 	qtmquitView.delegate = self;
 	qtmquitView.dataSource = self;
     //	qtmquitView.backgroundColor = [UIColor darkGrayColor];
@@ -216,9 +216,9 @@
 }
 -(void)loadData
 {
-    if (isLoaded) {
-        self.reloadRandom();
-    }
+//    if (isLoaded) {
+//        self.reloadRandom();
+//    }
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RECOMMENDAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             //只包含img_id和图片的url
@@ -711,8 +711,9 @@
 //    if ([ControllerManager getIsSuccess]) {
 //        vc.aid = [model.url substringToIndex:10];
 //    }
-    MainViewController * main = [ControllerManager shareMain];
-    [main.view addSubview:vc.view];
+    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//    MainViewController * main = [ControllerManager shareMain];
+//    [main.view addSubview:vc.view];
     
 //    [self presentViewController:vc animated:YES completion:nil];
     [vc release];

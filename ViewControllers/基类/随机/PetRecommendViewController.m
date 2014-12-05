@@ -12,14 +12,12 @@
 #import "PicDetailViewController.h"
 #import "PetInfoViewController.h"
 #import "UserInfoViewController.h"
-#import "MainViewController.h"
 #import "UserPetListModel.h"
 @implementation PetRecommendViewController
 -(void)viewWillAppear:(BOOL)animated
 {
-    MainViewController * main = [ControllerManager shareMain];
-    if (isLoaded && main.sv.contentOffset.x == 0) {
-        [self.tv headerBeginRefreshing];
+    if (isLoaded) {
+//        [self.tv headerBeginRefreshing];
     }
 }
 -(void)viewDidAppear:(BOOL)animated
@@ -32,7 +30,7 @@
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
     self.myCountryArray = [NSMutableArray arrayWithCapacity:0];
     
-    [self createBg];
+//    [self createBg];
     [self createTableView];
     [self loadData];
 }
@@ -94,7 +92,7 @@
 }
 -(void)createTableView
 {
-    self.tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64) style:UITableViewStylePlain];
+    self.tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-25) style:UITableViewStylePlain];
     self.tv.dataSource = self;
     self.tv.delegate = self;
     self.tv.separatorStyle = 0;
@@ -105,8 +103,8 @@
     [self.view addSubview:self.tv];
     [self.tv release];
     
-    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
-    self.tv.tableHeaderView = view;
+//    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 10)];
+//    self.tv.tableHeaderView = view;
 }
 
 #pragma mark -
@@ -142,7 +140,7 @@
         }
         
         AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-        [self.view addSubview:view];
+        [[UIApplication sharedApplication].keyWindow addSubview:view];
         if (a == 0) {
             NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
             NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
@@ -184,8 +182,8 @@
                                 //捧Ta成功界面
                                 NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
                                 noClose.confirm = ^(){};
-                                MainViewController * main = [ControllerManager shareMain];
-                                [main.view addSubview:noClose];
+//                                MainViewController * main = [ControllerManager shareMain];
+                                [[UIApplication sharedApplication].keyWindow addSubview:noClose];
                                 NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
                                 [noClose configUIWithTx:model.tx Name:model.name Percent:percent];
                                 [UIView animateWithDuration:0.3 animations:^{
@@ -195,7 +193,7 @@
                             }else{
                                 LOADFAILED;
 //                                [MyControl loadingFailedWithContent:@"加入失败" afterDelay:0.8f];
-                                NSLog(@"加入国家失败");
+                                NSLog(@"加入萌星失败");
                             }
                         }];
                         [request release];
@@ -220,8 +218,8 @@
         NSLog(@"跳转到第%d张图片详情页", a);
         FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = [[[self.dataArray[indexPath.row] images] objectAtIndex:a] objectForKey:@"img_id"];
-        MainViewController * main = [ControllerManager shareMain];
-        [main.view addSubview:vc.view];
+//        MainViewController * main = [ControllerManager shareMain];
+        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
         [vc release];
     };
     cell.clipsToBounds = YES;

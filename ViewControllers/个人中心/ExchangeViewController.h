@@ -8,11 +8,21 @@
 
 #import <UIKit/UIKit.h>
 #import "NIDropDown.h"
-@interface ExchangeViewController : UIViewController<NIDropDownDelegate>
+@interface ExchangeViewController : UIViewController<NIDropDownDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
 {
     UIView * navView;
     UIButton * exBtn;
-    
+    UIView * bottomBg;
+    UIImageView * bottomImage;
+    UIButton * upButton;
+    UIButton * headBtn;
     NIDropDown * dropDown;
+    
+    UIScrollView * sv;
+    
+    UICollectionView * collection;
+    
+    UIButton * leftArrowBtn;
+    UIButton * rightArrowBtn;
 }
 @end

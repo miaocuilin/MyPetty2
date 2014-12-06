@@ -150,7 +150,7 @@
     //22  44
     float spe = (bgView.frame.size.width-44-44*4)/3;
     NSArray * array1 = @[@"star_shake.png", @"star_gift.png", @"star_shout.png", @"star_play.png"];
-    NSArray * array2 = @[@"摇一摇", @"送礼物", @"叫一叫", @"求口粮"];
+    NSArray * array2 = @[@"摇一摇", @"送礼物", @"叫一叫", @"挣口粮"];
     NSArray * array3 = @[@"还剩3次", @"送了0次", @"叫过了", @"快来玩"];
     for (int i=0; i<4; i++) {
         UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(22+i*(44+spe), 130+6, 44, 44) ImageName:array1[i] Target:self Action:@selector(actBtnClick:) Title:nil];

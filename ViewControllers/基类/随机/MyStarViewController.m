@@ -103,7 +103,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [navView addSubview:titleLabel];
     
     
-    UIButton * camara = [MyControl createButtonWithFrame:CGRectMake(320-82/2-15, 64-54/2-7, 82/2, 54/2) ImageName:@"相机图标.png" Target:self Action:@selector(camaraClick) Title:nil];
+    UIButton * camara = [MyControl createButtonWithFrame:CGRectMake(320-61/2-15, 64-51/2-7, 61/2, 51/2) ImageName:@"newCamara.png" Target:self Action:@selector(camaraClick) Title:nil];
     camara.showsTouchWhenHighlighted = YES;
     [navView addSubview:camara];
 }

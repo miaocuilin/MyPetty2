@@ -17,6 +17,7 @@
 #import "ExchangeViewController.h"
 #import "AccountViewController.h"
 #import "ChargeViewController.h"
+#import "WalkAndTeaseViewController.h"
 
 @interface CenterViewController ()
 
@@ -101,8 +102,8 @@
         [centerBg addSubview:lineH];
     }
     
-    NSArray * imageArray = @[@"center_msg.png", @"center_mall.png", @"center_exchange.png", @"center_reward.png", @"center_gift.png", @"center_account.png"];
-    NSArray * nameArray = @[@"私信", @"商城", @"兑换", @"赏过", @"礼物", @"账号"];
+    NSArray * imageArray = @[@"center_msg.png", @"center_mall.png", @"center_exchange.png", @"center_charge.png", @"center_gift.png", @"center_account.png"];
+    NSArray * nameArray = @[@"私信", @"商城", @"兑换", @"充值", @"礼物", @"账号"];
     float spe2 = (centerBg.frame.size.width/3.0-99/2.0)/2.0;
     for (int i=0; i<6; i++) {
         UIImageView * imageView = [MyControl createImageViewWithFrame:CGRectMake(i%3*(centerBg.frame.size.width/3.0)+spe2, 8+i/3*90, 99/2.0, 103/2.0) ImageName:imageArray[i]];
@@ -141,7 +142,8 @@
     [bottomBg addSubview:goldNum];
     
     
-    UIButton * charge = [MyControl createButtonWithFrame:CGRectMake(337/2.0, (bottomBg.frame.size.height-40)/2.0, 100, 40) ImageName:@"center_charge.png" Target:self Action:@selector(chargeClick) Title:nil];
+    UIButton * charge = [MyControl createButtonWithFrame:CGRectMake(337/2.0, (bottomBg.frame.size.height-40)/2.0, 100, 40) ImageName:@"center_chargeBg.png" Target:self Action:@selector(chargeClick) Title:@"赚金币"];
+    charge.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     charge.showsTouchWhenHighlighted = YES;
     [bottomBg addSubview:charge];
     
@@ -164,7 +166,7 @@
     
     sex.hidden = NO;
     sex.frame = CGRectMake(name.frame.origin.x+size.width+5, 50+14, 15, 15);
-    if ([[USER objectForKey:@"gentder"] intValue] == 1) {
+    if ([[USER objectForKey:@"gender"] intValue] == 1) {
         sex.image = [UIImage imageNamed:@"man.png"];
     }else{
         sex.image = [UIImage imageNamed:@"woman.png"];
@@ -199,7 +201,14 @@
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
     }else if (a == 3) {
-        //赏过
+        //充值
+        if (![[USER objectForKey:@"isSuccess"] intValue]) {
+            ShowAlertView;
+            return;
+        }
+        ChargeViewController * vc = [[ChargeViewController alloc] init];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
         
     }else if (a == 4) {
         //礼物
@@ -220,7 +229,9 @@
         ShowAlertView;
         return;
     }
-    ChargeViewController * vc = [[ChargeViewController alloc] init];
+    
+    WalkAndTeaseViewController *vc = [[WalkAndTeaseViewController alloc] init];
+    vc.aid = [USER objectForKey:@"aid"];
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }

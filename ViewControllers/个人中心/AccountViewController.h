@@ -11,5 +11,6 @@
 @interface AccountViewController : UIViewController
 {
     UIView * navView;
+    UIImageView * head;
 }
 @end

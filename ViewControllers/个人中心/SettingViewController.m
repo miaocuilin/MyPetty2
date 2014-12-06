@@ -84,6 +84,10 @@
 {
     UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
     [self.view addSubview:imageView];
+    
+    UIView * alpha = [MyControl createViewWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
+    alpha.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2];
+    [self.view addSubview:alpha];
 //    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
 //    [self.view addSubview:self.bgImageView];
 //    //    self.bgImageView.backgroundColor = [UIColor redColor];
@@ -95,9 +99,9 @@
 //    UIImage * image = [UIImage imageWithData:data];
 //    self.bgImageView.image = image;
 //
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
-    [self.view addSubview:tempView];
+//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+//    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
+//    [self.view addSubview:tempView];
 }
 
 -(void)createTableView

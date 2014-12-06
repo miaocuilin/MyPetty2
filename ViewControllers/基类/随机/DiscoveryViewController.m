@@ -48,8 +48,11 @@
     [navView addSubview:alphaView];
     
     sc = [[UISegmentedControl alloc] initWithItems:@[@"最新萌照", @"排行榜单"]];
-    sc.frame = CGRectMake(10, 28, self.view.frame.size.width-10-35, 28);
-//    sc.alpha = 0.7;
+    sc.frame = CGRectMake(35, 28, self.view.frame.size.width-35*2, 28);
+    sc.layer.cornerRadius = 5;
+    sc.layer.masksToBounds = YES;
+    sc.backgroundColor = [UIColor whiteColor];
+    sc.alpha = 0.7;
     sc.tintColor = ORANGE;
     [sc setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]} forState:UIControlStateSelected];
     [sc addTarget:self action:@selector(segmentClick) forControlEvents:UIControlEventValueChanged];

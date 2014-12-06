@@ -500,7 +500,7 @@
                 
                 [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
                 [USER setObject:[dict objectForKey:@"gold"] forKey:@"gold"];
-                [USER setObject:[dict objectForKey:@"food"] forKey:@"food"];
+                [USER setObject:[NSString stringWithFormat:@"%@", [dict objectForKey:@"food"]] forKey:@"food"];
                 [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
                 [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
                 [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];

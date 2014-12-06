@@ -66,7 +66,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.view.backgroundColor = [UIColor whiteColor];
     //清空topic
     if (self.isBeg) {
         [USER setObject:@"挣口粮" forKey:@"topic"];
@@ -96,7 +96,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 -(void)createBg
 {
-    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"blurBg.png"];
     [self.view addSubview:bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
 //    NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
@@ -105,10 +105,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    NSData * data = [NSData dataWithContentsOfFile:filePath];
 //    //    NSLog(@"%@", data);
 //    UIImage * image = [UIImage imageWithData:data];
-    bgImageView.image = [self.oriImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
-    [self.view addSubview:tempView];
+    
+//    bgImageView.image = [self.oriImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+//    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
+//    [self.view addSubview:tempView];
 }
 -(void)createFakeNavigation
 {
@@ -128,11 +129,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [navView addSubview:backBtn];
     
     UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"发布照片"];
+    if (self.isBeg) {
+        titleLabel.text = @"挣口粮";
+    }
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
     
-    UIButton * rightButton = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-20-17, 30, 20, 20) ImageName:@"30-1.png" Target:self Action:@selector(rightButtonClick) Title:nil];
+    UIButton * rightButton = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-62-10, 29, 62, 24) ImageName:@"exchange_cateBtn.png" Target:self Action:@selector(rightButtonClick) Title:@"美化"];
+    rightButton.titleLabel.font = [UIFont systemFontOfSize:14];
     rightButton.showsTouchWhenHighlighted = YES;
     [navView addSubview:rightButton];
 }
@@ -245,10 +250,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    _textView.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
     [textBgView addSubview:_textView];
     
-    publishButton = [MyControl createButtonWithFrame:CGRectMake(10, textBgView.frame.origin.y+textBgView.frame.size.height+5, 300, 35) ImageName:@"" Target:self Action:@selector(publishButtonClick:) Title:@"发布"];
-    publishButton.backgroundColor = ORANGE;
-    publishButton.layer.cornerRadius = 5;
-    publishButton.layer.masksToBounds = YES;
+    //534 110
+    publishButton = [MyControl createButtonWithFrame:CGRectMake(10, textBgView.frame.origin.y+textBgView.frame.size.height+5, self.view.frame.size.width-20, (self.view.frame.size.width-20)*110/534) ImageName:@"public_longBtnBg.png" Target:self Action:@selector(publishButtonClick:) Title:@"发布"];
+    publishButton.alpha = 0.8;
+    publishButton.titleLabel.font = [UIFont boldSystemFontOfSize:20];
+//    publishButton.backgroundColor = ORANGE;
+//    publishButton.layer.cornerRadius = 5;
+//    publishButton.layer.masksToBounds = YES;
     [sv addSubview:publishButton];
     
     /************************************/
@@ -561,17 +569,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
 }
 #pragma mark -
--(void)leftButtonClick
-{
-    NSLog(@"重新编辑");
+//-(void)leftButtonClick
+//{
+//    NSLog(@"重新编辑");
 //    [self lauchEditorWithImage:self.oriImage];
 //    [self dismissViewControllerAnimated:YES completion:nil];
 //    [self presentViewController:self.af animated:YES completion:nil];
-}
+//}
 -(void)rightButtonClick
 {
-    NSLog(@"关闭");
-    [self dismissViewControllerAnimated:YES completion:nil];
+    NSLog(@"编辑");
+    [self lauchEditorWithImage:self.oriImage];
+//    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark
@@ -881,8 +890,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     self.oriImage = image;
     bigImageView.image = image;
+    for (UIView * view in sv.subviews) {
+        [view removeFromSuperview];
+    }
+    [self makeUI];
     [self dismissViewControllerAnimated:YES completion:nil];
-    
 }
 
 // This is called when the user taps "Cancel" in the photo editor.

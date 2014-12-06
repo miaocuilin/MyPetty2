@@ -7,8 +7,11 @@
 //
 
 #import "AccountViewController.h"
-
-@interface AccountViewController ()
+//#import "UMSocialSnsPlatformManager.h"
+//#import "UMSocialWechatHandler.h"
+//#import "UMSocialSnsService.h"
+//#import "UMSocialControllerService.h"
+@interface AccountViewController () <UMSocialUIDelegate>
 
 @end
 
@@ -19,6 +22,8 @@
     // Do any additional setup after loading the view.
     [self createBg];
     [self createFakeNavigation];
+    
+    [self createUI];
 }
 -(void)createBg
 {
@@ -51,6 +56,68 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+#pragma mark -
+-(void)createUI
+{
+    UIButton * button = [MyControl createButtonWithFrame:CGRectMake(100, 100, 100, 40) ImageName:@"" Target:self Action:@selector(click) Title:@"weChat"];
+    button.backgroundColor = ORANGE;
+    button.layer.cornerRadius = 5;
+    button.layer.masksToBounds = YES;
+    [self.view addSubview:button];
+    
+    head = [MyControl createImageViewWithFrame:CGRectMake(100, 200, 100, 100) ImageName:@""];
+    [self.view addSubview:head];
+}
+-(void)click
+{
+    UMSocialSnsPlatform *snsPlatform = [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToWechatSession];
+    snsPlatform.loginClickHandler(self,[UMSocialControllerService defaultControllerService],YES,^(UMSocialResponseEntity *response){
+        NSLog(@"response is %@",response);
+        if (response.viewControllerType == UMSViewControllerOauth) {
+            NSLog(@"didFinishOauthAndGetAccount response is %@",response);
+//
+            if (response.responseCode == 200) {
+                [self getUserWeChatInfo];
+////                [MyControl popAlertWithView:self.view Msg:[NSString stringWithFormat:@"用户名：%@\nID：%@", [[dic objectForKey:@"wxsession"] objectForKey:@"username"], [[dic objectForKey:@"wxsession"] objectForKey:@"usid"]]];
+            }
+//
+        }
+    });
+//    //设置回调对象
+//    [UMSocialControllerService defaultControllerService].socialUIDelegate = self;
+    
+}
+-(void)getUserWeChatInfo{
+    [[UMSocialDataService defaultDataService] requestSnsInformation:UMShareToWechatSession  completion:^(UMSocialResponseEntity *response){
+        NSLog(@"SnsInformation is %@",response.data);
+        NSDictionary * dic = (NSDictionary *)response.data;
+        NSString * gender = [dic objectForKey:@"gender"];
+        NSString * location = [dic objectForKey:@"location"];
+        NSString * openid = [dic objectForKey:@"openid"];
+        NSString * profile_image_url = [dic objectForKey:@"profile_image_url"];
+        NSString * screen_name = [dic objectForKey:@"screen_name"];
+        [head setImageWithURL:[NSURL URLWithString:profile_image_url]];
+        NSString * sex = nil;
+        if ([gender intValue] == 1) {
+            sex = @"男";
+        }else{
+            sex = @"女";
+        }
+        [MyControl createAlertViewWithTitle:@"微信信息" Message:[NSString stringWithFormat:@"用户名：%@\n性别：%@\n地址：%@\nID：%@", screen_name, sex, location, openid] delegate:nil cancelTitle:nil otherTitles:@"确定"];
+    }];
+}
+//实现授权回调
+//-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+//{
+//    if (response.viewControllerType == UMSViewControllerOauth) {
+//        
+//        NSLog(@"didFinishOauthAndGetAccount response is %@",response);
+//    }
+//    //得到的数据在回调Block对象形参respone的data属性
+//    [[UMSocialDataService defaultDataService] requestSnsInformation:UMShareToWechatSession  completion:^(UMSocialResponseEntity *response){
+//        NSLog(@"SnsInformation is %@",response.data);
+//    }];
+//}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

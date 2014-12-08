@@ -49,7 +49,7 @@
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
             [self.dataArray removeAllObjects];
-            if (![[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSArray class]]) {
+            if (![[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSArray class]] || [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] count] == 0) {
                 ENDLOADING;
                 return;
             }
@@ -127,10 +127,10 @@
     sex = [MyControl createImageViewWithFrame:CGRectMake(70, petHeadBtn.frame.origin.y+5, 13, 13) ImageName:@"man.png"];
     [navView addSubview:sex];
     
-    petName = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+15, petHeadBtn.frame.origin.y+5, 200, 15) Font:13 Text:@"大黄青葱岁月"];
+    petName = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+15, petHeadBtn.frame.origin.y+5, 200, 15) Font:13 Text:nil];
     [navView addSubview:petName];
     
-    petType = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x, 40, 100, 15) Font:11 Text:@"金毛"];
+    petType = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x, 40, 100, 15) Font:11 Text:nil];
     [navView addSubview:petType];
     
     userHeadImage = [MyControl createImageViewWithFrame:CGRectMake(navView.frame.size.width-20-13, 77/2, 20, 20) ImageName:@"defaultUserHead.png"];
@@ -138,7 +138,7 @@
     userHeadImage.layer.masksToBounds = YES;
     [navView addSubview:userHeadImage];
     
-    userName = [MyControl createLabelWithFrame:CGRectMake(userHeadImage.frame.origin.x-155, userHeadImage.frame.origin.y+2.5, 150, 15) Font:11 Text:@"By 彭于晏帅哥欧巴~"];
+    userName = [MyControl createLabelWithFrame:CGRectMake(userHeadImage.frame.origin.x-155, userHeadImage.frame.origin.y+2.5, 150, 15) Font:11 Text:nil];
     userName.textAlignment = NSTextAlignmentRight;
     [navView addSubview:userName];
     

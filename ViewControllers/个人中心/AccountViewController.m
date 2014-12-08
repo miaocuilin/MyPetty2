@@ -75,15 +75,12 @@
         NSLog(@"response is %@",response);
         if (response.viewControllerType == UMSViewControllerOauth) {
             NSLog(@"didFinishOauthAndGetAccount response is %@",response);
-//
             if (response.responseCode == 200) {
                 [self getUserWeChatInfo];
-////                [MyControl popAlertWithView:self.view Msg:[NSString stringWithFormat:@"用户名：%@\nID：%@", [[dic objectForKey:@"wxsession"] objectForKey:@"username"], [[dic objectForKey:@"wxsession"] objectForKey:@"usid"]]];
             }
-//
         }
     });
-//    //设置回调对象
+    //设置回调对象
 //    [UMSocialControllerService defaultControllerService].socialUIDelegate = self;
     
 }

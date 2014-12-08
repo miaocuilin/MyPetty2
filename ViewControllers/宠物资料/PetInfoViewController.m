@@ -1008,10 +1008,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [sheet showInView:self.view];
     }else{
         //提示注册
-        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc createLoginAlertView];
+        ShowAlertView;
+//        ToolTipsViewController * vc = [[ToolTipsViewController alloc] init];
+//        [self addChildViewController:vc];
+//        [self.view addSubview:vc.view];
+//        [vc createLoginAlertView];
         //        [vc autorelease];
     }
     
@@ -2098,13 +2099,24 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
     
-    NSURL * assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
+    [self dismissViewControllerAnimated:NO completion:^{
+        //Publish
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+        PublishViewController * vc = [[PublishViewController alloc] init];
+        vc.oriImage = image;
+        vc.name = [petInfoDict objectForKey:@"name"];
+        vc.aid = [petInfoDict objectForKey:@"aid"];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    }];
     
-    void(^completion)(void)  = ^(void){
-        if (isCamara) {
-            [self lauchEditorWithImage:image];
-        }else{
-            [self lauchEditorWithImage:image];
+//    NSURL * assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
+    
+//    void(^completion)(void)  = ^(void){
+//        if (isCamara) {
+//            [self lauchEditorWithImage:image];
+//        }else{
+//            [self lauchEditorWithImage:image];
 //            [[self assetLibrary] assetForURL:assetURL resultBlock:^(ALAsset *asset) {
 //                if (asset){
 //                    [self launchEditorWithAsset:asset];
@@ -2112,9 +2124,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            } failureBlock:^(NSError *error) {
 //                [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enable access to your device's photos." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 //            }];
-        }};
+//        }};
     
-    [self dismissViewControllerAnimated:NO completion:completion];
+//    [self dismissViewControllerAnimated:NO completion:completion];
     
 }
 

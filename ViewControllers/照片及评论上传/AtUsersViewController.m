@@ -86,9 +86,9 @@
 //
 //    UIImage * image = [UIImage imageWithData:data];
 //    self.bgImageView.image = image;
-//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-//    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
-//    [self.view addSubview:tempView];
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2];
+    [self.view addSubview:tempView];
 }
 -(void)createFakeNavigation
 {
@@ -112,26 +112,26 @@
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
     
-    UIButton * rightButton = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-60, 27, 50, 27) ImageName:@"greenBtnBg.png" Target:self Action:@selector(rightButtonClick) Title:@"确定"];
+    UIButton * rightButton = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-170/2*0.9-10, backImageView.frame.origin.y-4, 170/2*0.9, 54/2*0.9) ImageName:@"exchange_cateBtn.png" Target:self Action:@selector(rightButtonClick) Title:@"确定"];
     rightButton.titleLabel.font = [UIFont systemFontOfSize:15];
     rightButton.showsTouchWhenHighlighted = YES;
     [navView addSubview:rightButton];
 }
 -(void)createHeader
 {
-    headerView = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, 35)];
+    headerView = [MyControl createViewWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 35)];
     [self.view addSubview:headerView];
     
     UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 35)];
-    alphaView.backgroundColor = BGCOLOR;
-    alphaView.alpha = 0.85;
+    alphaView.backgroundColor = ORANGE;
+    alphaView.alpha = 0.2;
     [headerView addSubview:alphaView];
     
     //
-    UIView * redView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 1)];
-    redView.backgroundColor = [UIColor redColor];
-    redView.alpha = 0.2;
-    [headerView addSubview:redView];
+//    UIView * redView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 1)];
+//    redView.backgroundColor = [UIColor redColor];
+//    redView.alpha = 0.2;
+//    [headerView addSubview:redView];
     
     UIImageView * search = [MyControl createImageViewWithFrame:CGRectMake(10, 13, 14, 13) ImageName:@"5-5.png"];
     [headerView addSubview:search];

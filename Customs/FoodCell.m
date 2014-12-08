@@ -72,6 +72,7 @@
 }
 -(void)modifyUI:(BegFoodListModel *)model
 {
+    leftTime.text = nil;
     self.timeStamp = model.create_time;
     timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(minTime) userInfo:nil repeats:YES];
     

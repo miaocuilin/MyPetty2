@@ -1546,6 +1546,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     if (self.isOldUser) {
                         [MMProgressHUD dismissWithSuccess:@"创建成功" title:nil afterDelay:0.5];
                         [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
+                        
                         self.isOldUserTxOK = 1;
                         if (self.isOldUserPetInfoOK == 1) {
                             [self dismissViewControllerAnimated:NO completion:nil];
@@ -1559,6 +1560,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
                         [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
                         [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+                        [USER setObject:@"1" forKey:@"isLoginShouldDismiss"];
                         //2代表刚注册
                         [USER setObject:@"2" forKey:@"isNotRegister"];
                         if (self.isAdoption) {
@@ -1741,6 +1743,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
             [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
             [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+            [USER setObject:@"1" forKey:@"isLoginShouldDismiss"];
             //2代表刚注册
             [USER setObject:@"2" forKey:@"isNotRegister"];
             [self dismissViewControllerAnimated:NO completion:nil];
@@ -1762,6 +1765,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
             [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
             [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+            [USER setObject:@"1" forKey:@"isLoginShouldDismiss"];
             //2代表刚注册
             [USER setObject:@"2" forKey:@"isNotRegister"];
             if (self.isAdoption) {
@@ -1798,6 +1802,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
         [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
         [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+        [USER setObject:@"1" forKey:@"isLoginShouldDismiss"];
         //2代表刚注册
         [USER setObject:@"2" forKey:@"isNotRegister"];
         [self dismissViewControllerAnimated:NO completion:nil];
@@ -1815,6 +1820,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [USER setObject:@"1" forKey:@"isChooseInShouldDismiss"];
             [USER setObject:@"1" forKey:@"isChooseFamilyShouldDismiss"];
             [USER setObject:@"1" forKey:@"isSearchFamilyShouldDismiss"];
+            [USER setObject:@"1" forKey:@"isLoginShouldDismiss"];
             //2代表刚注册
             [USER setObject:@"2" forKey:@"isNotRegister"];
             if (self.isAdoption) {

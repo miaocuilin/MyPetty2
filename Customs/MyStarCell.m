@@ -42,15 +42,15 @@
     headView.alpha = 0.2;
     [bgView addSubview:headView];
     
-    position = [MyControl createImageViewWithFrame:CGRectMake(5, 0, 130/2, 75/2.0) ImageName:@"position_0.png"];
+    position = [MyControl createImageViewWithFrame:CGRectMake(5, 0, 140/2, 86/2.0) ImageName:@"position_0.png"];
     [bgView addSubview:position];
     
-    positionLabel = [MyControl createLabelWithFrame:CGRectMake(0, 7, 65, 15) Font:13 Text:@"经纪人"];
+    positionLabel = [MyControl createLabelWithFrame:CGRectMake(0, 7, 70, 15) Font:13 Text:@"经纪人"];
     positionLabel.font = [UIFont boldSystemFontOfSize:13];
     positionLabel.textAlignment = NSTextAlignmentCenter;
     [position addSubview:positionLabel];
     
-    self.contributionLabel = [MyControl createLabelWithFrame:CGRectMake(0, 20, 65, 15) Font:9 Text:@""];
+    self.contributionLabel = [MyControl createLabelWithFrame:CGRectMake(0, 20, 70, 15) Font:9 Text:@""];
     self.contributionLabel.textAlignment = NSTextAlignmentCenter;
     self.contributionLabel.textColor = [UIColor colorWithRed:252/255.0 green:196/255.0 blue:182/255.0 alpha:1];
     [position addSubview:self.contributionLabel];

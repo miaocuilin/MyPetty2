@@ -16,6 +16,7 @@ static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 #import "AtUsersViewController.h"
 #import "TopicViewController.h"
+#import "PublishToViewController.h"
 //#import "IQKeyboardManager.h"
 
 @interface PublishViewController () <UITextViewDelegate,AFPhotoEditorControllerDelegate>
@@ -91,6 +92,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self createBg];
     [self createFakeNavigation];
     [self makeUI];
+    if (self.aid == nil) {
+        self.aids = [NSMutableString stringWithString:[USER objectForKey:@"aid"]];
+    }else{
+        self.aids = [NSMutableString stringWithString:self.aid];
+    }
+    
 }
 
 
@@ -207,11 +214,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     users.showsTouchWhenHighlighted = YES;
     [sv addSubview:users];
     
-    publishTo = [MyControl createButtonWithFrame:CGRectMake(users.frame.origin.x+users.frame.size.width+space, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, width, 30) ImageName:@"" Target:self Action:@selector(usersClick) Title:[NSString stringWithFormat:@"发布到%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"]]];
+    publishTo = [MyControl createButtonWithFrame:CGRectMake(users.frame.origin.x+users.frame.size.width+space, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, width, 30) ImageName:@"" Target:self Action:@selector(publishToClick) Title:[NSString stringWithFormat:@"发布到%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"]]];
     if (self.name != nil) {
         [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", self.name] forState:UIControlStateNormal];
     }
-    publishTo.userInteractionEnabled = NO;
+//    publishTo.userInteractionEnabled = NO;
     publishTo.titleLabel.font = [UIFont systemFontOfSize:13];
     publishTo.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
     publishTo.layer.cornerRadius = 3;
@@ -327,6 +334,33 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }else{
             
         }
+    };
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
+}
+-(void)publishToClick
+{
+    PublishToViewController * vc = [[PublishToViewController alloc] init];
+    vc.aid = self.aids;
+    vc.selectedArray = ^(NSArray * array, NSArray * nameArray){
+        NSLog(@"===%@===", array);
+        if (array.count == 1) {
+            [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", nameArray[0]] forState:UIControlStateNormal];
+            self.aids = nil;
+            self.aids = array[0];
+            NSLog(@"%@", self.aids);
+        }
+//        else{
+//            [publishTo setTitle:[NSString stringWithFormat:@"发布到%@等%d个", nameArray[0], nameArray.count] forState:UIControlStateNormal];
+//            self.aids = nil;
+//            for (int i=0; i<array.count; i++) {
+//                [self.aids appendString:array[i]];
+//                if (i != array.count-1) {
+//                    [self.aids appendString:@","];
+//                }
+//            }
+//        }
+        
     };
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
@@ -590,18 +624,19 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     [MyControl startLoadingWithStatus:@"发布中..."];
 //    [USER objectForKey:@"aid"]
-    NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]];
+    NSLog(@"%@", self.aids);
+    NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aids];
     
     //网络上传
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETIMAGEAPI, [USER objectForKey:@"aid"], [MyMD5 md5:code], [ControllerManager getSID]];
-    if (self.aid != nil) {
-        code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
-        url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETIMAGEAPI, self.aid, [MyMD5 md5:code], [ControllerManager getSID]];
-    }
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETIMAGEAPI, self.aids, [MyMD5 md5:code], [ControllerManager getSID]];
+//    if (self.aid != nil) {
+//        code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
+//        url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETIMAGEAPI, self.aid, [MyMD5 md5:code], [ControllerManager getSID]];
+//    }
     NSLog(@"postUrl:%@", url);
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:url]];
     _request.requestMethod = @"POST";
-    _request.timeOutSeconds = 60.0;
+    _request.timeOutSeconds = 30.0;
     
 //    float p = 1.0;
 //    image.
@@ -737,7 +772,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - login
 -(void)login
 {
-    StartLoading;
+    LOADING;
     NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat",  UDID];
     NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@", LOGINAPI, UDID, [MyMD5 md5:code]];
     NSLog(@"login-url:%@", url);
@@ -749,10 +784,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"] forKey:@"SID"];
         
-            LoadingSuccess;
+            ENDLOADING;
 //            [self publishButtonClick:publishButton];
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];

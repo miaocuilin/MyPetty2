@@ -35,7 +35,7 @@
 		<key>115</key>
 		<string>苏格兰折耳猫</string>
 		<key>116</key>
-		<string>短毛猫</string>
+		<string>异国短毛猫</string>
 		<key>117</key>
 		<string>俄罗斯蓝猫</string>
 		<key>118</key>
@@ -84,6 +84,10 @@
 		<string>奶牛猫</string>
 		<key>140</key>
 		<string>中华田园猫</string>
+		<key>141</key>
+		<string>英国短毛猫</string>
+		<key>142</key>
+		<string>美国短毛猫</string>
 	</dict>
 	<key>2</key>
 	<dict>

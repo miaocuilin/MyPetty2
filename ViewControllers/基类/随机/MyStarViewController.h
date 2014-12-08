@@ -30,4 +30,7 @@
 @property(nonatomic,copy)NSString * pet_name;
 @property(nonatomic,copy)NSString * pet_tx;
 //-(void)refreshShakeNum:(int)shakeNum Index:(int)index;
+
+@property(nonatomic,copy)NSString * tempName;
+@property(nonatomic,copy)NSString * tempAid;
 @end

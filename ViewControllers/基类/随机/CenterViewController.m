@@ -18,6 +18,7 @@
 #import "AccountViewController.h"
 #import "ChargeViewController.h"
 #import "WalkAndTeaseViewController.h"
+#import "LoginViewController.h"
 
 @interface CenterViewController ()
 
@@ -77,6 +78,8 @@
     name.font = [UIFont boldSystemFontOfSize:17];
     [headBg addSubview:name];
     
+    slogan = [MyControl createLabelWithFrame:CGRectMake(name.frame.origin.x, 50+36, 200, 20) Font:13 Text:@"宠物星球—我是大萌星"];
+    [headBg addSubview:slogan];
     
     sex = [MyControl createImageViewWithFrame:CGRectMake(name.frame.origin.x+5, 50+14, 15, 15) ImageName:@"woman.png"];
     sex.hidden = YES;
@@ -134,26 +137,46 @@
     bottomBg.image = [UIImage imageNamed:@"center_bottom.png"];
     [sv addSubview:bottomBg];
     
-    UIImageView * gold = [MyControl createImageViewWithFrame:CGRectMake(25, (72-30)/2.0, 30, 30) ImageName:@"gold.png"];
+    gold = [MyControl createImageViewWithFrame:CGRectMake(25, (72-30)/2.0, 30, 30) ImageName:@"gold.png"];
+    gold.hidden = YES;
     [bottomBg addSubview:gold];
     
     goldNum = [MyControl createLabelWithFrame:CGRectMake(gold.frame.origin.x+gold.frame.size.width+5, gold.frame.origin.y, 100, gold.frame.size.height) Font:20 Text:@"0"];
+    goldNum.hidden = YES;
     goldNum.font = [UIFont boldSystemFontOfSize:20];
     [bottomBg addSubview:goldNum];
     
     
-    UIButton * charge = [MyControl createButtonWithFrame:CGRectMake(337/2.0, (bottomBg.frame.size.height-40)/2.0, 100, 40) ImageName:@"center_chargeBg.png" Target:self Action:@selector(chargeClick) Title:@"赚金币"];
+    charge = [MyControl createButtonWithFrame:CGRectMake(337/2.0, (bottomBg.frame.size.height-40)/2.0, 100, 40) ImageName:@"center_chargeBg.png" Target:self Action:@selector(chargeClick) Title:@"赚金币"];
     charge.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     charge.showsTouchWhenHighlighted = YES;
+    charge.hidden = YES;
     [bottomBg addSubview:charge];
     
+    //534 110
+    float w = bottomBg.frame.size.width-40;
+    regOrLoginBtn = [MyControl createButtonWithFrame:CGRectMake(20, charge.frame.origin.y-10, w, w*110/534) ImageName:@"public_longBtnBg.png" Target:self Action:@selector(loginBtnClick) Title:@"注册或登录"];
+    [bottomBg addSubview:regOrLoginBtn];
+    
     [self modifyUI];
+}
+-(void)loginBtnClick
+{
+    LoginViewController * vc = [[LoginViewController alloc] init];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 }
 -(void)modifyUI
 {
     if (![[USER objectForKey:@"isSuccess"] intValue]) {
         return;
     }
+    regOrLoginBtn.hidden = YES;
+    gold.hidden = NO;
+    goldNum.hidden = NO;
+    charge.hidden = NO;
+    slogan.hidden = YES;
+    
     [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (image) {
             [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];

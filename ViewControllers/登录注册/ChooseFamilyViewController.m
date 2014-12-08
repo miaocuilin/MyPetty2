@@ -72,7 +72,7 @@
 }
 -(void)loadRecommandListData
 {
-    StartLoading;
+    LOADING;
     NSString * url = [NSString stringWithFormat:@"%@%@", RECOMMANDCOUNTRYLISTAPI, [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -93,11 +93,11 @@
                 [self loadUserPetsList];
             }else{
                 [self createTableView];
-                LoadingSuccess;
+                ENDLOADING;
             }
             
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -119,9 +119,9 @@
                 [self createTableView];
             }
             
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -745,7 +745,7 @@
 //下拉刷新的时候调用
 -(void)reloadRecommandData
 {
-    StartLoading;
+    LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", self.from]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI2, self.from, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
@@ -766,16 +766,16 @@
             [self removeUserPets];
             pageNum = 1;
             [tv reloadData];
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
 }
 -(void)reloadTopicData
 {
-    StartLoading;
+    LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", self.from]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI, self.from, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
@@ -796,9 +796,9 @@
             [self removeUserPets];
             [tv reloadData];
             pageNum = 1;
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -810,7 +810,7 @@
 //    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
 //        [self reloadRecommandData];
 //    }else{
-        StartLoading;
+        LOADING;
         NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", type]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI2, type, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
@@ -835,10 +835,10 @@
 //                    self.lastAid = @"";
 //                }
                 [self removeUserPets];
-                LoadingSuccess;
+                ENDLOADING;
                 [tv reloadData];
             }else{
-                LoadingFailed;
+                LOADFAILED;
             }
         }];
         [request release];
@@ -849,7 +849,7 @@
 //    if ([self.limitTypeName isEqualToString:@"所有种族"]) {
 //        [self reloadTopicData];
 //    }else{
-        StartLoading;
+        LOADING;
         NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", type]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI2, type, sig, [ControllerManager getSID]];
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -873,9 +873,9 @@
 //                }
                 [self removeUserPets];
                 [tv reloadData];
-                LoadingSuccess;
+                ENDLOADING;
             }else{
-                LoadingFailed;
+                LOADFAILED;
             }
         }];
         [request release];
@@ -896,7 +896,7 @@
         url = [NSString stringWithFormat:@"%@%@&page=%d&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI3, type, pageNum, sig, [ControllerManager getSID]];
 //    }
     //
-    StartLoading;
+    LOADING;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
@@ -914,9 +914,9 @@
                 [tv reloadData];
             }
             [tv footerEndRefreshing];
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -935,7 +935,7 @@
         url = [NSString stringWithFormat:@"%@%@&page=%d&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI3, type, pageNum, sig, [ControllerManager getSID]];
 //    }
     //
-    StartLoading;
+    LOADING;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
@@ -954,9 +954,9 @@
             }
             
             [tv footerEndRefreshing];
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];

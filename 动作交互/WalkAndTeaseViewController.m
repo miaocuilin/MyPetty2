@@ -35,7 +35,7 @@
 {
     protWebView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
     [self.view addSubview:protWebView];
-    protWebView.delegate = self;
+//    protWebView.delegate = self;
     
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.aid]];
     self.URL = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", HAVEFUNAPI, self.aid, sig, [ControllerManager getSID]];

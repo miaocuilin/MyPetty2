@@ -16,11 +16,16 @@
     UIButton * headBtn;
     UILabel * name;
     UIImageView * sex;
+    UILabel * slogan;
     UILabel * location;
     
     UIImageView * msgNumBg;
     UILabel * msgNum;
     UILabel * goldNum;
+    
+    UIImageView * gold;
+    UIButton * charge;
+    UIButton * regOrLoginBtn;
     
     BOOL isLoaded;
 }

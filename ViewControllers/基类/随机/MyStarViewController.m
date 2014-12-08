@@ -71,6 +71,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self createFakeNavigation];
 //    [self loadMyPets];
     [self loadData];
+    
 }
 -(void)createBg
 {
@@ -117,6 +118,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)camaraClick
 {
+    self.tempAid = [USER objectForKey:@"aid"];
+    self.tempName = @"";
     isBeg = NO;
     if ([ControllerManager getIsSuccess]) {
         if (sheet == nil) {
@@ -457,7 +460,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             if (![model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
                 return;
             }
-            
+            self.tempAid = model.aid;
+            self.tempName = model.name;
             isBeg = YES;
             
             if (sheet == nil) {
@@ -592,6 +596,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             vc.isBeg = isBeg;
         }
         vc.oriImage = image;
+        vc.name = self.tempName;
+        vc.aid = self.tempAid;
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
     }];

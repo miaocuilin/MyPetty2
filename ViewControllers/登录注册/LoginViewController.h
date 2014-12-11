@@ -15,4 +15,9 @@
     UITextField * codeTF;
     UIButton * logBtn;
 }
+
+@property(nonatomic)BOOL isFromAccount;
+
+@property(nonatomic,copy)NSString * tempUID;
+@property(nonatomic,copy)NSString * tempAID;
 @end

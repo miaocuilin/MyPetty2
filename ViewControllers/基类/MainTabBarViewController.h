@@ -19,6 +19,7 @@
     UIScrollView * sv;
     
     BOOL isLoaded;
+    UIView * bottomBg;
     
 }
 @property(nonatomic,assign)UIImage * preImage;

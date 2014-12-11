@@ -614,7 +614,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //                #define ISBINDEDAPI @"http://54.199.161.210/dc/index.php?r=user/bindApi&wechat=&weibo="
                 NSString * str = [NSString stringWithFormat:@"wechat=&weibo=%@dog&cat", [USER objectForKey:@"sinaUsid"]];
                 NSString * code = [MyMD5 md5:str];
-                NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ISBINDEDAPI, [USER objectForKey:@"sinaUsid"], code, [ControllerManager getSID]];
+                NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", BIND3PARTYAPI, [USER objectForKey:@"sinaUsid"], code, [ControllerManager getSID]];
                 NSLog(@"%@", url);
                 [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {

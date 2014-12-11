@@ -180,7 +180,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSLog(@"%@", url);
     httpDownloadBlock * requset = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"我的萌星：%@", load.dataDict);
+//            NSLog(@"我的萌星：%@", load.dataDict);
             
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             [self.dataArray removeAllObjects];
@@ -212,7 +212,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            ENDLOADING;
         }else{
             [self.tv headerEndRefreshing];
-            LOADFAILED;
+            if(![USER objectForKey:@"notAlertError"] && [[USER objectForKey:@"isSuccess"] intValue]){
+               LOADFAILED;
+            }else{
+                [USER setObject:@"0" forKey:@"notAlertError"];
+            }
+            
         }
     }];
     [requset release];
@@ -490,7 +495,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = img_id;
 
-        [self.view addSubview:vc.view];
+        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
         [vc release];
     };
     [cell adjustCellHeight:model.images.count];

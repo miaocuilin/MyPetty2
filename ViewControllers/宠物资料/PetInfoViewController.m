@@ -524,6 +524,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
     [self.view addSubview:imageView];
+    
+    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
+    view.backgroundColor = [UIColor whiteColor];
+    [imageView addSubview:view];
 }
 -(void)createFakeNavigation
 {

@@ -1,3 +1,4 @@
+
 //
 //  FirstViewController.m
 //  MyPetty
@@ -13,6 +14,7 @@
 #import <ImageIO/ImageIO.h>
 //#import "FoodFirstViewController.h"
 #import "MainTabBarViewController.h"
+
 @interface FirstViewController () <UIAlertViewDelegate>
 {
   ASIFormDataRequest * _request;
@@ -192,6 +194,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor blackColor];
     
@@ -214,6 +217,9 @@
     //看是否需要dismiss
     [USER setObject:@"0" forKey:@"isChooseInShouldDismiss"];
     
+    [USER setObject:@"" forKey:@"weChatUserInfo"];
+    [USER setObject:@"" forKey:@"sinaUserInfo"];
+    [USER setObject:@"" forKey:@"password"];
     //从本地读取种类数据，然后
 //    NSString * path = [DOCDIR stringByAppendingPathComponent:@"CateNameList.plist"];
 //    NSLog(@"CateNameList= %@",path);
@@ -417,6 +423,7 @@
 -(void)login
 {
     reloadType = 2;
+    [USER setObject:@"1" forKey:@"notAlertError"];
     if (isLoadImage) {
 //        StartLoading;
     }
@@ -505,6 +512,10 @@
                 [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
                 [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
                 [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
+                [USER setObject:[dict objectForKey:@"weibo"] forKey:@"weibo"];
+//                NSLog(@"%@", [USER objectForKey:@"weibo"]);
+                [USER setObject:[dict objectForKey:@"wechat"] forKey:@"wechat"];
+                [USER setObject:[dict objectForKey:@"password"] forKey:@"password"];
                 if (!([[dict objectForKey:@"rank"] isKindOfClass:[NSNull class]] || ![[dict objectForKey:@"rank"] length])) {
                     [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
                 }else{

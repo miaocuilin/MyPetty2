@@ -8,9 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AccountViewController : UIViewController
+@interface AccountViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 {
     UIView * navView;
     UIImageView * head;
+    UITableView * tv;
+    
+    BOOL isConfVersion;
 }
+@property(nonatomic,retain)NSArray * array;
 @end

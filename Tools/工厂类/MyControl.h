@@ -78,6 +78,9 @@
 
 //为URL添加不备份标签
 + (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
+
+//抖动动画
++(void)animateIncorrectPassword:(UIView *)view;
 @end
 
 

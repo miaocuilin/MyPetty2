@@ -165,12 +165,16 @@
 //    UIButton *comeBack = [MyControl createButtonWithFrame:CGRectMake(5, 25, 25, 25) ImageName:@"7-7.png" Target:self Action:@selector(comeBackAction) Title:nil];
 //    [nav addSubview:comeBack];
     
+    UIButton * rightButton = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-170/2*0.9-10, backImageView.frame.origin.y-4, 170/2*0.9, 54/2*0.9) ImageName:@"exchange_cateBtn.png" Target:self Action:@selector(buttonAction:) Title:@"保存"];
+    rightButton.titleLabel.font = [UIFont systemFontOfSize:15];
+    rightButton.showsTouchWhenHighlighted = YES;
+    [navView addSubview:rightButton];
     
-    UIButton *changeButton = [MyControl createButtonWithFrame:CGRectMake(320-50-10, 30, 50, 23) ImageName:@"greenBtnBg.png" Target:self Action:@selector(buttonAction:) Title:@"保存"];
-    changeButton.titleLabel.font = [UIFont systemFontOfSize:14];
-    [navView addSubview:changeButton];
+//    UIButton *changeButton = [MyControl createButtonWithFrame:CGRectMake(320-50-10, 30, 50, 23) ImageName:@"greenBtnBg.png" Target:self Action:@selector(buttonAction:) Title:@"保存"];
+//    changeButton.titleLabel.font = [UIFont systemFontOfSize:14];
+//    [navView addSubview:changeButton];
     
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"设置"];
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"收货地址"];
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];

@@ -55,7 +55,7 @@
 }
 -(void)loadData
 {
-    StartLoading;
+//    LOADING;
     
     NSString * url = [NSString stringWithFormat:@"%@%@", RANDOMAPI, [ControllerManager getSID]];
 //    NSLog(@"recommendAPI:%@", url);
@@ -84,9 +84,9 @@
             [qtmquitView reloadData];
             [qtmquitView headerEndRefreshing];
             
-            LoadingSuccess;
+//            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
             [qtmquitView headerEndRefreshing];
             NSLog(@"数据加载失败");
         }
@@ -117,6 +117,8 @@
             [qtmquitView reloadData];
             [qtmquitView footerEndRefreshing];
         }else{
+            LOADFAILED;
+            [qtmquitView footerEndRefreshing];
             NSLog(@"数据加载失败");
         }
     }];

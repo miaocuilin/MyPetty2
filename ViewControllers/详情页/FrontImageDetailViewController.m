@@ -57,10 +57,10 @@
 //            view.frame = r;
 //        } completion:nil];
 //    }];
-    [UIView animateWithDuration:0.3 delay:0.3 options:0 animations:^{
+    [UIView animateWithDuration:0.2 delay:0.3 options:0 animations:^{
         view.frame = CGRectMake(r.origin.x-5, r.origin.y-10, r.size.width+10, r.size.height+10);
     } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.4 animations:^{
+        [UIView animateWithDuration:0.2 animations:^{
             view.frame = r;
         } completion:nil];
     }];
@@ -116,7 +116,7 @@
 }
 -(void)loadImageData
 {
-    LOADING;
+//    LOADING;
     
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@&usr_id=%@dog&cat", self.img_id, [USER objectForKey:@"usr_id"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&usr_id=%@&sig=%@&SID=%@", IMAGEINFOAPI, self.img_id, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
@@ -162,9 +162,7 @@
             
             [self analyseComments];
             
-            [self loadPetData];
-            
-            ENDLOADING;
+//            ENDLOADING;
             
             [self modifyUI];
         }else{
@@ -683,11 +681,11 @@
     sex = [MyControl createImageViewWithFrame:CGRectMake(55, 15, 13, 13) ImageName:@"man.png"];
     [imageBgView2 addSubview:sex];
     
-    petName = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+15, 15, 200, 15) Font:13 Text:@"大黄青葱岁月"];
+    petName = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+15, 15, 200, 15) Font:13 Text:@""];
     petName.textColor = [ControllerManager colorWithHexString:@"565656"];
     [imageBgView2 addSubview:petName];
     
-    petType = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x, 36, 100, 15) Font:11 Text:@"金毛"];
+    petType = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x, 36, 100, 15) Font:11 Text:@""];
     petType.textColor = GRAY;
     [imageBgView2 addSubview:petType];
     
@@ -696,7 +694,7 @@
     userTx.layer.masksToBounds = YES;
     [imageBgView2 addSubview:userTx];
     
-    userName = [MyControl createLabelWithFrame:CGRectMake(userTx.frame.origin.x-150, 36, 150, 15) Font:11 Text:@"By—彭于晏帅哥欧巴~"];
+    userName = [MyControl createLabelWithFrame:CGRectMake(userTx.frame.origin.x-150, 36, 150, 15) Font:11 Text:@""];
     userName.textAlignment = NSTextAlignmentRight;
     userName.textColor = GRAY;
     [imageBgView2 addSubview:userName];
@@ -1543,7 +1541,7 @@
     }else if(btn.tag/100 == 5){
         tempBtn = (UIButton *)[imageBgView2 viewWithTag:200+triangleIndex];
         if (btn.tag == 500) {
-            if (!isLoaded[1]) {
+            if (!isLoaded[0]) {
                 //                isLoaded[0] = 1;
                 [self loadLikersData];
             }
@@ -1766,6 +1764,10 @@
     NSLog(@"swipeLeft");
     isBackSide = !isBackSide;
     if (isBackSide) {
+        if(!isBackLoaded){
+            isBackLoaded = YES;
+            [self loadPetData];
+        }
         sv.hidden = YES;
         sv2.hidden = NO;
 //        [self performSelector:@selector(hideSv) withObject:nil afterDelay:0.25f];
@@ -1793,6 +1795,11 @@
     NSLog(@"swipeRight");
     isBackSide = !isBackSide;
     if (isBackSide) {
+        if(!isBackLoaded){
+            isBackLoaded = YES;
+            [self loadPetData];
+        }
+        
         sv.hidden = YES;
         sv2.hidden = NO;
         //        [self performSelector:@selector(hideSv) withObject:nil afterDelay:0.25f];

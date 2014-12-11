@@ -11,6 +11,8 @@
 #import "BegFoodListModel.h"
 #import "PetInfoViewController.h"
 #import "UserInfoViewController.h"
+#import "Alert_2ButtonView2.h"
+#import "ChargeViewController.h"
 @interface FoodViewController ()
 
 @end
@@ -47,7 +49,7 @@
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"%@", load.dataDict);
+//            NSLog(@"%@", load.dataDict);
             [self.dataArray removeAllObjects];
             if (![[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSArray class]] || [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] count] == 0) {
                 ENDLOADING;
@@ -148,15 +150,15 @@
 -(void)createReward
 {
     //587  98
-    rewardBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-587/2)/2.0, self.view.frame.size.height-50-98/2-20, 587/2, 98/2) ImageName:@"food_rewardBg.png"];
+    rewardBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-569/2)/2.0, self.view.frame.size.height-50-103/2-20, 569/2, 103/2) ImageName:@"food_rewardBg.png"];
     [self.view addSubview:rewardBg];
     
-    rewardNum = [MyControl createLabelWithFrame:CGRectMake(22, 0, 50, 98/2) Font:17 Text:@"1"];
+    rewardNum = [MyControl createLabelWithFrame:CGRectMake(22, 0, 50, rewardBg.frame.size.height) Font:17 Text:@"1"];
     rewardNum.font = [UIFont boldSystemFontOfSize:17];
     rewardNum.textAlignment = NSTextAlignmentCenter;
     [rewardBg addSubview:rewardNum];
     
-    UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(218/2, (98/2-31/2)/2.0, 18/2, 31/2) ImageName:@"rightArrow.png"];
+    UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(218/2, (rewardBg.frame.size.height-31/2)/2.0, 18/2, 31/2) ImageName:@"rightArrow.png"];
     [rewardBg addSubview:arrow];
     
     //10 100 1000
@@ -318,11 +320,43 @@
 }
 -(void)rewardBtnClick:(UIButton *)btn
 {
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        return;
+    }
     if ([rewardNum.text intValue]>[[USER objectForKey:@"gold"] intValue]+[[USER objectForKey:@"food"] intValue]) {
-        [MyControl popAlertWithView:self.view Msg:@"金币不足"];
+        Alert_2ButtonView2 * view2 = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        view2.type = 2;
+        view2.rewardNum = rewardNum.text;
+        [view2 makeUI];
+        view2.jumpCharge = ^(){
+            ChargeViewController * charge = [[ChargeViewController alloc] init];
+            [self presentViewController:charge animated:YES completion:nil];
+            [charge release];
+        };
+        [[UIApplication sharedApplication].keyWindow addSubview:view2];
+        [view2 release];
         return;
     }
     
+    if(![[USER objectForKey:@"notShowCostAlert"] intValue] && [rewardNum.text intValue]>[[USER objectForKey:@"food"] intValue]){
+        Alert_2ButtonView2 * view2 = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        view2.type = 1;
+        view2.reward = ^(){
+            [self reward];
+        };
+        view2.rewardNum = rewardNum.text;
+        [view2 makeUI];
+        [[UIApplication sharedApplication].keyWindow addSubview:view2];
+        [view2 release];
+        return;
+    }
+    
+    [self reward];
+    
+}
+-(void)reward
+{
     int a = tv.contentOffset.y/self.view.frame.size.width;
     
     LOADING;
@@ -341,6 +375,7 @@
                 [USER setObject:[NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"gold"]] forKey:@"gold"];
                 BegFoodListModel * model = self.dataArray[a];
                 model.food = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"food"]];
+                [MyControl popAlertWithView:self.view Msg:[NSString stringWithFormat:@"打赏成功，萌星 %@ 感谢您的爱心！", [self.dataArray[a] name]]];
                 [tv reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:a inSection:0]] withRowAnimation:0];
             }
             ENDLOADING;

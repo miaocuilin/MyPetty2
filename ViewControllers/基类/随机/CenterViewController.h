@@ -38,4 +38,7 @@
 @property(nonatomic)BOOL hasNewMsg;
 @property(nonatomic,retain)NSMutableArray * keysArray;
 @property(nonatomic,retain)NSMutableArray * valuesArray;
+
+//刷新页面及私信
+-(void)refresh;
 @end

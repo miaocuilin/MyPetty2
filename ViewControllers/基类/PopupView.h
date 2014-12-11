@@ -10,7 +10,7 @@
 
 @interface PopupView : UIView
 
-@property(nonatomic,retain)UIView * bgView;
+@property(nonatomic,retain)UIImageView * bgView;
 @property(nonatomic,retain)UIView * alphaView;
 
 @property(nonatomic,retain)UILabel * desLabel;

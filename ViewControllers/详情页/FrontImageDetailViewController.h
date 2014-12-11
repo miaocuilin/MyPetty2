@@ -66,6 +66,8 @@
     
     //4项是否都加载过数据了
     BOOL isLoaded[4];
+    
+    BOOL isBackLoaded;
 }
 @property(nonatomic,retain)NSDictionary * picDict;
 @property(nonatomic,retain)NSDictionary * imageDict;

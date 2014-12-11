@@ -43,7 +43,7 @@
     [MobClick event:@"personal_homepage"];
     
 //    self.view.backgroundColor = [UIColor whiteColor];
-    [self createBg];
+    
     
     self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
     self.userAttentionListArray = [NSMutableArray arrayWithCapacity:0];
@@ -54,7 +54,7 @@
     
     cellNum = 15;
 //    isOwner = YES;
-    
+    [self createBg];
     [self createScrollView];
     [self createFakeNavigation];
 //    [self createHeader];
@@ -226,6 +226,10 @@
 {
     UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
     [self.view addSubview:imageView];
+    
+    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
+    view.backgroundColor = [UIColor whiteColor];
+    [imageView addSubview:view];
 }
 -(void)createFakeNavigation
 {

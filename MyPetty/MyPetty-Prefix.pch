@@ -41,7 +41,8 @@
 #import "LoadingView.h"
 #import "FrontImageDetailViewController.h"
 #import "LargeImage.h"
-
+#import "LoginViewController.h"
+#import "VariousAlertViewController.h"
 
 #define LOADING LoadingView * loadView = [ControllerManager shareLoading];[[UIApplication sharedApplication].keyWindow addSubview:loadView];
 
@@ -49,7 +50,9 @@
 
 #define LOADFAILED LoadingView * load = [ControllerManager shareLoading];[load stopAnimation];[MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"网络异常"];
 
-#define ShowAlertView AlertView * alert = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];[alert makeUI];alert.jump = ^(){ChooseInViewController * vc = [[ChooseInViewController alloc] init];[self presentViewController:vc animated:YES completion:nil];[vc release];};[self.view addSubview:alert];[alert release];
+#define ShowAlertView VariousAlertViewController * vc = [[VariousAlertViewController alloc] init];vc.regClick = ^(){ChooseInViewController * choose = [[ChooseInViewController alloc] init];[self presentViewController:choose  animated:YES completion:nil];[choose release];[vc.view removeFromSuperview];};vc.fastClick = ^(){LoginViewController * login = [[LoginViewController alloc] init];[self presentViewController:login animated:YES completion:nil];[login release];[vc.view removeFromSuperview];};[self.view addSubview:vc.view];[vc release];
+
+//#define ShowAlertView AlertView * alert = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];[alert makeUI];alert.jump = ^(){LoginViewController * vc = [[LoginViewController alloc] init];[self presentViewController:vc animated:YES completion:nil];[vc release];};[self.view addSubview:alert];[alert release];
 
 #define iOS7 [[[UIDevice currentDevice] systemVersion] floatValue]>=7.0
 //橘色
@@ -128,6 +131,28 @@
 
 //赏口粮API  img_id=&n=
 #define REWARDFOODAPI @"http://123.57.39.48/index.php?r=image/rewardFoodApi&img_id="
+
+//设置密码
+#define SETPWDAPI @"http://123.57.39.48/index.php?r=user/setPwdApi&pwd="
+
+//微信微博登录或注册  weibo=&wechat=
+#define LOGINBY3PARTY @"http://123.57.39.48/index.php?r=user/loginBy3PartyApi"
+
+//密码登录API  &pwd=
+#define BINDUSERAPI @"http://123.57.39.48/index.php?r=user/bindUserApi&name="
+
+//兑换API  item/exchangeApi&item_id=&aid=
+#define EXCHANGEAPI @"http://123.57.39.48/index.php?r=item/exchangeApi&aid="
+
+//更新本地实物列表信息API item/listApi&code=
+#define TRUEGIFTLISTAPI @"http://123.57.39.48/index.php?r=item/listApi"
+
+//实物详情页API item/infoApi&item_id=
+#define TRUEGIFTDETAILAPI @"http://123.57.39.48/index.php?r=item/infoApi&item_id="
+
+//获取弹窗样式7所需数据API
+#define ALERT7DATAAPI @"http://123.57.39.48/index.php?r=animal/foodApi&aid="
+
 
 //IP头API
 #define IPURL @"http://54.199.161.210/dc/index.php"
@@ -291,8 +316,8 @@
 #define LIKERSAPI @"http://123.57.39.48/index.php?r=user/othersApi&usr_ids="
 #define USERSINFOAPI @"http://123.57.39.48/index.php?r=user/othersApi&usr_ids="
 
-//用户是否绑定微博或微信
-#define ISBINDEDAPI @"http://54.199.161.210/dc/index.php?r=user/bindApi&wechat=&weibo="
+//用户是否绑定微博或微信  &wechat=&weibo=
+#define BIND3PARTYAPI @"http://123.57.39.48/index.php?r=user/bindApi"
 
 //活动页面API
 #define TOPICLISTAPI @"http://123.57.39.48/index.php?r=topic/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="

@@ -193,6 +193,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     float space = 7.5;
     
     topic = [MyControl createButtonWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, width, 30) ImageName:@"" Target:self Action:@selector(topicClick) Title:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]]];
+    if(self.isBeg){
+        topic.userInteractionEnabled = NO;
+    }
     topic.titleLabel.font = [UIFont systemFontOfSize:13];
     topic.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
     topic.layer.cornerRadius = 3;
@@ -218,7 +221,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (self.name != nil) {
         [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", self.name] forState:UIControlStateNormal];
     }
-//    publishTo.userInteractionEnabled = NO;
+    if(self.isBeg){
+        publishTo.userInteractionEnabled = NO;
+    }
     publishTo.titleLabel.font = [UIFont systemFontOfSize:13];
     publishTo.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
     publishTo.layer.cornerRadius = 3;

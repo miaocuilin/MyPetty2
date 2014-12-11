@@ -33,6 +33,10 @@
         [self makeUI];
         [self modifyUI];
     }
+    if (self.selectedIndex == 3) {
+        CenterViewController * vc4 = self.viewControllers[3];
+        [vc4 refresh];
+    }
 }
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -152,7 +156,7 @@
 #pragma mark -
 -(void)createBottom
 {
-    UIView * bottomBg = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height-50, self.view.frame.size.width, 50)];
+    bottomBg = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height-50, self.view.frame.size.width, 50)];
     [self.view addSubview:bottomBg];
     
     NSArray * selectedArray = @[@"food_myStar_selected", @"food_beg_selected", @"food_discovery_selected", @"food_center_selected"];
@@ -181,7 +185,9 @@
     }
     
     for (int i=0; i<4; i++) {
-        UIButton * button = (UIButton *)[self.view viewWithTag:100+i];
+        //这里写button的直接父控件bottomBg再去找tag，不然会出问题
+        UIButton * button = (UIButton *)[bottomBg viewWithTag:100+i];
+        //UIButton * button = (UIButton *)[self.view viewWithTag:100+i];
         button.selected = NO;
     }
     btn.selected = YES;

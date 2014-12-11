@@ -8,6 +8,7 @@
 
 #import "LoginViewController.h"
 #import "ChooseInViewController.h"
+#import "Alert_2ButtonViewController.h"
 
 @interface LoginViewController ()
 
@@ -91,6 +92,9 @@
     regBtn.titleLabel.font = [UIFont systemFontOfSize:13];
     [regBtn setTitleColor:ORANGE forState:UIControlStateNormal];
     regBtn.showsTouchWhenHighlighted = YES;
+    if(self.isFromAccount){
+        regBtn.hidden = YES;
+    }
     [sv addSubview:regBtn];
     
     UIView * line1 = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2.0-174/2-15, logBtn.frame.origin.y+logBtn.frame.size.height+90, 174/2, 0.5)];
@@ -191,19 +195,60 @@
     [[UMSocialDataService defaultDataService] requestSnsInformation:UMShareToWechatSession  completion:^(UMSocialResponseEntity *response){
         NSLog(@"SnsInformation is %@",response.data);
         NSDictionary * dic = (NSDictionary *)response.data;
-        NSString * gender = [dic objectForKey:@"gender"];
-        NSString * location = [dic objectForKey:@"location"];
-        NSString * openid = [dic objectForKey:@"openid"];
-//        NSString * profile_image_url = [dic objectForKey:@"profile_image_url"];
-        NSString * screen_name = [dic objectForKey:@"screen_name"];
-//        [head setImageWithURL:[NSURL URLWithString:profile_image_url]];
-        NSString * sex = nil;
-        if ([gender intValue] == 1) {
-            sex = @"男";
-        }else{
-            sex = @"女";
-        }
-        [MyControl createAlertViewWithTitle:@"微信信息" Message:[NSString stringWithFormat:@"用户名：%@\n性别：%@\n地址：%@\nID：%@", screen_name, sex, location, openid] delegate:nil cancelTitle:nil otherTitles:@"确定"];
+        
+        [USER setObject:dic forKey:@"weChatUserInfo"];
+        [USER setObject:@"" forKey:@"sinaUserInfo"];
+        
+        LOADING;
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"wechat=%@dog&cat", [dic objectForKey:@"openid"]]];
+        NSString * url = [NSString stringWithFormat:@"%@&wechat=%@&sig=%@&SID=%@", LOGINBY3PARTY, [dic objectForKey:@"openid"], sig, [ControllerManager getSID]];
+        NSLog(@"%@", url);
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
+                    if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]) {
+                        //绑定过 更新本地个人信息及默认宠物信息，删除本地聊天记录
+                        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
+                        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
+                        [self getUserData];
+                    }else{
+                        //未绑定过
+                        /*
+                         1.已注册：提示是否绑定现用户，不绑定跳有宠没宠页面。
+                         2.未注册：直接跳有没有宠页面。
+                         */
+                        if(self.isFromAccount){
+                            //注册过 提示是否绑定现用户，不绑定不做操作
+                            Alert_2ButtonViewController * vc = [[Alert_2ButtonViewController alloc] init];
+                            [self.view addSubview:vc.view];
+//                            [vc release];
+                        }else{
+                            //没注册过 直接跳选择有宠没宠
+                            ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+                            [self presentViewController:vc animated:YES completion:nil];
+                            [vc release];
+                        }
+                    }
+                }
+                ENDLOADING;
+            }else{
+                LOADFAILED;
+            }
+        }];
+        [request release];
+//        NSString * gender = [dic objectForKey:@"gender"];
+//        NSString * location = [dic objectForKey:@"location"];
+//        NSString * openid = [dic objectForKey:@"openid"];
+////        NSString * profile_image_url = [dic objectForKey:@"profile_image_url"];
+//        NSString * screen_name = [dic objectForKey:@"screen_name"];
+////        [head setImageWithURL:[NSURL URLWithString:profile_image_url]];
+//        NSString * sex = nil;
+//        if ([gender intValue] == 1) {
+//            sex = @"男";
+//        }else{
+//            sex = @"女";
+//        }
+//        [MyControl createAlertViewWithTitle:@"微信信息" Message:[NSString stringWithFormat:@"用户名：%@\n性别：%@\n地址：%@\nID：%@", screen_name, sex, location, openid] delegate:nil cancelTitle:nil otherTitles:@"确定"];
     }];
 }
 -(void)sinaClick
@@ -224,20 +269,87 @@
     [[UMSocialDataService defaultDataService] requestSnsInformation:UMShareToSina  completion:^(UMSocialResponseEntity *response){
         NSLog(@"SnsInformation is %@",response.data);
         NSDictionary * dic = (NSDictionary *)response.data;
-        NSString * gender = [dic objectForKey:@"gender"];
-        NSString * location = [dic objectForKey:@"location"];
-        NSString * uid = [dic objectForKey:@"uid"];
-//        NSString * profile_image_url = [dic objectForKey:@"profile_image_url"];
-        NSString * screen_name = [dic objectForKey:@"screen_name"];
-        //        [head setImageWithURL:[NSURL URLWithString:profile_image_url]];
-        NSString * sex = nil;
-        if ([gender intValue] == 1) {
-            sex = @"男";
-        }else{
-            sex = @"女";
-        }
-        [MyControl createAlertViewWithTitle:@"微博信息" Message:[NSString stringWithFormat:@"用户名：%@\n性别：%@\n地址：%@\nID：%@", screen_name, sex, location, uid] delegate:nil cancelTitle:nil otherTitles:@"确定"];
+        
+        [USER setObject:dic forKey:@"sinaUserInfo"];
+        [USER setObject:@"" forKey:@"weChatUserInfo"];
+        
+        LOADING;
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"weibo=%@dog&cat", [dic objectForKey:@"uid"]]];
+        NSString * url = [NSString stringWithFormat:@"%@&weibo=%@&sig=%@&SID=%@", LOGINBY3PARTY, [dic objectForKey:@"uid"], sig, [ControllerManager getSID]];
+        NSLog(@"%@", url);
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+            if (isFinish) {
+                NSLog(@"%@", load.dataDict);
+                if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
+                    if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]) {
+                        //绑定过 更新本地个人信息及默认宠物信息，删除本地聊天记录
+                        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
+                        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
+                        [self getUserData];
+                    }else{
+                        //未绑定过
+                        /*
+                         1.已注册：提示是否绑定现用户，不绑定跳有宠没宠页面。
+                         2.未注册：直接跳有没有宠页面。
+                         */
+                        if(self.isFromAccount){
+                            //注册过 提示是否绑定现用户，不绑定不做操作
+                            Alert_2ButtonViewController * vc = [[Alert_2ButtonViewController alloc] init];
+                            vc.isSina = YES;
+                            [self.view addSubview:vc.view];
+                        }else{
+                            //没注册过 直接跳选择有宠没宠
+                            ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+                            [self presentViewController:vc animated:YES completion:nil];
+                            [vc release];
+                        }
+                    }
+                }
+                ENDLOADING;
+            }else{
+                LOADFAILED;
+            }
+        }];
+        [request release];
+//        NSString * gender = [dic objectForKey:@"gender"];
+//        NSString * location = [dic objectForKey:@"location"];
+//        NSString * uid = [dic objectForKey:@"uid"];
+////        NSString * profile_image_url = [dic objectForKey:@"profile_image_url"];
+//        NSString * screen_name = [dic objectForKey:@"screen_name"];
+//        //        [head setImageWithURL:[NSURL URLWithString:profile_image_url]];
+//        NSString * sex = nil;
+//        if ([gender intValue] == 1) {
+//            sex = @"男";
+//        }else{
+//            sex = @"女";
+//        }
+//        [MyControl createAlertViewWithTitle:@"微博信息" Message:[NSString stringWithFormat:@"用户名：%@\n性别：%@\n地址：%@\nID：%@", screen_name, sex, location, uid] delegate:nil cancelTitle:nil otherTitles:@"确定"];
     }];
+}
+#pragma mark -
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 100 || alertView.tag == 101) {
+        //切换微信账号
+        if(buttonIndex){
+            NSLog(@"11111111");
+        }
+    }else if(alertView.tag == 102){
+        //绑定微信账号
+        if(buttonIndex){
+            NSLog(@"222222222");
+        }
+    }else if (alertView.tag == 200 || alertView.tag == 201){
+        //切换微博账号
+        if(buttonIndex){
+            NSLog(@"333333333");
+        }
+    }else if(alertView.tag == 202){
+        //绑定微博账号
+        if(buttonIndex){
+            NSLog(@"444444444");
+        }
+    }
 }
 #pragma mark -
 -(void)backBtnClick
@@ -252,8 +364,138 @@
 }
 -(void)logBtnClick:(UIButton *)btn
 {
+    [nameTF resignFirstResponder];
+    [codeTF resignFirstResponder];
     
+    if (!nameTF.text.length) {
+        [MyControl popAlertWithView:self.view Msg:@"昵称为空"];
+        return;
+    }
+    if(!codeTF.text.length){
+        [MyControl popAlertWithView:self.view Msg:@"密码为空"];
+        return;
+    }
+    
+    //访问API
+    LOADING;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"pwd=%@dog&cat", codeTF.text]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&pwd=%@&sig=%@&SID=%@", BINDUSERAPI, [nameTF.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], codeTF.text, sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
+                NSDictionary * dic = [load.dataDict objectForKey:@"data"];
+                if([[dic objectForKey:@"isBinded"] intValue]){
+                    //绑定
+                    if ([[dic objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"登录成功"];
+                        [self dismissViewControllerAnimated:YES completion:nil];
+                    }else{
+                        [USER setObject:[dic objectForKey:@"aid"] forKey:@"aid"];
+                        [USER setObject:[dic objectForKey:@"usr_id"] forKey:@"usr_id"];
+                        //拿用户和宠物信息
+                        [self getUserData];
+                    }
+                }else{
+                    //未绑定  用户名或密码错误或者无此用户
+                    [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"用户名或密码错误"];
+                }
+            }
+//                if (self.isModify) {
+//                    [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"修改成功"];
+//                }else{
+//                    [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"设置成功"];
+//                }
+//                
+//                [self backBtnClick];
+//            }else{
+//                if (self.isModify) {
+//                    [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"修改失败"];
+//                }else{
+//                    [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"设置失败"];
+//                }
+//            }
+            ENDLOADING;
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
 }
+#pragma mark -
+#pragma mark -获取用户数据
+-(void)getUserData
+{
+    LOADING;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [USER objectForKey:@"usr_id"], sig,[ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            //SID未过期，直接获取用户数据
+            NSLog(@"用户数据：%@", load.dataDict);
+            NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            
+            [USER setObject:[dict objectForKey:@"a_name"] forKey:@"a_name"];
+            [USER setObject:[dict objectForKey:@"a_age"] forKey:@"a_age"];
+            if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
+                [USER setObject:[dict objectForKey:@"a_tx"] forKey:@"a_tx"];
+            }
+            [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
+            [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
+            [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
+            [USER setObject:[dict objectForKey:@"city"] forKey:@"city"];
+            [USER setObject:[dict objectForKey:@"exp"] forKey:@"oldexp"];
+            [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
+            [USER setObject:[NSString stringWithFormat:@"%@", [dict objectForKey:@"food"]] forKey:@"food"];
+            [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];
+            [USER setObject:[dict objectForKey:@"inviter"] forKey:@"inviter"];
+            [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
+            [USER setObject:[dict objectForKey:@"gold"] forKey:@"gold"];
+            [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
+            [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
+            [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
+            [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
+            [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
+            [USER setObject:[dict objectForKey:@"password"] forKey:@"password"];
+            
+            if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
+                [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
+            }
+            
+            
+            //获取宠物信息，存储到本地
+            [self loadPetInfo];
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
+}
+-(void)loadPetInfo
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"petInfo:%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
+                
+                //记录默认宠物信息
+                [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"petInfoDict"];
+            }
+            
+            ENDLOADING;
+            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"登录成功"];
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
+}
+
 #pragma mark - gesture
 -(void)tap:(UIGestureRecognizer *)tap
 {

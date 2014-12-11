@@ -510,6 +510,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     /**************************/
     
     UILabel * userTitle = [MyControl createLabelWithFrame:CGRectMake(-30+320+100, 205, 120, 20) Font:18 Text:@"经纪人档案"];
+    if(self.isAdoption){
+        userTitle.text = @"粉丝档案";
+    }
     userTitle.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:userTitle];
     
@@ -602,6 +605,30 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         man.userInteractionEnabled = NO;
         woman.userInteractionEnabled = NO;
         tfCity.userInteractionEnabled = NO;
+    }else if([[USER objectForKey:@"weChatUserInfo"] isKindOfClass:[NSDictionary class]]){
+        //微信
+        tfUserName.text = [[USER objectForKey:@"weChatUserInfo"]  objectForKey:@"screen_name"];
+        [photoButton2 setBackgroundImageWithURL:[NSURL URLWithString:[[USER objectForKey:@"weChatUserInfo"]  objectForKey:@"profile_image_url"]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if (image) {
+                self.oriUserImage = image;
+            }
+        }];
+        if ([[[USER objectForKey:@"weChatUserInfo"] objectForKey:@"gender"] intValue] == 1) {
+            woman.backgroundColor = [UIColor whiteColor];
+            man.backgroundColor = BGCOLOR;
+        }
+    }else if([[USER objectForKey:@"sinaUserInfo"] isKindOfClass:[NSDictionary class]]){
+        //微博
+        tfUserName.text = [[USER objectForKey:@"sinaUserInfo"]  objectForKey:@"screen_name"];
+        [photoButton2 setBackgroundImageWithURL:[NSURL URLWithString:[[USER objectForKey:@"sinaUserInfo"]  objectForKey:@"profile_image_url"]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if (image) {
+                self.oriUserImage = image;
+            }
+        }];
+        if ([[[USER objectForKey:@"sinaUserInfo"] objectForKey:@"gender"] intValue] == 1) {
+            woman.backgroundColor = [UIColor whiteColor];
+            man.backgroundColor = BGCOLOR;
+        }
     }
     /****************************************/
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -1261,6 +1288,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender];
     }else if (self.isOldUser){
         
+    }else if([[USER objectForKey:@"weChatUserInfo"] isKindOfClass:[NSDictionary class]]){
+        //
+        str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&wechat=%@dog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
+        str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
+    }else if([[USER objectForKey:@"sinaUserInfo"] isKindOfClass:[NSDictionary class]]){
+        str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&weibo=%@dog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"sinaUserInfo"] objectForKey:@"uid"]];
+        str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"sinaUserInfo"] objectForKey:@"uid"]];
     }
     /****************/
         sig = [MyMD5 md5:str2];
@@ -1364,7 +1398,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
                 [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
                 [USER setObject:@"1" forKey:@"isJustRegister"];
-                
+                if([[USER objectForKey:@"weChatUserInfo"] isKindOfClass:[NSDictionary class]]){
+                    [USER setObject:[[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"] forKey:@"wechat"];
+                }else if([[USER objectForKey:@"sinaUserInfo"] isKindOfClass:[NSDictionary class]]){
+                    [USER setObject:[[USER objectForKey:@"sinaUserInfo"] objectForKey:@"uid"] forKey:@"weibo"];
+                }
                 if (self.oriImage || self.self.oriUserImage){
                     isNeedPostImage = YES;
                     

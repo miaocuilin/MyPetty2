@@ -254,8 +254,9 @@
             
 //            LoadingSuccess;
         }else{
-            StartLoading;
-            LoadingFailed;
+            LOADFAILED;
+//            StartLoading;
+//            LoadingFailed;
 //            [indicatorView stopAnimating];
             [qtmquitView headerEndRefreshing];
             NSLog(@"数据加载失败");
@@ -344,8 +345,9 @@
             [qtmquitView reloadData];
             [qtmquitView footerEndRefreshing];
         }else{
-            StartLoading;
-            LoadingFailed;
+            LOADFAILED;
+//            StartLoading;
+//            LoadingFailed;
             [qtmquitView footerEndRefreshing];
             NSLog(@"数据加载失败");
         }

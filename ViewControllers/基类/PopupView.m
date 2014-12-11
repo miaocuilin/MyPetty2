@@ -26,15 +26,15 @@
 //    alphaView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:1];
 //    [self addSubview:view];
     
-    self.bgView = [MyControl createViewWithFrame:CGRectMake(100, 100, 100, 40)];
-    self.bgView.layer.cornerRadius = 10;
-    self.bgView.layer.masksToBounds = YES;
+    self.bgView = [MyControl createImageViewWithFrame:CGRectMake(100, 100, 100, 40) ImageName:@"public_alertBg.png"];
+//    self.bgView.layer.cornerRadius = 10;
+//    self.bgView.layer.masksToBounds = YES;
     self.bgView.alpha = 0;
     [self addSubview:self.bgView];
     
-    self.alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.bgView.frame.size.width, self.bgView.frame.size.height)];
-    self.alphaView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.8];
-    [self.bgView addSubview:self.alphaView];
+//    self.alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.bgView.frame.size.width, self.bgView.frame.size.height)];
+//    self.alphaView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.8];
+//    [self.bgView addSubview:self.alphaView];
     
     self.desLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 100, 20) Font:15 Text:nil];
     self.desLabel.textColor = [UIColor colorWithRed:113/255.0 green:113/255.0 blue:113/255.0 alpha:1];

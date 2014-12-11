@@ -481,4 +481,47 @@
     
     return success;
 }
++(void)animateIncorrectPassword:(UIView *)view {
+    // Clear the password field
+    
+    // Animate the alert to show that the entered string was wrong
+    // "Shakes" similar to OS X login screen
+    CGAffineTransform moveRight = CGAffineTransformTranslate(CGAffineTransformIdentity, 5, 0);
+    CGAffineTransform moveLeft = CGAffineTransformTranslate(CGAffineTransformIdentity, -5, 0);
+    CGAffineTransform resetTransform = CGAffineTransformTranslate(CGAffineTransformIdentity, 0, 0);
+    
+    CGAffineTransform transform = CGAffineTransformIdentity;   //申明旋转量
+    transform = CGAffineTransformMakeRotation(-M_PI/2);     //设置旋转量具体值
+    
+    [UIView animateWithDuration:0.05 animations:^{
+        // Translate left
+        view.transform = moveLeft;
+        
+    } completion:^(BOOL finished) {
+        
+        [UIView animateWithDuration:0.05 animations:^{
+            
+            // Translate right
+            view.transform = moveRight;
+            
+        } completion:^(BOOL finished) {
+            
+            [UIView animateWithDuration:0.05 animations:^{
+                
+                // Translate left
+                view.transform = moveLeft;
+                
+            } completion:^(BOOL finished) {
+                
+                [UIView animateWithDuration:0.05 animations:^{
+                    
+                    // Translate to origin
+                    view.transform = resetTransform;
+                }];
+            }];
+            
+        }];
+    }];
+    
+}
 @end

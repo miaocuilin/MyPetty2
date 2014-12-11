@@ -40,9 +40,20 @@
     }
     isLoaded = YES;
 }
+- (void)refresh
+{
+    [self getNewMessage];
+    [self modifyUI];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.talkIDArray = [NSMutableArray arrayWithCapacity:0];
+    self.nwDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.nwMsgDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.keysArray = [NSMutableArray arrayWithCapacity:0];
+    self.valuesArray = [NSMutableArray arrayWithCapacity:0];
+    
     [self createBg];
     [self createUI];
     [self createFakeNavigation];
@@ -160,11 +171,35 @@
     
     [self modifyUI];
 }
+#pragma mark -
+-(void)shake
+{
+    [MyControl animateIncorrectPassword:regOrLoginBtn];
+}
+#pragma mark - 点击登录
 -(void)loginBtnClick
 {
-    LoginViewController * vc = [[LoginViewController alloc] init];
-    [self presentViewController:vc animated:YES completion:nil];
+    VariousAlertViewController * vc = [[VariousAlertViewController alloc] init];
+    vc.regClick = ^(){
+        ChooseInViewController * choose = [[ChooseInViewController alloc] init];
+        [self presentViewController:choose  animated:YES completion:nil];
+        [choose release];
+//        NSLog(@"%d", [vc retainCount]);
+        [vc.view removeFromSuperview];
+//        NSLog(@"%d", [vc retainCount]);
+//        [vc release];
+//        NSLog(@"%d", [vc retainCount]);
+    };
+    vc.fastClick = ^(){
+        LoginViewController * login = [[LoginViewController alloc] init];
+        [self presentViewController:login animated:YES completion:nil];
+        [login release];
+        [vc.view removeFromSuperview];
+    };
+    [self.view addSubview:vc.view];
+//    NSLog(@"%d", [vc retainCount]);
     [vc release];
+    
 }
 -(void)modifyUI
 {
@@ -204,7 +239,8 @@
     NSLog(@"%d", btn.tag-100);
     int a = btn.tag-100;
     if (a != 1 && ![[USER objectForKey:@"isSuccess"] intValue]) {
-        ShowAlertView;
+//        ShowAlertView;
+        [self shake];
         return;
     }
     
@@ -262,7 +298,8 @@
 {
     NSLog(@"head");
     if (![[USER objectForKey:@"isSuccess"] intValue]) {
-        ShowAlertView;
+//        ShowAlertView;
+        [self shake];
         return;
     }
     
@@ -327,8 +364,9 @@
                         [dict2 setValue:@"" forKey:@"usr_tx"];
                     }
                 }
-                
+//                NSLog(@"%@--%@", array, self.nwDataArray);
                 [self.nwDataArray addObjectsFromArray:array];
+//                NSLog(@"%@--%@", array, self.nwDataArray);
             }else{
                 self.hasNewMsg = NO;
             }
@@ -388,44 +426,53 @@
     if ([manager fileExistsAtPath:path]) {
         //文件存在
         NSLog(@"文件存在");
+
         NSMutableDictionary * totalDict = [NSMutableDictionary dictionaryWithDictionary:[MyControl returnDictionaryWithDataPath:path]];
+
         NSArray * oldTalkIDArray = [totalDict allKeys];
         
 
         //合并
         for (int i=0; i<self.talkIDArray.count; i++) {
+            NSString * key = self.talkIDArray[i];
             
-            for (int j=0; j<oldTalkIDArray.count; j++) {
-                NSString * key = self.talkIDArray[i];
-                
-                if ([key isEqualToString:oldTalkIDArray[j]]) {
-                    //找到相同对话，合并
-                    SingleTalkModel * model = [totalDict objectForKey:key];
-                    NSMutableArray * oldMsgArray = [NSMutableArray arrayWithArray:[model.msgDict objectForKey:@"msg"]];
-                    //
-                    SingleTalkModel * newModel = self.nwMsgDataArray[i];
-                    NSArray * newArray = [newModel.msgDict objectForKey:@"msg"];
+            if (oldTalkIDArray.count) {
+                for (int j=0; j<oldTalkIDArray.count; j++) {
                     
-                    //1.合并消息
                     
-                    [oldMsgArray addObjectsFromArray:newArray];
-                    model.msgDict = [NSDictionary dictionaryWithObject:oldMsgArray forKey:@"msg"];
-                    //2.合并未读消息数
-                    model.unReadMsgNum = [NSString stringWithFormat:@"%d", [model.unReadMsgNum intValue] + [newModel.unReadMsgNum intValue]];
-                    //3.更新usr_tx
-                    model.usr_tx = newModel.usr_tx;
-                    //4.更新usr_name
-                    model.usr_name = newModel.usr_name;
-                    
-                    //合并完毕
-                    break;
-                }else if(j == oldTalkIDArray.count-1){
-                    //将新的添加
-                    [totalDict setObject:self.nwMsgDataArray[i] forKey:key];
+                    if ([key isEqualToString:oldTalkIDArray[j]]) {
+                        //找到相同对话，合并
+                        SingleTalkModel * model = [totalDict objectForKey:key];
+                        NSMutableArray * oldMsgArray = [NSMutableArray arrayWithArray:[model.msgDict objectForKey:@"msg"]];
+                        //
+                        SingleTalkModel * newModel = self.nwMsgDataArray[i];
+                        NSArray * newArray = [newModel.msgDict objectForKey:@"msg"];
+                        
+                        //1.合并消息
+                        
+                        [oldMsgArray addObjectsFromArray:newArray];
+                        model.msgDict = [NSDictionary dictionaryWithObject:oldMsgArray forKey:@"msg"];
+                        //2.合并未读消息数
+                        model.unReadMsgNum = [NSString stringWithFormat:@"%d", [model.unReadMsgNum intValue] + [newModel.unReadMsgNum intValue]];
+                        //3.更新usr_tx
+                        model.usr_tx = newModel.usr_tx;
+                        //4.更新usr_name
+                        model.usr_name = newModel.usr_name;
+                        
+                        //合并完毕
+                        break;
+                    }else if(j == oldTalkIDArray.count-1){
+                        //将新的添加
+                        [totalDict setObject:self.nwMsgDataArray[i] forKey:key];
+                    }
                 }
+            }else{
+                [totalDict setObject:self.nwMsgDataArray[i] forKey:key];
             }
+            
         }
         //新旧消息全部合并完毕，重新存储到本地
+//        NSLog(@"%@", totalDict);
         NSData * data = [MyControl returnDataWithDictionary:totalDict];
         BOOL a = [data writeToFile:path atomically:YES];
         NSLog(@"---存储合并后数据结果:%d", a);
@@ -438,6 +485,8 @@
         }
         NSString * docDir = DOCDIR;
         NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
+        
+//        NSLog(@"%@", newDataDict);
         //dict-->NSData
         NSData * data = [MyControl returnDataWithDictionary:newDataDict];
         BOOL a = [data writeToFile:path atomically:YES];
@@ -450,6 +499,7 @@
 {
     NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
     NSDictionary * dict = [MyControl returnDictionaryWithDataPath:path];
+//    NSLog(@"%@", dict);
     int num = 0;
     NSArray * array = [dict allKeys];
     for (int i=0; i<array.count; i++) {

@@ -627,7 +627,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 -(void)postData:(UIImage *)image
 {
-    [MyControl startLoadingWithStatus:@"发布中..."];
+//    [MyControl startLoadingWithStatus:@"发布中..."];
+    LOADING;
 //    [USER objectForKey:@"aid"]
     NSLog(@"%@", self.aids);
     NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aids];
@@ -696,23 +697,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     [USER setObject:@"1" forKey:@"needRefresh"];
     NSLog(@"success");
-    StartLoading;
+//    StartLoading;
     
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     NSDictionary *dict =[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
-    //如果返回正常，将图片存到本地
-    if([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[dict objectForKey:@"data"] objectForKey:@"image"] isKindOfClass:[NSDictionary class]]){
-        [MobClick event:@"photo"];
-        
-        NSString * url = [[[dict objectForKey:@"data"] objectForKey:@"image"] objectForKey:@"url"];
-        NSData * data = [MyControl scaleToSize:self.oriImage];
-        NSString * path = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
-        BOOL a = [data writeToFile:path atomically:YES];
-        NSLog(@"本地存储结果：%d", a);
-    }
     
-    if ([[dict objectForKey:@"errorCode"] intValue] == -1) {
-        [MMProgressHUD dismissWithError:[dict objectForKey:@"errorMessage"] afterDelay:1];
+    
+    if ([[dict objectForKey:@"state"] intValue] == 1) {
+        LOADFAILED;
+//        [MMProgressHUD dismissWithError:[dict objectForKey:@"errorMessage"] afterDelay:1];
         NSLog(@"errorMessage:%@", [dict objectForKey:@"errorMessage"]);
         publishButton.userInteractionEnabled = YES;
     }else if([[dict objectForKey:@"state"] intValue] == 2){
@@ -725,7 +718,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:index];
             
         }
-        [MyControl loadingSuccessWithContent:@"发布成功" afterDelay:0.5f];
+        ENDLOADING;
+//        [MyControl loadingSuccessWithContent:@"发布成功" afterDelay:0.5f];
         
         publishSuc = YES;
         if (shareSuc) {
@@ -734,6 +728,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             } completion:nil];
         }
         
+    }
+    
+    //如果返回正常，将图片存到本地
+    if([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[dict objectForKey:@"data"] objectForKey:@"image"] isKindOfClass:[NSDictionary class]]){
+        [MobClick event:@"photo"];
+        
+        NSString * url = [[[dict objectForKey:@"data"] objectForKey:@"image"] objectForKey:@"url"];
+        NSData * data = [MyControl scaleToSize:self.oriImage];
+        NSString * path = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
+        BOOL a = [data writeToFile:path atomically:YES];
+        NSLog(@"本地存储结果：%d", a);
     }
     
     //分享到微博
@@ -769,7 +774,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"failed");
-    [MyControl popAlertWithView:self.view Msg:@"上传失败"];
+    LOADFAILED;
+//    [MyControl popAlertWithView:self.view Msg:@"上传失败"];
 //    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
 //    LoadingFailed;
 //    [self dismissViewControllerAnimated:YES completion:nil];

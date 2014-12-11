@@ -12,7 +12,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
-    [self modifyUI];
+//    [self modifyUI];
 }
 - (id)initWithFrame:(CGRect)frame
 {
@@ -22,11 +22,13 @@
     }
     return self;
 }
--(void)modifyUI
+
+-(void)configUI:(ExchangeItemModel *)model
 {
-    self.nameLabel.text = @"贝德司 行货牛油果大型犬幼犬狗粮 90Kg";
-    self.weightLabel.text = @"90Kg";
-    self.priceLabel.text = @"2000";
+    self.nameLabel.text = model.name;
+    self.weightLabel.text = model.spec;
+    self.priceLabel.text = model.price;
+    [self.goodImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@item/%@", IMAGEURL, model.icon]]];
 }
 - (IBAction)exBtnClick:(id)sender {
     NSLog(@"exChange");

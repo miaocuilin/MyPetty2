@@ -20,6 +20,7 @@
 #import "UserPetListModel.h"
 #import "ChooseInViewController.h"
 #import "PublishViewController.h"
+#import "Alert_BegFoodViewController.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
@@ -462,28 +463,57 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }
         }else if (a == 3) {
             //求口粮
-            if (![model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
-                return;
-            }
-            self.tempAid = model.aid;
-            self.tempName = model.name;
-            isBeg = YES;
             
-            if (sheet == nil) {
-                // 判断是否支持相机
-                if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-                {
-                    sheet  = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
+            //请求API判断是否是否能发图
+            LOADING;
+            NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", model.aid]];
+            NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ALERT7DATAAPI, model.aid, sig, [ControllerManager getSID]];
+            NSLog(@"%@", url);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    NSLog(@"%@", load.dataDict);
+                    if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]] && ![[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSDictionary class]]){
+                        if ([model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                            
+                            self.tempAid = model.aid;
+                            self.tempName = model.name;
+                            isBeg = YES;
+                            
+                            if (sheet == nil) {
+                                // 判断是否支持相机
+                                if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+                                {
+                                    sheet  = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
+                                }
+                                else {
+                                    
+                                    sheet = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"从相册选择", nil];
+                                }
+                                
+                                sheet.tag = 255;
+                                
+                            }
+                            [sheet showInView:self.view];
+                        }else{
+                            [MyControl popAlertWithView:self.view Msg:[NSString stringWithFormat:@"萌星%@，今天还没挣口粮呢~", model.name]];
+                        }
+                        
+                    }else{
+                        //弹分享框
+                        Alert_BegFoodViewController * vc = [[Alert_BegFoodViewController alloc] init];
+                        vc.dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+                        [vc release];
+                    }
+                    ENDLOADING;
+                }else{
+                    LOADFAILED;
                 }
-                else {
-                    
-                    sheet = [[UIActionSheet alloc] initWithTitle:@"选择" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"从相册选择", nil];
-                }
-                
-                sheet.tag = 255;
-                
-            }
-            [sheet showInView:self.view];
+            }];
+            [request release];
+            
+            
+            
             
 //            WalkAndTeaseViewController *walkAndTeasevc = [[WalkAndTeaseViewController alloc] init];
 //            walkAndTeasevc.aid = self.pet_aid;

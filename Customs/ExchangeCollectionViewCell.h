@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "ExchangeItemModel.h"
 @interface ExchangeCollectionViewCell : UICollectionViewCell
 
 @property (retain, nonatomic) IBOutlet UILabel *nameLabel;
@@ -16,4 +16,5 @@
 @property (retain, nonatomic) IBOutlet UIImageView *goodImageView;
 @property (retain, nonatomic) IBOutlet UILabel *priceLabel;
 
+-(void)configUI:(ExchangeItemModel *)model;
 @end

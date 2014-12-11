@@ -24,5 +24,10 @@
     
     UIButton * leftArrowBtn;
     UIButton * rightArrowBtn;
+    
+    int index;
 }
+
+@property(nonatomic,retain)NSArray * itemsArray;
+@property(nonatomic,retain)NSMutableArray * dataArray;
 @end

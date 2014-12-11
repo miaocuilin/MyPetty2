@@ -158,8 +158,13 @@
     rewardNum.textAlignment = NSTextAlignmentCenter;
     [rewardBg addSubview:rewardNum];
     
+    
+    
     UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(218/2, (rewardBg.frame.size.height-31/2)/2.0, 18/2, 31/2) ImageName:@"rightArrow.png"];
     [rewardBg addSubview:arrow];
+    
+    UIImageView * food = [MyControl createImageViewWithFrame:CGRectMake(arrow.frame.origin.x-35, (rewardBg.frame.size.height-25)/2.0, 25, 25) ImageName:@"exchange_orangeFood.png"];
+    [rewardBg addSubview:food];
     
     //10 100 1000
     selectView = [MyControl createViewWithFrame:CGRectMake(rewardBg.frame.origin.x+20, rewardBg.frame.origin.y-105, 113, 105)];

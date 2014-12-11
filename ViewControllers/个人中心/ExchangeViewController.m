@@ -8,6 +8,9 @@
 
 #import "ExchangeViewController.h"
 #import "ExchangeCollectionViewCell.h"
+#import "ExchangeDetailView.h"
+#import "ExchangeItemModel.h"
+
 @interface ExchangeViewController ()
 
 @end
@@ -21,10 +24,59 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+    
     [self createBg];
     [self createCollectionView];
     [self createFakeNavigation];
     [self createBottom];
+    [self loadData];
+}
+-(void)loadData
+{
+    LOADING;
+    NSString * sig = [MyMD5 md5:@"dog&cat"];
+    NSString * url = [NSString stringWithFormat:@"%@&sig=%@&SID=%@", TRUEGIFTLISTAPI, sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            self.itemsArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"item_ids"];
+            [self loadItemInfo:self.itemsArray[index]];
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
+}
+-(void)loadItemInfo:(NSString *)item_id
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=%@dog&cat", item_id]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TRUEGIFTDETAILAPI, item_id, sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            
+            ExchangeItemModel * model = [[ExchangeItemModel alloc] init];
+            [model setValuesForKeysWithDictionary:[load.dataDict objectForKey:@"data"]];
+            model.des = [[load.dataDict objectForKey:@"data"] objectForKey:@"description"];
+            [self.dataArray addObject:model];
+            [model release];
+            
+            
+            if (index == self.itemsArray.count-1) {
+                [collection reloadData];
+//                [self createCollectionView];
+                ENDLOADING;
+            }else{
+                [self loadItemInfo:self.itemsArray[++index]];
+            }
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
 }
 -(void)createBg
 {
@@ -162,16 +214,19 @@
 #pragma mark - collectionDataSource
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 10+2;
+//    NSLog(@"%d", self.dataArray.count);
+    return self.dataArray.count;
 }
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString * cellID = @"collection";
-    UICollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
-    if (indexPath.row >= 10) {
+    ExchangeCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
+    if (indexPath.row >= self.dataArray.count) {
         cell.hidden = YES;
     }else{
         cell.hidden = NO;
+//        cell config
+        [cell configUI:self.dataArray[indexPath.row]];
     }
     cell.layer.cornerRadius = 3;
     cell.layer.masksToBounds = YES;
@@ -188,6 +243,11 @@
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"%d", indexPath.row);
+    ExchangeDetailView * detail = [[ExchangeDetailView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    detail.model = self.dataArray[indexPath.row];
+    [detail makeUI];
+    [self.view addSubview:detail];
+    [detail release];
 }
 
 

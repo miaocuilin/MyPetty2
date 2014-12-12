@@ -136,8 +136,8 @@
             //            }
             self.picDict = load.dataDict;
             self.imageDict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
-            
-            if([[self.imageDict objectForKey:@"likers"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"likers"] rangeOfString:[USER objectForKey:@"usr_id"]].location != NSNotFound){
+
+            if([[USER objectForKey:@"isSuccess"] intValue] && [[self.imageDict objectForKey:@"likers"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"likers"] rangeOfString:[USER objectForKey:@"usr_id"]].location != NSNotFound){
                 UIButton * button = (UIButton *)[self.view viewWithTag:100];
                 button.selected = YES;
             }
@@ -165,6 +165,8 @@
 //            ENDLOADING;
             
             [self modifyUI];
+            
+            [self loadPetData];
         }else{
             sv.hidden = NO;
             LOADFAILED;
@@ -825,7 +827,7 @@
         }
         
         SendGiftViewController * vc = [[SendGiftViewController alloc] init];
-        vc.receiver_aid = [self.petDict objectForKey:@"aid"];
+        vc.receiver_aid = [self.imageDict objectForKey:@"aid"];
         vc.receiver_name = [self.petDict objectForKey:@"name"];
         vc.receiver_img_id = [self.imageDict objectForKey:@"img_id"];
         vc.hasSendGift = ^(NSString * itemId){

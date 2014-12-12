@@ -354,6 +354,8 @@
 #pragma mark -
 -(void)backBtnClick
 {
+    [nameTF resignFirstResponder];
+    [codeTF resignFirstResponder];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)regBtnClick

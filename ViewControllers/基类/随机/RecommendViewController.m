@@ -70,6 +70,8 @@
             //只包含img_id和图片的url
             //NSLog(@"萌宠推荐数据:%@", load.dataDict);
             [self.dataArray removeAllObjects];
+            
+            
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
                 PhotoModel * model = [[PhotoModel alloc] init];

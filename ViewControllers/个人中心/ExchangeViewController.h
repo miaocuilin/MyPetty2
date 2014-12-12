@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "NIDropDown.h"
+#import "UserPetListModel.h"
+
 @interface ExchangeViewController : UIViewController<NIDropDownDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
 {
     UIView * navView;
@@ -24,10 +26,14 @@
     
     UIButton * leftArrowBtn;
     UIButton * rightArrowBtn;
+    UILabel * foodNum;
     
     int index;
 }
 
 @property(nonatomic,retain)NSArray * itemsArray;
 @property(nonatomic,retain)NSMutableArray * dataArray;
+@property(nonatomic,retain)NSMutableArray * userPetListArray;
+@property(nonatomic,retain)UserPetListModel * tempModel;
+@property(nonatomic,copy)NSString * tempAid;
 @end

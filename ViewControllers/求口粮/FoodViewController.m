@@ -37,7 +37,7 @@
 
 -(void)loadData
 {
-    LOADING;
+//    LOADING;
 //    if (isLoaded) {
 //        [UIView animateWithDuration:0.2 animations:^{
 //            tv.contentOffset = CGPointMake(0, 0);
@@ -52,7 +52,7 @@
 //            NSLog(@"%@", load.dataDict);
             [self.dataArray removeAllObjects];
             if (![[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSArray class]] || [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] count] == 0) {
-                ENDLOADING;
+//                ENDLOADING;
                 return;
             }
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
@@ -70,9 +70,10 @@
             }];
             
             [self refreshHeader:0];
-            ENDLOADING;
+//            ENDLOADING;
         }else{
             LOADFAILED;
+            NSLog(@"========myStar========");
         }
     }];
     [request release];
@@ -127,12 +128,13 @@
     [navView addSubview:petHeadBtn];
     
     sex = [MyControl createImageViewWithFrame:CGRectMake(70, petHeadBtn.frame.origin.y+5, 13, 13) ImageName:@"man.png"];
+    sex.hidden = YES;
     [navView addSubview:sex];
     
-    petName = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+15, petHeadBtn.frame.origin.y+5, 200, 15) Font:13 Text:nil];
+    petName = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x+15, petHeadBtn.frame.origin.y+5, 200, 15) Font:13 Text:@"我是大萌星"];
     [navView addSubview:petName];
     
-    petType = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x, 40, 100, 15) Font:11 Text:nil];
+    petType = [MyControl createLabelWithFrame:CGRectMake(sex.frame.origin.x, 40, 100, 15) Font:11 Text:@"我为自己带粮"];
     [navView addSubview:petType];
     
     userHeadImage = [MyControl createImageViewWithFrame:CGRectMake(navView.frame.size.width-20-13, 77/2, 20, 20) ImageName:@"defaultUserHead.png"];
@@ -163,7 +165,7 @@
     UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(218/2, (rewardBg.frame.size.height-31/2)/2.0, 18/2, 31/2) ImageName:@"rightArrow.png"];
     [rewardBg addSubview:arrow];
     
-    UIImageView * food = [MyControl createImageViewWithFrame:CGRectMake(arrow.frame.origin.x-35, (rewardBg.frame.size.height-25)/2.0, 25, 25) ImageName:@"exchange_orangeFood.png"];
+    UIImageView * food = [MyControl createImageViewWithFrame:CGRectMake(arrow.frame.origin.x-35, (rewardBg.frame.size.height-25)/2.0, 25, 25) ImageName:@"exchange_whiteFood.png"];
     [rewardBg addSubview:food];
     
     //10 100 1000
@@ -273,6 +275,7 @@
             [petHeadBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
         }
     }];
+    sex.hidden = NO;
     if ([model.gender intValue] == 1) {
         sex.image = [UIImage imageNamed:@"man.png"];
     }else{

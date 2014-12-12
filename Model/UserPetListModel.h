@@ -19,6 +19,7 @@
 @property(nonatomic,copy)NSString * t_contri;
 @property(nonatomic,copy)NSString * tx;
 @property(nonatomic,copy)NSString * master_id;
+@property(nonatomic,copy)NSString * food;
 
 @property(nonatomic,copy)NSString * gender;
 @property(nonatomic,copy)NSString * type;

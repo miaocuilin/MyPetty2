@@ -158,7 +158,7 @@
     [bottomBg addSubview:goldNum];
     
     
-    charge = [MyControl createButtonWithFrame:CGRectMake(337/2.0, (bottomBg.frame.size.height-40)/2.0, 100, 40) ImageName:@"center_chargeBg.png" Target:self Action:@selector(chargeClick) Title:@"赚金币"];
+    charge = [MyControl createButtonWithFrame:CGRectMake(337/2.0, (bottomBg.frame.size.height-40)/2.0, 100, 40) ImageName:@"center_chargeBg.png" Target:self Action:@selector(chargeClick) Title:@"游乐园"];
     charge.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     charge.showsTouchWhenHighlighted = YES;
     charge.hidden = YES;

@@ -79,6 +79,28 @@
         selectLabel.textAlignment = NSTextAlignmentCenter;
         
         [confirmBtn setTitle:@"去充值" forState:UIControlStateNormal];
+    }else if(self.type == 3){
+        label1.text = @"确认支付";
+        selectImage.hidden = YES;
+        selectLabel.hidden = YES;
+        
+        CGRect rect = goldImage.frame;
+        rect.origin.y -= 20;
+        goldImage.frame = rect;
+        
+        CGRect rect2 = costLabel.frame;
+        rect2.origin.y -= 20;
+        costLabel.frame = rect2;
+        
+    
+        goldImage.image = [UIImage imageNamed:@"exchange_orangeFood.png"];
+        costLabel.text = self.foodCost;
+        NSString * str = [NSString stringWithFormat:@"兑换%@?", self.productName];
+        label2.text = str;
+        label2.font = [UIFont systemFontOfSize:15];
+        label2.textAlignment = NSTextAlignmentCenter;
+        CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(bgView.frame.size.width-20, 100) lineBreakMode:1];
+        label2.frame = CGRectMake(10, goldImage.frame.origin.y+goldImage.frame.size.height+10, size.width, size.height);
     }
 //    if ([[USER objectForKey:@"notShowCostAlert"] intValue]) {
 //        selectImage.hidden = YES;
@@ -104,7 +126,7 @@
         self.jumpCharge();
     }else if(self.type == 3){
         //block确认兑换
-        
+        self.exchange();
     }
     [self removeFromSuperview];
 }

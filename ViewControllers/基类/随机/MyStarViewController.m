@@ -214,7 +214,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }else{
             [self.tv headerEndRefreshing];
             if(![USER objectForKey:@"notAlertError"] && [[USER objectForKey:@"isSuccess"] intValue]){
-               LOADFAILED;
+                LOADFAILED;
+                NSLog(@"========myStar========");
             }else{
                 [USER setObject:@"0" forKey:@"notAlertError"];
             }
@@ -352,116 +353,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        self.actClick(a, indexPath.row);
 //        MainViewController * mvc = [ControllerManager shareMain];
         if (a == 0) {
-            RockViewController *shake = [[RockViewController alloc] init];
-            shake.isFromStar = YES;
-            shake.titleString = @"摇一摇";
-//            shake.animalInfoDict = self.shakeInfoDict;
-            shake.pet_aid = self.pet_aid;
-            shake.pet_name = self.pet_name;
-            shake.pet_tx = self.pet_tx;
-            shake.unShakeNum = ^(int a){
-                NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
-                [dict setObject:[NSNumber numberWithInt:1] forKey:@"shake_count"];
-                model.dict = dict;
-                model.shake_count = [NSNumber numberWithInt:a];
-                [self.tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            };
-            shake.updateContri = ^(NSString * add_rq){
-//                NSLog(@"%@--%@", add_rq, cell.contributionLabel.text);
-                int contri = [[cell.contributionLabel.text substringFromIndex:3] intValue];
-//                cell.contributionLabel.text = [NSString stringWithFormat:@"贡献度%d", contri+[add_rq intValue]];
-                model.t_contri = [NSString stringWithFormat:@"%d", contri+[add_rq intValue]];
-                [self.tv reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:0];
-//                NSLog(@"%@--%d", cell.contributionLabel.text, contri+[add_rq intValue]);
-            };
-            [self addChildViewController:shake];
-            [shake release];
-            [shake didMoveToParentViewController:self];
-            [shake becomeFirstResponder];
-            [self.view addSubview:shake.view];
-
-        }else if (a == 1) {
-            SendGiftViewController * vc = [[SendGiftViewController alloc] init];
-            vc.receiver_aid = self.pet_aid;
-            vc.receiver_name = self.pet_name;
-            vc.hasSendGift = ^(NSString * itemId){
-                NSLog(@"赠送礼物给默认宠物成功!");
-                if ([[model.dict objectForKey:@"gift_count"] isKindOfClass:[NSNull class]]) {
-                    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
-                    [dict setObject:[NSNumber numberWithInt:1] forKey:@"gift_count"];
-                    model.dict = dict;
-                    model.gift_count = [NSNumber numberWithInt:1];
-                }else{
-                    model.gift_count = [NSNumber numberWithInt:[model.gift_count intValue]+1];
-                }
-                int contri = [[cell.contributionLabel.text substringFromIndex:3] intValue];
-
-                model.t_contri = [NSString stringWithFormat:@"%d", contri+[[[ControllerManager returnGiftDictWithItemId:itemId] objectForKey:@"add_rq"] intValue]];
-                [self.tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-                //
-//                MainViewController * main = [ControllerManager shareMain];
-                ResultOfBuyView * result = [[ResultOfBuyView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-                [UIView animateWithDuration:0.3 animations:^{
-                    result.alpha = 1;
-                }];
-                result.confirm = ^(){
-                    [vc closeGiftAction];
-                };
-                [result configUIWithName:self.pet_name ItemId:itemId Tx:self.pet_tx];
-                [self.view addSubview:result];
-                
-                
-            };
-            [self addChildViewController:vc];
-            [vc didMoveToParentViewController:self];
-            
-            [self.view addSubview:vc.view];
-            [vc release];
-        }else if (a == 2) {
-            UILabel * label = (UILabel *)[cell viewWithTag:302];
-            if ([model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
-//                NSLog(@"叫一叫");
-//                label.text = @"叫一叫";
-                
-                RecordViewController *shout = [[RecordViewController alloc] init];
-                shout.isFromStar = YES;
-                shout.recordBack = ^(void){
-                    label.text = @"叫过了";
-                    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
-                    [dict setObject:[NSNumber numberWithInt:1] forKey:@"is_voiced"];
-                    model.dict = dict;
-                    model.is_voiced = [NSNumber numberWithInt:1];
-                };
-                shout.pet_aid = self.pet_aid;
-                shout.pet_name = self.pet_name;
-                shout.pet_tx = self.pet_tx;
-                [self addChildViewController:shout];
-                [shout release];
-                [shout didMoveToParentViewController:self];
-                //        [shout createRecordOne];
-                [self.view addSubview:shout.view];
-            }else{
-//                NSLog(@"摸一摸");
-//                label.text = @"摸一摸";
-                
-                TouchViewController *touch = [[TouchViewController alloc] init];
-                touch.isFromStar = YES;
-                touch.touchBack = ^(void){
-                    label.text = @"摸过了";
-                    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
-                    [dict setObject:[NSNumber numberWithInt:1] forKey:@"is_touched"];
-                    model.dict = dict;
-                    model.is_touched = [NSNumber numberWithInt:1];
-                };
-                touch.pet_aid = self.pet_aid;
-                touch.pet_name = self.pet_name;
-                touch.pet_tx = self.pet_tx;
-                [self addChildViewController:touch];
-                [touch release];
-                [touch didMoveToParentViewController:self];
-                [self.view addSubview:touch.view];
-            }
-        }else if (a == 3) {
             //求口粮
             
             //请求API判断是否是否能发图
@@ -502,6 +393,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         //弹分享框
                         Alert_BegFoodViewController * vc = [[Alert_BegFoodViewController alloc] init];
                         vc.dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                        vc.name = model.name;
                         [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
                         [vc release];
                     }
@@ -511,8 +403,121 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 }
             }];
             [request release];
+
+        }else if (a == 1) {
+            
+            RockViewController *shake = [[RockViewController alloc] init];
+            shake.isFromStar = YES;
+            shake.titleString = @"摇一摇";
+            //            shake.animalInfoDict = self.shakeInfoDict;
+            shake.pet_aid = self.pet_aid;
+            shake.pet_name = self.pet_name;
+            shake.pet_tx = self.pet_tx;
+            shake.unShakeNum = ^(int a){
+                NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
+                [dict setObject:[NSNumber numberWithInt:1] forKey:@"shake_count"];
+                model.dict = dict;
+                model.shake_count = [NSNumber numberWithInt:a];
+                [self.tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            };
+            shake.updateContri = ^(NSString * add_rq){
+                //                NSLog(@"%@--%@", add_rq, cell.contributionLabel.text);
+                int contri = [[cell.contributionLabel.text substringFromIndex:3] intValue];
+                //                cell.contributionLabel.text = [NSString stringWithFormat:@"贡献度%d", contri+[add_rq intValue]];
+                model.t_contri = [NSString stringWithFormat:@"%d", contri+[add_rq intValue]];
+                [self.tv reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:0];
+                //                NSLog(@"%@--%d", cell.contributionLabel.text, contri+[add_rq intValue]);
+            };
+            [self addChildViewController:shake];
+            [shake release];
+            [shake didMoveToParentViewController:self];
+            [shake becomeFirstResponder];
+            [self.view addSubview:shake.view];
+        }else if (a == 2) {
+            SendGiftViewController * vc = [[SendGiftViewController alloc] init];
+            vc.receiver_aid = self.pet_aid;
+            vc.receiver_name = self.pet_name;
+            vc.hasSendGift = ^(NSString * itemId){
+                NSLog(@"赠送礼物给默认宠物成功!");
+                if ([[model.dict objectForKey:@"gift_count"] isKindOfClass:[NSNull class]]) {
+                    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
+                    [dict setObject:[NSNumber numberWithInt:1] forKey:@"gift_count"];
+                    model.dict = dict;
+                    model.gift_count = [NSNumber numberWithInt:1];
+                }else{
+                    model.gift_count = [NSNumber numberWithInt:[model.gift_count intValue]+1];
+                }
+                int contri = [[cell.contributionLabel.text substringFromIndex:3] intValue];
+                
+                model.t_contri = [NSString stringWithFormat:@"%d", contri+[[[ControllerManager returnGiftDictWithItemId:itemId] objectForKey:@"add_rq"] intValue]];
+                [self.tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                //
+                //                MainViewController * main = [ControllerManager shareMain];
+                ResultOfBuyView * result = [[ResultOfBuyView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                [UIView animateWithDuration:0.3 animations:^{
+                    result.alpha = 1;
+                }];
+                result.confirm = ^(){
+                    [vc closeGiftAction];
+                };
+                [result configUIWithName:self.pet_name ItemId:itemId Tx:self.pet_tx];
+                [self.view addSubview:result];
+                
+                
+            };
+            [self addChildViewController:vc];
+            [vc didMoveToParentViewController:self];
+            
+            [self.view addSubview:vc.view];
+            [vc release];
             
             
+            
+            
+//            if ([model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+////                NSLog(@"叫一叫");
+////                label.text = @"叫一叫";
+//                
+//                RecordViewController *shout = [[RecordViewController alloc] init];
+//                shout.isFromStar = YES;
+//                shout.recordBack = ^(void){
+//                    label.text = @"叫过了";
+//                    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
+//                    [dict setObject:[NSNumber numberWithInt:1] forKey:@"is_voiced"];
+//                    model.dict = dict;
+//                    model.is_voiced = [NSNumber numberWithInt:1];
+//                };
+//                shout.pet_aid = self.pet_aid;
+//                shout.pet_name = self.pet_name;
+//                shout.pet_tx = self.pet_tx;
+//                [self addChildViewController:shout];
+//                [shout release];
+//                [shout didMoveToParentViewController:self];
+//                //        [shout createRecordOne];
+//                [self.view addSubview:shout.view];
+//            }else{
+//                NSLog(@"摸一摸");
+//                label.text = @"摸一摸";
+            
+//            }
+        }else if (a == 3) {
+            UILabel * label = (UILabel *)[cell viewWithTag:302];
+            TouchViewController *touch = [[TouchViewController alloc] init];
+            touch.isFromStar = YES;
+            touch.touchBack = ^(void){
+                label.text = @"摸过了";
+                NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
+                [dict setObject:[NSNumber numberWithInt:1] forKey:@"is_touched"];
+                model.dict = dict;
+                model.is_touched = [NSNumber numberWithInt:1];
+            };
+            touch.pet_aid = self.pet_aid;
+            touch.pet_name = self.pet_name;
+            touch.pet_tx = self.pet_tx;
+            [self addChildViewController:touch];
+            [touch release];
+            [touch didMoveToParentViewController:self];
+            [self.view addSubview:touch.view];
             
             
 //            WalkAndTeaseViewController *walkAndTeasevc = [[WalkAndTeaseViewController alloc] init];

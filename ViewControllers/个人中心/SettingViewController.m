@@ -639,8 +639,9 @@
 #pragma mark -清除数据
 -(void)clearData
 {
-    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithStatus:@"清除中..."];
+    LOADING;
+//    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//    [MMProgressHUD showWithStatus:@"清除中..."];
     
     NSString *cachPath = DOCDIR;
     //    NSLog(@"%@", cachPath);
@@ -668,7 +669,14 @@
     cacheLabel.text = [NSString stringWithFormat:@"%.1fMB", 0.0];
     NSLog(@"%f", fileSize);
     
-    [MMProgressHUD dismissWithSuccess:@"清除成功"];
+    [self performSelector:@selector(done) withObject:nil afterDelay:1];
+    
+//    [MMProgressHUD dismissWithSuccess:@"清除成功"];
+}
+-(void)done
+{
+    ENDLOADING;
+    [MyControl popAlertWithView:self.view Msg:@"清除成功"];
 }
 - (void)didReceiveMemoryWarning
 {

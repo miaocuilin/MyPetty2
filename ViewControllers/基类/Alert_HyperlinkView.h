@@ -14,5 +14,6 @@
 @property(nonatomic)int type;
 @property(nonatomic,copy)void (^jumpSetPwd)();
 @property(nonatomic,copy)void (^jumpLogin)();
+@property(nonatomic,copy)void (^jumpAddress)();
 -(void)makeUI;
 @end

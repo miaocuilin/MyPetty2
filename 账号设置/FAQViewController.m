@@ -27,7 +27,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.array = @[@"萌星与捧TA", @"贡献度", @"萌星人气值", @"经验值", @"基本动作", @"金币", @"送礼物"];
+    self.array = @[@"萌星与捧TA", @"挣口粮与兑换", @"贡献度", @"萌星人气值", @"基本动作", @"金币", @"献爱心"];
     self.dataArray = [NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FAQ" ofType:@"plist"]];
 //    NSLog(@"%@", self.dataDict);
     [self createBg];

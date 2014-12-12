@@ -14,4 +14,5 @@
     UIView * bgView;
 }
 @property(nonatomic,retain)NSDictionary * dict;
+@property(nonatomic,copy)NSString * name;
 @end

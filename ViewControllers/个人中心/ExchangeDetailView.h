@@ -14,5 +14,9 @@
     UIScrollView * sv;
 }
 @property(nonatomic,retain)ExchangeItemModel * model;
+@property(nonatomic,copy)NSString * aid;
+@property(nonatomic,copy)NSString * foodNum;
+
+@property(nonatomic,copy)void (^jumpAddress)();
 -(void)makeUI;
 @end

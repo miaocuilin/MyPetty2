@@ -183,7 +183,10 @@
     NSString * stamp = [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
     //t为时间差
     //24小时为期限
-    int t = 24*60*60-([stamp intValue]-[timeStamp intValue]);
+    int t = 0;
+    if ([stamp intValue]>[timeStamp intValue]) {
+        t = 24*60*60-([stamp intValue]-[timeStamp intValue]);
+    }
     int h = t/60/60;
     int m = (t-h*3600)/60;
     int s = t-h*3600-m*60;

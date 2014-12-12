@@ -54,6 +54,9 @@
 }
 -(void)backBtnClick
 {
+    [oriTF resignFirstResponder];
+    [nwTF resignFirstResponder];
+    [conTF resignFirstResponder];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark -
@@ -67,7 +70,7 @@
     
 
     //528  92
-    UIImageView * bg1 = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-528/2)/2, 64+50, 528/2, 92/2) ImageName:@"login_tf_bg.png"];
+    bg1 = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-528/2)/2, 64+50, 528/2, 92/2) ImageName:@"login_tf_bg.png"];
     [sv addSubview:bg1];
     bg1.hidden = YES;
     
@@ -83,7 +86,7 @@
     [bg1 addSubview:oriTF];
     
     /**************/
-    UIImageView * bg2 = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-528/2)/2, 64+50, 528/2, 92/2) ImageName:@"login_tf_bg.png"];
+    bg2 = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-528/2)/2, 64+50, 528/2, 92/2) ImageName:@"login_tf_bg.png"];
     [sv addSubview:bg2];
     
     if (self.isModify) {
@@ -105,7 +108,7 @@
     
     /**************/
     
-    UIImageView * bg3 = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-528/2)/2, bg2.frame.origin.y+bg2.frame.size.height+50, 528/2, 92/2) ImageName:@"login_tf_bg.png"];
+    bg3 = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-528/2)/2, bg2.frame.origin.y+bg2.frame.size.height+50, 528/2, 92/2) ImageName:@"login_tf_bg.png"];
     [sv addSubview:bg3];
     
     conPwd = [MyControl createLabelWithFrame:CGRectMake(bg3.frame.origin.x+16, bg3.frame.origin.y-20, 200, 20) Font:15 Text:@"确认密码"];
@@ -118,7 +121,7 @@
     conTF.returnKeyType = UIReturnKeyDone;
     [bg3 addSubview:conTF];
     
-    UILabel * tip = [MyControl createLabelWithFrame:CGRectMake(conPwd.frame.origin.x, bg3.frame.origin.y+bg3.frame.size.height+10, bg3.frame.size.width, 20) Font:13 Text:@"提示：密码用于其他设备登录时填写"];
+    UILabel * tip = [MyControl createLabelWithFrame:CGRectMake(conPwd.frame.origin.x, bg3.frame.origin.y+bg3.frame.size.height+10, bg3.frame.size.width, 20) Font:13 Text:@"提示：在其他设备登录此账号需填写密码"];
     tip.textColor = [UIColor blackColor];
     [sv addSubview:tip];
     
@@ -138,6 +141,10 @@
     [conTF resignFirstResponder];
     
     if(self.isModify){
+        if(!nwTF.text.length || !conTF.text.length || !oriTF.text.length){
+            [MyControl popAlertWithView:self.view Msg:@"密码不能为空"];
+            return;
+        }
         if (![oriTF.text isEqualToString:[USER objectForKey:@"password"]]) {
             [MyControl popAlertWithView:self.view Msg:@"原密码不正确"];
             return;
@@ -146,17 +153,14 @@
             [MyControl popAlertWithView:self.view Msg:@"两次密码不一致"];
             return;
         }
-        if(!nwTF.text.length || !conTF.text.length || !oriTF.text.length){
-            [MyControl popAlertWithView:self.view Msg:@"密码不能为空"];
-            return;
-        }
+        
     }else{
-        if(![nwTF.text isEqualToString:conTF.text]){
-            [MyControl popAlertWithView:self.view Msg:@"两次密码不一致"];
-            return;
-        }
         if(!nwTF.text.length || !conTF.text.length){
             [MyControl popAlertWithView:self.view Msg:@"密码不能为空"];
+            return;
+        }
+        if(![nwTF.text isEqualToString:conTF.text]){
+            [MyControl popAlertWithView:self.view Msg:@"两次密码不一致"];
             return;
         }
     }
@@ -194,13 +198,37 @@
 #pragma mark -
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    float a = self.view.frame.size.width/self.view.frame.size.height;
-    float b = 320/480.0;
-    if (a == b) {
-        [UIView animateWithDuration:0.3 animations:^{
-            sv.frame = CGRectMake(0, -30, self.view.frame.size.width, self.view.frame.size.height);
-        }];
+    float a = 0;
+    if (textField == oriTF) {
+        a = bg1.frame.origin.y;
+    }else if(textField == nwTF){
+        a = bg2.frame.origin.y;
+    }else if(textField == conTF){
+        a = bg3.frame.origin.y;
     }
+    //目标起始位置
+    float targetY = self.view.frame.size.height-220-bg1.frame.size.height;
+    if (a>targetY) {
+        CGRect rect = sv.frame;
+//        if (textField == oriTF) {
+            rect.origin.y = targetY-a;
+//        }else if(textField == nwTF){
+//            rect.origin.y = 64-bg2.frame.origin.y;
+//        }else if(textField == conTF){
+//            rect.origin.y = 64-bg3.frame.origin.y;
+//        }
+        [UIView animateWithDuration:0.3 animations:^{
+            sv.frame = rect;
+        }];
+        
+    }
+//    float a = self.view.frame.size.width/self.view.frame.size.height;
+//    float b = 320/480.0;
+//    if (a == b) {
+//        [UIView animateWithDuration:0.3 animations:^{
+//            sv.frame = CGRectMake(0, -30, self.view.frame.size.width, self.view.frame.size.height);
+//        }];
+//    }
     return YES;
 }
 -(BOOL)textFieldShouldEndEditing:(UITextField *)textField

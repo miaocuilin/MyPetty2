@@ -16,5 +16,7 @@
 @property (retain, nonatomic) IBOutlet UIImageView *goodImageView;
 @property (retain, nonatomic) IBOutlet UILabel *priceLabel;
 
+@property(nonatomic,copy)void (^exchange)();
+
 -(void)configUI:(ExchangeItemModel *)model;
 @end

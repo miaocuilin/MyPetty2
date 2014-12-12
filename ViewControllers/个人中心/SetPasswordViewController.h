@@ -20,7 +20,9 @@
     UITextField * conTF;
     
     UIButton * confirmBtn;
-    
+    UIImageView * bg1;
+    UIImageView * bg2;
+    UIImageView * bg3;
     //确定是否可点
     BOOL canClick;
 }

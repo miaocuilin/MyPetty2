@@ -62,7 +62,7 @@
                 <outlet property="priceLabel" destination="fIG-Od-VCi" id="6OO-VL-L79"/>
                 <outlet property="weightLabel" destination="S0S-Uu-oOb" id="is0-r5-IlQ"/>
             </connections>
-            <point key="canvasLocation" x="244" y="222"/>
+            <point key="canvasLocation" x="-73" y="93"/>
         </collectionViewCell>
     </objects>
     <resources>

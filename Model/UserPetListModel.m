@@ -23,6 +23,7 @@
     [_gender release];
     [_type release];
     [_age release];
+    [_food release];
     [super dealloc];
 }
 

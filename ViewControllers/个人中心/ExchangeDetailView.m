@@ -7,6 +7,9 @@
 //
 
 #import "ExchangeDetailView.h"
+#import "Alert_oneBtnView.h"
+#import "Alert_2ButtonView2.h"
+#import "Alert_HyperlinkView.h"
 
 @implementation ExchangeDetailView
 
@@ -87,7 +90,65 @@
 
 -(void)confirmBtnClick
 {
-    
+    int num = [self.foodNum intValue];
+    NSLog(@"%d", num);
+    if (num<[self.model.price intValue]) {
+        //提示口粮不足
+        Alert_oneBtnView * alert = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        alert.type = 1;
+        [alert makeUI];
+        [self addSubview:alert];
+        [alert release];
+    }else{
+//        Alert_HyperlinkView * one = [[Alert_HyperlinkView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+//        one.type = 2;
+//        one.jumpAddress = ^(){
+//            self.jumpAddress();
+//        };
+//        [one makeUI];
+//        [self addSubview:one];
+//        [one release];
+//        return;
+        
+        Alert_2ButtonView2 * alert = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        alert.type = 3;
+        alert.productName = self.model.name;
+        alert.foodCost = self.model.price;
+        alert.exchange = ^(){
+            LOADING;
+            NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&item_id=%@dog&cat", self.aid, self.model.item_id]];
+            NSString * url = [NSString stringWithFormat:@"%@%@&item_id=%@&sig=%@&SID=%@", EXCHANGEAPI, self.aid, self.model.item_id, sig, [ControllerManager getSID]];
+            NSLog(@"%@", url);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    NSLog(@"%@", load.dataDict);
+                    if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[load.dataDict objectForKey:@"data"] objectForKey:@"food"] isKindOfClass:[NSNumber class]] && [[[load.dataDict objectForKey:@"data"] objectForKey:@"food"] intValue] != [self.foodNum intValue]){
+                        //兑换成功
+                        self.foodNum = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"food"]];
+                        Alert_HyperlinkView * one = [[Alert_HyperlinkView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+                        one.type = 2;
+                        one.jumpAddress = ^(){
+                            self.jumpAddress();
+                        };
+                        [one makeUI];
+                        [self addSubview:one];
+                        [one release];
+                        
+                    }else{
+                        //兑换失败
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"兑换失败"];
+                    }
+                    ENDLOADING;
+                }else{
+                    LOADFAILED;
+                }
+            }];
+            [request release];
+        };
+        [alert makeUI];
+        [self addSubview:alert];
+        [alert release];
+    }
 }
 -(void)closeBtnClick
 {

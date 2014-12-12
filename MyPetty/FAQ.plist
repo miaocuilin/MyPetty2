@@ -4,172 +4,172 @@
 <array>
 	<array>
 		<dict>
-			<key>que</key>
-			<string>萌星是什么？</string>
 			<key>ans</key>
 			<string>“萌星”是指宠物星球上的萌宠，纯真可爱的萌宠们，就像是宇宙中耀眼闪烁的明星，让无数地球人争相成为TA们的粉丝。</string>
+			<key>que</key>
+			<string>萌星是什么？</string>
 		</dict>
 		<dict>
-			<key>que</key>
-			<string>捧TA是什么？</string>
 			<key>ans</key>
 			<string>地球人遇见心仪的萌宠，可以选择捧TA，成为萌星的粉丝，通过点赞送礼物帮TA增加人气。</string>
+			<key>que</key>
+			<string>捧TA是什么？</string>
 		</dict>
 		<dict>
+			<key>ans</key>
+			<string>点击萌星资料右上角 “+”，在弹窗中选择“捧TA”，每个地球人可以免费捧10个萌星，超过10个要花费金币哦~</string>
 			<key>que</key>
 			<string>如何捧TA？</string>
-			<key>ans</key>
-			<string>点击萌星资料右上角 “+”，在弹窗中选择“捧TA”，每个地球人最多只能捧10个萌星哦~</string>
 		</dict>
 		<dict>
-			<key>que</key>
-			<string>如何创建萌星？</string>
 			<key>ans</key>
 			<string>在侧边栏点击用户头像进入个人档案，点击萌星列表底部的“+”创建新萌星。</string>
+			<key>que</key>
+			<string>如何创建萌星？</string>
 		</dict>
 		<dict>
+			<key>ans</key>
+			<string>在首页“个人中心”点击头像进入“我的档案”，点击萌星选择“不捧了”。需要注意的是，地球人不能不捧自己创建的萌星和当前仅有的萌星。</string>
 			<key>que</key>
 			<string>如何不捧了？</string>
-			<key>ans</key>
-			<string>在侧边栏点击用户头像进入个人档案，点击萌星选择“不捧了”。需要注意的是，地球人不能不捧自己创建的萌星，“设为最爱”的萌星和当前仅有的萌星。</string>
 		</dict>
 	</array>
 	<array>
 		<dict>
+			<key>ans</key>
+			<string>宠物主人（经纪人）可以为您创建的每只宠物精心挑选并发布一张“挣口粮”的照片。喜欢它的用户会给萌星“打赏”口粮，当得到的口粮数达到一定数量，就可以兑换真实宠物粮啦~快来让你的萌星“为自己代粮”吧~</string>
 			<key>que</key>
-			<string>贡献度是什么？</string>
+			<string>为什么要挣口粮？</string>
+		</dict>
+		<dict>
+			<key>ans</key>
+			<string>宠物主人（经纪人）可以在首页“我的萌星”页面，点击“挣口粮”来为自己创建的萌星发布“挣口粮”照片（每24小时限发布一张“挣口粮”照片，且照片的有效期为发布后的24小时以内），发布成功后还可以分享至微博、微信，让小伙伴们一起为萌星送粮吧~粉丝也可以使用“挣口粮”，帮TA分享，为TA助力！</string>
+			<key>que</key>
+			<string>如何挣口粮？</string>
+		</dict>
+		<dict>
+			<key>ans</key>
+			<string>首页“挣口粮”页面能看到所有正在“挣口粮”的照片，在这里就可以为您喜欢的萌星打赏口粮啦~不仅在应用内，分享至社交应用的网页版也可以进行打赏！需要注意的是，每位用户每日都会有免费的口粮可以随意打赏，打赏更多就需要花费金币了哟~</string>
+			<key>que</key>
+			<string>如何打赏？</string>
+		</dict>
+		<dict>
+			<key>ans</key>
+			<string>收到口粮会积累至相应的萌星，当萌星得到的口粮数足够多时就可以在“兑换”页面换取实物啦~兑换成功后，只需要您填写好收货地址，工作人员就会尽快为您备货，快递上门哦~</string>
+			<key>que</key>
+			<string>如何兑换？</string>
+		</dict>
+	</array>
+	<array>
+		<dict>
 			<key>ans</key>
 			<string>贡献度体现了地球人对萌星做出的贡献，给萌星送礼物会增加贡献度。</string>
+			<key>que</key>
+			<string>贡献度是什么？</string>
 		</dict>
 		<dict>
-			<key>que</key>
-			<string>什么是贡献排行榜？</string>
 			<key>ans</key>
 			<string>是每个萌星的粉丝做出贡献的排行榜，分为日贡献榜、周贡献榜、月贡献榜和总贡献榜。结榜时排名前列的小伙伴可得到奖励，每个榜单在榜单周期结束当天的24:00结算发放奖励。（暂未开放）</string>
+			<key>que</key>
+			<string>什么是贡献排行榜？</string>
 		</dict>
 		<dict>
-			<key>que</key>
-			<string>什么是萌星的粉丝等级？</string>
 			<key>ans</key>
 			<string>粉丝等级分为8级，分别是“凉粉、淡粉、狠粉、灰常粉、超级粉、铁杆粉、脑残粉、骨灰粉”，粉丝等级出现在萌星主页的各个角落，升级时还会获得奖励呦~</string>
+			<key>que</key>
+			<string>什么是萌星的粉丝等级？</string>
 		</dict>
 		<dict>
-			<key>que</key>
-			<string>什么是经纪人？</string>
 			<key>ans</key>
 			<string>萌星主人的等级会始终记为“经纪人”，象征独一无二的所属关系。带领你的萌宠闪闪发光吧！</string>
+			<key>que</key>
+			<string>什么是经纪人？</string>
 		</dict>
 	</array>
 	<array>
 		<dict>
-			<key>que</key>
-			<string>萌星人气值是什么？</string>
 			<key>ans</key>
 			<string>人气值是体现萌星在宠物星球受欢迎程度的数值。人气排名高的萌星是名副其实的明星，会得到欢迎页推荐的明星待遇，还有机会参加宠物星球举办的粉丝活动呢~。</string>
+			<key>que</key>
+			<string>萌星人气值是什么？</string>
 		</dict>
 		<dict>
-			<key>que</key>
-			<string>如何增加人气值？</string>
 			<key>ans</key>
 			<string>萌星收到礼物、被赞、被评论、被关注都会增加人气值。</string>
+			<key>que</key>
+			<string>如何增加人气值？</string>
 		</dict>
 		<dict>
-			<key>que</key>
-			<string>人气值为什么会降低？</string>
 			<key>ans</key>
 			<string>萌星收到捣乱礼物和被捣捣乱都会降低人气值。</string>
+			<key>que</key>
+			<string>人气值为什么会降低？</string>
 		</dict>
 		<dict>
-			<key>que</key>
-			<string>什么是星球人气排行榜？</string>
 			<key>ans</key>
 			<string>星球人气排行榜是萌星的人气排行榜，分成日人气榜、周人气榜、月人气榜和总人气榜。结榜时排名前列萌星的粉丝会得到相应奖励，每个榜单会在榜单周期结束当天的24:00结算并发放奖励。（暂未开放）</string>
+			<key>que</key>
+			<string>什么是星球人气排行榜？</string>
 		</dict>
 	</array>
 	<array>
 		<dict>
-			<key>que</key>
-			<string>如何获得经验值？</string>
-			<key>ans</key>
-			<string>地球人每天登录应用、发布新照片、评论照片和送礼物、萌印象、萌叫叫、摇一摇都可以获得一定数量的经验值。</string>
-		</dict>
-		<dict>
-			<key>que</key>
-			<string>经验值有什么用？</string>
-			<key>ans</key>
-			<string>经验值体现了地球人在宠物星球的独特资历，经验值可以提升经验等级，等级升级后会得到奖励金币。</string>
-		</dict>
-		<dict>
-			<key>que</key>
-			<string>经验值等级是什么？</string>
-			<key>ans</key>
-			<string>经验值等级分成50个等级，在经验值达到当前级别的上限后会升级并获得奖励金币，等级越高升级时得到的奖励金币越多。</string>
-		</dict>
-	</array>
-	<array>
-		<dict>
-			<key>que</key>
-			<string>什么是摇一摇？</string>
 			<key>ans</key>
 			<string>用户每日可以通过摇动手机摇出礼物，送给相应的萌星。摇一摇送出的礼物同样可以增加萌星的人气值和用户的贡献度。</string>
-		</dict>
-		<dict>
 			<key>que</key>
-			<string>什么是萌叫叫？</string>
-			<key>ans</key>
-			<string>萌星的经纪人每日可为自己的萌星录制一段录音，上传成功后，其他用户可以通过“萌印象”来收听。成功完成录音上传，经纪人会得到经验奖励。</string>
+			<string>什么是摇一摇？</string>
 		</dict>
 		<dict>
+			<key>ans</key>
+			<string>点击“萌印象”，会出现一张相应萌星的照片，完成小游戏就有机会获得金币奖励哦~</string>
 			<key>que</key>
 			<string>什么是萌印象？</string>
-			<key>ans</key>
-			<string>粉丝点击“萌印象”，会出现一张相应萌星的照片，完成小游戏即可听到萌星的的叫声。完成“萌印象”的用户，会获得经验和金币的奖励哦。</string>
 		</dict>
 		<dict>
+			<key>ans</key>
+			<string>游乐园是我们为大家准备的精彩小游戏，完成游戏，会根据成绩得到相应的金币奖励~（暂未开放）</string>
 			<key>que</key>
 			<string>什么是游乐园？</string>
-			<key>ans</key>
-			<string>游乐园是我们为大家准备的精彩小游戏，完成游戏，会根据成绩得到相应的金币、经验奖励。</string>
 		</dict>
 	</array>
 	<array>
 		<dict>
+			<key>ans</key>
+			<string>有两种方式可以获得金币&amp;●登录应用、萌印象、发表评论、官衔提升和参与宠物星球丰富的活动均有机会获得金币奖励。&amp;●充值来拥有更多金币！（暂未开放）</string>
 			<key>que</key>
 			<string>如何获得金币？</string>
-			<key>ans</key>
-			<string>有两种方式可以获得金币&amp;●登录应用、分享照片、摇一摇、萌印象、游乐园、经验等级提升、官衔提升和参与宠物星球丰富的活动均有机会获得金币奖励。&amp;●充值来拥有更多金币！（暂未开放）</string>
 		</dict>
 		<dict>
+			<key>ans</key>
+			<string>金币可以用于打赏您喜欢的萌星；也可以购买礼物送给喜欢的萌星来为TA增加人气。</string>
 			<key>que</key>
 			<string>金币可以用来做什么？</string>
-			<key>ans</key>
-			<string>金币可以购买礼物送给喜欢的萌星来为TA增加人气。</string>
 		</dict>
 	</array>
 	<array>
 		<dict>
-			<key>que</key>
-			<string>什么是虚拟礼物和现实礼物？</string>
 			<key>ans</key>
 			<string>宠物星球的礼物分为虚拟礼物和现实礼物，虚拟礼物仅存在于宠物星球的世界中，现实礼物是派送到主人家里的真实礼品，收到虚拟礼物和现实礼物都可以增加萌星的人气值。</string>
+			<key>que</key>
+			<string>什么是虚拟礼物和现实礼物？</string>
 		</dict>
 		<dict>
-			<key>que</key>
-			<string>为什么需要送礼物？</string>
 			<key>ans</key>
 			<string>给萌星送礼物可以增加萌星的人气值和地球人的贡献度，粉丝们可以共同努力将萌星打造成全宇宙最闪亮萌星。</string>
+			<key>que</key>
+			<string>为什么需要送礼物？</string>
 		</dict>
 		<dict>
-			<key>que</key>
-			<string>如何送礼物？</string>
 			<key>ans</key>
 			<string>您可以在送礼物弹窗中点击礼物直接送出，也可以先在商城购买完礼物之后在萌星主页送出礼物。</string>
+			<key>que</key>
+			<string>如何献爱心？</string>
 		</dict>
 		<dict>
-			<key>que</key>
-			<string>如何送出现实礼物？</string>
 			<key>ans</key>
 			<string>首先在礼物商城或送礼物弹框中购买礼物并选择赠送，之后萌星的经纪人会收到填写收货地址的私信通知，宠物星球的工作人员会在得到收货地址后的5个工作日内发出快递并私信通知您快递单号，经纪人收到礼物后会晒出礼物来感谢有爱的地球人的。（暂未开放）</string>
+			<key>que</key>
+			<string>如何送出现实礼物？</string>
 		</dict>
 	</array>
 </array>

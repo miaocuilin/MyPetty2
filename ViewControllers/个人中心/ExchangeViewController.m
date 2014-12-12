@@ -10,7 +10,11 @@
 #import "ExchangeCollectionViewCell.h"
 #import "ExchangeDetailView.h"
 #import "ExchangeItemModel.h"
+#import "Alert_2ButtonView2.h"
 
+#import "AddressViewController.h"
+#import "Alert_oneBtnView.h"
+#import "Alert_HyperlinkView.h"
 @interface ExchangeViewController ()
 
 @end
@@ -25,7 +29,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
+    self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
     
+    self.tempAid = [USER objectForKey:@"aid"];
     [self createBg];
     [self createCollectionView];
     [self createFakeNavigation];
@@ -43,12 +49,54 @@
             NSLog(@"%@", load.dataDict);
             self.itemsArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"item_ids"];
             [self loadItemInfo:self.itemsArray[index]];
+            
+            [self loadUserPetList];
         }else{
             LOADFAILED;
         }
     }];
     [request release];
 }
+-(void)loadUserPetList
+{
+    //    user/petsApi&usr_id=(若用户为自己则留空不填)
+//    LOADING;
+    NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            [self.userPetListArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for (NSDictionary * dict in array) {
+                UserPetListModel * model = [[UserPetListModel alloc] init];
+//                NSLog(@"%@--%@", model.aid, self.tempAid);
+                
+                [model setValuesForKeysWithDictionary:dict];
+                if (![model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                    continue;
+                }
+                if ([model.aid isEqualToString:self.tempAid]) {
+                    foodNum.text = model.food;
+                    self.tempModel = model;
+                }
+                [self.userPetListArray addObject:model];
+                [model release];
+                //
+                [bottomBg removeFromSuperview];
+                [self createBottom];
+            }
+            
+//            [tv reloadData];
+//            ENDLOADING;
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
+}
+
 -(void)loadItemInfo:(NSString *)item_id
 {
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=%@dog&cat", item_id]];
@@ -129,7 +177,7 @@
     UIImageView * orangeFood = [MyControl createImageViewWithFrame:CGRectMake(15, (78/2-30)/2.0, 30, 30) ImageName:@"exchange_orangeFood.png"];
     [foodNumBg addSubview:orangeFood];
     
-    UILabel * foodNum = [MyControl createLabelWithFrame:CGRectMake(orangeFood.frame.origin.x+30+5, 0, 90, 78/2.0) Font:20 Text:[USER objectForKey:@"food"]];
+    foodNum = [MyControl createLabelWithFrame:CGRectMake(orangeFood.frame.origin.x+30+5, 0, 90, 78/2.0) Font:20 Text:self.tempModel.food];
     foodNum.textColor = BGCOLOR;
     [foodNumBg addSubview:foodNum];
     
@@ -151,21 +199,50 @@
         }
     }];
     
-    UIImageView * leftArrow = [MyControl createImageViewWithFrame:CGRectMake(8, 64, 9, 15.5) ImageName:@"leftArrow.png"];
-    [bottomImage addSubview:leftArrow];
+//    UIImageView * leftArrow = [MyControl createImageViewWithFrame:CGRectMake(8, 64, 9, 15.5) ImageName:@"leftArrow.png"];
+//    [bottomImage addSubview:leftArrow];
+//    
+//    UIImageView * rightArrow = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-8-9, 64, 9, 15.5) ImageName:@"rightArrow.png"];
+//    [bottomImage addSubview:rightArrow];
+//    
+//    leftArrowBtn = [MyControl createButtonWithFrame:CGRectMake(leftArrow.frame.origin.x-5, leftArrow.frame.origin.y-10, leftArrow.frame.size.width+10, leftArrow.frame.size.height+20) ImageName:@"" Target:self Action:@selector(leftClick) Title:nil];
+////    leftArrowBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+//    [bottomImage addSubview:leftArrowBtn];
+//    
+//    rightArrowBtn = [MyControl createButtonWithFrame:CGRectMake(rightArrow.frame.origin.x-5, rightArrow.frame.origin.y-10, rightArrow.frame.size.width+10, rightArrow.frame.size.height+20) ImageName:@"" Target:self Action:@selector(rightClick) Title:nil];
+////    rightArrowBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+//    [bottomImage addSubview:rightArrowBtn];
     
-    UIImageView * rightArrow = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-8-9, 64, 9, 15.5) ImageName:@"rightArrow.png"];
-    [bottomImage addSubview:rightArrow];
-    
-    leftArrowBtn = [MyControl createButtonWithFrame:CGRectMake(leftArrow.frame.origin.x-5, leftArrow.frame.origin.y-10, leftArrow.frame.size.width+10, leftArrow.frame.size.height+20) ImageName:@"" Target:self Action:@selector(leftClick) Title:nil];
-//    leftArrowBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
-    [bottomImage addSubview:leftArrowBtn];
-    
-    rightArrowBtn = [MyControl createButtonWithFrame:CGRectMake(rightArrow.frame.origin.x-5, rightArrow.frame.origin.y-10, rightArrow.frame.size.width+10, rightArrow.frame.size.height+20) ImageName:@"" Target:self Action:@selector(rightClick) Title:nil];
-//    rightArrowBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
-    [bottomImage addSubview:rightArrowBtn];
-    
-//    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(<#CGFloat x#>, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)];
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, bottomBg.frame.size.height-50, self.view.frame.size.width, 50)];
+    sv.showsHorizontalScrollIndicator = NO;
+    sv.contentSize = CGSizeMake(40+self.userPetListArray.count*60, 50);
+    [bottomBg addSubview:sv];
+    for (int i=0; i<self.userPetListArray.count; i++) {
+        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(20+60*i, 2, 46, 46) ImageName:@"defaultPetHead.png" Target:self Action:@selector(headClick:) Title:nil];
+        button.layer.cornerRadius = 23;
+        button.layer.masksToBounds = YES;
+        [sv addSubview:button];
+        button.tag = 2000+i;
+        [button setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userPetListArray[i] tx]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if (image) {
+                [button setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+            }
+        }];
+    }
+}
+-(void)headClick:(UIButton *)btn
+{
+    NSLog(@"tag:%d", btn.tag);
+    int x = btn.tag-2000;
+    foodNum.text = [self.userPetListArray[x] food];
+    [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userPetListArray[x] tx]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (image) {
+            [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+        }
+    }];
+    self.tempModel = self.userPetListArray[x];
+    self.tempAid = [self.userPetListArray[x] aid];
+    [self upButtonClick:upButton];
 }
 -(void)leftClick
 {
@@ -227,7 +304,11 @@
         cell.hidden = NO;
 //        cell config
         [cell configUI:self.dataArray[indexPath.row]];
+        cell.exchange = ^(){
+            [self exchangeBtnClick:indexPath.row];
+        };
     }
+
     cell.layer.cornerRadius = 3;
     cell.layer.masksToBounds = YES;
     cell.backgroundColor = [UIColor whiteColor];
@@ -244,12 +325,77 @@
 {
     NSLog(@"%d", indexPath.row);
     ExchangeDetailView * detail = [[ExchangeDetailView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    detail.aid = self.tempAid;
+    detail.foodNum = foodNum.text;
     detail.model = self.dataArray[indexPath.row];
+    detail.jumpAddress = ^(){
+        AddressViewController * vc = [[AddressViewController alloc] init];
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
+    };
     [detail makeUI];
     [self.view addSubview:detail];
     [detail release];
 }
-
+#pragma mark -
+-(void)exchangeBtnClick:(int)Index
+{
+    ExchangeItemModel * itemModel = self.dataArray[Index];
+//    UserPetListModel * petModel = ;
+    int num = [self.tempModel.food intValue];
+    NSLog(@"%d", num);
+    if (num<[itemModel.price intValue]) {
+        //提示口粮不足
+        Alert_oneBtnView * alert = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        alert.type = 1;
+        [alert makeUI];
+        [self.view addSubview:alert];
+        [alert release];
+    }else{
+        
+        Alert_2ButtonView2 * alert = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        alert.type = 3;
+        alert.productName = itemModel.name;
+        alert.foodCost = itemModel.price;
+        alert.exchange = ^(){
+            LOADING;
+            NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&item_id=%@dog&cat", self.tempAid, itemModel.item_id]];
+            NSString * url = [NSString stringWithFormat:@"%@%@&item_id=%@&sig=%@&SID=%@", EXCHANGEAPI, self.tempAid, itemModel.item_id, sig, [ControllerManager getSID]];
+            NSLog(@"%@", url);
+            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                if (isFinish) {
+                    NSLog(@"%@", load.dataDict);
+                    if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[load.dataDict objectForKey:@"data"] objectForKey:@"food"] isKindOfClass:[NSNumber class]] && [[[load.dataDict objectForKey:@"data"] objectForKey:@"food"] intValue] != [self.tempModel.food intValue]){
+                        self.tempModel.food = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"food"]];
+                        foodNum.text = self.tempModel.food;
+                        //兑换成功
+                        Alert_HyperlinkView * one = [[Alert_HyperlinkView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+                        one.type = 2;
+                        one.jumpAddress = ^(){
+                            AddressViewController * vc = [[AddressViewController alloc] init];
+                            [self presentViewController:vc animated:YES completion:nil];
+                            [vc release];
+                        };
+                        [one makeUI];
+                        [self.view addSubview:one];
+                        [one release];
+                        
+                    }else{
+                        //兑换失败
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"兑换失败"];
+                    }
+                    ENDLOADING;
+                }else{
+                    LOADFAILED;
+                }
+            }];
+            [request release];
+        };
+        [alert makeUI];
+        [self.view addSubview:alert];
+        [alert release];
+    }
+}
 
 #pragma mark -
 -(void)exBtnClick:(UIButton *)btn

@@ -42,7 +42,7 @@
     label1.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
     [bgView addSubview:label1];
     
-    UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(20, label1.frame.origin.y+label1.frame.size.height+15, bgView.frame.size.width-40, 20) Font:15 Text:nil];
+    UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(20, label1.frame.origin.y+label1.frame.size.height+15, bgView.frame.size.width-40, 20) Font:13 Text:nil];
     label2.textAlignment = NSTextAlignmentCenter;
     label2.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
     [bgView addSubview:label2];
@@ -57,11 +57,15 @@
     
     
     if(self.type == 1){
-        label1.text = @"您尚未设置登录密码，成功切换";
-        label1.font = [UIFont systemFontOfSize:15];
-        label2.text = @"账号的话，当前账号会丢失哦~";
+        label1.text = @"您尚未设置登录密码";
+//        label1.font = [UIFont systemFontOfSize:15];
+        label2.text = @"成功切换账号的话，当前账号会丢失哦~";
+//        label2.font = [UIFont systemFontOfSize:12];
         [hyper setTitle:@"设置密码" forState:UIControlStateNormal];
-        
+    }else if(self.type == 2){
+        label1.text = @"恭喜您兑换成功啦！";
+        label2.text = @"即将为您备货，快去确认";
+        [hyper setTitle:@"收货地址" forState:UIControlStateNormal];
     }
     CGSize size = [hyper.titleLabel.text sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(label2.frame.size.width, 20) lineBreakMode:1];
     hyper.frame = CGRectMake(0, 0, size.width, 20);
@@ -86,13 +90,21 @@
 }
 -(void)confirmClick
 {
-    self.jumpLogin();
+    if (self.type == 1) {
+        self.jumpLogin();
+    }
+    
     [self removeFromSuperview];
 }
 -(void)hyperBtnClick
 {
-    //跳转设置密码
-    self.jumpSetPwd();
+    if (self.type == 1) {
+        //跳转设置密码
+        self.jumpSetPwd();
+    }else if(self.type == 2){
+        self.jumpAddress();
+    }
+    
     [self removeFromSuperview];
 }
 /*

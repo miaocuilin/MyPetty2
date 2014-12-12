@@ -603,7 +603,7 @@
     }
     mainTab.animalNum = self.animalNum;
     mainTab.foodNum = self.foodNum;
-    mainTab.modalTransitionStyle = 1;
+    mainTab.modalTransitionStyle = 2;
     
     mainTab.selectedIndex = 1;
     

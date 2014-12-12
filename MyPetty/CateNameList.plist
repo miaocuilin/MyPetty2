@@ -9,7 +9,7 @@
 		<key>102</key>
 		<string>波斯猫</string>
 		<key>103</key>
-		<string>挪威猫</string>
+		<string>挪威森林猫</string>
 		<key>104</key>
 		<string>缅因猫</string>
 		<key>105</key>
@@ -43,7 +43,7 @@
 		<key>119</key>
 		<string>埃及猫</string>
 		<key>120</key>
-		<string>斯芬克斯猫</string>
+		<string>加拿大无毛猫</string>
 		<key>121</key>
 		<string>缅甸猫</string>
 		<key>122</key>
@@ -79,7 +79,7 @@
 		<key>137</key>
 		<string>加菲猫</string>
 		<key>138</key>
-		<string>缅甸猫</string>
+		<string>狮子猫</string>
 		<key>139</key>
 		<string>奶牛猫</string>
 		<key>140</key>
@@ -88,6 +88,12 @@
 		<string>英国短毛猫</string>
 		<key>142</key>
 		<string>美国短毛猫</string>
+		<key>143</key>
+		<string>孟加拉豹猫</string>
+		<key>144</key>
+		<string>金吉拉</string>
+		<key>145</key>
+		<string>美国卷耳猫</string>
 	</dict>
 	<key>2</key>
 	<dict>
@@ -128,7 +134,7 @@
 		<key>218</key>
 		<string>松狮</string>
 		<key>219</key>
-		<string>牧羊犬</string>
+		<string>边境牧羊犬</string>
 		<key>220</key>
 		<string>柴犬</string>
 		<key>221</key>
@@ -192,7 +198,7 @@
 		<key>250</key>
 		<string>梗犬</string>
 		<key>251</key>
-		<string>牧羊犬</string>
+		<string>德国牧羊犬</string>
 		<key>252</key>
 		<string>吉娃娃</string>
 		<key>253</key>
@@ -201,10 +207,36 @@
 		<string>秋田犬</string>
 		<key>255</key>
 		<string>杜宾犬</string>
+		<key>256</key>
+		<string>中华田园犬</string>
+		<key>257</key>
+		<string>喜乐蒂牧羊犬</string>
+		<key>258</key>
+		<string>古代英国牧羊犬</string>
 	</dict>
 	<key>3</key>
 	<dict>
 		<key>301</key>
+		<string>鸟</string>
+		<key>302</key>
+		<string>鱼</string>
+		<key>303</key>
+		<string>蛇</string>
+		<key>304</key>
+		<string>龟</string>
+		<key>305</key>
+		<string>仓鼠</string>
+		<key>306</key>
+		<string>蜘蛛</string>
+		<key>307</key>
+		<string>龙猫</string>
+		<key>308</key>
+		<string>刺猬</string>
+		<key>309</key>
+		<string>兔子</string>
+		<key>310</key>
+		<string>蜥蜴</string>
+		<key>311</key>
 		<string>其他</string>
 	</dict>
 </dict>

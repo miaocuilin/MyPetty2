@@ -201,7 +201,7 @@
 {
     [self shopGiftTitle];
     
-    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, 40) Font:16 Text:@"摸萌照，听萌星叫叫，萌萌印心中~"];
+    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, 40) Font:16 Text:@"摸萌照，得金币，萌萌印心中~"];
     if(notHaveRecord){
         descLabel.text = [NSString stringWithFormat:@"%@还没有萌叫叫", self.pet_name];
     }
@@ -330,9 +330,11 @@
         [self.scratchCardView addSubview:playAndPauseView];
         
         playAndPauseImageView = [MyControl createImageViewWithFrame:CGRectMake(8, 8, 15, 15) ImageName:@"record_play.png"];
+        playAndPauseImageView.hidden = YES;
         [playAndPauseView addSubview:playAndPauseImageView];
         
         playAndPauseButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 30, 30) ImageName:nil Target:self Action:@selector(playAction) Title:nil];
+        
         [playAndPauseView addSubview:playAndPauseButton];
     }
     

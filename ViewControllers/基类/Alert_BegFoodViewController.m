@@ -26,7 +26,7 @@
     alphaView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
     [self.view addSubview:alphaView];
     
-    bgView = [MyControl createViewWithFrame:CGRectMake(18, ([UIScreen mainScreen].bounds.size.height-230)/2.0, [UIScreen mainScreen].bounds.size.width-36, 230)];
+    bgView = [MyControl createViewWithFrame:CGRectMake(18, ([UIScreen mainScreen].bounds.size.height-300)/2.0, [UIScreen mainScreen].bounds.size.width-36, 300)];
     [self.view addSubview:bgView];
     
     UIView * whiteBg = [MyControl createViewWithFrame:CGRectMake(0, 0, bgView.frame.size.width, bgView.frame.size.height)];
@@ -39,9 +39,16 @@
     [bgView addSubview:closeBtn];
     
     //
-    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(258/2, 30, bgView.frame.size.width-258/2, 20) Font:14 Text:@"猫猫莫按摩按摩"];
+    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(258/2, 30, bgView.frame.size.width-258/2, 20) Font:14 Text:self.name];
     name.textColor = ORANGE;
     [bgView addSubview:name];
+    
+    //
+    UIImageView * bigImage = [MyControl createImageViewWithFrame:CGRectMake(8, 10, name.frame.origin.x-20, 160) ImageName:@""];
+    bigImage.contentMode = UIViewContentModeScaleAspectFit;
+    [bigImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.dict objectForKey:@"url"]]]];
+    [bgView addSubview:bigImage];
+    
     
     NSString * str = @"已收到";
     CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:17] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
@@ -49,10 +56,10 @@
     label1.textColor = ORANGE;
     [bgView addSubview:label1];
     
-    UIImageView * foodImage = [MyControl createImageViewWithFrame:CGRectMake(label1.frame.origin.x, label1.frame.origin.y-6, 32, 32) ImageName:@"exchange_orangeFood"];
+    UIImageView * foodImage = [MyControl createImageViewWithFrame:CGRectMake(label1.frame.origin.x+size.width, label1.frame.origin.y-6, 32, 32) ImageName:@"exchange_orangeFood"];
     [bgView addSubview:foodImage];
     
-    UILabel * foodNum = [MyControl createLabelWithFrame:CGRectMake(foodImage.frame.origin.x+foodImage.frame.size.width+5, foodImage.frame.origin.y, bgView.frame.size.width-foodImage.frame.origin.x-foodImage.frame.size.width-5, foodImage.frame.size.height) Font:17 Text:@"0"];
+    UILabel * foodNum = [MyControl createLabelWithFrame:CGRectMake(foodImage.frame.origin.x+foodImage.frame.size.width+5, foodImage.frame.origin.y, bgView.frame.size.width-foodImage.frame.origin.x-foodImage.frame.size.width-5, foodImage.frame.size.height) Font:17 Text:[self.dict objectForKey:@"food"]];
     foodNum.textColor = ORANGE;
     [bgView addSubview:foodNum];
     
@@ -73,11 +80,18 @@
     
     deadLine = [MyControl createLabelWithFrame:CGRectMake(12, bgView.frame.size.height-50, bgView.frame.size.width-24, 15) Font:13 Text:nil];
     deadLine.textColor = ORANGE;
+    [self time];
+    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(time) userInfo:nil repeats:YES];
     [bgView addSubview:deadLine];
     
     UILabel * label3 = [MyControl createLabelWithFrame:CGRectMake(12, bgView.frame.size.height-30, bgView.frame.size.width-12, 15) Font:10 Text:@"每人每天都有免费赏粮机会快喊小伙伴一起打赏吧~"];
     label3.textColor = ORANGE;
     [bgView addSubview:label3];
+}
+-(void)time
+{
+    deadLine.text = [NSString stringWithFormat:@"距离下一次发布还剩%@", [MyControl leftTimeFromStamp:[self.dict objectForKey:@"create_time"]]];
+    
 }
 -(void)closeBtnClick
 {

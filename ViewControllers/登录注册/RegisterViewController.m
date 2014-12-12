@@ -65,7 +65,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.catArray = [NSMutableArray arrayWithCapacity:0];
     self.dogArray = [NSMutableArray arrayWithCapacity:0];
     self.otherArray = [NSMutableArray arrayWithCapacity:0];
-    self.cateArray = @[@"喵喵", @"汪汪"];
+    self.cateArray = @[@"喵喵", @"汪汪", @"其他"];
     self.u_city = 1000;
     
 //    self.catArray = @[@"猫咪", @"布偶猫", @"波斯猫", @"挪威猫", @"缅因猫", @"伯曼猫", @"索马利猫", @"土耳其梵猫", @"美国短尾猫", @"西伯利亚森林猫", @"巴厘猫", @"土耳其安哥拉猫", @"褴褛猫", @"拉邦猫", @"暹罗猫", @"苏格兰折耳猫", @"短毛猫", @"俄罗斯蓝猫", @"孟买猫" @"埃及猫", @"斯芬克斯猫" @"缅甸猫", @"阿比西尼亚猫", @"新加坡猫", @"中国狸花猫", @"日本短尾猫", @"东奇尼猫", @"卷毛猫", @"马恩岛猫", @"奥西猫", @"沙特尔猫", @"呵叻猫", @"美国刚毛猫", @"哈瓦那棕猫", @"波米拉猫", @"东方猫", @"混血"];

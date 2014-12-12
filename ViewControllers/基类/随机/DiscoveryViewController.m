@@ -47,7 +47,7 @@
     alphaView.backgroundColor = ORANGE;
     [navView addSubview:alphaView];
     
-    sc = [[UISegmentedControl alloc] initWithItems:@[@"最新萌照", @"排行榜单"]];
+    sc = [[UISegmentedControl alloc] initWithItems:@[@"最新萌照", @"萌星推荐"]];
     sc.frame = CGRectMake(35, 28, self.view.frame.size.width-35*2, 28);
     sc.layer.cornerRadius = 5;
     sc.layer.masksToBounds = YES;

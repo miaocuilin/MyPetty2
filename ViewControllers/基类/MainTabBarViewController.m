@@ -193,9 +193,18 @@
     btn.selected = YES;
     
 //    NSLog(@"------%d", self.selectedIndex);
-    if (btn.tag == 101 && self.selectedIndex == 1) {
+    if (btn.tag == 100) {
+        MyStarViewController * vc = self.viewControllers[0];
+        [vc.tv headerBeginRefreshing];
+    }else if (btn.tag == 101 && self.selectedIndex == 1) {
         FoodViewController * vc = self.viewControllers[1];
         [vc loadData];
+    }else if(btn.tag == 102 && self.selectedIndex == 2){
+        DiscoveryViewController * vc = self.viewControllers[2];
+        [vc refresh];
+    }else if(btn.tag == 103 && self.selectedIndex == 3){
+        CenterViewController * vc = self.viewControllers[3];
+        [vc refresh];
     }
     self.selectedIndex = btn.tag-100;
     

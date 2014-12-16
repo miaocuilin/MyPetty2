@@ -47,11 +47,11 @@
     
     //
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 18/2, 31/2) ImageName:@"choosein_back2.png"];
-    [self.view addSubview:backImageView];
+    [sv addSubview:backImageView];
     
     UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
-    [self.view addSubview:backBtn];
+    [sv addSubview:backBtn];
     
     float w = 159/2.0;
     float h = 97/2.0;
@@ -208,6 +208,8 @@
                 if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
                     if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]) {
                         //绑定过 更新本地个人信息及默认宠物信息，删除本地聊天记录
+                        [USER setObject:@"1" forKey:@"isSuccess"];
+                        [ControllerManager setIsSuccess:1];
                         [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
                         [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
                         [self getUserData];
@@ -219,9 +221,12 @@
                          */
                         if(self.isFromAccount){
                             //注册过 提示是否绑定现用户，不绑定不做操作
-                            Alert_2ButtonViewController * vc = [[Alert_2ButtonViewController alloc] init];
-                            [self.view addSubview:vc.view];
-//                            [vc release];
+                            Alert_oneBtnView * vc = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+                            vc.sina = YES;
+                            vc.type = 3;
+                            [vc makeUI];
+                            [self.view addSubview:vc];
+                            [vc release];
                         }else{
                             //没注册过 直接跳选择有宠没宠
                             ChooseInViewController * vc = [[ChooseInViewController alloc] init];
@@ -283,6 +288,8 @@
                 if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
                     if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]) {
                         //绑定过 更新本地个人信息及默认宠物信息，删除本地聊天记录
+                        [USER setObject:@"1" forKey:@"isSuccess"];
+                        [ControllerManager setIsSuccess:1];
                         [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
                         [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
                         [self getUserData];
@@ -293,10 +300,13 @@
                          2.未注册：直接跳有没有宠页面。
                          */
                         if(self.isFromAccount){
-                            //注册过 提示是否绑定现用户，不绑定不做操作
-                            Alert_2ButtonViewController * vc = [[Alert_2ButtonViewController alloc] init];
-                            vc.isSina = YES;
-                            [self.view addSubview:vc.view];
+                            //注册过 提示该第三方账号未绑定应用账号，切换失败
+                            Alert_oneBtnView * vc = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+                            vc.sina = YES;
+                            vc.type = 3;
+                            [vc makeUI];
+                            [self.view addSubview:vc];
+                            [vc release];
                         }else{
                             //没注册过 直接跳选择有宠没宠
                             ChooseInViewController * vc = [[ChooseInViewController alloc] init];
@@ -390,6 +400,11 @@
                 NSDictionary * dic = [load.dataDict objectForKey:@"data"];
                 if([[dic objectForKey:@"isBinded"] intValue]){
                     //绑定
+                    if (self.isFromAccount) {
+                        [USER setObject:@"1" forKey:@"AccountShouldDismiss"];
+                    }
+                    [USER setObject:@"1" forKey:@"isSuccess"];
+                    [ControllerManager setIsSuccess:1];
                     if ([[dic objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
                         [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"登录成功"];
                         [self dismissViewControllerAnimated:YES completion:nil];
@@ -399,6 +414,7 @@
                         //拿用户和宠物信息
                         [self getUserData];
                     }
+                    
                 }else{
                     //未绑定  用户名或密码错误或者无此用户
                     [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"用户名或密码错误"];
@@ -489,6 +505,9 @@
             }
             
             ENDLOADING;
+            if (self.isFromAccount) {
+                [USER setObject:@"1" forKey:@"AccountShouldDismiss"];
+            }
             [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"登录成功"];
             [self dismissViewControllerAnimated:YES completion:nil];
         }else{

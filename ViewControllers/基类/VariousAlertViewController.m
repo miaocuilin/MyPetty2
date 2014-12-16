@@ -45,7 +45,7 @@
     [bgView addSubview:regBtn];
     
     NSArray * array = @[@"various_weChat.png", @"various_sina.png", @"various_fastLogin.png"];
-    NSArray * array2 = @[@"微信登录", @"微博登录", @"快速登录"];
+    NSArray * array2 = @[@"微信登录", @"微博登录", @"昵称登录"];
     float spe = (bgView.frame.size.width-25*2-52*3)/2.0;
     for (int i=0; i<3; i++) {
         UIButton * button = [MyControl createButtonWithFrame:CGRectMake(25+i*(52+spe), 123, 52, 52) ImageName:array[i] Target:self Action:@selector(buttonClick:) Title:nil];
@@ -122,14 +122,16 @@
                         [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
                         [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
                         [self getUserData];
-                        }
+    
                     }else{
                         //未绑定过 没注册过 直接跳选择有宠没宠
-                            ChooseInViewController * vc = [[ChooseInViewController alloc] init];
-                            [self presentViewController:vc animated:YES completion:nil];
-                            [vc release];
+                        ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+                        [self presentViewController:vc animated:YES completion:nil];
+                        [vc release];
+                        [self closeBtnClick];
                     }
                 ENDLOADING;
+                }
             }else{
                 LOADFAILED;
             }
@@ -164,6 +166,7 @@
                         ChooseInViewController * vc = [[ChooseInViewController alloc] init];
                         [self presentViewController:vc animated:YES completion:nil];
                         [vc release];
+                        [self closeBtnClick];
                     }
                 }
                 ENDLOADING;

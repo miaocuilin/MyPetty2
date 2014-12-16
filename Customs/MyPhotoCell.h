@@ -24,6 +24,7 @@
     UIButton * zanBtn;
 }
 @property(nonatomic,copy)void (^unRegister)(void);
+@property(nonatomic,copy)void (^zanBlock)(void);
 
 @property(nonatomic,retain)UIImageView * bigImageView;
 @property(nonatomic,retain)NSArray * likersArray;

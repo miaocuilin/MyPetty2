@@ -156,7 +156,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)makeUI
 {
-    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
     sv.contentSize = CGSizeMake(320, 568);
     [self.view addSubview:sv];
 //    UIImageView * bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@""];
@@ -253,6 +253,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else{
         _textView.text = @"为您爱宠的靓照写个描述吧~";
     }
+    //
+    
     _textView.font = [UIFont systemFontOfSize:17];
     
     _textView.delegate = self;
@@ -261,6 +263,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     _textView.returnKeyType = UIReturnKeyDone;
 //    _textView.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
     [textBgView addSubview:_textView];
+    if (self.tempDes.length != 0) {
+        _textView.text = self.tempDes;
+        _textView.textColor = [UIColor blackColor];
+    }
+    
     
     //534 110
     publishButton = [MyControl createButtonWithFrame:CGRectMake(10, textBgView.frame.origin.y+textBgView.frame.size.height+5, self.view.frame.size.width-20, (self.view.frame.size.width-20)*110/534) ImageName:@"public_longBtnBg.png" Target:self Action:@selector(publishButtonClick:) Title:@"发布"];
@@ -618,6 +625,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)rightButtonClick
 {
     NSLog(@"编辑");
+    if (_textView != nil && ![_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"]) {
+        self.tempDes = _textView.text;
+    }else{
+        self.tempDes = @"";
+    }
     [self lauchEditorWithImage:self.oriImage];
 //    [self dismissViewControllerAnimated:YES completion:nil];
 }

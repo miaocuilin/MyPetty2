@@ -31,6 +31,9 @@
     
     int page;
 //    BOOL isLoaded;
+//    UIImageView * heart;
+    UIButton * heartBtn;
+    NSTimer * timer2;
 }
 -(void)loadData;
 @property(nonatomic,retain)NSMutableArray * dataArray;

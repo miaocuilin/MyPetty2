@@ -16,6 +16,8 @@
     UIView * navView;
     UISegmentedControl * sc;
     UIScrollView * sv;
+    
+//    UIScrollView * sv2;
     UITableView * tv;
 //    UITableView * tv2;
     
@@ -36,9 +38,13 @@
     UITextField * tf;
     UIButton * cancel;
     UIButton * typeBtn;
+    
+    BOOL isLoaded;
 }
 @property(nonatomic,copy)NSString * lastAid;
 @property(nonatomic,copy)NSString * tfString;
 @property(nonatomic,retain)NSMutableArray * searchArray;
 @property(nonatomic,retain)NSMutableArray * searchUserArray;
+
+-(void)refresh;
 @end

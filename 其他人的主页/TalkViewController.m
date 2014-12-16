@@ -271,18 +271,19 @@
 }
 -(void)createBg
 {
-    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"blurBg.png"];
     [self.view addSubview:bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
 //    NSString * docDir = DOCDIR;
-    NSString * filePath = BLURBG;
-    NSLog(@"%@", filePath);
-    NSData * data = [NSData dataWithContentsOfFile:filePath];
-    //    NSLog(@"%@", data);
-    UIImage * image = [UIImage imageWithData:data];
-    bgImageView.image = image;
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+//    NSString * filePath = BLURBG;
+//    NSLog(@"%@", filePath);
+//    NSData * data = [NSData dataWithContentsOfFile:filePath];
+//    //    NSLog(@"%@", data);
+//    UIImage * image = [UIImage imageWithData:data];
+//    bgImageView.image = image;
+    
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64)];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
     [self.view addSubview:tempView];
 }
 -(void)createFakeNavigation
@@ -291,8 +292,8 @@
     [self.view addSubview:navView];
     
     UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    alphaView.alpha = 0.85;
-    alphaView.backgroundColor = BGCOLOR;
+    alphaView.alpha = 0.2;
+    alphaView.backgroundColor = ORANGE;
     [navView addSubview:alphaView];
     
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
@@ -533,7 +534,7 @@
 //    UIButton * tvBgButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40) ImageName:@"" Target:self Action:@selector(hideKeyboard) Title:nil];
 //    [self.view addSubview:tvBgButton];
     
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-40-64) style:UITableViewStylePlain];
     tv.separatorStyle = UITableViewCellSeparatorStyleNone;
 //    tv.allowsSelection = NO;
 //    UIImageView * backImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chat_bg_default.jpg"]];
@@ -544,8 +545,8 @@
     tv.dataSource = self;
     [self.view addSubview:tv];
     
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    tv.tableHeaderView = tempView;
+//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+//    tv.tableHeaderView = tempView;
     
     
     //发送栏

@@ -80,27 +80,58 @@
         
         [confirmBtn setTitle:@"去充值" forState:UIControlStateNormal];
     }else if(self.type == 3){
-        label1.text = @"确认支付";
+        label1.text = @"支付";
+        label1.textAlignment = NSTextAlignmentLeft;
+        
+        UILabel * label3 = [MyControl createLabelWithFrame:CGRectMake(label1.frame.origin.x, label1.frame.origin.y+40, 100, 20) Font:16 Text:@"兑换"];
+        label3.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
+        [bgView addSubview:label3];
+        
         selectImage.hidden = YES;
         selectLabel.hidden = YES;
         
         CGRect rect = goldImage.frame;
-        rect.origin.y -= 20;
+        rect.origin.y = label1.frame.origin.y-4;
         goldImage.frame = rect;
         
         CGRect rect2 = costLabel.frame;
-        rect2.origin.y -= 20;
+        rect2.origin.y = label1.frame.origin.y;
         costLabel.frame = rect2;
         
     
         goldImage.image = [UIImage imageNamed:@"exchange_orangeFood.png"];
+        
         costLabel.text = self.foodCost;
-        NSString * str = [NSString stringWithFormat:@"兑换%@?", self.productName];
+        NSString * str = [NSString stringWithFormat:@"%@", self.productName];
         label2.text = str;
         label2.font = [UIFont systemFontOfSize:15];
-        label2.textAlignment = NSTextAlignmentCenter;
-        CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(bgView.frame.size.width-20, 100) lineBreakMode:1];
-        label2.frame = CGRectMake(10, goldImage.frame.origin.y+goldImage.frame.size.height+10, size.width, size.height);
+        label2.textAlignment = NSTextAlignmentLeft;
+        CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(bgView.frame.size.width-130, 100) lineBreakMode:1];
+        label2.frame = CGRectMake(100, label3.frame.origin.y, bgView.frame.size.width-130, size.height);
+    }else if(self.type == 4){
+        //退出圈子
+//        @"亲爱的，真的忍心不捧了吗？", @"你舍得放弃陪伴你的TA么？", @"真的要这么无情么？"
+        label1.text = @"亲爱的，真的忍心不捧了吗？";
+        label2.text = @"你舍得放弃陪伴你的TA么？";
+        
+        CGRect rect = label1.frame;
+        rect.origin.y += 20;
+        label1.frame = rect;
+        
+        CGRect rect2 = label2.frame;
+        rect2.origin.y += 20;
+        label2.frame = rect2;
+        
+        goldImage.hidden = YES;
+        selectImage.hidden = YES;
+        selectBtn.hidden = YES;
+        selectLabel.hidden = YES;
+        costLabel.hidden = YES;
+        
+        UILabel * label3 = [MyControl createLabelWithFrame:CGRectMake(20, label2.frame.origin.y+label2.frame.size.height+5, bgView.frame.size.width-40, 20) Font:16 Text:@"真的要这么无情么？"];
+        label3.textAlignment = NSTextAlignmentCenter;
+        label3.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
+        [bgView addSubview:label3];
     }
 //    if ([[USER objectForKey:@"notShowCostAlert"] intValue]) {
 //        selectImage.hidden = YES;
@@ -127,6 +158,9 @@
     }else if(self.type == 3){
         //block确认兑换
         self.exchange();
+    }else if(self.type == 4){
+        //退出圈子
+        self.quit();
     }
     [self removeFromSuperview];
 }

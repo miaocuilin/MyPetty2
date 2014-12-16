@@ -34,7 +34,7 @@
     zanLabel.textAlignment = NSTextAlignmentRight;
     [zanBgView addSubview:zanLabel];
     
-    fish = [MyControl createImageViewWithFrame:CGRectMake(3, 0, 30, 20) ImageName:@"fish.png"];
+    fish = [MyControl createImageViewWithFrame:CGRectMake(3, 0, 30, 20) ImageName:@"zan_crown.png"];
     
     [zanBgView addSubview:fish];
     
@@ -73,12 +73,12 @@
     zanLabel.textColor = [UIColor whiteColor];
     
 //    NSLog(@"%@", model.type);
-    if ([type intValue]/100 == 1) {
-        isMi = YES;
-       fish.image = [UIImage imageNamed:@"fish.png"];
-    }else{
-        fish.image = [UIImage imageNamed:@"bone.png"];
-    }
+//    if ([type intValue]/100 == 1) {
+//        isMi = YES;
+       fish.image = [UIImage imageNamed:@"zan_crown.png"];
+//    }else{
+//        fish.image = [UIImage imageNamed:@".png"];
+//    }
     
     
     if (!([model.likers isKindOfClass:[NSNull class]] || model.likers.length == 0 || [[USER objectForKey:@"isSuccess"] intValue] ==0)) {
@@ -87,11 +87,11 @@
         for(NSString * str in self.likersArray){
             if ([str isEqualToString:[USER objectForKey:@"usr_id"]]) {
                 zanLabel.textColor = BGCOLOR;
-                if (isMi) {
-                    fish.image = [UIImage imageNamed:@"fish1.png"];
-                }else{
-                    fish.image = [UIImage imageNamed:@"bone1.png"];
-                }
+//                if (isMi) {
+                    fish.image = [UIImage imageNamed:@"zan_crown1.png"];
+//                }else{
+//                    fish.image = [UIImage imageNamed:@"bone1.png"];
+//                }
                 
             }
         }
@@ -127,12 +127,14 @@
                 if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                     btn.enabled = NO;
                     
+                    self.zanBlock();
+                    
                     [MobClick event:@"like"];
-                    if (isMi) {
-                        fish.image = [UIImage imageNamed:@"fish1.png"];
-                    }else{
-                        fish.image = [UIImage imageNamed:@"bone1.png"];
-                    }
+//                    if (isMi) {
+                        fish.image = [UIImage imageNamed:@"zan_crown1.png"];
+//                    }else{
+//                        fish.image = [UIImage imageNamed:@"bone1.png"];
+//                    }
                     
                     zanLabel.text = [NSString stringWithFormat:@"%d", [zanLabel.text intValue]+1];
                     zanLabel.textColor = BGCOLOR;

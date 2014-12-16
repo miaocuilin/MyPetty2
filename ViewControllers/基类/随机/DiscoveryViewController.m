@@ -14,13 +14,33 @@
 #import "PetSearchCell.h"
 #import "UserInfoViewController.h"
 #import "PetInfoViewController.h"
+#import "PopularityListViewController.h"
 
 @interface DiscoveryViewController ()
 
 @end
 
 @implementation DiscoveryViewController
-
+//-(void)viewWillAppear:(BOOL)animated
+//{
+//
+//}
+-(void)refresh
+{
+    if(sc.selectedSegmentIndex == 0){
+        if (isLoaded) {
+            [vc headerRefresh];
+        }
+    }else{
+        if (isListLoaded) {
+            [vc2 headerRefresh];
+        }
+    }
+}
+-(void)viewDidAppear:(BOOL)animated
+{
+    isLoaded = YES;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -47,8 +67,11 @@
     alphaView.backgroundColor = ORANGE;
     [navView addSubview:alphaView];
     
+    UIButton * listBtn = [MyControl createButtonWithFrame:CGRectMake(5, 28, 27, 27) ImageName:@"discover_list.png" Target:self Action:@selector(jumpRQ) Title:nil];
+    [navView addSubview:listBtn];
+    
     sc = [[UISegmentedControl alloc] initWithItems:@[@"最新萌照", @"萌星推荐"]];
-    sc.frame = CGRectMake(35, 28, self.view.frame.size.width-35*2, 28);
+    sc.frame = CGRectMake(40, 28, self.view.frame.size.width-40*2, 28);
     sc.layer.cornerRadius = 5;
     sc.layer.masksToBounds = YES;
     sc.backgroundColor = [UIColor whiteColor];
@@ -66,6 +89,12 @@
     searchBtn.showsTouchWhenHighlighted = YES;
     //    topBtn.backgroundColor = [UIColor greenColor];
     [navView addSubview:searchBtn];
+}
+-(void)jumpRQ
+{
+    PopularityListViewController * rq = [[PopularityListViewController alloc] init];
+    [self presentViewController:rq animated:YES completion:nil];
+    [rq release];
 }
 -(void)createScrollView
 {
@@ -209,7 +238,8 @@
 //    [self.view insertSubview:blurImageView belowSubview:navView];
 //    blurImageView.hidden = YES;
     
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-25) style:UITableViewStylePlain];
+    
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-35) style:UITableViewStylePlain];
     tv.dataSource = self;
     tv.delegate = self;
     tv.separatorStyle = 0;
@@ -223,8 +253,8 @@
         [self loadMorePets];
     }];
     
-    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, tv.frame.size.width, 35)];
-    tv.tableHeaderView = view;
+//    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, tv.frame.size.width, 35)];
+//    tv.tableHeaderView = view;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {

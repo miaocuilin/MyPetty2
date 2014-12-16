@@ -18,4 +18,6 @@
 @property(nonatomic,retain)NSMutableArray * dataArray;
 
 @property(nonatomic,retain)NSMutableArray * myCountryArray;
+
+-(void)headerRefresh;
 @end

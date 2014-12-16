@@ -33,6 +33,7 @@
 
 @property(nonatomic,retain)NSArray * itemsArray;
 @property(nonatomic,retain)NSMutableArray * dataArray;
+@property(nonatomic,retain)NSMutableArray * tempDataArray;
 @property(nonatomic,retain)NSMutableArray * userPetListArray;
 @property(nonatomic,retain)UserPetListModel * tempModel;
 @property(nonatomic,copy)NSString * tempAid;

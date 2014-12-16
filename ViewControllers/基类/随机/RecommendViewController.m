@@ -140,6 +140,10 @@
     [qtmquitView addHeaderWithTarget:self action:@selector(headerRereshing)];
     [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
 }
+//-(void)headerRefresh
+//{
+//    [qtmquitView headerBeginRefreshing];
+//}
 - (void)headerRereshing
 {
     [self loadData];

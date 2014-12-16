@@ -18,7 +18,13 @@
 @end
 
 @implementation AccountViewController
-
+-(void)viewDidAppear:(BOOL)animated
+{
+    if ([[USER objectForKey:@"AccountShouldDismiss"] intValue]) {
+        [USER setObject:@"0" forKey:@"AccountShouldDismiss"];
+        [self dismissViewControllerAnimated:NO completion:nil];
+    }
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -27,9 +33,9 @@
         isConfVersion = YES;
     }
     if(isConfVersion){
-        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"绑定微信", @"绑定微博", @"同步分享到微信", @"同步分享到微博"];
+        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"同步分享到微信", @"同步分享到微博"];
     }else{
-        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"填写邀请码", @"绑定微信", @"绑定微博", @"同步分享到微信", @"同步分享到微博"];
+        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"填写邀请码", @"同步分享到微信", @"同步分享到微博"];
     }
     
     [self createBg];
@@ -112,38 +118,38 @@
     cell.selectionStyle = 0;
     int a = 0;
     if (isConfVersion) {
-        a = 3+2;
+        a = 3;
     }else{
-        a = 4+2;
+        a = 4;
     }
     if (indexPath.row <= a) {
-        if (indexPath.row == a-1) {
-            //微信
-            if ([[USER objectForKey:@"wechat"] isKindOfClass:[NSString class]] && [[USER objectForKey:@"wechat"] length]) {
-                UILabel * label = [MyControl createLabelWithFrame:CGRectMake(self.view.frame.size.width-60, 10, 40, 20) Font:12 Text:@"已绑定"];
-                label.textColor = [UIColor blackColor];
-                cell.accessoryView = label;
-            }else{
-                UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-40, 10, 20, 20) ImageName:@"14-6-2.png"];
-                cell.accessoryView = arrow;
-            }
-        }else if(indexPath.row == a){
-            //微博
-
-//            NSLog(@"%@--%d--%d", [USER objectForKey:@"weibo"], [[USER objectForKey:@"weibo"] isKindOfClass:[NSString class]], [[USER objectForKey:@"weibo"] length]);
-            if ([[USER objectForKey:@"weibo"] isKindOfClass:[NSString class]] && [[USER objectForKey:@"weibo"] length]) {
-                UILabel * label = [MyControl createLabelWithFrame:CGRectMake(self.view.frame.size.width-60, 10, 40, 20) Font:12 Text:@"已绑定"];
-                label.textColor = [UIColor blackColor];
-                cell.accessoryView = label;
-            }else{
-                UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-40, 10, 20, 20) ImageName:@"14-6-2.png"];
-                cell.accessoryView = arrow;
-            }
-        }else{
+//        if (indexPath.row == a-1) {
+//            //微信
+//            if ([[USER objectForKey:@"wechat"] isKindOfClass:[NSString class]] && [[USER objectForKey:@"wechat"] length]) {
+//                UILabel * label = [MyControl createLabelWithFrame:CGRectMake(self.view.frame.size.width-60, 10, 40, 20) Font:12 Text:@"已绑定"];
+//                label.textColor = [UIColor blackColor];
+//                cell.accessoryView = label;
+//            }else{
+//                UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-40, 10, 20, 20) ImageName:@"14-6-2.png"];
+//                cell.accessoryView = arrow;
+//            }
+//        }else if(indexPath.row == a){
+//            //微博
+//
+////            NSLog(@"%@--%d--%d", [USER objectForKey:@"weibo"], [[USER objectForKey:@"weibo"] isKindOfClass:[NSString class]], [[USER objectForKey:@"weibo"] length]);
+//            if ([[USER objectForKey:@"weibo"] isKindOfClass:[NSString class]] && [[USER objectForKey:@"weibo"] length]) {
+//                UILabel * label = [MyControl createLabelWithFrame:CGRectMake(self.view.frame.size.width-60, 10, 40, 20) Font:12 Text:@"已绑定"];
+//                label.textColor = [UIColor blackColor];
+//                cell.accessoryView = label;
+//            }else{
+//                UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-40, 10, 20, 20) ImageName:@"14-6-2.png"];
+//                cell.accessoryView = arrow;
+//            }
+//        }else{
             //箭头
             UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-40, 10, 20, 20) ImageName:@"14-6-2.png"];
             cell.accessoryView = arrow;
-        }
+//        }
         
     }else{
         //switch
@@ -152,14 +158,14 @@
         swit.tag = 100+indexPath.row;
         [cell addSubview:swit];
         
-        if(indexPath.row == a+3){
+        if(indexPath.row == a+1){
             //同步分享微信
             if ([[USER objectForKey:@"weChat"] intValue]) {
                 swit.on = YES;
             }else{
                 swit.on = NO;
             }
-        }else if(indexPath.row == a+4){
+        }else if(indexPath.row == a+2){
             //同步分享微博
             if ([[USER objectForKey:@"sina"] intValue]) {
                 swit.on = YES;
@@ -186,13 +192,18 @@
     }else if (x == 1) {
         //切换账号
         NSLog(@"%d--%d", [[USER objectForKey:@"password"] isKindOfClass:[NSString class]], [[USER objectForKey:@"password"] length]);
-        if (![[USER objectForKey:@"password"] isKindOfClass:[NSString class]] || ![[USER objectForKey:@"password"] length]) {
+//        if (![[USER objectForKey:@"password"] isKindOfClass:[NSString class]] || ![[USER objectForKey:@"password"] length]) {
             Alert_HyperlinkView * hyper = [[Alert_HyperlinkView alloc] initWithFrame:[UIScreen mainScreen].bounds];
             hyper.type = 1;
+        
             [hyper makeUI];
             [self.view addSubview:hyper];
             hyper.jumpSetPwd = ^(){
                 SetPasswordViewController * set = [[SetPasswordViewController alloc] init];
+                NSLog(@"%@", [USER objectForKey:@"password"]);
+                if ([[USER objectForKey:@"password"] isKindOfClass:[NSString class]] && [[USER objectForKey:@"password"] length]) {
+                    set.isModify = YES;
+                }
                 [self presentViewController:set animated:YES completion:nil];
                 [set release];
             };
@@ -203,12 +214,12 @@
                 [vc release];
             };
             [hyper release];
-        }else{
-            LoginViewController * vc = [[LoginViewController alloc] init];
-            vc.isFromAccount = YES;
-            [self presentViewController:vc animated:YES completion:nil];
-            [vc release];
-        }
+//        }else{
+//            LoginViewController * vc = [[LoginViewController alloc] init];
+//            vc.isFromAccount = YES;
+//            [self presentViewController:vc animated:YES completion:nil];
+//            [vc release];
+//        }
         
     }else if (x == 2) {
         //收货地址
@@ -224,34 +235,35 @@
     }else if(x == 4){
         if (isConfVersion) {
             //微信绑定
-            if (![[USER objectForKey:@"wechat"] length]) {
-                [self bindWeChat];
-            };
+//            if (![[USER objectForKey:@"wechat"] length]) {
+//                [self bindWeChat];
+//            };
         }else{
             //填写邀请码
             [self loadMyPets];
         }
         
-    }else if(x == 5){
-        if (isConfVersion) {
-            //微博绑定
-            if (![[USER objectForKey:@"weibo"] length]) {
-                [self bindSina];
-            };
-        }else{
-            //微信绑定
-            if (![[USER objectForKey:@"wechat"] length]) {
-                [self bindWeChat];
-            };
-        }
-    }else if(x == 6){
-        if (!isConfVersion) {
-            //微博绑定
-            if (![[USER objectForKey:@"weibo"] length]) {
-                [self bindSina];
-            };
-        }
     }
+//    else if(x == 5){
+//        if (isConfVersion) {
+//            //微博绑定
+//            if (![[USER objectForKey:@"weibo"] length]) {
+//                [self bindSina];
+//            };
+//        }else{
+//            //微信绑定
+//            if (![[USER objectForKey:@"wechat"] length]) {
+//                [self bindWeChat];
+//            };
+//        }
+//    }else if(x == 6){
+//        if (!isConfVersion) {
+//            //微博绑定
+//            if (![[USER objectForKey:@"weibo"] length]) {
+//                [self bindSina];
+//            };
+//        }
+//    }
 }
 #pragma mark -
 #pragma mark -
@@ -450,10 +462,10 @@
 -(void)switchChange:(UISwitch *)swit
 {
     int a = swit.tag-100;
-    if (isConfVersion) {
-        a -= 1;
-    }
-    if (a == 6) {
+//    if (isConfVersion) {
+//        a -= 1;
+//    }
+    if (a == self.array.count-2) {
         //同步微信
         if (swit.on) {
             [USER setObject:@"1" forKey:@"weChat"];
@@ -461,7 +473,7 @@
             [USER setObject:@"0" forKey:@"weChat"];
         }
         
-    }else if (a == 7) {
+    }else if (a == self.array.count-1) {
         //同步微博
         if (swit.on) {
             [USER setObject:@"1" forKey:@"sina"];

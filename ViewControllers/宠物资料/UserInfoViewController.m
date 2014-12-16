@@ -75,7 +75,11 @@
         if (isFinish) {
             NSLog(@"用户信息数据：%@",load.dataDict);
            headerDict=  [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-            [USER setObject:[headerDict objectForKey:@"gold"] forKey:@"gold"];
+            
+            if ([self.usr_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                [USER setObject:[headerDict objectForKey:@"gold"] forKey:@"gold"];
+            }
+            
             
             if ([[headerDict objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
                 titleLabel.text = @"我的档案";
@@ -792,14 +796,14 @@
 
 -(void)createTableView1
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
     tv.backgroundColor = [UIColor clearColor];
     [sv addSubview:tv];
     
-    UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 264)];
+    UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
     tv.tableHeaderView = tvHeaderView;
 
     isCreated[0] = 1;
@@ -846,14 +850,14 @@
 -(void)createTableView2
 {
     //
-    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(320, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(320, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv2.delegate = self;
     tv2.dataSource = self;
     tv2.separatorStyle = 0;
     tv2.backgroundColor = [UIColor clearColor];
     [sv addSubview:tv2];
     
-    UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
+    UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 200)];
     tv2.tableHeaderView = tvHeaderView2;
     
     [self.view bringSubviewToFront:bgView];
@@ -864,14 +868,14 @@
 -(void)createTableView3
 {
     //
-    tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv3.delegate = self;
     tv3.dataSource = self;
     tv3.separatorStyle = 0;
     tv3.backgroundColor = [UIColor clearColor];
     [sv addSubview:tv3];
     
-    UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
+    UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 200)];
     tv3.tableHeaderView = tvHeaderView3;
     
     [self.view bringSubviewToFront:bgView];

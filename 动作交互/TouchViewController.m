@@ -322,21 +322,22 @@
 
 - (void)shareViewCreate
 {
-    if(!notHaveRecord){
-        UIView *playAndPauseView = [MyControl createViewWithFrame:CGRectMake(10, 10, 30, 30)];
-        playAndPauseView.layer.cornerRadius = 15;
-        playAndPauseView.layer.masksToBounds = YES;
-        playAndPauseView.backgroundColor = LIGHTORANGECOLOR;
-        [self.scratchCardView addSubview:playAndPauseView];
-        
-        playAndPauseImageView = [MyControl createImageViewWithFrame:CGRectMake(8, 8, 15, 15) ImageName:@"record_play.png"];
-        playAndPauseImageView.hidden = YES;
-        [playAndPauseView addSubview:playAndPauseImageView];
-        
-        playAndPauseButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 30, 30) ImageName:nil Target:self Action:@selector(playAction) Title:nil];
-        
-        [playAndPauseView addSubview:playAndPauseButton];
-    }
+//    if(!notHaveRecord){
+//        UIView *playAndPauseView = [MyControl createViewWithFrame:CGRectMake(10, 10, 30, 30)];
+//        playAndPauseView.layer.cornerRadius = 15;
+//        playAndPauseView.layer.masksToBounds = YES;
+//        
+//        playAndPauseView.backgroundColor = LIGHTORANGECOLOR;
+//        [self.scratchCardView addSubview:playAndPauseView];
+//        
+//        playAndPauseImageView = [MyControl createImageViewWithFrame:CGRectMake(8, 8, 15, 15) ImageName:@"record_play.png"];
+//        playAndPauseImageView.hidden = YES;
+//        [playAndPauseView addSubview:playAndPauseImageView];
+//        
+//        playAndPauseButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 30, 30) ImageName:nil Target:self Action:@selector(playAction) Title:nil];
+//        
+//        [playAndPauseView addSubview:playAndPauseButton];
+//    }
     
     UIView *shareView = [MyControl createViewWithFrame:CGRectMake(bodyView.frame.size.width/2-195/2.0, 250, 195, 50)];
     [bodyView addSubview:shareView];

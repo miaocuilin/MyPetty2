@@ -93,11 +93,11 @@
     [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:@"痒痒痒，快给本宫挠挠！" image:[UIImage imageNamed:@"oops.png"] location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
         if (response.responseCode == UMSResponseCodeSuccess) {
             NSLog(@"分享成功！");
-            StartLoading;
-            [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
+//            StartLoading;
+//            [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
         }else{
-            StartLoading;
-            [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享失败"];
         }
         
     }];

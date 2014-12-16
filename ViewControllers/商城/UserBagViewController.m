@@ -168,7 +168,7 @@
 #pragma mark - createUI
 -(void)createScrollView
 {
-    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
     //    sv.contentSize = CGSizeMake(320, 64+35+15+(30/3)*100);
     [self.view addSubview:sv];
     
@@ -176,19 +176,19 @@
     
     int index = self.goodsArray.count;
     if (index%2) {
-        sv.contentSize = CGSizeMake(self.view.frame.size.width, 64+15+(index/2+1)*160);
+        sv.contentSize = CGSizeMake(self.view.frame.size.width, 15+(index/2+1)*160);
     }else{
-        sv.contentSize = CGSizeMake(self.view.frame.size.width, 64+15+(index/2)*160);
+        sv.contentSize = CGSizeMake(self.view.frame.size.width, 15+(index/2)*160);
     }
 //    NSLog(@"index:%d",index);
     
     /***************************/
     for(int i=0; i<index; i+=2){
         //白色背景
-        UIImageView * giftBgImageView = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-500/2)/2.0, 64+(i/2)*160+10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
+        UIImageView * giftBgImageView = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-500/2)/2.0, (i/2)*160+10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
         [sv addSubview:giftBgImageView];
         
-        UIImageView * giftBgImageView2 = [MyControl createImageViewWithFrame:CGRectMake(giftBgImageView.frame.origin.x+274/2, 64+(i/2)*160+10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
+        UIImageView * giftBgImageView2 = [MyControl createImageViewWithFrame:CGRectMake(giftBgImageView.frame.origin.x+274/2, (i/2)*160+10, 222/2, 190/2) ImageName:@"giftAlert_giftBg.png"];
         [sv addSubview:giftBgImageView2];
         //        if ((i+2)%4 == 0) {
         //            giftBgImageView.frame = CGRectMake(25+i/4*300, 10+310/2, 222/2, 190/2);

@@ -81,6 +81,11 @@
 
 //抖动动画
 +(void)animateIncorrectPassword:(UIView *)view;
+
+//修正图片旋转
++ (UIImage *)fixOrientation:(UIImage *)aImage;
+
+
 @end
 
 

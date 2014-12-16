@@ -185,6 +185,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             [self.dataArray removeAllObjects];
+            [USER setObject:[NSString stringWithFormat:@"%d", array.count] forKey:@"countryNum"];
             
             for (NSDictionary * dict in array) {
                 MyStarModel * model = [[MyStarModel alloc] init];
@@ -214,7 +215,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }else{
             [self.tv headerEndRefreshing];
             if(![USER objectForKey:@"notAlertError"] && [[USER objectForKey:@"isSuccess"] intValue]){
-                LOADFAILED;
+                ENDLOADING;
                 NSLog(@"========myStar========");
             }else{
                 [USER setObject:@"0" forKey:@"notAlertError"];
@@ -395,7 +396,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         vc.dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
                         vc.name = model.name;
                         [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
-                        [vc release];
+//                        [vc release];
                     }
                     ENDLOADING;
                 }else{
@@ -609,8 +610,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 - (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
+    NSLog(@"%@", info);
     UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    
+//    NSLog(@"%d", image.imageOrientation);
+    image = [MyControl fixOrientation:image];
+//    NSLog(@"%d", image.imageOrientation);
 //    NSURL * assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
 //    
 //    void(^completion)(void)  = ^(void){

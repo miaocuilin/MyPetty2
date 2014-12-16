@@ -125,6 +125,7 @@
                     if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[load.dataDict objectForKey:@"data"] objectForKey:@"food"] isKindOfClass:[NSNumber class]] && [[[load.dataDict objectForKey:@"data"] objectForKey:@"food"] intValue] != [self.foodNum intValue]){
                         //兑换成功
                         self.foodNum = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"food"]];
+                        self.refreshFoodNum(self.foodNum);
                         Alert_HyperlinkView * one = [[Alert_HyperlinkView alloc] initWithFrame:[UIScreen mainScreen].bounds];
                         one.type = 2;
                         one.jumpAddress = ^(){

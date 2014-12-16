@@ -25,6 +25,8 @@
 #import "SendGiftViewController.h"
 #import "ModifyPetOrUserInfoViewController.h"
 #import "PetInfoModel.h"
+#import "Alert_2ButtonView2.h"
+#import "Alert_oneBtnView.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
@@ -146,13 +148,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - 关系API
 - (void)loadAttentionAPI
 {
-    StartLoading;
+    LOADING;
 //    animal/relationApi&aid=
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
     NSString *attentionString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",RELATIONAPI,self.aid,sig,[ControllerManager getSID]];
     NSLog(@"%@",attentionString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:attentionString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
+            
             [load.dataDict objectForKey:@"data"];
             isFans = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_fan"] intValue];
             isFollow = [[[load.dataDict objectForKey:@"data"] objectForKey:@"is_follow"] intValue];
@@ -163,7 +166,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 super.label1.text =@"捣捣乱";
                 [self.btn1 setBackgroundImage:[UIImage imageNamed:@"rock2.png"] forState:UIControlStateNormal];
             }
-            LoadingSuccess;
+            ENDLOADING;
         }
     }];
     [request release];
@@ -847,7 +850,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [self cancelBtnClick];
         return;
     }
-    AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    Alert_oneBtnView * oneBtn = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     if (!button.selected) {
 //        [self createJoinCountryAlertView];
 //        StartLoading;
@@ -864,15 +867,16 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
                         return;
                     }
-                    view.AlertType = 3;
-                    view.CountryNum = array.count+1;
-                    [view makeUI];
+                    oneBtn.type = 2;
+                    oneBtn.petsNum = array.count+1;
+                    [oneBtn makeUI];
                 }else{
-                    view.AlertType = 2;
-                    [view makeUI];
+                    oneBtn.type = 2;
+                    oneBtn.petsNum = array.count+1;
+                    [oneBtn makeUI];
                     
                 }
-                view.jump = ^(){
+                oneBtn.jump = ^(){
 //                    [MyControl startLoadingWithStatus:@"加入中..."];
                     LOADING;
                     NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
@@ -917,18 +921,27 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [request release];
         //
         
-        [self.view addSubview:view];
-        [view release];
+        [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+        [oneBtn release];
     }else{
 //        [self createExitCountryAlertView];
-        view.AlertType = 5;
-        [view makeUI];
-        view.jump = ^(){
+        Alert_2ButtonView2 * buttonView2 = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        buttonView2.type = 4;
+        [buttonView2 makeUI];
+        buttonView2.quit = ^(){
+            NSLog(@"quit");
             [self loadMyCountryInfoData:button];
         };
+        [[UIApplication sharedApplication].keyWindow addSubview:buttonView2];
+        [buttonView2 release];
+//        view.AlertType = 5;
+//        [view makeUI];
+//        view.jump = ^(){
+//            [self loadMyCountryInfoData:button];
+//        };
     }
-    [self.view addSubview:view];
-    [view release];
+//    [self.view addSubview:view];
+//    [view release];
 }
 -(void)attentionBtnClick:(UIButton *)button
 {
@@ -1060,13 +1073,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)loadMyCountryInfoData:(UIButton *)btn
 {
-    StartLoading;
+    LOADING;
     //    user/petsApi&usr_id=(若用户为自己则留空不填)
     NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
+            ENDLOADING;
             //            NSLog(@"%@", load.dataDict);
 //            [self.userPetListArray removeAllObjects];
             NSArray * array = [load.dataDict objectForKey:@"data"];
@@ -1104,6 +1118,38 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 NSLog(@"需要切换到默认aid：%@", [tempArray[Index] aid]);
                 [self changeDefaultPetAid:[tempArray[Index] aid] MasterId:[tempArray[Index] master_id] Btn:btn];
                 return;
+            }else{
+                NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aid];
+                NSString * sig = [MyMD5 md5:code];
+                NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", EXITFAMILYAPI, self.aid, sig, [ControllerManager getSID]];
+                NSLog(@"quitApiurl:%@", url);
+                //                [MyControl startLoadingWithStatus:@"退出中..."];
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+                            ENDLOADING;
+                            btn.selected = NO;
+                            //                            [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
+                            //                            [self.userPetListArray removeObjectAtIndex:cellIndexPath.row];
+                            //                            [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
+                            //                            if (Index) {
+                            //                                [self changeDefaultPetAid:[self.userPetListArray[Index] aid] MasterId:[self.userPetListArray[Index] master_id]];
+                            //                            }else{
+                            //                            [tv reloadData];
+                            //                            }
+                            
+                        }else{
+                            ENDLOADING;
+                            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"退出失败"];
+                            //                            [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
+                        }
+                    }else{
+                        ENDLOADING;
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"退出失败"];
+                        //                        [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
+                    }
+                }];
+                [request release];
             }
             
             
@@ -1140,7 +1186,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            }
 
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -1148,8 +1194,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -
 -(void)changeDefaultPetAid:(NSString *)aid MasterId:(NSString *)master_id Btn:(UIButton *)btn
 {
-    
-    [MyControl startLoadingWithStatus:@"切换中..."];
+    LOADING;
+//    [MyControl startLoadingWithStatus:@"切换中..."];
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
     NSString * url =[NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", CHANGEDEFAULTPETAPI, aid, sig, [ControllerManager getSID]];
     //    NSLog(@"%@", url);
@@ -1165,14 +1211,16 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 NSString * sig2 = [MyMD5 md5:code];
                 NSString * url2 = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", EXITFAMILYAPI, [USER objectForKey:@"aid"], sig2, [ControllerManager getSID]];
                 NSLog(@"quitApiurl:%@", url2);
-                [MyControl startLoadingWithStatus:@"退出中..."];
+//                [MyControl startLoadingWithStatus:@"退出中..."];
                 [USER setObject:aid forKey:@"aid"];
                 [USER setObject:master_id forKey:@"master_id"];
                 NSLog(@"%@--%@--%@", [USER objectForKey:@"aid"], [USER objectForKey:@"master_id"], [USER objectForKey:@"usr_id"]);
                 httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url2 Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
+                        ENDLOADING;
                         if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-                            [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
+                            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"退出成功"];
+//                            [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
                             btn.selected = NO;
                             //                            [self.userPetListArray removeObjectAtIndex:quitIndex];
                             //                                [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
@@ -1185,21 +1233,21 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                             //                            }
                             
                         }else{
-                            [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
+                            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"退出失败"];
                         }
                     }else{
-                        [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"退出失败"];
                     }
                 }];
                 [request2 release];
                 
                 
             }else{
-                [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"切换失败"];
             }
             
         }else{
-            [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"切换失败"];
         }
     }];
     [request release];
@@ -1581,7 +1629,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 - (void)createNewsTableView
 {
     //动态
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
@@ -1591,14 +1639,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [self loadMoreKingDynamicData];
     }];
     
-    UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
+    UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 200)];
     tv.tableHeaderView = tvHeaderView;
 
 }
 - (void)createPhotosTableView
 {
     //图片
-    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(320, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(320, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv2.delegate = self;
     tv2.dataSource = self;
     tv2.separatorStyle = 0;
@@ -1606,14 +1654,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [tv2 addFooterWithTarget:self action:@selector(loadPhotoDataMore)];
     [sv addSubview:tv2];
     
-    UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
+    UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 200)];
     tv2.tableHeaderView = tvHeaderView2;
 
 }
 - (void)createCountryMembersTableView
 {
     //成员
-    tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv3.delegate = self;
     tv3.dataSource = self;
     tv3.separatorStyle = 0;
@@ -1621,20 +1669,20 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [tv3 addFooterWithTarget:self action:@selector(loadKingMembersDataMore)];
     [sv addSubview:tv3];
     
-    UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
+    UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 200)];
     tv3.tableHeaderView = tvHeaderView3;
 }
 - (void)createPresentsTableView
 {
     //礼物
-    tv4 = [[UITableView alloc] initWithFrame:CGRectMake(320*3, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv4 = [[UITableView alloc] initWithFrame:CGRectMake(320*3, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv4.delegate = self;
     tv4.dataSource = self;
     tv4.separatorStyle = 0;
     tv4.backgroundColor = [UIColor clearColor];
     [sv addSubview:tv4];
     
-    UIView * tvHeaderView4 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 264)];
+    UIView * tvHeaderView4 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 200)];
     tv4.tableHeaderView = tvHeaderView4;
 
 }
@@ -1863,6 +1911,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 }
             }
         }
+        PhotoModel * model = self.photosDataArray[indexPath.row];
+        cell.zanBlock = ^(){
+            if ([model.likers isKindOfClass:[NSString class]]) {
+                model.likers = [NSString stringWithFormat:@"%@,%@", model.likers, [USER objectForKey:@"usr_id"]];
+            }else{
+                model.likers = [USER objectForKey:@"usr_id"];
+            }
+            model.likes = [NSString stringWithFormat:@"%d", [model.likes intValue]+1];
+        };
         
         return cell;
     }else if (tableView == tv3) {
@@ -2102,6 +2159,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 - (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    image = [MyControl fixOrientation:image];
     
     [self dismissViewControllerAnimated:NO completion:^{
         //Publish

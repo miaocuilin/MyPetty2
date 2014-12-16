@@ -86,12 +86,12 @@
     [self.bgImageView addSubview:self.confirmBtn];
     
     //
-    UIImageView * roundBg = [MyControl createImageViewWithFrame:CGRectMake(18, 356, 53, 53) ImageName:@"head_cricle1.png"];
+    UIImageView * roundBg = [MyControl createImageViewWithFrame:CGRectMake(9, 352, 60, 60) ImageName:@"head_cricle1.png"];
     [self.bgImageView addSubview:roundBg];
     
     //
-    self.headImage = [MyControl createImageViewWithFrame:CGRectMake(3.5, 3.5, 46, 46) ImageName:@"defaultPetHead.png"];
-    self.headImage.layer.cornerRadius = 23;
+    self.headImage = [MyControl createImageViewWithFrame:CGRectMake(3.5, 3.5, 54, 54) ImageName:@"defaultPetHead.png"];
+    self.headImage.layer.cornerRadius = 27;
     self.headImage.layer.masksToBounds = YES;
     [roundBg addSubview:self.headImage];
     

@@ -110,17 +110,17 @@
 #pragma mark -
 -(void)createTabelView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
     tv.backgroundColor = [UIColor clearColor];
     tv.separatorStyle = 0;
     [self.view addSubview:tv];
     
-    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    tv.tableHeaderView = view;
+//    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+//    tv.tableHeaderView = view;
 }
-#pragma mark - 
+#pragma mark -
 #pragma mark - tableView代理
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {

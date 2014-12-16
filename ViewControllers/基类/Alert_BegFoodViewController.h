@@ -12,6 +12,7 @@
 {
     UILabel * deadLine;
     UIView * bgView;
+    UIImageView * bigImage;
 }
 @property(nonatomic,retain)NSDictionary * dict;
 @property(nonatomic,copy)NSString * name;

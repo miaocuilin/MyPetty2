@@ -29,6 +29,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
+    self.tempDataArray = [NSMutableArray arrayWithCapacity:0];
     self.userPetListArray = [NSMutableArray arrayWithCapacity:0];
     
     self.tempAid = [USER objectForKey:@"aid"];
@@ -109,11 +110,12 @@
             ExchangeItemModel * model = [[ExchangeItemModel alloc] init];
             [model setValuesForKeysWithDictionary:[load.dataDict objectForKey:@"data"]];
             model.des = [[load.dataDict objectForKey:@"data"] objectForKey:@"description"];
-            [self.dataArray addObject:model];
+            [self.tempDataArray addObject:model];
             [model release];
             
             
             if (index == self.itemsArray.count-1) {
+                self.dataArray = [NSMutableArray arrayWithArray:self.tempDataArray];
                 [collection reloadData];
 //                [self createCollectionView];
                 ENDLOADING;
@@ -292,7 +294,7 @@
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
 //    NSLog(@"%d", self.dataArray.count);
-    return self.dataArray.count;
+    return self.dataArray.count+2;
 }
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -308,7 +310,7 @@
             [self exchangeBtnClick:indexPath.row];
         };
     }
-
+    
     cell.layer.cornerRadius = 3;
     cell.layer.masksToBounds = YES;
     cell.backgroundColor = [UIColor whiteColor];
@@ -332,6 +334,9 @@
         AddressViewController * vc = [[AddressViewController alloc] init];
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
+    };
+    detail.refreshFoodNum = ^(NSString * num){
+        foodNum.text = num;
     };
     [detail makeUI];
     [self.view addSubview:detail];
@@ -424,6 +429,27 @@
 -(void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
 {
     NSLog(@"%d--%@", Line, Words);
+    if (Line == 0) {
+        self.dataArray = [NSMutableArray arrayWithArray:self.tempDataArray];
+        [collection reloadData];
+    }else if(Line == 1){
+        [self.dataArray removeAllObjects];
+        for (int i=0; i<self.tempDataArray.count; i++) {
+            if ([[self.tempDataArray[i] item_id] intValue]/1000 == 1) {
+                [self.dataArray addObject:self.tempDataArray[i]];
+            }
+        }
+        [collection reloadData];
+    }else if(Line == 2){
+        [self.dataArray removeAllObjects];
+        for (int i=0; i<self.tempDataArray.count; i++) {
+            if ([[self.tempDataArray[i] item_id] intValue]/1000 == 2) {
+                [self.dataArray addObject:self.tempDataArray[i]];
+            }
+        }
+        [collection reloadData];
+    }
+    
 }
 -(void)rel
 {

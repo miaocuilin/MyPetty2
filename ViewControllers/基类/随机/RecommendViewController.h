@@ -23,4 +23,6 @@
 @property(nonatomic,retain)NSMutableArray * dataArray;
 
 @property(nonatomic,copy)NSString * lastImg_id;
+
+//-(void)headerRefresh;
 @end

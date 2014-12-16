@@ -765,7 +765,7 @@
 
 - (void)createTableView
 {
-    messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
+    messageTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64) style:UITableViewStylePlain];
     [self.view addSubview:messageTableView];
     messageTableView.delegate = self;
     messageTableView.dataSource = self;
@@ -774,7 +774,7 @@
 //    [messageTableView addFooterWithTarget:self action:@selector(loadMoreMessageData)];
     [messageTableView release];
     messageTableView.backgroundColor = [UIColor clearColor];
-    messageTableView.tableHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 64)];
+//    messageTableView.tableHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 64)];
     
     
 //    systemTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];

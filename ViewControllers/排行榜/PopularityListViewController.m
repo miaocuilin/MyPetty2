@@ -683,8 +683,8 @@
     [self.view addSubview:headerView];
     
     UIView * headerBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 35)];
-    headerBgView.backgroundColor = BGCOLOR;
-    headerBgView.alpha = 0.85;
+    headerBgView.backgroundColor = ORANGE;
+    headerBgView.alpha = 0.2;
     [headerView addSubview:headerBgView];
     
     raceBtn = [MyControl createButtonWithFrame:CGRectMake(15, 5, 115-20, 25) ImageName:@"" Target:self Action:@selector(raceBtnClick) Title:@"所有"];

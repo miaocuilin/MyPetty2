@@ -53,19 +53,19 @@
 }
 -(void)createBg
 {
-    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
+    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"blurBg.png"];
     [self.view addSubview:bgImageView];
     //    self.bgImageView.backgroundColor = [UIColor redColor];
 //    NSString * docDir = DOCDIR;
-    NSString * filePath = BLURBG;
-    NSLog(@"%@", filePath);
-    NSData * data = [NSData dataWithContentsOfFile:filePath];
-    //    NSLog(@"%@", data);
-    UIImage * image = [UIImage imageWithData:data];
-    bgImageView.image = image;
+//    NSString * filePath = BLURBG;
+//    NSLog(@"%@", filePath);
+//    NSData * data = [NSData dataWithContentsOfFile:filePath];
+//    //    NSLog(@"%@", data);
+//    UIImage * image = [UIImage imageWithData:data];
+//    bgImageView.image = image;
     
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64)];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
     [self.view addSubview:tempView];
 }
 #pragma mark - 加载用户数据
@@ -91,7 +91,7 @@
 //参数name不需要加密
 - (void)loadSearchData:(NSString *)name
 {
-    StartLoading;
+    LOADING;
     
     NSString *searchSig = [MyMD5 md5:[NSString stringWithFormat:@"dog&cat"]];
     NSString *searchString = [NSString stringWithFormat:@"%@&name=%@&sig=%@&SID=%@", SEARCHAPI, [name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], searchSig,[ControllerManager getSID]];
@@ -109,9 +109,9 @@
             }
             [self removeUserPets];
             [tv reloadData];
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -376,14 +376,14 @@
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
         
         //给出加入提示
-        AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        Alert_oneBtnView * view = [[Alert_oneBtnView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
         int a = [[USER objectForKey:@"countryNum"] intValue];
-        if(a>=10){
-            view.AlertType = 3;
-            view.CountryNum = a+1;
-        }else{
-            view.AlertType = 2;
-        }
+//        if(a>=10){
+            view.type = 2;
+            view.petsNum = a+1;
+//        }else{
+//            view.AlertType = 2;
+//        }
         [view makeUI];
         view.jump = ^(){
 //            [MyControl startLoadingWithStatus:@"加入中..."];

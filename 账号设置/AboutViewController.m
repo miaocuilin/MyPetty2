@@ -82,8 +82,9 @@
 
 -(void)createUI
 {
-    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64)];
     sv.contentSize = CGSizeMake(320, 568);
+    sv.showsVerticalScrollIndicator = NO;
     [self.view addSubview:sv];
     
     UIImageView * logo = [MyControl createImageViewWithFrame:CGRectMake(118, 89, 85, 85) ImageName:@"about.png"];

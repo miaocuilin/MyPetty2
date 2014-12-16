@@ -284,7 +284,7 @@
 {
     isTvCreated = YES;
     
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64+35, 320, self.view.frame.size.height) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
     tv.backgroundColor = [UIColor clearColor];
@@ -296,8 +296,8 @@
     [self.view bringSubviewToFront:navView];
     [self.view bringSubviewToFront:headerView];
     
-    UIView * tempView1 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64+35)];
-    tv.tableHeaderView = tempView1;
+//    UIView * tempView1 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64+35)];
+//    tv.tableHeaderView = tempView1;
     
     insertView = [[MyControl createViewWithFrame:CGRectMake(0, 0, 320, 100)] retain];
     insertView.backgroundColor = [UIColor colorWithRed:243/255.0 green:198/255.0 blue:164/255.0 alpha:1];
@@ -497,14 +497,14 @@
     if ([ControllerManager getIsSuccess]) {
         
         //给出加入提示
-        AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        Alert_oneBtnView * view = [[Alert_oneBtnView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
         int a = [[USER objectForKey:@"countryNum"] intValue];
-        if(a>=10){
-            view.AlertType = 3;
-            view.CountryNum = a+1;
-        }else{
-            view.AlertType = 2;
-        }
+//        if(a>=10){
+            view.type = 2;
+            view.petsNum = a+1;
+//        }else{
+//            view.AlertType = 2;
+//        }
         
         [view makeUI];
         view.jump = ^(){

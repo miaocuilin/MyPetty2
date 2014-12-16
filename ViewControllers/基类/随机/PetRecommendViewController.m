@@ -13,6 +13,7 @@
 #import "PetInfoViewController.h"
 #import "UserInfoViewController.h"
 #import "UserPetListModel.h"
+#import "Alert_2ButtonView2.h"
 @implementation PetRecommendViewController
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -72,6 +73,10 @@
         }
     }];
     [request release];
+}
+-(void)headerRefresh
+{
+    [self.tv headerBeginRefreshing];
 }
 -(void)createBg
 {
@@ -139,8 +144,9 @@
             return;
         }
         
-        AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-        [[UIApplication sharedApplication].keyWindow addSubview:view];
+//        AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        Alert_oneBtnView * oneBtn = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        
         if (a == 0) {
             NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
             NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
@@ -154,14 +160,23 @@
                             [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
                             return;
                         }
-                        view.AlertType = 3;
-                        view.CountryNum = array.count+1;
-                        [view makeUI];
+//                        oneBtn.type = 1;
+//                        view.CountryNum = array.count+1;
+//                        [oneBtn makeUI];
+//                        [oneBtn release];
+                        oneBtn.type = 2;
+                        oneBtn.petsNum = array.count+1;
+                        [oneBtn makeUI];
                     }else{
-                        view.AlertType = 2;
-                        [view makeUI];
+                        oneBtn.type = 2;
+                        oneBtn.petsNum = array.count+1;
+                        [oneBtn makeUI];
+//                        [self.view addSubview:oneBtn];
+//                        [oneBtn release];
+//                        view.AlertType = 2;
+//                        [view makeUI];
                     }
-                    view.jump = ^(){
+                    oneBtn.jump = ^(){
 //                        [MyControl startLoadingWithStatus:@"加入中..."];
                         LOADING;
                         NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",aid]];
@@ -203,15 +218,24 @@
             [request release];
             //
             
-            [self.view addSubview:view];
-            [view release];
+            [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+            [oneBtn release];
         }else{
-            view.AlertType = 5;
-            [view makeUI];
-            view.jump = ^(){
+            Alert_2ButtonView2 * buttonView2 = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
+            buttonView2.type = 4;
+            [buttonView2 makeUI];
+            buttonView2.quit = ^(){
+                NSLog(@"quit");
                 [self loadMyCountryInfoData:aid btn:cell.pBtn Row:indexPath.row];
-//                cell.pBtn.selected = NO;
             };
+            [[UIApplication sharedApplication].keyWindow addSubview:buttonView2];
+            [buttonView2 release];
+//            view.AlertType = 5;
+//            [view makeUI];
+//            view.jump = ^(){
+//                [self loadMyCountryInfoData:aid btn:cell.pBtn Row:indexPath.row];
+//                cell.pBtn.selected = NO;
+//            };
         }
     };
     cell.imageClick = ^(int a){
@@ -233,7 +257,7 @@
 }
 -(void)loadMyCountryInfoData:(NSString *)aid btn:(UIButton *)btn Row:(int)row
 {
-    StartLoading;
+    LOADING;
     //    user/petsApi&usr_id=(若用户为自己则留空不填)
     NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
@@ -254,6 +278,7 @@
             if ([[USER objectForKey:@"usr_id"] isEqualToString:[self.dataArray[row] master_id]]) {
                 //                StartLoading;
                 //                [MMProgressHUD dismissWithError:@"不能不捧最爱萌星" afterDelay:1];
+                ENDLOADING;
                 [MyControl popAlertWithView:self.view Msg:@"不能不捧自己创建的萌星"];
                 return;
 //                PopupView * pop = [[PopupView alloc] init];
@@ -275,6 +300,7 @@
             if (self.myCountryArray.count == 1) {
                 //                StartLoading;
                 //                [MyControl loadingFailedWithContent:@"您仅有1个，不能退出" afterDelay:1];
+                ENDLOADING;
                 [MyControl popAlertWithView:self.view Msg:@"就剩一个啦~不能不捧啊~"];
 //                PopupView * pop = [[PopupView alloc] init];
 //                [pop modifyUIWithSize:self.view.frame.size msg:@"就剩一个啦~不能不捧啊~"];
@@ -311,8 +337,44 @@
                 NSLog(@"需要切换到默认aid：%@", [tempArray[Index] aid]);
                 //                if (Index) {
                 [self changeDefaultPetAid:[tempArray[Index] aid] MasterId:[tempArray[Index] master_id] Btn:btn];
+                ENDLOADING;
                 return;
-            }
+            }else{
+                NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [self.dataArray[row] aid]];
+                NSString * sig = [MyMD5 md5:code];
+                NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", EXITFAMILYAPI, [self.dataArray[row] aid], sig, [ControllerManager getSID]];
+                NSLog(@"quitApiurl:%@", url);
+//                [MyControl startLoadingWithStatus:@"退出中..."];
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
+                            ENDLOADING;
+                            btn.selected = NO;
+//                            [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
+//                            [self.userPetListArray removeObjectAtIndex:cellIndexPath.row];
+//                            [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
+                            //                            if (Index) {
+                            //                                [self changeDefaultPetAid:[self.userPetListArray[Index] aid] MasterId:[self.userPetListArray[Index] master_id]];
+                            //                            }else{
+//                            [tv reloadData];
+                            //                            }
+                            
+                        }else{
+                            ENDLOADING;
+                            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"退出失败"];
+//                            [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
+                        }
+                    }else{
+                        ENDLOADING;
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"退出失败"];
+//                        [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
+                    }
+                }];
+                [request release];
+            };
+//            [self.view addSubview:view];
+//            [view release];
+//            }
             
             
             
@@ -347,7 +409,7 @@
 //            }
             
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -356,7 +418,8 @@
 -(void)changeDefaultPetAid:(NSString *)aid MasterId:(NSString *)master_id Btn:(UIButton *)btn
 {
     
-    [MyControl startLoadingWithStatus:@"切换中..."];
+//    [MyControl startLoadingWithStatus:@"切换中..."];
+    LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
     NSString * url =[NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", CHANGEDEFAULTPETAPI, aid, sig, [ControllerManager getSID]];
     //    NSLog(@"%@", url);
@@ -366,20 +429,20 @@
             if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                 NSLog(@"%@", aid);
                 
-                
                 //退出圈子
                 NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]];
                 NSString * sig2 = [MyMD5 md5:code];
                 NSString * url2 = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", EXITFAMILYAPI, [USER objectForKey:@"aid"], sig2, [ControllerManager getSID]];
                 NSLog(@"quitApiurl:%@", url2);
-                [MyControl startLoadingWithStatus:@"退出中..."];
+//                [MyControl startLoadingWithStatus:@"退出中..."];
                 [USER setObject:aid forKey:@"aid"];
                 [USER setObject:master_id forKey:@"master_id"];
                 NSLog(@"%@--%@--%@", [USER objectForKey:@"aid"], [USER objectForKey:@"master_id"], [USER objectForKey:@"usr_id"]);
                 httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url2 Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
                         if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-                            [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
+                            ENDLOADING;
+//                            [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
                             btn.selected = NO;
 //                            [self.userPetListArray removeObjectAtIndex:quitIndex];
                             //                                [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
@@ -392,21 +455,26 @@
                             //                            }
                             
                         }else{
-                            [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
+                            ENDLOADING;
+                            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"退出失败"];
+//                            [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
                         }
                     }else{
-                        [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
+                        ENDLOADING;
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"退出失败"];
                     }
                 }];
                 [request2 release];
                 
                 
             }else{
-                [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+                LOADFAILED;
+//                [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
             }
             
         }else{
-            [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+            LOADFAILED;
+//            [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
         }
     }];
     [request release];

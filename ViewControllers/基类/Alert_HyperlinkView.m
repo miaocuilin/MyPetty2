@@ -57,9 +57,12 @@
     
     
     if(self.type == 1){
-        label1.text = @"您尚未设置登录密码";
+        label1.text = @"若您尚未设置登录密码，成功切换账号的话，当前账号会丢失哦~";
+        CGRect rect = label1.frame;
+        rect.size.height = 50;
+        label1.frame = rect;
 //        label1.font = [UIFont systemFontOfSize:15];
-        label2.text = @"成功切换账号的话，当前账号会丢失哦~";
+//        label2.text = @"成功切换账号的话，当前账号会丢失哦~";
 //        label2.font = [UIFont systemFontOfSize:12];
         [hyper setTitle:@"设置密码" forState:UIControlStateNormal];
     }else if(self.type == 2){
@@ -83,6 +86,10 @@
     
     UIButton * confirmBtn = [MyControl createButtonWithFrame:CGRectMake((bgView.frame.size.width-276/2)/2.0, 346/2, 276/2, 93/2.0) ImageName:@"various_orangeBtn.png" Target:self Action:@selector(confirmClick) Title:@"知道啦"];
     [bgView addSubview:confirmBtn];
+    if(self.type == 1){
+        [confirmBtn setTitle:@"继续切换" forState:UIControlStateNormal];
+    }
+    
 }
 -(void)closeBtnClick
 {

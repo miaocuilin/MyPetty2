@@ -18,5 +18,6 @@
 @property(nonatomic,copy)NSString * foodNum;
 
 @property(nonatomic,copy)void (^jumpAddress)();
+@property(nonatomic,copy)void (^refreshFoodNum)(NSString *);
 -(void)makeUI;
 @end

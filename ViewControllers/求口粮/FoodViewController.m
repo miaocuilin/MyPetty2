@@ -199,11 +199,49 @@
     selectBtn.titleLabel.font = [UIFont boldSystemFontOfSize:20];
     [rewardBg addSubview:selectBtn];
     
-    UIButton * rewardBtn = [MyControl createButtonWithFrame:CGRectMake(rewardBg.frame.size.width/2.0, 0, rewardBg.frame.size.width/2.0, rewardBg.frame.size.height) ImageName:@"" Target:self Action:@selector(rewardBtnClick:) Title:@"赏"];
-    rewardBtn.titleLabel.font = [UIFont boldSystemFontOfSize:20];
-    [rewardBg addSubview:rewardBtn];
+//    UIButton * rewardBtn = [MyControl createButtonWithFrame:CGRectMake(rewardBg.frame.size.width/2.0, 0, rewardBg.frame.size.width/2.0, rewardBg.frame.size.height) ImageName:@"" Target:self Action:@selector(rewardBtnClick:) Title:@""];
+//    rewardBtn.titleLabel.font = [UIFont boldSystemFontOfSize:20];
+//    [rewardBg addSubview:rewardBtn];
+    
+    heartBtn = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2) ImageName:@"food_heart.png" Target:self Action:@selector(rewardBtnClick:) Title:nil];
+    [heartBtn addTarget:self action:@selector(heartTouchDown) forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:heartBtn];
+    timer2 = [NSTimer scheduledTimerWithTimeInterval:2.4 target:self selector:@selector(heartAnimation) userInfo:nil repeats:YES];
 }
-#pragma mark - 
+-(void)heartTouchDown
+{
+    [timer2 invalidate];
+    timer2 = nil;
+    [UIView animateWithDuration:0.2 animations:^{
+        CGRect rect = heartBtn.frame;
+        rect.origin.x -= 7;
+        rect.origin.y -= 7;
+        rect.size.width += 14;
+        rect.size.height += 14;
+        heartBtn.frame = rect;
+    }];
+}
+-(void)heartAnimation
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        CGRect rect = heartBtn.frame;
+        rect.origin.x -= 7;
+        rect.origin.y -= 7;
+        rect.size.width += 14;
+        rect.size.height += 14;
+        heartBtn.frame = rect;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.2 animations:^{
+            heartBtn.frame = CGRectMake(self.view.frame.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2);
+        }];
+    }];
+}
+//-(void)heartClick:(UIButton *)btn
+//{
+//    NSLog(@"click");
+//    
+//}
+#pragma mark -
 -(void)createTableView
 {
 //    -25, 70+25, rewardBg.frame.origin.y-70-10, self.view.frame.size.width
@@ -328,6 +366,11 @@
 }
 -(void)rewardBtnClick:(UIButton *)btn
 {
+    [UIView animateWithDuration:0.2 animations:^{
+        heartBtn.frame = CGRectMake(self.view.frame.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2);
+    } completion:^(BOOL finished) {
+        timer2 = [NSTimer scheduledTimerWithTimeInterval:2.4 target:self selector:@selector(heartAnimation) userInfo:nil repeats:YES];
+    }];
     if (![[USER objectForKey:@"isSuccess"] intValue]) {
         ShowAlertView;
         return;

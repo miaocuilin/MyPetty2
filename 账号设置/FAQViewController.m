@@ -86,25 +86,25 @@
 }
 -(void)createTableView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
     tv.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tv];
     
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    tv.tableHeaderView = tempView;
+//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+//    tv.tableHeaderView = tempView;
     
-    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv2.delegate = self;
     tv2.dataSource = self;
     tv2.separatorStyle = 0;
     tv2.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tv2];
     
-    UIView * tempView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    tv2.tableHeaderView = tempView2;
+//    UIView * tempView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+//    tv2.tableHeaderView = tempView2;
     //
     tv2.hidden = YES;
 }

@@ -24,16 +24,26 @@
     self.alpha = 0;
 
     UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-    alphaView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
+    alphaView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
     [self addSubview:alphaView];
     //577  678
-    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake((self.frame.size.width-577/2.0)/2.0, (self.frame.size.height-678/2)/2.0, 577/2.0, 678/2) ImageName:@"alertBg_noClose.png"];
+    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake((self.frame.size.width-577/2.0)/2.0, (self.frame.size.height-678/2)/2.0, 577/2.0, 678/2) ImageName:@""];
     [self addSubview:self.bgImageView];
     
+    UIView * alphaView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.bgImageView.frame.size.width, self.bgImageView.frame.size.height)];
+    alphaView2.backgroundColor = [UIColor colorWithWhite:1 alpha:0.8];
+    alphaView2.layer.cornerRadius = 10;
+    alphaView2.layer.masksToBounds = YES;
+    [self.bgImageView addSubview:alphaView2];
+    
     //title
-    self.titleLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 577/2.0, 37) Font:17 Text:@"成功捧TA"];
+    self.titleLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, 577/2.0, 37) Font:15 Text:@"成功捧TA"];
+    self.titleLabel.textColor = [UIColor blackColor];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.bgImageView addSubview:self.titleLabel];
+    
+    UIButton * closeBtn = [MyControl createButtonWithFrame:CGRectMake(self.bgImageView.frame.size.width-36, 0, 36, 36) ImageName:@"various_close.png" Target:self Action:@selector(confirmClick) Title:nil];
+    [self.bgImageView addSubview:closeBtn];
     
     UIImageView * headBg = [MyControl createImageViewWithFrame:CGRectMake((self.bgImageView.frame.size.width-80)/2.0, 92/2, 80, 80) ImageName:@"alert_headBg.png"];
     [self.bgImageView addSubview:headBg];
@@ -70,12 +80,15 @@
     [self.bgImageView addSubview:label];
     
     //336  68
-    self.confirmBtn = [MyControl createButtonWithFrame:CGRectMake((self.bgImageView.frame.size.width-168)/2.0, self.bgImageView.frame.size.height-48, 168, 34) ImageName:@"" Target:self Action:@selector(confirmClick) Title:@"知道啦"];
-    self.confirmBtn.backgroundColor = ORANGE;
-    self.confirmBtn.layer.cornerRadius = 5;
-    self.confirmBtn.layer.masksToBounds = YES;
-    self.confirmBtn.titleLabel.font = [UIFont systemFontOfSize:16];
-    [self.bgImageView addSubview:self.confirmBtn];
+    UIButton * confirmBtn = [MyControl createButtonWithFrame:CGRectMake(self.bgImageView.frame.size.width/2-276/4.0, self.bgImageView.frame.size.height-93/2.0-14, 276/2, 93/2.0) ImageName:@"various_orangeBtn.png" Target:self Action:@selector(confirmClick) Title:@"知道啦"];
+    [self.bgImageView addSubview:confirmBtn];
+    
+//    self.confirmBtn = [MyControl createButtonWithFrame:CGRectMake((self.bgImageView.frame.size.width-168)/2.0, self.bgImageView.frame.size.height-48, 168, 34) ImageName:@"" Target:self Action:@selector(confirmClick) Title:@"知道啦"];
+//    self.confirmBtn.backgroundColor = ORANGE;
+//    self.confirmBtn.layer.cornerRadius = 5;
+//    self.confirmBtn.layer.masksToBounds = YES;
+//    self.confirmBtn.titleLabel.font = [UIFont systemFontOfSize:16];
+//    [self.bgImageView addSubview:self.confirmBtn];
 }
 
 -(void)configUIWithTx:(NSString *)tx Name:(NSString *)name Percent:(NSString *)percent

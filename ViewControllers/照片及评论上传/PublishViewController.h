@@ -38,6 +38,7 @@
     BOOL publishSuc;
     BOOL shareSuc;
 }
+@property (nonatomic,copy)NSString * tempDes;
 //@property (nonatomic,retain)UIImageView * bgImageView;
 @property (nonatomic)BOOL isBeg;
 @property (nonatomic,retain)UIImage * oriImage;

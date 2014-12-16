@@ -149,9 +149,9 @@
     /*****************华丽分割线********************/
     //22  44
     float spe = (bgView.frame.size.width-44-44*4)/3;
-    NSArray * array1 = @[@"star_play.png", @"star_shake.png", @"star_gift.png", @"star_shout.png"];
+    NSArray * array1 = @[@"star_food.png", @"star_shake.png", @"star_gift.png", @"star_touch.png"];
     NSArray * array2 = @[@"挣口粮", @"摇一摇", @"献爱心", @"萌印象"];
-    NSArray * array3 = @[@"快来玩", @"还剩3次", @"送了0次", @"还没摸"];
+    NSArray * array3 = @[@"快来挣", @"还剩3次", @"送了0次", @"还没摸"];
     for (int i=0; i<4; i++) {
         UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(22+i*(44+spe), 130+6, 44, 44) ImageName:array1[i] Target:self Action:@selector(actBtnClick:) Title:nil];
         [bgView addSubview:btn];
@@ -257,10 +257,11 @@
     UILabel * la = (UILabel *)[bgView viewWithTag:203];
     UILabel * la2 = (UILabel *)[bgView viewWithTag:303];
     UIButton * bt = (UIButton *)[bgView viewWithTag:103];
-//    if ([model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
-////        hyperBtn.hidden = NO;
-//        modifyBtn.hidden = NO;
-//        
+    if ([model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+//        hyperBtn.hidden = NO;
+        modifyBtn.hidden = NO;
+    }
+//
 //        la.text = @"萌印象";
 //        [bt setBackgroundImage:[UIImage imageNamed:@"star_shout.png"] forState:UIControlStateNormal];
 //        if([[model.dict objectForKey:@"is_voiced"] isKindOfClass:[NSNull class]] || [model.is_voiced intValue] == 0){

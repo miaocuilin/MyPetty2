@@ -168,7 +168,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    UIButton * rightButton = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-25-15, 25, 25, 25) ImageName:@"30-1.png" Target:self Action:@selector(rightButtonClick) Title:nil];
 //    [bgImageView addSubview:rightButton];
     
-    bigImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 64+5, self.view.frame.size.width-20, 230) ImageName:@""];
+    bigImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 5, self.view.frame.size.width-20, 230) ImageName:@""];
 //    bigImageView.image = [UIImage imageNamed:@"cat2.jpg"];
     bigImageView.image = self.oriImage;
     float Width = self.oriImage.size.width;

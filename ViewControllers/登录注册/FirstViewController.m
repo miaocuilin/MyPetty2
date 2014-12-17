@@ -13,7 +13,7 @@
 #import "ChoseLoadViewController.h"
 #import <ImageIO/ImageIO.h>
 //#import "FoodFirstViewController.h"
-#import "MainTabBarViewController.h"
+//#import "MainTabBarViewController.h"
 
 @interface FirstViewController () <UIAlertViewDelegate>
 {
@@ -595,7 +595,8 @@
 
 -(void)jumpToMain
 {
-    MainTabBarViewController * mainTab = [[MainTabBarViewController alloc] init];
+    FirstTabBarViewController * mainTab = [[FirstTabBarViewController alloc] init];
+//    MainTabBarViewController * mainTab = [[MainTabBarViewController alloc] init];
 //    JDSideMenu * sideMenu = [ControllerManager shareJDSideMenu];
     //                ChooseFamilyViewController * sideMenu = [[ChooseFamilyViewController alloc] init];
     if (hadImage) {

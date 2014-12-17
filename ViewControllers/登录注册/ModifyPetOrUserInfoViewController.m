@@ -66,9 +66,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.catArray = [NSMutableArray arrayWithCapacity:0];
     self.dogArray = [NSMutableArray arrayWithCapacity:0];
     self.otherArray = [NSMutableArray arrayWithCapacity:0];
-    self.cateArray = @[@"喵星", @"汪星"];
+    self.cateArray = @[@"喵喵", @"汪汪"];
     self.u_city = 1000;
-    self.cateName = @"喵星";
+    
+    typeTag = 1;
+    self.cateName = @"喵喵";
     self.detailName = @"布偶猫";
     
     [self createBg];
@@ -866,12 +868,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     if (textField == fromTF) {
         pickerBgView.hidden = NO;
+        pickerBgView2.hidden = YES;
+        pickerBgView3.hidden = YES;
         [tf resignFirstResponder];
         //        [self completeButton];
         return NO;
     }else if(textField == tfCity){
         NSLog(@"弹出选择地点picker");
         [tfUserName resignFirstResponder];
+        pickerBgView.hidden = YES;
         pickerBgView2.hidden = NO;
         pickerBgView3.hidden = YES;
         [tfCity resignFirstResponder];
@@ -879,6 +884,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else if(textField == ageTextField){
         NSLog(@"弹出年龄选择picker");
         [tf resignFirstResponder];
+        pickerBgView.hidden = YES;
         pickerBgView2.hidden = YES;
         pickerBgView3.hidden = NO;
         [ageTextField resignFirstResponder];
@@ -976,11 +982,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             num = row;
         }
         //每次都确定type
-        if ([self.cateName isEqualToString:@"喵星"]) {
+        if (typeTag == 1) {
             type = 100+num+1;
-        }else if([self.cateName isEqualToString:@"汪星"]){
+        }else if(typeTag == 2){
             type = 200+num+1;
-        }else{
+        }else if(typeTag == 3){
             type = 300+num+1;
         }
     }else if(pickerView == picker2){

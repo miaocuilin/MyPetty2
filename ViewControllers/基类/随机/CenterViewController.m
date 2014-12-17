@@ -220,7 +220,10 @@
     
     name.text = [USER objectForKey:@"name"];
     
-    CGSize size = [name.text sizeWithFont:[UIFont boldSystemFontOfSize:17] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
+    CGSize size = [name.text sizeWithFont:[UIFont boldSystemFontOfSize:17] constrainedToSize:CGSizeMake(200, 20) lineBreakMode:1];
+    CGRect rect = name.frame;
+    rect.size.width = size.width;
+    name.frame = rect;
     
     sex.hidden = NO;
     sex.frame = CGRectMake(name.frame.origin.x+size.width+5, 50+14, 15, 15);
@@ -605,7 +608,7 @@
         
         NSString * msg = [dict objectForKey:self.keysArray[i]];
         NSLog(@"%@", msg);
-        if ([msg rangeOfString:@"["].location != NSNotFound && [msg rangeOfString:@"]"].location != NSNotFound) {
+        if ([msg rangeOfString:@"[address]"].location == NSNotFound && [msg rangeOfString:@"["].location != NSNotFound && [msg rangeOfString:@"]"].location != NSNotFound) {
             int x = [msg rangeOfString:@"]"].location;
             
             msgModel.msg = [msg substringFromIndex:x+1];

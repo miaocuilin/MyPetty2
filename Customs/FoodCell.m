@@ -63,6 +63,11 @@
     
     bigImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 100, 100) ImageName:@""];
     [whiteView addSubview:bigImageView];
+    
+//    addLabel = [MyControl createLabelWithFrame:CGRectZero Font:15 Text:nil];
+//    addLabel.textColor = ORANGE;
+//    addLabel.textAlignment = NSTextAlignmentCenter;
+//    [whiteView addSubview:addLabel];
 }
 -(void)minTime
 {
@@ -89,6 +94,11 @@
     foodNum.attributedText = mutableStr;
     foodNum.frame = CGRectMake(5, line.frame.origin.y-25, 200, 20);
     [mutableStr release];
+    
+    //
+//    addLabel.frame = CGRectMake(foodNum.frame.origin.x, foodNum.frame.origin.y-15, foodNum.frame.size.width, 20);
+//    addLabel.alpha = 0;
+    
     //
     leftTime.frame = CGRectMake(whiteView.frame.size.width-220, foodNum.frame.origin.y, 210, 20);
     
@@ -116,6 +126,20 @@
     }];
     
 }
+//-(void)addAnimation:(int)num
+//{
+//    NSLog(@"add:%d", num);
+//    addLabel.text = [NSString stringWithFormat:@"+%d", num];
+//    addLabel.alpha = 1;
+//    [UIView animateWithDuration:0.8 animations:^{
+//        addLabel.alpha = 0;
+//        CGRect rect = addLabel.frame;
+//        rect.origin.y -= 15;
+//        addLabel.frame = rect;
+//    }completion:^(BOOL finished) {
+//        addLabel.frame = CGRectMake(foodNum.frame.origin.x, foodNum.frame.origin.y-15, foodNum.frame.size.width, 20);
+//    }];
+//}
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 

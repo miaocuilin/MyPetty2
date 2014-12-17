@@ -43,6 +43,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     if (isLoaded) {
 //        [self.tv headerBeginRefreshing];
+    }else if(![[USER objectForKey:@"guide_star"] intValue]){
+        [self createGuide];
+        [USER setObject:@"1" forKey:@"guide_star"];
     }
 }
 -(void)viewDidAppear:(BOOL)animated
@@ -73,6 +76,30 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [self loadMyPets];
     [self loadData];
     
+    
+}
+-(void)createGuide
+{
+    guide = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"guide3.png"];
+    float a = [UIScreen mainScreen].bounds.size.width/[UIScreen mainScreen].bounds.size.height;
+    float b = 320/480.0;
+    if(a == b){
+        guide.frame = CGRectMake(0, 0, self.view.frame.size.width, 568);
+    }
+    UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+    [guide addGestureRecognizer:tap];
+    
+//    FirstTabBarViewController * tabBar = [ControllerManager shareTabBar];
+    [[UIApplication sharedApplication].keyWindow addSubview:guide];
+    [tap release];
+}
+-(void)tap:(UITapGestureRecognizer *)tap
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        guide.alpha = 0;
+    }completion:^(BOOL finished) {
+        guide.hidden = YES;
+    }];
 }
 -(void)createBg
 {

@@ -67,7 +67,7 @@
 -(void)btnClick
 {
     //跳转求口粮
-    MainTabBarViewController * main = [[MainTabBarViewController alloc] init];
+    FirstTabBarViewController * main = [ControllerManager shareTabBar];
     main.selectedIndex = 1;
     [self presentViewController:main animated:YES completion:nil];
     [main release];

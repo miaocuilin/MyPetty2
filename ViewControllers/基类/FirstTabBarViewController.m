@@ -1,12 +1,12 @@
 //
-//  MainTabBarViewController.m
+//  FirstTabBarViewController.m
 //  MyPetty
 //
-//  Created by miaocuilin on 14-8-19.
+//  Created by miaocuilin on 14/12/17.
 //  Copyright (c) 2014年 AidiGame. All rights reserved.
 //
 
-#import "MainTabBarViewController.h"
+#import "FirstTabBarViewController.h"
 
 #import "MyStarViewController.h"
 #import "FoodViewController.h"
@@ -15,23 +15,19 @@
 #import "SingleTalkModel.h"
 #import "MessageModel.h"
 
-@interface MainTabBarViewController ()
+@interface FirstTabBarViewController ()
 
 @end
 
-@implementation MainTabBarViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+@implementation FirstTabBarViewController
 -(void)viewWillAppear:(BOOL)animated
 {
     if (!isLoaded) {
+        if (![[USER objectForKey:@"guide_food"] intValue]) {
+            [self createGuide];
+            [USER setObject:@"1" forKey:@"guide_food"];
+        }
+        
         [self makeUI];
         [self modifyUI];
     }
@@ -44,23 +40,38 @@
 {
     isLoaded = YES;
 }
+-(void)createGuide
+{
+    guide = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"guide2.png"];
+    UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+    [guide addGestureRecognizer:tap];
+    
+    //    FirstTabBarViewController * tabBar = [ControllerManager shareTabBar];
+    [self.view addSubview:guide];
+    [tap release];
+}
+-(void)tap:(UITapGestureRecognizer *)tap
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        guide.alpha = 0;
+    }completion:^(BOOL finished) {
+        guide.hidden = YES;
+    }];
+}
 -(void)refreshMessageNum
 {
     [self getNewMessage];
 }
-- (void)viewDidLoad
-{
+
+- (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    
-    
     MyStarViewController * vc1 = [[MyStarViewController alloc] init];
     FoodViewController * vc2 = [[FoodViewController alloc] init];
     DiscoveryViewController * vc3 = [[DiscoveryViewController alloc] init];
     CenterViewController * vc4 = [[CenterViewController alloc] init];
-//    tbc = [[UITabBarController alloc] init];
-
+    //    tbc = [[UITabBarController alloc] init];
+    
     self.viewControllers = @[vc1, vc2, vc3, vc4];
     self.selectedIndex = 1;
     self.tabBar.hidden = YES;
@@ -70,20 +81,21 @@
     [vc4 release];
     
     [self createBottom];
-//    NSArray * scArray = @[@"萌宠推荐", @"宇宙广场", @"星球关注"];
-//    sc = [[UISegmentedControl alloc] initWithItems:scArray];
-//    sc.backgroundColor = [UIColor whiteColor];
-//    sc.alpha = 0.7;
-//    sc.layer.cornerRadius = 4;
-//    sc.layer.masksToBounds = YES;
-//    sc.frame = CGRectMake(10, 69, 300, 30);
-//    [sc addTarget:self action:@selector(segmentClick:) forControlEvents:UIControlEventValueChanged];
-//    //默认选中第二个，宇宙广场
-//    sc.selectedSegmentIndex = 1;
-//    sc.tintColor = BGCOLOR;
-//    [rvc.view addSubview:sc];
+    //    NSArray * scArray = @[@"萌宠推荐", @"宇宙广场", @"星球关注"];
+    //    sc = [[UISegmentedControl alloc] initWithItems:scArray];
+    //    sc.backgroundColor = [UIColor whiteColor];
+    //    sc.alpha = 0.7;
+    //    sc.layer.cornerRadius = 4;
+    //    sc.layer.masksToBounds = YES;
+    //    sc.frame = CGRectMake(10, 69, 300, 30);
+    //    [sc addTarget:self action:@selector(segmentClick:) forControlEvents:UIControlEventValueChanged];
+    //    //默认选中第二个，宇宙广场
+    //    sc.selectedSegmentIndex = 1;
+    //    sc.tintColor = BGCOLOR;
+    //    [rvc.view addSubview:sc];
 }
-#pragma mark - 
+
+#pragma mark -
 -(void)makeUI
 {
     sv = [[UIScrollView alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -152,10 +164,10 @@
     }];
     
     
-//    MainTabBarViewController * main = [[MainTabBarViewController alloc] init];
-//    main.selectedIndex = 1;
-//    [self presentViewController:main animated:YES completion:nil];
-//    [main release];
+    //    MainTabBarViewController * main = [[MainTabBarViewController alloc] init];
+    //    main.selectedIndex = 1;
+    //    [self presentViewController:main animated:YES completion:nil];
+    //    [main release];
 }
 
 
@@ -210,7 +222,7 @@
     }
     btn.selected = YES;
     
-//    NSLog(@"------%d", self.selectedIndex);
+    //    NSLog(@"------%d", self.selectedIndex);
     if (btn.tag == 100) {
         MyStarViewController * vc = self.viewControllers[0];
         [vc.tv headerBeginRefreshing];
@@ -226,17 +238,17 @@
     }
     self.selectedIndex = btn.tag-100;
     
-//    NSLog(@"%d------", self.selectedIndex);
-
-//    if(btn.tag-100){
-//        
-//    }else if(btn.tag-100){
-//        
-//    }else if(btn.tag-100){
-//        
-//    }else if(btn.tag-100){
-//        
-//    }
+    //    NSLog(@"%d------", self.selectedIndex);
+    
+    //    if(btn.tag-100){
+    //
+    //    }else if(btn.tag-100){
+    //
+    //    }else if(btn.tag-100){
+    //
+    //    }else if(btn.tag-100){
+    //
+    //    }
 }
 
 //气泡动画
@@ -545,17 +557,7 @@
     model.msgDict = [NSDictionary dictionaryWithObject:tempNewMsgArray forKey:@"msg"];
 }
 
-
-//-(void)segmentClick:(UISegmentedControl *)seg
-//{
-//    NSLog(@"%d", seg.selectedSegmentIndex);
-//    int a = seg.selectedSegmentIndex;
-//    self.selectedIndex = a;
-//    UIViewController * vc = self.viewControllers[a];
-//    [vc.view addSubview:sc];
-//}
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -564,8 +566,7 @@
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }

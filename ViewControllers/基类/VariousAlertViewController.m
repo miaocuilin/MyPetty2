@@ -158,6 +158,8 @@
                 if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
                     if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]) {
                         //绑定过 没注册过 获取用户信息及宠物信息
+                        
+                        
                         [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
                         [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
                         [self getUserData];
@@ -243,6 +245,9 @@
             
             ENDLOADING;
             [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"登录成功"];
+            [USER setObject:@"1" forKey:@"isSuccess"];
+            [ControllerManager setIsSuccess:1];
+            
             [self.view removeFromSuperview];
 //            [self dismissViewControllerAnimated:YES completion:nil];
         }else{

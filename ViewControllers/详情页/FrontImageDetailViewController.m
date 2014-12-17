@@ -29,9 +29,20 @@
     [bigImageView release];
     [super dealloc];
 }
-
+-(void)viewWillAppear:(BOOL)animated
+{
+    if (!isLoad) {
+        if (![[USER objectForKey:@"guide_detail"] intValue]) {
+            [USER setObject:@"1" forKey:@"guide_detail"];
+            [self createGuide];
+        }
+        
+    }
+}
 -(void)viewDidAppear:(BOOL)animated
 {
+    isLoad = YES;
+    
     isInThisController = YES;
     //底部4个球跳动动画
     UIButton * b1 = (UIButton *)[self.view viewWithTag:100];
@@ -47,6 +58,24 @@
     [self animationWithView:b2 Size:r2];
     [self animationWithView:b3 Size:r3];
     [self animationWithView:b4 Size:r4];
+}
+-(void)createGuide
+{
+    guide = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"guide1.png"];
+    UITapGestureRecognizer * guideTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(guideTap:)];
+    [guide addGestureRecognizer:guideTap];
+    
+    //    FirstTabBarViewController * tabBar = [ControllerManager shareTabBar];
+    [self.view addSubview:guide];
+    [guideTap release];
+}
+-(void)guideTap:(UITapGestureRecognizer *)tap
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        guide.alpha = 0;
+    }completion:^(BOOL finished) {
+        guide.hidden = YES;
+    }];
 }
 -(void)animationWithView:(UIView *)view Size:(CGRect)r
 {
@@ -947,6 +976,7 @@
                     int a = [[[load.dataDict objectForKey:@"data"] objectForKey:@"gold"] intValue];
                     if (a) {
                         [ControllerManager HUDImageIcon:@"gold.png" showView:self.view yOffset:0 Number:a];
+                        [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]+a] forKey:@"gold"];
                     }
                     
                     UserInfoModel * model = [[UserInfoModel alloc] init];
@@ -1223,10 +1253,15 @@
     }else{
         if ([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
             int exp = [[USER objectForKey:@"exp"] intValue];
+            int gold = [[[dict objectForKey:@"data"] objectForKey:@"gold"] intValue];
             int addExp = [[[dict objectForKey:@"data"] objectForKey:@"exp"] intValue];
             if (addExp>0) {
                 [USER setObject:[NSString stringWithFormat:@"%d", exp+addExp] forKey:@"exp"];
 //                [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:0 Number:addExp];
+            }
+            if (gold>0) {
+                [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]+gold] forKey:@"gold"];
+                [ControllerManager HUDImageIcon:@"gold.png" showView:self.view.window yOffset:0 Number:gold];
             }
         }
         

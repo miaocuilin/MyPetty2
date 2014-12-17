@@ -17,6 +17,8 @@
 #import "ToolTipsViewController.h"
 #import "FrontImageDetailViewController.h"
 #import "MainViewController.h"
+#import "WalkAndTeaseViewController.h"
+
 @interface RandomViewController () <TMQuiltViewDataSource,TMQuiltViewDelegate>
 {
     TMQuiltView *qtmquitView;
@@ -54,13 +56,14 @@
 {
     [super viewDidLoad];
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
-    
+    self.bannerDataArray = [NSMutableArray arrayWithCapacity:0];
 //    self.view.backgroundColor = [UIColor whiteColor];
     
 //    [self createBg];
     [self createQtmquitView];
 //    [self createFakeNavigation];
     [self loadData];
+    [self loadBannerData];
 	
 //	[self performSelector:@selector(testFinishedLoadData) withObject:nil afterDelay:0.0f];
 //    self.menuBgView.frame = CGRectMake(50, self.view.frame.size.height-40, 220, 80);
@@ -80,7 +83,196 @@
 //        
 //    }
 }
-
+-(void)loadBannerData
+{
+    NSString * url = [NSString stringWithFormat:@"%@%@", BANNERAPI, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            [self.bannerDataArray removeAllObjects];
+            NSLog(@"%@", load.dataDict);
+            if ([[load.dataDict objectForKey:@"confVersion"] isEqualToString:@"1.0"]) {
+                isConf = YES;
+            }
+            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]] && [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSArray class]] && [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] count]) {
+                NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                self.bannerDataArray = [NSMutableArray arrayWithArray:array];
+//                NSLog(@"%@", array);
+//                NSLog(@"%@", [array[0] objectForKey:@"img_url"]);
+                sv = [[UIScrollView alloc] initWithFrame:CGRectMake(4, 64+4, self.view.frame.size.width-8, 80)];
+                sv.delegate = self;
+                
+                
+                if (array.count>1) {
+                    pageCount = array.count+2;
+                }else{
+                    pageCount = array.count;
+                }
+                
+                sv.contentSize = CGSizeMake(sv.frame.size.width*pageCount, 80);
+                if (pageCount>1) {
+                    sv.contentOffset = CGPointMake(sv.frame.size.width, 0);
+                }
+                sv.showsHorizontalScrollIndicator = NO;
+//                sv.backgroundColor = [UIColor purpleColor];
+                sv.pagingEnabled = YES;
+                [self.view addSubview:sv];
+                
+                pageContorl = [[UIPageControl alloc] initWithFrame:CGRectMake((sv.frame.size.width-100)/2.0, sv.frame.origin.y+sv.frame.size.height-15, 100, 10)];
+                pageContorl.numberOfPages = pageCount;
+                if (pageCount>1) {
+                    pageContorl.numberOfPages = pageCount-2;
+                }else{
+                    pageContorl.hidden = YES;
+                }
+                [self.view addSubview:pageContorl];
+                
+                for (int i=0; i<pageCount; i++) {
+                    UIButton * button = [MyControl createButtonWithFrame:CGRectMake(sv.frame.size.width*i, 0, sv.frame.size.width, sv.frame.size.height) ImageName:@"" Target:self Action:@selector(bannerClick:) Title:nil];
+                    button.tag = 100+i;
+                    if (pageCount == 1) {
+                        [button setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/banner/%@", IMAGEURL, [array[i] objectForKey:@"img_url"]]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                            if (image) {
+                                float w = sv.frame.size.width;
+                                float h = w*image.size.height/image.size.width;
+                                CGRect rect = button.frame;
+                                rect.size.height = h;
+                                button.frame = rect;
+                                
+                                CGRect rect2 = sv.frame;
+                                rect2.size.height = h;
+                                sv.frame = rect2;
+                                
+                                CGRect rect4 = pageContorl.frame;
+                                rect4.origin.y = sv.frame.origin.y+sv.frame.size.height-15;
+                                pageContorl.frame = rect4;
+                                
+                                CGRect rect3 = qtmquitView.frame;
+                                rect3.origin.y = sv.frame.origin.y+h+8;
+                                rect3.size.height = self.view.frame.size.height-64-25-(h+8);
+                                qtmquitView.frame = rect3;
+                            }
+                        }];
+                    }else{
+                        if (i == 0) {
+                            [button setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/banner/%@", IMAGEURL, [array[pageCount-3] objectForKey:@"img_url"]]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                                float w = sv.frame.size.width;
+                                float h = w*image.size.height/image.size.width;
+                                CGRect rect = button.frame;
+                                rect.size.height = h;
+                                button.frame = rect;
+                                
+                                CGRect rect2 = sv.frame;
+                                rect2.size.height = h;
+                                sv.frame = rect2;
+                                
+                                CGRect rect4 = pageContorl.frame;
+                                rect4.origin.y = sv.frame.origin.y+sv.frame.size.height-15;
+                                pageContorl.frame = rect4;
+                                
+                                CGRect rect3 = qtmquitView.frame;
+                                rect3.origin.y = sv.frame.origin.y+h+8;
+                                rect3.size.height = self.view.frame.size.height-64-25-(h+8);
+                                qtmquitView.frame = rect3;
+                            }];
+                        }else if(i == pageCount-1){
+                            [button setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/banner/%@", IMAGEURL, [array[0] objectForKey:@"img_url"]]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                                float w = sv.frame.size.width;
+                                float h = w*image.size.height/image.size.width;
+                                CGRect rect = button.frame;
+                                rect.size.height = h;
+                                button.frame = rect;
+                                
+                                CGRect rect2 = sv.frame;
+                                rect2.size.height = h;
+                                sv.frame = rect2;
+                                
+                                CGRect rect4 = pageContorl.frame;
+                                rect4.origin.y = sv.frame.origin.y+sv.frame.size.height-15;
+                                pageContorl.frame = rect4;
+                                
+                                CGRect rect3 = qtmquitView.frame;
+                                rect3.origin.y = sv.frame.origin.y+h+8;
+                                rect3.size.height = self.view.frame.size.height-64-25-(h+8);
+                                qtmquitView.frame = rect3;
+                            }];
+                        }else{
+                            [button setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/banner/%@", IMAGEURL, [array[i-1] objectForKey:@"img_url"]]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                                float w = sv.frame.size.width;
+                                float h = w*image.size.height/image.size.width;
+                                CGRect rect = button.frame;
+                                rect.size.height = h;
+                                button.frame = rect;
+                                
+                                CGRect rect2 = sv.frame;
+                                rect2.size.height = h;
+                                sv.frame = rect2;
+                                
+                                CGRect rect4 = pageContorl.frame;
+                                rect4.origin.y = sv.frame.origin.y+sv.frame.size.height-15;
+                                pageContorl.frame = rect4;
+                                
+                                CGRect rect3 = qtmquitView.frame;
+                                rect3.origin.y = sv.frame.origin.y+h+8;
+                                rect3.size.height = self.view.frame.size.height-64-25-(h+8);
+                                qtmquitView.frame = rect3;
+                            }];
+                        }
+                    }
+                    
+                    [sv addSubview:button];
+                }
+                
+//                qtmquitView.frame = CGRectMake(0, 64+88, 320, self.view.frame.size.height-64-25-88);
+            }else{
+                //瀑布流提升
+                sv.hidden = YES;
+                pageContorl.hidden = YES;
+                qtmquitView.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-25);
+            }
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
+}
+-(void)bannerClick:(UIButton *)btn
+{
+    if (isConf) {
+        return;
+    }
+    NSLog(@"%d", btn.tag);
+    int a = btn.tag-100;
+    WalkAndTeaseViewController * vc = [[WalkAndTeaseViewController alloc] init];
+    vc.isFromBanner = YES;
+    if (pageCount>1) {
+        if (a == 0) {
+            //最后一个
+            vc.URL = [self.bannerDataArray[self.bannerDataArray.count-1] objectForKey:@"url"];
+            vc.share_title = [self.bannerDataArray[self.bannerDataArray.count-1] objectForKey:@"title"];
+            vc.share_des = [self.bannerDataArray[self.bannerDataArray.count-1] objectForKey:@"description"];
+            vc.icon = [self.bannerDataArray[self.bannerDataArray.count-1] objectForKey:@"icon"];
+        }else if(a == pageCount-1){
+            //第一个
+            vc.URL = [self.bannerDataArray[0] objectForKey:@"url"];
+            vc.share_title = [self.bannerDataArray[0] objectForKey:@"title"];
+            vc.share_des = [self.bannerDataArray[0] objectForKey:@"description"];
+            vc.icon = [self.bannerDataArray[0] objectForKey:@"icon"];
+        }else{
+            vc.URL = [self.bannerDataArray[a-1] objectForKey:@"url"];
+            vc.share_title = [self.bannerDataArray[a-1] objectForKey:@"title"];
+            vc.share_des = [self.bannerDataArray[a-1] objectForKey:@"description"];
+            vc.icon = [self.bannerDataArray[a-1] objectForKey:@"icon"];
+        }
+    }else{
+        vc.URL = [self.bannerDataArray[0] objectForKey:@"url"];
+        vc.share_title = [self.bannerDataArray[0] objectForKey:@"title"];
+        vc.share_des = [self.bannerDataArray[0] objectForKey:@"description"];
+        vc.icon = [self.bannerDataArray[0] objectForKey:@"icon"];
+    }
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
+}
 -(void)createBg
 {
     UIImageView * blur = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"blurBg.png"];
@@ -174,7 +366,7 @@
 #pragma mark - 创建qtmquitView
 -(void)createQtmquitView
 {
-    qtmquitView = [[TMQuiltView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height-64-25)];
+    qtmquitView = [[TMQuiltView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-25)];
 	qtmquitView.delegate = self;
 	qtmquitView.dataSource = self;
     //	qtmquitView.backgroundColor = [UIColor darkGrayColor];
@@ -726,6 +918,28 @@
 //    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"内存不足"];
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+#pragma mark -
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView == sv) {
+        float a = sv.contentOffset.x/sv.frame.size.width;
+        if (pageCount>1 && a == pageCount-1) {
+            scrollView.contentOffset = CGPointMake(sv.frame.size.width, 0);
+            pageContorl.currentPage = 0;
+        }else if(pageCount > 1 && a == 0){
+            scrollView.contentOffset = CGPointMake(sv.frame.size.width*(pageCount-2), 0);
+            pageContorl.currentPage = pageCount-2;
+        }else{
+            NSLog(@"%f", a);
+            if (pageCount>1) {
+                pageContorl.currentPage = a-1;
+            }else{
+                pageContorl.currentPage = a;
+            }
+
+        }
+    }
 }
 
 #pragma mark - 金币、星星、红心弹窗

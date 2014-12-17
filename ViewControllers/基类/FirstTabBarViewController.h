@@ -1,17 +1,17 @@
 //
-//  MainTabBarViewController.h
+//  FirstTabBarViewController.h
 //  MyPetty
 //
-//  Created by miaocuilin on 14-8-19.
+//  Created by miaocuilin on 14/12/17.
 //  Copyright (c) 2014年 AidiGame. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface MainTabBarViewController : UITabBarController <UIScrollViewDelegate>
+@interface FirstTabBarViewController : UITabBarController<UIScrollViewDelegate>
 {
-//    UITabBarController * tbc;
-//    UISegmentedControl * sc;
+    //    UITabBarController * tbc;
+    //    UISegmentedControl * sc;
     UILabel * label1;
     UILabel * label2;
     UILabel * label3;
@@ -23,6 +23,8 @@
     
     UIImageView * msgNumBg;
     UILabel * msgNum;
+    
+    UIImageView * guide;
 }
 @property(nonatomic,assign)UIImage * preImage;
 

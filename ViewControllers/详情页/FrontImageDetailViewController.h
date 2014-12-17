@@ -68,6 +68,9 @@
     BOOL isLoaded[4];
     
     BOOL isBackLoaded;
+    
+    BOOL isLoad;
+    UIImageView * guide;
 }
 @property(nonatomic,retain)NSDictionary * picDict;
 @property(nonatomic,retain)NSDictionary * imageDict;

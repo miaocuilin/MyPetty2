@@ -34,6 +34,10 @@
 //    UIImageView * heart;
     UIButton * heartBtn;
     NSTimer * timer2;
+    
+    UILabel * addLabel;
+//    BOOL isLoaded;
+    
 }
 -(void)loadData;
 @property(nonatomic,retain)NSMutableArray * dataArray;

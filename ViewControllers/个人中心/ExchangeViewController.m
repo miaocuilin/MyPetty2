@@ -407,8 +407,8 @@
 {
     if (dropDown == nil) {
         CGFloat f = 200;
-        navView.frame = CGRectMake(0, 0, self.view.frame.size.width, 64+110);
-        dropDown = [[NIDropDown alloc] showDropDown:btn :&f :@[@"所有", @"猫粮", @"狗粮"]];
+        navView.frame = CGRectMake(0, 0, self.view.frame.size.width, 64+150);
+        dropDown = [[NIDropDown alloc] showDropDown:btn :&f :@[@"所有", @"猫粮", @"狗粮", @"其他"]];
 
 //        [dropDown setDefaultCellType];
         [dropDown setCellTextColor:[UIColor whiteColor] Font:[UIFont systemFontOfSize:15] BgColor:[UIColor colorWithRed:246/255.0 green:168/255.0 blue:146/255.0 alpha:0.6] lineColor:[UIColor brownColor]];
@@ -447,6 +447,9 @@
                 [self.dataArray addObject:self.tempDataArray[i]];
             }
         }
+        [collection reloadData];
+    }else if(Line == 3){
+        [self.dataArray removeAllObjects];
         [collection reloadData];
     }
     

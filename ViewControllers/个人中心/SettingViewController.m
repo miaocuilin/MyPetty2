@@ -106,15 +106,16 @@
 
 -(void)createTableView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv.dataSource = self;
     tv.delegate = self;
     tv.separatorStyle = 0;
+    tv.bounces = NO;
     tv.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tv];
     
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
-    tv.tableHeaderView = tempView;
+//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
+//    tv.tableHeaderView = tempView;
 }
 -(void)createFakeNavigation
 {
@@ -644,7 +645,7 @@
 //    [MMProgressHUD showWithStatus:@"清除中..."];
     
     NSString *cachPath = DOCDIR;
-    //    NSLog(@"%@", cachPath);
+        NSLog(@"%@", cachPath);
     NSArray *files = [[NSFileManager defaultManager] subpathsAtPath:cachPath];
 //    NSLog(@"files :%d",[files count]);
     for (NSString *p in files) {

@@ -17,7 +17,7 @@
 #import "NoticeViewController.h"
 #import "UIViewController+JDSideMenu.h"
 #import "SettingViewController.h"
-#import "MainTabBarViewController.h"
+//#import "MainTabBarViewController.h"
 #import "RandomViewController.h"
 #import "MainViewController.h"
 #import "ToolTipsViewController.h"

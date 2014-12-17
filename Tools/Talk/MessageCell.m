@@ -137,6 +137,15 @@
     _iconView.layer.masksToBounds = YES;
     
     // 3、设置内容
+//    NSLog(@"%@", message.content);
+    if ([message.content rangeOfString:@"[address]"].location != NSNotFound) {
+        message.content = [[message.content componentsSeparatedByString:@"[address]"] objectAtIndex:1];
+//        NSLog(@"%@", message.content);
+        self.hasArrow = YES;
+        self.hasAddress = YES;
+    }else{
+        self.hasAddress = NO;
+    }
     [_contentBtn setTitle:message.content forState:UIControlStateNormal];
     _contentBtn.contentEdgeInsets = UIEdgeInsetsMake(kContentTop, kContentLeft, kContentBottom, kContentRight);
     _contentBtn.frame = _messageFrame.contentF;
@@ -178,7 +187,12 @@
 -(void)arrowBtnClick
 {
     NSLog(@"jumpToDetail");
-    self.jumpToPicDetail();
+    if (self.hasAddress) {
+        self.jumpToAddress();
+    }else{
+        self.jumpToPicDetail();
+    }
+    
 }
 -(void)headBtnClick
 {

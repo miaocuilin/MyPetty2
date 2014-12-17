@@ -341,7 +341,7 @@
     
     UIView *shareView = [MyControl createViewWithFrame:CGRectMake(bodyView.frame.size.width/2-195/2.0, 250, 195, 50)];
     [bodyView addSubview:shareView];
-    NSArray *array = @[@"rock_weixin.png",@"rock_pengyou.png",@"rock_xinlang.png"];
+    NSArray *array = @[@"more_weixin.png",@"more_friend.png",@"more_sina.png"];
     NSArray *arrayDesc = @[@"微信好友",@"朋 友 圈",@"微 博"];
     for (int i = 0; i < 3; i++) {
         UIImageView *shareImageView = [MyControl createImageViewWithFrame:CGRectMake(0+shareView.frame.size.width/3 * i +(i*15), 0, 36, 36) ImageName:array[i]];

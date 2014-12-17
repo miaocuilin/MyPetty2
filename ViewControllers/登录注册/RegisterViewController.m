@@ -71,7 +71,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    self.catArray = @[@"猫咪", @"布偶猫", @"波斯猫", @"挪威猫", @"缅因猫", @"伯曼猫", @"索马利猫", @"土耳其梵猫", @"美国短尾猫", @"西伯利亚森林猫", @"巴厘猫", @"土耳其安哥拉猫", @"褴褛猫", @"拉邦猫", @"暹罗猫", @"苏格兰折耳猫", @"短毛猫", @"俄罗斯蓝猫", @"孟买猫" @"埃及猫", @"斯芬克斯猫" @"缅甸猫", @"阿比西尼亚猫", @"新加坡猫", @"中国狸花猫", @"日本短尾猫", @"东奇尼猫", @"卷毛猫", @"马恩岛猫", @"奥西猫", @"沙特尔猫", @"呵叻猫", @"美国刚毛猫", @"哈瓦那棕猫", @"波米拉猫", @"东方猫", @"混血"];
 //    self.dogArray = @[@"狗狗", @"吉娃娃", @"博美犬", @"马尔济斯犬", @"约克夏梗", @"贵宾犬", @"蝴蝶犬", @"八哥犬", @"西施犬", @"比熊犬", @"北京犬", @"迷你杜宾", @"拉萨犬", @"冠毛犬", @"小型雪瑞纳", @"柯基犬", @"巴吉度犬", @"哈士奇", @"松狮", @"牧羊犬", @"柴犬", @"斗牛犬", @"萨摩耶犬", @"腊肠犬", @"猎兔犬", @"惠比特犬", @"拉布拉多", @"大麦町犬(斑点狗)", @"爱斯基摩犬", @"沙皮犬", @"山地犬", @"无毛犬", @"雪纳瑞", @"藏獒", @"史毕诺犬", @"卡斯罗", @"罗威纳犬", @"阿拉斯加雪橇犬", @"金毛", @"柯利犬", @"波尔多犬", @"法国狼犬", @"雪达犬", @"奇努克犬", @"威玛犬", @"比利时马林诺斯犬", @"寻回犬", @"浣熊犬", @"迦南犬", @"猎犬", @"梗犬", @"混血"];
     
-    self.cateName = @"喵星";
+    self.cateName = @"喵喵";
+    typeTag = 1;
     self.detailName = @"布偶猫";
     
     if (self.isModify) {
@@ -781,18 +782,23 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     if (textField == fromTF) {
         pickerBgView.hidden = NO;
+        pickerBgView2.hidden = YES;
+        pickerBgView3.hidden = YES;
         [tf resignFirstResponder];
 //        [self completeButton];
         return NO;
     }else if(textField == tfCity){
         NSLog(@"弹出选择地点picker");
         [tfUserName resignFirstResponder];
+        pickerBgView.hidden = YES;
         pickerBgView2.hidden = NO;
+        pickerBgView3.hidden = YES;
         [tfCity resignFirstResponder];
         return NO;
     }else if(textField == ageTextField){
         NSLog(@"弹出年龄选择picker");
         [tf resignFirstResponder];
+        pickerBgView.hidden = YES;
         pickerBgView2.hidden = YES;
         pickerBgView3.hidden = NO;
         [ageTextField resignFirstResponder];
@@ -884,6 +890,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (component == 0) {
             self.cateName = self.cateArray[row];
             if (row == 0) {
+                typeTag = 1;
+                
                 self.tempArray = self.catArray;
                 count = self.catArray.count;
                 if (num<self.catArray.count) {
@@ -893,6 +901,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     self.detailName = self.catArray[self.catArray.count-1];
                 }
             }else if(row == 1){
+                typeTag = 2;
+                
                 self.tempArray = self.dogArray;
                 count = self.dogArray.count;
                 if (num<self.dogArray.count) {
@@ -902,6 +912,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     self.detailName = self.dogArray[self.dogArray.count-1];
                 }
             }else{
+                typeTag = 3;
+                
                 self.tempArray = self.otherArray;
                 count = self.otherArray.count;
                 if (num<self.otherArray.count) {
@@ -1195,11 +1207,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     self.name = tf.text;
     //宠物种类
-    if ([self.cateName isEqualToString:@"喵星"]) {
+    if (typeTag == 1) {
         type = 100+num+1;
-    }else if([self.cateName isEqualToString:@"汪星"]){
+    }else if(typeTag == 2){
         type = 200+num+1;
-    }else{
+    }else if(typeTag == 3){
         type = 300+num+1;
     }
     /*******************/
@@ -1880,12 +1892,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     NSLog(@"headImage upload failed");
 }
 
--(void)fromButtonClick
-{
-    [tf resignFirstResponder];
-    pickerBgView.hidden = NO;
-    [self completeButton];
-}
+//-(void)fromButtonClick
+//{
+//    [tf resignFirstResponder];
+//    pickerBgView.hidden = NO;
+//    pickerBgView2.hidden = YES;
+//    pickerBgView3.hidden = YES;
+//    [self completeButton];
+//}
 #pragma mark - picker picker2确认点击事件
 -(void)confirmButtonClick
 {

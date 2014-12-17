@@ -62,6 +62,7 @@
     UIButton * man;
     BOOL isUserPhoto;
     
+    int typeTag;
 }
 //是否是修改用户资料
 @property (nonatomic)BOOL isModifyUser;

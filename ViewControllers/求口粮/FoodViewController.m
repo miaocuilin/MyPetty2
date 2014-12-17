@@ -19,6 +19,16 @@
 
 @implementation FoodViewController
 
+//-(void)viewWillAppear:(BOOL)animated
+//{
+//    if (!isLoaded) {
+//        [self createGuide];
+//    }
+//}
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    isLoaded = YES;
+//}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -206,7 +216,7 @@
     heartBtn = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2) ImageName:@"food_heart.png" Target:self Action:@selector(rewardBtnClick:) Title:nil];
     [heartBtn addTarget:self action:@selector(heartTouchDown) forControlEvents:UIControlEventTouchDown];
     [self.view addSubview:heartBtn];
-    timer2 = [NSTimer scheduledTimerWithTimeInterval:2.4 target:self selector:@selector(heartAnimation) userInfo:nil repeats:YES];
+    timer2 = [NSTimer scheduledTimerWithTimeInterval:1.9 target:self selector:@selector(heartAnimation) userInfo:nil repeats:YES];
 }
 -(void)heartTouchDown
 {
@@ -262,6 +272,11 @@
     tv.backgroundColor = [UIColor clearColor];
     
     [self.view bringSubviewToFront:selectView];
+    
+//    addLabel = [MyControl createLabelWithFrame:CGRectZero Font:15 Text:nil];
+//    addLabel.textColor = ORANGE;
+//    addLabel.textAlignment = NSTextAlignmentCenter;
+//    [self.view addSubview:addLabel];
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -428,6 +443,8 @@
                 model.food = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"food"]];
                 [MyControl popAlertWithView:self.view Msg:[NSString stringWithFormat:@"打赏成功，萌星 %@ 感谢您的爱心！", [self.dataArray[a] name]]];
                 [tv reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:a inSection:0]] withRowAnimation:0];
+                
+                
             }
             ENDLOADING;
         }else{

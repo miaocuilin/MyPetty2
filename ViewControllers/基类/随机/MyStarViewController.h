@@ -18,6 +18,8 @@
     
     //是否是求口粮
     BOOL isBeg;
+    
+    UIImageView * guide;
 }
 @property(nonatomic,retain)UITableView * tv;
 

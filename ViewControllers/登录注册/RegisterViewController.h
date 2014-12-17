@@ -75,6 +75,8 @@
     BOOL doubleNeedPost;
     //用来判断进行了几次post
     int postCount;
+    
+    int typeTag;
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 

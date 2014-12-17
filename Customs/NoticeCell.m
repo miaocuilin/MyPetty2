@@ -56,7 +56,7 @@
     noticeMessage_time.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:noticeMessage_time];
     
-    desLabel = [MyControl createLabelWithFrame:CGRectMake(70, 40, self.frame.size.width-70-20, 20) Font:14 Text:@"111111111111111"];
+    desLabel = [MyControl createLabelWithFrame:CGRectMake(70, 40, self.frame.size.width-70-20, 20) Font:14 Text:@""];
     desLabel.textColor = [UIColor darkGrayColor];
     desLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     desLabel.adjustsFontSizeToFitWidth = NO;
@@ -108,7 +108,12 @@
     Index = index;
     tips.hidden = YES;
     
-    desLabel.text = content;
+    if([content rangeOfString:@"[address]"].location == NSNotFound){
+        desLabel.text = content;
+    }else{
+        desLabel.text = [[content componentsSeparatedByString:@"[address]"] objectAtIndex:1];
+    }
+    
     NSDate * date = [NSDate dateWithTimeIntervalSince1970:[time intValue]];
     NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm"];

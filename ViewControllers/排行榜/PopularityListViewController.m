@@ -64,7 +64,7 @@
     self.titleArray = [NSMutableArray arrayWithObjects:@"总人气榜",@"昨日人气", @"上周人气", @"上月人气",  nil];
     self.myCountryRankArray = [NSMutableArray arrayWithCapacity:0];
     self.selectedWords = @"所有";
-    self.totalArray = [NSMutableArray arrayWithObjects:@"所有", @"喵", @"汪", nil];
+    self.totalArray = [NSMutableArray arrayWithObjects:@"所有", @"喵", @"汪", @"其他", nil];
 //    [self getListData];
     [self createBg];
     [self createTableView];
@@ -274,7 +274,7 @@
 #pragma mark - 创建tableView
 -(void)createTableView
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64+35+35, self.view.frame.size.width, self.view.frame.size.height-(64+35+35)) style:UITableViewStylePlain];
 //    if (self.view.frame.size.height == 480) {
 //        tv.frame = CGRectMake(0, 0, 320, 64+35+35+50*3);
 //    }
@@ -284,8 +284,8 @@
     tv.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tv];
 
-    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64+35+35)];
-    tv.tableHeaderView = tempView;
+//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64+35+35)];
+//    tv.tableHeaderView = tempView;
     
 //    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-50*3, 320, 50*3) style:UITableViewStylePlain];
 //    tv2.delegate = self;
@@ -726,7 +726,8 @@
         dropDown = [[NIDropDown alloc] showDropDown:raceBtn :&f :self.totalArray];
         [dropDown setDefaultCellType];
         dropDown.delegate = self;
-        headerView.frame = CGRectMake(0, 64, 320, 35+200);
+        headerView.frame = CGRectMake(0, 64, 320, 35+160);
+//        headerView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     }else{
         [dropDown hideDropDown:raceBtn];
         [self rel];
@@ -765,10 +766,17 @@
                         [self.limitRankDataArray addObject:self.rankDataArray[i]];
                     }
                 }
-            }else{
+            }else if([Words isEqualToString:@"汪"]){
                 for (int i=0; i<self.rankDataArray.count; i++) {
                     popularityListModel * model = self.rankDataArray[i];
                     if ([model.type intValue]/100 == 2) {
+                        [self.limitRankDataArray addObject:self.rankDataArray[i]];
+                    }
+                }
+            }else if([Words isEqualToString:@"其他"]){
+                for (int i=0; i<self.rankDataArray.count; i++) {
+                    popularityListModel * model = self.rankDataArray[i];
+                    if ([model.type intValue]/100 == 3) {
                         [self.limitRankDataArray addObject:self.rankDataArray[i]];
                     }
                 }

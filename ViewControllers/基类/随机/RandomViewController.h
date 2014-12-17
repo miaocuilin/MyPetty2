@@ -25,11 +25,18 @@
     int page;
     
     BOOL isLoaded;
+    
+    UIScrollView * sv;
+    UIPageControl * pageContorl;
+    int pageCount;
+    
+    BOOL isConf;
 }
 @property(nonatomic,copy)NSString * tempUrl;
 
 @property(nonatomic,retain)UIButton * menuBtn;
 @property(nonatomic,retain)NSMutableArray * dataArray;
+@property(nonatomic,retain)NSMutableArray * bannerDataArray;
 @property(nonatomic,retain)NSMutableArray * likersArray;
 @property(nonatomic,copy)NSString * lastImg_id;
 

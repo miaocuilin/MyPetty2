@@ -17,7 +17,7 @@
 #import "RewardViewController.h"
 #define DEFAULT_VOID_COLOR [UIColor whiteColor]
 #import "JDMenuViewController.h"
-//#import "MainTabBarViewController.h"
+
 #import "MainViewController.h"
 #import <CoreText/CoreText.h>
 #import "LevelRank.h"
@@ -44,7 +44,9 @@ static PopupView * pop = nil;
 //static NTSlidingViewController * sliding = nil;
 static MainViewController * main = nil;
 MBProgressHUD *HUD;
-static LevelRank *levelAndRank =nil;
+static LevelRank *levelAndRank = nil;
+
+static FirstTabBarViewController * tabBar = nil;
 
 
 +(id)shareManagerRandom
@@ -129,14 +131,16 @@ static LevelRank *levelAndRank =nil;
     [MMProgressHUD dismissWithError:string];
 }
 
-//+(id)shareMainTabBar
-//{
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        main = [[MainTabBarViewController alloc] init];
-//    });
-//    return main;
-//}
+
++(id)shareTabBar
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        tabBar = [[FirstTabBarViewController alloc] init];
+    });
+    return tabBar;
+}
+
 +(id)shareMain
 {
     static dispatch_once_t onceToken;
@@ -632,5 +636,13 @@ static LevelRank *levelAndRank =nil;
     //a为要升到的级别
     int needExp = 110*(a-1)+5*(a+2)*(a-1)/2;
     return needExp;
+}
+
++(void)clearTalkData
+{
+    NSString *path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+    }
 }
 @end

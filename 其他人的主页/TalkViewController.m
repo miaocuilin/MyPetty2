@@ -15,6 +15,7 @@
 #import "PicDetailViewController.h"
 #import "UserInfoViewController.h"
 #import "FrontImageDetailViewController.h"
+#import "AddressViewController.h"
 //#import "NoticeViewController.h";
 #define TimeGap 60
 
@@ -343,7 +344,7 @@
 - (void)talkSendMessageData
 {
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat",self.usr_id]];
-    NSString *sendString = [NSString stringWithFormat:@"http://123.57.39.48/index.php?r=talk/sendMsgApi&usr_id=%@&sig=%@&SID=%@", self.usr_id, sig, [ControllerManager getSID]];
+    NSString *sendString = [NSString stringWithFormat:@"http://release4pet.aidigame.com/index.php?r=talk/sendMsgApi&usr_id=%@&sig=%@&SID=%@", self.usr_id, sig, [ControllerManager getSID]];
     _requestSend = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:sendString]];
     _requestSend.requestMethod=@"POST";
     _requestSend.timeOutSeconds = 20;
@@ -627,7 +628,11 @@
         [self.view addSubview:vc.view];
         [vc release];
     };
-    
+    cell.jumpToAddress = ^(){
+        AddressViewController * address = [[AddressViewController alloc] init];
+        [self presentViewController:address animated:YES completion:nil];
+        [address release];
+    };
 //    cell.messageFrame = self.dataArray[indexPath.row];
     return cell;
 }

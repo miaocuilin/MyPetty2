@@ -222,7 +222,7 @@
                         if(self.isFromAccount){
                             //注册过 提示是否绑定现用户，不绑定不做操作
                             Alert_oneBtnView * vc = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-                            vc.sina = YES;
+//                            vc.sina = NO;
                             vc.type = 3;
                             [vc makeUI];
                             [self.view addSubview:vc];
@@ -407,6 +407,8 @@
                     [ControllerManager setIsSuccess:1];
                     if ([[dic objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
                         [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"登录成功"];
+                        [ControllerManager clearTalkData];
+                        
                         [self dismissViewControllerAnimated:YES completion:nil];
                     }else{
                         [USER setObject:[dic objectForKey:@"aid"] forKey:@"aid"];
@@ -509,6 +511,7 @@
                 [USER setObject:@"1" forKey:@"AccountShouldDismiss"];
             }
             [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"登录成功"];
+            [ControllerManager clearTalkData];
             [self dismissViewControllerAnimated:YES completion:nil];
         }else{
             LOADFAILED;

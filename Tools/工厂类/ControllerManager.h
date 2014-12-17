@@ -26,7 +26,8 @@
 +(void)loadingSuccess:(NSString *)string;
 +(void)loadingFailed:(NSString *)string;
 
-//+(id)shareMainTabBar;
+
++(id)shareTabBar;
 +(id)shareMain;
 +(id)shareJDSideMenu;
 //+(id)shareSliding;
@@ -68,4 +69,6 @@
 +(BOOL)rankPOP:(NSString *)contribution addContribution:(NSInteger)add planet:(NSString *)dogOrcat;
 
 + (NSMutableArray *)getGift:(BOOL)isBad;
+
++(void)clearTalkData;
 @end

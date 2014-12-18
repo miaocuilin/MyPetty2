@@ -162,24 +162,26 @@
 -(void)createReward
 {
     //587  98
-    rewardBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-569/2)/2.0, self.view.frame.size.height-50-103/2-20, 569/2, 103/2) ImageName:@"food_rewardBg.png"];
+    rewardBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-498/2)/2.0, self.view.frame.size.height-50-103/2-20, 498/2, 103/2) ImageName:@"food_rewardBg.png"];
     [self.view addSubview:rewardBg];
     
-    rewardNum = [MyControl createLabelWithFrame:CGRectMake(22, 0, 50, rewardBg.frame.size.height) Font:17 Text:@"1"];
+    //
+    UIImageView * food = [MyControl createImageViewWithFrame:CGRectMake(30, (rewardBg.frame.size.height-25)/2.0, 25, 25) ImageName:@"exchange_whiteFood.png"];
+    [rewardBg addSubview:food];
+    
+    rewardNum = [MyControl createLabelWithFrame:CGRectMake(75, 0, 47, rewardBg.frame.size.height) Font:17 Text:@"1"];
     rewardNum.font = [UIFont boldSystemFontOfSize:17];
     rewardNum.textAlignment = NSTextAlignmentCenter;
     [rewardBg addSubview:rewardNum];
     
     
-    
-    UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(218/2, (rewardBg.frame.size.height-31/2)/2.0, 18/2, 31/2) ImageName:@"rightArrow.png"];
+    UIImageView * arrow = [MyControl createImageViewWithFrame:CGRectMake(125, (rewardBg.frame.size.height-31/2)/2.0, 18/2, 31/2) ImageName:@"rightArrow.png"];
     [rewardBg addSubview:arrow];
     
-    UIImageView * food = [MyControl createImageViewWithFrame:CGRectMake(arrow.frame.origin.x-35, (rewardBg.frame.size.height-25)/2.0, 25, 25) ImageName:@"exchange_whiteFood.png"];
-    [rewardBg addSubview:food];
+    
     
     //10 100 1000
-    selectView = [MyControl createViewWithFrame:CGRectMake(rewardBg.frame.origin.x+20, rewardBg.frame.origin.y-105, 113, 105)];
+    selectView = [MyControl createViewWithFrame:CGRectMake(rewardBg.frame.origin.x+45, rewardBg.frame.origin.y-105, 113, 105)];
     selectView.hidden = YES;
     [self.view addSubview:selectView];
     
@@ -336,7 +338,7 @@
     }
     petName.text = model.name;
     petType.text = [ControllerManager returnCateNameWithType:model.type];
-    userName.text = [NSString stringWithFormat:@"By %@", model.u_name];
+    userName.text = [NSString stringWithFormat:@"%@", model.u_name];
     [userHeadImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, model.u_tx]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (image) {
             userHeadImage.image = [MyControl returnSquareImageWithImage:image];

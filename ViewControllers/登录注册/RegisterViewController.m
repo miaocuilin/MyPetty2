@@ -1172,16 +1172,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)finishButtonClick:(UIButton *)sender
 {
     if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"] || tfUserName.text.length == 0 || tfCity.text.length == 0 || (boy.selected == NO && girl.selected == NO)) {
-        StartLoading;
-        [MMProgressHUD dismissWithError:@"您有信息没有填写!" afterDelay:1];
+//        StartLoading;
+//        [MMProgressHUD dismissWithError:@"您有信息没有填写!" afterDelay:1];
+        [MyControl popAlertWithView:self.view Msg:@"您有信息没有填写!"];
 //        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"您有信息没有填写!" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
 //        [alert show];
 //        [alert release];
         return;
     }
     if (tfUserName.text.length >8 || tf.text.length>8) {
-        StartLoading;
-        [MMProgressHUD dismissWithError:@"昵称不可以超过8个字哦~" afterDelay:1];
+//        StartLoading;
+//        [MMProgressHUD dismissWithError:@"昵称不可以超过8个字哦~" afterDelay:1];
+        [MyControl popAlertWithView:self.view Msg:@"昵称不可以超过8个字哦~"];
 //        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"昵称不可以超过8个汉字哦~"];
         return;
     }
@@ -1243,7 +1245,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - createCountry
 -(void)createCountry
 {
-    StartLoading;
+    LOADING;
     NSString * code = [NSString stringWithFormat:@"age=%d&gender=%d&type=%ddog&cat", age, gender, type];
     
     NSString * url = [NSString stringWithFormat:@"%@&age=%d&gender=%d&name=%@&type=%d&sig=%@&SID=%@", CREATECOUNTRY, age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, [MyMD5 md5:code], [ControllerManager getSID]];
@@ -1251,7 +1253,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
-            LoadingSuccess;
+            ENDLOADING;
             
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
                 [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
@@ -1266,7 +1268,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }
             
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -1291,23 +1293,43 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    }else{
 //        str = [NSString stringWithFormat:@"age=%d&code=&gender=%d&name=%@&type=%d&wechat=&weibo=", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type];
 //        str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&wechat=&weibo=dog&cat", age, gender, type];
-        
+    if ([[USER objectForKey:@"weChatUserInfo"] isKindOfClass:[NSDictionary class]]) {
+        if (self.isAdoption) {
+            str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&wechat=%@&weibo=dog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
+            str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=%@&weibo=", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
+        }else{
+            str2 = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&wechat=%@&weibo=dog&cat", age, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
+            str = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=%@&weibo=", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
+        }
+    }else if([[USER objectForKey:@"sinaUserInfo"] isKindOfClass:[NSDictionary class]]){
+        if (self.isAdoption) {
+            str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&wechat=&weibo=%@dog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"sinaUserInfo"] objectForKey:@"uid"]];
+            str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=&weibo=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"sinaUserInfo"] objectForKey:@"uid"]];
+        }else{
+            str2 = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&wechat=&weibo=%@dog&cat", age, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"sinaUserInfo"] objectForKey:@"uid"]];
+            str = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=&weibo=%@", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"sinaUserInfo"] objectForKey:@"uid"]];
+        }
+    }else if(self.isAdoption){
         str = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         str2 = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, gender, type, self.u_city, self.u_gender];
-    /****************/
-    if (self.isAdoption) {
-        str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender];
-    }else if (self.isOldUser){
-        
-    }else if([[USER objectForKey:@"weChatUserInfo"] isKindOfClass:[NSDictionary class]]){
-        //
-        str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&wechat=%@dog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
-        str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
-    }else if([[USER objectForKey:@"sinaUserInfo"] isKindOfClass:[NSDictionary class]]){
-        str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&weibo=%@dog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"sinaUserInfo"] objectForKey:@"uid"]];
-        str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=%@", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"sinaUserInfo"] objectForKey:@"uid"]];
+    }else{
+        str = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        str2 = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&type=%d&u_city=%d&u_gender=%ddog&cat", age, gender, type, self.u_city, self.u_gender];
     }
+    
+    
+    /****************/
+//    if (self.isAdoption) {
+//        
+//    }else if (self.isOldUser){
+//        
+//    }else if([[USER objectForKey:@"weChatUserInfo"] isKindOfClass:[NSDictionary class]]){
+//        //
+//        
+//    }else if([[USER objectForKey:@"sinaUserInfo"] isKindOfClass:[NSDictionary class]]){
+//        NSLog(@"%@", [USER objectForKey:@"sinaUserInfo"]);
+//        
+//    }
     /****************/
         sig = [MyMD5 md5:str2];
     

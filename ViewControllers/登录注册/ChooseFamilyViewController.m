@@ -55,7 +55,7 @@
     self.detailDict = [NSMutableDictionary dictionaryWithCapacity:0];
     
     self.systemListArray = [NSMutableArray arrayWithObjects:@"推荐", @"人气", nil];
-    self.totalArray = [NSMutableArray arrayWithObjects:@"所有", @"喵喵", @"汪汪", nil];
+    self.totalArray = [NSMutableArray arrayWithObjects:@"所有", @"喵喵", @"汪汪", @"其他", nil];
     self.limitTypeName = @"所有";
 //    [UIApplication sharedApplication].statusBarHidden = NO;
     
@@ -284,7 +284,7 @@
 {
     isTvCreated = YES;
     
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64+35, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64+35, 320, self.view.frame.size.height-64-35) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
     tv.backgroundColor = [UIColor clearColor];
@@ -600,12 +600,12 @@
 {
     NSLog(@"system");
     if (dropDown2 == nil) {
-        CGFloat f = 120;
+        CGFloat f = 160;
         dropDown2 = [[NIDropDown alloc] showDropDown:systemBtn :&f :self.systemListArray];
         [dropDown2 setDefaultCellType];
         dropDown2.delegate = self;
         if (!isRaceShow) {
-            headerView.frame = CGRectMake(0, 64, 320, 35+120);
+            headerView.frame = CGRectMake(0, 64, 320, 35+160);
         }
         isSystemShow = YES;
         if (isRaceShow) {

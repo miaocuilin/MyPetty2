@@ -70,7 +70,14 @@
     FoodViewController * vc2 = [[FoodViewController alloc] init];
     DiscoveryViewController * vc3 = [[DiscoveryViewController alloc] init];
     CenterViewController * vc4 = [[CenterViewController alloc] init];
+    vc4.tabBar = self;
     //    tbc = [[UITabBarController alloc] init];
+    
+    self.talkIDArray = [NSMutableArray arrayWithCapacity:0];
+    self.nwDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.nwMsgDataArray = [NSMutableArray arrayWithCapacity:0];
+    self.keysArray = [NSMutableArray arrayWithCapacity:0];
+    self.valuesArray = [NSMutableArray arrayWithCapacity:0];
     
     self.viewControllers = @[vc1, vc2, vc3, vc4];
     self.selectedIndex = 1;
@@ -192,13 +199,13 @@
             ballBtn.selected = YES;
         }
         if (i == 3) {
-            msgNumBg = [MyControl createImageViewWithFrame:CGRectMake(ballBtn.frame.size.width-15, -5, 22, 22) ImageName:@"center_msgBg.png"];
-            msgNumBg.hidden = YES;
-            [ballBtn addSubview:msgNumBg];
+            self.msgNumBg = [MyControl createImageViewWithFrame:CGRectMake(ballBtn.frame.size.width-15, -5, 22, 22) ImageName:@"center_msgBg.png"];
+            self.msgNumBg.hidden = YES;
+            [ballBtn addSubview:self.msgNumBg];
             
-            msgNum = [MyControl createLabelWithFrame:CGRectMake(-10, 0, 42, 22) Font:12 Text:@"50"];
-            msgNum.textAlignment = NSTextAlignmentCenter;
-            [msgNumBg addSubview:msgNum];
+            self.msgNum = [MyControl createLabelWithFrame:CGRectMake(-10, 0, 42, 22) Font:12 Text:@"50"];
+            self.msgNum.textAlignment = NSTextAlignmentCenter;
+            [self.msgNumBg addSubview:self.msgNum];
         }
     }
     
@@ -323,8 +330,14 @@
                 
                 //遍历整个本地字典，拿到消息数之和，返回给侧边栏
                 
-                msgNum.text = [self getNewMessageNum];
-                msgNumBg.hidden = NO;
+                NSString * num = [self getNewMessageNum];
+                if ([num intValue]) {
+                    self.msgNum.text = num;
+                    self.msgNumBg.hidden = NO;
+                }else{
+                    self.msgNumBg.hidden = YES;
+                }
+                
                 //                ENDLOADING;
             }else{
                 //遍历本地消息，取出未读数相加返回
@@ -332,16 +345,16 @@
                 if ([fileManager fileExistsAtPath:path]) {
                     NSString * num = [self getNewMessageNum];
                     if ([num intValue]) {
-                        msgNum.text = num;
-                        msgNumBg.hidden = NO;
+                        self.msgNum.text = num;
+                        self.msgNumBg.hidden = NO;
                     }else{
-                        msgNumBg.hidden = YES;
+                        self.msgNumBg.hidden = YES;
                     }
                     
                     
                 }else{
-                    msgNum.text = @"0";
-                    msgNumBg.hidden = YES;
+                    self.msgNum.text = @"0";
+                    self.msgNumBg.hidden = YES;
                 }
                 //返回
                 

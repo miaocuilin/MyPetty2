@@ -125,9 +125,10 @@
     
                     }else{
                         //未绑定过 没注册过 直接跳选择有宠没宠
-                        ChooseInViewController * vc = [[ChooseInViewController alloc] init];
-                        [self presentViewController:vc animated:YES completion:nil];
-                        [vc release];
+                        self.regClick();
+//                        ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+//                        [self presentViewController:vc animated:YES completion:nil];
+//                        [vc release];
                         [self closeBtnClick];
                     }
                 ENDLOADING;
@@ -147,6 +148,7 @@
         
         [USER setObject:dic forKey:@"sinaUserInfo"];
         [USER setObject:@"" forKey:@"weChatUserInfo"];
+         NSLog(@"%@", [USER objectForKey:@"sinaUserInfo"]);
         
         LOADING;
         NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"weibo=%@dog&cat", [dic objectForKey:@"uid"]]];
@@ -165,9 +167,10 @@
                         [self getUserData];
                     }else{
                         //未绑定过 没注册过 直接跳选择有宠没宠
-                        ChooseInViewController * vc = [[ChooseInViewController alloc] init];
-                        [self presentViewController:vc animated:YES completion:nil];
-                        [vc release];
+                        self.regClick();
+//                        ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+//                        [self presentViewController:vc animated:YES completion:nil];
+//                        [vc release];
                         [self closeBtnClick];
                     }
                 }

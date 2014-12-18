@@ -12,4 +12,5 @@
 
 @property(nonatomic,copy)void (^regClick)(void);
 @property(nonatomic,copy)void (^fastClick)(void);
+//@property(nonatomic,copy)void (^)(void);
 @end

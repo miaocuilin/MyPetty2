@@ -82,7 +82,7 @@
     
     [_timeBtn setTitle:message.time forState:UIControlStateNormal];
 //    NSLog(@"===============================%@", message.time);
-//    _messageFrame.showTime = YES;
+    _messageFrame.showTime = YES;
     _timeBtn.frame = _messageFrame.timeF;
 //    [_timeBtn setBackgroundImage:[[UIImage imageNamed:@"chat_timeline_bg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:0] forState:UIControlStateNormal];
 //    if (messageFrame.showTime) {
@@ -116,17 +116,22 @@
                 [_iconView setBackgroundImage:image forState:UIControlStateNormal];
             }else{
                 //下载头像
-                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, message.icon] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                    if (isFinish) {
-                        [_iconView setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                        NSString * docDir = DOCDIR;
-                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", message.icon]];
-                        [load.data writeToFile:txFilePath atomically:YES];
-                    }else{
-                        NSLog(@"头像下载失败");
+                [_iconView setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, message.icon]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                    if (image) {
+                        [_iconView setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
                     }
                 }];
-                [request release];
+//                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, message.icon] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                    if (isFinish) {
+//                        [_iconView setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                        NSString * docDir = DOCDIR;
+//                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", message.icon]];
+//                        [load.data writeToFile:txFilePath atomically:YES];
+//                    }else{
+//                        NSLog(@"头像下载失败");
+//                    }
+//                }];
+//                [request release];
             }
         }
         

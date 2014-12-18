@@ -271,7 +271,7 @@
 //        }
 //    }else{
         la.text = @"萌印象";
-        [bt setBackgroundImage:[UIImage imageNamed:@"star_shout.png"] forState:UIControlStateNormal];
+//        [bt setBackgroundImage:[UIImage imageNamed:@"star_touch.png"] forState:UIControlStateNormal];
         if([[model.dict objectForKey:@"is_touched"] isKindOfClass:[NSNull class]] || [model.is_touched intValue] == 0){
             la2.text = @"没摸过";
         }else{

@@ -31,6 +31,8 @@
     int pageCount;
     
     BOOL isConf;
+    
+    NSTimer * timer;
 }
 @property(nonatomic,copy)NSString * tempUrl;
 

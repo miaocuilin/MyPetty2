@@ -205,6 +205,7 @@
         NSLog(@"%@", url);
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
+                NSLog(@"%@", load.dataDict);
                 if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
                     if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]) {
                         //绑定过 更新本地个人信息及默认宠物信息，删除本地聊天记录

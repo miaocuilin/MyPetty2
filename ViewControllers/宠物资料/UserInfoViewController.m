@@ -412,16 +412,18 @@
 }
 -(void)reportIt
 {
-    StartLoading;
+    LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", REPORTUSERAPI, self.usr_id, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
-            [MyControl loadingSuccessWithContent:@"举报成功" afterDelay:0.5];
+            ENDLOADING;
+            [MyControl popAlertWithView:self.view Msg:@"举报成功"];
+//            [MyControl loadingSuccessWithContent:@"举报成功" afterDelay:0.5];
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -465,11 +467,13 @@
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self cancelBtnClick];
-                StartLoading;
-                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
             }else{
-                StartLoading;
-                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
             
         }];
@@ -481,11 +485,13 @@
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self cancelBtnClick];
-                StartLoading;
-                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
             }else{
-                StartLoading;
-                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
             
         }];
@@ -496,12 +502,14 @@
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self cancelBtnClick];
-                StartLoading;
-                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
             }else{
                 NSLog(@"失败原因：%@", response);
-                StartLoading;
-                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
             
         }];
@@ -727,32 +735,32 @@
     [flagImageView addSubview:GXList];
 
     //五角星
-    UIImageView * star = [MyControl createImageViewWithFrame:CGRectMake(74/2, 126, 20, 20) ImageName:@"yellow_star.png"];
-    [bgView addSubview:star];
-    
-    NSString * str3= [NSString stringWithFormat:@"Lv.%@",[headerDict objectForKey:@"lv"]];
-    CGSize size3 = [str3 sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(100, 100) lineBreakMode:1];
-    UILabel * RQLabel = [MyControl createLabelWithFrame:CGRectMake(64, 130, size3.width, 15) Font:13 Text:str3];
-    [bgView addSubview:RQLabel];
-    
-    UIImageView * RQBgImageView = [MyControl createImageViewWithFrame:CGRectMake(64+size3.width, 132, 350/2, 13) ImageName:@""];
-    RQBgImageView.image = [[UIImage imageNamed:@"RQBg.png"] stretchableImageWithLeftCapWidth:37/2 topCapHeight:26/2];
-    //边缘处理
-    RQBgImageView.layer.cornerRadius = 6;
-    RQBgImageView.layer.masksToBounds = YES;
-    [bgView addSubview:RQBgImageView];
-    
-    int needExp = [ControllerManager returnExpOfNeedWithLv:[headerDict objectForKey:@"lv"]];
-    int length = [[headerDict objectForKey:@"exp"] floatValue]/needExp*173;
-    //    float length = 3.5/2*70;
-    NSLog(@"%d", length);
-    UIImageView * RQImageView = [MyControl createImageViewWithFrame:CGRectMake(1, 1, length, 11) ImageName:@""];
-    RQImageView.image = [[UIImage imageNamed:@"RQImage.png"] stretchableImageWithLeftCapWidth:51/2 topCapHeight:25/2];
-    [RQBgImageView addSubview:RQImageView];
-    
-    UILabel * RQNumLabel = [MyControl createLabelWithFrame:CGRectMake(50, 0, 75, 13) Font:12 Text:[NSString stringWithFormat:@"%d/%d", [[headerDict objectForKey:@"exp"] intValue], needExp]];
-    RQNumLabel.textAlignment = NSTextAlignmentCenter;
-    [RQBgImageView addSubview:RQNumLabel];
+//    UIImageView * star = [MyControl createImageViewWithFrame:CGRectMake(74/2, 126, 20, 20) ImageName:@"yellow_star.png"];
+//    [bgView addSubview:star];
+//    
+//    NSString * str3= [NSString stringWithFormat:@"Lv.%@",[headerDict objectForKey:@"lv"]];
+//    CGSize size3 = [str3 sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(100, 100) lineBreakMode:1];
+//    UILabel * RQLabel = [MyControl createLabelWithFrame:CGRectMake(64, 130, size3.width, 15) Font:13 Text:str3];
+//    [bgView addSubview:RQLabel];
+//    
+//    UIImageView * RQBgImageView = [MyControl createImageViewWithFrame:CGRectMake(64+size3.width, 132, 350/2, 13) ImageName:@""];
+//    RQBgImageView.image = [[UIImage imageNamed:@"RQBg.png"] stretchableImageWithLeftCapWidth:37/2 topCapHeight:26/2];
+//    //边缘处理
+//    RQBgImageView.layer.cornerRadius = 6;
+//    RQBgImageView.layer.masksToBounds = YES;
+//    [bgView addSubview:RQBgImageView];
+//    
+//    int needExp = [ControllerManager returnExpOfNeedWithLv:[headerDict objectForKey:@"lv"]];
+//    int length = [[headerDict objectForKey:@"exp"] floatValue]/needExp*173;
+//    //    float length = 3.5/2*70;
+//    NSLog(@"%d", length);
+//    UIImageView * RQImageView = [MyControl createImageViewWithFrame:CGRectMake(1, 1, length, 11) ImageName:@""];
+//    RQImageView.image = [[UIImage imageNamed:@"RQImage.png"] stretchableImageWithLeftCapWidth:51/2 topCapHeight:25/2];
+//    [RQBgImageView addSubview:RQImageView];
+//    
+//    UILabel * RQNumLabel = [MyControl createLabelWithFrame:CGRectMake(50, 0, 75, 13) Font:12 Text:[NSString stringWithFormat:@"%d/%d", [[headerDict objectForKey:@"exp"] intValue], needExp]];
+//    RQNumLabel.textAlignment = NSTextAlignmentCenter;
+//    [RQBgImageView addSubview:RQNumLabel];
     
 }
 -(void)headerClick
@@ -783,8 +791,8 @@
 #pragma mark - 创建scrollView
 -(void)createScrollView
 {
-    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-    sv.contentSize = CGSizeMake(320*4, self.view.frame.size.height);
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    sv.contentSize = CGSizeMake(self.view.frame.size.width*4, self.view.frame.size.height);
     sv.delegate = self;
     sv.pagingEnabled = YES;
     //为防止和cell的手势冲突需要关闭scrollView的滑动属性。
@@ -796,7 +804,7 @@
 
 -(void)createTableView1
 {
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
@@ -850,14 +858,14 @@
 -(void)createTableView2
 {
     //
-    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(320, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 64, self.view.frame.size.width, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv2.delegate = self;
     tv2.dataSource = self;
     tv2.separatorStyle = 0;
     tv2.backgroundColor = [UIColor clearColor];
     [sv addSubview:tv2];
     
-    UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 200)];
+    UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
     tv2.tableHeaderView = tvHeaderView2;
     
     [self.view bringSubviewToFront:bgView];
@@ -868,7 +876,7 @@
 -(void)createTableView3
 {
     //
-    tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv3 = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.size.width*2, 64, self.view.frame.size.width, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv3.delegate = self;
     tv3.dataSource = self;
     tv3.separatorStyle = 0;
@@ -1342,11 +1350,14 @@
                 NSString * sig = [MyMD5 md5:code];
                 NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", EXITFAMILYAPI, [self.userPetListArray[cellIndexPath.row] aid], sig, [ControllerManager getSID]];
                 NSLog(@"quitApiurl:%@", url);
-                [MyControl startLoadingWithStatus:@"退出中..."];
+                LOADING;
+//                [MyControl startLoadingWithStatus:@"退出中..."];
                 httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if (isFinish) {
                         if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-                            [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
+                            ENDLOADING;
+                            [MyControl popAlertWithView:self.view Msg:@"退出成功"];
+//                            [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
                             [self.userPetListArray removeObjectAtIndex:cellIndexPath.row];
                             [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
 //                            if (Index) {
@@ -1356,10 +1367,14 @@
 //                            }
                             
                         }else{
-                            [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
+                            ENDLOADING;
+                            [MyControl popAlertWithView:self.view Msg:@"退出失败"];
+//                            [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
                         }
                     }else{
-                        [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
+                        ENDLOADING;
+                        [MyControl popAlertWithView:self.view Msg:@"退出失败"];
+//                        [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
                     }
                 }];
                 [request release];
@@ -1380,7 +1395,8 @@
 -(void)changeDefaultPetAid:(NSString *)aid MasterId:(NSString *)master_id
 {
     
-    [MyControl startLoadingWithStatus:@"切换中..."];
+//    [MyControl startLoadingWithStatus:@"切换中..."];
+    LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
     NSString * url =[NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", CHANGEDEFAULTPETAPI, aid, sig, [ControllerManager getSID]];
     //    NSLog(@"%@", url);
@@ -1398,7 +1414,7 @@
                     NSString * sig2 = [MyMD5 md5:code];
                     NSString * url2 = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", EXITFAMILYAPI, [USER objectForKey:@"aid"], sig2, [ControllerManager getSID]];
                     NSLog(@"quitApiurl:%@", url2);
-                    [MyControl startLoadingWithStatus:@"退出中..."];
+//                    [MyControl startLoadingWithStatus:@"退出中..."];
                     [USER setObject:aid forKey:@"aid"];
                     [USER setObject:master_id forKey:@"master_id"];
                     NSLog(@"%@--%@--%@", [USER objectForKey:@"aid"], [USER objectForKey:@"master_id"], [USER objectForKey:@"usr_id"]);
@@ -1416,10 +1432,14 @@
                                 //                            }
                                 
                             }else{
-                                [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
+                                ENDLOADING;
+                                [MyControl popAlertWithView:self.view Msg:@"退出失败"];
+//                                [MMProgressHUD dismissWithSuccess:@"退出失败" title:nil afterDelay:0.7];
                             }
                         }else{
-                            [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
+                            ENDLOADING;
+                            [MyControl popAlertWithView:self.view Msg:@"退出失败"];
+//                            [MMProgressHUD dismissWithError:@"退出失败" afterDelay:0.7];
                         }
                     }];
                     [request2 release];
@@ -1433,18 +1453,23 @@
                 
 
             }else{
-                [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+                ENDLOADING;
+                [MyControl popAlertWithView:self.view Msg:@"切换失败"];
+//                [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
             }
             
         }else{
-            [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
+            ENDLOADING;
+            [MyControl popAlertWithView:self.view Msg:@"切换失败"];
+//            [MMProgressHUD dismissWithError:@"切换失败" afterDelay:0.8];
         }
     }];
     [request release];
 }
 -(void)loadPetInfo
 {
-    [MyControl startLoadingWithStatus:@"切换成功，更新信息中..."];
+//    [MyControl startLoadingWithStatus:@"切换成功，更新信息中..."];
+    LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -1455,9 +1480,12 @@
                 //记录默认宠物信息
                 [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"petInfoDict"];
             }
-            [MMProgressHUD dismissWithSuccess:@"更新成功" title:nil afterDelay:0.5];
+            ENDLOADING;
+            [MyControl popAlertWithView:self.view Msg:@"更新成功"];
+//            [MMProgressHUD dismissWithSuccess:@"更新成功" title:nil afterDelay:0.5];
         }else{
-            [MMProgressHUD dismissWithError:@"更新失败" afterDelay:0.5];
+            LOADFAILED;
+//            [MMProgressHUD dismissWithError:@"更新失败" afterDelay:0.5];
         }
     }];
     [request release];

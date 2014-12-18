@@ -21,8 +21,7 @@
     BOOL isLoaded;
     UIView * bottomBg;
     
-    UIImageView * msgNumBg;
-    UILabel * msgNum;
+    
     
     UIImageView * guide;
 }
@@ -37,6 +36,9 @@
 @property(nonatomic)BOOL hasNewMsg;
 @property(nonatomic,retain)NSMutableArray * keysArray;
 @property(nonatomic,retain)NSMutableArray * valuesArray;
+
+@property(nonatomic,retain)UIImageView * msgNumBg;
+@property(nonatomic,retain)UILabel * msgNum;
 
 -(void)modifyUI;
 -(void)refreshMessageNum;

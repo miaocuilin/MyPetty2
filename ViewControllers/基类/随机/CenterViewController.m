@@ -391,8 +391,17 @@
                 
                 //遍历整个本地字典，拿到消息数之和，返回给侧边栏
                 
-                msgNum.text = [self getNewMessageNum];
-                msgNumBg.hidden = NO;
+                NSString * num = [self getNewMessageNum];
+                if ([num intValue]) {
+                    msgNum.text = num;
+                    msgNumBg.hidden = NO;
+                    
+                    self.tabBar.msgNum.text = num;
+                    self.tabBar.msgNumBg.hidden = NO;
+                }else{
+                    msgNumBg.hidden = YES;
+                    self.tabBar.msgNumBg.hidden = YES;
+                }
 //                ENDLOADING;
             }else{
                 //遍历本地消息，取出未读数相加返回
@@ -402,14 +411,22 @@
                     if ([num intValue]) {
                         msgNum.text = num;
                         msgNumBg.hidden = NO;
+                        
+                        self.tabBar.msgNum.text = num;
+                        self.tabBar.msgNumBg.hidden = NO;
                     }else{
                         msgNumBg.hidden = YES;
+                        
+                        self.tabBar.msgNumBg.hidden = YES;
                     }
                     
                    
                 }else{
                     msgNum.text = @"0";
                     msgNumBg.hidden = YES;
+                    
+                    self.tabBar.msgNum.text = @"0";
+                    self.tabBar.msgNumBg.hidden = YES;
                 }
                 //返回
 

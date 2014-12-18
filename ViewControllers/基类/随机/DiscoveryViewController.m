@@ -239,7 +239,7 @@
 //    blurImageView.hidden = YES;
     
     
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-35) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64+35, self.view.frame.size.width, self.view.frame.size.height-64-35-25) style:UITableViewStylePlain];
     tv.dataSource = self;
     tv.delegate = self;
     tv.separatorStyle = 0;
@@ -415,6 +415,7 @@
                     
                     NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
                     if (array.count == 0) {
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"查无此宠"];
                         ENDLOADING;
                         return;
                     }
@@ -457,6 +458,7 @@
                     
                     NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
                     if (array.count == 0) {
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"查无此人"];
                         ENDLOADING;
                         return;
                     }

@@ -38,7 +38,7 @@
 @property(nonatomic)BOOL hasNewMsg;
 @property(nonatomic,retain)NSMutableArray * keysArray;
 @property(nonatomic,retain)NSMutableArray * valuesArray;
-
+@property(nonatomic,assign)FirstTabBarViewController * tabBar;
 //刷新页面及私信
 -(void)refresh;
 @end

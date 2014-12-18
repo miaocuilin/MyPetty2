@@ -217,8 +217,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     users.showsTouchWhenHighlighted = YES;
     [sv addSubview:users];
     
-    publishTo = [MyControl createButtonWithFrame:CGRectMake(users.frame.origin.x+users.frame.size.width+space, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, width, 30) ImageName:@"" Target:self Action:@selector(publishToClick) Title:[NSString stringWithFormat:@"发布到%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"name"]]];
-    if (self.name != nil) {
+    publishTo = [MyControl createButtonWithFrame:CGRectMake(users.frame.origin.x+users.frame.size.width+space, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, width, 30) ImageName:@"" Target:self Action:@selector(publishToClick) Title:[NSString stringWithFormat:@"发布到%@", [USER objectForKey:@"a_name"]]];
+    if ([self.name isKindOfClass:[NSString class]] && self.name.length) {
         [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", self.name] forState:UIControlStateNormal];
     }
     if(self.isBeg){

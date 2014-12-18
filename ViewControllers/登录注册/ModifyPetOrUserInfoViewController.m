@@ -598,13 +598,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     NSLog(@"修改宠物资料完成");
     if (ageTextField.text.length == 0 || tf.text.length == 0 || [fromLabel.text isEqualToString:@"点击选择爱宠种族"] || (boy.selected == NO && girl.selected == NO)) {
-        StartLoading;
-        [MMProgressHUD dismissWithError:@"您有信息没有填写!" afterDelay:1];
+        [MyControl popAlertWithView:self.view Msg:@"您有信息没有填写!"];
+//        [MMProgressHUD dismissWithError:@"" afterDelay:1];
         return;
     }
     if (tf.text.length>8) {
-        StartLoading;
-        [MMProgressHUD dismissWithError:@"名字不可以超过8个字哦~" afterDelay:1];
+        [MyControl popAlertWithView:self.view Msg:@"名字不可以超过8个字哦~"];
+//        [MMProgressHUD dismissWithError:@"名字不可以超过8个字哦~" afterDelay:1];
         return;
     }
     NSLog(@"============符合要求============");
@@ -620,8 +620,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)petModifyInfo
 {
-    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithStatus:@"修改中..."];
+    LOADING;
+//    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//    [MMProgressHUD showWithStatus:@"修改中..."];
     
     NSString * code = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type];
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%ddog&cat", age, self.petInfoModel.aid, gender, type]];
@@ -643,12 +644,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [self postImage];
             }else{
                 self.refreshPetInfo();
-                [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
+                ENDLOADING;
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"修改成功"];
+//                [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
         }else{
 //            [MMProgressHUD dismissWithError:@"修改失败" afterDelay:0.5];
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -659,14 +662,16 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     NSLog(@"修改用户资料完成");
     if(tfUserName.text.length == 0 || tfCity.text.length == 0){
-        StartLoading;
-        [MMProgressHUD dismissWithError:@"您有信息没有填写!" afterDelay:1];
+        [MyControl popAlertWithView:self.view Msg:@"您有信息没有填写!"];
+//        StartLoading;
+//        [MMProgressHUD dismissWithError:@"您有信息没有填写!" afterDelay:1];
         return;
     }
     if (tfUserName.text.length >8)
     {
-        StartLoading;
-        [MMProgressHUD dismissWithError:@"昵称不可以超过8个字哦~" afterDelay:1];
+        [MyControl popAlertWithView:self.view Msg:@"昵称不可以超过8个字哦~"];
+//        StartLoading;
+//        [MMProgressHUD dismissWithError:@"昵称不可以超过8个字哦~" afterDelay:1];
         return;
     }
     NSLog(@"============符合要求============");
@@ -681,8 +686,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)userModifyInfo
 {
-    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithStatus:@"修改中..."];
+    LOADING;
+//    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//    [MMProgressHUD showWithStatus:@"修改中..."];
     NSString * code = [NSString stringWithFormat:@"u_city=%d&u_gender=%d&u_name=%@", self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"u_city=%d&u_gender=%ddog&cat", self.u_city, self.u_gender]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", MODIFYUSERINFOAPI, code, sig, [ControllerManager getSID]];
@@ -699,11 +705,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [self postUserImage];
             }else{
                 self.refreshUserInfo();
-                [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
+                ENDLOADING;
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"修改成功"];
+//                [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
                 [self dismissViewControllerAnimated:YES completion:nil];
             }
         }else{
-            [MyControl loadingFailedWithContent:@"修改失败" afterDelay:0.1];
+            LOADFAILED;
+//            [MyControl loadingFailedWithContent:@"修改失败" afterDelay:0.1];
 //            [MMProgressHUD dismissWithError:@"修改失败" afterDelay:0.5];
         }
     }];
@@ -790,15 +799,19 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         NSLog(@"用户头像存放结果：%d", a);
         self.refreshUserInfo();
     }
-    [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
+    ENDLOADING;
+    [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"修改成功"];
+//    [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     if (request == _request) {
-        [MMProgressHUD dismissWithError:@"宠物头像上传失败" afterDelay:0.5];
+        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"宠物头像上传失败"];
+//        [MMProgressHUD dismissWithError:@"宠物头像上传失败" afterDelay:0.5];
     }else{
-        [MMProgressHUD dismissWithError:@"用户头像上传失败" afterDelay:0.5];
+        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"用户头像上传失败"];
+//        [MMProgressHUD dismissWithError:@"用户头像上传失败" afterDelay:0.5];
     }
     NSLog(@"headImage upload failed");
 }

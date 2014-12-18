@@ -800,12 +800,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-
-                StartLoading;
-                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
             }else{
-                StartLoading;
-                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
             
         }];
@@ -816,12 +817,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-
-                StartLoading;
-                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
             }else{
-                StartLoading;
-                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
             
         }];
@@ -831,13 +833,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-
-                StartLoading;
-                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
             }else{
                 NSLog(@"失败原因：%@", response);
-                StartLoading;
-                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
             
         }];
@@ -1629,7 +1632,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 - (void)createNewsTableView
 {
     //动态
-    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
@@ -1639,14 +1642,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [self loadMoreKingDynamicData];
     }];
     
-    UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 200)];
+    UIView * tvHeaderView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
     tv.tableHeaderView = tvHeaderView;
 
 }
 - (void)createPhotosTableView
 {
     //图片
-    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(320, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 64, self.view.frame.size.width, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv2.delegate = self;
     tv2.dataSource = self;
     tv2.separatorStyle = 0;
@@ -1654,14 +1657,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [tv2 addFooterWithTarget:self action:@selector(loadPhotoDataMore)];
     [sv addSubview:tv2];
     
-    UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 200)];
+    UIView * tvHeaderView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
     tv2.tableHeaderView = tvHeaderView2;
 
 }
 - (void)createCountryMembersTableView
 {
     //成员
-    tv3 = [[UITableView alloc] initWithFrame:CGRectMake(320*2, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv3 = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.size.width*2, 64, self.view.frame.size.width, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv3.delegate = self;
     tv3.dataSource = self;
     tv3.separatorStyle = 0;
@@ -1669,13 +1672,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [tv3 addFooterWithTarget:self action:@selector(loadKingMembersDataMore)];
     [sv addSubview:tv3];
     
-    UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 200)];
+    UIView * tvHeaderView3 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
     tv3.tableHeaderView = tvHeaderView3;
 }
 - (void)createPresentsTableView
 {
     //礼物
-    tv4 = [[UITableView alloc] initWithFrame:CGRectMake(320*3, 64, 320, self.view.frame.size.height) style:UITableViewStylePlain];
+    tv4 = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.size.width*3, 64, self.view.frame.size.width, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv4.delegate = self;
     tv4.dataSource = self;
     tv4.separatorStyle = 0;
@@ -1692,10 +1695,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self.view bringSubviewToFront:navView];
     
     //为保证切换条在所有层的最上面，所以在此创建
-    toolBgView = [MyControl createViewWithFrame:CGRectMake(0, 64+200-44, 320, 44)];
+    toolBgView = [MyControl createViewWithFrame:CGRectMake(0, 64+200-44, self.view.frame.size.width, 44)];
     [self.view addSubview:toolBgView];
     
-    UIView * toolAlphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 44)];
+    UIView * toolAlphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
     toolAlphaView.alpha = 0.4;
     toolAlphaView.backgroundColor = [ControllerManager colorWithHexString:@"8e2918"];
     [toolBgView addSubview:toolAlphaView];
@@ -1772,7 +1775,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        tempTv = nil;
 //        bgView.frame = CGRectMake(0, 64, 320, 200);
 //        toolBgView.frame = CGRectMake(0, 64+200-44, 320, 44);
-        sv.contentOffset = CGPointMake(320*x, 0);
+        sv.contentOffset = CGPointMake(self.view.frame.size.width*x, 0);
     }];
 }
 
@@ -1781,38 +1784,38 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
 //    NSLog(@"scrollView.contentOffset.y = %f", scrollView.contentOffset.y);
     int x = sv.contentOffset.x;
-    
-    if (scrollView == sv && x%320 == 0) {
+    int w = self.view.frame.size.width;
+    if (scrollView == sv && x%w == 0) {
         tempTv = nil;
-        if (x/320 == 0) {
+        if (x/self.view.frame.size.width == 0) {
             tempTv = tv;
-        }else if(x/320 == 1){
+        }else if(x/w == 1){
             tempTv = tv2;
-        }else if(x/320 == 2){
+        }else if(x/w == 2){
             tempTv = tv3;
         }else{
             tempTv = tv4;
         }
         //对应的按钮变颜色
-        UIButton * button = (UIButton *)[toolBgView viewWithTag:200+x/320];
+        UIButton * button = (UIButton *)[toolBgView viewWithTag:200+x/w];
         [self toolBtnClick:button];
         //小橘条位置变化
         [UIView animateWithDuration:0.2 animations:^{
-            bottom.frame = CGRectMake(80*x/320, 40, 80, 4);
+            bottom.frame = CGRectMake(80*x/w, 40, 80, 4);
             tempTv.contentOffset = CGPointMake(0, 0);
             tempTv = nil;
-            bgView.frame = CGRectMake(0, 64, 320, 200);
-            toolBgView.frame = CGRectMake(0, 64+200-44, 320, 44);
+            bgView.frame = CGRectMake(0, 64, w, 200);
+            toolBgView.frame = CGRectMake(0, 64+200-44, w, 44);
         }];
     }
     
     if (scrollView != sv) {
-        bgView.frame = CGRectMake(0, 64-scrollView.contentOffset.y, 320, 200);
+        bgView.frame = CGRectMake(0, 64-scrollView.contentOffset.y, w, 200);
         //
         if (scrollView.contentOffset.y<=200-44) {
-            toolBgView.frame = CGRectMake(0, 64+200-44-scrollView.contentOffset.y, 320, 44);
+            toolBgView.frame = CGRectMake(0, 64+200-44-scrollView.contentOffset.y, w, 44);
         }else{
-            toolBgView.frame = CGRectMake(0, 64, 320, 44);
+            toolBgView.frame = CGRectMake(0, 64, w, 44);
         }
     }
 

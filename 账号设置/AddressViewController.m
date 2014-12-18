@@ -104,19 +104,25 @@
     [_request setPostValue:detailarea forKey:@"building"];
     _request.delegate = self;
     [_request startAsynchronous];
-    StartLoading;
+//    StartLoading;
+    LOADING;
 
 }
 -(void)requestFinished:(ASIHTTPRequest *)request
 {
     NSLog(@"success");
-    [MMProgressHUD dismissWithSuccess:@"保存成功" title:nil afterDelay:0.5];
+    ENDLOADING;
+    [MyControl popAlertWithView:self.view Msg:@"保存成功"];
+//    [MMProgressHUD dismissWithSuccess:@"保存成功" title:nil afterDelay:0.5];
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"failed");
-    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
+//    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
+    ENDLOADING;
+    [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"上传失败"];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)loadDataAPI

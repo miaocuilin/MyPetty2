@@ -155,6 +155,7 @@
             if ([[self.dataDict objectForKey:@"state"] intValue] == 1) {
                 //state=1时直接返回errorMessage
                 msg = [self.dataDict objectForKey:@"errorMessage"];
+                NSLog(@"%@", msg);
 //                self.httpRequestBlock(NO,self);
 //                return;
             }

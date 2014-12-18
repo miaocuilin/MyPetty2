@@ -43,17 +43,19 @@
 }
 -(void)cancelBtnClick
 {
-    StartLoading;
+    LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNBOLCKTALKAPI, self.usr_id, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
-            [MyControl loadingSuccessWithContent:@"去黑成功" afterDelay:0.5];
+            ENDLOADING;
+            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"去黑成功"];
+//            [MyControl loadingSuccessWithContent:@"去黑成功" afterDelay:0.5];
             self.deleteBlack();
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];

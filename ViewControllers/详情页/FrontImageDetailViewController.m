@@ -565,10 +565,12 @@
     
     petName.text = [self.petDict objectForKey:@"name"];
     petType.text = [ControllerManager returnCateNameWithType:[self.petDict objectForKey:@"type"]];
-    userName.text = [NSString stringWithFormat:@"By-%@", [self.petDict objectForKey:@"u_name"]];
+    userName.text = [NSString stringWithFormat:@"%@", [self.petDict objectForKey:@"u_name"]];
     
     UILabel * zan = (UILabel *)[imageBgView2 viewWithTag:300];
-    zan.text = [self.imageDict objectForKey:@"likes"];
+    if ([zan.text intValue]<[[self.imageDict objectForKey:@"likes"] intValue]) {
+        zan.text = [self.imageDict objectForKey:@"likes"];
+    }
     
     UILabel * gift = (UILabel *)[imageBgView2 viewWithTag:301];
     gift.text = [self.imageDict objectForKey:@"gifts"];
@@ -745,7 +747,7 @@
         [imageBgView2 addSubview:btn];
         btn.tag = 200+i;
         
-        UILabel * numLabel = [MyControl createLabelWithFrame:CGRectMake(btn.frame.origin.x+btn.frame.size.width+5, btn.frame.origin.y, space2-5, btn.frame.size.height) Font:13 Text:@"123"];
+        UILabel * numLabel = [MyControl createLabelWithFrame:CGRectMake(btn.frame.origin.x+btn.frame.size.width+5, btn.frame.origin.y, space2-5, btn.frame.size.height) Font:13 Text:@"0"];
         numLabel.textColor = GRAY;
         [imageBgView2 addSubview:numLabel];
         numLabel.tag = 300+i;
@@ -988,7 +990,8 @@
 //                    [self.likerIdArray insertObject:[USER objectForKey:@"usr_id"] atIndex:0];
 //                    [self.likerTxArray insertObject:[USER objectForKey:@"tx"] atIndex:0];
                     UILabel * label = (UILabel *)[imageBgView2 viewWithTag:300];
-                    label.text = [NSString stringWithFormat:@"%d", self.likersArray.count];
+                    NSLog(@"%@", label.text);
+                    label.text = [NSString stringWithFormat:@"%d", [label.text intValue]+1];
                     if (triangleIndex == 0) {
                         [tv reloadData];
                     }

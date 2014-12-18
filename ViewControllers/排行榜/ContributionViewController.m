@@ -79,7 +79,7 @@
 //}
 - (void)loadData
 {
-    StartLoading;
+    LOADING;
     NSString *contributionSig  =[MyMD5 md5:[NSString stringWithFormat:@"aid=%@&category=%ddog&cat", self.aid, self.category]];
     NSString *contribution = [NSString stringWithFormat:@"%@%@&category=%d&sig=%@&SID=%@",CONTRIBUTIONAPI, self.aid, self.category, contributionSig,[ControllerManager getSID]];
     NSLog(@"国家贡献排行榜API:%@",contribution);
@@ -89,7 +89,8 @@
             [self.contributionDataArray removeAllObjects];
             if (![[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]]) {
                 
-                [MyControl loadingFailedWithContent:@"数据异常" afterDelay:0.7];
+//                [MyControl loadingFailedWithContent:@"数据异常" afterDelay:0.7];
+                LOADFAILED;
                 [tv reloadData];
                 return;
             }
@@ -117,9 +118,9 @@
             
             [tv reloadData];
 //            [tv2 reloadData];
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];

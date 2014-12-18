@@ -356,8 +356,8 @@
 -(void)requestFinished:(ASIHTTPRequest *)request
 {
     NSLog(@"success");
-    StartLoading;
-    [MMProgressHUD dismissWithSuccess:@"发送成功" title:nil afterDelay:0.2];
+    ENDLOADING;
+//    [MMProgressHUD dismissWithSuccess:@"发送成功" title:nil afterDelay:0.2];
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     //将消息存储到本地plist文件
     NSDate * date = [NSDate date];
@@ -381,7 +381,7 @@
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
-    LoadingFailed;
+    LOADFAILED;
     NSLog(@"failed");
 }
 #pragma mark - 将消息存储到本地plist文件
@@ -634,6 +634,7 @@
         [address release];
     };
 //    cell.messageFrame = self.dataArray[indexPath.row];
+    cell.selectionStyle = 0;
     return cell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -660,7 +661,7 @@
     CGFloat ty = - rect.size.height;
     [UIView animateWithDuration:[note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
 //        self.view.transform = CGAffineTransformMakeTranslation(0, ty);
-        tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height-40+ty);
+        tv.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-40+ty);
         commentBgView2.frame = CGRectMake(0, self.view.frame.size.height-40+ty, 320, 40);
         if (tv.contentSize.height>tv.frame.size.height) {
             tv.contentOffset = CGPointMake(0, tv.contentSize.height-tv.frame.size.height);
@@ -674,8 +675,8 @@
     [UIView animateWithDuration:[note.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
 //        self.view.transform = CGAffineTransformIdentity;
         NSLog(@"%f", self.view.frame.size.height);
-        tv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height-40);
-        commentBgView2.frame = CGRectMake(0, self.view.frame.size.height-40, 320, 40);
+        tv.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-40-64);
+        commentBgView2.frame = CGRectMake(0, self.view.frame.size.height-40, self.view.frame.size.width, 40);
         if (tv.contentSize.height>tv.frame.size.height) {
             tv.contentOffset = CGPointMake(0, tv.contentSize.height-tv.frame.size.height);
         }
@@ -687,11 +688,14 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if ([tf.text isKindOfClass:[NSNull class]] || tf.text.length == 0) {
-        [ControllerManager startLoading:@"发送中..."];
-        [ControllerManager loadingFailed:@"内容不能为空"];
+        [MyControl popAlertWithView:self.view Msg:@"内容不能为空"];
+//        [ControllerManager startLoading:@"发送中..."];
+//        [ControllerManager loadingFailed:@"内容不能为空"];
         return NO;
     }
-    [ControllerManager startLoading:@"发送中..."];
+    
+    LOADING;
+//    [ControllerManager startLoading:@"发送中..."];
     
     // 5、上传信息
 //    [self postData];
@@ -803,7 +807,6 @@
 //}
 - (void)didReceiveMemoryWarning
 {
-    
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

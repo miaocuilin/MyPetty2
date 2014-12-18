@@ -101,7 +101,8 @@
 //                NSLog(@"%@", [array[0] objectForKey:@"img_url"]);
                 sv = [[UIScrollView alloc] initWithFrame:CGRectMake(4, 64+4, self.view.frame.size.width-8, 80)];
                 sv.delegate = self;
-                
+                //轮播
+                timer = [NSTimer scheduledTimerWithTimeInterval:4 target:self selector:@selector(bannerPlay) userInfo:nil repeats:YES];
                 
                 if (array.count>1) {
                     pageCount = array.count+2;
@@ -148,7 +149,7 @@
                                 pageContorl.frame = rect4;
                                 
                                 CGRect rect3 = qtmquitView.frame;
-                                rect3.origin.y = sv.frame.origin.y+h+8;
+                                rect3.origin.y = sv.frame.origin.y+h+4;
                                 rect3.size.height = self.view.frame.size.height-64-25-(h+8);
                                 qtmquitView.frame = rect3;
                             }
@@ -171,7 +172,7 @@
                                 pageContorl.frame = rect4;
                                 
                                 CGRect rect3 = qtmquitView.frame;
-                                rect3.origin.y = sv.frame.origin.y+h+8;
+                                rect3.origin.y = sv.frame.origin.y+h+4;
                                 rect3.size.height = self.view.frame.size.height-64-25-(h+8);
                                 qtmquitView.frame = rect3;
                             }];
@@ -192,7 +193,7 @@
                                 pageContorl.frame = rect4;
                                 
                                 CGRect rect3 = qtmquitView.frame;
-                                rect3.origin.y = sv.frame.origin.y+h+8;
+                                rect3.origin.y = sv.frame.origin.y+h+4;
                                 rect3.size.height = self.view.frame.size.height-64-25-(h+8);
                                 qtmquitView.frame = rect3;
                             }];
@@ -213,7 +214,7 @@
                                 pageContorl.frame = rect4;
                                 
                                 CGRect rect3 = qtmquitView.frame;
-                                rect3.origin.y = sv.frame.origin.y+h+8;
+                                rect3.origin.y = sv.frame.origin.y+h+4;
                                 rect3.size.height = self.view.frame.size.height-64-25-(h+8);
                                 qtmquitView.frame = rect3;
                             }];
@@ -235,6 +236,15 @@
         }
     }];
     [request release];
+}
+-(void)bannerPlay
+{
+    float a = sv.contentOffset.x/sv.frame.size.width;
+    int b = a;
+//    NSLog(@"%f--%d", a, b);
+    [UIView animateWithDuration:0.5 animations:^{
+        sv.contentOffset = CGPointMake((b+1)*sv.frame.size.width, 0);
+    }];
 }
 -(void)bannerClick:(UIButton *)btn
 {
@@ -924,14 +934,19 @@
 {
     if (scrollView == sv) {
         float a = sv.contentOffset.x/sv.frame.size.width;
+//        NSLog(@"---%f", a);
         if (pageCount>1 && a == pageCount-1) {
-            scrollView.contentOffset = CGPointMake(sv.frame.size.width, 0);
+//            NSLog(@"到达最后一张");
+            
+            [self performSelector:@selector(click1) withObject:nil afterDelay:0.5];
+            
             pageContorl.currentPage = 0;
         }else if(pageCount > 1 && a == 0){
+//            NSLog(@"到达第一张");
             scrollView.contentOffset = CGPointMake(sv.frame.size.width*(pageCount-2), 0);
             pageContorl.currentPage = pageCount-2;
         }else{
-            NSLog(@"%f", a);
+//            NSLog(@"%f", a);
             if (pageCount>1) {
                 pageContorl.currentPage = a-1;
             }else{
@@ -941,7 +956,10 @@
         }
     }
 }
-
+-(void)click1
+{
+    sv.contentOffset = CGPointMake(sv.frame.size.width, 0);
+}
 #pragma mark - 金币、星星、红心弹窗
 - (void)HUDText:(NSString *)string showView:(UIView *)inView yOffset:(float) offset
 {

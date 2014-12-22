@@ -397,7 +397,7 @@
                 //网上也米有SID--》login
                 [self login];
             }else{
-                
+                [USER setObject:[load.dataDict objectForKey:@"confVersion"] forKey:@"confVersion"];
                 if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] intValue]
                     ) {
                     [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
@@ -435,6 +435,8 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){
             NSLog(@"%@", load.dataDict);
+            [USER setObject:[load.dataDict objectForKey:@"confVersion"] forKey:@"confVersion"];
+            
             if ([[load.dataDict objectForKey:@"errorCode"] intValue]) {
                 UIAlertView * alert = [MyControl createAlertViewWithTitle:@"错误" Message:[load.dataDict objectForKey:@"errorMessage"] delegate:nil cancelTitle:nil otherTitles:@"确定"];
                 return;
@@ -488,6 +490,7 @@
                 //                [self getUserData];
                 return;
             }else{
+                [USER setObject:[load.dataDict objectForKey:@"confVersion"] forKey:@"confVersion"];
                 //SID未过期，直接获取用户数据
                 NSLog(@"用户数据：%@", load.dataDict);
                 NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];

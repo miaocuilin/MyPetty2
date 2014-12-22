@@ -137,7 +137,8 @@
         model.lastMsg = msgModel.msg;
         model.img_id = msgModel.img_id;
         model.usr_id = msgModel.usr_id;
-        
+        model.other_usr_id = talkModel.usr_id;
+//        NSLog(@"%@--%@", talkModel.usr_id, model.usr_id);
         [self.dataArray addObject:model];
         
         [model release];
@@ -965,10 +966,11 @@
     
     TalkViewController * vc = [[TalkViewController alloc] init];
     vc.friendName = model.usr_name;
-    vc.usr_id = model.usr_id;
+    vc.usr_id = model.other_usr_id;
     vc.otherTX = model.usr_tx;
 //    vc.noticeVc = self;
     vc.talk_id = model.talk_id;
+    NSLog(@"===%@--%@--%@", model.other_usr_id, model.usr_tx, model.talk_id);
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }

@@ -17,6 +17,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #import "AtUsersViewController.h"
 #import "TopicViewController.h"
 #import "PublishToViewController.h"
+#import "UserPetListModel.h"
 //#import "IQKeyboardManager.h"
 
 @interface PublishViewController () <UITextViewDelegate,AFPhotoEditorControllerDelegate>
@@ -89,17 +90,62 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     // Start the Aviary Editor OpenGL Load
     [AFOpenGLManager beginOpenGLLoad];
     
+    self.dataArray = [NSMutableArray arrayWithCapacity:0];
+    
     [self createBg];
     [self createFakeNavigation];
     [self makeUI];
-    if (self.aid == nil) {
-        self.aids = [NSMutableString stringWithString:[USER objectForKey:@"aid"]];
-    }else{
+//    if (self.aid == nil || self.aid.length == 0) {
+//        self.aids = [NSMutableString stringWithString:[USER objectForKey:@"aid"]];
+    if(self.isBeg){
         self.aids = [NSMutableString stringWithString:self.aid];
     }
-    
+    [self loadData];
 }
-
+-(void)loadData
+{
+    LOADING;
+    NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSLog(@"%@", load.dataDict);
+            [self.dataArray removeAllObjects];
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            for (NSDictionary * dict in array) {
+                if (![[dict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                    continue;
+                }
+                UserPetListModel * model = [[UserPetListModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
+                [self.dataArray addObject:model];
+                [model release];
+            }
+            //如果有aid
+            if (!self.isBeg) {
+                if ([[USER objectForKey:@"lastPublishAid"] intValue]) {
+                    for (int i=0; i<self.dataArray.count; i++) {
+                        if ([[self.dataArray[i] aid] isEqualToString:[USER objectForKey:@"lastPublishAid"]]) {
+                            self.aids = [NSMutableString stringWithString:[self.dataArray[i] aid]];
+                            self.name = [self.dataArray[i] name];
+                            [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", self.name] forState:UIControlStateNormal];
+                            break;
+                        }else if(i == self.dataArray.count-1){
+                            self.aids = [NSMutableString stringWithString:[self.dataArray[i] aid]];
+                            self.name = [self.dataArray[i] name];
+                            [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", self.name] forState:UIControlStateNormal];
+                        }
+                    }
+                }
+            }
+            ENDLOADING;
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
+}
 
 -(void)createBg
 {
@@ -644,7 +690,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    [USER objectForKey:@"aid"]
     NSLog(@"%@", self.aids);
     NSString * code = [NSString stringWithFormat:@"aid=%@dog&cat", self.aids];
-    
+    [USER setObject:self.aids forKey:@"lastPublishAid"];
     //网络上传
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETIMAGEAPI, self.aids, [MyMD5 md5:code], [ControllerManager getSID]];
 //    if (self.aid != nil) {

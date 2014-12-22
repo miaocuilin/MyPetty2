@@ -660,6 +660,7 @@
 		60BFBC7119B0271300EE3746 /* list_up.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6A19B0271300EE3746 /* list_up.png */; };
 		60BFBC7219B0271300EE3746 /* silverMedal.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BFBC6B19B0271300EE3746 /* silverMedal.png */; };
 		60D2F35B19F153F800FC5FB2 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D2F35A19F153F800FC5FB2 /* MessageModel.m */; };
+		60D5D5B51A43BEEC00C6F930 /* water_white.png in Resources */ = {isa = PBXBuildFile; fileRef = 60D5D5B41A43BEEC00C6F930 /* water_white.png */; };
 		60D62A6B19A4499300224976 /* ControllerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D62A6819A4499300224976 /* ControllerManager.m */; };
 		60D62A6C19A4499300224976 /* MyControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D62A6A19A4499300224976 /* MyControl.m */; };
 		60D62A6F19A46D5900224976 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60D62A6E19A46D5900224976 /* MainViewController.m */; };
@@ -1619,6 +1620,7 @@
 		60BFBC6B19B0271300EE3746 /* silverMedal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = silverMedal.png; sourceTree = "<group>"; };
 		60D2F35919F153F800FC5FB2 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
 		60D2F35A19F153F800FC5FB2 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
+		60D5D5B41A43BEEC00C6F930 /* water_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = water_white.png; sourceTree = "<group>"; };
 		60D62A6719A4499300224976 /* ControllerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControllerManager.h; sourceTree = "<group>"; };
 		60D62A6819A4499300224976 /* ControllerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControllerManager.m; sourceTree = "<group>"; };
 		60D62A6919A4499300224976 /* MyControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyControl.h; sourceTree = "<group>"; };
@@ -3031,6 +3033,7 @@
 		60A8EEE41A2EDC5000086756 /* center */ = {
 			isa = PBXGroup;
 			children = (
+				60D5D5B41A43BEEC00C6F930 /* water_white.png */,
 				60B986B51A401BA500899B51 /* discover_list.png */,
 				60BD15E61A397348000138EC /* public_alertBg.png */,
 				60BC5CA61A3874060097864B /* various_2rightarrow.png */,
@@ -3868,6 +3871,7 @@
 				60525B9F1A431C1D00F0BFF4 /* Icon@2x.png in Resources */,
 				49A5626219CBFA8600B6080A /* blackcloudbg.png in Resources */,
 				60BA9E2F1A32C5F900BEE021 /* exchange_whiteFood.png in Resources */,
+				60D5D5B51A43BEEC00C6F930 /* water_white.png in Resources */,
 				60BC3A111A3152A800EEF7D0 /* front_gift_unSelect.png in Resources */,
 				096520CE1963EFD200A8186D /* weibo.png in Resources */,
 				60B93DAD1A3EDD39008E8985 /* zan_crown.png in Resources */,

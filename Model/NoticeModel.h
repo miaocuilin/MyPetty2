@@ -14,6 +14,7 @@
 @property(nonatomic,copy)NSString * usr_name;
 @property(nonatomic,copy)NSString * usr_tx;
 @property(nonatomic,copy)NSString * usr_id;
+@property(nonatomic,copy)NSString * other_usr_id;
 @property(nonatomic,copy)NSString * time;
 @property(nonatomic,copy)NSString * lastMsg;
 @property(nonatomic,copy)NSString * unReadNum;

@@ -47,6 +47,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [self createGuide];
         [USER setObject:@"1" forKey:@"guide_star"];
     }
+    
 }
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -132,7 +133,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [navView addSubview:titleLabel];
     
     
-    UIButton * camara = [MyControl createButtonWithFrame:CGRectMake(320-61/2-15, 64-51/2-7, 61/2, 51/2) ImageName:@"newCamara.png" Target:self Action:@selector(camaraClick) Title:nil];
+    camara = [MyControl createButtonWithFrame:CGRectMake(320-61/2-15, 64-51/2-7, 61/2, 51/2) ImageName:@"newCamara.png" Target:self Action:@selector(camaraClick) Title:nil];
     camara.showsTouchWhenHighlighted = YES;
     [navView addSubview:camara];
 }
@@ -220,8 +221,19 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 model.dict = dict;
                 model.images = [dict objectForKey:@"images"];
                 [self.dataArray addObject:model];
+                
                 [model release];
             }
+            //判断camara是否出现
+            for(int i=0;i<self.dataArray.count;i++){
+                if ([[self.dataArray[i] master_id] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                    camara.hidden = NO;
+                    break;
+                }else if(i == self.dataArray.count-1){
+                    camara.hidden = YES;
+                }
+            }
+            
 //            NSLog(@"%d", self.dataArray.count);
             //
             NSMutableArray * tempArray = [NSMutableArray arrayWithArray:self.dataArray];

@@ -571,6 +571,8 @@
         cell.layer.borderWidth = 0.8;
         cell.layer.borderColor = [UIColor colorWithRed:206/255.0 green:206/255.0 blue:206/255.0 alpha:1].CGColor;
     }
+    cell.photoView.image = [UIImage imageNamed:@"water_white.png"];
+    
     PhotoModel * model = self.dataArray[indexPath.row];
     self.tempUrl = model.url;
     [cell configUI:model];
@@ -597,7 +599,6 @@
 //    if (!docDir) {
 //        NSLog(@"Documents 目录未找到");
 //    }else{
-        cell.photoView.image = nil;
     
     NSURL * URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]];
     [MyControl addSkipBackupAttributeToItemAtURL:URL];
@@ -615,7 +616,7 @@
 //            [self setFooterView];
 //            [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
         }else{
-            [cell.photoView setImageWithURL:URL placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            [cell.photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                 NSLog(@"下载完了第%d个图片", indexPath.row);
                 model.width = self.view.frame.size.width/2-4-2;
                 model.height = (model.width/image.size.width)*image.size.height;
@@ -626,11 +627,11 @@
                 }else{
                     tempHeight = model.height+35;
                 }
-                if (Height[indexPath.row] != tempHeight) {
+//                if (Height[indexPath.row] != tempHeight) {
                     NSLog(@"刷新瀑布流-%d", indexPath.row);
                     Height[indexPath.row] = tempHeight;
                     [quiltView reloadData];
-                }
+//                }
                 //                [self reloadQuiltView];
                 
             }];

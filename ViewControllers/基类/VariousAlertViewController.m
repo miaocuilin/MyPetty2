@@ -44,19 +44,27 @@
 //    [regBtn setBackgroundImage:[[UIImage imageNamed:@"various_regBtn.png"] stretchableImageWithLeftCapWidth:17 topCapHeight:0] forState:UIControlStateNormal];
     [bgView addSubview:regBtn];
     
-    NSArray * array = @[@"various_weChat.png", @"various_sina.png", @"various_fastLogin.png"];
-    NSArray * array2 = @[@"微信登录", @"微博登录", @"昵称登录"];
-    float spe = (bgView.frame.size.width-25*2-52*3)/2.0;
-    for (int i=0; i<3; i++) {
-        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(25+i*(52+spe), 123, 52, 52) ImageName:array[i] Target:self Action:@selector(buttonClick:) Title:nil];
-        button.tag = 1000+i;
-        [bgView addSubview:button];
-        
-        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(button.frame.origin.x-10, button.frame.origin.y+button.frame.size.height, button.frame.size.width+20, 20) Font:14 Text:array2[i]];
-        label.textAlignment = NSTextAlignmentCenter;
-        label.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
-        [bgView addSubview:label];
+    if ([[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"]) {
+        UIButton * logBtn = [MyControl createButtonWithFrame:CGRectMake(32, 123, bgView.frame.size.width-64, 42) ImageName:@"various_regBtn.png" Target:self Action:@selector(logBtnClick) Title:@"昵称登录"];
+        [logBtn setTitleColor:ORANGE forState:UIControlStateNormal];
+        //    [regBtn setBackgroundImage:[[UIImage imageNamed:@"various_regBtn.png"] stretchableImageWithLeftCapWidth:17 topCapHeight:0] forState:UIControlStateNormal];
+        [bgView addSubview:logBtn];
+    }else{
+        NSArray * array = @[@"various_weChat.png", @"various_sina.png", @"various_fastLogin.png"];
+        NSArray * array2 = @[@"微信登录", @"微博登录", @"昵称登录"];
+        float spe = (bgView.frame.size.width-25*2-52*3)/2.0;
+        for (int i=0; i<3; i++) {
+            UIButton * button = [MyControl createButtonWithFrame:CGRectMake(25+i*(52+spe), 123, 52, 52) ImageName:array[i] Target:self Action:@selector(buttonClick:) Title:nil];
+            button.tag = 1000+i;
+            [bgView addSubview:button];
+            
+            UILabel * label = [MyControl createLabelWithFrame:CGRectMake(button.frame.origin.x-10, button.frame.origin.y+button.frame.size.height, button.frame.size.width+20, 20) Font:14 Text:array2[i]];
+            label.textAlignment = NSTextAlignmentCenter;
+            label.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
+            [bgView addSubview:label];
+        }
     }
+    
 }
 
 -(void)closeBtnClick
@@ -69,6 +77,10 @@
     self.regClick();
 //    [self.view removeFromSuperview];
 //    [self dismissViewControllerAnimated:NO completion:nil];
+}
+-(void)logBtnClick
+{
+    self.fastClick();
 }
 -(void)buttonClick:(UIButton *)btn
 {

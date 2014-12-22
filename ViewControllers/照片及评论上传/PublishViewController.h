@@ -49,5 +49,8 @@
 @property (nonatomic,copy)NSString * aid;
 @property (nonatomic,copy)NSString * name;
 
+//要发布到的宠物的aid
 @property (nonatomic,copy)NSMutableString * aids;
+
+@property(nonatomic,retain)NSMutableArray * dataArray;
 @end

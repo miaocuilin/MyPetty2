@@ -20,6 +20,8 @@
     BOOL isBeg;
     
     UIImageView * guide;
+    
+    UIButton * camara;
 }
 @property(nonatomic,retain)UITableView * tv;
 

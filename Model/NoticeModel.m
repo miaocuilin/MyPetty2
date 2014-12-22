@@ -18,6 +18,7 @@
     [_lastMsg release];
     [_unReadNum release];
     [_img_id release];
+    [_other_usr_id release];
     [super dealloc];
 }
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key

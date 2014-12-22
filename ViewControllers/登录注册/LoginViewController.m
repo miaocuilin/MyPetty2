@@ -97,30 +97,35 @@
     }
     [sv addSubview:regBtn];
     
-    UIView * line1 = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2.0-174/2-15, logBtn.frame.origin.y+logBtn.frame.size.height+90, 174/2, 0.5)];
-    line1.backgroundColor = [UIColor whiteColor];
-    [sv addSubview:line1];
-    if (self.view.frame.size.height<568) {
-        CGRect rect = line1.frame;
-        rect.origin.y -= 40;
-        line1.frame = rect;
+    
+    //开关
+    if(![[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"]){
+        UIView * line1 = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2.0-174/2-15, logBtn.frame.origin.y+logBtn.frame.size.height+90, 174/2, 0.5)];
+        line1.backgroundColor = [UIColor whiteColor];
+        [sv addSubview:line1];
+        if (self.view.frame.size.height<568) {
+            CGRect rect = line1.frame;
+            rect.origin.y -= 40;
+            line1.frame = rect;
+        }
+        
+        UILabel * orLabel = [MyControl createLabelWithFrame:CGRectMake(self.view.frame.size.width/2-15, line1.frame.origin.y-10, 30, 20) Font:14 Text:@"或"];
+        orLabel.textAlignment = NSTextAlignmentCenter;
+        [sv addSubview:orLabel];
+        
+        UIView * line2 = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2.0+15, line1.frame.origin.y, 174/2, 0.5)];
+        line2.backgroundColor = [UIColor whiteColor];
+        [sv addSubview:line2];
+        
+        UIButton * wechat = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width/2-10-52, line2.frame.origin.y+18, 52, 52) ImageName:@"login_wechat.png" Target:self Action:@selector(wechatClick) Title:nil];
+        wechat.showsTouchWhenHighlighted = YES;
+        [sv addSubview:wechat];
+        
+        UIButton * sina = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width/2+10, line2.frame.origin.y+18, 52, 52) ImageName:@"login_sina.png" Target:self Action:@selector(sinaClick) Title:nil];
+        sina.showsTouchWhenHighlighted = YES;
+        [sv addSubview:sina];
+
     }
-    
-    UILabel * orLabel = [MyControl createLabelWithFrame:CGRectMake(self.view.frame.size.width/2-15, line1.frame.origin.y-10, 30, 20) Font:14 Text:@"或"];
-    orLabel.textAlignment = NSTextAlignmentCenter;
-    [sv addSubview:orLabel];
-    
-    UIView * line2 = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2.0+15, line1.frame.origin.y, 174/2, 0.5)];
-    line2.backgroundColor = [UIColor whiteColor];
-    [sv addSubview:line2];
-    
-    UIButton * wechat = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width/2-10-52, line2.frame.origin.y+18, 52, 52) ImageName:@"login_wechat.png" Target:self Action:@selector(wechatClick) Title:nil];
-    wechat.showsTouchWhenHighlighted = YES;
-    [sv addSubview:wechat];
-    
-    UIButton * sina = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width/2+10, line2.frame.origin.y+18, 52, 52) ImageName:@"login_sina.png" Target:self Action:@selector(sinaClick) Title:nil];
-    sina.showsTouchWhenHighlighted = YES;
-    [sv addSubview:sina];
 }
 #pragma mark - delegate
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField

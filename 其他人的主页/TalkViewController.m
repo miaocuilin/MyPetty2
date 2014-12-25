@@ -611,14 +611,23 @@
         if (a == 1 || a == 2 || a == 3) {
             return;
         }
-        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
-        //    NSLog(@"%@", petInfoDict);
+        
+        UserCardViewController * vc = [[UserCardViewController alloc] init];
         vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
         vc.modalTransitionStyle = 2;
-//        vc.isFromPetInfo = YES;
-//        vc.petHeadImage = headerImageView.image;
-        [self presentViewController:vc animated:YES completion:nil];
+        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+        vc.close = ^(){
+            [vc.view removeFromSuperview];
+        };
         [vc release];
+//        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+        //    NSLog(@"%@", petInfoDict);
+//        vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
+//        vc.modalTransitionStyle = 2;
+////        vc.isFromPetInfo = YES;
+////        vc.petHeadImage = headerImageView.image;
+//        [self presentViewController:vc animated:YES completion:nil];
+//        [vc release];
     };
     
     cell.jumpToPicDetail = ^(void){

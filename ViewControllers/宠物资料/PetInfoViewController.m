@@ -1583,18 +1583,20 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - 跳转点击事件
 -(void)jumpToUserInfo
 {
-    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+    UserCardViewController * vc = [[UserCardViewController alloc] init];
 //    NSLog(@"%@", petInfoDict);
     vc.usr_id = [petInfoDict objectForKey:@"master_id"];
     vc.modalTransitionStyle = 2;
-    vc.isFromPetInfo = YES;
-    if ([self.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
-        vc.petHeadImage = headBtn.currentBackgroundImage;
-    }else{
-        vc.petHeadImage = headerImageView.image;
-    }
-    
-    [self presentViewController:vc animated:YES completion:nil];
+//    vc.isFromPetInfo = YES;
+//    if ([self.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+//        vc.petHeadImage = headBtn.currentBackgroundImage;
+//    }else{
+//        vc.petHeadImage = headerImageView.image;
+//    }
+    vc.close = ^(){
+        [vc.view removeFromSuperview];
+    };
+    [self.view addSubview:vc.view];
     [vc release];
 }
 -(void)GXListClick
@@ -2030,12 +2032,19 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        NSLog(@"%d--%d--%@--%@--%@", indexPath.row, self.countryMembersDataArray.count, model.tx, model.usr_id, [self.countryMembersDataArray[indexPath.row] usr_id]);
         //跳转到用户页面
 //        NSLog(@"model.usr_id:%@--%@---%@",model.usr_id,model.city,model.gender);
-        UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] init];
-//        NSLog(@"%@", model.usr_id);
-        userInfoVC.usr_id = model.usr_id;
-        [self presentViewController:userInfoVC animated:YES completion:^{
-            [userInfoVC release];
-        }];
+//        UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] init];
+////        NSLog(@"%@", model.usr_id);
+//        userInfoVC.usr_id = model.usr_id;
+//        [self presentViewController:userInfoVC animated:YES completion:^{
+//            [userInfoVC release];
+//        }];
+        UserCardViewController * vc = [[UserCardViewController alloc] init];
+        vc.usr_id = model.usr_id;
+        [self.view addSubview:vc.view];
+        vc.close = ^(){
+            [vc.view removeFromSuperview];
+        };
+        [vc release];
     }
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

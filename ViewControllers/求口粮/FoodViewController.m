@@ -13,6 +13,9 @@
 #import "UserInfoViewController.h"
 #import "Alert_2ButtonView2.h"
 #import "ChargeViewController.h"
+#import "UserCardViewController.h"
+#import "PetMainViewController.h"
+
 @interface FoodViewController ()
 
 @end
@@ -466,10 +469,14 @@
 }
 -(void)jumpUserClick
 {
-    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+    UserCardViewController * vc = [[UserCardViewController alloc] init];
     int a = tv.contentOffset.y/self.view.frame.size.width;
     vc.usr_id = [self.dataArray[a] usr_id];
-    [self presentViewController:vc animated:YES completion:nil];
+    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+    vc.close = ^(){
+        [vc.view removeFromSuperview];
+    };
+//    [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
 //-(void)createBottom

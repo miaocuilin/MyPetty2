@@ -29,9 +29,10 @@
 #import "LoginViewController.h"
 #import "SetPasswordViewController.h"
 #import "VariousAlertViewController.h"
-#import "CollectionWaterFlowViewController.h"
-#import "WaterCollectionViewController.h"
-//#import "DSImagesViewController.h"
+
+#import "EaseMob.h"
+//#import "ChatSender"
+
 @implementation AppDelegate
 -(void)dealloc
 {
@@ -108,6 +109,72 @@
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     [MobClick setAppVersion:version];
     
+    //将通知数量角标归零
+//    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge categories:nil];
+//    
+//    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    /**********环信***********/
+//    aps_development.cer
+//    NSString * apnsCertName = @"imengstar_dev";
+//    [[EaseMob sharedInstance] registerSDKWithAppKey:@"aidigame#imengstar" apnsCertName:apnsCertName];
+//    [[EaseMob sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+//
+//    [self registerRemoteNotification];
+    
+    //注册
+//    [[EaseMob sharedInstance].chatManager asyncRegisterNewAccount:@"miaocuilin" password:@"123456" withCompletion:^(NSString *username, NSString *password, EMError *error) {
+//        if (!error) {
+//            NSLog(@"注册成功");
+//        }else{
+//            NSLog(@"%@", error);
+//        }
+//    } onQueue:nil];
+    
+    //登录
+//    [[EaseMob sharedInstance].chatManager asyncLoginWithUsername:@"jj" password:@"123456" completion:^(NSDictionary *loginInfo, EMError *error) {
+//        if (!error) {
+//            NSLog(@"登录成功");
+    
+//            EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
+//            NSLog(@"%@", options.nickname);
+            
+//            [[EaseMob sharedInstance].chatManager setApnsNickname:@"jj"];
+//            EMPushNotificationOptions *options = [[EMPushNotificationOptions alloc] init];
+//            options.displayStyle = ePushNotificationDisplayStyle_messageSummary;
+//            [[EaseMob sharedInstance].chatManager asyncUpdatePushOptions:options completion:^(EMPushNotificationOptions *options, EMError *error) {
+//                if (error) {
+//                    NSLog(@"%@", error);
+//                }else{
+//                    NSLog(@"更新成功");
+//                }
+//            } onQueue:nil];
+//            
+//            
+//            EMChatText *text = [[EMChatText alloc] initWithText:@"hello world!"];
+//            EMTextMessageBody *body = [[EMTextMessageBody alloc] initWithChatObject:text];
+//            EMMessage *retureMsg = [[EMMessage alloc] initWithReceiver:@"miaocuilin" bodies:[NSArray arrayWithObject:body]];
+//            retureMsg.requireEncryption = NO;
+//            retureMsg.isGroup = NO;
+//            [[EaseMob sharedInstance].chatManager sendMessage:retureMsg progress:nil error:nil];
+//        }else{
+//            NSLog(@"%@", error);
+//        }
+//    } onQueue:nil];
+    
+    
+//    [ChatSendHelper sendTextMessageWithString:@"hello world!" toUsername:@"miaocuilin" isChatGroup:NO requireEncryption:NO];
+//    EMChatText *text = [[EMChatText alloc] initWithText:@"hello world!"];
+//    EMTextMessageBody *body = [[EMTextMessageBody alloc] initWithChatObject:text];
+//    
+//    EMMessage *msg = [[EMMessage alloc]
+//                      initWithReceiver:@"miaocuilin"
+//                      bodies:[NSArray arrayWithObject:body]];
+//    //msg.ext = ...;
+//
+    
+    /**********环信***********/
+    
 //    Class cls = NSClassFromString(@"UMANUtil");
 //    SEL deviceIDSelector = @selector(openUDIDString);
 //    NSString *deviceID = nil;
@@ -125,6 +192,61 @@
     NSLog(@"shake>>");
     [[NSNotificationCenter defaultCenter]postNotificationName:@"shake" object:self];
 }
+/****************************/
+//自定义方法
+- (void)registerRemoteNotification
+{
+#if !TARGET_IPHONE_SIMULATOR
+    UIApplication *application = [UIApplication sharedApplication];
+    
+    //iOS8 注册APNS
+    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
+        [application registerForRemoteNotifications];
+        UIUserNotificationType notificationTypes = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
+        [application registerUserNotificationSettings:settings];
+    }else{
+        UIRemoteNotificationType notificationTypes = UIRemoteNotificationTypeBadge |
+        UIRemoteNotificationTypeSound |
+        UIRemoteNotificationTypeAlert;
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
+    }
+    
+#endif
+}
+
+//系统方法
+-(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    //SDK方法调用
+    [[EaseMob sharedInstance] application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+}
+//系统方法
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    //SDK方法调用
+    [[EaseMob sharedInstance] application:application didFailToRegisterForRemoteNotificationsWithError:error];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"注册推送失败"
+                                                    message:error.description
+                                                   delegate:nil
+                                          cancelButtonTitle:@"确定"
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
+//系统方法
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    //SDK方法调用
+    [[EaseMob sharedInstance] application:application didReceiveRemoteNotification:userInfo];
+}
+
+//系统方法
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+    //SDK方法调用
+    [[EaseMob sharedInstance] application:application didReceiveLocalNotification:notification];
+}
 
 //-(void)segmentClick:(UISegmentedControl *)seg
 //{
@@ -139,6 +261,7 @@
 -(void)applicationDidBecomeActive:(UIApplication *)application
 {
     [UMSocialSnsService applicationDidBecomeActive];
+    [[EaseMob sharedInstance] applicationDidBecomeActive:application];
 }
 -(BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
@@ -154,14 +277,17 @@
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    [[EaseMob sharedInstance] applicationWillResignActive:application];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    [[EaseMob sharedInstance] applicationDidEnterBackground:application];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    [[EaseMob sharedInstance] applicationWillEnterForeground:application];
 }
 
 //- (void)applicationDidBecomeActive:(UIApplication *)application
@@ -171,6 +297,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+    [[EaseMob sharedInstance] applicationWillTerminate:application];
 //    [USER removeAllObjects];
 //    [USER setObject:@"0" forKey:@"isSuccess"];
 //    NSLog(@"%@", [USER objectForKey:@"SID"]);

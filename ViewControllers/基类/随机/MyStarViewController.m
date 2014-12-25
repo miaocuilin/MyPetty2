@@ -541,7 +541,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
 //            }
         }else if (a == 3) {
-            UILabel * label = (UILabel *)[cell viewWithTag:302];
+            UILabel * label = (UILabel *)[cell viewWithTag:303];
             TouchViewController *touch = [[TouchViewController alloc] init];
             touch.isFromStar = YES;
             touch.touchBack = ^(void){
@@ -681,6 +681,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         vc.oriImage = image;
         vc.name = self.tempName;
         vc.aid = self.tempAid;
+        vc.showFrontImage = ^(NSString * img_id){
+            FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
+            front.img_id = img_id;
+            [[UIApplication sharedApplication].keyWindow addSubview:front.view];
+            [front release];
+            
+        };
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
     }];

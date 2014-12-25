@@ -46,6 +46,8 @@
 #import "Alert_oneBtnView.h"
 #import "Alert_2ButtonView2.h"
 #import "FirstTabBarViewController.h"
+#import "UserCardViewController.h"
+
 
 #define LOADING LoadingView * loadView = [ControllerManager shareLoading];[[UIApplication sharedApplication].keyWindow addSubview:loadView];
 

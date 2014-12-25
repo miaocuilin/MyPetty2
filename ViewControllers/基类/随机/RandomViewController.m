@@ -421,6 +421,7 @@
 //    if (isLoaded) {
 //        self.reloadRandom();
 //    }
+//    NSLog(@"%@", [NSString stringWithFormat:@"%@%@", RECOMMENDAPI, [ControllerManager getSID]]);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RECOMMENDAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             //只包含img_id和图片的url
@@ -605,18 +606,26 @@
     NSString * key = [[SDWebImageManager sharedManager] cacheKeyForURL:URL];
     SDImageCache * cache = [SDImageCache sharedImageCache];
     UIImage * image = [cache imageFromDiskCacheForKey:key];
-    
-//        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
-////        NSLog(@"randomFilePath:%@", randomFilePath);
-//        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
+    @try{
         if (image) {
             cell.photoView.image = image;
-//            cell.photoView.image = [MyControl image:image fitInSize:CGSizeMake(self.view.frame.size.width/2-4-2, Height[indexPath.row])];
+            //            cell.photoView.image = [MyControl image:image fitInSize:CGSizeMake(self.view.frame.size.width/2-4-2, Height[indexPath.row])];
             //            [self refreshView];
-//            [self setFooterView];
-//            [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
+            //            [self setFooterView];
+            //            [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
         }else{
             [cell.photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                
+//                NSURL * URL2 = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]];
+//                [MyControl addSkipBackupAttributeToItemAtURL:URL2];
+//                NSString * key2 = [[SDWebImageManager sharedManager] cacheKeyForURL:URL2];
+//                SDImageCache * cache2 = [SDImageCache sharedImageCache];
+//                UIImage * image2 = [cache2 imageFromDiskCacheForKey:key2];
+//                if (image2) {
+//                    cell.photoView.image = image2;
+//                }else{
+//                    cell.photoView.image = image;
+//                }
                 NSLog(@"下载完了第%d个图片", indexPath.row);
                 model.width = self.view.frame.size.width/2-4-2;
                 model.height = (model.width/image.size.width)*image.size.height;
@@ -627,14 +636,26 @@
                 }else{
                     tempHeight = model.height+35;
                 }
-//                if (Height[indexPath.row] != tempHeight) {
+                
+                if ([model.url rangeOfString:@"&"].location == NSNotFound) {
                     NSLog(@"刷新瀑布流-%d", indexPath.row);
                     Height[indexPath.row] = tempHeight;
                     [quiltView reloadData];
-//                }
+                }
                 //                [self reloadQuiltView];
                 
             }];
+        }
+    }@catch(NSException * exception){
+        NSLog(@"%@", exception);
+    }@finally{
+        
+    }
+//        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
+////        NSLog(@"randomFilePath:%@", randomFilePath);
+//        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
+    
+    
 //            cell.photoView.image = [UIImage imageNamed:@"20-1.png"];
 //            cell.photoView.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"20-1" ofType:@"png"]];
 //            [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url] Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -686,7 +707,7 @@
 //                    //            [alert release];
 //                }
 //            }];
-        }
+//        }
 //    }
     cell.titleLabel.text = model.cmt;
     //    NSString * url = [NSString stringWithFormat:@"%@%@", IMAGEURL, model.url];

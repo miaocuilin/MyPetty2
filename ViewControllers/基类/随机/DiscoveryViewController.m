@@ -293,10 +293,17 @@
 {
     NSLog(@"%d", indexPath.row);
     if (isSearchUser) {
-        UserInfoViewController * uvc = [[UserInfoViewController alloc] init];
-        uvc.usr_id = [self.searchUserArray[indexPath.row] usr_id];
-        [self presentViewController:uvc animated:YES completion:nil];
-        [uvc release];
+        UserCardViewController * card = [[UserCardViewController alloc] init];
+        card.usr_id = [self.searchUserArray[indexPath.row] usr_id];
+        [[UIApplication sharedApplication].keyWindow addSubview:card.view];
+        card.close = ^(){
+            [card.view removeFromSuperview];
+        };
+        [card release];
+//        UserInfoViewController * uvc = [[UserInfoViewController alloc] init];
+//        uvc.usr_id = [self.searchUserArray[indexPath.row] usr_id];
+//        [self presentViewController:uvc animated:YES completion:nil];
+//        [uvc release];
     }else{
         PetInfoViewController * pvc = [[PetInfoViewController alloc] init];
         pvc.aid = [self.searchArray[indexPath.row] aid];

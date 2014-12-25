@@ -942,10 +942,17 @@
 #pragma mark - 
 -(void)jumpToUserClick
 {
-    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+    UserCardViewController * vc = [[UserCardViewController alloc] init];
     vc.usr_id = [self.petDict objectForKey:@"master_id"];
-    [self presentViewController:vc animated:YES completion:nil];
+    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+    vc.close = ^(){
+        [vc.view removeFromSuperview];
+    };
     [vc release];
+//    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+//    vc.usr_id = [self.petDict objectForKey:@"master_id"];
+//    [self presentViewController:vc animated:YES completion:nil];
+//    [vc release];
 }
 #pragma mark - 点赞
 -(void)zanBtnClick:(UIButton *)btn
@@ -1465,8 +1472,9 @@
     if (index == 0) {
         NSLog(@"微信");
         //强制分享图片
+//        [self.imageDict objectForKey:@"cmt"]
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:[self.imageDict objectForKey:@"cmt"] image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:[self.petDict objectForKey:@"name"] image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self loadShareAPI];
@@ -1486,7 +1494,7 @@
         NSLog(@"朋友圈");
         //强制分享图片
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:[self.imageDict objectForKey:@"cmt"] image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:[self.petDict objectForKey:@"name"] image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self loadShareAPI];
@@ -1776,7 +1784,7 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+    UserCardViewController * vc = [[UserCardViewController alloc] init];
     if (triangleIndex == 0) {
         vc.usr_id = [self.likersArray[indexPath.row] usr_id];
         [self presentViewController:vc animated:YES completion:nil];
@@ -1792,6 +1800,12 @@
     }else{
         vc.usr_id = [self.sharersArray[indexPath.row] usr_id];
         [self presentViewController:vc animated:YES completion:nil];
+    }
+    vc.close = ^(){
+        [vc.view removeFromSuperview];
+    };
+    if (triangleIndex != 2) {
+        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
     }
     
     [vc release];

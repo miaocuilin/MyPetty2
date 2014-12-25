@@ -133,10 +133,17 @@
         [vc release];
     };
     cell.jumpUserClick = ^(){
-        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+        UserCardViewController * vc = [[UserCardViewController alloc] init];
         vc.usr_id = model.master_id;
-        [self presentViewController:vc animated:YES completion:nil];
+        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+        vc.close = ^(){
+            [vc.view removeFromSuperview];
+        };
         [vc release];
+//        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+//        vc.usr_id = model.master_id;
+//        [self presentViewController:vc animated:YES completion:nil];
+//        [vc release];
     };
     cell.pBtnClick = ^(int a, NSString * aid){
         if (![[USER objectForKey:@"isSuccess"] intValue]) {

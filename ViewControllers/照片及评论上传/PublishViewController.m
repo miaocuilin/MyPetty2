@@ -124,20 +124,21 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }
             //如果有aid
             if (!self.isBeg) {
-                if ([[USER objectForKey:@"lastPublishAid"] intValue]) {
-                    for (int i=0; i<self.dataArray.count; i++) {
-                        if ([[self.dataArray[i] aid] isEqualToString:[USER objectForKey:@"lastPublishAid"]]) {
-                            self.aids = [NSMutableString stringWithString:[self.dataArray[i] aid]];
-                            self.name = [self.dataArray[i] name];
-                            [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", self.name] forState:UIControlStateNormal];
-                            break;
-                        }else if(i == self.dataArray.count-1){
-                            self.aids = [NSMutableString stringWithString:[self.dataArray[i] aid]];
-                            self.name = [self.dataArray[i] name];
-                            [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", self.name] forState:UIControlStateNormal];
-                        }
+                for (int i=0; i<self.dataArray.count; i++) {
+                    if ([[self.dataArray[i] aid] isEqualToString:[USER objectForKey:@"lastPublishAid"]]) {
+                        self.aids = [NSMutableString stringWithString:[self.dataArray[i] aid]];
+                        self.name = [self.dataArray[i] name];
+                        [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", self.name] forState:UIControlStateNormal];
+                        break;
+                    }else if(i == self.dataArray.count-1){
+                        self.aids = [NSMutableString stringWithString:[self.dataArray[0] aid]];
+                        self.name = [self.dataArray[0] name];
+                        [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", self.name] forState:UIControlStateNormal];
                     }
                 }
+//                if ([[USER objectForKey:@"lastPublishAid"] intValue]) {
+//
+//                }
             }
             ENDLOADING;
         }else{
@@ -456,6 +457,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         shareSuc = YES;
         if (publishSuc) {
             [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                self.showFrontImage(self.img_id);
                 [self dismissViewControllerAnimated:YES completion:nil];
             } completion:nil];
         }
@@ -476,6 +478,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             shareSuc = YES;
             if (publishSuc) {
                 [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                    self.showFrontImage(self.img_id);
                     [self dismissViewControllerAnimated:YES completion:nil];
                 } completion:nil];
             }
@@ -499,6 +502,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             shareSuc = YES;
             if (publishSuc) {
                 [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                    self.showFrontImage(self.img_id);
                     [self dismissViewControllerAnimated:YES completion:nil];
                 } completion:nil];
             }
@@ -524,6 +528,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 shareSuc = YES;
                 if (publishSuc) {
                     [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                        self.showFrontImage(self.img_id);
                         [self dismissViewControllerAnimated:YES completion:nil];
                     } completion:nil];
                 }
@@ -759,7 +764,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     NSDictionary *dict =[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
-    
+    if([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[dict objectForKey:@"data"] objectForKey:@"image"] isKindOfClass:[NSDictionary class]]){
+        self.img_id = [[[dict objectForKey:@"data"] objectForKey:@"image"] objectForKey:@"img_id"];
+    }
     
     if ([[dict objectForKey:@"state"] intValue] == 1) {
         LOADFAILED;
@@ -782,6 +789,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         publishSuc = YES;
         if (shareSuc) {
             [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                self.showFrontImage(self.img_id);
                 [self dismissViewControllerAnimated:YES completion:nil];
             } completion:nil];
         }

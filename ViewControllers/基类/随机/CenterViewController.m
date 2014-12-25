@@ -309,11 +309,18 @@
         [self shake];
         return;
     }
-    
-    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+
+    UserCardViewController * vc = [[UserCardViewController alloc] init];
     vc.usr_id = [USER objectForKey:@"usr_id"];
-    [self presentViewController:vc animated:YES completion:nil];
+    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+    vc.close = ^(){
+        [vc.view removeFromSuperview];
+    };
     [vc release];
+//    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+//    vc.usr_id = [USER objectForKey:@"usr_id"];
+//    [self presentViewController:vc animated:YES completion:nil];
+//    [vc release];
 }
 -(void)createFakeNavigation
 {

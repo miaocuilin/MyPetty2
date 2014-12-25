@@ -103,7 +103,9 @@
     leftTime.frame = CGRectMake(whiteView.frame.size.width-220, foodNum.frame.origin.y, 210, 20);
     
     //517_1417699704@50512@_640&853.png
-    [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+    [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] placeholderImage:[UIImage imageNamed:@"water_white.png"] options:0 progress:^(NSUInteger receivedSize, long long expectedSize) {
+//        NSLog(@"%d--%lld--%.2lld", receivedSize, expectedSize, receivedSize/expectedSize);
+    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (image) {
             
             float w = whiteView.frame.size.width;
@@ -120,10 +122,31 @@
             }else{
                 //过高
                 float realWidth = (h-margin*2)*imageW/imageH;
-                 bigImageView.frame = CGRectMake((w-realWidth)/2.0, margin, realWidth, h-margin*2);
+                bigImageView.frame = CGRectMake((w-realWidth)/2.0, margin, realWidth, h-margin*2);
             }
         }
     }];
+//    [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//        if (image) {
+//            
+//            float w = whiteView.frame.size.width;
+//            float h = leftTime.frame.origin.y;
+//            
+//            float imageW = image.size.width;
+//            float imageH = image.size.height;
+//            
+//            int margin = 5;
+//            if (imageW/imageH > w/h) {
+//                //过宽
+//                float realHeight = (w-margin*2)*imageH/imageW;
+//                bigImageView.frame = CGRectMake(margin, (h-realHeight)/2.0, w-margin*2, realHeight);
+//            }else{
+//                //过高
+//                float realWidth = (h-margin*2)*imageW/imageH;
+//                 bigImageView.frame = CGRectMake((w-realWidth)/2.0, margin, realWidth, h-margin*2);
+//            }
+//        }
+//    }];
     
 }
 //-(void)addAnimation:(int)num

@@ -704,7 +704,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             if (self.oriUserImage) {
                 [self postUserImage];
             }else{
-                self.refreshUserInfo();
+                self.refreshUserInfo(self.u_name, self.u_gender, self.u_city, self.oriUserImage);
                 ENDLOADING;
                 [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"修改成功"];
 //                [MMProgressHUD dismissWithSuccess:@"修改成功" title:nil afterDelay:0.5];
@@ -797,7 +797,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         NSData * data = UIImageJPEGRepresentation(self.oriUserImage, 0.1);
         BOOL a = [data writeToFile:pngFilePath atomically:YES];
         NSLog(@"用户头像存放结果：%d", a);
-        self.refreshUserInfo();
+        self.refreshUserInfo(self.u_name, self.u_gender, self.u_city, self.oriUserImage);
     }
     ENDLOADING;
     [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"修改成功"];
@@ -859,7 +859,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             finishButton.userInteractionEnabled = NO;
             return;
         }else{
-            finishButton.backgroundColor = BGCOLOR;
+            finishButton.backgroundColor = ORANGE;
             finishButton.userInteractionEnabled = YES;
         }
     }else{
@@ -869,7 +869,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             finishButton2.userInteractionEnabled = NO;
             return;
         }else{
-            finishButton2.backgroundColor = BGCOLOR;
+            finishButton2.backgroundColor = ORANGE;
             finishButton2.userInteractionEnabled = YES;
         }
     }

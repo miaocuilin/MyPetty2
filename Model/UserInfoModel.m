@@ -24,6 +24,12 @@
     [_name release];
     [_tx release];
     [_usr_id release];
+    [_next_gold release];
+    [_password release];
+    [_rank release];
+    [_wechat release];
+    [_weibo release];
+    [_code release];
     [super dealloc];
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key

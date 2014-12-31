@@ -38,6 +38,7 @@
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
 //    if([[USER objectForKey:@"favoriteNeedRefresh"] intValue] == 1 && [[USER objectForKey:@"isFavoriteLoaded"] intValue] == 1){
 //        [self loadData];
 //        [USER setObject:@"0" forKey:@"favoriteNeedRefresh"];

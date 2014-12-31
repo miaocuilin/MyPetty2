@@ -37,6 +37,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     //1 代表未注册  2 代表刚注册  3代表已注册
     if ([[USER objectForKey:@"isNotRegister"] intValue] == 2) {
         [USER setObject:@"3" forKey:@"isNotRegister"];

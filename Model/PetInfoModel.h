@@ -24,6 +24,11 @@
 @property(nonatomic,copy)NSString * u_name;
 @property(nonatomic,copy)NSString * u_rank;
 @property(nonatomic,copy)NSString * u_tx;
+@property(nonatomic,copy)NSString * gifts;
+@property(nonatomic,copy)NSString * images;
+@property(nonatomic,copy)NSString * news;
+@property(nonatomic,copy)NSString * total_food;
+@property(nonatomic,copy)NSString * msg;
 
 @property(nonatomic,copy)NSString * is_follow;
 @end

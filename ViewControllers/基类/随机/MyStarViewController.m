@@ -41,6 +41,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 @implementation MyStarViewController
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (isLoaded) {
 //        [self.tv headerBeginRefreshing];
     }else if(![[USER objectForKey:@"guide_star"] intValue]){
@@ -51,6 +52,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
 }
 - (void)viewDidLoad {
@@ -541,7 +543,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
 //            }
         }else if (a == 3) {
-            UILabel * label = (UILabel *)[cell viewWithTag:302];
+            UILabel * label = (UILabel *)[cell viewWithTag:303];
             TouchViewController *touch = [[TouchViewController alloc] init];
             touch.isFromStar = YES;
             touch.touchBack = ^(void){
@@ -637,9 +639,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         
         imagePickerController.sourceType = sourceType;
         
-        if ([self hasValidAPIKey]) {
+//        if ([self hasValidAPIKey]) {
             [self presentViewController:imagePickerController animated:YES completion:^{}];
-        }
+//        }
         
         [imagePickerController release];
     }
@@ -681,6 +683,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         vc.oriImage = image;
         vc.name = self.tempName;
         vc.aid = self.tempAid;
+        vc.showFrontImage = ^(NSString * img_id){
+            FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
+            front.img_id = img_id;
+            [[UIApplication sharedApplication].keyWindow addSubview:front.view];
+            [front release];
+            
+        };
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
     }];

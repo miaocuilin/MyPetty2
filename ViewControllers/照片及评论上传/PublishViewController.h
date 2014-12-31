@@ -53,4 +53,7 @@
 @property (nonatomic,copy)NSMutableString * aids;
 
 @property(nonatomic,retain)NSMutableArray * dataArray;
+
+@property(nonatomic,copy)void (^showFrontImage)(NSString *);
+@property (nonatomic,copy)NSString * img_id;
 @end

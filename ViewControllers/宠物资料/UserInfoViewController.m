@@ -28,12 +28,14 @@
 @implementation UserInfoViewController
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (isLoaded) {
         [self loadMyCountryInfoData];
     }
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
 }
 - (void)viewDidLoad
@@ -433,7 +435,7 @@
     NSLog(@"跳转到修改用户资料");
     ModifyPetOrUserInfoViewController * vc = [[ModifyPetOrUserInfoViewController alloc] init];
     vc.isModifyUser = YES;
-    vc.refreshUserInfo = ^(void){
+    vc.refreshUserInfo = ^(NSString * name,int gender,int city,UIImage * image){
         for (UIView * view in self.view.subviews) {
             [view removeFromSuperview];
         }

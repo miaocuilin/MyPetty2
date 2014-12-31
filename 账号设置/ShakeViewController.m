@@ -43,15 +43,18 @@
 }
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [self loadShakeDataInit];
 
 }
 - (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadShakeData) name:@"shake" object:nil];
     [self createNoChanceView];
 }
 - (void)viewDidDisappear:(BOOL)animated
 {
+    [super viewDidDisappear:animated];
     [self resignFirstResponder];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"shake" object:nil];
 }

@@ -54,6 +54,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if ([USER objectForKey:@"noViewGift"] == nil || [[USER objectForKey:@"noViewGift"] length] == 0 || [[USER objectForKey:@"noViewGift"] intValue] == 0) {
         greenBall.hidden = YES;
     }else{

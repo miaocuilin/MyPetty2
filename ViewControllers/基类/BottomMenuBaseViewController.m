@@ -29,6 +29,7 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     NSLog(@"%f", self.view.frame.size.height);
     int a = self.view.frame.size.height;
     if (a == 568.0) {

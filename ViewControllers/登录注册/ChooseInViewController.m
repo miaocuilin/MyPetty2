@@ -27,6 +27,7 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     if ([[USER objectForKey:@"isChooseInShouldDismiss"] intValue]) {
         [USER setObject:@"0" forKey:@"isChooseInShouldDismiss"];
         [self dismissViewControllerAnimated:NO completion:nil];

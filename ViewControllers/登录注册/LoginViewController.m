@@ -17,6 +17,7 @@
 @implementation LoginViewController
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     if ([[USER objectForKey:@"isLoginShouldDismiss"] intValue]) {
         [USER setObject:@"0" forKey:@"isLoginShouldDismiss"];
         [self dismissViewControllerAnimated:NO completion:nil];

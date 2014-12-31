@@ -22,6 +22,7 @@
 @implementation FirstTabBarViewController
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (!isLoaded) {
         if (![[USER objectForKey:@"guide_food"] intValue]) {
             [self createGuide];
@@ -38,6 +39,7 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
 }
 -(void)createGuide

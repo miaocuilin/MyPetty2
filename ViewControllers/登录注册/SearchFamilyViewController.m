@@ -21,6 +21,7 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     if ([[USER objectForKey:@"isSearchFamilyShouldDismiss"] intValue]) {
         [USER setObject:@"0" forKey:@"isSearchFamilyShouldDismiss"];
         [self dismissViewControllerAnimated:NO completion:nil];
@@ -71,7 +72,7 @@
 #pragma mark - 加载用户数据
 -(void)loadUserPetsList
 {
-    StartLoading;
+    LOADING;
     NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"%@", url);
@@ -79,9 +80,9 @@
         if (isFinish) {
             NSLog(@"UserPetsList:%@", load.dataDict);
             self.userPetsListArray = [load.dataDict objectForKey:@"data"];
-            LoadingSuccess;
+            ENDLOADING;
         }else{
-            LoadingFailed;
+            LOADFAILED;
         }
     }];
     [request release];
@@ -379,12 +380,31 @@
         Alert_oneBtnView * view = [[Alert_oneBtnView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
         int a = [[USER objectForKey:@"countryNum"] intValue];
 //        if(a>=10){
-            view.type = 2;
-            view.petsNum = a+1;
+//            view.type = 2;
+//            view.petsNum = a+1;
 //        }else{
 //            view.AlertType = 2;
 //        }
-        [view makeUI];
+//        [view makeUI];
+        if(a >= 10){
+            if((a+1)*5>[[USER objectForKey:@"gold"] intValue]){
+                //余额不足
+                [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                return;
+            }
+            view.type = 2;
+            view.petsNum = a+1;
+            [view makeUI];
+            [self.view addSubview:view];
+            [view release];
+        }else{
+            view.type = 2;
+            view.petsNum = a+1;
+            [view makeUI];
+            [self.view addSubview:view];
+            [view release];
+        }
+        
         view.jump = ^(){
 //            [MyControl startLoadingWithStatus:@"加入中..."];
             LOADING;
@@ -399,6 +419,7 @@
 //                    [MyControl loadingSuccessWithContent:@"加入成功^_^" afterDelay:0.5f];
                     if (a>=10) {
                         [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-(a+1)*5] forKey:@"gold"];
+                        [USER setObject:@"countryNum" forKey:[NSString stringWithFormat:@"%d", a+1]];
                     }
                     //捧Ta成功界面
                     NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
@@ -421,8 +442,8 @@
             [request release];
             
         };
-        [self.view addSubview:view];
-        [view release];
+//        [self.view addSubview:view];
+//        [view release];
         
     }else{
         RegisterViewController * vc = [[RegisterViewController alloc] init];

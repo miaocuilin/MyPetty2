@@ -31,6 +31,7 @@
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (!isLoaded) {
         [self makeUI];
         [self modifyUI];
@@ -42,6 +43,7 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
 }
 -(void)refreshMessageNum

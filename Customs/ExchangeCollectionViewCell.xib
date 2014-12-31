@@ -37,7 +37,7 @@
                             <action selector="exBtnClick:" destination="gTV-IL-0wX" eventType="touchUpInside" id="HmU-VO-7Kv"/>
                         </connections>
                     </button>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cat2.jpg" id="dfX-hZ-Far">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="dfX-hZ-Far">
                         <rect key="frame" x="8" y="50" width="122" height="71"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </imageView>
@@ -66,7 +66,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="cat2.jpg" width="600" height="600"/>
         <image name="center_chargeBg.png" width="206" height="81"/>
         <image name="exchange_whiteFood.png" width="68" height="69"/>
     </resources>

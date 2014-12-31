@@ -61,6 +61,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (isLoaded) {
         [self loadCountryList];
         //更新头像
@@ -99,6 +100,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
 }
 - (void)viewDidLoad
@@ -873,11 +875,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     oneBtn.type = 2;
                     oneBtn.petsNum = array.count+1;
                     [oneBtn makeUI];
+                    [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+                    [oneBtn release];
                 }else{
                     oneBtn.type = 2;
                     oneBtn.petsNum = array.count+1;
                     [oneBtn makeUI];
-                    
+                    [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+                    [oneBtn release];
                 }
                 oneBtn.jump = ^(){
 //                    [MyControl startLoadingWithStatus:@"加入中..."];
@@ -924,8 +929,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [request release];
         //
         
-        [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
-        [oneBtn release];
     }else{
 //        [self createExitCountryAlertView];
         Alert_2ButtonView2 * buttonView2 = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -1593,7 +1596,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else{
         vc.petHeadImage = headerImageView.image;
     }
-    
+//    vc.close = ^(){
+//        [vc.view removeFromSuperview];
+//    };
+//    [self.view addSubview:vc.view];
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
@@ -2030,12 +2036,20 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        NSLog(@"%d--%d--%@--%@--%@", indexPath.row, self.countryMembersDataArray.count, model.tx, model.usr_id, [self.countryMembersDataArray[indexPath.row] usr_id]);
         //跳转到用户页面
 //        NSLog(@"model.usr_id:%@--%@---%@",model.usr_id,model.city,model.gender);
-        UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] init];
-//        NSLog(@"%@", model.usr_id);
-        userInfoVC.usr_id = model.usr_id;
-        [self presentViewController:userInfoVC animated:YES completion:^{
-            [userInfoVC release];
-        }];
+//        UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] init];
+////        NSLog(@"%@", model.usr_id);
+//        userInfoVC.usr_id = model.usr_id;
+//        [self presentViewController:userInfoVC animated:YES completion:^{
+//            [userInfoVC release];
+//        }];
+        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+        vc.usr_id = model.usr_id;
+        [self presentViewController:vc animated:YES completion:nil];
+//        [self.view addSubview:vc.view];
+//        vc.close = ^(){
+//            [vc.view removeFromSuperview];
+//        };
+        [vc release];
     }
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

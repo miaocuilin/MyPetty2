@@ -209,7 +209,7 @@
     descLabel.textColor = GRAYBLUECOLOR;
     [bodyView addSubview:descLabel];
     
-    UIImageView *touchImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2-130, 40, 260, 180) ImageName:@"defaultPetHead.png"];
+    UIImageView *touchImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2-130, 40, 260, 180) ImageName:@""];
 //    touchImageView.contentMode = UIViewContentModeScaleAspectFill;
     
     //看是否有照片
@@ -374,11 +374,13 @@
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-                StartLoading;
-                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
             }else{
-                StartLoading;
-                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享失败"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
             
         }];
@@ -389,11 +391,13 @@
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-                StartLoading;
-                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
             }else{
-                StartLoading;
-                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享失败"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
             
         }];
@@ -403,12 +407,14 @@
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-                StartLoading;
-                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
             }else{
                 NSLog(@"失败原因：%@", response);
-                StartLoading;
-                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享失败"];
+//                StartLoading;
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
             }
             
         }];

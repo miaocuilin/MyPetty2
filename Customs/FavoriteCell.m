@@ -265,7 +265,7 @@
         [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"点赞失败 = =."];
+//                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"点赞失败 = =."];
                     
                     heart.image = [UIImage imageNamed:@"11-1.png"];
                     numLabel.text = [NSString stringWithFormat:@"%d", [numLabel.text intValue]-1];
@@ -289,7 +289,7 @@
         [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消赞失败 = =."];
+//                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消赞失败 = =."];
                     heart.image = [UIImage imageNamed:@"11-2.png"];
                     numLabel.text = [NSString stringWithFormat:@"%d", [numLabel.text intValue]+1];
                 }else{

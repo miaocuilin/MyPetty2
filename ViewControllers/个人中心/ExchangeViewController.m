@@ -36,7 +36,7 @@
     [self createBg];
     [self createCollectionView];
     [self createFakeNavigation];
-    [self createBottom];
+//    [self createBottom];
     [self loadData];
 }
 -(void)loadData
@@ -76,19 +76,23 @@
                 
                 [model setValuesForKeysWithDictionary:dict];
                 if (![model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                    [model release];
                     continue;
                 }
                 if ([model.aid isEqualToString:self.tempAid]) {
                     foodNum.text = model.food;
                     self.tempModel = model;
                 }
+                
                 [self.userPetListArray addObject:model];
                 [model release];
                 //
-                [bottomBg removeFromSuperview];
-                [self createBottom];
             }
-            
+            if ([self.tempModel.food length] == 0 && self.userPetListArray.count) {
+                self.tempModel = self.userPetListArray[0];
+            }
+            [bottomBg removeFromSuperview];
+            [self createBottom];
 //            [tv reloadData];
 //            ENDLOADING;
         }else{
@@ -180,6 +184,9 @@
     [foodNumBg addSubview:orangeFood];
     
     foodNum = [MyControl createLabelWithFrame:CGRectMake(orangeFood.frame.origin.x+30+5, 0, 90, 78/2.0) Font:20 Text:self.tempModel.food];
+    if (!self.tempModel.food.length) {
+        foodNum.text = @"0";
+    }
     foodNum.textColor = BGCOLOR;
     [foodNumBg addSubview:foodNum];
     
@@ -191,15 +198,18 @@
     [upButton setBackgroundImage:[UIImage imageNamed:@"exchange_down.png"] forState:UIControlStateSelected];
     [bottomBg addSubview:upButton];
     
-    headBtn = [MyControl createButtonWithFrame:CGRectMake(petBg.frame.origin.x+26.5, petBg.frame.origin.y+12, 52, 52) ImageName:@"" Target:self Action:@selector(headBtnClick) Title:nil];
+    headBtn = [MyControl createButtonWithFrame:CGRectMake(petBg.frame.origin.x+26.5, petBg.frame.origin.y+12, 52, 52) ImageName:@"defaultPetHead.png" Target:self Action:@selector(headBtnClick) Title:nil];
     headBtn.layer.cornerRadius = 26;
     headBtn.layer.masksToBounds = YES;
     [bottomBg addSubview:headBtn];
-    [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [USER objectForKey:@"a_tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-            [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-        }
-    }];
+    if (self.userPetListArray.count) {
+        [MyControl setImageForBtn:headBtn Tx:[self.userPetListArray[0] tx] isPet:YES isRound:YES];
+    }
+//    [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userPetListArray[0] tx]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//        if (image) {
+//            [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+//        }
+//    }];
     
 //    UIImageView * leftArrow = [MyControl createImageViewWithFrame:CGRectMake(8, 64, 9, 15.5) ImageName:@"leftArrow.png"];
 //    [bottomImage addSubview:leftArrow];

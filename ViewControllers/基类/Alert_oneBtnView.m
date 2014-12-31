@@ -56,6 +56,10 @@
             label2.attributedText = mutableStr;
             [bgView addSubview:label2];
             [mutableStr release];
+        }else{
+            CGRect rect = label1.frame;
+            rect.origin.y += 25;
+            label1.frame = rect;
         }
     }else if(self.type == 3){
         CGRect rect = label1.frame;

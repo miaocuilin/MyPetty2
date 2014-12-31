@@ -45,9 +45,9 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 }
 -(void)makeUI
 {
-    self.photoView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35)];
-    self.photoView.clipsToBounds = YES;
-    [self addSubview:self.photoView];
+    _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35)];
+    _photoView.clipsToBounds = YES;
+    [self addSubview:_photoView];
     
     self.titleLabel = [MyControl createLabelWithFrame:CGRectMake(4, self.frame.size.height - 18, self.frame.size.width-8, 0) Font:12 Text:nil];
 //    self.titleLabel.numberOfLines = 1;

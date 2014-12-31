@@ -42,6 +42,7 @@
 //}
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     NSLog(@"&&&&&&&&&&&&&&&&&&%f--%f", tv.contentSize.height-tv.frame.size.height, tv.contentOffset.y);
     if (tv.contentSize.height>=tv.frame.size.height){
         tv.contentOffset = CGPointMake(0, tv.contentSize.height-tv.frame.size.height);
@@ -611,8 +612,17 @@
         if (a == 1 || a == 2 || a == 3) {
             return;
         }
+        
+//        UserCardViewController * vc = [[UserCardViewController alloc] init];
+//        vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
+//        vc.modalTransitionStyle = 2;
+//        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//        vc.close = ^(){
+//            [vc.view removeFromSuperview];
+//        };
+//        [vc release];
         UserInfoViewController * vc = [[UserInfoViewController alloc] init];
-        //    NSLog(@"%@", petInfoDict);
+//            NSLog(@"%@", petInfoDict);
         vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
         vc.modalTransitionStyle = 2;
 //        vc.isFromPetInfo = YES;

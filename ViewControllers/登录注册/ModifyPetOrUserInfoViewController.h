@@ -87,5 +87,5 @@
 @property (nonatomic,retain)PetInfoModel * petInfoModel;
 
 @property (nonatomic,copy)void (^refreshPetInfo)(void);
-@property (nonatomic,copy)void (^refreshUserInfo)(void);
+@property (nonatomic,copy)void (^refreshUserInfo)(NSString *, int, int, UIImage *);
 @end

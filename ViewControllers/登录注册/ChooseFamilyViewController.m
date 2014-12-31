@@ -30,6 +30,7 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     if ([[USER objectForKey:@"isChooseFamilyShouldDismiss"]intValue]) {
         [USER setObject:@"0" forKey:@"isChooseFamilyShouldDismiss"];
         [self dismissViewControllerAnimated:NO completion:nil];
@@ -500,13 +501,32 @@
         Alert_oneBtnView * view = [[Alert_oneBtnView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
         int a = [[USER objectForKey:@"countryNum"] intValue];
 //        if(a>=10){
-            view.type = 2;
-            view.petsNum = a+1;
+//            view.type = 2;
+//            view.petsNum = a+1;
 //        }else{
 //            view.AlertType = 2;
 //        }
-        
-        [view makeUI];
+        if(a >= 10){
+            if((a+1)*5>[[USER objectForKey:@"gold"] intValue]){
+                //余额不足
+                [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                return;
+            }
+            view.type = 2;
+            view.petsNum = a+1;
+            [view makeUI];
+            [self.view addSubview:view];
+            [view release];
+        }else{
+            view.type = 2;
+            view.petsNum = a+1;
+            [view makeUI];
+            [self.view addSubview:view];
+            [view release];
+        }
+//        [view makeUI];
+//        [self.view addSubview:view];
+//        [view release];
         view.jump = ^(){
 //            [MMProgressHUD showWithStatus:@"加入中..."];
             LOADING;
@@ -523,6 +543,7 @@
                         NSLog(@"%@", [USER objectForKey:@"gold"]);
                         [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-(a+1)*5] forKey:@"gold"];
                         NSLog(@"%@", [USER objectForKey:@"gold"]);
+                        [USER setObject:@"countryNum" forKey:[NSString stringWithFormat:@"%d", a+1]];
                     }
 //                    [MMProgressHUD dismissWithSuccess:@"加入成功^_^" title:nil afterDelay:0.5];
                     //刷新列表
@@ -547,8 +568,6 @@
             [request release];
             
         };
-        [self.view addSubview:view];
-        [view release];
         
     }else{
         RegisterViewController * vc = [[RegisterViewController alloc] init];

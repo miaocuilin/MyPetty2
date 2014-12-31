@@ -20,6 +20,7 @@
 @implementation AccountViewController
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     if ([[USER objectForKey:@"AccountShouldDismiss"] intValue]) {
         [USER setObject:@"0" forKey:@"AccountShouldDismiss"];
         [self dismissViewControllerAnimated:NO completion:nil];
@@ -308,6 +309,7 @@
         InviteCodeModel * model = [[InviteCodeModel alloc] init];
         model.inviter = inviter;
         [self codeViewFailed:model];
+        [model release];
         return;
     }
     

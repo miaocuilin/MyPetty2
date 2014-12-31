@@ -19,6 +19,7 @@
 #import "ChargeViewController.h"
 #import "WalkAndTeaseViewController.h"
 #import "LoginViewController.h"
+#import "MsgViewController.h"
 
 @interface CenterViewController ()
 
@@ -28,6 +29,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     //刷新私信数
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
         [self getNewMessage];
@@ -35,6 +37,7 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     if (isLoaded) {
         [self modifyUI];
     }
@@ -250,8 +253,10 @@
     if (a == 0) {
         //私信
         NoticeViewController * vc = [[NoticeViewController alloc] init];
+//        UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
+//        [nc release];
     }else if (a == 1) {
         //商城
         GiftShopViewController * vc = [[GiftShopViewController alloc] init];
@@ -309,7 +314,14 @@
         [self shake];
         return;
     }
-    
+
+//    UserCardViewController * vc = [[UserCardViewController alloc] init];
+//    vc.usr_id = [USER objectForKey:@"usr_id"];
+//    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//    vc.close = ^(){
+//        [vc.view removeFromSuperview];
+//    };
+//    [vc release];
     UserInfoViewController * vc = [[UserInfoViewController alloc] init];
     vc.usr_id = [USER objectForKey:@"usr_id"];
     [self presentViewController:vc animated:YES completion:nil];

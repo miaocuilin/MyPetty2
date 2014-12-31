@@ -58,6 +58,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
     [UIApplication sharedApplication].statusBarHidden = NO;
     
     if (!([[USER objectForKey:@"petInfoDict"] isKindOfClass:[NSDictionary class]] && [[[USER objectForKey:@"petInfoDict"] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]])) {
@@ -175,6 +177,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark -
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
     
     self.menuBtn.selected = NO;

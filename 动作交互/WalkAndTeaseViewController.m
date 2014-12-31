@@ -44,10 +44,20 @@
     if (!self.isFromBanner) {
         self.URL = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", HAVEFUNAPI, self.aid, sig, [ControllerManager getSID]];
     }
+//    else{
+//        self.URL = [NSString stringWithFormat:@"%@&SID=%@", self.URL, [ControllerManager getSID]];
+//    }
     
     NSLog(@"%@", self.URL);
-    NSURL *url = [[NSURL alloc]initWithString:self.URL];
+    NSURL *url = nil;
+    if (self.isFromBanner) {
+        url = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@&SID=%@", self.URL, [ControllerManager getSID]]];
+    }else{
+        url = [[NSURL alloc]initWithString:self.URL];
+    }
+//    NSLog(@"%@--%@", self.URL, url);
     [protWebView loadRequest:[NSURLRequest requestWithURL:url]];
+    [url release];
 }
 -(void)createFakeNavigation
 {

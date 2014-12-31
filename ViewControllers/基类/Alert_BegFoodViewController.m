@@ -8,7 +8,7 @@
 
 #import "Alert_BegFoodViewController.h"
 
-@interface Alert_BegFoodViewController ()
+@interface Alert_BegFoodViewController () <UMSocialUIDelegate>
 
 @end
 
@@ -69,23 +69,34 @@
     UIView * bgView1 = [MyControl createViewWithFrame:CGRectZero];
     [bgView addSubview:bgView1];
     
-    NSString * str = @"已收到";
-    CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:17] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
-    UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(0, 0, size.width, 25) Font:15 Text:str];
-    label1.textColor = ORANGE;
-    [bgView1 addSubview:label1];
+//    NSString * str = @"已收到";
+//    CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:17] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
+//    UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(0, 0, size.width, 25) Font:15 Text:str];
+//    label1.textColor = ORANGE;
+//    [bgView1 addSubview:label1];
     
-    UIImageView * foodImage = [MyControl createImageViewWithFrame:CGRectMake(label1.frame.origin.x+size.width, label1.frame.origin.y-6, 32, 32) ImageName:@"exchange_orangeFood"];
+    UIImageView * foodImage = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"exchange_orangeFood.png"];
     [bgView1 addSubview:foodImage];
     
 //    bgView.frame.size.height-214/2
     NSString * str1 = [self.dict objectForKey:@"food"];
     CGSize size1 = [str1 sizeWithFont:[UIFont systemFontOfSize:17] constrainedToSize:CGSizeMake(100, 32) lineBreakMode:1];
-    UILabel * foodNum = [MyControl createLabelWithFrame:CGRectMake(foodImage.frame.origin.x+foodImage.frame.size.width+5, 0, size1.width, 25) Font:17 Text:[self.dict objectForKey:@"food"]];
+    UILabel * foodNum = [MyControl createLabelWithFrame:CGRectMake(foodImage.frame.origin.x+foodImage.frame.size.width+5, 0, size1.width, 32) Font:17 Text:[self.dict objectForKey:@"food"]];
     foodNum.textColor = ORANGE;
     [bgView1 addSubview:foodNum];
     
-    float w = foodNum.frame.origin.x+size1.width;
+    UIImageView * clock = [MyControl createImageViewWithFrame:CGRectMake(foodNum.frame.origin.x+foodNum.frame.size.width+20, 5, 22, 22) ImageName:@"clock.png"];
+    [bgView1 addSubview:clock];
+    
+    NSString * str2 = [NSString stringWithFormat:@"%@", [MyControl leftTimeFromStamp:[self.dict objectForKey:@"create_time"]]];
+    CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:17] constrainedToSize:CGSizeMake(200, 32) lineBreakMode:1];
+    deadLine = [MyControl createLabelWithFrame:CGRectMake(clock.frame.origin.x+clock.frame.size.width+5, 0, size2.width, 32) Font:17 Text:str2];
+    deadLine.textColor = ORANGE;
+    [self time];
+    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(time) userInfo:nil repeats:YES];
+    [bgView1 addSubview:deadLine];
+    
+    float w = 32+5+size1.width+size2.width+clock.frame.size.width+25;
     bgView1.frame = CGRectMake((bgView.frame.size.width-w)/2.0, bgView.frame.size.height-234/2.0, w, 32);
     
 //    float width = bgView.frame.size.width-label1.frame.origin.x-20;
@@ -103,21 +114,17 @@
         [bgView addSubview:button];
     }
     
-//    deadLine = [MyControl createLabelWithFrame:CGRectMake(12, bgView.frame.size.height-50, bgView.frame.size.width-24, 15) Font:13 Text:nil];
-//    deadLine.textColor = ORANGE;
-//    [self time];
-//    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(time) userInfo:nil repeats:YES];
-//    [bgView addSubview:deadLine];
-//    
+    
+//
 //    UILabel * label3 = [MyControl createLabelWithFrame:CGRectMake(12, bgView.frame.size.height-30, bgView.frame.size.width-12, 15) Font:10 Text:@"每人每天都有免费赏粮机会快喊小伙伴一起打赏吧~"];
 //    label3.textColor = ORANGE;
 //    [bgView addSubview:label3];
 }
-//-(void)time
-//{
-//    deadLine.text = [NSString stringWithFormat:@"距离下一次发布还剩%@", [MyControl leftTimeFromStamp:[self.dict objectForKey:@"create_time"]]];
-//    
-//}
+-(void)time
+{
+    deadLine.text = [NSString stringWithFormat:@"%@", [MyControl leftTimeFromStamp:[self.dict objectForKey:@"create_time"]]];
+    
+}
 -(void)closeBtnClick
 {
     [self.view removeFromSuperview];
@@ -180,18 +187,37 @@
     }else if(sender.tag == 1002){
         NSLog(@"微博");
         NSString * str = [NSString stringWithFormat:@"轻轻一点，免费赏粮！快把你每天的免费粮食赏给我家%@！#挣口粮#%@（分享自@宠物星球社交应用）", self.name, [NSString stringWithFormat:@"%@%@&to=%@", WEBBEGFOODAPI, [self.dict objectForKey:@"img_id"], @"weibo"]];
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImage.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-            
-            if (response.responseCode == UMSResponseCodeSuccess) {
-                NSLog(@"分享成功！");
-//                [self loadShakeShare];
-                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
-            }else{
-                NSLog(@"失败原因：%@", response);
-                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
-            }
-            
-        }];
+        
+        //
+        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+        NSLog(@"%d", oauth);
+        if (oauth) {
+            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:bigImage.image socialUIDelegate:self];
+                //设置分享内容和回调对象
+                [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+            }];
+        }else{
+            [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:bigImage.image socialUIDelegate:self];
+            //设置分享内容和回调对象
+            [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+        }
+//
+//        //
+        
+        //
+//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImage.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//            
+//            if (response.responseCode == UMSResponseCodeSuccess) {
+//                NSLog(@"分享成功！");
+////                [self loadShakeShare];
+//                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//            }else{
+//                NSLog(@"失败原因：%@", response);
+//                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//            }
+//            
+//        }];
     }
 }
 - (void)didReceiveMemoryWarning {

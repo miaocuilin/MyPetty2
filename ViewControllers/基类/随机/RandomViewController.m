@@ -47,6 +47,7 @@
 //}
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
 //    if (!isLoaded) {
 //        [self loadData];
 //    }
@@ -102,7 +103,9 @@
                 sv = [[UIScrollView alloc] initWithFrame:CGRectMake(4, 64+4, self.view.frame.size.width-8, 80)];
                 sv.delegate = self;
                 //轮播
-                timer = [NSTimer scheduledTimerWithTimeInterval:4 target:self selector:@selector(bannerPlay) userInfo:nil repeats:YES];
+                if (array.count>1) {
+                    timer = [NSTimer scheduledTimerWithTimeInterval:4 target:self selector:@selector(bannerPlay) userInfo:nil repeats:YES];
+                }
                 
                 if (array.count>1) {
                     pageCount = array.count+2;
@@ -358,11 +361,12 @@
         [level didMoveToParentViewController:self];
         [self.view addSubview:level.view];
         [level createExpAlertView];
+        [level release];
     }
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+    [super viewWillAppear:animated];
     if ([[USER objectForKey:@"Menu"] intValue] == 1) {
         //头像，名称，性别，年龄
 //        [self refreshMenu];

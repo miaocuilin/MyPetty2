@@ -246,17 +246,17 @@
     popularityListModel *model = self.contributionDataArray[indexPath.row];
     cell.cellClick = ^(int num){
         NSLog(@"跳转到第%d个国家", num);
-        UserCardViewController * vc = [[UserCardViewController alloc] init];
-        vc.usr_id = model.usr_id;
-        [self.view addSubview:vc.view];
-        vc.close = ^(){
-            [vc.view removeFromSuperview];
-        };
-        [vc release];
-//        UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] init];
-//        userInfoVC.usr_id = model.usr_id;
-//        [self presentViewController:userInfoVC animated:YES completion:nil];
-//        [userInfoVC release];
+//        UserCardViewController * vc = [[UserCardViewController alloc] init];
+//        vc.usr_id = model.usr_id;
+//        [self.view addSubview:vc.view];
+//        vc.close = ^(){
+//            [vc.view removeFromSuperview];
+//        };
+//        [vc release];
+        UserInfoViewController *userInfoVC = [[UserInfoViewController alloc] init];
+        userInfoVC.usr_id = model.usr_id;
+        [self presentViewController:userInfoVC animated:YES completion:nil];
+        [userInfoVC release];
     };
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];

@@ -12,6 +12,7 @@
 {
     UITabBarController * tbc;
     UISegmentedControl * sc;
+    
 }
 @property (strong, nonatomic) UIWindow *window;
 

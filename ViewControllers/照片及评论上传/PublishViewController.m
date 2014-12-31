@@ -18,7 +18,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #import "TopicViewController.h"
 #import "PublishToViewController.h"
 #import "UserPetListModel.h"
-//#import "IQKeyboardManager.h"
+#import "IQKeyboardManager.h"
 
 @interface PublishViewController () <UITextViewDelegate,AFPhotoEditorControllerDelegate>
 {
@@ -42,8 +42,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     return self;
 }
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[IQKeyboardManager sharedManager] setEnable:NO];
+}
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if ([[USER objectForKey:@"selectTopic"] intValue] == 1) {
         [topic setTitle:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]] forState:UIControlStateNormal];
         [USER setObject:@"0" forKey:@"selectTopic"];
@@ -92,6 +98,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
     
+    [self createIQ];
     [self createBg];
     [self createFakeNavigation];
     [self makeUI];
@@ -147,7 +154,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }];
     [request release];
 }
-
+- (void)createIQ
+{
+    //Enabling keyboard manager
+    [[IQKeyboardManager sharedManager] setEnable:YES];
+    [[IQKeyboardManager sharedManager] setKeyboardDistanceFromTextField:20];
+    //Enabling autoToolbar behaviour. If It is set to NO. You have to manually create UIToolbar for keyboard.
+    [[IQKeyboardManager sharedManager] setEnableAutoToolbar:NO];
+    //Setting toolbar behavious to IQAutoToolbarBySubviews. Set it to IQAutoToolbarByTag to manage previous/next according to UITextField's tag property in increasing order.
+    [[IQKeyboardManager sharedManager] setToolbarManageBehaviour:IQAutoToolbarBySubviews];
+    //Resign textField if touched outside of UITextField/UITextView.
+    [[IQKeyboardManager sharedManager] setShouldResignOnTouchOutside:YES];
+}
 -(void)createBg
 {
     bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"blurBg.png"];
@@ -368,9 +386,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasChange:) name:UIKeyboardDidChangeFrameNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasChange:) name:UIKeyboardDidChangeFrameNotification object:nil];
     
     [self.view bringSubviewToFront:navView];
 }
@@ -613,58 +631,58 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 
 #pragma mark -键盘监听
--(void)keyboardWillShow:(NSNotification *)info
-{
-    float h = sv.contentOffset.y;
-    if (textBgView.frame.origin.y+textBgView.frame.size.height-h<=(self.view.frame.size.height-216)) {
-        return;
-    }
-    [UIView animateWithDuration:0.25 animations:^{
-        textBgView.frame = CGRectMake(10, self.view.frame.size.height-80-216+h, 300, 80);
-    }];
-}
--(void)keyboardWillHide:(NSNotification *)info
-{
-    if (textBgView.frame.origin.y == rect.origin.y) {
-        return;
-    }
-    [UIView animateWithDuration:0.25 animations:^{
-        textBgView.frame = rect;
-    }];
-}
-
--(void)keyboardWasChange:(NSNotification *)notification
-{
-    if (!isInPublish) {
-        return;
-    }
-    float y = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.y;
-    if (y == self.view.frame.size.height) {
-        return;
-    }
-    float height = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
-    NSString * str = [[UITextInputMode currentInputMode] primaryLanguage];
-    
-//    if (_textView.frame.origin.y+_textView.frame.size.height>=(self.view.frame.size.height-height)) {
-//        if (_textView.frame.origin.y == rect.origin.y) {
-//            return;
-//        }else{
-//            _textView.frame = rect;
-//            return;
-//        }
+//-(void)keyboardWillShow:(NSNotification *)info
+//{
+//    float h = sv.contentOffset.y;
+//    if (textBgView.frame.origin.y+textBgView.frame.size.height-h<=(self.view.frame.size.height-216)) {
+//        return;
 //    }
-    
-    if ([str isEqualToString:@"zh-Hans"]) {
-        
-        [UIView animateWithDuration:0.25 animations:^{
-            textBgView.frame = CGRectMake(10, self.view.frame.size.height-height-80+sv.contentOffset.y, 300, 80);
-        }];
-    }else{
-        [UIView animateWithDuration:0.25 animations:^{
-            textBgView.frame = CGRectMake(10, self.view.frame.size.height-height-80+sv.contentOffset.y, 300, 80);
-        }];
-    }
-}
+//    [UIView animateWithDuration:0.25 animations:^{
+//        textBgView.frame = CGRectMake(10, self.view.frame.size.height-80-216+h, 300, 80);
+//    }];
+//}
+//-(void)keyboardWillHide:(NSNotification *)info
+//{
+//    if (textBgView.frame.origin.y == rect.origin.y) {
+//        return;
+//    }
+//    [UIView animateWithDuration:0.25 animations:^{
+//        textBgView.frame = rect;
+//    }];
+//}
+//
+//-(void)keyboardWasChange:(NSNotification *)notification
+//{
+//    if (!isInPublish) {
+//        return;
+//    }
+//    float y = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].origin.y;
+//    if (y == self.view.frame.size.height) {
+//        return;
+//    }
+//    float height = [[notification.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+//    NSString * str = [[UITextInputMode currentInputMode] primaryLanguage];
+//    
+////    if (_textView.frame.origin.y+_textView.frame.size.height>=(self.view.frame.size.height-height)) {
+////        if (_textView.frame.origin.y == rect.origin.y) {
+////            return;
+////        }else{
+////            _textView.frame = rect;
+////            return;
+////        }
+////    }
+//    
+//    if ([str isEqualToString:@"zh-Hans"]) {
+//        
+//        [UIView animateWithDuration:0.25 animations:^{
+//            textBgView.frame = CGRectMake(10, self.view.frame.size.height-height-80+sv.contentOffset.y, 300, 80);
+//        }];
+//    }else{
+//        [UIView animateWithDuration:0.25 animations:^{
+//            textBgView.frame = CGRectMake(10, self.view.frame.size.height-height-80+sv.contentOffset.y, 300, 80);
+//        }];
+//    }
+//}
 #pragma mark -
 //-(void)leftButtonClick
 //{

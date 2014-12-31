@@ -26,11 +26,11 @@
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="扩展更多图标.png" translatesAutoresizingMaskIntoConstraints="NO" id="1j6-dO-6gM">
-                        <rect key="frame" x="287" y="14" width="15" height="24"/>
-                    </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="water_white.png" translatesAutoresizingMaskIntoConstraints="NO" id="OGf-eY-ttr">
                         <rect key="frame" x="18" y="15" width="25" height="26"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="扩展更多图标.png" translatesAutoresizingMaskIntoConstraints="NO" id="1j6-dO-6gM">
+                        <rect key="frame" x="291" y="19" width="12" height="18"/>
                     </imageView>
                 </subviews>
             </tableViewCellContentView>

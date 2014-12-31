@@ -27,6 +27,12 @@
     [_u_rank release];
     [_u_tx release];
     [_is_follow release];
+    [_gifts release];
+    [_images release];
+    [_news release];
+    [_total_food release];
+    [_msg release];
+    
     [super dealloc];
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key

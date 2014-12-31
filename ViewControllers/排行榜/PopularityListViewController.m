@@ -35,7 +35,7 @@
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+    [super viewWillAppear:animated];
     if ([[USER objectForKey:@"isSuccess"] intValue] && isLoaded) {
         if (!showMyRank) {
             [self loadData];
@@ -44,6 +44,7 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
 }
 - (void)viewDidLoad
@@ -87,7 +88,7 @@
     NSLog(@"rank:%@",rank);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:rank Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
-            NSLog(@"人气排行数据：%@",load.dataDict);
+//            NSLog(@"人气排行数据：%@",load.dataDict);
 //            arrow.hidden = NO;
             [self.rankDataArray removeAllObjects];
             [self.limitRankDataArray removeAllObjects];

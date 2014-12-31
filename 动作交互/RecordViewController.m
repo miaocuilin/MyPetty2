@@ -75,9 +75,11 @@
                 if ([manager fileExistsAtPath:filePath]) {
                     //存在录音，播放
 //                    [self playRecord2];
+                    [manager release];
                 }else{
                     //不存在，去下载
                     [self loadRecordStringData];
+                    [manager release];
                     
 //                    NSString * sig2 = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
 //                    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECORDDOWNLOADAPI, self.pet_aid, sig2, [ControllerManager getSID]];
@@ -148,6 +150,7 @@
         //存在录音，播放
         [self playRecord2];
     }
+    [manager release];
 //    else{
 //        //不存在，去下载
 //        NSString * sig2 = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
@@ -173,11 +176,15 @@
         NSError *playerError;
         self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:&playerError];
         self.player.meteringEnabled = YES;
+        
+        self.player.delegate = self;
         if (_player == nil)
         {
             NSLog(@"ERror creating player: %@", [playerError description]);
         }
-        self.player.delegate = self;
+//        else{
+//            [self.player release];
+//        }
     }
     
     [self.player play];
@@ -237,7 +244,7 @@
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"上传录音失败");
-    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
+//    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
 }
 #pragma mark - 创建界面
 - (void)createUI
@@ -455,7 +462,7 @@
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 5, 200, 20) Font:12 Text:nil];
     NSAttributedString *helpPetString = [self firstString:@"听萌萌叫" formatString: self.pet_name insertAtIndex:1];
     helpPetLabel.attributedText = helpPetString;
-    [helpPetString release];
+//    [helpPetString release];
     [downView addSubview:helpPetLabel];
     
     //播放按钮
@@ -538,7 +545,7 @@
     }
 //    _recording = NO;
 //    [self.recorder stop];
-    [self.recorder release];
+//    [self.recorder release];
     self.recorder = nil;
     
 }

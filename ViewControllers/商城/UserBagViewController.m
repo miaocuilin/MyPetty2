@@ -215,15 +215,35 @@
         [sv addSubview:hang_tag2];
         
         //礼物名称
-        UILabel * productLabel = [MyControl createLabelWithFrame:CGRectMake(10, 18, 80, 15) Font:12 Text:nil];
+        UILabel * productLabel = [MyControl createLabelWithFrame:CGRectMake(0, 18, 80, 15) Font:12 Text:nil];
         productLabel.font = [UIFont boldSystemFontOfSize:12];
         productLabel.textColor = [ControllerManager colorWithHexString:@"5F5E5E"];
+        productLabel.textAlignment = NSTextAlignmentCenter;
         [hang_tag addSubview:productLabel];
         
-        UILabel * productLabel2 = [MyControl createLabelWithFrame:CGRectMake(10, 18, 80, 15) Font:12 Text:nil];
+        UILabel * productLabel2 = [MyControl createLabelWithFrame:CGRectMake(0, 18, 80, 15) Font:12 Text:nil];
         productLabel2.font = [UIFont boldSystemFontOfSize:12];
         productLabel2.textColor = [ControllerManager colorWithHexString:@"5F5E5E"];
+        productLabel2.textAlignment = NSTextAlignmentCenter;
         [hang_tag2 addSubview:productLabel2];
+        
+        //礼物数
+        UIImageView * giftImage = [MyControl createImageViewWithFrame:CGRectMake(productLabel.frame.origin.x+20, productLabel.frame.origin.y+productLabel.frame.size.height+3, 12, 14) ImageName:@"detail_gift.png"];
+        [hang_tag addSubview:giftImage];
+        
+        UILabel * giftNum = [MyControl createLabelWithFrame:CGRectMake(giftImage.frame.origin.x+15, giftImage.frame.origin.y, 80, 15) Font:13 Text:[NSString stringWithFormat:@" × %@", self.goodsNumArray[i]]];
+        giftNum.textColor = ORANGE;
+        [hang_tag addSubview:giftNum];
+        
+        if (i+1<=self.goodsArray.count-1) {
+            UIImageView * giftImage2 = [MyControl createImageViewWithFrame:CGRectMake(productLabel2.frame.origin.x+20, productLabel2.frame.origin.y+productLabel2.frame.size.height+3, 12, 14) ImageName:@"detail_gift.png"];
+            [hang_tag2 addSubview:giftImage2];
+            
+            UILabel * giftNum2 = [MyControl createLabelWithFrame:CGRectMake(giftImage2.frame.origin.x+15, giftImage2.frame.origin.y, 80, 15) Font:13 Text:[NSString stringWithFormat:@" × %@", self.goodsNumArray[i+1]]];
+            giftNum2.textColor = ORANGE;
+            [hang_tag2 addSubview:giftNum2];
+        }
+                
         
         //人气
         UILabel * rq = [MyControl createLabelWithFrame:CGRectMake(90, 20, 30, 15) Font:12 Text:@"人气"];
@@ -244,6 +264,9 @@
         rqz2.textAlignment = NSTextAlignmentCenter;
         rqz2.font = [UIFont boldSystemFontOfSize:12];
         [hang_tag2 addSubview:rqz2];
+        
+        
+        
         
         //
 //        CGRect rect = giftBgImageView.frame;

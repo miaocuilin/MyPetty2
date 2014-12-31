@@ -29,6 +29,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (isLoaded) {
         [self loadLocalData];
         [messageTableView reloadData];
@@ -43,6 +44,7 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
 }
 //-(void)viewWillDisappear:(BOOL)animated
@@ -110,8 +112,10 @@
     NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
     NSFileManager * manager = [[NSFileManager alloc] init];
     if (![manager fileExistsAtPath:path]) {
+        [manager release];
         return;
     }
+    [manager release];
     self.totalDataDict = [NSMutableDictionary dictionaryWithDictionary:[MyControl returnDictionaryWithDataPath:path]];
     NSArray * array = [self.totalDataDict allKeys];
     for (int i=0; i<array.count; i++) {

@@ -38,7 +38,7 @@
 }
 -(void)loadData
 {
-    LOADING;
+    LOADING2;
 //    user/infoApi&usr_id=
     NSString *userInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
     NSString *userInfoString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, self.usr_id, userInfoSig,[ControllerManager getSID]];
@@ -71,7 +71,7 @@
 }
 -(void)loadPetsData
 {
-    LOADING;
+    LOADING2;
     NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", self.usr_id];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, self.usr_id, [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"%@", url);
@@ -84,7 +84,12 @@
             for (NSDictionary * dict in array) {
                 UserPetListModel * model = [[UserPetListModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.petsDataArray addObject:model];
+                if([model.master_id isEqualToString:self.usr_id]){
+                    [self.petsDataArray insertObject:model atIndex:0];
+                }else{
+                    [self.petsDataArray addObject:model];
+                }
+                
                 [model release];
                 
             }
@@ -190,19 +195,21 @@
         hasHeadImage = NO;
     }else{
         if (isMyself) {
-            [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, self.userModel.tx]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                if (image) {
-                    [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-                }
-            }];
+            [MyControl setImageForBtn:headBtn Tx:self.userModel.tx isPet:NO isRound:YES];
+//            [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, self.userModel.tx]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//                if (image) {
+//                    [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+//                }
+//            }];
             
             [msgBtn setTitle:@"修改资料" forState:UIControlStateNormal];
         }else{
-            [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, self.userModel.tx]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                if (image) {
-                    headImageView.image = [MyControl returnSquareImageWithImage:image];
-                }
-            }];
+            [MyControl setImageForImageView:headImageView Tx:self.userModel.tx isPet:NO isRound:YES];
+//            [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, self.userModel.tx]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//                if (image) {
+//                    headImageView.image = [MyControl returnSquareImageWithImage:image];
+//                }
+//            }];
         }
     }
     
@@ -260,6 +267,13 @@
             }
         }];
         [sv addSubview:picBtn];
+        
+        if ([[self.petsDataArray[i] master_id] isEqualToString:self.usr_id]) {
+            UIImageView * crown = [MyControl createImageViewWithFrame:CGRectMake(picBtn.frame.origin.x+picBtn.frame.size.width-12, picBtn.frame.origin.y+picBtn.frame.size.height-15, 15, 15) ImageName:@"crown.png"];
+            [sv addSubview:crown];
+            
+        }
+        
     }
     CGRect rect = sv.frame;
     if (self.petsDataArray.count == 1) {
@@ -304,7 +318,7 @@
 {
     NSLog(@"%d", btn.tag);
     int a = btn.tag-100;
-    PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+    PetMainViewController * vc = [[PetMainViewController alloc] init];
     vc.aid = [self.petsDataArray[a] aid];
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];

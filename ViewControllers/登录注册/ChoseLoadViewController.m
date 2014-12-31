@@ -37,6 +37,7 @@
 //}
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     //
     if (!self.isFromMenu) {
         if ([[USER objectForKey:@"planet"] intValue] == 1) {

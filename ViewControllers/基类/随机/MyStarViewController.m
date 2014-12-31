@@ -41,6 +41,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 @implementation MyStarViewController
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (isLoaded) {
 //        [self.tv headerBeginRefreshing];
     }else if(![[USER objectForKey:@"guide_star"] intValue]){
@@ -51,6 +52,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
 }
 - (void)viewDidLoad {
@@ -637,9 +639,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         
         imagePickerController.sourceType = sourceType;
         
-        if ([self hasValidAPIKey]) {
+//        if ([self hasValidAPIKey]) {
             [self presentViewController:imagePickerController animated:YES completion:^{}];
-        }
+//        }
         
         [imagePickerController release];
     }

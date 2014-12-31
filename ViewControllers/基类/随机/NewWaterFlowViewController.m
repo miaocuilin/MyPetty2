@@ -12,7 +12,11 @@
 #import "PicDetailViewController.h"
 #define LabelFont 12
 @implementation NewWaterFlowViewController
-
+-(void)dealloc
+{
+    [super dealloc];
+    [_tv release];
+}
 -(void)viewDidLoad
 {
     [super viewDidLoad];
@@ -84,15 +88,15 @@
     [bgTv addHeaderWithTarget:self action:@selector(loadData)];
     [bgTv addFooterWithTarget:self action:@selector(loadNextData)];
     
-    self.tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/2, self.view.frame.size.height-64) style:UITableViewStylePlain];
-    self.tv.delegate = self;
-    self.tv.dataSource = self;
-    self.tv.separatorStyle = 0;
-    self.tv.showsVerticalScrollIndicator = NO;
-    self.tv.backgroundColor = [UIColor clearColor];
+    _tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/2, self.view.frame.size.height-64) style:UITableViewStylePlain];
+    _tv.delegate = self;
+    _tv.dataSource = self;
+    _tv.separatorStyle = 0;
+    _tv.showsVerticalScrollIndicator = NO;
+    _tv.backgroundColor = [UIColor clearColor];
 //    self.tv.bounces = NO;
     [bgTv addSubview:self.tv];
-    [self.tv release];
+//    [self.tv release];
     
     tv2 = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2, 0, self.view.frame.size.width/2, self.view.frame.size.height-64) style:UITableViewStylePlain];
     tv2.delegate = self;

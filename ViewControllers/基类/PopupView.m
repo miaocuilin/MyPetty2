@@ -49,8 +49,9 @@
     
     float w = 0;
 //    float h = 0;
-    if (viewSize.width/2.0<200) {
-        w = 200;
+    //看屏幕一般是否超过200宽，如果超过就用一半，不超过就用200
+    if (viewSize.width/2.0<240) {
+        w = 240;
     }else{
         w = viewSize.width/2.0;
     }

@@ -220,6 +220,7 @@
     
     heartBtn = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2) ImageName:@"food_heart.png" Target:self Action:@selector(rewardBtnClick:) Title:nil];
     [heartBtn addTarget:self action:@selector(heartTouchDown) forControlEvents:UIControlEventTouchDown];
+    [heartBtn addTarget:self action:@selector(heartUpOutside) forControlEvents:UIControlEventTouchUpOutside];
     [self.view addSubview:heartBtn];
     timer2 = [NSTimer scheduledTimerWithTimeInterval:1.9 target:self selector:@selector(heartAnimation) userInfo:nil repeats:YES];
 }
@@ -234,6 +235,14 @@
         rect.size.width += 14;
         rect.size.height += 14;
         heartBtn.frame = rect;
+    }];
+}
+-(void)heartUpOutside
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        heartBtn.frame = CGRectMake(self.view.frame.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2);
+    } completion:^(BOOL finished) {
+        timer2 = [NSTimer scheduledTimerWithTimeInterval:2.4 target:self selector:@selector(heartAnimation) userInfo:nil repeats:YES];
     }];
 }
 -(void)heartAnimation
@@ -384,6 +393,7 @@
     }
     
 }
+
 -(void)rewardBtnClick:(UIButton *)btn
 {
     [UIView animateWithDuration:0.2 animations:^{
@@ -461,7 +471,7 @@
 -(void)headBtnClick
 {
     //跳转宠物主页
-    PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+    PetMainViewController * vc = [[PetMainViewController alloc] init];
     int a = tv.contentOffset.y/self.view.frame.size.width;
     vc.aid = [self.dataArray[a] aid];
     [self presentViewController:vc animated:YES completion:nil];
@@ -469,14 +479,14 @@
 }
 -(void)jumpUserClick
 {
-    UserCardViewController * vc = [[UserCardViewController alloc] init];
+    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
     int a = tv.contentOffset.y/self.view.frame.size.width;
     vc.usr_id = [self.dataArray[a] usr_id];
-    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
-    vc.close = ^(){
-        [vc.view removeFromSuperview];
-    };
-//    [self presentViewController:vc animated:YES completion:nil];
+//    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//    vc.close = ^(){
+//        [vc.view removeFromSuperview];
+//    };
+    [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
 //-(void)createBottom

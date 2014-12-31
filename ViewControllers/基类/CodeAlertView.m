@@ -160,7 +160,7 @@
     }else if(self.alertType == 3){
         lab1.hidden = YES;
         //
-        StartLoading;
+        LOADING;
         NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.codeModel.inviter]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, self.codeModel.inviter, sig, [ControllerManager getSID]];
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
@@ -175,9 +175,9 @@
                     
                     [model release];
                 }
-                LoadingSuccess;
+                ENDLOADING;
             }else{
-                LoadingFailed;
+                LOADFAILED;
             }
         }];
         [request release];
@@ -207,35 +207,20 @@
             button.tag = 100+i;
             [shareBg addSubview:button];
         }
+        [self loadUserTx:tx];
     }
 }
 
 -(void)loadUserTx:(NSString *)tx
 {
+    NSLog(@"%@", tx);
     if (!([tx isKindOfClass:[NSNull class]] || [tx length]==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
-
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-            self.headImage.image = image;
+        if(self.alertType == 3){
+            [MyControl setImageForImageView:self.headImage Tx:tx isPet:NO isRound:YES];
         }else{
-            //下载头像
-            NSString * url = [NSString stringWithFormat:@"%@%@", USERTXURL, tx];
-            
-            NSLog(@"%@", url);
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    self.headImage.image = load.dataImage;
-//                    NSString * docDir = DOCDIR;
-//                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
-                }
-            }];
-            [request release];
+            [MyControl setImageForImageView:self.headImage Tx:tx isPet:YES isRound:YES];
         }
+        
     }
 }
 #pragma mark - tfDelegate

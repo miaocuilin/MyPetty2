@@ -127,7 +127,7 @@
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"上传录音失败");
-    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
+//    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
 }
 
 #pragma mark - 初始界面
@@ -295,8 +295,8 @@
                               [NSNumber numberWithInt: 2],                              AVNumberOfChannelsKey,
                               [NSNumber numberWithInt: AVAudioQualityLow],                       AVEncoderAudioQualityKey,
                               nil];
-    CFUUIDRef cfuuid = CFUUIDCreate(kCFAllocatorDefault);
-    NSString *cfuuidString = (NSString*)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, cfuuid));
+//    CFUUIDRef cfuuid = CFUUIDCreate(kCFAllocatorDefault);
+//    NSString *cfuuidString = (NSString*)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, cfuuid));
 //    _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@.aac", cfuuidString]]] retain];
     _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
 
@@ -355,13 +355,13 @@
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 5, 200, 20) Font:12 Text:nil];
     NSAttributedString *helpPetString = [self firstString:@"让叫一叫" formatString:[self.animalInfoDict objectForKey:@"name"] insertAtIndex:1];
     helpPetLabel.attributedText = helpPetString;
-    [helpPetString release];
+//    [helpPetString release];
     [downView addSubview:helpPetLabel];
     
     UILabel *timesLabel = [MyControl createLabelWithFrame:CGRectMake(70, 27, 200, 20) Font:12 Text:nil];
     NSAttributedString *timesString = [self firstString:@"今天还有只爱宠需要叫一叫哦~" formatString:countString insertAtIndex:4];
     timesLabel.attributedText = timesString;
-    [timesString release];
+//    [timesString release];
     [downView addSubview:timesLabel];
 }
 //一句话两种颜色
@@ -374,7 +374,7 @@
     [attributeString1 addAttribute:NSForegroundColorAttributeName value:GRAYBLUECOLOR range:NSMakeRange(0, attributeString1.length)];
     [attributeString1 insertAttributedString:attributeString2 atIndex:number];
     [attributeString2 release];
-    return attributeString1;
+    return [attributeString1 autorelease];
 }
 - (void)shopGiftTitle
 {

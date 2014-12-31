@@ -85,6 +85,10 @@
 //修正图片旋转
 + (UIImage *)fixOrientation:(UIImage *)aImage;
 
++(void)setImageForBtn:(UIButton *)btn Tx:(NSString *)tx isPet:(BOOL)isPet;
++(void)setImageForImageView:(UIImageView *)imageView Tx:(NSString *)tx isPet:(BOOL)isPet;
++(void)setImageForBtn:(UIButton *)btn Tx:(NSString *)tx isPet:(BOOL)isPet isRound:(BOOL)isRound;
++(void)setImageForImageView:(UIImageView *)imageView Tx:(NSString *)tx isPet:(BOOL)isPet isRound:(BOOL)isRound;
 
 @end
 

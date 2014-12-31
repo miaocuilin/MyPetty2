@@ -607,4 +607,58 @@
     CGImageRelease(cgimg);
     return img;
 }
+
++(void)setImageForBtn:(UIButton *)btn Tx:(NSString *)tx isPet:(BOOL)isPet
+{
+    NSString * str = nil;
+    UIImage * defaultImage = nil;
+    if (isPet) {
+        str = [NSString stringWithFormat:@"%@%@", PETTXURL, tx];
+        defaultImage = [UIImage imageNamed:@"defaultPetHead.png"];
+    }else{
+        str = [NSString stringWithFormat:@"%@%@", USERTXURL, tx];
+        defaultImage = [UIImage imageNamed:@"defaultUserHead.png"];
+    }
+    [btn setBackgroundImageWithURL:[NSURL URLWithString:str] forState:UIControlStateNormal placeholderImage:defaultImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (image) {
+            [btn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+        }
+    }];
+}
++(void)setImageForImageView:(UIImageView *)imageView Tx:(NSString *)tx isPet:(BOOL)isPet
+{
+    NSString * str = nil;
+    UIImage * defaultImage = nil;
+    if (isPet) {
+        str = [NSString stringWithFormat:@"%@%@", PETTXURL, tx];
+        defaultImage = [UIImage imageNamed:@"defaultPetHead.png"];
+    }else{
+        str = [NSString stringWithFormat:@"%@%@", USERTXURL, tx];
+        defaultImage = [UIImage imageNamed:@"defaultUserHead.png"];
+    }
+    [imageView setImageWithURL:[NSURL URLWithString:str] placeholderImage:defaultImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        if (image) {
+            [imageView setImage:[MyControl returnSquareImageWithImage:image]];
+        }
+    }];
+}
+
++(void)setImageForBtn:(UIButton *)btn Tx:(NSString *)tx isPet:(BOOL)isPet isRound:(BOOL)isRound
+{
+    if (isRound) {
+        float a = btn.frame.size.width/2.0;
+        btn.layer.cornerRadius = a;
+        btn.layer.masksToBounds = YES;
+    }
+    [self setImageForBtn:btn Tx:tx isPet:isPet];
+}
++(void)setImageForImageView:(UIImageView *)imageView Tx:(NSString *)tx isPet:(BOOL)isPet isRound:(BOOL)isRound
+{
+    if (isRound) {
+        float a = imageView.frame.size.width/2.0;
+        imageView.layer.cornerRadius = a;
+        imageView.layer.masksToBounds = YES;
+    }
+    [self setImageForImageView:imageView Tx:tx isPet:isPet];
+}
 @end

@@ -78,11 +78,12 @@
 //{
 //    NSLog(@"shake+++++++++++++++++");
 //}
-- (void)viewDidAppear:(BOOL)animated{
+//- (void)viewDidAppear:(BOOL)animated{
 //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(shakeAction) name:@"shake" object:nil];
-}
+//}
 - (void)viewDidDisappear:(BOOL)animated
 {
+    [super viewDidDisappear:animated];
     [self resignFirstResponder];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:@"shake" object:nil];
 }
@@ -147,12 +148,12 @@
 #pragma mark - 赠送礼物界面
 - (void)pickGift
 {
-    if (self.count <= 0) {
-        self.upView.contentOffset = CGPointMake(300*3, 0);
-    }
+//    if (self.count <= 0) {
+//        self.upView.contentOffset = CGPointMake(300*3, 0);
+//    }
     GiftShopModel * model = [[GiftShopModel alloc] init];
     int index=0,a=0;
-    NSString * add_rq;
+//    NSString * add_rq;
     
     index = arc4random()%1000+1;
     if (!self.isTrouble) {
@@ -173,7 +174,7 @@
         NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:[NSString stringWithFormat:@"%d", a]];
         [model setValuesForKeysWithDictionary:dict];
 //        model = self.goodGiftDataArray[index];
-        add_rq = [NSString stringWithFormat:@"+%@",model.add_rq];
+//        add_rq = [NSString stringWithFormat:@"+%@",model.add_rq];
     }else{
 //        index = arc4random()%(self.badGiftDataArray.count);
         if (index<=800) {
@@ -186,7 +187,7 @@
         NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:[NSString stringWithFormat:@"%d", a]];
         [model setValuesForKeysWithDictionary:dict];
 //        model = self.badGiftDataArray[index];
-        add_rq = model.add_rq;
+//        add_rq = model.add_rq;
     }
 //    rewardLabel.text = [NSString stringWithFormat:@"%@",model.name];
 //    self.giftName = model.name;
@@ -255,7 +256,9 @@
             
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
                 //更新贡献度
-                self.updateContri(model.add_rq);
+                if(self.isFromStar){
+                    self.updateContri(model.add_rq);
+                }
                 
                 ResultOfSendViewController * send = [[ResultOfSendViewController alloc] init];
                 send.giftName = model.name;
@@ -279,7 +282,7 @@
                 int exp = [[USER objectForKey:@"exp"] intValue];
                 [USER setObject:[NSString stringWithFormat:@"%d", exp+newexp] forKey:@"exp"];
 
-                int index = newexp;
+//                int index = newexp;
                 //            AudioServicesPlaySystemSound(soundID2);
 //                self.isShaking = NO;
 //                self.upView.contentOffset = CGPointMake(self.upView.frame.size.width, 0);
@@ -515,7 +518,7 @@
     
     NSAttributedString *helpPetString = [self firstString:@"帮摇一摇" formatString:self.pet_name insertAtIndex:1];
     helpPetLabel.attributedText = helpPetString;
-    [helpPetString release];
+//    [helpPetString release];
     [downView addSubview:helpPetLabel];
     
     timesLabel = [MyControl createLabelWithFrame:CGRectMake(70, 27, 220, 20) Font:12 Text:nil];
@@ -702,7 +705,7 @@
     [attributeString1 addAttribute:NSForegroundColorAttributeName value:GRAYBLUECOLOR range:NSMakeRange(0, attributeString1.length)];
     [attributeString1 insertAttributedString:attributeString2 atIndex:number];
     [attributeString2 release];
-    return attributeString1;
+    return [attributeString1 autorelease];
 }
 #pragma mark - 浮云
 - (void)floatingAnimation

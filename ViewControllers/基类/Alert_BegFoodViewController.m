@@ -8,7 +8,7 @@
 
 #import "Alert_BegFoodViewController.h"
 
-@interface Alert_BegFoodViewController ()
+@interface Alert_BegFoodViewController () <UMSocialUIDelegate>
 
 @end
 
@@ -187,18 +187,37 @@
     }else if(sender.tag == 1002){
         NSLog(@"微博");
         NSString * str = [NSString stringWithFormat:@"轻轻一点，免费赏粮！快把你每天的免费粮食赏给我家%@！#挣口粮#%@（分享自@宠物星球社交应用）", self.name, [NSString stringWithFormat:@"%@%@&to=%@", WEBBEGFOODAPI, [self.dict objectForKey:@"img_id"], @"weibo"]];
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImage.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-            
-            if (response.responseCode == UMSResponseCodeSuccess) {
-                NSLog(@"分享成功！");
-//                [self loadShakeShare];
-                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
-            }else{
-                NSLog(@"失败原因：%@", response);
-                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
-            }
-            
-        }];
+        
+        //
+        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+        NSLog(@"%d", oauth);
+        if (oauth) {
+            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:bigImage.image socialUIDelegate:self];
+                //设置分享内容和回调对象
+                [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+            }];
+        }else{
+            [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:bigImage.image socialUIDelegate:self];
+            //设置分享内容和回调对象
+            [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+        }
+//
+//        //
+        
+        //
+//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImage.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//            
+//            if (response.responseCode == UMSResponseCodeSuccess) {
+//                NSLog(@"分享成功！");
+////                [self loadShakeShare];
+//                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//            }else{
+//                NSLog(@"失败原因：%@", response);
+//                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//            }
+//            
+//        }];
     }
 }
 - (void)didReceiveMemoryWarning {

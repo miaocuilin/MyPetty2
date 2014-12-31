@@ -17,12 +17,14 @@
 @implementation PetRecommendViewController
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (isLoaded) {
 //        [self.tv headerBeginRefreshing];
     }
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
 }
 -(void)viewDidLoad
@@ -133,17 +135,17 @@
         [vc release];
     };
     cell.jumpUserClick = ^(){
-        UserCardViewController * vc = [[UserCardViewController alloc] init];
-        vc.usr_id = model.master_id;
-        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
-        vc.close = ^(){
-            [vc.view removeFromSuperview];
-        };
-        [vc release];
-//        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+//        UserCardViewController * vc = [[UserCardViewController alloc] init];
 //        vc.usr_id = model.master_id;
-//        [self presentViewController:vc animated:YES completion:nil];
+//        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//        vc.close = ^(){
+//            [vc.view removeFromSuperview];
+//        };
 //        [vc release];
+        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+        vc.usr_id = model.master_id;
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
     };
     cell.pBtnClick = ^(int a, NSString * aid){
         if (![[USER objectForKey:@"isSuccess"] intValue]) {
@@ -165,6 +167,7 @@
                         if((array.count+1)*5>[[USER objectForKey:@"gold"] intValue]){
                             //余额不足
                             [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                            [oneBtn release];
                             return;
                         }
 //                        oneBtn.type = 1;
@@ -174,10 +177,14 @@
                         oneBtn.type = 2;
                         oneBtn.petsNum = array.count+1;
                         [oneBtn makeUI];
+                        [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+                        [oneBtn release];
                     }else{
                         oneBtn.type = 2;
                         oneBtn.petsNum = array.count+1;
                         [oneBtn makeUI];
+                        [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+                        [oneBtn release];
 //                        [self.view addSubview:oneBtn];
 //                        [oneBtn release];
 //                        view.AlertType = 2;
@@ -225,8 +232,6 @@
             [request release];
             //
             
-            [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
-            [oneBtn release];
         }else{
             Alert_2ButtonView2 * buttonView2 = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
             buttonView2.type = 4;
@@ -357,6 +362,7 @@
                         if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
                             ENDLOADING;
                             btn.selected = NO;
+                            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"退出成功"];
 //                            [MMProgressHUD dismissWithSuccess:@"退出成功" title:nil afterDelay:0.5];
 //                            [self.userPetListArray removeObjectAtIndex:cellIndexPath.row];
 //                            [tv deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];

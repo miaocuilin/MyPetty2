@@ -35,6 +35,7 @@
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
 //    self.sv.frame = CGRectMake(0, 0, 320, self.view.frame.size.height);
 //    NSLog(@"%@", self.usr_id);
     //注册完之后更新按钮头像
@@ -111,12 +112,14 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
     isInThisController = YES;
 //    NSLog(@"%f--%f--%f", commentTextView.frame.origin.x, commentBgView.frame.origin.x, commentBgView.frame.origin.y);
 }
 -(void)viewDidDisappear:(BOOL)animated
 {
+    [super viewDidDisappear:animated];
     isInThisController = NO;
 }
 - (void)viewDidLoad

@@ -46,6 +46,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     //改变微博的图片
     if ([UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina]) {
         [sina setImage:[UIImage imageNamed:@"weibo-1.png"] forState:UIControlStateNormal];
@@ -912,15 +913,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //                        [USER setObject:@"1" forKey:@"needRefresh"];
                         [self login];
 //                        oriIndex = 2;
-                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注成功 ^_^" ];
+//                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注成功 ^_^" ];
 //                        [USER setObject:@"1" forKey:@"favoriteNeedRefresh"];
                         [USER setObject:@"1" forKey:@"favoriteRefresh"];
                     }else{
-                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注失败 = =."];
+//                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注失败 = =."];
                     }
                 }else{
                     //数据下载失败
-                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注请求失败 = =."];
+//                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注请求失败 = =."];
                 }
             }];
         }else{
@@ -959,11 +960,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //                        oriIndex = 3;
                         if (alertView.tag == 200) {
                             
-                            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"关注成功 ^_^"];
+//                            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"关注成功 ^_^"];
                             //                            isFansFriend[fansButtonIndex-2000] = YES;
 //                            [USER setObject:@"1" forKey:@"favoriteNeedRefresh"];
                         }else{
-                            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注成功 ^_^" ];
+//                            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注成功 ^_^" ];
                             //                            isFansFriend[fansButtonIndex-2000] = NO;
 //                            [USER setObject:@"1" forKey:@"favoriteNeedRefresh"];
                         }
@@ -971,17 +972,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         
                     }else{
                         if (alertView.tag == 200) {
-                            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"关注失败 = =."];
+//                            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"关注失败 = =."];
                         }else{
-                            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注失败 = =."];
+//                            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注失败 = =."];
                         }
                     }
                 }else{
                     //数据下载失败
                     if (alertView.tag == 200) {
-                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"关注请求失败 = =."];
+//                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"关注请求失败 = =."];
                     }else{
-                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注请求失败 = =."];
+//                        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消关注请求失败 = =."];
                     }
                 }
             }];
@@ -1020,7 +1021,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     //上传成功，home页刷新值设为1
     [USER setObject:@"1" forKey:@"needRefresh"];
     
-    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"头像上传成功"];
+//    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"头像上传成功"];
     
     //头像存放在本地
     NSData * data = UIImageJPEGRepresentation(self.tempImage, 0.1);

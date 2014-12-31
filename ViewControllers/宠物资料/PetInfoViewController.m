@@ -61,6 +61,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (isLoaded) {
         [self loadCountryList];
         //更新头像
@@ -99,6 +100,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoaded = YES;
 }
 - (void)viewDidLoad
@@ -873,11 +875,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     oneBtn.type = 2;
                     oneBtn.petsNum = array.count+1;
                     [oneBtn makeUI];
+                    [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+                    [oneBtn release];
                 }else{
                     oneBtn.type = 2;
                     oneBtn.petsNum = array.count+1;
                     [oneBtn makeUI];
-                    
+                    [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+                    [oneBtn release];
                 }
                 oneBtn.jump = ^(){
 //                    [MyControl startLoadingWithStatus:@"加入中..."];
@@ -924,8 +929,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [request release];
         //
         
-        [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
-        [oneBtn release];
     }else{
 //        [self createExitCountryAlertView];
         Alert_2ButtonView2 * buttonView2 = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -1583,20 +1586,21 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #pragma mark - 跳转点击事件
 -(void)jumpToUserInfo
 {
-    UserCardViewController * vc = [[UserCardViewController alloc] init];
+    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
 //    NSLog(@"%@", petInfoDict);
     vc.usr_id = [petInfoDict objectForKey:@"master_id"];
     vc.modalTransitionStyle = 2;
-//    vc.isFromPetInfo = YES;
-//    if ([self.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
-//        vc.petHeadImage = headBtn.currentBackgroundImage;
-//    }else{
-//        vc.petHeadImage = headerImageView.image;
-//    }
-    vc.close = ^(){
-        [vc.view removeFromSuperview];
-    };
-    [self.view addSubview:vc.view];
+    vc.isFromPetInfo = YES;
+    if ([self.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+        vc.petHeadImage = headBtn.currentBackgroundImage;
+    }else{
+        vc.petHeadImage = headerImageView.image;
+    }
+//    vc.close = ^(){
+//        [vc.view removeFromSuperview];
+//    };
+//    [self.view addSubview:vc.view];
+    [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
 -(void)GXListClick
@@ -2038,12 +2042,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        [self presentViewController:userInfoVC animated:YES completion:^{
 //            [userInfoVC release];
 //        }];
-        UserCardViewController * vc = [[UserCardViewController alloc] init];
+        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
         vc.usr_id = model.usr_id;
-        [self.view addSubview:vc.view];
-        vc.close = ^(){
-            [vc.view removeFromSuperview];
-        };
+        [self presentViewController:vc animated:YES completion:nil];
+//        [self.view addSubview:vc.view];
+//        vc.close = ^(){
+//            [vc.view removeFromSuperview];
+//        };
         [vc release];
     }
 }

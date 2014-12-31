@@ -23,8 +23,8 @@
     }
     return self;
 }
--(void)viewDidAppear:(BOOL)animated
-{
+//-(void)viewDidAppear:(BOOL)animated
+//{
 //    NSLog(@"%f", qtmquitView.frame.origin.y);
 //    int oldgold = [[USER objectForKey:@"oldgold"] intValue];
 //    int gold = [[USER objectForKey:@"gold"] intValue];
@@ -42,7 +42,7 @@
 //    }
     //    [self RandomTips];
     
-}
+//}
 - (void)viewDidLoad
 {
     [super viewDidLoad];

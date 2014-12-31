@@ -40,10 +40,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [[IQKeyboardManager sharedManager] setEnable:YES];
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
     [[IQKeyboardManager sharedManager] setEnable:NO];
 }
 - (void)viewDidLoad

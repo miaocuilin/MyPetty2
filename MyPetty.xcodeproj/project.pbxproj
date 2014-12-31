@@ -466,6 +466,10 @@
 		606181B719B19749009AF63D /* setToDefaultPet.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181B519B19749009AF63D /* setToDefaultPet.png */; };
 		606181C219B1BA80009AF63D /* more_greenBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 606181C019B1BA80009AF63D /* more_greenBg.png */; };
 		6065A97519A9910300333B0D /* arrow_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 6065A97419A9910300333B0D /* arrow_right.png */; };
+		6068AF381A512F6000E8F292 /* PetMain_Active_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6068AF371A512F6000E8F292 /* PetMain_Active_ViewController.m */; };
+		6068AF3B1A5140F400E8F292 /* PetMain_Fans_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6068AF3A1A5140F400E8F292 /* PetMain_Fans_ViewController.m */; };
+		6068AF3E1A515B1F00E8F292 /* PetMain_Photo_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6068AF3D1A515B1F00E8F292 /* PetMain_Photo_ViewController.m */; };
+		6068AF411A515D5E00E8F292 /* PetMain_Photo_CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6068AF401A515D5E00E8F292 /* PetMain_Photo_CollectionViewCell.m */; };
 		606D5FB31A0B977C00DC117F /* MyStarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 606D5FB21A0B977C00DC117F /* MyStarViewController.m */; };
 		606D5FB61A0B986000DC117F /* MyStarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 606D5FB51A0B986000DC117F /* MyStarCell.m */; };
 		607725611A35425000CB4F9F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 607725601A35425000CB4F9F /* LoginViewController.m */; };
@@ -486,6 +490,17 @@
 		607725811A35940900CB4F9F /* PublishToViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 607725801A35940900CB4F9F /* PublishToViewController.m */; };
 		607ADE001A033460007BA160 /* talkArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 607ADDFF1A033460007BA160 /* talkArrow.png */; };
 		607ADE031A03694E007BA160 /* WaterFlowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 607ADE021A03694E007BA160 /* WaterFlowCell.m */; };
+		6080CB301A523F8C00B6CC94 /* PetMain_Gift_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080CB2F1A523F8C00B6CC94 /* PetMain_Gift_ViewController.m */; };
+		6080CB331A52548000B6CC94 /* PetMain_Food_ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080CB321A52548000B6CC94 /* PetMain_Food_ViewController.m */; };
+		6080CB361A5256CA00B6CC94 /* PetMain_FoodCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080CB351A5256CA00B6CC94 /* PetMain_FoodCell.m */; };
+		6080CB461A52A49900B6CC94 /* MsgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080CB451A52A49900B6CC94 /* MsgViewController.m */; };
+		6080CB4A1A52AFCC00B6CC94 /* ChatListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080CB491A52AFCC00B6CC94 /* ChatListCell.m */; };
+		6080CB4D1A52B04D00B6CC94 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080CB4C1A52B04D00B6CC94 /* ChatViewController.m */; };
+		6080CB501A52B15400B6CC94 /* ConvertToCommonEmoticonsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080CB4F1A52B15400B6CC94 /* ConvertToCommonEmoticonsHelper.m */; };
+		6080CB561A52B1AE00B6CC94 /* Emoji.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080CB531A52B1AE00B6CC94 /* Emoji.m */; };
+		6080CB571A52B1AE00B6CC94 /* EmojiEmoticons.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080CB551A52B1AE00B6CC94 /* EmojiEmoticons.m */; };
+		6080CB5A1A52B65C00B6CC94 /* NSDate+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080CB591A52B65C00B6CC94 /* NSDate+Category.m */; };
+		6080CB5D1A52B69100B6CC94 /* NSDateFormatter+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080CB5C1A52B69100B6CC94 /* NSDateFormatter+Category.m */; };
 		6080F5C119C8631F0021BA2B /* PetNewsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6080F5C019C8631F0021BA2B /* PetNewsModel.m */; };
 		6083F08D19CD6A4F006A62C4 /* talkLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 6083F08B19CD6A4F006A62C4 /* talkLeft.png */; };
 		6083F08E19CD6A4F006A62C4 /* talkRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 6083F08C19CD6A4F006A62C4 /* talkRight.png */; };
@@ -596,7 +611,6 @@
 		60BA6ED91A301EE6007932BA /* rightArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BA6ED81A301EE6007932BA /* rightArrow.png */; };
 		60BA6EE01A302847007932BA /* food_selectBg_tri.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BA6EDE1A302847007932BA /* food_selectBg_tri.png */; };
 		60BA6EE11A302847007932BA /* food_selectBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BA6EDF1A302847007932BA /* food_selectBg.png */; };
-		60BA6EE61A305693007932BA /* HorizontalTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 60BA6EE51A305693007932BA /* HorizontalTableView.m */; };
 		60BA6EE91A30939E007932BA /* FoodCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 60BA6EE81A30939E007932BA /* FoodCell.m */; };
 		60BA853C1A4157FD005B59D8 /* more_friend.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BA85391A4157FD005B59D8 /* more_friend.png */; };
 		60BA853D1A4157FD005B59D8 /* more_sina.png in Resources */ = {isa = PBXBuildFile; fileRef = 60BA853A1A4157FD005B59D8 /* more_sina.png */; };
@@ -1462,6 +1476,14 @@
 		606181B519B19749009AF63D /* setToDefaultPet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = setToDefaultPet.png; sourceTree = "<group>"; };
 		606181C019B1BA80009AF63D /* more_greenBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more_greenBg.png; sourceTree = "<group>"; };
 		6065A97419A9910300333B0D /* arrow_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow_right.png; sourceTree = "<group>"; };
+		6068AF361A512F6000E8F292 /* PetMain_Active_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PetMain_Active_ViewController.h; sourceTree = "<group>"; };
+		6068AF371A512F6000E8F292 /* PetMain_Active_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetMain_Active_ViewController.m; sourceTree = "<group>"; };
+		6068AF391A5140F400E8F292 /* PetMain_Fans_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PetMain_Fans_ViewController.h; sourceTree = "<group>"; };
+		6068AF3A1A5140F400E8F292 /* PetMain_Fans_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetMain_Fans_ViewController.m; sourceTree = "<group>"; };
+		6068AF3C1A515B1F00E8F292 /* PetMain_Photo_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PetMain_Photo_ViewController.h; sourceTree = "<group>"; };
+		6068AF3D1A515B1F00E8F292 /* PetMain_Photo_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetMain_Photo_ViewController.m; sourceTree = "<group>"; };
+		6068AF3F1A515D5E00E8F292 /* PetMain_Photo_CollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PetMain_Photo_CollectionViewCell.h; sourceTree = "<group>"; };
+		6068AF401A515D5E00E8F292 /* PetMain_Photo_CollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetMain_Photo_CollectionViewCell.m; sourceTree = "<group>"; };
 		606D5FB11A0B977C00DC117F /* MyStarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyStarViewController.h; sourceTree = "<group>"; };
 		606D5FB21A0B977C00DC117F /* MyStarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyStarViewController.m; sourceTree = "<group>"; };
 		606D5FB41A0B986000DC117F /* MyStarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyStarCell.h; sourceTree = "<group>"; };
@@ -1488,6 +1510,28 @@
 		607ADDFF1A033460007BA160 /* talkArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = talkArrow.png; sourceTree = "<group>"; };
 		607ADE011A03694E007BA160 /* WaterFlowCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterFlowCell.h; sourceTree = "<group>"; };
 		607ADE021A03694E007BA160 /* WaterFlowCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterFlowCell.m; sourceTree = "<group>"; };
+		6080CB2E1A523F8C00B6CC94 /* PetMain_Gift_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PetMain_Gift_ViewController.h; sourceTree = "<group>"; };
+		6080CB2F1A523F8C00B6CC94 /* PetMain_Gift_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetMain_Gift_ViewController.m; sourceTree = "<group>"; };
+		6080CB311A52548000B6CC94 /* PetMain_Food_ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PetMain_Food_ViewController.h; sourceTree = "<group>"; };
+		6080CB321A52548000B6CC94 /* PetMain_Food_ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetMain_Food_ViewController.m; sourceTree = "<group>"; };
+		6080CB341A5256CA00B6CC94 /* PetMain_FoodCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PetMain_FoodCell.h; sourceTree = "<group>"; };
+		6080CB351A5256CA00B6CC94 /* PetMain_FoodCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetMain_FoodCell.m; sourceTree = "<group>"; };
+		6080CB441A52A49900B6CC94 /* MsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MsgViewController.h; sourceTree = "<group>"; };
+		6080CB451A52A49900B6CC94 /* MsgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MsgViewController.m; sourceTree = "<group>"; };
+		6080CB481A52AFCC00B6CC94 /* ChatListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatListCell.h; sourceTree = "<group>"; };
+		6080CB491A52AFCC00B6CC94 /* ChatListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatListCell.m; sourceTree = "<group>"; };
+		6080CB4B1A52B04D00B6CC94 /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
+		6080CB4C1A52B04D00B6CC94 /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
+		6080CB4E1A52B15400B6CC94 /* ConvertToCommonEmoticonsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConvertToCommonEmoticonsHelper.h; sourceTree = "<group>"; };
+		6080CB4F1A52B15400B6CC94 /* ConvertToCommonEmoticonsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConvertToCommonEmoticonsHelper.m; sourceTree = "<group>"; };
+		6080CB521A52B1AE00B6CC94 /* Emoji.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Emoji.h; sourceTree = "<group>"; };
+		6080CB531A52B1AE00B6CC94 /* Emoji.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Emoji.m; sourceTree = "<group>"; };
+		6080CB541A52B1AE00B6CC94 /* EmojiEmoticons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiEmoticons.h; sourceTree = "<group>"; };
+		6080CB551A52B1AE00B6CC94 /* EmojiEmoticons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiEmoticons.m; sourceTree = "<group>"; };
+		6080CB581A52B65C00B6CC94 /* NSDate+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Category.h"; sourceTree = "<group>"; };
+		6080CB591A52B65C00B6CC94 /* NSDate+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Category.m"; sourceTree = "<group>"; };
+		6080CB5B1A52B69100B6CC94 /* NSDateFormatter+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+Category.h"; sourceTree = "<group>"; };
+		6080CB5C1A52B69100B6CC94 /* NSDateFormatter+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+Category.m"; sourceTree = "<group>"; };
 		6080F5BF19C8631F0021BA2B /* PetNewsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PetNewsModel.h; sourceTree = "<group>"; };
 		6080F5C019C8631F0021BA2B /* PetNewsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PetNewsModel.m; sourceTree = "<group>"; };
 		6083F08B19CD6A4F006A62C4 /* talkLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = talkLeft.png; sourceTree = "<group>"; };
@@ -1614,8 +1658,6 @@
 		60BA6ED81A301EE6007932BA /* rightArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rightArrow.png; sourceTree = "<group>"; };
 		60BA6EDE1A302847007932BA /* food_selectBg_tri.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = food_selectBg_tri.png; sourceTree = "<group>"; };
 		60BA6EDF1A302847007932BA /* food_selectBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = food_selectBg.png; sourceTree = "<group>"; };
-		60BA6EE41A305693007932BA /* HorizontalTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HorizontalTableView.h; sourceTree = "<group>"; };
-		60BA6EE51A305693007932BA /* HorizontalTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HorizontalTableView.m; sourceTree = "<group>"; };
 		60BA6EE71A30939E007932BA /* FoodCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoodCell.h; sourceTree = "<group>"; };
 		60BA6EE81A30939E007932BA /* FoodCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoodCell.m; sourceTree = "<group>"; };
 		60BA85391A4157FD005B59D8 /* more_friend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more_friend.png; sourceTree = "<group>"; };
@@ -2082,6 +2124,10 @@
 				60BC3A201A31DC5400EEF7D0 /* ChargeViewController.m */,
 				604334471A36EE6100D21E74 /* SetPasswordViewController.h */,
 				604334481A36EE6100D21E74 /* SetPasswordViewController.m */,
+				6080CB441A52A49900B6CC94 /* MsgViewController.h */,
+				6080CB451A52A49900B6CC94 /* MsgViewController.m */,
+				6080CB4B1A52B04D00B6CC94 /* ChatViewController.h */,
+				6080CB4C1A52B04D00B6CC94 /* ChatViewController.m */,
 			);
 			path = "个人中心";
 			sourceTree = "<group>";
@@ -2450,10 +2496,10 @@
 		09D989711935C0A800C83C4B /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				6080CB471A52AFB000B6CC94 /* 环信 */,
 				60327C271A491C8700C13C7A /* EaseMobSDK */,
 				60BB0C881A320F56009769F2 /* UMSocial_Sdk_4.2.1 */,
 				090F046719543187002B1F45 /* 图片素材 */,
-				60BA6EE31A30567C007932BA /* HorizontalTableView */,
 				60BA07FB1A1A2D8500229804 /* UMAnalytics_Sdk_3.1.9 */,
 				606158A31A076D5900C751CF /* Reflection */,
 				6049A0A11A0694A6009C1527 /* iCarousel */,
@@ -2642,6 +2688,10 @@
 				603C5F2F1A4C1517009D1839 /* PetMainCell.h */,
 				603C5F301A4C1517009D1839 /* PetMainCell.m */,
 				603C5F311A4C1517009D1839 /* PetMainCell.xib */,
+				6068AF3F1A515D5E00E8F292 /* PetMain_Photo_CollectionViewCell.h */,
+				6068AF401A515D5E00E8F292 /* PetMain_Photo_CollectionViewCell.m */,
+				6080CB341A5256CA00B6CC94 /* PetMain_FoodCell.h */,
+				6080CB351A5256CA00B6CC94 /* PetMain_FoodCell.m */,
 			);
 			path = Customs;
 			sourceTree = "<group>";
@@ -2653,7 +2703,6 @@
 				4922D5E719A754370018160A /* 商城 */,
 				090F0469195431E0002B1F45 /* 菜单页 */,
 				09561AC419382893008A13EB /* 基类 */,
-				60B878681A2C8C0C00E5D691 /* 图像界面 */,
 				09561AC919382928008A13EB /* 登录注册 */,
 				60B878641A2C83F300E5D691 /* 求口粮 */,
 				09561AC5193828A8008A13EB /* 随机 */,
@@ -2945,6 +2994,16 @@
 				6036EBD51A4A5BB700DB2C83 /* UserCardViewController.m */,
 				603C5F2C1A4BE64B009D1839 /* PetMainViewController.h */,
 				603C5F2D1A4BE64B009D1839 /* PetMainViewController.m */,
+				6068AF361A512F6000E8F292 /* PetMain_Active_ViewController.h */,
+				6068AF371A512F6000E8F292 /* PetMain_Active_ViewController.m */,
+				6068AF391A5140F400E8F292 /* PetMain_Fans_ViewController.h */,
+				6068AF3A1A5140F400E8F292 /* PetMain_Fans_ViewController.m */,
+				6068AF3C1A515B1F00E8F292 /* PetMain_Photo_ViewController.h */,
+				6068AF3D1A515B1F00E8F292 /* PetMain_Photo_ViewController.m */,
+				6080CB2E1A523F8C00B6CC94 /* PetMain_Gift_ViewController.h */,
+				6080CB2F1A523F8C00B6CC94 /* PetMain_Gift_ViewController.m */,
+				6080CB311A52548000B6CC94 /* PetMain_Food_ViewController.h */,
+				6080CB321A52548000B6CC94 /* PetMain_Food_ViewController.m */,
 			);
 			path = "宠物资料";
 			sourceTree = "<group>";
@@ -3329,6 +3388,33 @@
 			path = Reflection;
 			sourceTree = "<group>";
 		};
+		6080CB471A52AFB000B6CC94 /* 环信 */ = {
+			isa = PBXGroup;
+			children = (
+				6080CB581A52B65C00B6CC94 /* NSDate+Category.h */,
+				6080CB591A52B65C00B6CC94 /* NSDate+Category.m */,
+				6080CB5B1A52B69100B6CC94 /* NSDateFormatter+Category.h */,
+				6080CB5C1A52B69100B6CC94 /* NSDateFormatter+Category.m */,
+				6080CB481A52AFCC00B6CC94 /* ChatListCell.h */,
+				6080CB491A52AFCC00B6CC94 /* ChatListCell.m */,
+				6080CB4E1A52B15400B6CC94 /* ConvertToCommonEmoticonsHelper.h */,
+				6080CB4F1A52B15400B6CC94 /* ConvertToCommonEmoticonsHelper.m */,
+				6080CB511A52B1AE00B6CC94 /* Emoji */,
+			);
+			path = "环信";
+			sourceTree = "<group>";
+		};
+		6080CB511A52B1AE00B6CC94 /* Emoji */ = {
+			isa = PBXGroup;
+			children = (
+				6080CB521A52B1AE00B6CC94 /* Emoji.h */,
+				6080CB531A52B1AE00B6CC94 /* Emoji.m */,
+				6080CB541A52B1AE00B6CC94 /* EmojiEmoticons.h */,
+				6080CB551A52B1AE00B6CC94 /* EmojiEmoticons.m */,
+			);
+			path = Emoji;
+			sourceTree = "<group>";
+		};
 		609A5B8819F6031800822B1F /* 2014-10-21 */ = {
 			isa = PBXGroup;
 			children = (
@@ -3427,13 +3513,6 @@
 			path = "求口粮";
 			sourceTree = "<group>";
 		};
-		60B878681A2C8C0C00E5D691 /* 图像界面 */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "图像界面";
-			sourceTree = "<group>";
-		};
 		60B9016A1A1BA79B006CD61E /* 礼物 */ = {
 			isa = PBXGroup;
 			children = (
@@ -3500,15 +3579,6 @@
 				60BA07FE1A1A2D8500229804 /* MobClickSocialAnalytics.h */,
 			);
 			path = UMAnalytics_Sdk_3.1.9;
-			sourceTree = "<group>";
-		};
-		60BA6EE31A30567C007932BA /* HorizontalTableView */ = {
-			isa = PBXGroup;
-			children = (
-				60BA6EE41A305693007932BA /* HorizontalTableView.h */,
-				60BA6EE51A305693007932BA /* HorizontalTableView.m */,
-			);
-			path = HorizontalTableView;
 			sourceTree = "<group>";
 		};
 		60BB0C881A320F56009769F2 /* UMSocial_Sdk_4.2.1 */ = {
@@ -4266,6 +4336,7 @@
 				60432F551A21ED3300C869A7 /* SDWebImagePrefetcher.m in Sources */,
 				09D989531935C08E00C83C4B /* AppDelegate.m in Sources */,
 				60ACAC1919F200A80049D366 /* SingleTalkModel.m in Sources */,
+				6080CB4D1A52B04D00B6CC94 /* ChatViewController.m in Sources */,
 				6024A61B19A18DE0005ED3D3 /* BottomMenuRootViewController.m in Sources */,
 				603A367A19C07F680000E0AD /* PlanetAttentionViewController.m in Sources */,
 				09D989F41935C1FE00C83C4B /* TMQuiltViewController.m in Sources */,
@@ -4277,6 +4348,7 @@
 				60DDF24119AF120400CB3042 /* TopicViewController.m in Sources */,
 				09C87C26195137CA00F41C6A /* UIImage+UIImageExtras.m in Sources */,
 				60E7C64A1A242B980075B0E8 /* LargeImage.m in Sources */,
+				6080CB331A52548000B6CC94 /* PetMain_Food_ViewController.m in Sources */,
 				09D98AC01935E87300C83C4B /* FavoriteCell.m in Sources */,
 				60432F281A21DCA100C869A7 /* BackImageDetailCommentViewCell.m in Sources */,
 				607725811A35940900CB4F9F /* PublishToViewController.m in Sources */,
@@ -4287,6 +4359,7 @@
 				09DA9DCB1965400200E219A6 /* NoticeViewController.m in Sources */,
 				601BB36319AB4D660076E051 /* MyHomeViewController.m in Sources */,
 				60492B1E1A08DFFA0088AD0B /* BlackListCell.m in Sources */,
+				6080CB5A1A52B65C00B6CC94 /* NSDate+Category.m in Sources */,
 				09D98A021935C26800C83C4B /* TMPhotoQuiltViewCell.m in Sources */,
 				60BA6EE91A30939E007932BA /* FoodCell.m in Sources */,
 				60ACAC1C19F24A8A0049D366 /* NoticeModel.m in Sources */,
@@ -4300,6 +4373,7 @@
 				6051D72C1A1C2B67007289C2 /* NoCloseAlert.m in Sources */,
 				09E2C898193740CE002D9E65 /* ASIDataCompressor.m in Sources */,
 				601716EB198F5ACD001E6DE6 /* SearchFamilyViewController.m in Sources */,
+				6080CB461A52A49900B6CC94 /* MsgViewController.m in Sources */,
 				60BA32761A280AC1007E14B6 /* SendResultViewController.m in Sources */,
 				6061280E19D55D2A0087F642 /* SearchResultModel.m in Sources */,
 				60432F5B1A21ED3300C869A7 /* UIImageView+DownWebimage.m in Sources */,
@@ -4322,6 +4396,7 @@
 				098FC7EC194053320064A004 /* MyMD5.m in Sources */,
 				60EC8F9F198B429F00F1781A /* ChoseLoadViewController.m in Sources */,
 				6038619919A75E1100B1312A /* UIImage+ImageBlur.m in Sources */,
+				6080CB5D1A52B69100B6CC94 /* NSDateFormatter+Category.m in Sources */,
 				60432F501A21ED3300C869A7 /* SDWebImageDecoder.m in Sources */,
 				09E2C899193740CE002D9E65 /* ASIDataDecompressor.m in Sources */,
 				6020BD6819987DC3002C74FA /* PetInfoViewController.m in Sources */,
@@ -4340,8 +4415,11 @@
 				6057C3251A1471AC00453A88 /* InviteCodeModel.m in Sources */,
 				09EC596519876C9500FDE806 /* RecommendViewController.m in Sources */,
 				099F2D131960F76A009614D3 /* TopicListModel.m in Sources */,
+				6080CB501A52B15400B6CC94 /* ConvertToCommonEmoticonsHelper.m in Sources */,
+				6068AF381A512F6000E8F292 /* PetMain_Active_ViewController.m in Sources */,
 				60432F581A21ED3300C869A7 /* UIImage+MultiFormat.m in Sources */,
 				4964C26019C95D2600DF896D /* WalkAndTeaseViewController.m in Sources */,
+				6068AF411A515D5E00E8F292 /* PetMain_Photo_CollectionViewCell.m in Sources */,
 				091EAD36194ECA6400B0DE41 /* MyPetViewController.m in Sources */,
 				60B036F419CD9DE100A46DC9 /* LevelRank.m in Sources */,
 				60BD15ED1A397FFB000138EC /* Alert_BegFoodViewController.m in Sources */,
@@ -4354,6 +4432,7 @@
 				60178AE619EB6F8500E38C2C /* ModifyPetOrUserInfoViewController.m in Sources */,
 				60432F4F1A21ED3300C869A7 /* SDWebImageCompat.m in Sources */,
 				09292296196CDC6900C6EAAF /* SystemMessageListModel.m in Sources */,
+				6080CB4A1A52AFCC00B6CC94 /* ChatListCell.m in Sources */,
 				099D0F001945D246002137CB /* VisibleViewController.m in Sources */,
 				6038618319A71A5600B1312A /* PicDetailViewController.m in Sources */,
 				6049A09D1A068E25009C1527 /* PetRecommendViewController.m in Sources */,
@@ -4363,7 +4442,7 @@
 				602A880319AD80AA004F368C /* UserInfoActivityCell.m in Sources */,
 				49590B5219B0447A0090E697 /* DACircularProgressView.m in Sources */,
 				606D5FB31A0B977C00DC117F /* MyStarViewController.m in Sources */,
-				60BA6EE61A305693007932BA /* HorizontalTableView.m in Sources */,
+				6080CB561A52B1AE00B6CC94 /* Emoji.m in Sources */,
 				603A367E19C080FC0000E0AD /* PlanetAttentionCell.m in Sources */,
 				601BB36019AB4CAD0076E051 /* NIDropDown.m in Sources */,
 				605242501A1B634500373EC3 /* ResultOfBuyView.m in Sources */,
@@ -4373,10 +4452,12 @@
 				604FA48F1A0CD4E500D0A75A /* PetRecomModel.m in Sources */,
 				605E12931A09FAAA003F41FF /* UIImage+Reflection.m in Sources */,
 				60BD15F21A39A645000138EC /* ExchangeDetailView.m in Sources */,
+				6068AF3B1A5140F400E8F292 /* PetMain_Fans_ViewController.m in Sources */,
 				60D62A6F19A46D5900224976 /* MainViewController.m in Sources */,
 				6061281119D55E280087F642 /* AlertView.m in Sources */,
 				0914B6D2196E3F410056CFB0 /* MMProgressHUD.m in Sources */,
 				1818E529195D1C8D001ED167 /* ClickImage.m in Sources */,
+				6080CB301A523F8C00B6CC94 /* PetMain_Gift_ViewController.m in Sources */,
 				09DA9DC819653B5400E219A6 /* NoticeCell.m in Sources */,
 				0974AB5C19444C7D0010DFE5 /* PhotoModel.m in Sources */,
 				496CF22B19A495070081BF5E /* MassWatchViewController.m in Sources */,
@@ -4407,6 +4488,7 @@
 				6080F5C119C8631F0021BA2B /* PetNewsModel.m in Sources */,
 				60EC8FB1198B650A00F1781A /* ChooseInViewController.m in Sources */,
 				098FC7EA194053320064A004 /* HttpDownLoad.m in Sources */,
+				6080CB571A52B1AE00B6CC94 /* EmojiEmoticons.m in Sources */,
 				604334491A36EE6100D21E74 /* SetPasswordViewController.m in Sources */,
 				60432F521A21ED3300C869A7 /* SDWebImageDownloaderOperation.m in Sources */,
 				606181B219B1856C009AF63D /* DefaultPetCell.m in Sources */,
@@ -4418,6 +4500,7 @@
 				60492B211A0909AB0088AD0B /* HyperlinksButton.m in Sources */,
 				09811383193D5EAC0084ED28 /* RegisterViewController.m in Sources */,
 				09E2C897193740CE002D9E65 /* ASIAuthenticationDialog.m in Sources */,
+				6080CB361A5256CA00B6CC94 /* PetMain_FoodCell.m in Sources */,
 				60BC5CA51A3869390097864B /* Alert_HyperlinkView.m in Sources */,
 				1818E53E195D1CDD001ED167 /* MJRefreshConst.m in Sources */,
 				0974AB5919441DB80010DFE5 /* UploadViewController.m in Sources */,
@@ -4489,6 +4572,7 @@
 				60D62A6B19A4499300224976 /* ControllerManager.m in Sources */,
 				496CF22819A4908D0081BF5E /* IQKeyboardManager.m in Sources */,
 				09C9DFC7197CF8E400198BDE /* AFPopupView.m in Sources */,
+				6068AF3E1A515B1F00E8F292 /* PetMain_Photo_ViewController.m in Sources */,
 				09E2C89E193740CE002D9E65 /* ASINetworkQueue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4577,6 +4661,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
+				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
@@ -4612,6 +4697,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				PROVISIONING_PROFILE = "";
+				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "armv7 armv7s arm64";

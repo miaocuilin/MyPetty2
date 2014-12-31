@@ -29,6 +29,6 @@
 @property(nonatomic,copy)NSString * rank;
 @property(nonatomic,copy)NSString * wechat;
 @property(nonatomic,copy)NSString * weibo;
-
+@property(nonatomic,copy)NSString * code;
 
 @end

@@ -47,9 +47,10 @@
 #import "Alert_2ButtonView2.h"
 #import "FirstTabBarViewController.h"
 #import "UserCardViewController.h"
-
+#import "PetMainViewController.h"
 
 #define LOADING LoadingView * loadView = [ControllerManager shareLoading];[[UIApplication sharedApplication].keyWindow addSubview:loadView];
+#define LOADING2 LoadingView * loadView = [ControllerManager shareLoading];[self.view addSubview:loadView];
 
 #define ENDLOADING LoadingView * loadView = [ControllerManager shareLoading];[loadView stopAnimation];
 
@@ -76,6 +77,8 @@
 #define BGCOLOR5 [UIColor colorWithRed:147/255.0 green:204/255.0 blue:172/255.0 alpha:1]
 //
 #define ORANGE [ControllerManager colorWithHexString:@"fc7b51"]
+//
+#define RGBACOLOR(r,g,b,a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
 
 
 #define USER [ControllerManager shareUserDefault]

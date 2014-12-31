@@ -113,7 +113,8 @@
 //    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge categories:nil];
 //    
 //    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    //归零
+//    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     /**********环信***********/
 //    aps_development.cer
 //    NSString * apnsCertName = @"imengstar_dev";
@@ -132,14 +133,14 @@
 //    } onQueue:nil];
     
     //登录
-//    [[EaseMob sharedInstance].chatManager asyncLoginWithUsername:@"jj" password:@"123456" completion:^(NSDictionary *loginInfo, EMError *error) {
+//    [[EaseMob sharedInstance].chatManager asyncLoginWithUsername:@"miaocuilin" password:@"123456" completion:^(NSDictionary *loginInfo, EMError *error) {
 //        if (!error) {
 //            NSLog(@"登录成功");
-    
+//    
 //            EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
 //            NSLog(@"%@", options.nickname);
             
-//            [[EaseMob sharedInstance].chatManager setApnsNickname:@"jj"];
+//            [[EaseMob sharedInstance].chatManager setApnsNickname:@"miaocuilin"];
 //            EMPushNotificationOptions *options = [[EMPushNotificationOptions alloc] init];
 //            options.displayStyle = ePushNotificationDisplayStyle_messageSummary;
 //            [[EaseMob sharedInstance].chatManager asyncUpdatePushOptions:options completion:^(EMPushNotificationOptions *options, EMError *error) {
@@ -149,11 +150,11 @@
 //                    NSLog(@"更新成功");
 //                }
 //            } onQueue:nil];
-//            
-//            
+            
+            
 //            EMChatText *text = [[EMChatText alloc] initWithText:@"hello world!"];
 //            EMTextMessageBody *body = [[EMTextMessageBody alloc] initWithChatObject:text];
-//            EMMessage *retureMsg = [[EMMessage alloc] initWithReceiver:@"miaocuilin" bodies:[NSArray arrayWithObject:body]];
+//            EMMessage *retureMsg = [[EMMessage alloc] initWithReceiver:@"317" bodies:[NSArray arrayWithObject:body]];
 //            retureMsg.requireEncryption = NO;
 //            retureMsg.isGroup = NO;
 //            [[EaseMob sharedInstance].chatManager sendMessage:retureMsg progress:nil error:nil];

@@ -72,6 +72,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [self login];
 //    [tv reloadData];
 //    tv.hidden = NO;

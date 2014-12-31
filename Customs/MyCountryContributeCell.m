@@ -20,7 +20,7 @@
 
     self.headBtn.layer.cornerRadius = self.headBtn.frame.size.height/2;
     self.headBtn.layer.masksToBounds = YES;
-    
+    self.headBtn.userInteractionEnabled = NO;
 }
 -(void)modifyWithBOOL:(BOOL)isThis lineNum:(int)num
 {

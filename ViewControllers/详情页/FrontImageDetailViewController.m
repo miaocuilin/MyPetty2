@@ -31,6 +31,7 @@
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if (!isLoad) {
         if (![[USER objectForKey:@"guide_detail"] intValue]) {
             [USER setObject:@"1" forKey:@"guide_detail"];
@@ -41,6 +42,7 @@
 }
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     isLoad = YES;
     
     isInThisController = YES;
@@ -96,6 +98,7 @@
 }
 -(void)viewDidDisappear:(BOOL)animated
 {
+    [super viewDidDisappear:animated];
     isInThisController = NO;
 }
 - (void)viewDidLoad {
@@ -402,7 +405,7 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"照片详情页宠物信息：%@", load.dataDict);
-            //            PetInfoModel * model = [[PetInfoModel alloc] init];
+//            PetInfoModel * model = [[PetInfoModel alloc] init];
 
             self.petDict = [load.dataDict objectForKey:@"data"];
             
@@ -942,17 +945,17 @@
 #pragma mark - 
 -(void)jumpToUserClick
 {
-    UserCardViewController * vc = [[UserCardViewController alloc] init];
-    vc.usr_id = [self.petDict objectForKey:@"master_id"];
-    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
-    vc.close = ^(){
-        [vc.view removeFromSuperview];
-    };
-    [vc release];
-//    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+//    UserCardViewController * vc = [[UserCardViewController alloc] init];
 //    vc.usr_id = [self.petDict objectForKey:@"master_id"];
-//    [self presentViewController:vc animated:YES completion:nil];
+//    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//    vc.close = ^(){
+//        [vc.view removeFromSuperview];
+//    };
 //    [vc release];
+    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+    vc.usr_id = [self.petDict objectForKey:@"master_id"];
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 }
 #pragma mark - 点赞
 -(void)zanBtnClick:(UIButton *)btn
@@ -1657,7 +1660,7 @@
 -(void)headBtnClick
 {
     PetInfoViewController * vc = [[PetInfoViewController alloc] init];
-    vc.aid = [self.imageDict objectForKey:@"aid"];
+    vc.aid = [self.imageDict objectForKey:@"aid"];;
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
@@ -1784,7 +1787,7 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UserCardViewController * vc = [[UserCardViewController alloc] init];
+    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
     if (triangleIndex == 0) {
         vc.usr_id = [self.likersArray[indexPath.row] usr_id];
         [self presentViewController:vc animated:YES completion:nil];
@@ -1801,12 +1804,12 @@
         vc.usr_id = [self.sharersArray[indexPath.row] usr_id];
         [self presentViewController:vc animated:YES completion:nil];
     }
-    vc.close = ^(){
-        [vc.view removeFromSuperview];
-    };
-    if (triangleIndex != 2) {
-        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
-    }
+//    vc.close = ^(){
+//        [vc.view removeFromSuperview];
+//    };
+//    if (triangleIndex != 2) {
+//        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//    }
     
     [vc release];
 }

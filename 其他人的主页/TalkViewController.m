@@ -42,6 +42,7 @@
 //}
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     NSLog(@"&&&&&&&&&&&&&&&&&&%f--%f", tv.contentSize.height-tv.frame.size.height, tv.contentOffset.y);
     if (tv.contentSize.height>=tv.frame.size.height){
         tv.contentOffset = CGPointMake(0, tv.contentSize.height-tv.frame.size.height);
@@ -612,22 +613,22 @@
             return;
         }
         
-        UserCardViewController * vc = [[UserCardViewController alloc] init];
-        vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
-        vc.modalTransitionStyle = 2;
-        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
-        vc.close = ^(){
-            [vc.view removeFromSuperview];
-        };
-        [vc release];
-//        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
-        //    NSLog(@"%@", petInfoDict);
+//        UserCardViewController * vc = [[UserCardViewController alloc] init];
 //        vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
 //        vc.modalTransitionStyle = 2;
-////        vc.isFromPetInfo = YES;
-////        vc.petHeadImage = headerImageView.image;
-//        [self presentViewController:vc animated:YES completion:nil];
+//        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//        vc.close = ^(){
+//            [vc.view removeFromSuperview];
+//        };
 //        [vc release];
+        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+//            NSLog(@"%@", petInfoDict);
+        vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
+        vc.modalTransitionStyle = 2;
+//        vc.isFromPetInfo = YES;
+//        vc.petHeadImage = headerImageView.image;
+        [self presentViewController:vc animated:YES completion:nil];
+        [vc release];
     };
     
     cell.jumpToPicDetail = ^(void){

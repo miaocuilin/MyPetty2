@@ -29,6 +29,7 @@
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
     [[IQKeyboardManager sharedManager] setEnable:NO];
 }
 

@@ -7,7 +7,6 @@
 //
 
 #import "MyCountryMessageCell.h"
-#import "PicDetailViewController.h"
 @implementation MyCountryMessageCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier

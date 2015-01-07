@@ -7,7 +7,6 @@
 //
 
 #import "PetRecommendCell.h"
-#import "UIImage+Reflection.h"
 
 @implementation PetRecommendCell
 

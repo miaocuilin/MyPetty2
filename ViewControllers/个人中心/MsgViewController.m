@@ -50,8 +50,8 @@
 }
 -(void)modifyUI
 {
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-    self.navigationController.navigationBar.shadowImage = [UIImage new];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@""] forBarMetrics:UIBarMetricsDefault];
+    self.navigationController.navigationBar.shadowImage = [UIImage imageNamed:@""];
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     //
     UIButton * leftBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 10, 17) ImageName:@"leftArrow.png" Target:self Action:@selector(leftBtnClick) Title:nil];
@@ -81,7 +81,7 @@
         _tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         _tableView.delegate = self;
         _tableView.dataSource = self;
-        _tableView.tableFooterView = [[UIView alloc] init];
+        _tableView.tableFooterView = [MyControl createViewWithFrame:CGRectZero];
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [_tableView registerClass:[ChatListCell class] forCellReuseIdentifier:@"chatListCell"];
 //    }
@@ -105,7 +105,7 @@
                           }
                       }];
     ret = [[NSMutableArray alloc] initWithArray:sorte];
-    return ret;
+    return [ret autorelease];
 }
 
 // 得到最后消息时间

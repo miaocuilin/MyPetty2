@@ -8,43 +8,24 @@
 
 #import "ControllerManager.h"
 #import "RandomViewController.h"
-#import "FavoriteViewController.h"
-#import "DetailViewController.h"
-#import "MyPetViewController.h"
-#import "MyHomeViewController.h"
-#import "SquareViewController.h"
-//#import "NTSlidingViewController.h"
-#import "RewardViewController.h"
 #define DEFAULT_VOID_COLOR [UIColor whiteColor]
-#import "JDMenuViewController.h"
-
-#import "MainViewController.h"
 #import <CoreText/CoreText.h>
-#import "LevelRank.h"
 
 @implementation ControllerManager
 
 static RandomViewController * rvc = nil;
-static FavoriteViewController * fvc = nil;
 static UINavigationController * nc1 = nil;
-static UINavigationController * nc2 = nil;
-static DetailViewController * dvc = nil;
-static MyPetViewController * mvc = nil;
-static UINavigationController * nc3 = nil;
-static MyHomeViewController * hvc = nil;
+//static UINavigationController * nc2 = nil;
+//static UINavigationController * nc3 = nil;
 
 static NSUserDefaults * user = nil;
 static NSString * SID = nil;
 static int isSuccess;
 
-static JDSideMenu * sideMenu = nil;
 static LoadingView * load = nil;
 static PopupView * pop = nil;
 
-//static NTSlidingViewController * sliding = nil;
-static MainViewController * main = nil;
 MBProgressHUD *HUD;
-static LevelRank *levelAndRank = nil;
 
 static FirstTabBarViewController * tabBar = nil;
 
@@ -58,40 +39,7 @@ static FirstTabBarViewController * tabBar = nil;
     });
     return nc1;
 }
-+(id)shareManagerFavorite
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        fvc = [[FavoriteViewController alloc]init];
-        nc2 = [[UINavigationController alloc] initWithRootViewController:fvc];
-    });
-    return nc2;
-}
-+(id)shareManagerDetail
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        dvc = [[DetailViewController alloc] init];
-    });
-    return dvc;
-}
-+(id)shareManagerMyPet
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        mvc = [[MyPetViewController alloc] init];
-        nc3 = [[UINavigationController alloc] initWithRootViewController:mvc];
-    });
-    return nc3;
-}
-+(id)shareManagerMyHome
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        hvc = [[MyHomeViewController alloc] init];
-    });
-    return hvc;
-}
+
 +(id)shareUserDefault
 {
     static dispatch_once_t onceToken;
@@ -139,26 +87,6 @@ static FirstTabBarViewController * tabBar = nil;
         tabBar = [[FirstTabBarViewController alloc] init];
     });
     return tabBar;
-}
-
-+(id)shareMain
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        main = [[MainViewController alloc] init];
-    });
-    return main;
-}
-+(id)shareJDSideMenu
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        MainViewController * main = [ControllerManager shareMain];
-        JDMenuViewController * menu = [[JDMenuViewController alloc] init];
-        sideMenu = [[JDSideMenu alloc]initWithContentController:main menuController:menu];
-    });
-    
-    return sideMenu;
 }
 
 +(id)shareLoading
@@ -312,43 +240,7 @@ static FirstTabBarViewController * tabBar = nil;
     [HUD hide:YES afterDelay:1.0];
     
 }
-+(id)shareLevelAndRank
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        levelAndRank = [[LevelRank alloc]init];
-    });
-    return levelAndRank;
-}
-+(BOOL)levelPOP:(NSString *)exp addExp:(NSInteger)add
-{
-    [self shareLevelAndRank];
-    NSString *level = [levelAndRank calculateLevel:exp addExp:add];
-    if ([level intValue] >[[USER objectForKey:@"level"] intValue]) {
-        [USER setObject:level forKey:@"level"];
-        return YES;
-    }
-    return NO;
-}
-+(BOOL)rankPOP:(NSString *)contribution addContribution:(NSInteger)add planet:(NSString *)dogOrcat
-{
-    [self shareLevelAndRank];
-    NSString *rank = [levelAndRank calculaterRank:contribution planet:dogOrcat addContribution:add];
-    if ([rank intValue] > [[USER objectForKey:@"rank"] intValue]) {
-        [USER setObject:@"" forKey:@"rank"];
-        return YES;
-    }
-    return NO;
-}
-+ (NSMutableArray *)getGift:(BOOL)isBad
-{
-    [self shareLevelAndRank];
-    if (isBad) {
-        return [levelAndRank getBadGiftDataArray:YES];
-    }else{
-        return [levelAndRank getBadGiftDataArray:NO];
-    }
-}
+
 //+ (void)loginHUDAlertView:(UIView *)showInView
 //{
 //    HUD = [[MBProgressHUD alloc] initWithWindow:showInView.window];

@@ -10,8 +10,6 @@
 
 #import "MyStarCell.h"
 #import "MyStarModel.h"
-#import "PicDetailViewController.h"
-#import "PetInfoViewController.h"
 #import "RockViewController.h"
 #import "TouchViewController.h"
 #import "RecordViewController.h"
@@ -386,7 +384,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         self.pet_tx = tx;
     };
     cell.headClick = ^(NSString * aid){
-        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+        PetMainViewController * vc = [[PetMainViewController alloc] init];
         vc.aid = aid;
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];

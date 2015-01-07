@@ -10,7 +10,6 @@
 #import "FirstViewController.h"
 #import "ControllerManager.h"
 #import "ASIFormDataRequest.h"
-#import "ChoseLoadViewController.h"
 #import <ImageIO/ImageIO.h>
 //#import "FoodFirstViewController.h"
 //#import "MainTabBarViewController.h"
@@ -200,7 +199,7 @@
     self.view.backgroundColor = [UIColor blackColor];
     
     [USER setObject:@"1" forKey:@"planet"];
-    [USER setObject:nil forKey:@"petInfoDict"];
+    [USER setObject:@"" forKey:@"petInfoDict"];
 //    NSLog(@"%f", self.view.frame.size.height);
     //全局变量，存储在本地，用于判断各种条件，以做出相应操作
     [USER setObject:@"0" forKey:@"MyHomeTimes"];
@@ -391,7 +390,14 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"uid=%@dog&cat", UDID]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@", GETPRESID, UDID, sig];
     NSLog(@"%@", url);
+    if (shouldLoading) {
+        LOADING;
+    }
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (shouldLoading) {
+            ENDLOADING;
+            shouldLoading = NO;
+        }
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
             if (![[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
@@ -433,7 +439,14 @@
     NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", UDID];
     NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@", LOGINAPI, UDID, [MyMD5 md5:code]];
     NSLog(@"login-url:%@", url);
+    if (shouldLoading) {
+        LOADING;
+    }
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (shouldLoading) {
+            ENDLOADING;
+            shouldLoading = NO;
+        }
         if(isFinish){
             NSLog(@"%@", load.dataDict);
             [USER setObject:[load.dataDict objectForKey:@"confVersion"] forKey:@"confVersion"];
@@ -483,7 +496,14 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [USER objectForKey:@"usr_id"], sig,[ControllerManager getSID]];
     NSLog(@"%@", url);
+    if (shouldLoading) {
+        LOADING;
+    }
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (shouldLoading) {
+            ENDLOADING;
+            shouldLoading = NO;
+        }
         if (isFinish) {
             if ([[load.dataDict objectForKey:@"state"] intValue] == 2) {
                 //SID过期,需要重新登录获取SID
@@ -551,7 +571,15 @@
     reloadType = 4;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+//    NSLog(@"%@", url);
+    if (shouldLoading) {
+        LOADING;
+    }
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (shouldLoading) {
+            ENDLOADING;
+            shouldLoading = NO;
+        }
         if (isFinish) {
             NSLog(@"petInfo:%@", load.dataDict);
             if(![[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
@@ -562,6 +590,7 @@
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
                 
                 //记录默认宠物信息
+//                [[load.dataDict objectForKey:@"data"] setObject:@"0" forKey:@"gifts"];
                 [USER setObject:[load.dataDict objectForKey:@"data"] forKey:@"petInfoDict"];
             }
             
@@ -745,6 +774,7 @@
     if (buttonIndex == 0) {
         
     }else{
+        shouldLoading = 1;
         if (reloadType == 1) {
             [self getUserData];
         }else if (reloadType == 2) {

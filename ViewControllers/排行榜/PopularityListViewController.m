@@ -10,7 +10,6 @@
 #define YELLOW [UIColor colorWithRed:250/255.0 green:230/255.0 blue:180/255.0 alpha:1]
 #import "PopularityCell.h"
 #import "popularityListModel.h"
-#import "PetInfoViewController.h"
 @interface PopularityListViewController ()
 
 @property (nonatomic,assign)NSInteger category;
@@ -342,7 +341,7 @@
     [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
     cell.cellClick = ^(int num){
         NSLog(@"跳转到第%d个国家", num);
-        PetInfoViewController *petInfoVC = [[PetInfoViewController alloc] init];
+        PetMainViewController *petInfoVC = [[PetMainViewController alloc] init];
         petInfoVC.aid = model.aid;
         [self presentViewController:petInfoVC animated:YES completion:nil];
         [petInfoVC release];

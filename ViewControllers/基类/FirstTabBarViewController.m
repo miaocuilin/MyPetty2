@@ -152,6 +152,12 @@
 }
 -(void)modifyUI
 {
+    if([self.animalNum isKindOfClass:[NSNull class]] || self.animalNum.length == 0){
+        self.animalNum = @"0";
+    }
+    if([self.foodNum isKindOfClass:[NSNull class]] || self.foodNum.length == 0){
+        self.foodNum = @"0";
+    }
     NSMutableAttributedString * mutableStr1 = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@位萌星", self.animalNum]];
     [mutableStr1 addAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:28]} range:NSMakeRange(0, self.animalNum.length)];
     label1.attributedText = mutableStr1;
@@ -345,6 +351,7 @@
                 //遍历本地消息，取出未读数相加返回
                 NSFileManager * fileManager = [[NSFileManager alloc] init];
                 if ([fileManager fileExistsAtPath:path]) {
+                    [fileManager release];
                     NSString * num = [self getNewMessageNum];
                     if ([num intValue]) {
                         self.msgNum.text = num;
@@ -355,6 +362,7 @@
                     
                     
                 }else{
+                    [fileManager release];
                     self.msgNum.text = @"0";
                     self.msgNumBg.hidden = YES;
                 }
@@ -379,6 +387,7 @@
     NSString * path = [docDir stringByAppendingPathComponent:@"talkData.plist"];
     if ([manager fileExistsAtPath:path]) {
         //文件存在
+        [manager release];
         NSLog(@"文件存在");
         
         NSMutableDictionary * totalDict = [NSMutableDictionary dictionaryWithDictionary:[MyControl returnDictionaryWithDataPath:path]];
@@ -433,6 +442,8 @@
     }else{
         //本地没有文件
         //存到本地
+        [manager release];
+        
         NSMutableDictionary * newDataDict = [NSMutableDictionary dictionaryWithCapacity:0];
         for (int i=0; i<self.talkIDArray.count; i++) {
             [newDataDict setObject:self.nwMsgDataArray[i] forKey:self.talkIDArray[i]];
@@ -521,6 +532,7 @@
         //
         [self.nwMsgDataArray addObject:talkModel];
         
+        [talkModel release];
     }
 }
 -(void)analysisData:(NSDictionary *)dict usrId:(NSString *)usrID talkModel:(SingleTalkModel *)model

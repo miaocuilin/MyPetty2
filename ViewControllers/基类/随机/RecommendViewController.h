@@ -10,7 +10,6 @@
 #import "TMQuiltView.h"
 #import "TMPhotoQuiltViewCell.h"
 #import "PhotoModel.h"
-#import "PicDetailViewController.h"
 #import "MJRefresh.h"
 
 @interface RecommendViewController : UIViewController <TMQuiltViewDataSource,TMQuiltViewDelegate>

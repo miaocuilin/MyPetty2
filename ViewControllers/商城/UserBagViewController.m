@@ -8,7 +8,6 @@
 
 #import "UserBagViewController.h"
 #import "UserBagCollectionViewCell.h"
-#import "PresentDetailViewController.h"
 @interface UserBagViewController ()
 
 

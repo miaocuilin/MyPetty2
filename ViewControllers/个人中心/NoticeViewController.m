@@ -101,7 +101,6 @@
 //    [self loadData];
 //    [self loadMessageData];
 //    [self loadSystemData];
-    [self createAlphaBtn];
 }
 /****************************/
 #pragma mark -
@@ -180,27 +179,6 @@
         NSLog(@"%@", [self.dataArray[i] unReadNum]);
     }
     
-}
-
-#pragma mark -
--(void)createAlphaBtn
-{
-    alphaBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(hideSideMenu) Title:nil];
-    alphaBtn.backgroundColor = [UIColor blackColor];
-    alphaBtn.alpha = 0;
-    alphaBtn.hidden = YES;
-    [self.view addSubview:alphaBtn];
-}
--(void)hideSideMenu
-{
-    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
-    [menu hideMenuAnimated:YES];
-    [UIView animateWithDuration:0.25 animations:^{
-        alphaBtn.alpha = 0;
-    } completion:^(BOOL finished) {
-        alphaBtn.hidden = YES;
-        backBtn.selected = NO;
-    }];
 }
 
 //加载新消息

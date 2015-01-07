@@ -10,11 +10,9 @@
 #define GRAY [UIColor colorWithRed:96/255.0 green:96/255.0 blue:96/255.0 alpha:1]
 #import "BackImageDetailViewCell.h"
 #import "UserInfoModel.h"
-#import "PetInfoViewController.h"
 #import "SendGiftViewController.h"
 #import "TalkViewController.h"
 #import "BackImageDetailCommentViewCell.h"
-#import "UserInfoViewController.h"
 @interface FrontImageDetailViewController ()
 
 @end
@@ -945,17 +943,17 @@
 #pragma mark - 
 -(void)jumpToUserClick
 {
-//    UserCardViewController * vc = [[UserCardViewController alloc] init];
-//    vc.usr_id = [self.petDict objectForKey:@"master_id"];
-//    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
-//    vc.close = ^(){
-//        [vc.view removeFromSuperview];
-//    };
-//    [vc release];
-    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+    UserCardViewController * vc = [[UserCardViewController alloc] init];
     vc.usr_id = [self.petDict objectForKey:@"master_id"];
-    [self presentViewController:vc animated:YES completion:nil];
+    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+    vc.close = ^(){
+        [vc.view removeFromSuperview];
+    };
     [vc release];
+//    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+//    vc.usr_id = [self.petDict objectForKey:@"master_id"];
+//    [self presentViewController:vc animated:YES completion:nil];
+//    [vc release];
 }
 #pragma mark - 点赞
 -(void)zanBtnClick:(UIButton *)btn
@@ -1659,7 +1657,7 @@
 }
 -(void)headBtnClick
 {
-    PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+    PetMainViewController * vc = [[PetMainViewController alloc] init];
     vc.aid = [self.imageDict objectForKey:@"aid"];;
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
@@ -1787,13 +1785,13 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+    UserCardViewController * vc = [[UserCardViewController alloc] init];
     if (triangleIndex == 0) {
         vc.usr_id = [self.likersArray[indexPath.row] usr_id];
-        [self presentViewController:vc animated:YES completion:nil];
+//        [self presentViewController:vc animated:YES completion:nil];
     }else if (triangleIndex == 1) {
         vc.usr_id = [self.sendersArray[indexPath.row] usr_id];
-        [self presentViewController:vc animated:YES completion:nil];
+//        [self presentViewController:vc animated:YES completion:nil];
     }else if (triangleIndex == 2) {
         isReply = YES;
         replyRow = indexPath.row;
@@ -1802,14 +1800,14 @@
 //        [self presentViewController:vc animated:YES completion:nil];
     }else{
         vc.usr_id = [self.sharersArray[indexPath.row] usr_id];
-        [self presentViewController:vc animated:YES completion:nil];
+//        [self presentViewController:vc animated:YES completion:nil];
     }
-//    vc.close = ^(){
-//        [vc.view removeFromSuperview];
-//    };
-//    if (triangleIndex != 2) {
-//        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
-//    }
+    vc.close = ^(){
+        [vc.view removeFromSuperview];
+    };
+    if (triangleIndex != 2) {
+        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+    }
     
     [vc release];
 }

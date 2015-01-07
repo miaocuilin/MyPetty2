@@ -7,7 +7,6 @@
 //
 
 #import "MyCountryContributeCell.h"
-#import "UserInfoViewController.h"
 @implementation MyCountryContributeCell
 
 - (void)awakeFromNib

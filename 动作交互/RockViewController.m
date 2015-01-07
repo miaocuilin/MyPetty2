@@ -68,7 +68,7 @@
 //    } else {
 //        NSLog(@"不是第一响应对象");
 //    }
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(shakeAction) name:@"shake" object:nil];
+    
 }
 //-(BOOL)canBecomeFirstResponder
 //{
@@ -102,6 +102,8 @@
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:shakeString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"摇一摇数据：%@",load.dataDict);
         if (isFinish) {
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(shakeAction) name:@"shake" object:nil];
+            
             int index = [[[load.dataDict objectForKey:@"data"] objectForKey:@"shake_count"] intValue];
             self.count = index;
             

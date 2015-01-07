@@ -8,7 +8,6 @@
 
 #import "SearchFamilyViewController.h"
 #import "PetInfoModel.h"
-#import "PetInfoViewController.h"
 #import "RegisterViewController.h"
 #import "SearchCell.h"
 #import "ChooseFamilyDetailCell.h"

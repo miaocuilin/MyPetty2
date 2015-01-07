@@ -47,6 +47,7 @@
     [self addSkipBackupAttributeToItemAtURL:url];
 //    [url setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:nil];
     
+    
     self.connection=[NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL:url] delegate:self];
     
     if (timer == NULL) {

@@ -7,7 +7,6 @@
 //
 
 #import "PublishViewController.h"
-#import "DetailViewController.h"
 //#import "UMSocialDataService.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>

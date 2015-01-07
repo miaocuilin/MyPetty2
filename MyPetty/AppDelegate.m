@@ -18,14 +18,12 @@
 
 #import "MobClick.h"
 
-#import "NewWaterFlowViewController.h"
 #import "PetRecommendViewController.h"
 
 //
 #import "FrontImageDetailViewController.h"
 #import "SendResultViewController.h"
 #import "ResultOfSendViewController.h"
-#import "FoodFirstViewController.h"
 #import "LoginViewController.h"
 #import "SetPasswordViewController.h"
 #import "VariousAlertViewController.h"
@@ -184,10 +182,42 @@
 //    }
 //    NSLog(@"{\"oid\": \"%@\"}", deviceID);
     
+    //开启网络状况的监听
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(reachabilityChanged:)
+//                                                 name: kReachabilityChangedNotification
+//                                               object: nil];
+//    hostReach = [[Reachability reachabilityWithHostName:@"www.baidu.com"] retain];
+//    [hostReach startNotifier];
+    
+    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
 }
+#pragma mark -
+// 连接改变
+- (void)reachabilityChanged:(NSNotification *)note {
+    Reachability* curReach = [note object];
+    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
+    NetworkStatus status = [curReach currentReachabilityStatus];
+    
+    if (status == NotReachable) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络连接异常" delegate:nil cancelButtonTitle:@"YES" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }else if(status == ReachableViaWWAN){
+//        if(notAlert){
+//            return;
+//        }
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"星球检测您正在使用移动网络！" message:@"流量告急时要谨慎使用哦~" delegate:nil cancelButtonTitle:@"不再提醒" otherButtonTitles:@"省点，不刷了", @"流量多，任性", nil];
+        [alert show];
+        [alert release];
+//        notAlert = YES;
+    }
+}
+
+
 -(void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
     NSLog(@"shake>>");

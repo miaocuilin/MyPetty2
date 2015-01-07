@@ -9,9 +9,6 @@
 #import "PetRecommendViewController.h"
 #import "PetRecommendCell.h"
 #import "PetRecomModel.h"
-#import "PicDetailViewController.h"
-#import "PetInfoViewController.h"
-#import "UserInfoViewController.h"
 #import "UserPetListModel.h"
 #import "Alert_2ButtonView2.h"
 @implementation PetRecommendViewController
@@ -129,23 +126,23 @@
     PetRecomModel * model = self.dataArray[indexPath.row];
     [cell configUI:model];
     cell.jumpPetClick = ^(NSString * aid){
-        PetInfoViewController * vc = [[PetInfoViewController alloc] init];
+        PetMainViewController * vc = [[PetMainViewController alloc] init];
         vc.aid = aid;
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
     };
     cell.jumpUserClick = ^(){
-//        UserCardViewController * vc = [[UserCardViewController alloc] init];
-//        vc.usr_id = model.master_id;
-//        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
-//        vc.close = ^(){
-//            [vc.view removeFromSuperview];
-//        };
-//        [vc release];
-        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+        UserCardViewController * vc = [[UserCardViewController alloc] init];
         vc.usr_id = model.master_id;
-        [self presentViewController:vc animated:YES completion:nil];
+        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+        vc.close = ^(){
+            [vc.view removeFromSuperview];
+        };
         [vc release];
+//        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+//        vc.usr_id = model.master_id;
+//        [self presentViewController:vc animated:YES completion:nil];
+//        [vc release];
     };
     cell.pBtnClick = ^(int a, NSString * aid){
         if (![[USER objectForKey:@"isSuccess"] intValue]) {

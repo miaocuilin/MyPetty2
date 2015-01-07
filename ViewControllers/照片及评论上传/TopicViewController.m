@@ -131,7 +131,9 @@
     //    tf.backgroundColor = BGCOLOR;
     tf.delegate = self;
     tf.textColor = [UIColor whiteColor];
-    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@" 请插入话题名称" attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+    NSAttributedString * attString = [[NSAttributedString alloc] initWithString:@" 请插入话题名称" attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+    tf.attributedPlaceholder = attString;
+    [attString release];
     [headerView addSubview:tf];
     
 }

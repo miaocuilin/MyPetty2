@@ -7,15 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "JDSideMenu.h"
 
 @interface ControllerManager : NSObject
 
 +(id)shareManagerRandom;
-+(id)shareManagerFavorite;
-+(id)shareManagerDetail;
-+(id)shareManagerMyPet;
-+(id)shareManagerMyHome;
 +(id)shareUserDefault;
 +(void)setIsSuccess:(int)a;
 +(int)getIsSuccess;
@@ -28,9 +23,6 @@
 
 
 +(id)shareTabBar;
-+(id)shareMain;
-+(id)shareJDSideMenu;
-//+(id)shareSliding;
 +(id)shareLoading;
 +(id)sharePopView;
 

@@ -12,8 +12,6 @@
 #import "MessageFrame.h"
 #import "SingleTalkModel.h"
 #import "MessageModel.h"
-#import "PicDetailViewController.h"
-#import "UserInfoViewController.h"
 #import "FrontImageDetailViewController.h"
 #import "AddressViewController.h"
 //#import "NoticeViewController.h";
@@ -613,22 +611,22 @@
             return;
         }
         
-//        UserCardViewController * vc = [[UserCardViewController alloc] init];
-//        vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
-//        vc.modalTransitionStyle = 2;
-//        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
-//        vc.close = ^(){
-//            [vc.view removeFromSuperview];
-//        };
-//        [vc release];
-        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
-//            NSLog(@"%@", petInfoDict);
+        UserCardViewController * vc = [[UserCardViewController alloc] init];
         vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
         vc.modalTransitionStyle = 2;
-//        vc.isFromPetInfo = YES;
-//        vc.petHeadImage = headerImageView.image;
-        [self presentViewController:vc animated:YES completion:nil];
+        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+        vc.close = ^(){
+            [vc.view removeFromSuperview];
+        };
         [vc release];
+//        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
+////            NSLog(@"%@", petInfoDict);
+//        vc.usr_id = [self.talkDataArray[indexPath.row] usr_id];
+//        vc.modalTransitionStyle = 2;
+////        vc.isFromPetInfo = YES;
+////        vc.petHeadImage = headerImageView.image;
+//        [self presentViewController:vc animated:YES completion:nil];
+//        [vc release];
     };
     
     cell.jumpToPicDetail = ^(void){

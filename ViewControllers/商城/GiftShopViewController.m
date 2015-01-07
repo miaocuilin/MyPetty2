@@ -7,7 +7,6 @@
 //
 
 #import "GiftShopViewController.h"
-#import "UserInfoViewController.h"
 #import "UserBagViewController.h"
 #import "GiftShopModel.h"
 @interface GiftShopViewController ()
@@ -45,8 +44,7 @@
 //    [self createScrollView2];
     [self createScrollView];
     [self createBottom];
-//
-    [self createAlphaBtn];
+
 //    [self loadData];
     
     
@@ -185,25 +183,6 @@
 //    NSLog(@"itemsString:%@",itemsString);
 //}
 /****************/
--(void)createAlphaBtn
-{
-    alphaBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(hideSideMenu) Title:nil];
-    alphaBtn.backgroundColor = [UIColor blackColor];
-    alphaBtn.alpha = 0;
-    alphaBtn.hidden = YES;
-    [self.view addSubview:alphaBtn];
-}
--(void)hideSideMenu
-{
-    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
-    [menu hideMenuAnimated:YES];
-    [UIView animateWithDuration:0.25 animations:^{
-        alphaBtn.alpha = 0;
-    } completion:^(BOOL finished) {
-        alphaBtn.hidden = YES;
-        backBtn.selected = NO;
-    }];
-}
 
 -(void)createBg
 {

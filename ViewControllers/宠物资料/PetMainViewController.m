@@ -26,7 +26,11 @@
 @end
 
 @implementation PetMainViewController
-
+-(void)dealloc{
+    [super dealloc];
+    headBlurImage.image = nil;
+    [headBlurImage release];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -228,7 +232,7 @@
         }
     }];
     
-    [MyControl setImageForBtn:userHeadBtn Tx:self.model.u_tx isPet:NO isRound:YES];
+//    [MyControl setImageForBtn:userHeadBtn Tx:self.model.u_tx isPet:NO isRound:YES];
     
     if (isMyPet) {
         headBtn = [MyControl createButtonWithFrame:CGRectMake((headCircle.frame.size.width-78)/2.0, (headCircle.frame.size.width-78)/2.0, 78, 78) ImageName:@"" Target:self Action:@selector(headBtnClick) Title:nil];
@@ -237,7 +241,7 @@
     }else{
         headImageView = [[ClickImage alloc] initWithFrame:CGRectMake((headCircle.frame.size.width-78)/2.0, (headCircle.frame.size.width-78)/2.0, 78, 78)];
         headImageView.canClick = YES;
-        [MyControl setImageForImageView:headImageView Tx:self.model.tx isPet:YES isRound:YES];
+//        [MyControl setImageForImageView:headImageView Tx:self.model.tx isPet:YES isRound:YES];
         [headCircle addSubview:headImageView];
     }
     
@@ -573,8 +577,9 @@
             [cell modifyUIWithIndex:indexPath.row Num:self.model.total_food];
         }else if (indexPath.row == 1 && [self.rq isKindOfClass:[NSString class]]) {
             [cell modifyUIWithIndex:indexPath.row Num:self.rq];
-        }else if(indexPath.row == 2 && [self.model.gifts isKindOfClass:[NSString class]]){
-            [cell modifyUIWithIndex:indexPath.row Num:self.model.gifts];
+//            indexPath.row == 2 && [self.model.gifts isKindOfClass:[NSString class]]
+        }else if(indexPath.row == 2 && [self.rq isKindOfClass:[NSString class]]){
+            [cell modifyUIWithIndex:indexPath.row Num:@"0"];
         }
         
         return cell;

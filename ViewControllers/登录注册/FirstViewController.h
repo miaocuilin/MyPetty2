@@ -26,6 +26,8 @@
     //1.getUser 2.login  3.getPreSID  4.loadPetInfo
     int reloadType;
     
+    //判断是否是点击重试加载的数据，如果是出现loading图给用户反馈
+    BOOL shouldLoading;
 }
 @property(nonatomic,copy)NSString * animalNum;
 @property(nonatomic,copy)NSString * foodNum;

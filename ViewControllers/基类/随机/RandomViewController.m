@@ -10,20 +10,15 @@
 #import "MJRefresh.h"
 #import "TMQuiltView.h"
 #import "TMPhotoQuiltViewCell.h"
-#import "DetailViewController.h"
 #import "PhotoModel.h"
 #import "UIImageView+WebCache.h"
-#import "PicDetailViewController.h"
-#import "ToolTipsViewController.h"
 #import "FrontImageDetailViewController.h"
-#import "MainViewController.h"
 #import "WalkAndTeaseViewController.h"
 
 @interface RandomViewController () <TMQuiltViewDataSource,TMQuiltViewDelegate>
 {
     TMQuiltView *qtmquitView;
     UIImageView * heart;
-    ToolTipsViewController *toolTipsVC;
 }
 @property (nonatomic, retain) NSMutableArray *images;
 @end
@@ -355,13 +350,13 @@
     
     BOOL islevel = [ControllerManager levelPOP:[USER objectForKey:@"oldexp"] addExp:index];
     if (islevel) {
-        ToolTipsViewController *level = [[ToolTipsViewController alloc] init];
-        level.expLevel = [[USER objectForKey:@"level"] integerValue];
-        [self addChildViewController:level];
-        [level didMoveToParentViewController:self];
-        [self.view addSubview:level.view];
-        [level createExpAlertView];
-        [level release];
+//        ToolTipsViewController *level = [[ToolTipsViewController alloc] init];
+//        level.expLevel = [[USER objectForKey:@"level"] integerValue];
+//        [self addChildViewController:level];
+//        [level didMoveToParentViewController:self];
+//        [self.view addSubview:level.view];
+//        [level createExpAlertView];
+//        [level release];
     }
 }
 -(void)viewWillAppear:(BOOL)animated

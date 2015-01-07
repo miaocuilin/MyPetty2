@@ -174,10 +174,10 @@
     if (_player == nil)
     {
         NSError *playerError;
-        self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:&playerError];
-        self.player.meteringEnabled = YES;
+        _player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:&playerError];
+        _player.meteringEnabled = YES;
         
-        self.player.delegate = self;
+        _player.delegate = self;
         if (_player == nil)
         {
             NSLog(@"ERror creating player: %@", [playerError description]);
@@ -187,7 +187,7 @@
 //        }
     }
     
-    [self.player play];
+    [_player play];
 }
 #pragma mark - 上传录音
 - (void)uploadRecordData
@@ -272,35 +272,35 @@
     [self.view addSubview:totalView];
     
     //上方视图
-    self.upScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
-    self.upScrollView.scrollEnabled = NO;
+    _upScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
+    _upScrollView.scrollEnabled = NO;
     
     [bodyView addSubview:self.upScrollView];
-    self.upScrollView.contentSize = CGSizeMake(self.upScrollView.frame.size.width*5, self.upScrollView.frame.size.height);
-    self.upScrollView.pagingEnabled = YES;
+    _upScrollView.contentSize = CGSizeMake(self.upScrollView.frame.size.width*5, self.upScrollView.frame.size.height);
+    _upScrollView.pagingEnabled = YES;
 //    self.upScrollView.scrollEnabled = NO;
     
     CGFloat upViewWidth= self.upScrollView.frame.size.width;
     self.distance = 0;
     
     UIImageView *cloudBg1 = [MyControl createImageViewWithFrame:CGRectMake(0, 110, upViewWidth, 200) ImageName:@"bluecloudbg.png"];
-    [self.upScrollView addSubview:cloudBg1];
+    [_upScrollView addSubview:cloudBg1];
     UIImageView *cloudBg2 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth, 110, upViewWidth, 200) ImageName:@"bluecloudbg.png"];
-    [self.upScrollView addSubview:cloudBg2];
+    [_upScrollView addSubview:cloudBg2];
     UIImageView *cloudBg3 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*2, 110, upViewWidth, 200) ImageName:@"bluecloudbg.png"];
-    [self.upScrollView addSubview:cloudBg3];
+    [_upScrollView addSubview:cloudBg3];
     
     floating1 = [MyControl createImageViewWithFrame:CGRectMake(230, 40, 70, 25) ImageName:@"yellowcloud.png"];
     floating1.tag = 30;
-    [self.upScrollView addSubview:floating1];
+    [_upScrollView addSubview:floating1];
     
     floating2 = [MyControl createImageViewWithFrame:CGRectMake(23, 90, 70, 25) ImageName:@"yellowcloud.png"];
     floating2.tag = 31;
-    [self.upScrollView addSubview:floating2];
+    [_upScrollView addSubview:floating2];
     
     floating3 = [MyControl createImageViewWithFrame:CGRectMake(180, 180, 70, 25) ImageName:@"yellowcloud.png"];
     floating3.tag = 32;
-    [self.upScrollView addSubview:floating3];
+    [_upScrollView addSubview:floating3];
     self.timer = [NSTimer timerWithTimeInterval:0.02 target:self selector:@selector(floatingAnimation) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
 #pragma mark - one
@@ -580,8 +580,8 @@
     
     NSLog(@"_recordedFile :%@",recordedFile);
     NSError* error;
-    self.recorder = [[AVAudioRecorder alloc] initWithURL:recordedFile settings:settings error:&error];
-    self.recorder.delegate = self;
+    _recorder = [[AVAudioRecorder alloc] initWithURL:recordedFile settings:settings error:&error];
+    _recorder.delegate = self;
     NSLog(@"%@", [error description]);
     if (error)
     {
@@ -596,9 +596,9 @@
     }
     
     
-    [self.recorder prepareToRecord];
-    self.recorder.meteringEnabled = YES;
-    [self.recorder record];
+    [_recorder prepareToRecord];
+    _recorder.meteringEnabled = YES;
+    [_recorder record];
     _hasCAFFile = YES;
 //    self.recorder = YES;
     if (!_timer2) {
@@ -616,8 +616,8 @@
             if (_player == nil)
             {
                 NSError *playerError;
-                self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:recordedFile error:&playerError];
-                self.player.meteringEnabled = YES;
+                _player = [[AVAudioPlayer alloc] initWithContentsOfURL:recordedFile error:&playerError];
+                _player.meteringEnabled = YES;
                 if (_player == nil)
                 {
                     NSLog(@"ERror creating player: %@", [playerError description]);
@@ -751,7 +751,7 @@
         self.timer2 = nil;
         //停止，发送
         [self.recorder stop];
-        [self.recorder release];
+        [_recorder release];
         self.recorder = nil;
         self.upScrollView.contentOffset = CGPointMake(self.upScrollView.frame.size.width, 0);
         [self toMp3];
@@ -833,7 +833,7 @@
     [attributeString1 addAttribute:NSForegroundColorAttributeName value:GRAYBLUECOLOR range:NSMakeRange(0, attributeString1.length)];
     [attributeString1 insertAttributedString:attributeString2 atIndex:number];
     [attributeString2 release];
-    return attributeString1;
+    return [attributeString1 autorelease];
 }
 - (void)backgroundView
 {

@@ -10,7 +10,6 @@
 #import "UserPetListModel.h"
 #import "TalkViewController.h"
 #import "ModifyPetOrUserInfoViewController.h"
-#import "PetInfoViewController.h"
 
 @interface UserCardViewController ()
 
@@ -20,7 +19,7 @@
 -(void)dealloc
 {
     [super dealloc];
-    [self.userModel release];
+    [_userModel release];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -50,8 +49,8 @@
             NSLog(@"用户信息数据：%@",load.dataDict);
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]] && [[load.dataDict objectForKey:@"data"] count]) {
                 NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-                self.userModel = [[UserInfoModel alloc] init];
-                [self.userModel setValuesForKeysWithDictionary:dict];
+                _userModel = [[UserInfoModel alloc] init];
+                [_userModel setValuesForKeysWithDictionary:dict];
                 
                 if (isMyself) {
                     [USER setObject:self.userModel.gold forKey:@"gold"];
@@ -59,9 +58,6 @@
                 
                 [self loadPetsData];
             }
-            
-            
-            
         }else{
             LOADFAILED;
         }
@@ -258,14 +254,16 @@
     
     for (int i=0; i<self.petsDataArray.count; i++) {
         UIButton * picBtn = [MyControl createButtonWithFrame:CGRectMake(spe+(spe*2+picWidth)*i, 0, picWidth, picWidth) ImageName:@"" Target:self Action:@selector(picClick:) Title:nil];
+//        picBtn.currentBackgroundImage = UIViewContentModeScaleAspectFill;
         picBtn.tag = 100+i;
         picBtn.layer.cornerRadius = picWidth/2.0;
         picBtn.layer.masksToBounds = YES;
         [picBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.petsDataArray[i] tx]]] forState:UIControlStateNormal  placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             if (image) {
-                [picBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+//                [picBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
             }
         }];
+        
         [sv addSubview:picBtn];
         
         if ([[self.petsDataArray[i] master_id] isEqualToString:self.usr_id]) {
@@ -275,6 +273,7 @@
         }
         
     }
+    //
     CGRect rect = sv.frame;
     if (self.petsDataArray.count == 1) {
         rect.origin.x += spe*2+picWidth;
@@ -396,8 +395,10 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+//    SDImageCache * cache = [SDImageCache sharedImageCache];
+//    [cache clearMemory];
 }
-
 /*
 #pragma mark - Navigation
 

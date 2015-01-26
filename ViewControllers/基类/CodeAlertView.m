@@ -237,9 +237,9 @@
 -(void)shareClick:(UIButton *)button
 {
     //截图
-    UIImage * image = [MyControl imageWithView:self.bgImageView];
+//    UIImage * image = [MyControl imageWithView:self.bgImageView];
     
-    self.shareClick(button.tag-100, image, self.model.invite_code);
+    self.shareClick(button.tag-100, self.headImage.image, self.model.invite_code);
     
 }
 -(void)closeBtnClick

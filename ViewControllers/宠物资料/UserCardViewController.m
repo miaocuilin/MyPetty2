@@ -10,6 +10,7 @@
 #import "UserPetListModel.h"
 #import "TalkViewController.h"
 #import "ModifyPetOrUserInfoViewController.h"
+#import "ChatViewController.h"
 
 @interface UserCardViewController ()
 
@@ -374,13 +375,20 @@
             return;
         }
         NSLog(@"发私信");
-        TalkViewController * vc = [[TalkViewController alloc] init];
-        vc.friendName = self.userModel.name;
-        vc.usr_id = self.usr_id;
-        vc.otherTX = self.userModel.tx;
+        ChatViewController * chatController = [[ChatViewController alloc] initWithChatter:self.usr_id isGroup:NO];
+        chatController.isFromCard = YES;
+        chatController.nickName = [USER objectForKey:@"name"];
+        chatController.tx = [USER objectForKey:@"tx"];
+        chatController.other_nickName = self.userModel.name;
+        chatController.other_tx = self.userModel.tx;
+        
+//        TalkViewController * vc = [[TalkViewController alloc] init];
+//        vc.friendName = self.userModel.name;
+//        vc.usr_id = self.usr_id;
+//        vc.otherTX = self.userModel.tx;
 //        NSLog(@"%@--%@--%@", [headerDict objectForKey:@"name"], [headerDict objectForKey:@"usr_id"], [headerDict objectForKey:@"tx"]);
-        [self presentViewController:vc animated:YES completion:nil];
-        [vc release];
+        [self presentViewController:chatController animated:YES completion:nil];
+        [chatController release];
     }
 }
 -(void)closeBtnClick
@@ -396,8 +404,8 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
     //清除缓存图片
-//    SDImageCache * cache = [SDImageCache sharedImageCache];
-//    [cache clearMemory];
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 /*
 #pragma mark - Navigation

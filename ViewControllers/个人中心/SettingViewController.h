@@ -22,6 +22,7 @@
     UIButton * backBtn;
     
     BOOL isConfVersion;
+    UISwitch * _switch;
 }
 @property(nonatomic,retain)UIImageView * bgImageView;
 

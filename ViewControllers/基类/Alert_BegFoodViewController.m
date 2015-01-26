@@ -141,9 +141,15 @@
         NSLog(@"微信");
         //强制分享图片
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
-        [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@&to=%@", WEBBEGFOODAPI, [self.dict objectForKey:@"img_id"], @"wechat"];
-        [UMSocialData defaultData].extConfig.wechatSessionData.title = @"轻轻一点，免费赏粮！我家宝贝的口粮就靠你啦~";
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:@"努力卖萌，只为给自己代粮！快把你每天的免费粮食赏给我~" image:bigImage.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@", WEBBEGFOODAPI, [self.dict objectForKey:@"img_id"]];
+        [UMSocialData defaultData].extConfig.wechatSessionData.title = @"轻轻一点，免费赏粮！我的口粮全靠你啦~";
+        NSString * str = nil;
+        if ([[self.dict objectForKey:@"cmt"] length]) {
+            str = [self.dict objectForKey:@"cmt"];
+        }else{
+            str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
+        }
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:str image:bigImage.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
@@ -158,9 +164,15 @@
         NSLog(@"朋友圈");
         //强制分享图片
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
-        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@&to=%@", WEBBEGFOODAPI, [self.dict objectForKey:@"img_id"], @"wechat"];
-        [UMSocialData defaultData].extConfig.wechatTimelineData.title = @"轻轻一点，免费赏粮！我家宝贝的口粮就靠你啦~";
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:bigImage.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", WEBBEGFOODAPI, [self.dict objectForKey:@"img_id"]];
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = @"轻轻一点，免费赏粮！我的口粮全靠你啦~";
+        NSString * str = nil;
+        if ([[self.dict objectForKey:@"cmt"] length]) {
+            str = [self.dict objectForKey:@"cmt"];
+        }else{
+            str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
+        }
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:str image:bigImage.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
@@ -186,7 +198,13 @@
 //        }];
     }else if(sender.tag == 1002){
         NSLog(@"微博");
-        NSString * str = [NSString stringWithFormat:@"轻轻一点，免费赏粮！快把你每天的免费粮食赏给我家%@！#挣口粮#%@（分享自@宠物星球社交应用）", self.name, [NSString stringWithFormat:@"%@%@&to=%@", WEBBEGFOODAPI, [self.dict objectForKey:@"img_id"], @"weibo"]];
+        NSString * string = nil;
+        if ([[self.dict objectForKey:@"cmt"] length]) {
+            string = [self.dict objectForKey:@"cmt"];
+        }else{
+            string = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
+        }
+        NSString * str = [NSString stringWithFormat:@"%@#挣口粮#%@（分享自@宠物星球社交应用）", string, [NSString stringWithFormat:@"%@%@", WEBBEGFOODAPI, [self.dict objectForKey:@"img_id"]]];
         
         //
         BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
@@ -223,6 +241,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

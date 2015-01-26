@@ -507,19 +507,23 @@
 //            view.AlertType = 2;
 //        }
         if(a >= 10){
-            if((a+1)*5>[[USER objectForKey:@"gold"] intValue]){
+            int cost = a*5;
+            if (cost>100) {
+                cost = 100;
+            }
+            if(cost>[[USER objectForKey:@"gold"] intValue]){
                 //余额不足
                 [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
                 return;
             }
             view.type = 2;
-            view.petsNum = a+1;
+            view.petsNum = a;
             [view makeUI];
             [self.view addSubview:view];
             [view release];
         }else{
             view.type = 2;
-            view.petsNum = a+1;
+            view.petsNum = a;
             [view makeUI];
             [self.view addSubview:view];
             [view release];
@@ -541,7 +545,13 @@
                     ENDLOADING;
                     if (a>=10) {
                         NSLog(@"%@", [USER objectForKey:@"gold"]);
-                        [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-(a+1)*5] forKey:@"gold"];
+                        int cost = a*5;
+                        if (cost>100) {
+                            [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-100] forKey:@"gold"];
+                        }else{
+                            [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-cost] forKey:@"gold"];
+                        }
+                        
                         NSLog(@"%@", [USER objectForKey:@"gold"]);
                         [USER setObject:@"countryNum" forKey:[NSString stringWithFormat:@"%d", a+1]];
                     }
@@ -632,6 +642,7 @@
             isRaceShow = NO;
             [self rel];
         }
+        [dropDown2 release];
     }else{
         isSystemShow = NO;
         [dropDown2 hideDropDown:systemBtn];
@@ -985,6 +996,9 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

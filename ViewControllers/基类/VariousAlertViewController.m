@@ -119,32 +119,43 @@
         NSLog(@"SnsInformation is %@",response.data);
         NSDictionary * dic = (NSDictionary *)response.data;
         
-        [USER setObject:dic forKey:@"weChatUserInfo"];
-        [USER setObject:@"" forKey:@"sinaUserInfo"];
-        
+        NSString * Url = [NSString stringWithFormat:@"https://api.weixin.qq.com/sns/userinfo?access_token=%@&openid=%@", [dic objectForKey:@"access_token"], [dic objectForKey:@"openid"]];
         LOADING;
-        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"wechat=%@dog&cat", [dic objectForKey:@"openid"]]];
-        NSString * url = [NSString stringWithFormat:@"%@&wechat=%@&sig=%@&SID=%@", LOGINBY3PARTY, [dic objectForKey:@"openid"], sig, [ControllerManager getSID]];
-        NSLog(@"%@", url);
-        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:Url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
-                if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
-                    if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]) {
-                        //绑定过 自动切换 直接用用户id和宠物id获取用户信息
-                        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
-                        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
-                        [self getUserData];
-    
+                NSDictionary * dict = load.dataDict;
+                [USER setObject:dict forKey:@"weChatUserInfo"];
+                [USER setObject:@"" forKey:@"sinaUserInfo"];
+                
+//                LOADING;
+                NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"wechat=%@&wechat_union=%@dog&cat", [dict objectForKey:@"openid"], [dict objectForKey:@"unionid"]]];
+                NSString * url = [NSString stringWithFormat:@"%@&wechat=%@&wechat_union=%@&sig=%@&SID=%@", LOGINBY3PARTY, [dict objectForKey:@"openid"], [dict objectForKey:@"unionid"], sig, [ControllerManager getSID]];
+                NSLog(@"%@", url);
+                httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
+                            if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]) {
+                                //绑定过 自动切换 直接用用户id和宠物id获取用户信息
+                                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
+                                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
+                                [self getUserData];
+                                
+                            }else{
+                                //未绑定过 没注册过 直接跳选择有宠没宠
+                                self.regClick();
+                                //                        ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+                                //                        [self presentViewController:vc animated:YES completion:nil];
+                                //                        [vc release];
+                                [self closeBtnClick];
+                            }
+                            ENDLOADING;
+                        }
                     }else{
-                        //未绑定过 没注册过 直接跳选择有宠没宠
-                        self.regClick();
-//                        ChooseInViewController * vc = [[ChooseInViewController alloc] init];
-//                        [self presentViewController:vc animated:YES completion:nil];
-//                        [vc release];
-                        [self closeBtnClick];
+                        LOADFAILED;
                     }
-                ENDLOADING;
-                }
+                }];
+                [request2 release];
+                
             }else{
                 LOADFAILED;
             }
@@ -275,6 +286,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

@@ -86,7 +86,7 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             [self.bannerDataArray removeAllObjects];
-            NSLog(@"%@", load.dataDict);
+//            NSLog(@"%@", load.dataDict);
             if ([[load.dataDict objectForKey:@"confVersion"] isEqualToString:@"1.0"]) {
                 isConf = YES;
             }
@@ -420,7 +420,7 @@
 //    if (isLoaded) {
 //        self.reloadRandom();
 //    }
-//    NSLog(@"%@", [NSString stringWithFormat:@"%@%@", RECOMMENDAPI, [ControllerManager getSID]]);
+    NSLog(@"%@", [NSString stringWithFormat:@"%@%@", RECOMMENDAPI, [ControllerManager getSID]]);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RECOMMENDAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             //只包含img_id和图片的url
@@ -573,6 +573,8 @@
     }
     cell.photoView.image = [UIImage imageNamed:@"water_white.png"];
     
+    cell.tag = 1000+indexPath.row;
+    
     PhotoModel * model = self.dataArray[indexPath.row];
     self.tempUrl = model.url;
     [cell configUI:model];
@@ -600,56 +602,63 @@
 //        NSLog(@"Documents 目录未找到");
 //    }else{
     
-    NSURL * URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]];
-    [MyControl addSkipBackupAttributeToItemAtURL:URL];
-    NSString * key = [[SDWebImageManager sharedManager] cacheKeyForURL:URL];
-    SDImageCache * cache = [SDImageCache sharedImageCache];
-    UIImage * image = [cache imageFromDiskCacheForKey:key];
-    @try{
-        if (image) {
-            cell.photoView.image = image;
-            //            cell.photoView.image = [MyControl image:image fitInSize:CGSizeMake(self.view.frame.size.width/2-4-2, Height[indexPath.row])];
-            //            [self refreshView];
-            //            [self setFooterView];
-            //            [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
-        }else{
-            [cell.photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                
-//                NSURL * URL2 = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]];
-//                [MyControl addSkipBackupAttributeToItemAtURL:URL2];
-//                NSString * key2 = [[SDWebImageManager sharedManager] cacheKeyForURL:URL2];
-//                SDImageCache * cache2 = [SDImageCache sharedImageCache];
-//                UIImage * image2 = [cache2 imageFromDiskCacheForKey:key2];
-//                if (image2) {
-//                    cell.photoView.image = image2;
+//    NSURL * URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]];
+//    [MyControl addSkipBackupAttributeToItemAtURL:URL];
+//    NSString * key = [[SDWebImageManager sharedManager] cacheKeyForURL:URL];
+//    SDImageCache * cache = [SDImageCache sharedImageCache];
+//    UIImage * image = [cache imageFromDiskCacheForKey:key];
+//    @try{
+//        if (image) {
+//            cell.photoView.image = image;
+//            //            cell.photoView.image = [MyControl image:image fitInSize:CGSizeMake(self.view.frame.size.width/2-4-2, Height[indexPath.row])];
+//            //            [self refreshView];
+//            //            [self setFooterView];
+//            //            [qtmquitView addFooterWithTarget:self action:@selector(footerRereshing)];
+//        }else{
+//            [cell.photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//                
+////                NSURL * URL2 = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]];
+////                [MyControl addSkipBackupAttributeToItemAtURL:URL2];
+////                NSString * key2 = [[SDWebImageManager sharedManager] cacheKeyForURL:URL2];
+////                SDImageCache * cache2 = [SDImageCache sharedImageCache];
+////                UIImage * image2 = [cache2 imageFromDiskCacheForKey:key2];
+////                if (image2) {
+////                    cell.photoView.image = image2;
+////                }else{
+////                    cell.photoView.image = image;
+////                }
+//                if (cell.tag == indexPath.row+1000) {
+//                    NSLog(@"下载完了第%d个图片", indexPath.row);
+//                    model.width = self.view.frame.size.width/2-4-2;
+//                    model.height = (model.width/image.size.width)*image.size.height;
+//                    //            Height[indexPath.row] = model.height;
+//                    float tempHeight = 0;
+//                    if(model.cmtHeight){
+//                        tempHeight = model.height+model.cmtHeight;
+//                    }else{
+//                        tempHeight = model.height+35;
+//                    }
+//                    
+//                    if ([model.url rangeOfString:@"&"].location == NSNotFound) {
+//                        NSLog(@"刷新瀑布流-%d", indexPath.row);
+//                        Height[indexPath.row] = tempHeight;
+//                        [quiltView reloadData];
+//                    }
 //                }else{
-//                    cell.photoView.image = image;
+//                    NSLog(@"celltag:%d--row:%d", cell.tag, indexPath.row);
+////                    TMPhotoQuiltViewCell * tempCell = (TMPhotoQuiltViewCell *)[self.view viewWithTag:cell.tag];
+////                    cell.photoView.image = [UIImage imageNamed:@"water_white.png"];
+//                    
 //                }
-                NSLog(@"下载完了第%d个图片", indexPath.row);
-                model.width = self.view.frame.size.width/2-4-2;
-                model.height = (model.width/image.size.width)*image.size.height;
-                //            Height[indexPath.row] = model.height;
-                float tempHeight = 0;
-                if(model.cmtHeight){
-                    tempHeight = model.height+model.cmtHeight;
-                }else{
-                    tempHeight = model.height+35;
-                }
-                
-                if ([model.url rangeOfString:@"&"].location == NSNotFound) {
-                    NSLog(@"刷新瀑布流-%d", indexPath.row);
-                    Height[indexPath.row] = tempHeight;
-                    [quiltView reloadData];
-                }
-                //                [self reloadQuiltView];
-                
-            }];
-        }
-    }@catch(NSException * exception){
-        NSLog(@"%@", exception);
-    }@finally{
-        
-    }
+//                //                [self reloadQuiltView];
+//                
+//            }];
+//        }
+//    }@catch(NSException * exception){
+//        NSLog(@"%@", exception);
+//    }@finally{
+//        
+//    }
 //        NSString * randomFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.url]];
 ////        NSLog(@"randomFilePath:%@", randomFilePath);
 //        UIImage * image = [UIImage imageWithData:[NSData dataWithContentsOfFile:randomFilePath]];
@@ -946,9 +955,13 @@
 
 - (void)didReceiveMemoryWarning
 {
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 //    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"内存不足"];
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    
 }
 #pragma mark -
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView

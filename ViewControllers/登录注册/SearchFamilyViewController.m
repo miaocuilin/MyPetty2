@@ -386,19 +386,23 @@
 //        }
 //        [view makeUI];
         if(a >= 10){
-            if((a+1)*5>[[USER objectForKey:@"gold"] intValue]){
+            int cost = a*5;
+            if (cost>100) {
+                cost = 100;
+            }
+            if(cost>[[USER objectForKey:@"gold"] intValue]){
                 //余额不足
                 [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
                 return;
             }
             view.type = 2;
-            view.petsNum = a+1;
+            view.petsNum = a;
             [view makeUI];
             [self.view addSubview:view];
             [view release];
         }else{
             view.type = 2;
-            view.petsNum = a+1;
+            view.petsNum = a;
             [view makeUI];
             [self.view addSubview:view];
             [view release];
@@ -417,7 +421,13 @@
                     ENDLOADING;
 //                    [MyControl loadingSuccessWithContent:@"加入成功^_^" afterDelay:0.5f];
                     if (a>=10) {
-                        [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-(a+1)*5] forKey:@"gold"];
+                        int cost = a*5;
+                        if (cost>100) {
+                            [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-100] forKey:@"gold"];
+                        }else{
+                            [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-cost] forKey:@"gold"];
+                        }
+                        
                         [USER setObject:@"countryNum" forKey:[NSString stringWithFormat:@"%d", a+1]];
                     }
                     //捧Ta成功界面
@@ -545,6 +555,9 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

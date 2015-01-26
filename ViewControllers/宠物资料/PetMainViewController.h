@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "ClickImage.h"
 #import "PetInfoModel.h"
-
+#import "ASIFormDataRequest.h"
 @interface PetMainViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate>
 {
+    ASIFormDataRequest * _request;
     UITableView * tv;
     UIView * headerView;
     UIImageView * headBlurImage;
@@ -35,11 +36,20 @@
     UIView * whiteBg;
     UILabel * msgLabel;
     UITextField * tf;
+    UIImageView * editImage;
+    
+    BOOL isLoad;
+    UIImageView * guide;
+    
 }
 @property(nonatomic,copy)NSString * aid;
 
+@property(nonatomic,copy)NSString * tempTFString;
 @property(nonatomic,retain)PetInfoModel * model;
 @property(nonatomic,retain)NSMutableArray * petsDataArray;
 
 @property(nonatomic,copy)NSString * rq;
+
+@property(nonatomic,copy)void (^updatePBtn)();
+@property(nonatomic)BOOL isFromPetRecom;
 @end

@@ -13,12 +13,19 @@
 #import <UIKit/UIKit.h>
 
 @interface ChatListCell : UITableViewCell
+
+{
+    UILongPressGestureRecognizer *_headerLongPress;
+}
 @property (nonatomic, strong) NSURL *imageURL;
 @property (nonatomic, strong) UIImage *placeholderImage;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *detailMsg;
 @property (nonatomic, strong) NSString *time;
+@property (nonatomic, strong) NSString *usr_id;
 @property (nonatomic) NSInteger unreadCount;
+
+@property (nonatomic, copy) void (^longPress)();
 
 +(CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath;

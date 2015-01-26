@@ -20,6 +20,7 @@
     BOOL _isOfflineMessage;
 }
 
+
 /*!
  @property
  @brief 消息来源用户名

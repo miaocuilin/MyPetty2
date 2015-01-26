@@ -20,6 +20,8 @@
 #import "PublishViewController.h"
 #import "PetMain_Gift_ViewController.h"
 #import "PetMain_Food_ViewController.h"
+#import "ModifyPetOrUserInfoViewController.h"
+#import "ChatViewController.h"
 
 @interface PetMainViewController ()<UMSocialUIDelegate>
 
@@ -30,6 +32,31 @@
     [super dealloc];
     headBlurImage.image = nil;
     [headBlurImage release];
+}
+
+-(void)createGuide
+{
+    guide = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"guide_petmain.png"];
+    float a = [UIScreen mainScreen].bounds.size.width/[UIScreen mainScreen].bounds.size.height;
+    float b = 320/480.0;
+    if(a == b){
+        guide.frame = CGRectMake(0, 0, self.view.frame.size.width, 568);
+    }
+    UITapGestureRecognizer * guideTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(guideTap:)];
+    [guide addGestureRecognizer:guideTap];
+    
+    //    FirstTabBarViewController * tabBar = [ControllerManager shareTabBar];
+    [self.view addSubview:guide];
+    [guideTap release];
+}
+-(void)guideTap:(UITapGestureRecognizer *)tap
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        guide.alpha = 0;
+    }completion:^(BOOL finished) {
+        guide.hidden = YES;
+        [guide removeFromSuperview];
+    }];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -88,10 +115,10 @@
             NSArray * array = [load.dataDict objectForKey:@"data"];
             for (NSDictionary * dict in array) {
                 UserPetListModel * model = [[UserPetListModel alloc] init];
+                [model setValuesForKeysWithDictionary:dict];
                 if ([model.aid isEqualToString:self.aid]) {
                     pBtn.selected = YES;
                 }
-                [model setValuesForKeysWithDictionary:dict];
                 [self.petsDataArray addObject:model];
                 [model release];
             }
@@ -168,7 +195,7 @@
     
     NSArray * array = @[@"动态", @"粉丝", @"照片"];
     for (int i=0; i<3; i++) {
-        UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(hLine.frame.origin.x+spe*i, hLine.frame.origin.y+5, spe, 20) Font:15 Text:@"0"];
+        UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(hLine.frame.origin.x+spe*i, hLine.frame.origin.y+5, spe, 20) Font:15 Text:@"100"];
         label1.textAlignment = NSTextAlignmentCenter;
         label1.font = [UIFont boldSystemFontOfSize:15];
         label1.tag = 100+i;
@@ -232,16 +259,21 @@
         }
     }];
     
-//    [MyControl setImageForBtn:userHeadBtn Tx:self.model.u_tx isPet:NO isRound:YES];
+    [MyControl setImageForBtn:userHeadBtn Tx:self.model.u_tx isPet:NO isRound:YES];
     
     if (isMyPet) {
         headBtn = [MyControl createButtonWithFrame:CGRectMake((headCircle.frame.size.width-78)/2.0, (headCircle.frame.size.width-78)/2.0, 78, 78) ImageName:@"" Target:self Action:@selector(headBtnClick) Title:nil];
         [MyControl setImageForBtn:headBtn Tx:self.model.tx isPet:YES isRound:YES];
         [headCircle addSubview:headBtn];
+        
+        if (![[USER objectForKey:@"guide_petmain"] intValue]) {
+            [USER setObject:@"1" forKey:@"guide_petmain"];
+            [self createGuide];
+        }
     }else{
         headImageView = [[ClickImage alloc] initWithFrame:CGRectMake((headCircle.frame.size.width-78)/2.0, (headCircle.frame.size.width-78)/2.0, 78, 78)];
         headImageView.canClick = YES;
-//        [MyControl setImageForImageView:headImageView Tx:self.model.tx isPet:YES isRound:YES];
+        [MyControl setImageForImageView:headImageView Tx:self.model.tx isPet:YES isRound:YES];
         [headCircle addSubview:headImageView];
     }
     
@@ -274,34 +306,139 @@
     [tv reloadData];
     
     if([self.model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]){
-        tf = [MyControl createTextFieldWithFrame:CGRectMake(whiteBg.frame.origin.x+10, whiteBg.frame.origin.y, whiteBg.frame.size.width-20, 25) placeholder:[NSString stringWithFormat:@"%@暂时沉默中~", self.model.name] passWord:NO leftImageView:nil rightImageView:nil Font:13];
+        editImage = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 15, 15) ImageName:@"star_modify.png"];
+        [headerView addSubview:editImage];
+        
+        tf = [MyControl createTextFieldWithFrame:CGRectMake(whiteBg.frame.origin.x+10, whiteBg.frame.origin.y, whiteBg.frame.size.width-20, 25) placeholder:@"" passWord:NO leftImageView:nil rightImageView:nil Font:13];
+        NSAttributedString * mutableString = [[NSAttributedString alloc] initWithString:@"点击创建独一无二的萌宣言吧~" attributes:@{NSForegroundColorAttributeName:[ControllerManager colorWithHexString:@"555555"]}];
+        tf.attributedPlaceholder = mutableString;
+        [mutableString release];
+        if([self.model.msg isKindOfClass:[NSString class]] && self.model.msg.length){
+            tf.text = self.model.msg;
+        }
         tf.delegate = self;
         tf.textAlignment = NSTextAlignmentCenter;
-        tf.textColor = [UIColor grayColor];
+        tf.textColor = [ControllerManager colorWithHexString:@"555555"];
         tf.returnKeyType = UIReturnKeyDone;
         tf.borderStyle = 0;
         tf.backgroundColor = [UIColor clearColor];
-        
         [headerView addSubview:tf];
+        
+        NSString * str = nil;
+        if (tf.text.length == 0) {
+            str = @"点击创建独一无二的萌宣言吧~";
+        }else{
+            str = tf.text;
+        }
+        CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(tf.frame.size.width, 25) lineBreakMode:1];
+        editImage.frame = CGRectMake(tf.frame.origin.x+tf.frame.size.width/2.0+size.width/2.0+5, tf.frame.origin.y+5, 15, 15);
     }else{
-        msgLabel = [MyControl createLabelWithFrame:CGRectMake(whiteBg.frame.origin.x+10, whiteBg.frame.origin.y, whiteBg.frame.size.width-20, 25) Font:13 Text:@"在我身上，流着浪漫血液"];
-        msgLabel.textColor = [UIColor grayColor];
+        msgLabel = [MyControl createLabelWithFrame:CGRectMake(whiteBg.frame.origin.x+10, whiteBg.frame.origin.y, whiteBg.frame.size.width-20, 25) Font:13 Text:[NSString stringWithFormat:@"%@暂时沉默中~", self.model.name]];
+        if([self.model.msg isKindOfClass:[NSString class]] && self.model.msg.length){
+            msgLabel.text = self.model.msg;
+        }
+        msgLabel.textColor = [ControllerManager colorWithHexString:@"555555"];
         msgLabel.textAlignment = NSTextAlignmentCenter;
         [headerView addSubview:msgLabel];
+        
+        CGSize size = [msgLabel.text sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(tf.frame.size.width, 25) lineBreakMode:1];
+        
+        UIButton * msgBtn = [MyControl createButtonWithFrame:CGRectMake(msgLabel.frame.origin.x+msgLabel.frame.size.width/2.0+size.width/2.0+5, msgLabel.frame.origin.y+5, 17, 15)ImageName:@"pet_msg.png" Target:self Action:@selector(msgClick) Title:nil];
+        [headerView addSubview:msgBtn];
     }
 }
+
+-(void)msgClick
+{
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        return;
+    }
+    ChatViewController * chatController = [[ChatViewController alloc] initWithChatter:self.model.master_id isGroup:NO];
+    chatController.isFromCard = YES;
+    chatController.nickName = [USER objectForKey:@"name"];
+    chatController.tx = [USER objectForKey:@"tx"];
+    chatController.other_nickName = self.model.u_name;
+    chatController.other_tx = self.model.u_tx;
+    [self presentViewController:chatController animated:YES completion:nil];
+    [chatController release];
+}
 #pragma mark -
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    editImage.hidden = YES;
+    self.tempTFString = textField.text;
+}
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    editImage.hidden = NO;
+    NSString * str = nil;
+    if (tf.text.length == 0) {
+        str = @"点击创建独一无二的萌宣言吧~";
+    }else{
+        str = tf.text;
+    }
+    CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(tf.frame.size.width, 25) lineBreakMode:1];
+    editImage.frame = CGRectMake(tf.frame.origin.x+tf.frame.size.width/2.0+size.width/2.0+5, tf.frame.origin.y+5, 15, 15);
     [tf resignFirstResponder];
+    if ([textField.text isEqualToString:self.tempTFString]) {
+        return YES;
+    }else{
+        [self postMsg];
+    }
+    
     return YES;
+}
+-(void)postMsg
+{
+    LOADING;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.model.aid]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", MODIFYDECLAREAPI, self.model.aid, sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    _request.requestMethod = @"POST";
+    _request.timeOutSeconds = 30.0;
+    [_request setPostValue:tf.text forKey:@"msg"];
+    _request.delegate = self;
+    [_request startAsynchronous];
+}
+-(void)requestFinished:(ASIHTTPRequest *)request
+{
+    ENDLOADING;
+    NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
+    NSDictionary *dict =[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
+    if([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
+//        CGSize tfSize = [tf.text sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(250, 20) lineBreakMode:1];
+//        tf.frame = CGRectMake((bgView.frame.size.width-tfSize.width)/2, 152/2, tfSize.width, 20);
+//        CGRect hyRect = hyperBtn.frame;
+//        hyRect.origin.x = tf.frame.origin.x+tfSize.width-10;
+//        hyperBtn.frame = hyRect;
+//        
+//        //
+//        CGRect modRect = modifyBtn.frame;
+//        modRect.origin.x = hyRect.origin.x+15;
+//        modifyBtn.frame = modRect;
+    }else{
+        tf.text = self.tempTFString;
+    }
+    
+}
+-(void)requestFailed:(ASIHTTPRequest *)request
+{
+    tf.text = self.tempTFString;
+    LOADFAILED;
 }
 
 #pragma mark -
 -(void)headBtnClick
 {
     //修改资料
-    
+    ModifyPetOrUserInfoViewController * vc = [[ModifyPetOrUserInfoViewController alloc] init];
+    vc.refreshPetInfo = ^(){
+        [self loadData];
+    };
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
 }
 -(void)pBtnClick:(UIButton *)btn
 {
@@ -320,19 +457,23 @@
             if (isFinish) {
                 NSArray * array = [load.dataDict objectForKey:@"data"];
                 if (array.count >= 10) {
-                    if((array.count+1)*5>[[USER objectForKey:@"gold"] intValue]){
+                    int cost = array.count*5;
+                    if (cost>100) {
+                        cost = 100;
+                    }
+                    if(cost>[[USER objectForKey:@"gold"] intValue]){
                         //余额不足
                         [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
                         return;
                     }
                     oneBtn.type = 2;
-                    oneBtn.petsNum = array.count+1;
+                    oneBtn.petsNum = array.count;
                     [oneBtn makeUI];
                     [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
                     [oneBtn release];
                 }else{
                     oneBtn.type = 2;
-                    oneBtn.petsNum = array.count+1;
+                    oneBtn.petsNum = array.count;
                     [oneBtn makeUI];
                     [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
                     [oneBtn release];
@@ -349,9 +490,20 @@
                             if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                                 //
                                 pBtn.selected = YES;
+                                if (self.isFromPetRecom) {
+                                    self.updatePBtn();
+                                }
+                                UILabel * tempLabel = (UILabel *)[headerView viewWithTag:101];
+                                tempLabel.text = [NSString stringWithFormat:@"%d", [tempLabel.text intValue]+1];
                                 
                                 if (array.count>=10) {
-                                    [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-(array.count+1)*5] forKey:@"gold"];
+                                    int cost = array.count*5;
+                                    if (cost>100) {
+                                        [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-100] forKey:@"gold"];
+                                    }else{
+                                       [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-cost] forKey:@"gold"];
+                                    }
+                                    
                                 }
                                 
                             }
@@ -580,6 +732,8 @@
 //            indexPath.row == 2 && [self.model.gifts isKindOfClass:[NSString class]]
         }else if(indexPath.row == 2 && [self.rq isKindOfClass:[NSString class]]){
             [cell modifyUIWithIndex:indexPath.row Num:@"0"];
+        }else{
+            [cell modifyUIWithIndex:indexPath.row Num:@"100"];
         }
         
         return cell;
@@ -622,6 +776,8 @@
     }else if(indexPath.row == 1){
         PopularityListViewController * rq = [[PopularityListViewController alloc] init];
 //        [rq setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+        rq.isFromPetMain = YES;
+        rq.targetAid = self.aid;
         [self presentViewController:rq animated:YES completion:nil];
         [rq release];
     }else{
@@ -826,15 +982,26 @@
 {
     [self cancelBtnClick];
     
-    UIImage * screenshotImage = [MyControl imageWithView:tv];
+    
+    UIImage * screenshotImage = nil;
+    if (isMyPet) {
+        screenshotImage = headBtn.currentBackgroundImage;
+    }else{
+        screenshotImage = headImageView.image;
+    }
+    if (screenshotImage == nil) {
+        screenshotImage = [UIImage imageNamed:@"record_upload.png"];
+    }
     
     int a = button.tag-400;
     
     if (a == 0) {
         NSLog(@"微信");
         //强制分享图片
-        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+        [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.aid];
+        [UMSocialData defaultData].extConfig.wechatSessionData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.model.name];
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [MyControl popAlertWithView:self.view Msg:@"分享成功"];
@@ -850,8 +1017,10 @@
     }else if(a == 1){
         NSLog(@"朋友圈");
         //强制分享图片
-        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.aid];
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.model.name];
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [MyControl popAlertWithView:self.view Msg:@"分享成功"];
@@ -866,7 +1035,7 @@
         }];
     }else{
         NSLog(@"微博");
-        NSString * str = @"雷达报告发现一只萌宠，火速围观！http://home4pet.aidigame.com/（分享自@宠物星球社交应用）";
+        NSString * str = [NSString stringWithFormat:@"人家在宠物星球好开心，快来跟我一起玩嘛~%@（分享自@宠物星球社交应用）", [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.aid]];
 //        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
 //            if (response.responseCode == UMSResponseCodeSuccess) {
 //                NSLog(@"分享成功！");
@@ -979,12 +1148,25 @@
         vc.oriImage = image;
         vc.name = self.model.name;
         vc.aid = self.model.aid;
-        vc.showFrontImage = ^(NSString * img_id){
-            FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
-            front.img_id = img_id;
-            [[UIApplication sharedApplication].keyWindow addSubview:front.view];
-            [front release];
-            
+        vc.showFrontImage = ^(NSString * img_id, BOOL isFood, NSString * aid, NSString * name){
+            if (!isFood) {
+                FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
+                front.img_id = img_id;
+                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
+                [front release];
+            }else{
+                NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
+                NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ALERT7DATAAPI, aid, sig, [ControllerManager getSID]];
+                NSLog(@"%@", url);
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    Alert_BegFoodViewController * vc = [[Alert_BegFoodViewController alloc] init];
+                    vc.dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                    vc.name = name;
+                    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+                    [vc release];
+                }];
+                [request release];
+            }
         };
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
@@ -1000,6 +1182,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

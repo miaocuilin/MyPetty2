@@ -8,7 +8,7 @@
 
 #import "ResultOfSendViewController.h"
 
-@interface ResultOfSendViewController ()
+@interface ResultOfSendViewController () <UMSocialUIDelegate>
 
 @end
 
@@ -195,20 +195,47 @@
     }else if(sender.tag == 102){
         NSLog(@"微博");
         NSString * str = [NSString stringWithFormat:@"随便一摇就摇出了一个%@，好惊喜，你也想试试吗？http://home4pet.aidigame.com/（分享自@宠物星球社交应用）", self.giftName];
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-
-            if (response.responseCode == UMSResponseCodeSuccess) {
-                NSLog(@"分享成功！");
-                [self loadShakeShare];
-                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
-            }else{
-                NSLog(@"失败原因：%@", response);
-                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
-            }
-            
-        }];
+        
+        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+        NSLog(@"%d", oauth);
+        if (oauth) {
+            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:image socialUIDelegate:self];
+                //设置分享内容和回调对象
+                [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+            }];
+        }else{
+            [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:image socialUIDelegate:self];
+            //设置分享内容和回调对象
+            [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+        }
+//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//
+//            if (response.responseCode == UMSResponseCodeSuccess) {
+//                NSLog(@"分享成功！");
+//                [self loadShakeShare];
+//                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//            }else{
+//                NSLog(@"失败原因：%@", response);
+//                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//            }
+//            
+//        }];
     }
 }
+#pragma mark -
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+{
+    if (response.responseCode == UMSResponseCodeSuccess) {
+        NSLog(@"分享成功！");
+        [self loadShakeShare];
+        [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+    }else{
+        NSLog(@"失败原因：%@", response);
+        [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+    }
+}
+
 -(void)loadShakeShare
 {
     LOADING;
@@ -231,6 +258,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

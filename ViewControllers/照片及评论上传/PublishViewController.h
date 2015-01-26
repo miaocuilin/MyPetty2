@@ -37,6 +37,9 @@
     
     BOOL publishSuc;
     BOOL shareSuc;
+    
+    //判断是否是新浪微信都分享，用来判断新浪分享完成代理该走哪个处理
+    BOOL isDouble;
 }
 @property (nonatomic,copy)NSString * tempDes;
 //@property (nonatomic,retain)UIImageView * bgImageView;
@@ -54,6 +57,6 @@
 
 @property(nonatomic,retain)NSMutableArray * dataArray;
 
-@property(nonatomic,copy)void (^showFrontImage)(NSString *);
+@property(nonatomic,copy)void (^showFrontImage)(NSString *, BOOL, NSString *, NSString *);
 @property (nonatomic,copy)NSString * img_id;
 @end

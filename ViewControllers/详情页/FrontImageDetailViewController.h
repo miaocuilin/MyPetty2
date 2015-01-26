@@ -71,6 +71,16 @@
     
     BOOL isLoad;
     UIImageView * guide;
+    
+    //图片不存在
+    BOOL imageNotExist;
+    
+    UIButton * menuBgBtn;
+    UIView * moreView;
+    BOOL isMoreCreated;
+    
+    //判断当前图片是否是求口粮图片并且未过时
+    BOOL isFood;
 }
 @property(nonatomic,retain)NSDictionary * picDict;
 @property(nonatomic,retain)NSDictionary * imageDict;
@@ -98,6 +108,5 @@
 @property (nonatomic,retain)NSMutableArray * sendersArray;
 @property (nonatomic,retain)NSMutableArray * commentersArray;
 @property (nonatomic,retain)NSMutableArray * sharersArray;
-
 
 @end

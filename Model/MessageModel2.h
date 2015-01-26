@@ -1,14 +1,14 @@
 //
-//  MessageModel.h
+//  MessageModel2.h
 //  MyPetty
 //
-//  Created by miaocuilin on 14-10-17.
-//  Copyright (c) 2014年 AidiGame. All rights reserved.
+//  Created by miaocuilin on 15/1/9.
+//  Copyright (c) 2015年 AidiGame. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-@interface MessageModel : NSObject <NSCoding>
+@interface MessageModel2 : NSObject <NSCoding>
 
 @property(nonatomic,copy)NSString * msg;
 @property(nonatomic,copy)NSString * time;

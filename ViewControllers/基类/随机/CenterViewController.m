@@ -12,13 +12,14 @@
 #import "GiftShopViewController.h"
 #import "UserBagViewController.h"
 #import "SingleTalkModel.h"
-#import "MessageModel.h"
+#import "MessageModel2.h"
 #import "ExchangeViewController.h"
 #import "AccountViewController.h"
 #import "ChargeViewController.h"
 #import "WalkAndTeaseViewController.h"
 #import "LoginViewController.h"
 #import "MsgViewController.h"
+#import "ModifyPetOrUserInfoViewController.h"
 
 @interface CenterViewController ()
 
@@ -26,12 +27,58 @@
 
 @implementation CenterViewController
 
+-(void)createGuide
+{
+    guide = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"guide_center.png"];
+    float a = [UIScreen mainScreen].bounds.size.width/[UIScreen mainScreen].bounds.size.height;
+    float b = 320/480.0;
+    if(a == b){
+        guide.frame = CGRectMake(0, 0, self.view.frame.size.width, 568);
+    }
+    UITapGestureRecognizer * guideTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(guideTap:)];
+    [guide addGestureRecognizer:guideTap];
+    
+    //    FirstTabBarViewController * tabBar = [ControllerManager shareTabBar];
+    [[UIApplication sharedApplication].keyWindow addSubview:guide];
+    [guideTap release];
+}
+-(void)guideTap:(UITapGestureRecognizer *)tap
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        guide.alpha = 0;
+    }completion:^(BOOL finished) {
+        guide.hidden = YES;
+        [guide removeFromSuperview];
+    }];
+}
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if (!isLoaded) {
+        if (![[USER objectForKey:@"guide_center"] intValue]) {
+            [USER setObject:@"1" forKey:@"guide_center"];
+            [self createGuide];
+        }
+        
+    }
+    
     //刷新私信数
     if ([[USER objectForKey:@"isSuccess"] intValue]) {
-        [self getNewMessage];
+//        [self getNewMessage];
+        int a = [MyControl returnUnreadMessageCount];
+        if (a) {
+            msgNum.text = [NSString stringWithFormat:@"%d", a];
+            msgNumBg.hidden = NO;
+            
+            self.tabBar.msgNum.text = [NSString stringWithFormat:@"%d", a];
+            self.tabBar.msgNumBg.hidden = NO;
+        }else{
+            msgNum.text = @"0";
+            msgNumBg.hidden = YES;
+            self.tabBar.msgNum.text = @"0";
+            self.tabBar.msgNumBg.hidden = YES;
+        }
     }
 }
 -(void)viewDidAppear:(BOOL)animated
@@ -41,10 +88,13 @@
         [self modifyUI];
     }
     isLoaded = YES;
+    //
+    
+    
 }
 - (void)refresh
 {
-    [self getNewMessage];
+//    [self getNewMessage];
     [self modifyUI];
 }
 - (void)viewDidLoad {
@@ -73,6 +123,10 @@
     UIImageView * headBg2 = [MyControl createImageViewWithFrame:CGRectMake(10+130, 9+50, self.view.frame.size.width-20-130, 124/2) ImageName:@""];
     headBg2.image = [[UIImage imageNamed:@"center_head2.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:10];
     [sv addSubview:headBg2];
+    
+    UIButton * modifyBtn = [MyControl createButtonWithFrame:CGRectMake(headBg2.frame.origin.x+headBg2.frame.size.width-35, headBg2.frame.origin.y+10, 30, 30) ImageName:@"center_modify_info.png" Target:self Action:@selector(modifyClick) Title:nil];
+    modifyBtn.showsTouchWhenHighlighted = YES;
+    [sv addSubview:modifyBtn];
     
     UIImageView * headBg = [MyControl createImageViewWithFrame:CGRectMake(10, 10, 130, 222/2) ImageName:@"center_head.png"];
 //    headBg.image = [[UIImage imageNamed:@"center_head.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(60, 110, 1, 2) resizingMode:UIImageResizingModeStretch];
@@ -119,7 +173,7 @@
     }
     
     NSArray * imageArray = @[@"center_msg.png", @"center_mall.png", @"center_exchange.png", @"center_play.png", @"center_gift.png", @"center_account.png"];
-    NSArray * nameArray = @[@"私信", @"商城", @"兑换", @"玩耍", @"礼物", @"账号"];
+    NSArray * nameArray = @[@"消息", @"商城", @"兑换", @"玩耍", @"礼物", @"账号"];
     float spe2 = (centerBg.frame.size.width/3.0-99/2.0)/2.0;
     for (int i=0; i<6; i++) {
         UIImageView * imageView = [MyControl createImageViewWithFrame:CGRectMake(i%3*(centerBg.frame.size.width/3.0)+spe2, 8+i/3*90, 99/2.0, 103/2.0) ImageName:imageArray[i]];
@@ -203,6 +257,23 @@
     [vc release];
     
 }
+#pragma mark -
+-(void)modifyClick
+{
+    NSLog(@"modify");
+    ModifyPetOrUserInfoViewController * vc = [[ModifyPetOrUserInfoViewController alloc] init];
+    vc.isModifyUser = YES;
+    vc.refreshUserInfo = ^(NSString * Name, int gender, int city, UIImage * image){
+        [USER setObject:Name forKey:@"name"];
+        [USER setObject:[NSString stringWithFormat:@"%d", gender] forKey:@"gender"];
+        [USER setObject:[NSString stringWithFormat:@"%d", city] forKey:@"city"];
+        //头像tx已经在上传照片后修改了
+        [self modifyUI];
+    };
+    [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
+}
+
 -(void)modifyUI
 {
     if (![[USER objectForKey:@"isSuccess"] intValue]) {
@@ -251,11 +322,11 @@
     
     if (a == 0) {
         //私信
-        NoticeViewController * vc = [[NoticeViewController alloc] init];
-//        UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
-        [self presentViewController:vc animated:YES completion:nil];
+        MsgViewController * vc = [[MsgViewController alloc] init];
+        UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
+        [self presentViewController:nc animated:YES completion:nil];
         [vc release];
-//        [nc release];
+        [nc release];
     }else if (a == 1) {
         //商城
         GiftShopViewController * vc = [[GiftShopViewController alloc] init];
@@ -630,7 +701,7 @@
     //    NSLog(@"%@", self.keysArray);
     for (int i=0;i<self.keysArray.count;i++) {
         //        NSLog(@"key:%@--value:%@", self.keysArray[i], [dict objectForKey:self.keysArray[i]]);
-        MessageModel * msgModel = [[MessageModel alloc] init];
+        MessageModel2 * msgModel = [[MessageModel2 alloc] init];
         msgModel.time = self.keysArray[i];
         msgModel.usr_id = usrID;
         
@@ -657,6 +728,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

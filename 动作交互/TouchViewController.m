@@ -15,7 +15,7 @@
 #define GRAYBLUECOLOR [UIColor colorWithRed:127/255.0 green:151/255.0 blue:179/255.0 alpha:1]
 #define LIGHTORANGECOLOR [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1]
 
-@interface TouchViewController ()
+@interface TouchViewController () <UMSocialUIDelegate>
 {
     UIView *bodyView;
 }
@@ -53,7 +53,7 @@
 
 - (void)checkIsTouch
 {
-    LOADING;
+    LOADING2;
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
     NSString *isTouch = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ISTOUCHAPI, self.pet_aid, sig, [ControllerManager getSID]];
     NSLog(@"isTouch:%@",isTouch);
@@ -169,6 +169,7 @@
 //                    [ControllerManager HUDImageIcon:@"Star.png" showView:self.view.window yOffset:40 Number:exp];
                 }
                 if (gold) {
+                    [USER setObject:[NSString stringWithFormat:@"%d", gold+[[USER objectForKey:@"gold"] intValue]] forKey:@"gold"];
                     [ControllerManager HUDImageIcon:@"gold.png" showView:self.view.window yOffset:-40.0 Number:gold];
                 }
             }
@@ -210,7 +211,11 @@
     [bodyView addSubview:descLabel];
     
     UIImageView *touchImageView = [MyControl createImageViewWithFrame:CGRectMake(bodyView.frame.size.width/2-130, 40, 260, 180) ImageName:@""];
-//    touchImageView.contentMode = UIViewContentModeScaleAspectFill;
+    touchImageView.layer.cornerRadius = 10;
+    touchImageView.layer.masksToBounds = YES;
+    touchImageView.contentMode = UIViewContentModeScaleAspectFill;
+//    [bodyView addSubview:touchImageView];
+    
     
     //看是否有照片
     if(self.img_url){
@@ -218,11 +223,15 @@
         UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
         if (animalHeaderImage) {
             touchImageView.image = animalHeaderImage;
+            [self blurImage:touchImageView.image Frame:touchImageView.frame];
         }else{
             httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",IMAGEURL, self.img_url] Block:^(BOOL isFinish, httpDownloadBlock *load) {
                 if (isFinish) {
                     touchImageView.image = load.dataImage;
                     [load.data writeToFile:pngFilePath atomically:YES];
+                    [self blurImage:touchImageView.image Frame:touchImageView.frame];
+                }else{
+                    LOADFAILED;
                 }
             }];
             [request release];
@@ -233,32 +242,34 @@
             UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
             if (animalHeaderImage) {
                 touchImageView.image = animalHeaderImage;
+                [self blurImage:touchImageView.image Frame:touchImageView.frame];
             }else{
                 httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
                     if (isFinish) {
                         touchImageView.image = load.dataImage;
                         [load.data writeToFile:pngFilePath atomically:YES];
+                        [self blurImage:touchImageView.image Frame:touchImageView.frame];
+                    }else{
+                        LOADFAILED;
                     }
                 }];
                 [request release];
             }
         }
     }
+}
+-(void)blurImage:(UIImage *)image Frame:(CGRect)frame
+{
+    image = [MyControl returnImageWithImage:image Width:frame.size.width Height:frame.size.height];
+    UIImage *imageDemo = [image applyBlurWithRadius:60.0 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
     
-
-    touchImageView.layer.cornerRadius = 10;
-    touchImageView.layer.masksToBounds = YES;
-    [bodyView addSubview:touchImageView];
-    
-    UIImage *imageDemo = [touchImageView.image applyBlurWithRadius:60.0 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
-    
-    self.scratchCardView = [[HYScratchCardView alloc]initWithFrame:touchImageView.frame];
-    self.scratchCardView.layer.cornerRadius = 10;
-    self.scratchCardView.layer.masksToBounds = YES;
-    self.scratchCardView.surfaceImage = imageDemo;
-    self.scratchCardView.image = touchImageView.image;
-    self.scratchCardView.contentMode = UIViewContentModeScaleAspectFill;
-    [bodyView addSubview:self.scratchCardView];
+    _scratchCardView = [[HYScratchCardView alloc]initWithFrame:frame];
+    _scratchCardView.layer.cornerRadius = 10;
+    _scratchCardView.layer.masksToBounds = YES;
+    _scratchCardView.surfaceImage = imageDemo;
+    _scratchCardView.image = image;
+    _scratchCardView.contentMode = UIViewContentModeScaleAspectFill;
+    [bodyView addSubview:_scratchCardView];
     
     self.scratchCardView.completion = ^(id userInfo) {
         NSLog(@"%d",self.scratchCardView.isOpen);
@@ -271,7 +282,6 @@
     };
     [self addDownView];
 }
-
 - (void)addDownView
 {
     UIView *downView = [MyControl createViewWithFrame:CGRectMake(0, bodyView.frame.size.height-70, bodyView.frame.size.width, 70)];
@@ -404,20 +414,34 @@
     }else if(sender.tag == 79){
         NSLog(@"微博");
         NSString * str = [NSString stringWithFormat:@"我在宠物星球里面摸了萌星%@，%@乖巧地冲我叫了一声，真可爱~http://home4pet.aidigame.com/(分享自@宠物星球社交应用）", self.pet_name, self.pet_name];
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-            if (response.responseCode == UMSResponseCodeSuccess) {
-                NSLog(@"分享成功！");
-                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
-//                StartLoading;
-//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
-            }else{
-                NSLog(@"失败原因：%@", response);
-                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享失败"];
-//                StartLoading;
-//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
-            }
-            
-        }];
+        
+        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+        NSLog(@"%d", oauth);
+        if (oauth) {
+            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:image socialUIDelegate:self];
+                //设置分享内容和回调对象
+                [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+            }];
+        }else{
+            [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:image socialUIDelegate:self];
+            //设置分享内容和回调对象
+            [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+        }
+//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//            if (response.responseCode == UMSResponseCodeSuccess) {
+//                NSLog(@"分享成功！");
+//                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
+////                StartLoading;
+////                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+//            }else{
+//                NSLog(@"失败原因：%@", response);
+//                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享失败"];
+////                StartLoading;
+////                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+//            }
+//            
+//        }];
     }
 }
 - (void)audioPlayerCreate
@@ -549,7 +573,7 @@
     [_player stop];
     [_player release],_player=nil;
     [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+//    [self removeFromParentViewController];
 }
 #pragma mark - streamer
 - (void)destroyStreamer

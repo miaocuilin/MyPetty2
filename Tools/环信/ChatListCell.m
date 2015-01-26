@@ -58,8 +58,23 @@
         _lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.contentView.frame.size.width, 1)];
         _lineView.backgroundColor = RGBACOLOR(207, 210, 213, 0.7);
         [self.contentView addSubview:_lineView];
+        
+        _headerLongPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(headerLongPress:)];
+        [self addGestureRecognizer:_headerLongPress];
     }
     return self;
+}
+
+- (void)headerLongPress:(UILongPressGestureRecognizer *)longPress
+{
+    
+    if (longPress.state == UIGestureRecognizerStateBegan) {
+        self.longPress();
+//        if(_delegate && _indexPath && [_delegate respondsToSelector:@selector(cellImageViewLongPressAtIndexPath:)])
+//        {
+//            [_delegate cellImageViewLongPressAtIndexPath:self.indexPath];
+//        }
+    }
 }
 
 - (void)awakeFromNib
@@ -85,12 +100,26 @@
 -(void)layoutSubviews{
     [super layoutSubviews];
     CGRect frame = self.imageView.frame;
+    self.imageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
     
-    [self.imageView setImageWithURL:_imageURL placeholderImage:_placeholderImage];
+    if([self.usr_id isEqualToString:@"1"]){
+        self.imageView.image = [UIImage imageNamed:@"miaomiao.png"];
+    }else if([self.usr_id isEqualToString:@"2"]){
+        self.imageView.image = [UIImage imageNamed:@"wangwang.png"];
+    }else if([self.usr_id isEqualToString:@"3"]){
+        self.imageView.image = [UIImage imageNamed:@"xiaoge.png"];
+    }else if([_imageURL isKindOfClass:[NSURL class]] && _imageURL != nil) {
+        [self.imageView setImageWithURL:_imageURL placeholderImage:_placeholderImage];
+    }
+    
 //    [self.imageView sd_setImageWithURL:_imageURL placeholderImage:_placeholderImage];
     self.imageView.frame = CGRectMake(10, 7, 45, 45);
+    self.imageView.layer.cornerRadius = self.imageView.frame.size.width/2.0;
+    self.imageView.layer.masksToBounds = YES;
     
     self.textLabel.text = _name;
+    self.textLabel.font = [UIFont boldSystemFontOfSize:15];
+    self.textLabel.textColor = [ControllerManager colorWithHexString:@"404040"];
     self.textLabel.frame = CGRectMake(65, 7, 175, 20);
     
     _detailLabel.text = _detailMsg;

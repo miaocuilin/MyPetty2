@@ -19,6 +19,7 @@
 #import "ChooseInViewController.h"
 #import "PublishViewController.h"
 #import "Alert_BegFoodViewController.h"
+#import "ChatViewController.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
@@ -26,7 +27,7 @@
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 
-@interface MyStarViewController () <AFPhotoEditorControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
+@interface MyStarViewController () <AFPhotoEditorControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UMSocialUIDelegate>
 {
     BOOL isCamara;
     UIActionSheet * sheet;
@@ -100,6 +101,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         guide.alpha = 0;
     }completion:^(BOOL finished) {
         guide.hidden = YES;
+        [guide removeFromSuperview];
     }];
 }
 -(void)createBg
@@ -312,58 +314,75 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [codeView makeUI];
         codeView.shareClick = ^(int a, UIImage * image, NSString * code){
             [MobClick event:@"invite_share"];
+            if (image == nil) {
+                image = [UIImage imageNamed:@"record_upload.png"];
+            }
             
             if (a == 0) {
                 NSLog(@"微信");
                 //强制分享图片
-                [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-                [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+                [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+                [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, model.aid];
+                [UMSocialData defaultData].extConfig.wechatSessionData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", model.name];
+                [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
                     if (response.responseCode == UMSResponseCodeSuccess) {
                         NSLog(@"分享成功！");
                         //                [self loadShareAPI];
                         //                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
-                        StartLoading;
-                        [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
                     }else{
-                        StartLoading;
-                        [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享失败"];
                     }
                     
                 }];
             }else if(a == 1){
                 NSLog(@"朋友圈");
                 //强制分享图片
-                [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-                [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+                [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+                [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, model.aid];
+                [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", model.name];
+                [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
                     if (response.responseCode == UMSResponseCodeSuccess) {
                         NSLog(@"分享成功！");
                         //                [self loadShareAPI];
                         //                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
-                        StartLoading;
-                        [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
                     }else{
-                        StartLoading;
-                        [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+                        [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享失败"];
                     }
                     
                 }];
             }else{
                 NSLog(@"微博");
-                NSString * str = [NSString stringWithFormat:@"我家萌星最闪亮！小伙伴们快来助力~~邀请码：%@，http://home4pet.aidigame.com/（分享自@宠物星球社交应用）", code];
-                [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-                    if (response.responseCode == UMSResponseCodeSuccess) {
-                        NSLog(@"分享成功！");
-                        //                [self loadShareAPI];
-                        //                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
-                        StartLoading;
-                        [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
-                    }else{
-                        NSLog(@"失败原因：%@", response);
-                        StartLoading;
-                        [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
-                    }
-                    
-                }];
+                NSString * str = [NSString stringWithFormat:@"人家在宠物星球好开心，快来跟我一起玩嘛~%@（分享自@宠物星球社交应用）", [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, model.aid]];
+                
+                BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+                NSLog(@"%d", oauth);
+                if (oauth) {
+                    [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                        [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:image socialUIDelegate:self];
+                        //设置分享内容和回调对象
+                        [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+                    }];
+                }else{
+                    [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:image socialUIDelegate:self];
+                    //设置分享内容和回调对象
+                    [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+                }
+//                [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//                    if (response.responseCode == UMSResponseCodeSuccess) {
+//                        NSLog(@"分享成功！");
+//                        //                [self loadShareAPI];
+//                        //                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
+//                        StartLoading;
+//                        [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+//                    }else{
+//                        NSLog(@"失败原因：%@", response);
+//                        StartLoading;
+//                        [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+//                    }
+//                    
+//                }];
             }
         };
         [self.view addSubview:codeView];
@@ -554,10 +573,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             touch.pet_aid = self.pet_aid;
             touch.pet_name = self.pet_name;
             touch.pet_tx = self.pet_tx;
-            [self addChildViewController:touch];
+//            [self addChildViewController:touch];
+//            [touch didMoveToParentViewController:self];
+            [[UIApplication sharedApplication].keyWindow addSubview:touch.view];
             [touch release];
-            [touch didMoveToParentViewController:self];
-            [self.view addSubview:touch.view];
             
             
 //            WalkAndTeaseViewController *walkAndTeasevc = [[WalkAndTeaseViewController alloc] init];
@@ -572,6 +591,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
         [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
         [vc release];
+    };
+    
+    cell.msgClick = ^(){
+        ChatViewController * chatController = [[ChatViewController alloc] initWithChatter:model.master_id isGroup:NO];
+        chatController.isFromCard = YES;
+        chatController.nickName = [USER objectForKey:@"name"];
+        chatController.tx = [USER objectForKey:@"tx"];
+        chatController.other_nickName = model.u_name;
+        chatController.other_tx = model.u_tx;
+        [self presentViewController:chatController animated:YES completion:nil];
+        [chatController release];
     };
     [cell adjustCellHeight:model.images.count];
     [cell configUI:model];
@@ -592,6 +622,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 #pragma mark - 相机
@@ -681,12 +714,25 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         vc.oriImage = image;
         vc.name = self.tempName;
         vc.aid = self.tempAid;
-        vc.showFrontImage = ^(NSString * img_id){
-            FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
-            front.img_id = img_id;
-            [[UIApplication sharedApplication].keyWindow addSubview:front.view];
-            [front release];
-            
+        vc.showFrontImage = ^(NSString * img_id, BOOL isFood, NSString * aid, NSString * name){
+            if (!isFood) {
+                FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
+                front.img_id = img_id;
+                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
+                [front release];
+            }else{
+                NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
+                NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ALERT7DATAAPI, aid, sig, [ControllerManager getSID]];
+                NSLog(@"%@", url);
+                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    Alert_BegFoodViewController * vc = [[Alert_BegFoodViewController alloc] init];
+                    vc.dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                    vc.name = name;
+                    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+                    [vc release];
+                }];
+                [request release];
+            }
         };
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];

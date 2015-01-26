@@ -12,6 +12,6 @@
 
 {
     UIView * navView;
-    UIScrollView * sv;
+//    UIScrollView * sv;
 }
 @end

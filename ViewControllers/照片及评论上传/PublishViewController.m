@@ -19,7 +19,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #import "UserPetListModel.h"
 #import "IQKeyboardManager.h"
 
-@interface PublishViewController () <UITextViewDelegate,AFPhotoEditorControllerDelegate>
+@interface PublishViewController () <UITextViewDelegate,AFPhotoEditorControllerDelegate,UMSocialUIDelegate>
 {
     UITextView * _textView;
     CGRect rect;
@@ -49,6 +49,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [[IQKeyboardManager sharedManager] setEnable:YES];
+    
     if ([[USER objectForKey:@"selectTopic"] intValue] == 1) {
         [topic setTitle:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]] forState:UIControlStateNormal];
         [USER setObject:@"0" forKey:@"selectTopic"];
@@ -81,7 +83,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [USER setObject:@"点击添加话题" forKey:@"topic"];
     }
     
-    
+//    NSLog(@"%d--%@--%@", self.isBeg, self.aid, self.name);
     // Do any additional setup after loading the view.
     // Allocate Asset Library
     ALAssetsLibrary * assetLibrary = [[ALAssetsLibrary alloc] init];
@@ -474,7 +476,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         shareSuc = YES;
         if (publishSuc) {
             [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                self.showFrontImage(self.img_id);
+                self.showFrontImage(self.img_id, self.isBeg, self.aid, self.name);
                 [self dismissViewControllerAnimated:YES completion:nil];
             } completion:nil];
         }
@@ -490,27 +492,40 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             str = [NSString stringWithFormat:@"%@ %@", _textView.text, @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
         }
         
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-            NSLog(@"sina-response:%@", response);
-            shareSuc = YES;
-            if (publishSuc) {
-                [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                    self.showFrontImage(self.img_id);
-                    [self dismissViewControllerAnimated:YES completion:nil];
-                } completion:nil];
-            }
-            
-            button.userInteractionEnabled = YES;
-            if ([response.message isEqualToString:@"user cancel the operation"]) {
-                return;
-            }
-            
-            if (response.responseCode == UMSResponseCodeSuccess) {
-                NSLog(@"分享成功！");
-//                [self postData:self.oriImage];
-            }
-            
-        }];
+        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+        NSLog(@"%d", oauth);
+        if (oauth) {
+            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:bigImageView.image socialUIDelegate:self];
+                //设置分享内容和回调对象
+                [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+            }];
+        }else{
+            [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:bigImageView.image socialUIDelegate:self];
+            //设置分享内容和回调对象
+            [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+        }
+//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//            NSLog(@"sina-response:%@", response);
+//            shareSuc = YES;
+//            if (publishSuc) {
+//                [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+//                    self.showFrontImage(self.img_id);
+//                    [self dismissViewControllerAnimated:YES completion:nil];
+//                } completion:nil];
+//            }
+//            
+//            button.userInteractionEnabled = YES;
+//            if ([response.message isEqualToString:@"user cancel the operation"]) {
+//                return;
+//            }
+//            
+//            if (response.responseCode == UMSResponseCodeSuccess) {
+//                NSLog(@"分享成功！");
+////                [self postData:self.oriImage];
+//            }
+//            
+//        }];
     }else if(s == 0 && w == 1){
         button.userInteractionEnabled = YES;
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
@@ -519,7 +534,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             shareSuc = YES;
             if (publishSuc) {
                 [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                    self.showFrontImage(self.img_id);
+                    self.showFrontImage(self.img_id, self.isBeg, self.aid, self.name);
                     [self dismissViewControllerAnimated:YES completion:nil];
                 } completion:nil];
             }
@@ -531,42 +546,93 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }];
 
     }else if(s == 1 && w == 1){
+        isDouble = YES;
+        
         NSString * str = nil;
         if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"]) {
             str = @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）";
         }else{
             str = [NSString stringWithFormat:@"%@ %@", _textView.text, @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
         }
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-            button.userInteractionEnabled = YES;
-            //分享微信
-            [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-            [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:_textView.text image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-                shareSuc = YES;
-                if (publishSuc) {
-                    [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                        self.showFrontImage(self.img_id);
-                        [self dismissViewControllerAnimated:YES completion:nil];
-                    } completion:nil];
-                }
-                
-                NSLog(@"weChat-response:%@", response);
-                if (response.responseCode == UMSResponseCodeSuccess) {
-                    NSLog(@"分享成功！");
-                }
+        
+        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+        NSLog(@"%d", oauth);
+        if (oauth) {
+            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:bigImageView.image socialUIDelegate:self];
+                //设置分享内容和回调对象
+                [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
             }];
-            
-            NSLog(@"sina-response:%@", response);
-            if (response.responseCode == UMSResponseCodeSuccess) {
-                NSLog(@"分享成功！");
-                
-//                [self postData:self.oriImage];
-            }
-            
-        }];
+        }else{
+            [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:bigImageView.image socialUIDelegate:self];
+            //设置分享内容和回调对象
+            [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+        }
+//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//            button.userInteractionEnabled = YES;
+//            //分享微信
+//            [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+//            [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:_textView.text image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//                shareSuc = YES;
+//                if (publishSuc) {
+//                    [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+//                        self.showFrontImage(self.img_id);
+//                        [self dismissViewControllerAnimated:YES completion:nil];
+//                    } completion:nil];
+//                }
+//                
+//                NSLog(@"weChat-response:%@", response);
+//                if (response.responseCode == UMSResponseCodeSuccess) {
+//                    NSLog(@"分享成功！");
+//                }
+//            }];
+//            
+//            NSLog(@"sina-response:%@", response);
+//            if (response.responseCode == UMSResponseCodeSuccess) {
+//                NSLog(@"分享成功！");
+//                
+////                [self postData:self.oriImage];
+//            }
+//            
+//        }];
     }
     
 }
+#pragma mark - 
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+{
+    NSLog(@"%@", response);
+    if (!isDouble) {
+        shareSuc = YES;
+        if (publishSuc) {
+            [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                self.showFrontImage(self.img_id, self.isBeg, self.aid, self.name);
+                [self dismissViewControllerAnimated:YES completion:nil];
+            } completion:nil];
+        }
+        
+        publishButton.userInteractionEnabled = YES;
+    }else{
+        publishButton.userInteractionEnabled = YES;
+        //分享微信
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:_textView.text image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            shareSuc = YES;
+            if (publishSuc) {
+                [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+                    self.showFrontImage(self.img_id, self.isBeg, self.aid, self.name);
+                    [self dismissViewControllerAnimated:YES completion:nil];
+                } completion:nil];
+            }
+            
+            NSLog(@"weChat-response:%@", response);
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+            }
+        }];
+    }
+}
+
 #pragma mark - 新浪、微信点击事件
 -(void)sinaClick
 {
@@ -727,6 +793,19 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    float p = 1.0;
 //    image.
     NSData * data = [MyControl scaleToSize:image];
+    float W = image.size.width;
+    float H = image.size.height;
+    float p = 0;
+    if (W>H && image.size.width>2000) {
+        p = 2000/W;
+        W *= p;
+        H *= p;
+        //        sourceImage = [self OriginImage:sourceImage scaleToSize:CGSizeMake(w*p, h*p)];
+    }else if(H>W && image.size.height>2000){
+        p = 2000/H;
+        W *= p;
+        H *= p;
+    }
 //    NSData * data = UIImageJPEGRepresentation(image, 1);
 //    NSLog(@"%d", data.length);
 //    while (data.length>100*1024) {
@@ -740,7 +819,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     
     NSTimeInterval  timeInterval = [[NSDate date] timeIntervalSince1970];
-    [_request setData:data withFileName:[NSString stringWithFormat:@"%.0f%@%d%@_%d&%d.png", timeInterval, @"@", data.length, @"@", (int)image.size.width, (int)image.size.height] andContentType:@"image/jpg" forKey:@"image"];
+    [_request setData:data withFileName:[NSString stringWithFormat:@"%.0f%@%d%@_%d&%d.png", timeInterval, @"@", data.length, @"@", (int)W, (int)H] andContentType:@"image/jpg" forKey:@"image"];
     //    [_request setPostValue:data forKey:@"image"];
     //图片
     if (![_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"]) {
@@ -806,7 +885,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         publishSuc = YES;
         if (shareSuc) {
             [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                self.showFrontImage(self.img_id);
+                self.showFrontImage(self.img_id, self.isBeg, self.aid, self.name);
                 [self dismissViewControllerAnimated:YES completion:nil];
             } completion:nil];
         }
@@ -814,15 +893,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     
     //如果返回正常，将图片存到本地
-    if([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[dict objectForKey:@"data"] objectForKey:@"image"] isKindOfClass:[NSDictionary class]]){
-        [MobClick event:@"photo"];
-        
-        NSString * url = [[[dict objectForKey:@"data"] objectForKey:@"image"] objectForKey:@"url"];
-        NSData * data = [MyControl scaleToSize:self.oriImage];
-        NSString * path = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
-        BOOL a = [data writeToFile:path atomically:YES];
-        NSLog(@"本地存储结果：%d", a);
-    }
+//    if([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[dict objectForKey:@"data"] objectForKey:@"image"] isKindOfClass:[NSDictionary class]]){
+//        [MobClick event:@"photo"];
+//        
+//        NSString * url = [[[dict objectForKey:@"data"] objectForKey:@"image"] objectForKey:@"url"];
+//        NSData * data = [MyControl scaleToSize:self.oriImage];
+//        NSString * path = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];
+//        BOOL a = [data writeToFile:path atomically:YES];
+//        NSLog(@"本地存储结果：%d", a);
+//    }
     
     //分享到微博
 //    if ([[USER objectForKey:@"sina"] intValue] == 1) {
@@ -891,6 +970,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

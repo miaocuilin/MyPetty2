@@ -43,22 +43,23 @@
 }
 -(void)cancelBtnClick
 {
-    LOADING;
-    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNBOLCKTALKAPI, self.usr_id, sig, [ControllerManager getSID]];
-    NSLog(@"%@", url);
-    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        if (isFinish) {
-            NSLog(@"%@", load.dataDict);
-            ENDLOADING;
-            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"去黑成功"];
-//            [MyControl loadingSuccessWithContent:@"去黑成功" afterDelay:0.5];
-            self.deleteBlack();
-        }else{
-            LOADFAILED;
-        }
-    }];
-    [request release];
+    self.deleteBlack();
+//    LOADING;
+//    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
+//    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNBOLCKTALKAPI, self.usr_id, sig, [ControllerManager getSID]];
+//    NSLog(@"%@", url);
+//    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            NSLog(@"%@", load.dataDict);
+//            ENDLOADING;
+//            [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"去黑成功"];
+////            [MyControl loadingSuccessWithContent:@"去黑成功" afterDelay:0.5];
+//            self.deleteBlack();
+//        }else{
+//            LOADFAILED;
+//        }
+//    }];
+//    [request release];
 }
 -(void)configUIWithModel:(InfoModel *)model
 {
@@ -66,28 +67,29 @@
     self.usr_id = model.usr_id;
     
     if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-            //            [button setBackgroundImage:image forState:UIControlStateNormal];
-            headImage.image = image;
-        }else{
-            //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    //                    [button setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                    headImage.image = load.dataImage;
-//                    NSString * docDir = DOCDIR;
-//                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
-                }
-            }];
-            [request release];
-        }
+        [MyControl setImageForImageView:headImage Tx:model.tx isPet:NO isRound:YES];
+//        NSString * docDir = DOCDIR;
+//        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+//        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+//        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+//        if (image) {
+//            //            [button setBackgroundImage:image forState:UIControlStateNormal];
+//            headImage.image = image;
+//        }else{
+//            //下载头像
+//            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+//                    //                    [button setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                    headImage.image = load.dataImage;
+////                    NSString * docDir = DOCDIR;
+////                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+//                    [load.data writeToFile:txFilePath atomically:YES];
+//                }else{
+//                    NSLog(@"头像下载失败");
+//                }
+//            }];
+//            [request release];
+//        }
     }
 }
 @end

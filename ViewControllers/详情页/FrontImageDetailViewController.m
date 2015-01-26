@@ -13,7 +13,9 @@
 #import "SendGiftViewController.h"
 #import "TalkViewController.h"
 #import "BackImageDetailCommentViewCell.h"
-@interface FrontImageDetailViewController ()
+#import "ChatViewController.h"
+
+@interface FrontImageDetailViewController () <UMSocialUIDelegate>
 
 @end
 
@@ -62,6 +64,11 @@
 -(void)createGuide
 {
     guide = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"guide1.png"];
+    float a = [UIScreen mainScreen].bounds.size.width/[UIScreen mainScreen].bounds.size.height;
+    float b = 320/480.0;
+    if(a == b){
+        guide.frame = CGRectMake(0, 0, self.view.frame.size.width, 568);
+    }
     UITapGestureRecognizer * guideTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(guideTap:)];
     [guide addGestureRecognizer:guideTap];
     
@@ -75,8 +82,29 @@
         guide.alpha = 0;
     }completion:^(BOOL finished) {
         guide.hidden = YES;
+        [guide removeFromSuperview];
+        
+        if(!isBackSide){
+            [self swipeLeft:swipeLeft];
+        }
     }];
 }
+-(void)createGuide2
+{
+    guide = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"guide_detail_back_comment.png"];
+    float a = [UIScreen mainScreen].bounds.size.width/[UIScreen mainScreen].bounds.size.height;
+    float b = 320/480.0;
+    if(a == b){
+        guide.frame = CGRectMake(0, 0, self.view.frame.size.width, 568);
+    }
+    UITapGestureRecognizer * guideTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(guideTap:)];
+    [guide addGestureRecognizer:guideTap];
+    
+    //    FirstTabBarViewController * tabBar = [ControllerManager shareTabBar];
+    [self.view addSubview:guide];
+    [guideTap release];
+}
+
 -(void)animationWithView:(UIView *)view Size:(CGRect)r
 {
 //    [UIView animateWithDuration:0.3 animations:^{
@@ -154,6 +182,11 @@
     
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
+//            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSNull class]]) {
+//                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"图片离家出走了~"];
+//                [self closeClick];
+//                return;
+//            }
             if ([[load.dataDict objectForKey:@"confVersion"] isEqualToString:@"1.0"]) {
                 isTest = YES;
             }
@@ -166,7 +199,34 @@
             //            }
             self.picDict = load.dataDict;
             self.imageDict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
+            
+            //判断是否过期
+            NSDate * date = [NSDate date];
+            //当前时间戳
+            NSString * stamp = [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
+            //t为时间差
+            //24小时为期限
+            int t = 0;
+            //当前时间戳-时间戳 < 24h 才显示
+            if ([stamp intValue]-[[self.imageDict objectForKey:@"create_time"] intValue] < 24*60*60) {
+                t = 1;
+            }
+            if ([[self.imageDict objectForKey:@"is_food"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"is_food"] intValue] == 1 && t == 1) {
+                isFood = YES;
+            }else{
+                isFood = NO;
+            }
 
+//            NSLog(@"%@", [self.imageDict objectForKey:@"is_food"]);
+//            if ([[self.imageDict objectForKey:@"is_food"] isKindOfClass:[NSString class]]) {
+//                NSLog(@"string");
+//                if ([[self.imageDict objectForKey:@"is_food"] intValue] == 1) {
+//                    NSLog(@"1");
+//                }
+//            }else{
+//                
+//            }
+            
             if([[USER objectForKey:@"isSuccess"] intValue] && [[self.imageDict objectForKey:@"likers"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"likers"] rangeOfString:[USER objectForKey:@"usr_id"]].location != NSNotFound){
                 UIButton * button = (UIButton *)[self.view viewWithTag:100];
                 button.selected = YES;
@@ -198,8 +258,9 @@
             
             [self loadPetData];
         }else{
+            imageNotExist = YES;
             sv.hidden = NO;
-            LOADFAILED;
+            [MyControl popAlertWithView:self.view Msg:@"网络或数据异常"];
             NSLog(@"数据加载失败");
         }
     }];
@@ -296,6 +357,7 @@
                 [self.commentersArray addObject:model];
                 [model release];
             }
+            
             for (int i=0; i<self.commentersArray.count; i++) {
                 for (int j=0; j<self.usrIdArray.count; j++) {
                     if ([[self.commentersArray[i] usr_id] isEqualToString:self.usrIdArray[j]]) {
@@ -610,7 +672,6 @@
 #pragma mark -
 -(void)createUI
 {
-    
     bgView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     [self.view addSubview:bgView];
     
@@ -633,7 +694,7 @@
     [sv addGestureRecognizer:swipeLeft];
     
     swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
-    swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+    swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
     [sv addGestureRecognizer:swipeRight];
     
     //手势
@@ -653,6 +714,7 @@
     
     bigImageView = [[ClickImage alloc] initWithFrame:CGRectMake(8, 5, imageBgView.frame.size.width-16, 300)];
     bigImageView.canClick = YES;
+    bigImageView.image = [UIImage imageNamed:@"water_white.png"];
 //    bigImageView = [MyControl createImageViewWithFrame:CGRectMake(8, 5, imageBgView.frame.size.width-16, 300) ImageName:@""];
     [imageBgView addSubview:bigImageView];
     
@@ -820,7 +882,7 @@
         UIImageView * halfBall = [MyControl createImageViewWithFrame:CGRectMake(i*(self.view.frame.size.width/4.0), bottomBg.frame.size.height-50, self.view.frame.size.width/4.0, 50) ImageName:@"food_bottom_halfBall.png"];
         [bottomBg addSubview:halfBall];
         
-        UIButton * ballBtn = [MyControl createButtonWithFrame:CGRectMake(halfBall.frame.origin.x+halfBall.frame.size.width/2.0-42.5/2.0, 2, 85/2.0, 85/2.0) ImageName:unSelectedArray[i] Target:self Action:@selector(ballBtnClick:) Title:nil];
+        UIButton * ballBtn = [MyControl createButtonWithFrame:CGRectMake(halfBall.frame.origin.x+halfBall.frame.size.width/2.0-42.5/2.0, 2, 85/2.0, 94/2.0) ImageName:unSelectedArray[i] Target:self Action:@selector(ballBtnClick:) Title:nil];
         ballBtn.tag = 100+i;
         
         [ballBtn setBackgroundImage:[UIImage imageNamed:selectedArray[i]] forState:UIControlStateHighlighted];
@@ -902,10 +964,24 @@
         [self commentClick];
     }else if (a == 3) {
         //more
-        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"更多" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"分享", @"私信", @"举报此照", nil];
-        [sheet showInView:self.view];
-        sheet.tag = 401;
-        [sheet release];
+        NSLog(@"More");
+        if (!isMoreCreated) {
+            //create more
+            isMoreCreated = YES;
+            [self createMore];
+        }
+        //show more
+        menuBgBtn.hidden = NO;
+        CGRect rect = moreView.frame;
+        rect.origin.y -= rect.size.height;
+        [UIView animateWithDuration:0.3 animations:^{
+            moreView.frame = rect;
+            menuBgBtn.alpha = 0.6;
+        }];
+//        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"更多" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"分享", @"私信", @"举报此照", nil];
+//        [sheet showInView:self.view];
+//        sheet.tag = 401;
+//        [sheet release];
     }
 
 }
@@ -1126,16 +1202,222 @@
         isReply = NO;
         [self commentClick];
     }else if(btn.tag == 103){
-        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"分享" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"微信好友", @"朋友圈", @"微博", nil];
-        [sheet showInView:self.view];
-        sheet.tag = 400;
-        [sheet release];
+        NSLog(@"More");
+        if (!isMoreCreated) {
+            //create more
+            isMoreCreated = YES;
+            [self createMore];
+        }
+        //show more
+        menuBgBtn.hidden = NO;
+        CGRect rect = moreView.frame;
+        rect.origin.y -= rect.size.height;
+        [UIView animateWithDuration:0.3 animations:^{
+            moreView.frame = rect;
+            menuBgBtn.alpha = 0.6;
+        }];
+//        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"分享" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"微信好友", @"朋友圈", @"微博", nil];
+//        [sheet showInView:self.view];
+//        sheet.tag = 400;
+//        [sheet release];
     }else if(btn.tag == 104){
-        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"更多" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"私信", @"举报此照", nil];
-        [sheet showInView:self.view];
-        sheet.tag = 401;
-        [sheet release];
+        NSLog(@"More");
+        if (!isMoreCreated) {
+            //create more
+            isMoreCreated = YES;
+            [self createMore];
+        }
+        //show more
+        menuBgBtn.hidden = NO;
+        CGRect rect = moreView.frame;
+        rect.origin.y -= rect.size.height;
+        [UIView animateWithDuration:0.3 animations:^{
+            moreView.frame = rect;
+            menuBgBtn.alpha = 0.6;
+        }];
+//        UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"更多" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"私信", @"举报此照", nil];
+//        [sheet showInView:self.view];
+//        sheet.tag = 401;
+//        [sheet release];
     }
+}
+#pragma mark - 创建更多视图
+-(void)createMore
+{
+    menuBgBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(cancelBtnClick) Title:nil];
+    menuBgBtn.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:menuBgBtn];
+    menuBgBtn.alpha = 0;
+    menuBgBtn.hidden = YES;
+    
+    // 318*234
+    moreView = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height, 320, 180)];
+    moreView.backgroundColor = [ControllerManager colorWithHexString:@"efefef"];
+    [self.view addSubview:moreView];
+    
+    //orange line
+    UIView * orangeLine = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 4)];
+    orangeLine.backgroundColor = [ControllerManager colorWithHexString:@"fc7b51"];
+    [moreView addSubview:orangeLine];
+    //label
+    UILabel * shareLabel = [MyControl createLabelWithFrame:CGRectMake(15, 10, 80, 15) Font:13 Text:@"分享到"];
+    shareLabel.textColor = [UIColor blackColor];
+    [moreView addSubview:shareLabel];
+    //3个按钮
+    NSArray * arr = @[@"more_weixin.png", @"more_friend.png", @"more_sina.png"];
+    NSArray * arr2 = @[@"微信好友", @"朋友圈", @"微博"];
+    float spe = (self.view.frame.size.width-80-42*3)/2.0;
+    for(int i=0;i<3;i++){
+        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(40+i*(spe+42), 33, 42, 42) ImageName:arr[i] Target:self Action:@selector(shareClick:) Title:nil];
+        button.tag = 400+i;
+        [moreView addSubview:button];
+        
+        CGRect rect = button.frame;
+        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(rect.origin.x-10, rect.origin.y+rect.size.height+5, rect.size.width+20, 15) Font:12 Text:arr2[i]];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor blackColor];
+        //        label.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        [moreView addSubview:label];
+    }
+    
+    UIView * grayLine1 = [MyControl createViewWithFrame:CGRectMake(0, 105, 320, 2)];
+    grayLine1.backgroundColor = [ControllerManager colorWithHexString:@"e3e3e3"];
+    [moreView addSubview:grayLine1];
+    
+    float spe2 = (self.view.frame.size.width-20*2-72*3)/2.0;
+    UIButton * reportBtn = [MyControl createButtonWithFrame:CGRectMake(20, grayLine1.frame.origin.y+15, 72, 34) ImageName:@"front_report.png" Target:self Action:@selector(reportBtnClick) Title:nil];
+//    reportBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+//    reportBtn.backgroundColor = [UIColor lightGrayColor];
+//    reportBtn.layer.cornerRadius = 5;
+//    reportBtn.layer.masksToBounds = YES;
+//    reportBtn.showsTouchWhenHighlighted = YES;
+    [moreView addSubview:reportBtn];
+    
+    UIButton * addBtn = [MyControl createButtonWithFrame:CGRectMake(reportBtn.frame.origin.x+reportBtn.frame.size.width+spe2, grayLine1.frame.origin.y+15, 72, 34) ImageName:@"front_p.png" Target:self Action:@selector(addBtnClick) Title:nil];
+//    addBtn.layer.cornerRadius = 8;
+//    addBtn.layer.masksToBounds = YES;
+//    [addBtn setBackgroundImage:[[UIImage imageNamed:@"more_greenBg2.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:25] forState:UIControlStateNormal];
+//    [addBtn setBackgroundImage:[[UIImage imageNamed:@"more_orangeBg2.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:25] forState:UIControlStateSelected];
+//    [addBtn setTitle:@"捧ing" forState:UIControlStateSelected];
+//    addBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [moreView addSubview:addBtn];
+    
+    UIButton * msgBtn = [MyControl createButtonWithFrame:CGRectMake(addBtn.frame.origin.x+addBtn.frame.size.width+spe2, grayLine1.frame.origin.y+15, 72, 34) ImageName:@"front_msg.png" Target:self Action:@selector(msgBtnClick) Title:nil];
+//    msgBtn.layer.cornerRadius = 8;
+//    msgBtn.layer.masksToBounds = YES;
+//    [msgBtn setBackgroundImage:[[UIImage imageNamed:@"more_greenBg2.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:25] forState:UIControlStateNormal];
+//    [msgBtn setBackgroundImage:[[UIImage imageNamed:@"more_orangeBg2.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:25] forState:UIControlStateSelected];
+//    [msgBtn setTitle:@"捧ing" forState:UIControlStateSelected];
+//    msgBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [moreView addSubview:msgBtn];
+}
+#pragma mark -
+-(void)reportBtnClick
+{
+    NSLog(@"举报");
+    [self cancelBtnClick];
+    [self reportImage];
+}
+-(void)addBtnClick
+{
+    NSLog(@"pTA");
+    [self cancelBtnClick];
+    [self pPet];
+}
+-(void)msgBtnClick
+{
+    NSLog(@"私信");
+    [self cancelBtnClick];
+    [self sendMessage];
+}
+
+#pragma mark - 分享截图
+//-(void)shareClick:(UIButton *)button
+//{
+//    [self cancelBtnClick];
+//    
+//    UIImage * screenshotImage = [MyControl imageWithView:tv];
+//    
+//    int a = button.tag-400;
+//    
+//    if (a == 0) {
+//        NSLog(@"微信");
+//        //强制分享图片
+//        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//            if (response.responseCode == UMSResponseCodeSuccess) {
+//                NSLog(@"分享成功！");
+//                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//                //                StartLoading;
+//                //                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+//            }else{
+//                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//                //                StartLoading;
+//                //                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+//            }
+//            
+//        }];
+//    }else if(a == 1){
+//        NSLog(@"朋友圈");
+//        //强制分享图片
+//        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
+//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//            if (response.responseCode == UMSResponseCodeSuccess) {
+//                NSLog(@"分享成功！");
+//                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//                //                StartLoading;
+//                //                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+//            }else{
+//                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//                //                StartLoading;
+//                //                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+//            }
+//            
+//        }];
+//    }else{
+//        NSLog(@"微博");
+//        NSString * str = @"雷达报告发现一只萌宠，火速围观！http://home4pet.aidigame.com/（分享自@宠物星球社交应用）";
+//        //        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//        //            if (response.responseCode == UMSResponseCodeSuccess) {
+//        //                NSLog(@"分享成功！");
+//        //                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//        //                //                StartLoading;
+//        //                //                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+//        //            }else{
+//        //                NSLog(@"失败原因：%@", response);
+//        //                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//        //                //                StartLoading;
+//        //                //                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+//        //            }
+//        //
+//        //        }];
+//        
+//        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+//        NSLog(@"%d", oauth);
+//        if (oauth) {
+//            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+//                [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:screenshotImage socialUIDelegate:self];
+//                //设置分享内容和回调对象
+//                [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+//            }];
+//        }else{
+//            [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:screenshotImage socialUIDelegate:self];
+//            //设置分享内容和回调对象
+//            [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+//        }
+//    }
+//}
+-(void)cancelBtnClick
+{
+    NSLog(@"cancel");
+    CGRect rect = moreView.frame;
+    rect.origin.y += rect.size.height;
+    [UIView animateWithDuration:0.3 animations:^{
+        moreView.frame = rect;
+        menuBgBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        menuBgBtn.hidden = YES;
+    }];
 }
 #pragma mark - commentClick
 -(void)commentClick
@@ -1394,41 +1676,41 @@
     }];
 }
 #pragma mark -
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    NSLog(@"%d", buttonIndex);
-    if (actionSheet.tag == 401) {
+//-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+//{
+//    NSLog(@"%d", buttonIndex);
+//    if (actionSheet.tag == 401) {
+////        if (buttonIndex == 0) {
+////            //查看大图
+////            LargeImage * large = [[LargeImage alloc] initWithFrame:[UIScreen mainScreen].bounds];
+////            [self.view addSubview:large];
+////            [large modifyUIWithImage:bigImageView.image];
+////            [large release];
+////        }else
 //        if (buttonIndex == 0) {
-//            //查看大图
-//            LargeImage * large = [[LargeImage alloc] initWithFrame:[UIScreen mainScreen].bounds];
-//            [self.view addSubview:large];
-//            [large modifyUIWithImage:bigImageView.image];
-//            [large release];
-//        }else
-        if (buttonIndex == 0) {
-            //分享
-            UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"分享" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"微信好友", @"朋友圈", @"微博", nil];
-            [sheet showInView:self.view];
-            sheet.tag = 400;
-            [sheet release];
-        }else if (buttonIndex == 1) {
-            //私信
-            [self sendMessage];
-        }else if(buttonIndex == 2){
-            //举报此照
-            [self reportImage];
-        }
-    }else if(actionSheet.tag == 400){
-        [self shareClick:buttonIndex];
-//        if (buttonIndex == 0) {
-//            //微信好友
+//            //分享
+//            UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:@"分享" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"微信好友", @"朋友圈", @"微博", nil];
+//            [sheet showInView:self.view];
+//            sheet.tag = 400;
+//            [sheet release];
 //        }else if (buttonIndex == 1) {
-//            //朋友圈
-//        }else if (buttonIndex == 2) {
-//            //微博
+//            //私信
+//            [self sendMessage];
+//        }else if(buttonIndex == 2){
+//            //举报此照
+//            [self reportImage];
 //        }
-    }
-}
+//    }else if(actionSheet.tag == 400){
+////        [self shareClick:buttonIndex];
+////        if (buttonIndex == 0) {
+////            //微信好友
+////        }else if (buttonIndex == 1) {
+////            //朋友圈
+////        }else if (buttonIndex == 2) {
+////            //微博
+////        }
+//    }
+//}
 #pragma mark - 举报图片
 -(void)reportImage
 {
@@ -1456,26 +1738,160 @@
         return;
     }
     NSLog(@"发私信");
-    TalkViewController * vc = [[TalkViewController alloc] init];
-    vc.friendName = [self.petDict objectForKey:@"u_name"];
-    vc.usr_id = [self.petDict objectForKey:@"master_id"];
-    vc.otherTX = [self.petDict objectForKey:@"u_tx"];
-    [self presentViewController:vc animated:YES completion:nil];
-    [vc release];
+    if([[self.petDict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]){
+        [MyControl popAlertWithView:self.view Msg:@"不能给自己发私信哦~"];
+        return;
+    }
+    ChatViewController * chatController = [[ChatViewController alloc] initWithChatter:[self.petDict objectForKey:@"master_id"] isGroup:NO];
+    chatController.isFromCard = YES;
+    chatController.nickName = [USER objectForKey:@"name"];
+    chatController.tx = [USER objectForKey:@"tx"];
+    chatController.other_nickName = [self.petDict objectForKey:@"u_name"];
+    chatController.other_tx = [self.petDict objectForKey:@"u_tx"];
+    [self presentViewController:chatController animated:YES completion:nil];
+    [chatController release];
+}
+#pragma mark - 捧TA
+-(void)pPet
+{
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        return;
+    }
+    if([[self.petDict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]){
+        [MyControl popAlertWithView:self.view Msg:@"你已经捧TA了~"];
+        return;
+    }
+    //判断是否捧过
+    NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            ENDLOADING;
+            NSLog(@"%@", load.dataDict);
+//            [self.petsDataArray removeAllObjects];
+            
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            BOOL isP = NO;
+            for(int i=0; i<array.count; i++){
+                NSDictionary * dict = array[i];
+                if ([[dict objectForKey:@"aid"]isEqualToString:[self.petDict objectForKey:@"aid"]]) {
+                    isP = YES;
+                    break;
+                }
+            }
+            
+            if (isP) {
+                [MyControl popAlertWithView:self.view Msg:@"你已经捧TA了~"];
+                return;
+            }else{
+                Alert_oneBtnView * oneBtn = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+                if (array.count >= 10) {
+                    int cost = array.count*5;
+                    if (cost>100) {
+                        cost = 100;
+                    }
+                    if(cost>[[USER objectForKey:@"gold"] intValue]){
+                        //余额不足
+                        [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                        return;
+                    }
+                    oneBtn.type = 2;
+                    oneBtn.petsNum = array.count;
+                    [oneBtn makeUI];
+                    [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+                    [oneBtn release];
+                }else{
+                    oneBtn.type = 2;
+                    oneBtn.petsNum = array.count;
+                    [oneBtn makeUI];
+                    [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+                    [oneBtn release];
+                }
+                oneBtn.jump = ^(){
+                    //                    [MyControl startLoadingWithStatus:@"加入中..."];
+                    LOADING;
+                    NSString *joinPetCricleSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [self.petDict objectForKey:@"aid"]]];
+                    NSString *joinPetCricleString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",JOINPETCRICLEAPI,[self.petDict objectForKey:@"aid"],joinPetCricleSig,[ControllerManager getSID]];
+                    NSLog(@"加入圈子:%@",joinPetCricleString);
+                    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:joinPetCricleString Block:^(BOOL isFinish, httpDownloadBlock *load) {
+                        if (isFinish) {
+                            NSLog(@"加入成功数据：%@",load.dataDict);
+                            if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
+                                //
+//                                pBtn.selected = YES;
+//                                UILabel * tempLabel = (UILabel *)[headerView viewWithTag:101];
+//                                tempLabel.text = [NSString stringWithFormat:@"%d", [tempLabel.text intValue]+1];
+                                if (array.count>=10) {
+                                    int cost = array.count*5;
+                                    if (cost>100) {
+                                        [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-100] forKey:@"gold"];
+                                    }else{
+                                        [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-cost] forKey:@"gold"];
+                                    }
+                                    
+                                }
+                                
+                            }
+                            //                            [MyControl loadingSuccessWithContent:@"加入成功" afterDelay:0.5f];
+                            ENDLOADING;
+                            //捧Ta成功界面
+                            NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                            noClose.confirm = ^(){};
+                            [self.view addSubview:noClose];
+                            NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
+                            [noClose configUIWithTx:[self.petDict objectForKey:@"tx"] Name:[self.petDict objectForKey:@"name"] Percent:percent];
+                            [UIView animateWithDuration:0.3 animations:^{
+                                noClose.alpha = 1;
+                            }];
+                        }else{
+                            LOADFAILED;
+                            NSLog(@"加入国家失败");
+                        }
+                    }];
+                    [request release];
+                };
+            }
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
 }
 
 #pragma mark - 分享截图
--(void)shareClick:(int)index
+-(void)shareClick:(UIButton *)btn
 {
-    
+    int index = btn.tag;
     [MobClick event:@"photo_share"];
     
-    if (index == 0) {
+    if (index == 400) {
         NSLog(@"微信");
         //强制分享图片
 //        [self.imageDict objectForKey:@"cmt"]
-        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:[self.petDict objectForKey:@"name"] image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+        [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@", WEBBEGFOODAPI, self.img_id];
+        
+        NSString * str = nil;
+        if(isFood){
+            [UMSocialData defaultData].extConfig.wechatSessionData.title = @"轻轻一点，免费赏粮！我的口粮全靠你啦~";
+            if ([[self.imageDict objectForKey:@"cmt"] length]) {
+                str = [self.imageDict objectForKey:@"cmt"];
+            }else{
+                str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
+            }
+        }else{
+            [UMSocialData defaultData].extConfig.wechatSessionData.title = [NSString stringWithFormat:@"我是%@，你有没有爱上我？", [self.petDict objectForKey:@"name"]];
+            if ([[self.imageDict objectForKey:@"cmt"] length]) {
+                str = [self.imageDict objectForKey:@"cmt"];
+            }else{
+                str = @"这是我最新的美照哦~~打滚儿求表扬~~";
+            }
+        }
+       
+
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self loadShareAPI];
@@ -1491,11 +1907,29 @@
             }
             
         }];
-    }else if(index == 1){
+    }else if(index == 401){
         NSLog(@"朋友圈");
         //强制分享图片
-        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:[self.petDict objectForKey:@"name"] image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", WEBBEGFOODAPI, self.img_id];
+        
+        NSString * str = nil;
+        if(isFood){
+            [UMSocialData defaultData].extConfig.wechatTimelineData.title = @"轻轻一点，免费赏粮！我的口粮全靠你啦~";
+            if ([[self.imageDict objectForKey:@"cmt"] length]) {
+                str = [self.imageDict objectForKey:@"cmt"];
+            }else{
+                str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
+            }
+        }else{
+            [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"我是%@，你有没有爱上我？", [self.petDict objectForKey:@"name"]];
+            if ([[self.imageDict objectForKey:@"cmt"] length]) {
+                str = [self.imageDict objectForKey:@"cmt"];
+            }else{
+                str = @"这是我最新的美照哦~~打滚儿求表扬~~";
+            }
+        }
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self loadShareAPI];
@@ -1511,33 +1945,76 @@
             }
             
         }];
-    }else if(index == 2){
+    }else if(index == 402){
         NSLog(@"微博");
         NSString * str = nil;
-        if([[self.imageDict objectForKey:@"topic_name"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"topic_name"] length]){
-            str = [NSString stringWithFormat:@"%@ #%@# %@", [self.imageDict objectForKey:@"cmt"], [self.imageDict objectForKey:@"topic_name"], @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
+        if(isFood){
+            if ([[self.imageDict objectForKey:@"cmt"] length]) {
+                str = [self.imageDict objectForKey:@"cmt"];
+            }else{
+                str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
+            }
         }else{
-            str = [NSString stringWithFormat:@"%@%@", [self.imageDict objectForKey:@"cmt"], @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
+            if ([[self.imageDict objectForKey:@"cmt"] length]) {
+                str = [self.imageDict objectForKey:@"cmt"];
+            }else{
+                str = @"这是我最新的美照哦~~打滚儿求表扬~~";
+            }
         }
         
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-            if (response.responseCode == UMSResponseCodeSuccess) {
-                NSLog(@"分享成功！");
-                [self loadShareAPI];
-//                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
-                
-                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
-//                StartLoading;
-//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
-            }else{
-                NSLog(@"失败原因：%@", response);
-
-                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
-//                StartLoading;
-//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
-            }
-            
-        }];
+        NSString * last = [NSString stringWithFormat:@"%@%@（分享自@宠物星球社交应用）", WEBBEGFOODAPI, self.img_id];
+        if([[self.imageDict objectForKey:@"topic_name"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"topic_name"] length]){
+            str = [NSString stringWithFormat:@"%@ #%@# %@", str, [self.imageDict objectForKey:@"topic_name"], last];
+        }else{
+            str = [NSString stringWithFormat:@"%@%@", str, last];
+        }
+        
+        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+        NSLog(@"%d", oauth);
+        if (oauth) {
+            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:bigImageView.image socialUIDelegate:self];
+                //设置分享内容和回调对象
+                [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+            }];
+        }else{
+            [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:bigImageView.image socialUIDelegate:self];
+            //设置分享内容和回调对象
+            [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+        }
+        
+//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//            if (response.responseCode == UMSResponseCodeSuccess) {
+//                NSLog(@"分享成功！");
+//                [self loadShareAPI];
+////                shareNum.text = [NSString stringWithFormat:@"%d", [shareNum.text intValue]+1];
+//                
+//                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+////                StartLoading;
+////                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+//            }else{
+//                NSLog(@"失败原因：%@", response);
+//
+//                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+////                StartLoading;
+////                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+//            }
+//
+//        }];
+    }
+}
+#pragma mark -
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+{
+//    NSLog(@"%@", response);
+    if (response.responseCode == UMSResponseCodeSuccess) {
+        NSLog(@"分享成功！");
+        [self loadShareAPI];
+        [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+    }else{
+        NSLog(@"失败原因：%@", response);
+        
+        [MyControl popAlertWithView:self.view Msg:@"分享失败"];
     }
 }
 #pragma mark - 分享API
@@ -1582,6 +2059,7 @@
 {
     NSLog(@"%d", btn.tag);
     
+    int ori = triangleIndex;
     triangleIndex = btn.tag%100;
     
     UIButton * tempBtn = nil;
@@ -1591,28 +2069,41 @@
         tempBtn = (UIButton *)[imageBgView2 viewWithTag:200+triangleIndex];
         if (btn.tag == 500) {
             if (!isLoaded[0]) {
-                //                isLoaded[0] = 1;
+                isLoaded[0] = 1;
                 [self loadLikersData];
+            }else if(ori == triangleIndex){
+                UIButton * zanBtn = (UIButton *)[self.view viewWithTag:100];
+                [self bottomClick:zanBtn];
             }
         }else if (btn.tag == 501) {
             if (!isLoaded[1]) {
-//                isLoaded[1] = 1;
+                isLoaded[1] = 1;
                 [self loadSendersData];
+            }else if(ori == triangleIndex){
+                UIButton * giftBtn = (UIButton *)[self.view viewWithTag:101];
+                [self bottomClick:giftBtn];
             }
         }else if (btn.tag == 502) {
             if (!isLoaded[2]) {
-//                isLoaded[2] = 1;
+                isLoaded[2] = 1;
                 [self loadCommentersData];
+            }else if(ori == triangleIndex){
+                UIButton * cmtBtn = (UIButton *)[self.view viewWithTag:102];
+                [self bottomClick:cmtBtn];
             }
         }else if (btn.tag == 503) {
             if (!isLoaded[3]) {
-//                isLoaded[3] = 1;
+                isLoaded[3] = 1;
                 if ([[self.imageDict objectForKey:@"sharers"] isKindOfClass:[NSString class]]) {
                     [self loadSharersData];
                 }else{
                     isLoaded[3] = 1;
                 }
-                
+            }else if(ori == triangleIndex){
+                if (ori == triangleIndex) {
+                    UIButton * shareBtn = (UIButton *)[self.view viewWithTag:103];
+                    [self bottomClick:shareBtn];
+                }
             }
         }
     }
@@ -1816,12 +2307,21 @@
 #pragma mark -
 -(void)swipeLeft:(UISwipeGestureRecognizer *)swipeLeft
 {
+    if (self.commentersArray.count && ![[USER objectForKey:@"guide_detail_back_comment"] intValue]) {
+        [USER setObject:@"1" forKey:@"guide_detail_back_comment"];
+        [self createGuide2];
+    }
+    
     NSLog(@"swipeLeft");
+    if (imageNotExist) {
+        [MyControl popAlertWithView:self.view  Msg:@"网络或数据异常"];
+        return;
+    }
     isBackSide = !isBackSide;
     if (isBackSide) {
         if(!isBackLoaded){
             isBackLoaded = YES;
-            [self loadPetData];
+//            [self loadPetData];
         }
         sv.hidden = YES;
         sv2.hidden = NO;
@@ -1847,12 +2347,21 @@
 }
 -(void)swipeRight:(UISwipeGestureRecognizer *)swipeRight
 {
+    if (self.commentersArray.count && ![[USER objectForKey:@"guide_detail_back_comment"] intValue]) {
+        [USER setObject:@"1" forKey:@"guide_detail_back_comment"];
+        [self createGuide2];
+    }
+    
     NSLog(@"swipeRight");
+    if (imageNotExist) {
+        [MyControl popAlertWithView:self.view  Msg:@"网络或数据异常"];
+        return;
+    }
     isBackSide = !isBackSide;
     if (isBackSide) {
         if(!isBackLoaded){
             isBackLoaded = YES;
-            [self loadPetData];
+//            [self loadPetData];
         }
         
         sv.hidden = YES;
@@ -1894,6 +2403,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

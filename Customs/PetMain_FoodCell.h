@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BegFoodListModel.h"
 
 @interface PetMain_FoodCell : UITableViewCell
 {
@@ -19,5 +20,12 @@
     UIView * selectView;
     UIButton * heartBtn;
     NSTimer * timer;
+    UIView * line;
 }
+//@property(nonatomic,copy)NSString * petName;
+@property(nonatomic,copy)NSString * img_id;
+@property(nonatomic,copy)void (^rewardClick)(UILabel *);
+
+-(void)configUI:(BegFoodListModel *)model;
+-(void)reward;
 @end

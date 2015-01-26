@@ -11,7 +11,7 @@
 #import "MessageCell.h"
 #import "MessageFrame.h"
 #import "SingleTalkModel.h"
-#import "MessageModel.h"
+#import "MessageModel2.h"
 #import "FrontImageDetailViewController.h"
 #import "AddressViewController.h"
 //#import "NoticeViewController.h";
@@ -122,7 +122,7 @@
             
             self.talkDataArray = [NSMutableArray arrayWithArray:msgModelArray];
             for (int i=0; i<msgModelArray.count;i++) {
-                MessageModel * model = msgModelArray[i];
+                MessageModel2 * model = msgModelArray[i];
                 if ([model.usr_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
                     [self presentNewMessageWithSend:YES time:model.time msg:model.msg];
                 }else{
@@ -245,7 +245,7 @@
         NSLog(@"key:%@--value:%@", self.keysArray[i], [dict objectForKey:self.keysArray[i]]);
         [self.valuesArray addObject:[dict objectForKey:self.keysArray[i]]];
         //
-        MessageModel * msgModel = [[MessageModel alloc] init];
+        MessageModel2 * msgModel = [[MessageModel2 alloc] init];
         msgModel.time = self.keysArray[i];
         msgModel.usr_id = self.usr_id;
         
@@ -363,7 +363,7 @@
     NSString * timeStamp = [NSString stringWithFormat:@"%d", (int)[date timeIntervalSince1970]];
     
     //存到本地
-    MessageModel * model = [[MessageModel alloc] init];
+    MessageModel2 * model = [[MessageModel2 alloc] init];
     model.msg = self.lastMessage;
     model.time = timeStamp;
     model.usr_id = [USER objectForKey:@"usr_id"];
@@ -817,6 +817,9 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

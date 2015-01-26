@@ -13,9 +13,10 @@
 #import "DiscoveryViewController.h"
 #import "CenterViewController.h"
 #import "SingleTalkModel.h"
-#import "MessageModel.h"
+#import "MessageModel2.h"
+#import "EaseMob.h"
 
-@interface FirstTabBarViewController ()
+@interface FirstTabBarViewController () <IChatManagerDelegate>
 
 @end
 
@@ -36,11 +37,26 @@
         CenterViewController * vc4 = self.viewControllers[3];
         [vc4 refresh];
     }
+    //
+    int a = [MyControl returnUnreadMessageCount];
+    if (a) {
+        self.msgNum.text = [NSString stringWithFormat:@"%d", a];
+        self.msgNumBg.hidden = NO;
+    }else{
+        self.msgNum.text = @"0";
+        self.msgNumBg.hidden = YES;
+    }
 }
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     isLoaded = YES;
+    
+//    if ([[USER objectForKey:@"hasRemoteNotification"] intValue]) {
+//        [USER setObject:@"0" forKey:@"hasRemoteNotification"];
+//        UIButton * button = (UIButton *)[bottomBg viewWithTag:103];
+//        [self ballBtnClick:button];
+//    }
 }
 -(void)createGuide
 {
@@ -58,16 +74,28 @@
         guide.alpha = 0;
     }completion:^(BOOL finished) {
         guide.hidden = YES;
+        [guide removeFromSuperview];
     }];
 }
 -(void)refreshMessageNum
 {
-    [self getNewMessage];
+//    [self getNewMessage];
+    int a = [MyControl returnUnreadMessageCount];
+    if (a) {
+        self.msgNum.text = [NSString stringWithFormat:@"%d", a];
+        self.msgNumBg.hidden = NO;
+    }else{
+        self.msgNum.text = @"0";
+        self.msgNumBg.hidden = YES;
+    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    [self registerNotifications];
+    
     MyStarViewController * vc1 = [[MyStarViewController alloc] init];
     FoodViewController * vc2 = [[FoodViewController alloc] init];
     DiscoveryViewController * vc3 = [[DiscoveryViewController alloc] init];
@@ -83,6 +111,7 @@
     
     self.viewControllers = @[vc1, vc2, vc3, vc4];
     self.selectedIndex = 1;
+    
     self.tabBar.hidden = YES;
     [vc1 release];
     [vc2 release];
@@ -113,8 +142,9 @@
     sv.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*2);
     sv.delegate = self;
     [self.view addSubview:sv];
+    [sv release];
     
-    UIImageView * bgImageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@""];
+    bgImageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@""];
     if (self.preImage) {
         bgImageView.image = [self.preImage applyBlurWithRadius:20 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
     }else{
@@ -147,7 +177,23 @@
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     if (sv.contentOffset.y == self.view.frame.size.height) {
-        sv.hidden = YES;
+//        NSLog(@"%d", [bgImageView retainCount]);
+//        [bgImageView release];
+//        NSLog(@"%d", [bgImageView retainCount]);
+//        [bgImageView removeFromSuperview];
+//        NSLog(@"%d", [bgImageView retainCount]);
+//        bgImageView = nil;
+//        NSLog(@"%d", [bgImageView retainCount]);
+        
+//        [sv removeFromSuperview];
+//        NSLog(@"%d", [sv retainCount]);
+        [sv removeFromSuperview];
+//        NSLog(@"%d", [sv retainCount]);
+//        
+//        [sv release];
+//        NSLog(@"%d", [sv retainCount]);
+//        sv = nil;
+//        NSLog(@"%d", [sv retainCount]);
     }
 }
 -(void)modifyUI
@@ -198,7 +244,7 @@
         UIImageView * halfBall = [MyControl createImageViewWithFrame:CGRectMake(i*(self.view.frame.size.width/4.0), bottomBg.frame.size.height-50, self.view.frame.size.width/4.0, 50) ImageName:@"food_bottom_halfBall.png"];
         [bottomBg addSubview:halfBall];
         
-        UIButton * ballBtn = [MyControl createButtonWithFrame:CGRectMake(halfBall.frame.origin.x+halfBall.frame.size.width/2.0-42.5/2.0, 2, 85/2.0, 85/2.0) ImageName:unSelectedArray[i] Target:self Action:@selector(ballBtnClick:) Title:nil];
+        UIButton * ballBtn = [MyControl createButtonWithFrame:CGRectMake(halfBall.frame.origin.x+halfBall.frame.size.width/2.0-42.5/2.0, 2, 85/2.0, 94/2.0) ImageName:unSelectedArray[i] Target:self Action:@selector(ballBtnClick:) Title:nil];
         ballBtn.tag = 100+i;
         
         [ballBtn setBackgroundImage:[UIImage imageNamed:selectedArray[i]] forState:UIControlStateSelected];
@@ -328,7 +374,7 @@
             
             /**********************/
             NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
-            NSLog(@"%@", [[MyControl returnDictionaryWithDataPath:path] allKeys]);
+            NSLog(@"历史消息：%@", [[MyControl returnDictionaryWithDataPath:path] allKeys]);
             
             if (self.hasNewMsg) {
                 //分解数据添加到7个数组中
@@ -561,7 +607,7 @@
     //    NSLog(@"%@", self.keysArray);
     for (int i=0;i<self.keysArray.count;i++) {
         //        NSLog(@"key:%@--value:%@", self.keysArray[i], [dict objectForKey:self.keysArray[i]]);
-        MessageModel * msgModel = [[MessageModel alloc] init];
+        MessageModel2 * msgModel = [[MessageModel2 alloc] init];
         msgModel.time = self.keysArray[i];
         msgModel.usr_id = usrID;
         
@@ -587,8 +633,40 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
+}
+#pragma mark - private
+
+-(void)registerNotifications
+{
+    [self unregisterNotifications];
+    
+    [[EaseMob sharedInstance].chatManager addDelegate:self delegateQueue:nil];
+    //    [[EMSDKFull sharedInstance].callManager addDelegate:self delegateQueue:nil];
 }
 
+-(void)unregisterNotifications
+{
+    [[EaseMob sharedInstance].chatManager removeDelegate:self];
+    //    [[EMSDKFull sharedInstance].callManager removeDelegate:self];
+}
+#pragma mark - IChatManagerDelegate 登录状态变化
+
+- (void)didLoginFromOtherDevice
+{
+    [[EaseMob sharedInstance].chatManager asyncLogoffWithCompletion:^(NSDictionary *info, EMError *error) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"你的账号已在其他地方登录"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:nil,
+                                  nil];
+        alertView.tag = 100;
+        [alertView show];
+    } onQueue:nil];
+}
 /*
 #pragma mark - Navigation
 

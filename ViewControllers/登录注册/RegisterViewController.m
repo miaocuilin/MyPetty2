@@ -12,7 +12,7 @@
 #import "OpenUDID.h"
 #import "ASIFormDataRequest.h"
 #import "IQKeyboardManager.h"
-
+#import "EaseMob.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
 #import <AviarySDK/AviarySDK.h>
@@ -56,7 +56,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     // Allocate Sessions Array
     NSMutableArray * sessions = [NSMutableArray arrayWithCapacity:0];
     [self setSessions:sessions];
-    [sessions release];
     
     // Start the Aviary Editor OpenGL Load
     [AFOpenGLManager beginOpenGLLoad];
@@ -1296,11 +1295,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        str2 = [NSString stringWithFormat:@"age=%d&code=&gender=%d&type=%d&wechat=&weibo=dog&cat", age, gender, type];
     if ([[USER objectForKey:@"weChatUserInfo"] isKindOfClass:[NSDictionary class]]) {
         if (self.isAdoption) {
-            str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&wechat=%@&weibo=dog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
-            str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=%@&weibo=", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
+            str2 = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&wechat=%@&weibo=dog&cat", age, self.petInfoModel.aid, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"unionid"]];
+            str = [NSString stringWithFormat:@"age=%d&aid=%@&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=%@&weibo=", age, self.petInfoModel.aid, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"unionid"]];
         }else{
-            str2 = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&wechat=%@&weibo=dog&cat", age, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
-            str = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=%@&weibo=", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"]];
+            str2 = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&type=%d&u_city=%d&u_gender=%d&wechat=%@&weibo=dog&cat", age, gender, type, self.u_city, self.u_gender, [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"unionid"]];
+            str = [NSString stringWithFormat:@"age=%d&aid=0&code=&gender=%d&name=%@&type=%d&u_city=%d&u_gender=%d&u_name=%@&wechat=%@&weibo=", age, gender, [self.name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], type, self.u_city, self.u_gender, [self.u_name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], [[USER objectForKey:@"weChatUserInfo"] objectForKey:@"unionid"]];
         }
     }else if([[USER objectForKey:@"sinaUserInfo"] isKindOfClass:[NSDictionary class]]){
         if (self.isAdoption) {
@@ -1435,7 +1434,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
                 [USER setObject:@"1" forKey:@"isJustRegister"];
                 if([[USER objectForKey:@"weChatUserInfo"] isKindOfClass:[NSDictionary class]]){
-                    [USER setObject:[[USER objectForKey:@"weChatUserInfo"] objectForKey:@"openid"] forKey:@"wechat"];
+                    [USER setObject:[[USER objectForKey:@"weChatUserInfo"] objectForKey:@"unionid"] forKey:@"wechat"];
                 }else if([[USER objectForKey:@"sinaUserInfo"] isKindOfClass:[NSDictionary class]]){
                     [USER setObject:[[USER objectForKey:@"sinaUserInfo"] objectForKey:@"uid"] forKey:@"weibo"];
                 }
@@ -1575,7 +1574,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //                [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
 //                [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
     if (self.isAdoption) {
-        [USER setObject:@"505" forKey:@"gold"];
+        [USER setObject:@"0" forKey:@"gold"];
         [USER setObject:@"1" forKey:@"lv"];
         [USER setObject:@"1" forKey:@"con_login"];
         [USER setObject:@"0" forKey:@"exp"];
@@ -1584,12 +1583,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else if(self.isOldUser){
         [USER setObject:@"0" forKey:@"rank"];
     }else{
-        [USER setObject:@"505" forKey:@"gold"];
+        [USER setObject:@"0" forKey:@"gold"];
         [USER setObject:@"1" forKey:@"lv"];
         [USER setObject:@"1" forKey:@"con_login"];
         [USER setObject:@"0" forKey:@"exp"];
         [USER setObject:@"0" forKey:@"rank"];
         [USER setObject:@"5" forKey:@"food"];
+    }
+    if(!self.isOldUser){
+        [self loadUserInfo];
     }
 //                [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
     
@@ -1651,6 +1653,87 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            }
 //        }
 //    }];
+}
+-(void)loadUserInfo
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, [USER objectForKey:@"usr_id"], sig,[ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            [USER setObject:[load.dataDict objectForKey:@"confVersion"] forKey:@"confVersion"];
+            //SID未过期，直接获取用户数据
+            NSLog(@"用户数据：%@", load.dataDict);
+            NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            
+            //先登出再登录环信
+            [[EaseMob sharedInstance].chatManager asyncLogoffWithCompletion:^(NSDictionary *info, EMError *error) {
+                //                NSLog(@"%@", info);
+                NSLog(@"%@", [USER objectForKey:@"usr_id"]);
+                [[EaseMob sharedInstance].chatManager asyncLoginWithUsername:[USER objectForKey:@"usr_id"] password:[dict objectForKey:@"code"] completion:^(NSDictionary *loginInfo, EMError *error) {
+                    if (!error) {
+                        NSLog(@"登录成功");
+                        [[EaseMob sharedInstance].chatManager setApnsNickname:[dict objectForKey:@"name"]];
+                        if (![[USER objectForKey:@"setMsgDetail"] intValue]) {
+                            EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
+                            if(options.displayStyle != ePushNotificationDisplayStyle_messageDetail){
+                                options.displayStyle = ePushNotificationDisplayStyle_messageDetail;
+                                [[EaseMob sharedInstance].chatManager asyncUpdatePushOptions:options completion:^(EMPushNotificationOptions *options, EMError *error) {
+                                    if (error) {
+                                        NSLog(@"%@", error);
+                                    }else{
+                                        NSLog(@"消息推送类型更新成功");
+                                        [USER setObject:@"1" forKey:@"setMsgDetail"];
+                                    }
+                                } onQueue:nil];
+                            }
+                        }
+                    }else{
+                        NSLog(@"%@", error);
+                    }
+                } onQueue:nil];
+            } onQueue:nil];
+            
+            [USER setObject:[dict objectForKey:@"a_name"] forKey:@"a_name"];
+            if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
+                [USER setObject:[dict objectForKey:@"a_tx"] forKey:@"a_tx"];
+            }
+            [USER setObject:[dict objectForKey:@"inviter"] forKey:@"inviter"];
+            [USER setObject:[dict objectForKey:@"age"] forKey:@"age"];
+            [USER setObject:[dict objectForKey:@"gender"] forKey:@"gender"];
+            [USER setObject:[dict objectForKey:@"name"] forKey:@"name"];
+            [USER setObject:[dict objectForKey:@"city"] forKey:@"city"];
+            [USER setObject:[dict objectForKey:@"exp"] forKey:@"oldexp"];
+            [USER setObject:[dict objectForKey:@"exp"] forKey:@"exp"];
+            [USER setObject:[dict objectForKey:@"lv"] forKey:@"lv"];
+            
+            [USER setObject:[USER objectForKey:@"gold"] forKey:@"oldgold"];
+            [USER setObject:[dict objectForKey:@"gold"] forKey:@"gold"];
+            [USER setObject:[NSString stringWithFormat:@"%@", [dict objectForKey:@"food"]] forKey:@"food"];
+            [USER setObject:[dict objectForKey:@"usr_id"] forKey:@"usr_id"];
+            [USER setObject:[dict objectForKey:@"aid"] forKey:@"aid"];
+            [USER setObject:[dict objectForKey:@"con_login"] forKey:@"con_login"];
+            [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
+            [USER setObject:[dict objectForKey:@"weibo"] forKey:@"weibo"];
+            //                NSLog(@"%@", [USER objectForKey:@"weibo"]);
+            [USER setObject:[dict objectForKey:@"wechat"] forKey:@"wechat"];
+            [USER setObject:[dict objectForKey:@"password"] forKey:@"password"];
+            [USER setObject:[dict objectForKey:@"code"] forKey:@"code"];
+            if (!([[dict objectForKey:@"rank"] isKindOfClass:[NSNull class]] || ![[dict objectForKey:@"rank"] length])) {
+                [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
+            }else{
+                [USER setObject:@"1" forKey:@"rank"];
+            }
+            
+            
+            if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
+                [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
+            }
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
 }
 -(void)loadPetInfo
 {
@@ -1974,6 +2057,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 -(void)photoButtonClick2
 {

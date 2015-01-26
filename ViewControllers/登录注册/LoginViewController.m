@@ -9,6 +9,7 @@
 #import "LoginViewController.h"
 #import "ChooseInViewController.h"
 #import "Alert_2ButtonViewController.h"
+#import "EaseMob.h"
 
 @interface LoginViewController ()
 
@@ -186,7 +187,7 @@
 {
     UMSocialSnsPlatform *snsPlatform = [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToWechatSession];
     snsPlatform.loginClickHandler(self,[UMSocialControllerService defaultControllerService],YES,^(UMSocialResponseEntity *response){
-        NSLog(@"response is %@",response);
+        NSLog(@"response is %@",response);        
         if (response.viewControllerType == UMSViewControllerOauth) {
             NSLog(@"didFinishOauthAndGetAccount response is %@",response);
             if (response.responseCode == 200) {
@@ -201,53 +202,66 @@
     [[UMSocialDataService defaultDataService] requestSnsInformation:UMShareToWechatSession  completion:^(UMSocialResponseEntity *response){
         NSLog(@"SnsInformation is %@",response.data);
         NSDictionary * dic = (NSDictionary *)response.data;
-        
-        [USER setObject:dic forKey:@"weChatUserInfo"];
-        [USER setObject:@"" forKey:@"sinaUserInfo"];
-        
+
+        NSString * Url = [NSString stringWithFormat:@"https://api.weixin.qq.com/sns/userinfo?access_token=%@&openid=%@", [dic objectForKey:@"access_token"], [dic objectForKey:@"openid"]];
         LOADING;
-        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"wechat=%@dog&cat", [dic objectForKey:@"openid"]]];
-        NSString * url = [NSString stringWithFormat:@"%@&wechat=%@&sig=%@&SID=%@", LOGINBY3PARTY, [dic objectForKey:@"openid"], sig, [ControllerManager getSID]];
-        NSLog(@"%@", url);
-        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:Url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
-                NSLog(@"%@", load.dataDict);
-                if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
-                    if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]) {
-                        //绑定过 更新本地个人信息及默认宠物信息，删除本地聊天记录
-                        [USER setObject:@"1" forKey:@"isSuccess"];
-                        [ControllerManager setIsSuccess:1];
-                        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
-                        [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
-                        [self getUserData];
-                    }else{
-                        //未绑定过
-                        /*
-                         1.已注册：提示是否绑定现用户，不绑定跳有宠没宠页面。
-                         2.未注册：直接跳有没有宠页面。
-                         */
-                        if(self.isFromAccount){
-                            //注册过 提示是否绑定现用户，不绑定不做操作
-                            Alert_oneBtnView * vc = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-//                            vc.sina = NO;
-                            vc.type = 3;
-                            [vc makeUI];
-                            [self.view addSubview:vc];
-                            [vc release];
-                        }else{
-                            //没注册过 直接跳选择有宠没宠
-                            ChooseInViewController * vc = [[ChooseInViewController alloc] init];
-                            [self presentViewController:vc animated:YES completion:nil];
-                            [vc release];
+//                ENDLOADING;
+                NSDictionary * dict = load.dataDict;
+                [USER setObject:dict forKey:@"weChatUserInfo"];
+                [USER setObject:@"" forKey:@"sinaUserInfo"];
+                
+//                LOADING;
+                NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"wechat=%@&wechat_union=%@dog&cat", [dict objectForKey:@"openid"], [dict objectForKey:@"unionid"]]];
+                NSString * url = [NSString stringWithFormat:@"%@&wechat=%@&wechat_union=%@&sig=%@&SID=%@", LOGINBY3PARTY, [dict objectForKey:@"openid"], [dict objectForKey:@"unionid"], sig, [ControllerManager getSID]];
+                NSLog(@"%@", url);
+                httpDownloadBlock * request2 = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+                    if (isFinish) {
+                        NSLog(@"%@", load.dataDict);
+                        if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
+                            if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]) {
+                                //绑定过 更新本地个人信息及默认宠物信息，删除本地聊天记录
+                                [USER setObject:@"1" forKey:@"isSuccess"];
+                                [ControllerManager setIsSuccess:1];
+                                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"usr_id"] forKey:@"usr_id"];
+                                [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"aid"] forKey:@"aid"];
+                                [self getUserData];
+                            }else{
+                                //未绑定过
+                                /*
+                                 1.已注册：提示是否绑定现用户，不绑定跳有宠没宠页面。
+                                 2.未注册：直接跳有没有宠页面。
+                                 */
+                                if(self.isFromAccount){
+                                    //注册过 提示是否绑定现用户，不绑定不做操作
+                                    Alert_oneBtnView * vc = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+                                    //                            vc.sina = NO;
+                                    vc.type = 3;
+                                    [vc makeUI];
+                                    [self.view addSubview:vc];
+                                    [vc release];
+                                }else{
+                                    //没注册过 直接跳选择有宠没宠
+                                    ChooseInViewController * vc = [[ChooseInViewController alloc] init];
+                                    [self presentViewController:vc animated:YES completion:nil];
+                                    [vc release];
+                                }
+                            }
                         }
+                        ENDLOADING;
+                    }else{
+                        LOADFAILED;
                     }
-                }
-                ENDLOADING;
+                }];
+                [request2 release];
             }else{
                 LOADFAILED;
             }
         }];
         [request release];
+        
+        
 //        NSString * gender = [dic objectForKey:@"gender"];
 //        NSString * location = [dic objectForKey:@"location"];
 //        NSString * openid = [dic objectForKey:@"openid"];
@@ -486,10 +500,40 @@
             [USER setObject:[dict objectForKey:@"next_gold"] forKey:@"next_gold"];
             [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
             [USER setObject:[dict objectForKey:@"password"] forKey:@"password"];
+            [USER setObject:[dict objectForKey:@"code"] forKey:@"code"];
             
             if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
                 [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
             }
+            
+            //登出
+        [[EaseMob sharedInstance].chatManager asyncLogoffWithCompletion:^(NSDictionary *info, EMError *error) {
+//                NSLog(@"%@", info);
+            NSLog(@"%@", [USER objectForKey:@"usr_id"]);
+                [[EaseMob sharedInstance].chatManager asyncLoginWithUsername:[USER objectForKey:@"usr_id"] password:[dict objectForKey:@"code"] completion:^(NSDictionary *loginInfo, EMError *error) {
+                    if (!error) {
+                        NSLog(@"登录成功");
+                        [MyControl popAlertWithView:self.view Msg:@"登录成功"];
+                        [[EaseMob sharedInstance].chatManager setApnsNickname:[dict objectForKey:@"name"]];
+                        if (![[USER objectForKey:@"setMsgDetail"] intValue]) {
+                            EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
+                            if(options.displayStyle != ePushNotificationDisplayStyle_messageDetail){
+                                options.displayStyle = ePushNotificationDisplayStyle_messageDetail;
+                                [[EaseMob sharedInstance].chatManager asyncUpdatePushOptions:options completion:^(EMPushNotificationOptions *options, EMError *error) {
+                                    if (error) {
+                                        NSLog(@"%@", error);
+                                    }else{
+                                        NSLog(@"消息推送类型更新成功");
+                                        [USER setObject:@"1" forKey:@"setMsgDetail"];
+                                    }
+                                } onQueue:nil];
+                            }
+                        }
+                    }else{
+                        NSLog(@"%@", error);
+                    }
+                } onQueue:nil];
+            } onQueue:nil];
             
             
             //获取宠物信息，存储到本地
@@ -539,6 +583,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

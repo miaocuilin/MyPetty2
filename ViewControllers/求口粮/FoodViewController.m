@@ -13,6 +13,8 @@
 #import "ChargeViewController.h"
 #import "UserCardViewController.h"
 #import "PetMainViewController.h"
+#import "MsgViewController.h"
+
 
 @interface FoodViewController ()
 
@@ -26,10 +28,20 @@
 //        [self createGuide];
 //    }
 //}
-//-(void)viewDidAppear:(BOOL)animated
-//{
+-(void)viewDidAppear:(BOOL)animated
+{
 //    isLoaded = YES;
-//}
+    [super viewDidAppear:animated];
+    if ([[USER objectForKey:@"hasRemoteNotification"] intValue]) {
+        [USER setObject:@"0" forKey:@"hasRemoteNotification"];
+        MsgViewController * vc = [[MsgViewController alloc] init];
+        UINavigationController * nc = [[UINavigationController alloc] initWithRootViewController:vc];
+        [self presentViewController:nc animated:YES completion:nil];
+        [vc release];
+        [nc release];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -303,7 +315,12 @@
     }
     BegFoodListModel * model = self.dataArray[indexPath.row];
     [cell modifyUI:model];
-    
+    cell.bigClick = ^(){
+        FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
+        vc.img_id = model.img_id;
+        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+        [vc release];
+    };
     
     cell.transform = CGAffineTransformMakeRotation(M_PI/2);
     cell.backgroundColor = [UIColor clearColor];
@@ -418,7 +435,7 @@
         return;
     }
     
-    if(![[USER objectForKey:@"notShowCostAlert"] intValue] && [rewardNum.text intValue]>[[USER objectForKey:@"food"] intValue]){
+    if([[USER objectForKey:@"notShowCostAlert"] intValue] && [rewardNum.text intValue]>[[USER objectForKey:@"food"] intValue]){
         Alert_2ButtonView2 * view2 = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
         view2.type = 1;
         view2.reward = ^(){
@@ -553,6 +570,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

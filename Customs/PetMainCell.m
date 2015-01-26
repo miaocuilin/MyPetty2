@@ -33,7 +33,12 @@
         self.name.text = @"礼物";
     }
     
-    self.num.text = [NSString stringWithFormat:@"（%@）", num];
+    if(index != 2){
+        self.num.text = [NSString stringWithFormat:@"（%@）", num];
+    }else{
+        self.num.text = @"";
+    }
+    
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

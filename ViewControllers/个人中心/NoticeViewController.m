@@ -12,7 +12,7 @@
 #import "TalkViewController.h"
 #import "NoticeModel.h"
 #import "SingleTalkModel.h"
-#import "MessageModel.h"
+#import "MessageModel2.h"
 
 #define SelectedColor [UIColor colorWithRed:248/255.0 green:177/255.0 blue:160/255.0 alpha:1]
 
@@ -135,7 +135,7 @@
         
         NSArray * msgArray = [talkModel.msgDict objectForKey:@"msg"];
         NSLog(@"%@--%@--%@", talkModel.usr_name, talkModel.msgDict, msgArray);
-        MessageModel * msgModel = msgArray[msgArray.count-1];
+        MessageModel2 * msgModel = msgArray[msgArray.count-1];
         model.time = msgModel.time;
         model.lastMsg = msgModel.msg;
         model.img_id = msgModel.img_id;
@@ -1012,6 +1012,9 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 #pragma mark - 图片毛玻璃化
 -(void)createBg

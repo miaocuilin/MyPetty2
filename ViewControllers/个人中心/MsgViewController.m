@@ -19,8 +19,8 @@
 
 @implementation MsgViewController
 - (void)dealloc{
-    [super dealloc];
     [self unregisterNotifications];
+    [super dealloc];
 }
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -50,8 +50,8 @@
 }
 -(void)modifyUI
 {
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@""] forBarMetrics:UIBarMetricsDefault];
-    self.navigationController.navigationBar.shadowImage = [UIImage imageNamed:@""];
+//    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@""] forBarMetrics:UIBarMetricsDefault];
+//    self.navigationController.navigationBar.shadowImage = [UIImage imageNamed:@""];
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     //
     UIButton * leftBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, 10, 17) ImageName:@"leftArrow.png" Target:self Action:@selector(leftBtnClick) Title:nil];
@@ -279,6 +279,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

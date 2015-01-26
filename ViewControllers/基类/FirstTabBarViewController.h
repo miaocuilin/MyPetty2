@@ -17,6 +17,7 @@
     UILabel * label3;
     
     UIScrollView * sv;
+    UIImageView * bgImageView;
     
     BOOL isLoaded;
     UIView * bottomBg;

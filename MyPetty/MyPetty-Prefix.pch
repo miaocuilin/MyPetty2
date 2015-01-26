@@ -47,6 +47,7 @@
 #import "UserCardViewController.h"
 #import "PetMainViewController.h"
 
+
 #define LOADING LoadingView * loadView = [ControllerManager shareLoading];[[UIApplication sharedApplication].keyWindow addSubview:loadView];
 #define LOADING2 LoadingView * loadView = [ControllerManager shareLoading];[self.view addSubview:loadView];
 
@@ -159,11 +160,23 @@
 //获取弹窗样式7所需数据API
 #define ALERT7DATAAPI @"http://release4pet.aidigame.com/index.php?r=animal/foodApi&aid="
 
-//求口粮网页版 img_id=  to=
-#define WEBBEGFOODAPI @"http://kouliang.tuturead.com/index.php?r=social/foodShareApi&img_id="
+//求口粮网页版 img_id=  to=   kouliang.tuturead
+#define WEBBEGFOODAPI @"http://release4pet.aidigame.com/index.php?r=social/foodShareApi&img_id="
 
 //banner API
 #define BANNERAPI @"http://release4pet.aidigame.com/index.php?r=image/bannerApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+//宠物主页挣口粮页面API
+#define FOODLISTAPI @"http://release4pet.aidigame.com/index.php?r=animal/foodListApi&aid="
+
+//宠物主页分享API
+#define PETMAINSHAREAPI @"http://release4pet.aidigame.com/index.php?r=animal/infoShare&aid="
+
+//用户协议网页URL
+#define AGREEMENTAPI @"http://release4pet.aidigame.com/index.php?r=site/agreement"
+
+//faq网页URL
+#define FAQAPI @"http://release4pet.aidigame.com/index.php?r=site/faq"
 
 //IP头API
 #define IPURL @"http://54.199.161.210/dc/index.php"

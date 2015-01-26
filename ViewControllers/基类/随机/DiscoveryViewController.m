@@ -19,10 +19,43 @@
 @end
 
 @implementation DiscoveryViewController
-//-(void)viewWillAppear:(BOOL)animated
-//{
-//
-//}
+
+-(void)createGuide
+{
+    guide = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"guide_discover.png"];
+    float a = [UIScreen mainScreen].bounds.size.width/[UIScreen mainScreen].bounds.size.height;
+    float b = 320/480.0;
+    if(a == b){
+        guide.frame = CGRectMake(0, 0, self.view.frame.size.width, 568);
+    }
+    UITapGestureRecognizer * guideTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(guideTap:)];
+    [guide addGestureRecognizer:guideTap];
+    
+    //    FirstTabBarViewController * tabBar = [ControllerManager shareTabBar];
+    [[UIApplication sharedApplication].keyWindow addSubview:guide];
+    [guideTap release];
+}
+-(void)guideTap:(UITapGestureRecognizer *)tap
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        guide.alpha = 0;
+    }completion:^(BOOL finished) {
+        guide.hidden = YES;
+        [guide removeFromSuperview];
+    }];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if (!isLoaded) {
+        if (![[USER objectForKey:@"guide_discover"] intValue]) {
+            [USER setObject:@"1" forKey:@"guide_discover"];
+            [self createGuide];
+        }
+    }
+}
+
 -(void)refresh
 {
     if(sc.selectedSegmentIndex == 0){
@@ -549,6 +582,9 @@
 }
 
 - (void)didReceiveMemoryWarning {
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

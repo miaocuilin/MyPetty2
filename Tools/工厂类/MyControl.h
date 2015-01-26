@@ -68,6 +68,7 @@
 +(NSDictionary *)imageSizeFrom:(NSURL *)imageUrl;
 
 //限制图片大小
++(UIImage*)OriginImage:(UIImage *)image scaleToSize:(CGSize)size;
 +(NSData *)scaleToSize:(UIImage *)sourceImage;
 
 + (UIImage *)thumbnailWithImageWithoutScale:(UIImage *)image size:(CGSize)asize;
@@ -90,6 +91,10 @@
 +(void)setImageForBtn:(UIButton *)btn Tx:(NSString *)tx isPet:(BOOL)isPet isRound:(BOOL)isRound;
 +(void)setImageForImageView:(UIImageView *)imageView Tx:(NSString *)tx isPet:(BOOL)isPet isRound:(BOOL)isRound;
 
+//图片压缩
++(NSData*)compressImage:(UIImage*)image;
+
++(NSInteger)returnUnreadMessageCount;
 @end
 
 

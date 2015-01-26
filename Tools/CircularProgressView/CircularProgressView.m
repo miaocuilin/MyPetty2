@@ -68,10 +68,10 @@
 
 - (void)setAudioURL:(NSURL *)audioURL{
     if (audioURL) {
-        self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:audioURL error:nil];
-        self.player.delegate = self;
-        self.duration = self.player.duration;
-        [self.player prepareToPlay];
+        _player = [[AVAudioPlayer alloc] initWithContentsOfURL:audioURL error:nil];
+        _player.delegate = self;
+        self.duration = _player.duration;
+        [_player prepareToPlay];
     }
     _audioURL = audioURL;
 }

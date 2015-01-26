@@ -13,6 +13,9 @@
 #import "SetPasswordViewController.h"
 #import "InviteCodeModel.h"
 #import "Alert_HyperlinkView.h"
+#import "MessagePushSetViewController.h"
+//#import "BlackListViewController.h"
+
 @interface AccountViewController () <UMSocialUIDelegate>
 
 @end
@@ -34,9 +37,9 @@
         isConfVersion = YES;
     }
     if(isConfVersion){
-        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"同步分享到微信", @"同步分享到微博"];
+        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"消息推送设置", @"同步分享到微信", @"同步分享到微博"];
     }else{
-        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"填写邀请码", @"同步分享到微信", @"同步分享到微博"];
+        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"填写邀请码", @"消息推送设置", @"同步分享到微信", @"同步分享到微博"];
     }
     
     [self createBg];
@@ -119,9 +122,9 @@
     cell.selectionStyle = 0;
     int a = 0;
     if (isConfVersion) {
-        a = 3;
-    }else{
         a = 4;
+    }else{
+        a = 5;
     }
     if (indexPath.row <= a) {
 //        if (indexPath.row == a-1) {
@@ -235,6 +238,11 @@
         [vc release];
     }else if(x == 4){
         if (isConfVersion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                MessagePushSetViewController * vc = [[MessagePushSetViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            });
             //微信绑定
 //            if (![[USER objectForKey:@"wechat"] length]) {
 //                [self bindWeChat];
@@ -244,6 +252,18 @@
             [self loadMyPets];
         }
         
+    }else if(x == 5){
+        if (!isConfVersion) {
+            
+//            UINavigationController * nav = [[UINavigationController alloc] initWithRootViewController:vc];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                MessagePushSetViewController * vc = [[MessagePushSetViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+            });
+            
+//            [nav release];
+        }
     }
 //    else if(x == 5){
 //        if (isConfVersion) {
@@ -400,14 +420,14 @@
                 [[UMSocialDataService defaultDataService] requestSnsInformation:UMShareToWechatSession  completion:^(UMSocialResponseEntity *response){
                     NSLog(@"SnsInformation is %@",response.data);
                     NSDictionary * dic = (NSDictionary *)response.data;
-                    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"wechat=%@dog&cat", [dic objectForKey:@"openid"]]];
-                    NSString * url = [NSString stringWithFormat:@"%@&wechat=%@&sig=%@&SID=%@", BIND3PARTYAPI, [dic objectForKey:@"openid"], sig, [ControllerManager getSID]];
+                    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"wechat=%@dog&cat", [dic objectForKey:@"unionid"]]];
+                    NSString * url = [NSString stringWithFormat:@"%@&wechat=%@&sig=%@&SID=%@", BIND3PARTYAPI, [dic objectForKey:@"unionid"], sig, [ControllerManager getSID]];
                     NSLog(@"%@", url);
                     LOADING;
                     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
                         if (isFinish) {
                             if([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]){
-                                [USER setObject:[dic objectForKey:@"openid"] forKey:@"wechat"];
+                                [USER setObject:[dic objectForKey:@"unionid"] forKey:@"wechat"];
                                 [MyControl popAlertWithView:self.view Msg:@"绑定成功"];
                                 [tv reloadData];
                             }else{
@@ -489,6 +509,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

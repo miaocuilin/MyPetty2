@@ -43,7 +43,11 @@
         CGSize size = [label1.text sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(label1.frame.size.width, 100) lineBreakMode:1];
         label1.frame = CGRectMake(20, closeBtn.frame.origin.y+closeBtn.frame.size.height+10, bgView.frame.size.width-40, size.height);
         if (self.petsNum >= 10) {
-            NSString * str = [NSString stringWithFormat:@"本次捧星会消耗您%d金币哦~", self.petsNum*5];
+            int cost = self.petsNum*5;
+            if (cost>100) {
+                cost = 100;
+            }
+            NSString * str = [NSString stringWithFormat:@"本次捧星会消耗您%d金币哦~", cost];
             CGSize size2 = [str sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(label1.frame.size.width, 100) lineBreakMode:1];
             UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(20, label1.frame.origin.y+label1.frame.size.height+10, label1.frame.size.width, size.height) Font:14 Text:nil];
             label2.textAlignment = NSTextAlignmentCenter;

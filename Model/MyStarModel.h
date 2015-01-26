@@ -24,6 +24,8 @@
 @property(nonatomic,copy)NSString * t_rq;
 @property(nonatomic,copy)NSString * tx;
 @property(nonatomic,copy)NSString * invite_code;
+@property(nonatomic,copy)NSString * u_tx;
+@property(nonatomic,copy)NSString * u_name;
 
 @property(nonatomic,retain)NSArray * images;
 @property(nonatomic,retain)NSDictionary * dict;

@@ -9,6 +9,9 @@
 #import "MyControl.h"
 #import <ImageIO/ImageIO.h>
 #define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue]>=7.0
+#import "EMConversation.h"
+#import "EaseMob.h"
+
 
 @implementation MyControl
 //工厂模式   +方法
@@ -50,10 +53,14 @@
 }
 +(UIImageView*)createImageViewWithFrame:(CGRect)frame ImageName:(NSString*)imageName
 {
-    UIImageView*imageView=[[UIImageView alloc]initWithFrame:frame];
-    imageView.image=[UIImage imageNamed:imageName];
-    imageView.userInteractionEnabled=YES;
-    return [imageView autorelease];
+        UIImageView*imageView=[[UIImageView alloc]initWithFrame:frame];
+        imageView.image=[UIImage imageNamed:imageName];
+        //    if ([imageName rangeOfString:@".png"].location != NSNotFound) {
+        //        imageName = [[imageName componentsSeparatedByString:@".png"] objectAtIndex:0];
+        //    }
+        //    imageView.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:imageName ofType:@"png"]];
+        imageView.userInteractionEnabled=YES;
+        return [imageView autorelease];
 }
 +(UIView*)createViewWithFrame:(CGRect)frame
 {
@@ -319,21 +326,57 @@
     NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:[imageInfoDict objectForKey:@"PixelWidth"], @"width", [imageInfoDict objectForKey:@"PixelHeight"], @"height", nil];
     return dict;
 }
-
+#pragma mark -
++(UIImage*)OriginImage:(UIImage *)image scaleToSize:(CGSize)size
+{
+    UIGraphicsBeginImageContext(size);  //size 为CGSize类型，即你所需要的图片尺寸
+    
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    
+    UIImage* scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return scaledImage;   //返回的就是已经改变的图片
+}
 #pragma mark - 图片大小限制
 + (NSData *)scaleToSize:(UIImage *)sourceImage
 {
+    float w = sourceImage.size.width;
+    float h = sourceImage.size.height;
+    float p = 0;
+    if (w>h && sourceImage.size.width>2000) {
+        p = 2000/w;
+        sourceImage = [self image:sourceImage fitInSize:CGSizeMake(w*p, h*p)];
+//        sourceImage = [self OriginImage:sourceImage scaleToSize:CGSizeMake(w*p, h*p)];
+    }else if(h>w && sourceImage.size.height>2000){
+        p = 2000/h;
+        sourceImage = [self image:sourceImage fitInSize:CGSizeMake(w*p, h*p)];
+    }
+    NSLog(@"%f--%f", sourceImage.size.width, sourceImage.size.height);
     CGFloat compression = 1.0f;
-    float maxFileSize = 120*1024;
+    float maxFileSize = 256*1024;
     
     NSData *imageData = UIImageJPEGRepresentation(sourceImage, compression);
-    
+//    3746443 1748174 56556
+//    13278499 4440060 284031
+    NSLog(@"%d", imageData.length);
     compression = maxFileSize / [imageData length];
-    
+//    int count = 0;
+//    while (imageData.length>maxFileSize) {
+//        imageData = UIImageJPEGRepresentation(sourceImage, compression);
+//        NSLog(@"*******%f--%d*******", compression, imageData.length);
+//        sourceImage = [UIImage imageWithData:imageData];
+//        
+//        compression = maxFileSize / imageData.length;
+//        NSLog(@"%d--%f", imageData.length, compression);
+//        count++;
+////        NSLog(@"======压缩后的图片大小：%d======%d", imageData.length, count);
+//    }
     if (compression < 1) {
         imageData = UIImageJPEGRepresentation(sourceImage, compression);
     }
-    
+    NSLog(@"======压缩后的图片大小：%d======", imageData.length);
     return imageData;
 }
 
@@ -481,7 +524,7 @@
     BOOL success = [URL setResourceValue: [NSNumber numberWithBool: YES] forKey: NSURLIsExcludedFromBackupKey error: &error];
     
     if(!success){
-        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+//        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
     }
     
     return success;
@@ -620,9 +663,9 @@
         defaultImage = [UIImage imageNamed:@"defaultUserHead.png"];
     }
     [btn setBackgroundImageWithURL:[NSURL URLWithString:str] forState:UIControlStateNormal placeholderImage:defaultImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-            [btn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-        }
+//        if (image) {
+//            [btn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+//        }
     }];
 }
 +(void)setImageForImageView:(UIImageView *)imageView Tx:(NSString *)tx isPet:(BOOL)isPet
@@ -637,10 +680,17 @@
         defaultImage = [UIImage imageNamed:@"defaultUserHead.png"];
     }
     [imageView setImageWithURL:[NSURL URLWithString:str] placeholderImage:defaultImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-            [imageView setImage:[MyControl returnSquareImageWithImage:image]];
+        if (!image) {
+            if (!isPet) {
+                [imageView setImage:[UIImage imageNamed:@"defaultUserHead.png"]];
+            }else{
+                [imageView setImage:[UIImage imageNamed:@"defaultPetHead.png"]];
+            }
+            
+//            [imageView setImage:[MyControl returnSquareImageWithImage:image]];
         }
     }];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
 }
 
 +(void)setImageForBtn:(UIButton *)btn Tx:(NSString *)tx isPet:(BOOL)isPet isRound:(BOOL)isRound
@@ -660,5 +710,37 @@
         imageView.layer.masksToBounds = YES;
     }
     [self setImageForImageView:imageView Tx:tx isPet:isPet];
+}
+
+//图片压缩
++(NSData*)compressImage:(UIImage*)image{
+    CGFloat compression = 0.9f;
+    CGFloat maxCompression = 0.1f;
+    /**
+     *  128kb
+     */
+    int maxFileSize = 128*1024;
+    NSData *imageData = UIImageJPEGRepresentation(image, compression);
+    while ([imageData length] > maxFileSize && compression > maxCompression)
+    {
+        compression -= 0.1;
+        imageData = UIImageJPEGRepresentation(image, compression);
+    }
+    NSLog(@"======压缩后的图片大小：%d======", imageData.length);
+    return imageData;
+}
+
++(NSInteger)returnUnreadMessageCount
+{
+    NSArray *conversations = [[[EaseMob sharedInstance] chatManager] conversations];
+    NSInteger unreadCount = 0;
+    for (EMConversation *conversation in conversations) {
+        unreadCount += conversation.unreadMessagesCount;
+    }
+    UIApplication *application = [UIApplication sharedApplication];
+    if(application.applicationIconBadgeNumber != unreadCount){
+        [application setApplicationIconBadgeNumber:unreadCount];
+    }
+    return unreadCount;
 }
 @end

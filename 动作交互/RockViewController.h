@@ -15,6 +15,7 @@
     SystemSoundID soundID2;
     
     UIView * totalView;
+    BOOL isLoaded;
 }
 @property (nonatomic,strong)NSDictionary *animalInfoDict;
 @property (nonatomic,strong)NSString *titleString;

@@ -1,14 +1,14 @@
 //
-//  MessageModel.m
+//  MessageModel2.m
 //  MyPetty
 //
-//  Created by miaocuilin on 14-10-17.
-//  Copyright (c) 2014年 AidiGame. All rights reserved.
+//  Created by miaocuilin on 15/1/9.
+//  Copyright (c) 2015年 AidiGame. All rights reserved.
 //
 
-#import "MessageModel.h"
+#import "MessageModel2.h"
 
-@implementation MessageModel
+@implementation MessageModel2
 
 -(void)encodeWithCoder:(NSCoder *)aCoder
 {
@@ -39,6 +39,6 @@
 }
 - (void)setValue:(id)value forUndefinedKey:(NSString *)key
 {
-//    NSLog(@"undefinedKey:%@",key);
+    //    NSLog(@"undefinedKey:%@",key);
 }
 @end

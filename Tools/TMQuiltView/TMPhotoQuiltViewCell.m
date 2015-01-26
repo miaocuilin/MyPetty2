@@ -96,6 +96,40 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
     cmtHeight = model.cmtHeight;
     cmtWidth = model.cmtWidth;
     
+    NSURL * URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]];
+//    SDWebImageManager * manager = [SDWebImageManager sharedManager];
+//    [manager downloadWithURL:URL options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+//        if (image) {
+//            if (image.size.width>2000 || image.size.height>2000) {
+//                _photoView.image = [UIImage imageWithData:[MyControl scaleToSize:image]];
+//            }else{
+//                _photoView.image = image;
+//            }
+//            
+//        }else{
+//            [_photoView setImage:[UIImage imageNamed:@"water_white.png"]];
+//        }
+//    }];
+    
+    [_photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//        if (image) {
+//            if (image.size.width>2000 || image.size.height>2000) {
+//                float w = image.size.width;
+//                float h = image.size.height;
+//                float p = 0;
+//                if (w>h && image.size.width>2000) {
+//                    p = 2000/w;
+//                }else if(h>w && image.size.height>2000){
+//                    p = 2000/h;
+//                }
+//                w *= p;
+//                h *= p;
+//                _photoView.image = [MyControl thumbnailWithImageWithoutScale:image size:CGSizeMake(w, h)];
+//            }else{
+//                _photoView.image = image;
+//            }
+//        }
+    }];
 //    if (!cmtHeight) {
 //        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35);
 //        self.titleLabel.frame = CGRectMake(4, self.frame.size.height - 18, self.frame.size.width-8, 0);

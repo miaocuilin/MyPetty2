@@ -69,8 +69,28 @@ static char operationArrayKey;
                 if (!sself) return;
                 if (image)
                 {
-                    sself.image = image;
-                    [sself setNeedsLayout];
+//                    if (image.size.width>2000 || image.size.height>2000) {
+//                        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//                            float w = image.size.width;
+//                            float h = image.size.height;
+//                            float p = 0;
+//                            if (w>h && image.size.width>2000) {
+//                                p = 2000/w;
+//                            }else if(h>w && image.size.height>2000){
+//                                p = 2000/h;
+//                            }
+//                            w *= p;
+//                            h *= p;
+//                            sself.image = [MyControl thumbnailWithImageWithoutScale:image size:CGSizeMake(w, h)];
+//                            dispatch_async((dispatch_get_main_queue()), ^{
+//                                [sself setNeedsLayout];
+//                            });
+//                        });
+//                        
+//                    }else{
+                        sself.image = image;
+                        [sself setNeedsLayout];
+//                    }
                 }
                 if (completedBlock && finished)
                 {
@@ -155,7 +175,7 @@ static char operationArrayKey;
     BOOL success = [URL setResourceValue: [NSNumber numberWithBool: YES] forKey: NSURLIsExcludedFromBackupKey error: &error];
     
     if(!success){
-        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+//        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
     }
     
     return success;

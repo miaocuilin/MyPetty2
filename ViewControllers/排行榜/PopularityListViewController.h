@@ -60,4 +60,8 @@
 @property (nonatomic,retain)NSMutableArray * aidsArray;
 //记录我的国家在排行榜中的排名，只存储排名
 @property (nonatomic,retain)NSMutableArray * myCountryArray;
+
+@property (nonatomic)BOOL isFromPetMain;
+//从宠物主页进入排行榜之后根据aid定位该宠物
+@property (nonatomic,copy)NSString * targetAid;
 @end

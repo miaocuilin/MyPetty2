@@ -36,6 +36,8 @@
     UILabel * lab3;
     
     UIButton * inviteBtn;
+    
+    BOOL isModify;
 }
 @property(nonatomic,retain)UILabel * contributionLabel;
 
@@ -50,6 +52,8 @@
 @property(nonatomic,copy)void (^actClickSend)(NSString *,NSString *,NSString *);
 //-(void)makeUIWithWidth:(float)width Height:(float)height;
 @property(nonatomic,copy)void (^inviteClick)(void);
+
+@property(nonatomic,copy)void (^msgClick)();
 -(void)adjustCellHeight:(int)a;
 
 -(void)configUI:(MyStarModel *)model;

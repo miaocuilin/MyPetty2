@@ -44,7 +44,7 @@
 //        self.arr3 = @[@"清除缓存", @"常见问题", @"意见反馈", @"关于我们"];
 //    }else{
 //        self.arr1 = @[@"收货地址", @"填写邀请码", @"设置最爱萌星", @"解除黑名单", @"绑定新浪微博"];
-        self.arr3 = @[@"清除缓存", @"常见问题", @"意见反馈", @"关于我们"];
+        self.arr3 = @[@"清除缓存", @"打赏提示", @"常见问题", @"意见反馈", @"关于我们"];
 //    }
     
 //    self.arr2 = @[@"新浪微博", @"微信朋友圈"];
@@ -246,6 +246,15 @@
             cacheLabel.text = [NSString stringWithFormat:@"%.1fMB", [self fileSizeForDir:DOCDIR]];
             [cell addSubview:cacheLabel];
 
+        }else if(indexPath.row == 1){
+            _switch = [[UISwitch alloc] initWithFrame:CGRectMake(self.view.frame.size.width-50-20, 7, 0, 0)];
+            [_switch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
+            [cell addSubview:_switch];
+            if ([[USER objectForKey:@"notShowCostAlert"] intValue] == 0) {
+                _switch.on = NO;
+            }else{
+                _switch.on = YES;
+            }
         }
         cell.textLabel.text =[NSString stringWithFormat:@"     %@",self.arr3[indexPath.row]];
         cell.textLabel.textColor = [UIColor blackColor];
@@ -254,6 +263,14 @@
     [self normalCell:cell arrow:indexPath];
     
     return cell;
+}
+-(void)switchChanged:(UISwitch *)sw
+{
+    if (sw.on) {
+        [USER setObject:@"1" forKey:@"notShowCostAlert"];
+    }else{
+        [USER setObject:@"0" forKey:@"notShowCostAlert"];
+    }
 }
 //设置箭头和初始化cell
 - (void)normalCell:(UITableViewCell *)cell arrow:(NSIndexPath *)indexPath
@@ -267,7 +284,7 @@
 //        a = 4;
 //    }
 //    if((indexPath.section == 0 && indexPath.row != a) ||(indexPath.section == 2 && indexPath.row != 0)){
-    if (indexPath.row != 0) {
+    if (indexPath.row > 1) {
         arrow = [MyControl createImageViewWithFrame:CGRectMake(570/2, 10, 20, 20) ImageName:@"14-6-2.png"];
         //        [cell addSubview:arrow];
         cell.accessoryView = arrow;
@@ -371,9 +388,9 @@
             [self clearData];
         }else if(indexPath.row == 1){
 //            if(isConfVersion){
-                FAQViewController * vc = [[FAQViewController alloc] init];
-                [self presentViewController:vc animated:YES completion:nil];
-                [vc release];
+//                FAQViewController * vc = [[FAQViewController alloc] init];
+//                [self presentViewController:vc animated:YES completion:nil];
+//                [vc release];
 //            }else{
 //                //upgrade
 //                
@@ -387,38 +404,39 @@
 //            [MMProgressHUD dismissWithSuccess:@"重置成功" title:nil afterDelay:0.5f];
         }if(indexPath.row == 2){
 //            if (isConfVersion) {
-                FeedbackViewController *feedBackVC = [[FeedbackViewController alloc] init];
-                [self presentViewController:feedBackVC animated:YES completion:^{
-                    [feedBackVC release];
-                }];
-//            }else{
-//                FAQViewController * vc = [[FAQViewController alloc] init];
-//                [self presentViewController:vc animated:YES completion:nil];
-//                [vc release];
-//            }
-            
-        }else if (indexPath.row == 3) {
-            AboutViewController * vc = [[AboutViewController alloc] init];
-            [self presentViewController:vc animated:YES completion:nil];
-            [vc release];
-//            if (isConfVersion) {
-//                //好评
-//            }else{
 //                FeedbackViewController *feedBackVC = [[FeedbackViewController alloc] init];
 //                [self presentViewController:feedBackVC animated:YES completion:^{
 //                    [feedBackVC release];
 //                }];
+//            }else{
+                FAQViewController * vc = [[FAQViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
+//            }
+            
+        }else if (indexPath.row == 3) {
+//            AboutViewController * vc = [[AboutViewController alloc] init];
+//            [self presentViewController:vc animated:YES completion:nil];
+//            [vc release];
+//            if (isConfVersion) {
+//                //好评
+//            }else{
+                FeedbackViewController *feedBackVC = [[FeedbackViewController alloc] init];
+                [self presentViewController:feedBackVC animated:YES completion:^{
+                    [feedBackVC release];
+                }];
 //            }
         }
-//        else if (indexPath.row == 4){
+        else if (indexPath.row == 4){
 //            if (isConfVersion) {
-//                AboutViewController * vc = [[AboutViewController alloc] init];
-//                [self presentViewController:vc animated:YES completion:nil];
-//                [vc release];
+                AboutViewController * vc = [[AboutViewController alloc] init];
+                [self presentViewController:vc animated:YES completion:nil];
+                [vc release];
 //            }else{
 //                //好评
 //            }
-//        }else if(indexPath.row == 5){
+        }
+//            else if(indexPath.row == 5){
 //            if (isConfVersion) {
 //                
 //            }else{
@@ -683,6 +701,9 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

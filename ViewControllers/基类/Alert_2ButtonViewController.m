@@ -117,14 +117,14 @@
                     [[UMSocialDataService defaultDataService] requestSnsInformation:UMShareToWechatSession  completion:^(UMSocialResponseEntity *response){
                         NSLog(@"SnsInformation is %@",response.data);
                         NSDictionary * dic = (NSDictionary *)response.data;
-                        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"wechat=%@dog&cat", [dic objectForKey:@"openid"]]];
-                        NSString * url = [NSString stringWithFormat:@"%@&wechat=%@&sig=%@&SID=%@", BIND3PARTYAPI, [dic objectForKey:@"openid"], sig, [ControllerManager getSID]];
+                        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"wechat=%@dog&cat", [dic objectForKey:@"unionid"]]];
+                        NSString * url = [NSString stringWithFormat:@"%@&wechat=%@&sig=%@&SID=%@", BIND3PARTYAPI, [dic objectForKey:@"unionid"], sig, [ControllerManager getSID]];
                         NSLog(@"%@", url);
                         LOADING;
                         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
                             if (isFinish) {
                                 if([[[load.dataDict objectForKey:@"data"] objectForKey:@"isBinded"] intValue]){
-                                    [USER setObject:[dic objectForKey:@"openid"] forKey:@"wechat"];
+                                    [USER setObject:[dic objectForKey:@"unionid"] forKey:@"wechat"];
                                     [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"绑定成功"];
                                 }else{
                                     [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"绑定失败"];
@@ -144,6 +144,9 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

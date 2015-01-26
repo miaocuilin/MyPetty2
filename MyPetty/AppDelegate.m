@@ -112,14 +112,17 @@
 //    
 //    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     //归零
-//    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+//    if([UIApplication sharedApplication].applicationIconBadgeNumber){
+//         [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+//    }
+    
     /**********环信***********/
 //    aps_development.cer
-//    NSString * apnsCertName = @"imengstar_dev";
-//    [[EaseMob sharedInstance] registerSDKWithAppKey:@"aidigame#imengstar" apnsCertName:apnsCertName];
-//    [[EaseMob sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
-//
-//    [self registerRemoteNotification];
+    NSString * apnsCertName = @"imengstar";
+    [[EaseMob sharedInstance] registerSDKWithAppKey:@"aidigame#imengstar" apnsCertName:apnsCertName];
+    [[EaseMob sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+
+    [self registerRemoteNotification];
     
     //注册
 //    [[EaseMob sharedInstance].chatManager asyncRegisterNewAccount:@"miaocuilin" password:@"123456" withCompletion:^(NSString *username, NSString *password, EMError *error) {
@@ -134,10 +137,10 @@
 //    [[EaseMob sharedInstance].chatManager asyncLoginWithUsername:@"miaocuilin" password:@"123456" completion:^(NSDictionary *loginInfo, EMError *error) {
 //        if (!error) {
 //            NSLog(@"登录成功");
-//    
+//
 //            EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
 //            NSLog(@"%@", options.nickname);
-            
+//            
 //            [[EaseMob sharedInstance].chatManager setApnsNickname:@"miaocuilin"];
 //            EMPushNotificationOptions *options = [[EMPushNotificationOptions alloc] init];
 //            options.displayStyle = ePushNotificationDisplayStyle_messageSummary;
@@ -148,11 +151,11 @@
 //                    NSLog(@"更新成功");
 //                }
 //            } onQueue:nil];
-            
+    
             
 //            EMChatText *text = [[EMChatText alloc] initWithText:@"hello world!"];
 //            EMTextMessageBody *body = [[EMTextMessageBody alloc] initWithChatObject:text];
-//            EMMessage *retureMsg = [[EMMessage alloc] initWithReceiver:@"317" bodies:[NSArray arrayWithObject:body]];
+//            EMMessage *retureMsg = [[EMMessage alloc] initWithReceiver:@"jj" bodies:[NSArray arrayWithObject:body]];
 //            retureMsg.requireEncryption = NO;
 //            retureMsg.isGroup = NO;
 //            [[EaseMob sharedInstance].chatManager sendMessage:retureMsg progress:nil error:nil];
@@ -190,6 +193,43 @@
 //    hostReach = [[Reachability reachabilityWithHostName:@"www.baidu.com"] retain];
 //    [hostReach startNotifier];
     
+    //判断版本号 从本地获取
+    NSString * versionKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSLog(@"%@", versionKey);
+    if (![[USER objectForKey:@"versionKey"] isEqualToString:versionKey]) {
+        [USER setObject:@"0" forKey:@"guide_star"];
+        [USER setObject:@"0" forKey:@"guide_food"];
+        [USER setObject:@"0" forKey:@"guide_detail"];
+        [USER setObject:@"0" forKey:@"guide_center"];
+        [USER setObject:@"0" forKey:@"guide_detail_back_comment"];
+        [USER setObject:@"0" forKey:@"guide_discover"];
+        [USER setObject:@"0" forKey:@"guide_petmain"];
+        
+        [USER setObject:@"0" forKey:@"setMsgDetail"];
+        [USER setObject:versionKey forKey:@"versionKey"];
+        
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    }
+    
+    //判断是否有talkData.plist文件，如果有删除
+    NSFileManager * manager = [[NSFileManager alloc] init];
+    NSString * path = [DOCDIR stringByAppendingPathComponent:@"talkData.plist"];
+//    NSDictionary * dict = [NSDictionary dictionaryWithObject:@"1" forKey:@"1"];
+//    [dict writeToFile:path atomically:YES];
+    if ([manager fileExistsAtPath:path]) {
+        BOOL a = [manager removeItemAtPath:path error:nil];
+        NSLog(@"文件存在，删除结果：%d", a);
+    }
+    [manager release];
+    
+    //
+    NSDictionary * remoteNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (remoteNotification != nil) {
+//        NSLog(@"%@", remoteNotification);
+        
+        [USER setObject:@"1" forKey:@"hasRemoteNotification"];
+//        [MyControl createAlertViewWithTitle:[NSString stringWithFormat:@"启动：%@", [USER objectForKey:@"hasRemoteNotification"]]];
+    }
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
@@ -293,6 +333,8 @@
 {
     [UMSocialSnsService applicationDidBecomeActive];
     [[EaseMob sharedInstance] applicationDidBecomeActive:application];
+    NSLog(@"软件已经开始活动");
+//    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 }
 -(BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
@@ -309,16 +351,19 @@
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     [[EaseMob sharedInstance] applicationWillResignActive:application];
+    NSLog(@"软件进入非活动状态");
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     [[EaseMob sharedInstance] applicationDidEnterBackground:application];
+    NSLog(@"软件已经进入后台");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [[EaseMob sharedInstance] applicationWillEnterForeground:application];
+    NSLog(@"软件将进入前台");
 }
 
 //- (void)applicationDidBecomeActive:(UIApplication *)application
@@ -329,6 +374,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     [[EaseMob sharedInstance] applicationWillTerminate:application];
+    NSLog(@"软件即将关闭");
 //    [USER removeAllObjects];
 //    [USER setObject:@"0" forKey:@"isSuccess"];
 //    NSLog(@"%@", [USER objectForKey:@"SID"]);

@@ -28,6 +28,8 @@
     UIButton * regOrLoginBtn;
     
     BOOL isLoaded;
+    
+    UIImageView * guide;
 }
 /*************************************/
 //@property(nonatomic,retain) UIImageView * msgNum;

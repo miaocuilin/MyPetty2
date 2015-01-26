@@ -57,8 +57,8 @@
 +(int)returnExpOfNeedWithLv:(NSString *)lv;
 /***********************************************/
 //计算升级和官职弹窗
-+(BOOL)levelPOP:(NSString *)exp addExp:(NSInteger)add;
-+(BOOL)rankPOP:(NSString *)contribution addContribution:(NSInteger)add planet:(NSString *)dogOrcat;
+//+(BOOL)levelPOP:(NSString *)exp addExp:(NSInteger)add;
+//+(BOOL)rankPOP:(NSString *)contribution addContribution:(NSInteger)add planet:(NSString *)dogOrcat;
 
 + (NSMutableArray *)getGift:(BOOL)isBad;
 

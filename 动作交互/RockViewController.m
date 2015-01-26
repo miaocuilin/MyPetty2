@@ -12,7 +12,7 @@
 #define LIGHTORANGECOLOR [UIColor colorWithRed:252/255.0 green:123/255.0 blue:81/255.0 alpha:1]
 #import "ResultOfSendViewController.h"
 
-@interface RockViewController ()
+@interface RockViewController () <UMSocialUIDelegate>
 {
     UILabel *timesLabel;
     UILabel *rewardLabel;
@@ -78,9 +78,17 @@
 //{
 //    NSLog(@"shake+++++++++++++++++");
 //}
-//- (void)viewDidAppear:(BOOL)animated{
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(shakeAction) name:@"shake" object:nil];
-//}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if (isLoaded) {
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(shakeAction) name:@"shake" object:nil];
+    }
+}
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    isLoaded = YES;
+}
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
@@ -362,13 +370,14 @@
     
     
     //创建滚动视图
-    self.upView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
-    self.upView.pagingEnabled = YES;
-    self.upView.showsHorizontalScrollIndicator = NO;
-    self.upView.showsVerticalScrollIndicator = NO;
-    self.upView.contentSize = CGSizeMake(self.upView.frame.size.width*4, self.upView.frame.size.height);
-    self.upView.scrollEnabled = NO;
-    [bodyView addSubview:self.upView];
+    _upView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
+    _upView.pagingEnabled = YES;
+    _upView.showsHorizontalScrollIndicator = NO;
+    _upView.showsVerticalScrollIndicator = NO;
+    _upView.contentSize = CGSizeMake(_upView.frame.size.width*4, _upView.frame.size.height);
+    _upView.scrollEnabled = NO;
+    [bodyView addSubview:_upView];
+    [_upView release];
 #pragma mark - one
     //1
 //    UIView *view1 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.upView.frame.size.width, self.upView.frame.size.height)];
@@ -409,44 +418,44 @@
     [self.upView addSubview:shakeImageView1];
 #pragma mark - two
     //2
-    UILabel *shakeDescLabel2 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 +upViewWidth- 115, 10, 230, 20) Font:16 Text:@"哎呦~运气不错哦~为萌星摇出"];
-    shakeDescLabel2.textAlignment = NSTextAlignmentCenter;
-    shakeDescLabel2.textColor = GRAYBLUECOLOR;
-    [self.upView addSubview:shakeDescLabel2];
-    UIImageView *rewardbg = [MyControl createImageViewWithFrame:CGRectMake(self.upView.frame.size.width/2-80+upViewWidth, 50, 160, 185) ImageName:@"rewardbg.png"];
-    [self.upView addSubview:rewardbg];
-    rewardLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2-100+upViewWidth, 70, 200, 15) Font:16 Text:@"糖果"];
-    [self.upView addSubview:rewardLabel];
-    rewardLabel.font = [UIFont boldSystemFontOfSize:16];
-    rewardLabel.textColor = LIGHTORANGECOLOR;
-    rewardLabel.textAlignment = NSTextAlignmentCenter;
-    
-    //196  167
-    rewardImage = [MyControl createImageViewWithFrame:CGRectMake(rewardbg.frame.size.width/2-54, rewardbg.frame.size.height/2-36, 196/2, 166/2) ImageName:@"1102.png"];
-    [rewardbg addSubview:rewardImage];
-    
-    descRewardLabel = [MyControl createLabelWithFrame:CGRectMake(0, 140, rewardbg.frame.size.width, 30) Font:12 Text:@"猫君 人气 +10"];
-    descRewardLabel.textAlignment = NSTextAlignmentCenter;
-    [rewardbg addSubview:descRewardLabel];
-    
-    UIImageView *share = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth, 265, upViewWidth, 40) ImageName:@"threeshare.png"];
-    [self.upView addSubview:share];
-    UIView *shareView = [MyControl createViewWithFrame:CGRectMake(upViewWidth/2-195/2.0+upViewWidth, 250, 195, 50)];
-    [self.upView addSubview:shareView];
-    for (int i = 0; i<3; i++) {
-        UIButton *shareButton = [MyControl createButtonWithFrame:CGRectMake(0+shareView.frame.size.width/3 * i +(i*12), 15, 40, 40) ImageName:nil Target:self Action:@selector(shareAction:) Title:nil];
-        shareButton.tag = 77+i;
-//        [shareButton setShowsTouchWhenHighlighted:YES];
-        [shareView addSubview:shareButton];
-    }
+//    UILabel *shakeDescLabel2 = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2 +upViewWidth- 115, 10, 230, 20) Font:16 Text:@"哎呦~运气不错哦~为萌星摇出"];
+//    shakeDescLabel2.textAlignment = NSTextAlignmentCenter;
+//    shakeDescLabel2.textColor = GRAYBLUECOLOR;
+//    [self.upView addSubview:shakeDescLabel2];
+//    UIImageView *rewardbg = [MyControl createImageViewWithFrame:CGRectMake(self.upView.frame.size.width/2-80+upViewWidth, 50, 160, 185) ImageName:@"rewardbg.png"];
+//    [self.upView addSubview:rewardbg];
+//    rewardLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2-100+upViewWidth, 70, 200, 15) Font:16 Text:@"糖果"];
+//    [self.upView addSubview:rewardLabel];
+//    rewardLabel.font = [UIFont boldSystemFontOfSize:16];
+//    rewardLabel.textColor = LIGHTORANGECOLOR;
+//    rewardLabel.textAlignment = NSTextAlignmentCenter;
+//    
+//    //196  167
+//    rewardImage = [MyControl createImageViewWithFrame:CGRectMake(rewardbg.frame.size.width/2-54, rewardbg.frame.size.height/2-36, 196/2, 166/2) ImageName:@"1102.png"];
+//    [rewardbg addSubview:rewardImage];
+//    
+//    descRewardLabel = [MyControl createLabelWithFrame:CGRectMake(0, 140, rewardbg.frame.size.width, 30) Font:12 Text:@"猫君 人气 +10"];
+//    descRewardLabel.textAlignment = NSTextAlignmentCenter;
+//    [rewardbg addSubview:descRewardLabel];
+//    
+//    UIImageView *share = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth, 265, upViewWidth, 40) ImageName:@"threeshare.png"];
+//    [self.upView addSubview:share];
+//    UIView *shareView = [MyControl createViewWithFrame:CGRectMake(upViewWidth/2-195/2.0+upViewWidth, 250, 195, 50)];
+//    [self.upView addSubview:shareView];
+//    for (int i = 0; i<3; i++) {
+//        UIButton *shareButton = [MyControl createButtonWithFrame:CGRectMake(0+shareView.frame.size.width/3 * i +(i*12), 15, 40, 40) ImageName:nil Target:self Action:@selector(shareAction:) Title:nil];
+//        shareButton.tag = 77+i;
+////        [shareButton setShowsTouchWhenHighlighted:YES];
+//        [shareView addSubview:shareButton];
+//    }
 #pragma mark - three
     //3
-    UIImageView *shakeBg3 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*2, 150, upViewWidth, 120) ImageName:@"grassnothing.png"];
-    [self.upView addSubview:shakeBg3];
-    UILabel *descNoGiftLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2-115+upViewWidth*2,10, 230, 100) Font:16 Text:@"如果上天再给我一次机会\n我会 ... 我一定会 ... \n摇到你"];
-    descNoGiftLabel.textAlignment = NSTextAlignmentCenter;
-    descNoGiftLabel.textColor = GRAYBLUECOLOR;
-    [self.upView addSubview:descNoGiftLabel];
+//    UIImageView *shakeBg3 = [MyControl createImageViewWithFrame:CGRectMake(upViewWidth*2, 150, upViewWidth, 120) ImageName:@"grassnothing.png"];
+//    [self.upView addSubview:shakeBg3];
+//    UILabel *descNoGiftLabel = [MyControl createLabelWithFrame:CGRectMake(upViewWidth/2-115+upViewWidth*2,10, 230, 100) Font:16 Text:@"如果上天再给我一次机会\n我会 ... 我一定会 ... \n摇到你"];
+//    descNoGiftLabel.textAlignment = NSTextAlignmentCenter;
+//    descNoGiftLabel.textColor = GRAYBLUECOLOR;
+//    [self.upView addSubview:descNoGiftLabel];
 #pragma mark - four
 
     //4
@@ -496,22 +505,23 @@
     
     UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
     if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]== 0)) {
-        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
-        UIImage * image = [UIImage imageWithContentsOfFile:pngFilePath];
-        if (image) {
-            headImageView.image = image;
-        }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                if (isFinish) {
-                    headImageView.image = load.dataImage;
-                    [load.data writeToFile:pngFilePath atomically:YES];
-                }
-            }];
-            [request release];
-        }
+        [MyControl setImageForImageView:headImageView Tx:self.pet_tx isPet:YES isRound:YES];
+//        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
+//        UIImage * image = [UIImage imageWithContentsOfFile:pngFilePath];
+//        if (image) {
+//            headImageView.image = image;
+//        }else{
+//            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//                if (isFinish) {
+//                    headImageView.image = load.dataImage;
+//                    [load.data writeToFile:pngFilePath atomically:YES];
+//                }
+//            }];
+//            [request release];
+//        }
     }
-    headImageView.layer.cornerRadius = 28;
-    headImageView.layer.masksToBounds = YES;
+//    headImageView.layer.cornerRadius = 28;
+//    headImageView.layer.masksToBounds = YES;
     [downView addSubview:headImageView];
     
     UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:CGRectMake(8, -2, 60, 60) ImageName:@"head_cricle1.png"];
@@ -536,10 +546,10 @@
         floating3.image = [UIImage imageNamed:@"blackcloud.png"];
         shakeDescLabel1.text = @"小鬼捣捣乱，措手不及减人气";
         shakeImageView1.image = [UIImage imageNamed:@"rock2.png"];
-        shakeDescLabel2.text = @"哎呦够坏哟~成功摇出";
-        rewardbg.image = [UIImage imageNamed:@"badrewardbg.png"];
-        shakeBg3.image = [UIImage imageNamed:@"troublenothing.png"];
-        descNoGiftLabel.text = @"哈哈，上天没给你机会\n恶作剧不是每一个人都可以哟~";
+//        shakeDescLabel2.text = @"哎呦够坏哟~成功摇出";
+//        rewardbg.image = [UIImage imageNamed:@"badrewardbg.png"];
+//        shakeBg3.image = [UIImage imageNamed:@"troublenothing.png"];
+//        descNoGiftLabel.text = @"哈哈，上天没给你机会\n恶作剧不是每一个人都可以哟~";
         shakeDescLabel.text = @"够了~你真是够了！\n你今天的捣捣乱次数用完啦~\n换个萌主继续捣乱吧~";
         grassBg4.image = [UIImage imageNamed:@"troublenothing.png"];
         shakeImageView.hidden = YES;
@@ -587,20 +597,47 @@
     }else if(sender.tag == 102){
         NSLog(@"微博");
         NSString * str = [NSString stringWithFormat:@"木有摇一摇次数了，好忧桑，你也想试试吗？http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-
-            if (response.responseCode == UMSResponseCodeSuccess) {
-                NSLog(@"分享成功！");
-                [self loadShakeShare];
-                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
-            }else{
-                NSLog(@"失败原因：%@", response);
-                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
-            }
-            
-        }];
+        
+        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+        NSLog(@"%d", oauth);
+        if (oauth) {
+            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:image socialUIDelegate:self];
+                //设置分享内容和回调对象
+                [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+            }];
+        }else{
+            [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:image socialUIDelegate:self];
+            //设置分享内容和回调对象
+            [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+        }
+//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//
+//            if (response.responseCode == UMSResponseCodeSuccess) {
+//                NSLog(@"分享成功！");
+//                [self loadShakeShare];
+//                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+//            }else{
+//                NSLog(@"失败原因：%@", response);
+//                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+//            }
+//            
+//        }];
     }
 }
+#pragma mark -
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+{
+    if (response.responseCode == UMSResponseCodeSuccess) {
+        NSLog(@"分享成功！");
+        [self loadShakeShare];
+        [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+    }else{
+        NSLog(@"失败原因：%@", response);
+        [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+    }
+}
+
 -(void)loadShakeShare
 {
     LOADING;
@@ -683,18 +720,32 @@
         }else{
             str = [NSString stringWithFormat:@"嘿嘿~我在宠物星球捉弄了萌宠%@，恶作剧的感觉真是妙不可言~http://home4pet.aidigame.com/(分享自@宠物星球社交应用）", self.pet_name];
         }
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-            if (response.responseCode == UMSResponseCodeSuccess) {
-                NSLog(@"分享成功！");
-                StartLoading;
-                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
-            }else{
-                NSLog(@"失败原因：%@", response);
-                StartLoading;
-                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
-            }
-            
-        }];
+        
+        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+        NSLog(@"%d", oauth);
+        if (oauth) {
+            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:image socialUIDelegate:self];
+                //设置分享内容和回调对象
+                [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+            }];
+        }else{
+            [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:image socialUIDelegate:self];
+            //设置分享内容和回调对象
+            [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+        }
+//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+//            if (response.responseCode == UMSResponseCodeSuccess) {
+//                NSLog(@"分享成功！");
+//                StartLoading;
+//                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+//            }else{
+//                NSLog(@"失败原因：%@", response);
+//                StartLoading;
+//                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+//            }
+//            
+//        }];
     }
 }
 //一句话两种颜色

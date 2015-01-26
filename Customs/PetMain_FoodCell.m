@@ -7,6 +7,7 @@
 //
 
 #import "PetMain_FoodCell.h"
+#import "ChargeViewController.h"
 
 @implementation PetMain_FoodCell
 
@@ -26,25 +27,27 @@
 {
     float width = [UIScreen mainScreen].bounds.size.width;
     
-    headImage = [MyControl createImageViewWithFrame:CGRectMake(16, 10, 86, 86) ImageName:@"20-1.png"];
+    headImage = [MyControl createImageViewWithFrame:CGRectMake(16, 10, 86, 86) ImageName:@""];
+    headImage.contentMode = UIViewContentModeScaleAspectFill;
+    headImage.clipsToBounds = YES;
     [self addSubview:headImage];
     
     //距照片20，距右边15
     float originX = headImage.frame.origin.x+headImage.frame.size.width+20;
-    foodNum = [MyControl createLabelWithFrame:CGRectMake(originX, 10, [UIScreen mainScreen].bounds.size.width-originX-15, 17) Font:16 Text:@"已挣得口粮：14098 份"];
+    foodNum = [MyControl createLabelWithFrame:CGRectMake(originX, 10, [UIScreen mainScreen].bounds.size.width-originX-15, 17) Font:16 Text:nil];
     foodNum.textColor = ORANGE;
     [self addSubview:foodNum];
     
-    desLabel = [MyControl createLabelWithFrame:CGRectMake(originX, headImage.frame.origin.y+15, [UIScreen mainScreen].bounds.size.width-originX-15, headImage.frame.size.height-15) Font:12 Text:@"生生灯火，明暗无辄，看着迂回的伤痕，却不能为你做什么，我恨我，躲在永夜背后找微光的出口"];
+    desLabel = [MyControl createLabelWithFrame:CGRectMake(originX, headImage.frame.origin.y+15, [UIScreen mainScreen].bounds.size.width-originX-15, headImage.frame.size.height-15) Font:12 Text:nil];
     desLabel.textColor = [UIColor blackColor];
     [self addSubview:desLabel];
     
-    timeLabel = [MyControl createLabelWithFrame:CGRectMake(width-15-100, 10+headImage.frame.size.height-10, 100, 15) Font:11 Text:@"1小时前"];
+    timeLabel = [MyControl createLabelWithFrame:CGRectMake(width-15-100, 10+headImage.frame.size.height-10, 100, 15) Font:11 Text:nil];
     timeLabel.textAlignment = NSTextAlignmentRight;
     timeLabel.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
     [self addSubview:timeLabel];
     
-    UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 104, width, 0.8)];
+    line = [MyControl createViewWithFrame:CGRectMake(0, 104, width, 0.8)];
     line.backgroundColor = [ControllerManager colorWithHexString:@"b9b9b9"];
     [self addSubview:line];
     
@@ -52,6 +55,8 @@
 }
 -(void)createReward
 {
+//    [line removeFromSuperview];
+    
     float width = [UIScreen mainScreen].bounds.size.width;
     //587  98
     rewardBg = [MyControl createImageViewWithFrame:CGRectMake((width-498/2)/2.0, 106, 498/2, 103/2) ImageName:@"food_rewardBg.png"];
@@ -108,47 +113,88 @@
     //    [rewardBg addSubview:rewardBtn];
     
     heartBtn = [MyControl createButtonWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2) ImageName:@"food_heart.png" Target:self Action:@selector(rewardBtnClick:) Title:nil];
-    [heartBtn addTarget:self action:@selector(heartTouchDown) forControlEvents:UIControlEventTouchDown];
-    [heartBtn addTarget:self action:@selector(heartUpOutside) forControlEvents:UIControlEventTouchUpOutside];
+//    [heartBtn addTarget:self action:@selector(heartTouchDown) forControlEvents:UIControlEventTouchDown];
+//    [heartBtn addTarget:self action:@selector(heartUpOutside) forControlEvents:UIControlEventTouchUpOutside];
     [self addSubview:heartBtn];
 //    timer = [NSTimer scheduledTimerWithTimeInterval:1.9 target:self selector:@selector(heartAnimation) userInfo:nil repeats:YES];
 }
--(void)heartTouchDown
+-(void)rewardBtnClick:(UIButton *)btn
 {
-    [timer invalidate];
-    timer = nil;
-    [UIView animateWithDuration:0.2 animations:^{
-        CGRect rect = heartBtn.frame;
-        rect.origin.x -= 7;
-        rect.origin.y -= 7;
-        rect.size.width += 14;
-        rect.size.height += 14;
-        heartBtn.frame = rect;
-    }];
+    self.rewardClick(rewardNum);
+    
+    
+//    [self reward];
 }
--(void)heartUpOutside
+-(void)reward
 {
-    [UIView animateWithDuration:0.2 animations:^{
-        heartBtn.frame = CGRectMake([UIScreen mainScreen].bounds.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2);
-    } completion:^(BOOL finished) {
-        timer = [NSTimer scheduledTimerWithTimeInterval:2.4 target:self selector:@selector(heartAnimation) userInfo:nil repeats:YES];
+//    int a = tv.contentOffset.y/self.view.frame.size.width;
+    
+    LOADING;
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@&n=%@dog&cat", self.img_id, rewardNum.text]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&n=%@&sig=%@&SID=%@", REWARDFOODAPI, self.img_id, rewardNum.text, sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
+                if ([rewardNum.text intValue]>[[USER objectForKey:@"food"] intValue]) {
+                    [USER setObject:@"0" forKey:@"food"];
+                }else{
+                    [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"food"] intValue]-[rewardNum.text intValue]] forKey:@"food"];
+                }
+                
+                [USER setObject:[NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"gold"]] forKey:@"gold"];
+//                BegFoodListModel * model = self.dataArray[a];
+                
+                foodNum.text = [NSString stringWithFormat:@"已挣得口粮：%@ 份", [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"food"]]];
+//                self.begModel.food = [[load.dataDict objectForKey:@"data"] objectForKey:@"food"];
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"打赏成功，感谢您的爱心！"];
+//                [tv reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:a inSection:0]] withRowAnimation:0];
+                
+                
+            }
+            ENDLOADING;
+        }else{
+            LOADFAILED;
+        }
     }];
+    [request release];
 }
--(void)heartAnimation
-{
-    [UIView animateWithDuration:0.2 animations:^{
-        CGRect rect = heartBtn.frame;
-        rect.origin.x -= 7;
-        rect.origin.y -= 7;
-        rect.size.width += 14;
-        rect.size.height += 14;
-        heartBtn.frame = rect;
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.2 animations:^{
-            heartBtn.frame = CGRectMake([UIScreen mainScreen].bounds.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2);
-        }];
-    }];
-}
+//-(void)heartTouchDown
+//{
+//    [timer invalidate];
+//    timer = nil;
+//    [UIView animateWithDuration:0.2 animations:^{
+//        CGRect rect = heartBtn.frame;
+//        rect.origin.x -= 7;
+//        rect.origin.y -= 7;
+//        rect.size.width += 14;
+//        rect.size.height += 14;
+//        heartBtn.frame = rect;
+//    }];
+//}
+//-(void)heartUpOutside
+//{
+//    [UIView animateWithDuration:0.2 animations:^{
+//        heartBtn.frame = CGRectMake([UIScreen mainScreen].bounds.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2);
+//    } completion:^(BOOL finished) {
+//        timer = [NSTimer scheduledTimerWithTimeInterval:2.4 target:self selector:@selector(heartAnimation) userInfo:nil repeats:YES];
+//    }];
+//}
+//-(void)heartAnimation
+//{
+//    [UIView animateWithDuration:0.2 animations:^{
+//        CGRect rect = heartBtn.frame;
+//        rect.origin.x -= 7;
+//        rect.origin.y -= 7;
+//        rect.size.width += 14;
+//        rect.size.height += 14;
+//        heartBtn.frame = rect;
+//    } completion:^(BOOL finished) {
+//        [UIView animateWithDuration:0.2 animations:^{
+//            heartBtn.frame = CGRectMake([UIScreen mainScreen].bounds.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2);
+//        }];
+//    }];
+//}
 
 #pragma mark -
 -(void)numBtnClick:(UIButton *)btn
@@ -185,6 +231,37 @@
     }
     
 }
+
+-(void)configUI:(BegFoodListModel *)model
+{
+//    NSLog(@"%@", model.name);
+//    self.petName = model.name;
+    self.img_id = model.img_id;
+    
+    [headImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+    }];
+    desLabel.text = model.cmt;
+    timeLabel.text = [MyControl timeFromTimeStamp:model.create_time];
+    foodNum.text = [NSString stringWithFormat:@"已挣得口粮：%@ 份", model.food];
+    
+    NSDate * date = [NSDate date];
+    //当前时间戳
+    int stamp = [[NSString stringWithFormat:@"%f", [date timeIntervalSince1970]] intValue];
+    int timeStamp = [model.create_time intValue];
+    if(stamp-timeStamp >= 24*60*60){
+        CGRect rect = line.frame;
+        rect.origin.y = 104.0;
+        line.frame = rect;
+    }else{
+        [self createReward];
+        CGRect rect = line.frame;
+        rect.origin.y = 164.0;
+        line.frame = rect;
+    }
+}
+
+
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 

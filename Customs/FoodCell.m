@@ -14,6 +14,9 @@
     [super dealloc];
     [timer invalidate];
     [timer release];
+    bigImageView.image = nil;
+    bigImageView = nil,[bigImageView release];
+    
 }
 - (void)awakeFromNib {
     // Initialization code
@@ -68,6 +71,13 @@
 //    addLabel.textColor = ORANGE;
 //    addLabel.textAlignment = NSTextAlignmentCenter;
 //    [whiteView addSubview:addLabel];
+    bigBtn = [MyControl createButtonWithFrame:whiteView.frame ImageName:@"" Target:self Action:@selector(bigBtnClick) Title:nil];
+//    bigBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
+    [self addSubview:bigBtn];
+}
+-(void)bigBtnClick
+{
+    self.bigClick();
 }
 -(void)minTime
 {
@@ -107,7 +117,8 @@
 //        NSLog(@"%d--%lld--%.2lld", receivedSize, expectedSize, receivedSize/expectedSize);
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (image) {
-            
+//            bigImageView.image = nil;
+//            bigImageView.image = [UIImage imageWithData:[MyControl compressImage:image]];
             float w = whiteView.frame.size.width;
             float h = leftTime.frame.origin.y;
             
@@ -124,6 +135,7 @@
                 float realWidth = (h-margin*2)*imageW/imageH;
                 bigImageView.frame = CGRectMake((w-realWidth)/2.0, margin, realWidth, h-margin*2);
             }
+            
         }
     }];
 //    [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {

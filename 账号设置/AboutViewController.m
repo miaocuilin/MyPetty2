@@ -45,9 +45,9 @@
 //    //    NSLog(@"%@", data);
 //    UIImage * image = [UIImage imageWithData:data];
 //    bgImageView.image = image;
-//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-//    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
-//    [self.view addSubview:tempView];
+    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
+    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
+    [self.view addSubview:tempView];
 }
 #pragma mark - 创建导航
 -(void)createFakeNavigation
@@ -95,7 +95,7 @@
     title.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:title];
     
-    UILabel * version = [MyControl createLabelWithFrame:CGRectMake(100, 220, 120, 20) Font:16 Text:@"V1.0.1"];
+    UILabel * version = [MyControl createLabelWithFrame:CGRectMake(100, 220, 120, 20) Font:16 Text:@"V1.1.3"];
 //    if ([[USER objectForKey:@"version"] isEqualToString:@"1.0"]) {
 //        version.text = @"V1.0.0";
 //    }else{
@@ -112,7 +112,7 @@
 //    sina.showsTouchWhenHighlighted = YES;
     [sv addSubview:sina];
     
-    UIButton * wechat = [MyControl createButtonWithFrame:CGRectMake(0, 320, 320, 47) ImageName:@"" Target:self Action:@selector(wechatClick) Title:@"微信公众号：宠物星球"];
+    UIButton * wechat = [MyControl createButtonWithFrame:CGRectMake(0, 320, 320, 47) ImageName:@"" Target:self Action:@selector(wechatClick) Title:@"微信号：imengstar"];
     wechat.titleLabel.font = [UIFont systemFontOfSize:16];
     [wechat setTitleColor:BGCOLOR forState:UIControlStateNormal];
     wechat.backgroundColor = [UIColor colorWithRed:245/255.0 green:245/255.0 blue:245/255.0 alpha:1];
@@ -128,7 +128,7 @@
     phone.textColor = [UIColor colorWithRed:85/255.0 green:85/255.0 blue:85/255.0 alpha:1];
     [sv addSubview:phone];
     
-    UILabel * mail = [MyControl createLabelWithFrame:CGRectMake(118/2, 450, 220, 20) Font:12 Text:@"邮箱：contact@aidigame.com"];
+    UILabel * mail = [MyControl createLabelWithFrame:CGRectMake(118/2, 450, 220, 20) Font:12 Text:@"邮箱：contact@imengstar.com"];
     mail.textColor = [UIColor colorWithRed:85/255.0 green:85/255.0 blue:85/255.0 alpha:1];
     [sv addSubview:mail];
     
@@ -161,6 +161,9 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

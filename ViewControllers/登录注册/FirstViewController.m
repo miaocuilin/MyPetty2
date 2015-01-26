@@ -11,6 +11,7 @@
 #import "ControllerManager.h"
 #import "ASIFormDataRequest.h"
 #import <ImageIO/ImageIO.h>
+#import "EaseMob.h"
 //#import "FoodFirstViewController.h"
 //#import "MainTabBarViewController.h"
 
@@ -420,7 +421,7 @@
                 }
             }
         }else{
-            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:nil otherTitles:@"确定"];
             alert.delegate = self;
         }
     }];
@@ -478,7 +479,7 @@
             }
         }else{
             LoadingFailed;
-            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:nil otherTitles:@"确定"];
             alert.delegate = self;
         }
     }];
@@ -499,6 +500,7 @@
     if (shouldLoading) {
         LOADING;
     }
+    
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (shouldLoading) {
             ENDLOADING;
@@ -515,6 +517,34 @@
                 //SID未过期，直接获取用户数据
                 NSLog(@"用户数据：%@", load.dataDict);
                 NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+                //登录环信
+                [[EaseMob sharedInstance].chatManager asyncLoginWithUsername:[USER objectForKey:@"usr_id"] password:[dict objectForKey:@"code"] completion:^(NSDictionary *loginInfo, EMError *error) {
+                    if (!error) {
+                        NSLog(@"登录成功");
+                        
+//                        EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
+//                        NSLog(@"%@", options.nickname);
+                        
+                        [[EaseMob sharedInstance].chatManager setApnsNickname:[dict objectForKey:@"name"]];
+                        if (![[USER objectForKey:@"setMsgDetail"] intValue]) {
+                            EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
+                            if(options.displayStyle != ePushNotificationDisplayStyle_messageDetail){
+                                options.displayStyle = ePushNotificationDisplayStyle_messageDetail;
+                                [[EaseMob sharedInstance].chatManager asyncUpdatePushOptions:options completion:^(EMPushNotificationOptions *options, EMError *error) {
+                                    if (error) {
+                                        NSLog(@"%@", error);
+                                    }else{
+                                        NSLog(@"消息推送类型更新成功");
+                                        [USER setObject:@"1" forKey:@"setMsgDetail"];
+                                    }
+                                } onQueue:nil];
+                            }
+                        }
+                        
+                    }else{
+                        NSLog(@"%@", error);
+                    }
+                } onQueue:nil];
                 
                 [USER setObject:[dict objectForKey:@"a_name"] forKey:@"a_name"];
                 if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {
@@ -540,6 +570,8 @@
 //                NSLog(@"%@", [USER objectForKey:@"weibo"]);
                 [USER setObject:[dict objectForKey:@"wechat"] forKey:@"wechat"];
                 [USER setObject:[dict objectForKey:@"password"] forKey:@"password"];
+                [USER setObject:[dict objectForKey:@"code"] forKey:@"code"];
+                
                 if (!([[dict objectForKey:@"rank"] isKindOfClass:[NSNull class]] || ![[dict objectForKey:@"rank"] length])) {
                     [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
                 }else{
@@ -559,7 +591,7 @@
                 
             }
         }else{
-            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:nil otherTitles:@"确定"];
             alert.delegate = self;
         }
     }];
@@ -596,7 +628,7 @@
             
             [self jumpToMain];
         }else{
-            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:@"取消" otherTitles:@"确定"];
+            UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:nil otherTitles:@"确定"];
             alert.delegate = self;
         }
     }];
@@ -640,6 +672,9 @@
     mainTab.modalTransitionStyle = 2;
     
     mainTab.selectedIndex = 1;
+//    if ([[USER objectForKey:@"hasRemoteNotification"] intValue]) {
+//        mainTab.selectedIndex = 3;
+//    }
     
     [self presentViewController:mainTab animated:YES completion:nil];
     [mainTab release];
@@ -734,6 +769,9 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 -(void)setAnimation:(UIImageView *)nowView
@@ -772,8 +810,6 @@
 {
     NSLog(@"%d", buttonIndex);
     if (buttonIndex == 0) {
-        
-    }else{
         shouldLoading = 1;
         if (reloadType == 1) {
             [self getUserData];

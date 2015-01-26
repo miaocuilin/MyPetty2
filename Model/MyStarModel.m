@@ -26,6 +26,8 @@
     [_t_contri release];
     [_t_rq release];
     [_tx release];
+    [_u_tx release];
+    [_u_name release];
     [_images release];
     [_invite_code release];
 }

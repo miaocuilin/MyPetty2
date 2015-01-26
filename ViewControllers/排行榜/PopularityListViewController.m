@@ -128,6 +128,14 @@
                 [self loadUserPetsInfo];
             }else{
                 [tv reloadData];
+                if(self.isFromPetMain && self.targetAid != nil){
+                    for (int i=0; i<self.limitRankDataArray.count; i++) {
+                        if ([[self.limitRankDataArray[i] aid] isEqualToString:self.targetAid]) {
+                            tv.contentOffset = CGPointMake(0, i*50);
+                            break;
+                        }
+                    }
+                }
                 ENDLOADING;
             }
             
@@ -213,7 +221,22 @@
 //                }
 //            }
             ENDLOADING;
-            [self findMeBtnClick];
+            if (self.isFromPetMain) {
+                if(self.targetAid != nil){
+                    for (int i=0; i<self.limitRankDataArray.count; i++) {
+                        if ([[self.limitRankDataArray[i] aid] isEqualToString:self.targetAid]) {
+                            tv.contentOffset = CGPointMake(0, i*50);
+                            [tv reloadData];
+                            break;
+                        }else if(i == self.limitRankDataArray.count-1){
+                            [self findMeBtnClick];
+                        }
+                    }
+                }
+            }else{
+                [self findMeBtnClick];
+            }
+            
 //            [tv reloadData];
         }else{
             LOADFAILED;
@@ -834,6 +857,9 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    //清除缓存图片
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
 }
 
 /*

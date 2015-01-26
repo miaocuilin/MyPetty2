@@ -40,6 +40,7 @@
     UIButton * typeBtn;
     
     BOOL isLoaded;
+    UIImageView * guide;
 }
 @property(nonatomic,copy)NSString * lastAid;
 @property(nonatomic,copy)NSString * tfString;

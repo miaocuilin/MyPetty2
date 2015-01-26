@@ -9,21 +9,76 @@
 #import "SetBlackListViewController.h"
 #import "BlackListCell.h"
 #import "InfoModel.h"
+#import "EaseMob.h"
+#import "FAQViewController.h"
+#import "FAQCell.h"
+@interface SetBlackListViewController () <IChatManagerDelegate,UIAlertViewDelegate>
+
+@end
+
 @implementation SetBlackListViewController
 
 -(void)viewDidLoad
 {
     [super viewDidLoad];
     self.dataArray = [NSMutableArray arrayWithCapacity:0];
+    [self getBlackList];
     [self createBg];
     [self createTableView];
     [self createFakeNavigation];
-    [self loadData];
+    
 }
 #pragma mark -
--(void)loadData
+-(void)getBlackList
 {
-    NSString * url = [NSString stringWithFormat:@"%@%@", BLOCKLISTAPI, [USER objectForKey:@"SID"]];
+    BOOL isLogin = [[[EaseMob sharedInstance] chatManager] isLoggedIn];
+    if (!isLogin) {
+        NSLog(@"未登录");
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"您尚未登录，不能查看黑名单，是否重新登录？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"登录", nil];
+        [alert show];
+        return;
+    }
+    [[EaseMob sharedInstance].chatManager asyncFetchBlockedListWithCompletion:^(NSArray *blockedList, EMError *error) {
+        if (!error) {
+            NSLog(@"获取成功 -- %@",blockedList);
+            [self loadData:blockedList];
+        }else{
+            NSLog(@"%@", error);
+            UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 100, self.view.frame.size.width, 20) Font:15 Text:@"小黑屋里还没人~"];
+            label.textColor = [UIColor blackColor];
+            label.textAlignment = NSTextAlignmentCenter;
+//            label.tag = 100;
+            [self.view addSubview:label];
+        }
+    } onQueue:nil];
+}
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        [[EaseMob sharedInstance].chatManager asyncLoginWithUsername:[USER objectForKey:@"usr_id"] password:[USER objectForKey:@"code"] completion:^(NSDictionary *loginInfo, EMError *error) {
+            if (!error) {
+                NSLog(@"登录成功");
+                [[EaseMob sharedInstance].chatManager setApnsNickname:[USER objectForKey:@"name"]];
+//                UILabel * label = (UILabel *)[self.view viewWithTag:100];
+//                [label removeFromSuperview];
+                [self getBlackList];
+            }else{
+                NSLog(@"%@", error);
+            }
+        } onQueue:nil];
+    }
+}
+-(void)loadData:(NSArray *)tempArray
+{
+    NSMutableString * str = [NSMutableString stringWithCapacity:0];
+    for (int i=0; i<tempArray.count; i++) {
+        [str appendString:tempArray[i]];
+        if (i != tempArray.count-1) {
+            [str appendString:@","];
+        }
+    }
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_ids=%@dog&cat", str]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, str, sig, [USER objectForKey:@"SID"]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -38,12 +93,7 @@
                     [model release];
                 }
                 [tv reloadData];
-                if (self.dataArray.count == 0) {
-                    UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 100, self.view.frame.size.width, 20) Font:15 Text:@"小黑屋里还没人~"];
-                    label.textColor = [UIColor blackColor];
-                    label.textAlignment = NSTextAlignmentCenter;
-                    [self.view addSubview:label];
-                }
+                
             }
         }else{
         
@@ -129,7 +179,7 @@
 //        //请求切换默认宠物API
 //        [self changeDefaultPet:[self.userPetListArray[a] aid] MasterId:master_id];
 //    };
-    
+//    NSLog(@"%@", model.name);
     cell.selectionStyle = 0;
     cell.backgroundColor = [UIColor clearColor];
     [cell configUIWithModel:model];
@@ -140,11 +190,41 @@
         //删除单元格的某一行时，在用动画效果实现删除过程
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
 //        [tv reloadData];
+        [self registerEaseMobDelegate];
+        // 将6001移除黑名单
+        EMError *error = [[EaseMob sharedInstance].chatManager unblockBuddy:model.usr_id];
+        if (!error) {
+            NSLog(@"发送成功");
+            UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 100, self.view.frame.size.width, 20) Font:15 Text:@"小黑屋里还没人~"];
+            label.textColor = [UIColor blackColor];
+            label.textAlignment = NSTextAlignmentCenter;
+            [self.view addSubview:label];
+        }
     };
     return cell;
 }
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 72.0f;
+}
+
+#pragma mark -
+#pragma mark - IChatManagerDelegate
+- (void)didUnblockBuddy:(EMBuddy *)buddy error:(EMError **)pError{
+    if (!pError) {
+        [MyControl popAlertWithView:self.view Msg:@"移除成功"];
+    }
+}
+
+// 向SDK中注册回调
+- (void)registerEaseMobDelegate{
+    // 此处先取消一次，是为了保证只将self注册过一次回调。
+    [self unRegisterEaseMobDelegate];
+    [[EaseMob sharedInstance].chatManager addDelegate:self delegateQueue:nil];
+}
+
+// 取消SDK中注册的回调
+- (void)unRegisterEaseMobDelegate{
+    [[EaseMob sharedInstance].chatManager removeDelegate:self];
 }
 @end

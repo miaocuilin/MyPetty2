@@ -96,16 +96,16 @@
 }
 -(void)createTableView
 {
-    self.tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-25) style:UITableViewStylePlain];
-    self.tv.dataSource = self;
-    self.tv.delegate = self;
-    self.tv.separatorStyle = 0;
-    self.tv.backgroundColor = [UIColor clearColor];
-    [self.tv addHeaderWithCallback:^{
+    _tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-25) style:UITableViewStylePlain];
+    _tv.dataSource = self;
+    _tv.delegate = self;
+    _tv.separatorStyle = 0;
+    _tv.backgroundColor = [UIColor clearColor];
+    [_tv addHeaderWithCallback:^{
         [self loadData];
     }];
-    [self.view addSubview:self.tv];
-    [self.tv release];
+    [self.view addSubview:_tv];
+    [_tv release];
     
 //    UIView * view = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 10)];
 //    self.tv.tableHeaderView = view;
@@ -128,6 +128,11 @@
     cell.jumpPetClick = ^(NSString * aid){
         PetMainViewController * vc = [[PetMainViewController alloc] init];
         vc.aid = aid;
+        vc.isFromPetRecom = YES;
+        vc.updatePBtn = ^(){
+            cell.pBtn.selected = YES;
+            model.in_circle = [NSNumber numberWithInt:1];
+        };
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
     };
@@ -161,7 +166,11 @@
                 if (isFinish) {
                     NSArray * array = [load.dataDict objectForKey:@"data"];
                     if (array.count >= 10) {
-                        if((array.count+1)*5>[[USER objectForKey:@"gold"] intValue]){
+                        int cost = array.count*5;
+                        if (cost>100) {
+                            cost = 100;
+                        }
+                        if(cost > [[USER objectForKey:@"gold"] intValue]){
                             //余额不足
                             [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
                             [oneBtn release];
@@ -172,13 +181,13 @@
 //                        [oneBtn makeUI];
 //                        [oneBtn release];
                         oneBtn.type = 2;
-                        oneBtn.petsNum = array.count+1;
+                        oneBtn.petsNum = array.count;
                         [oneBtn makeUI];
                         [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
                         [oneBtn release];
                     }else{
                         oneBtn.type = 2;
-                        oneBtn.petsNum = array.count+1;
+                        oneBtn.petsNum = array.count;
                         [oneBtn makeUI];
                         [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
                         [oneBtn release];
@@ -198,7 +207,13 @@
                                 NSLog(@"加入成功数据：%@",load.dataDict);
                                 if ([[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"]) {
                                     if (array.count>=10) {
-                                        [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-(array.count+1)*5] forKey:@"gold"];
+                                        int cost = array.count*5;
+                                        if (cost>100) {
+                                           [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-100] forKey:@"gold"];
+                                        }else{
+                                            [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"gold"] intValue]-cost] forKey:@"gold"];
+                                        }
+                                        
                                     }
                                     
                                     cell.pBtn.selected = YES;

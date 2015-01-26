@@ -12,6 +12,8 @@
 {
     UIView * navView;
     UITableView * tv;
+    //用来上拉刷新的
+    int page;
 }
 @property(nonatomic,retain)PetInfoModel * model;
 @property(nonatomic,retain)NSMutableArray * dataArray;

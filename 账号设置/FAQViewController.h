@@ -8,17 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FAQViewController : UIViewController <UITableViewDataSource,UITableViewDelegate>
+@interface FAQViewController : UIViewController
 {
     UIView * navView;
     UIImageView * bgImageView;
-    UITableView * tv;
-    UITableView * tv2;
+//    UITableView * tv;
+//    UITableView * tv2;
     
-    BOOL isSecond;
-    int rowNum;
+//    BOOL isSecond;
+//    int rowNum;
 }
-@property(nonatomic,copy)NSString * str;
-@property(nonatomic,retain)NSArray * array;
-@property(nonatomic,retain)NSMutableArray * dataArray;
+//@property(nonatomic,copy)NSString * str;
+//@property(nonatomic,retain)NSArray * array;
+//@property(nonatomic,retain)NSMutableArray * dataArray;
 @end

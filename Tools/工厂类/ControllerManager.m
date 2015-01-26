@@ -373,7 +373,7 @@ static FirstTabBarViewController * tabBar = nil;
 {
     NSMutableArray * array = [NSMutableArray arrayWithCapacity:0];
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"shopGift" ofType:@"plist"];
-    NSMutableDictionary *DictData = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+    NSMutableDictionary *DictData = [NSMutableDictionary dictionaryWithContentsOfFile:plistPath];
     NSArray *level0 = [[DictData objectForKey:@"good"] objectForKey:@"level0"];
     NSArray *level1 =[[DictData objectForKey:@"good"] objectForKey:@"level1"];
     NSArray *level2 =[[DictData objectForKey:@"good"] objectForKey:@"level2"];

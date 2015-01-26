@@ -230,7 +230,13 @@
 
 -(void)modifyBtnClick
 {
-    [self hyperBtnClick:hyperBtn];
+    if (isModify) {
+        [self hyperBtnClick:hyperBtn];
+    }else{
+        NSLog(@"私信");
+        self.msgClick();
+    }
+    
 }
 -(void)hyperBtnClick:(UIButton *)btn
 {
@@ -260,6 +266,15 @@
     if ([model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
 //        hyperBtn.hidden = NO;
         modifyBtn.hidden = NO;
+        [modifyBtn setBackgroundImage:[UIImage imageNamed:@"star_modify.png"] forState:UIControlStateNormal];
+        isModify = YES;
+    }else{
+        modifyBtn.hidden = NO;
+        [modifyBtn setBackgroundImage:[UIImage imageNamed:@"pet_msg.png"] forState:UIControlStateNormal];
+        CGRect rect = modifyBtn.frame;
+        rect.size.width = 23;
+        modifyBtn.frame = rect;
+        isModify = NO;
     }
 //
 //        la.text = @"萌印象";
@@ -439,6 +454,15 @@
 {
     //移动tableView到顶，以免textField被遮挡
     tf.backgroundColor = [UIColor colorWithRed:226/255.0 green:215/255.0 blue:215/255.0 alpha:1];
+    CGRect rect = tf.frame;
+    rect.size.width = 100;
+    rect.origin.x = (bgView.frame.size.width-100)/2.0;
+    tf.frame = rect;
+    
+    CGRect rect2 = hyperBtn.frame;
+    rect2.origin.x = rect.origin.x+100;
+    hyperBtn.frame = rect2;
+    
     return YES;
 }
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -476,7 +500,7 @@
 
 -(void)postMsg
 {
-    StartLoading;
+    LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.aid]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", MODIFYDECLAREAPI, self.aid, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
@@ -489,7 +513,7 @@
 }
 -(void)requestFinished:(ASIHTTPRequest *)request
 {
-    LoadingSuccess;
+    ENDLOADING;
     NSLog(@"响应：%@", [NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil]);
     NSDictionary *dict =[NSJSONSerialization JSONObjectWithData:request.responseData options:NSJSONReadingMutableContainers error:nil];
     if([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
@@ -511,7 +535,7 @@
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     tf.text = self.tempTfString;
-    LoadingFailed;
+    LOADFAILED;
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

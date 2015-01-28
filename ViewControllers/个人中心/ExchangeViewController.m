@@ -49,7 +49,9 @@
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
             self.itemsArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"item_ids"];
-            [self loadItemInfo:self.itemsArray[index]];
+            if(self.itemsArray.count){
+                [self loadItemInfo:self.itemsArray[index]];
+            }
             
             [self loadUserPetList];
         }else{

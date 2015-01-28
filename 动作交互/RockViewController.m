@@ -37,7 +37,20 @@
 @end
 
 @implementation RockViewController
-
+-(void)dealloc
+{
+    [super dealloc];
+    [totalView release];
+    [timesLabel release];
+    [rewardLabel release];
+    [rewardImage release];
+    [descRewardLabel release];
+    [floating1 release];
+    [floating2 release];
+    [floating3 release];
+    [_upView release];
+    NSLog(@"Rock release");
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -115,7 +128,7 @@
             int index = [[[load.dataDict objectForKey:@"data"] objectForKey:@"shake_count"] intValue];
             self.count = index;
             
-            [MobClick event:@"shake_suc"];
+            
             timesLabel.attributedText = [self firstString:@"今天还有次机会哦~" formatString:[NSString stringWithFormat:@"%d",self.count] insertAtIndex:4];
             
             if (self.count <= 0) {
@@ -146,6 +159,7 @@
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
                 self.count = [[[load.dataDict objectForKey:@"data"] objectForKey:@"shake_count"] intValue];
                 [self pickGift];
+                [MobClick event:@"shake_suc"];
             }
             
             ENDLOADING;
@@ -244,7 +258,7 @@
         [self colseGiftAction];
     };
     [model release];
-    
+    [result release];
     
     if (self.isFromStar) {
         self.unShakeNum(self.count);
@@ -277,6 +291,7 @@
                     self.count = cnt;
                 };
                 [self.view addSubview:send.view];
+                [send release];
                 [send configUIWithName:self.pet_name ItemId:model.no Tx:self.pet_tx];
                 [UIView animateWithDuration:0.3 animations:^{
                     send.view.alpha = 1;
@@ -346,28 +361,35 @@
 #pragma mark - 创建界面
 - (void)createShakeUI
 {
-    totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150, self.view.frame.size.height/2-212, 300, 425)];
-    [self.view addSubview:totalView];
+//    totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150, self.view.frame.size.height/2-212, 300, 425)];
+    totalView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2-150, self.view.frame.size.height/2-212, 300, 425)];
     totalView.layer.cornerRadius = 10;
     totalView.layer.masksToBounds = YES;
-    UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
+    [self.view addSubview:totalView];
+    
+    UIImageView *titleView = [MyController createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
     [totalView addSubview:titleView];
-    UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"摇一摇"];
+    [titleView release];
+    
+    UILabel *titleLabel = [MyController createLabelWithFrame:titleView.frame Font:17 Text:@"摇一摇"];
     titleLabel.text = self.titleString;
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [totalView addSubview:titleLabel];
-    UIImageView *closeImageView = [MyControl createImageViewWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png"];
+    
+    UIImageView *closeImageView = [MyController createImageViewWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png"];
     [totalView addSubview:closeImageView];
-    UIButton *closeButton = [MyControl createButtonWithFrame:CGRectMake(252.5, 2.5, 35, 35) ImageName:nil Target:self Action:@selector(colseGiftAction) Title:nil];
+    [closeImageView release];
+    
+    UIButton *closeButton = [MyController createButtonWithFrame:CGRectMake(252.5, 2.5, 35, 35) ImageName:nil Target:self Action:@selector(colseGiftAction) Title:nil];
     closeButton.showsTouchWhenHighlighted = YES;
     [totalView addSubview:closeButton];
     
     
     //    bodyView = nil;
-    UIView *bodyView = [MyControl createViewWithFrame:CGRectMake(0, 40, 300, 385)];
+    UIView *bodyView = [MyController createViewWithFrame:CGRectMake(0, 40, 300, 385)];
     bodyView.backgroundColor = [UIColor whiteColor];
     [totalView addSubview:bodyView];
-    
+    [bodyView release];
     
     //创建滚动视图
     _upView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
@@ -377,7 +399,6 @@
     _upView.contentSize = CGSizeMake(_upView.frame.size.width*4, _upView.frame.size.height);
     _upView.scrollEnabled = NO;
     [bodyView addSubview:_upView];
-    [_upView release];
 #pragma mark - one
     //1
 //    UIView *view1 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.upView.frame.size.width, self.upView.frame.size.height)];
@@ -506,6 +527,7 @@
     UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
     if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]== 0)) {
         [MyControl setImageForImageView:headImageView Tx:self.pet_tx isPet:YES isRound:YES];
+        
 //        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
 //        UIImage * image = [UIImage imageWithContentsOfFile:pngFilePath];
 //        if (image) {
@@ -671,10 +693,27 @@
     if (self.isFromStar) {
         self.unShakeNum(self.count);
     }
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
     [self.timer invalidate];
     self.timer = nil;
+    
+    [self willMoveToParentViewController:nil];
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    
+//    [totalView release];
+//    [timesLabel release];
+//    [rewardLabel release];
+//    [rewardImage release];
+//    [descRewardLabel release];
+//    [floating1 release];
+//    [floating2 release];
+//    [floating3 release];
+//    [_upView release];
+//    NSLog(@"Rock release");
+    
+//    [self dealloc];
+//    [self removeFromParentViewController];
+    
 }
 - (void)shareAction:(UIButton *)sender
 {

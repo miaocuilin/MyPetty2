@@ -101,7 +101,7 @@
     
     
     //开关
-    if(![[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"]){
+    if(![[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
         UIView * line1 = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2.0-174/2-15, logBtn.frame.origin.y+logBtn.frame.size.height+90, 174/2, 0.5)];
         line1.backgroundColor = [UIColor whiteColor];
         [sv addSubview:line1];
@@ -517,8 +517,8 @@
                         [[EaseMob sharedInstance].chatManager setApnsNickname:[dict objectForKey:@"name"]];
                         if (![[USER objectForKey:@"setMsgDetail"] intValue]) {
                             EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
-                            if(options.displayStyle != ePushNotificationDisplayStyle_messageDetail){
-                                options.displayStyle = ePushNotificationDisplayStyle_messageDetail;
+                            if(options.displayStyle != ePushNotificationDisplayStyle_messageSummary){
+                                options.displayStyle = ePushNotificationDisplayStyle_messageSummary;
                                 [[EaseMob sharedInstance].chatManager asyncUpdatePushOptions:options completion:^(EMPushNotificationOptions *options, EMError *error) {
                                     if (error) {
                                         NSLog(@"%@", error);

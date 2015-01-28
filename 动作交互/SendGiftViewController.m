@@ -565,6 +565,7 @@
 }
 -(void)closeGiftAction
 {
+    [self willMoveToParentViewController:nil];
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
 }

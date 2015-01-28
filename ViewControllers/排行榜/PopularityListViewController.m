@@ -50,6 +50,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [MobClick event:@"rank"];
+    
     self.view.backgroundColor = [UIColor whiteColor];
     
     self.catArray = [NSMutableArray arrayWithCapacity:0];
@@ -229,12 +231,14 @@
                             [tv reloadData];
                             break;
                         }else if(i == self.limitRankDataArray.count-1){
-                            [self findMeBtnClick];
+//                            [self findMeBtnClick];
+                            [tv reloadData];
                         }
                     }
                 }
             }else{
-                [self findMeBtnClick];
+//                [self findMeBtnClick];
+                [tv reloadData];
             }
             
 //            [tv reloadData];
@@ -575,7 +579,8 @@
         return;
     }
     if (self.myCountryArray.count == 0) {
-        NSLog(@"排行榜中没有您的王国");
+        NSLog(@"排行榜中没有您的萌星");
+        [MyControl popAlertWithView:self.view Msg:@"排行榜中没有您的萌星"];
         return;
     }
     /***************逻辑判断*****************/

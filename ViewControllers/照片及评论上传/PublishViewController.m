@@ -245,9 +245,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        Height *= w;
 //    }
 //    if (Height>230) {
+    if(Width != 0){
         float h = (self.view.frame.size.width-20)/Width;
-//        Width *= h;
+        //        Width *= h;
         Height *= h;
+    }else{
+        Height = 200;
+    }
+
 //    }
     bigImageView.frame = CGRectMake((self.view.frame.size.width-300)/2, bigImageView.frame.origin.y, self.view.frame.size.width-20, Height);
     bigImageView.layer.cornerRadius = 5;
@@ -883,6 +888,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        [MyControl loadingSuccessWithContent:@"发布成功" afterDelay:0.5f];
         
         publishSuc = YES;
+        
+        [MobClick event:@"photo"];
+        
         if (shareSuc) {
             [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
                 self.showFrontImage(self.img_id, self.isBeg, self.aid, self.name);
@@ -894,8 +902,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     //如果返回正常，将图片存到本地
 //    if([[dict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[dict objectForKey:@"data"] objectForKey:@"image"] isKindOfClass:[NSDictionary class]]){
-//        [MobClick event:@"photo"];
-//        
+    
+//
 //        NSString * url = [[[dict objectForKey:@"data"] objectForKey:@"image"] objectForKey:@"url"];
 //        NSData * data = [MyControl scaleToSize:self.oriImage];
 //        NSString * path = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", url]];

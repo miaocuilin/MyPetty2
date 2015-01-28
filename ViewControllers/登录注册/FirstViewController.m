@@ -517,34 +517,45 @@
                 //SID未过期，直接获取用户数据
                 NSLog(@"用户数据：%@", load.dataDict);
                 NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-                //登录环信
-                [[EaseMob sharedInstance].chatManager asyncLoginWithUsername:[USER objectForKey:@"usr_id"] password:[dict objectForKey:@"code"] completion:^(NSDictionary *loginInfo, EMError *error) {
-                    if (!error) {
-                        NSLog(@"登录成功");
-                        
-//                        EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
-//                        NSLog(@"%@", options.nickname);
-                        
-                        [[EaseMob sharedInstance].chatManager setApnsNickname:[dict objectForKey:@"name"]];
-                        if (![[USER objectForKey:@"setMsgDetail"] intValue]) {
+                
+                //判断环信有没有自动登录
+                BOOL isAutoLogin = [[EaseMob sharedInstance].chatManager isAutoLoginEnabled];
+                if (!isAutoLogin) {
+                    //登录环信
+                    [[EaseMob sharedInstance].chatManager asyncLoginWithUsername:[USER objectForKey:@"usr_id"] password:[dict objectForKey:@"code"] completion:^(NSDictionary *loginInfo, EMError *error) {
+                        if (!error) {
+                            NSLog(@"登录成功");
+                            
+                            [[EaseMob sharedInstance].chatManager setIsAutoLoginEnabled:YES];
+                            //                        EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
+                            //                        NSLog(@"%@", options.nickname);
+                            
                             EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
-                            if(options.displayStyle != ePushNotificationDisplayStyle_messageDetail){
-                                options.displayStyle = ePushNotificationDisplayStyle_messageDetail;
-                                [[EaseMob sharedInstance].chatManager asyncUpdatePushOptions:options completion:^(EMPushNotificationOptions *options, EMError *error) {
-                                    if (error) {
-                                        NSLog(@"%@", error);
-                                    }else{
-                                        NSLog(@"消息推送类型更新成功");
-                                        [USER setObject:@"1" forKey:@"setMsgDetail"];
-                                    }
-                                } onQueue:nil];
+                            if(![options.nickname isEqualToString:[dict objectForKey:@"name"]]){
+                                NSLog(@"更新昵称");
+                                [[EaseMob sharedInstance].chatManager setApnsNickname:[dict objectForKey:@"name"]];
                             }
+                            
+                            if (![[USER objectForKey:@"setMsgDetail"] intValue]) {
+                                EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
+                                if(options.displayStyle != ePushNotificationDisplayStyle_messageSummary){
+                                    options.displayStyle = ePushNotificationDisplayStyle_messageSummary;
+                                    [[EaseMob sharedInstance].chatManager asyncUpdatePushOptions:options completion:^(EMPushNotificationOptions *options, EMError *error) {
+                                        if (error) {
+                                            NSLog(@"%@", error);
+                                        }else{
+                                            NSLog(@"消息推送类型更新成功");
+                                            [USER setObject:@"1" forKey:@"setMsgDetail"];
+                                        }
+                                    } onQueue:nil];
+                                }
+                            }
+                            
+                        }else{
+                            NSLog(@"%@", error);
                         }
-                        
-                    }else{
-                        NSLog(@"%@", error);
-                    }
-                } onQueue:nil];
+                    } onQueue:nil];
+                }
                 
                 [USER setObject:[dict objectForKey:@"a_name"] forKey:@"a_name"];
                 if (![[dict objectForKey:@"a_tx"] isKindOfClass:[NSNull class]]) {

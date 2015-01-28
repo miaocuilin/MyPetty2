@@ -330,8 +330,10 @@
 - (void)refreshPushOptions
 {
     EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
+    NSLog(@"%d", options.displayStyle);
     _nickName = options.nickname;
     _pushDisplayStyle = options.displayStyle;
+    NSLog(@"%d", _pushDisplayStyle);
     _isNoDisturbing = options.noDisturbing;
     if (_isNoDisturbing) {
         _noDisturbingStart = options.noDisturbingStartH;

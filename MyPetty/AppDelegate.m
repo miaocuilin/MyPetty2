@@ -206,6 +206,7 @@
         [USER setObject:@"0" forKey:@"guide_petmain"];
         
         [USER setObject:@"0" forKey:@"setMsgDetail"];
+        [USER setObject:@"1" forKey:@"showCostAlert"];
         [USER setObject:versionKey forKey:@"versionKey"];
         
         [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];

@@ -138,7 +138,7 @@
         label3.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
         [bgView addSubview:label3];
     }
-//    if ([[USER objectForKey:@"notShowCostAlert"] intValue]) {
+//    if ([[USER objectForKey:@"showCostAlert"] intValue]) {
 //        selectImage.hidden = YES;
 //        selectBtn.hidden = YES;
 //        selectLabel.hidden = YES;
@@ -174,10 +174,10 @@
     btn.selected = !btn.selected;
     if (btn.selected) {
         selectImage.image = [UIImage imageNamed:@"atUsers_selected.png"];
-        [USER setObject:@"0" forKey:@"notShowCostAlert"];
+        [USER setObject:@"0" forKey:@"showCostAlert"];
     }else{
         selectImage.image = [UIImage imageNamed:@"atUsers_unSelected.png"];
-        [USER setObject:@"1" forKey:@"notShowCostAlert"];
+        [USER setObject:@"1" forKey:@"showCostAlert"];
     }
 }
 /*

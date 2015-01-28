@@ -101,6 +101,8 @@
     retureMsg.requireEncryption = requireEncryption;
     retureMsg.isGroup = isChatGroup;
     retureMsg.ext = @{@"nickname":nickName, @"tx":tx, @"other_nickname":other_nickName, @"other_tx":other_tx, @"id":[USER objectForKey:@"usr_id"]};
+    
+    [MobClick event:@"message"];
 //    , @"type":@"3", @"img_id":@"3475", @"nickname":@"毛大师"
 //    , @"type":@"2", @"img_id":@"3350"
 //    NSLog(@"%@", retureMsg.ext);

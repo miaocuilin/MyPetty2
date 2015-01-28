@@ -65,7 +65,9 @@
 -(void)timeOutMethod
 {
 	[self performSelector:@selector(resleaseTimer)];
-	[delegate performSelector:@selector(timeoutCallBack:) withObject:self];
+    if ([self respondsToSelector:@selector(timeoutCallBack:)]) {
+        [delegate performSelector:@selector(timeoutCallBack:) withObject:self];
+    }
 }
 
 -(void)resleaseTimer

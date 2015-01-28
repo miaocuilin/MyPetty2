@@ -363,7 +363,15 @@
     NSString *chatter = conversation.chatter;
     
     chatController = [[ChatViewController alloc] initWithChatter:chatter isGroup:conversation.isGroup];
-    if ([[conversation.latestMessageFromOthers.ext objectForKey:@"other_nickname"] isEqualToString:[USER objectForKey:@"name"]]) {
+    BOOL hasOthersMsg;
+    if ([conversation.latestMessageFromOthers.ext objectForKey:@"nickname"] == nil) {
+        //昵称为空，说明没有对方发来的消息
+        hasOthersMsg = NO;
+    }else{
+        hasOthersMsg = YES;
+    }
+    
+    if (hasOthersMsg) {
         //有对方发的
         chatController.nickName = [conversation.latestMessageFromOthers.ext objectForKey:@"other_nickname"];
         chatController.other_nickName = [conversation.latestMessageFromOthers.ext objectForKey:@"nickname"];

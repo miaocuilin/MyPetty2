@@ -87,7 +87,7 @@
         if (isFinish) {
             [self.bannerDataArray removeAllObjects];
 //            NSLog(@"%@", load.dataDict);
-            if ([[load.dataDict objectForKey:@"confVersion"] isEqualToString:@"1.0"]) {
+            if ([[load.dataDict objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]) {
                 isConf = YES;
             }
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]] && [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSArray class]] && [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] count]) {

@@ -13,6 +13,23 @@
 @end
 
 @implementation ResultOfSendViewController
+-(void)dealloc
+{
+    [super dealloc];
+    
+    [label1 release];
+    [label2 release];
+    [label3 release];
+    
+    [_bgImageView release];
+    [_headImageView release];
+    [_titleLabel release];
+//    closeBtn;
+    [_rqLabel release];
+//    confirmBtn;
+    [_headImage release];
+    [_actLabel release];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -24,27 +41,29 @@
 {
 //    self.view.alpha = 0;
     //596 852  有效宽度596
-    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-304)/2.0, (self.view.frame.size.height-426)/2.0, 304, 426) ImageName:@"alert_sendGift_good.png"];
+    self.bgImageView = [MyController createImageViewWithFrame:CGRectMake((self.view.frame.size.width-304)/2.0, (self.view.frame.size.height-426)/2.0, 304, 426) ImageName:@"alert_sendGift_good.png"];
     [self.view addSubview:self.bgImageView];
     
     //title
-    self.titleLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, self.bgImageView.frame.size.width, 37) Font:17 Text:nil];
+    self.titleLabel = [MyController createLabelWithFrame:CGRectMake(0, 0, self.bgImageView.frame.size.width, 37) Font:17 Text:nil];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.bgImageView addSubview:self.titleLabel];
     
     //close
-    self.closeBtn = [MyControl createButtonWithFrame:CGRectMake(self.bgImageView.frame.size.width-20-10, 8.5, 20, 20) ImageName:@"" Target:self Action:@selector(closeClick) Title:nil];
+    self.closeBtn = [MyController createButtonWithFrame:CGRectMake(self.bgImageView.frame.size.width-20-10, 8.5, 20, 20) ImageName:@"" Target:self Action:@selector(closeClick) Title:nil];
     [self.bgImageView addSubview:self.closeBtn];
     
     //转动动画
-    UIView * rollView = [MyControl createViewWithFrame:CGRectMake(0, 75/2.0, self.bgImageView.frame.size.width, self.bgImageView.frame.size.height-75/2.0)];
+    UIView * rollView = [MyController createViewWithFrame:CGRectMake(0, 75/2.0, self.bgImageView.frame.size.width, self.bgImageView.frame.size.height-75/2.0)];
     rollView.layer.cornerRadius = 10;
     rollView.layer.masksToBounds = YES;
     [self.bgImageView addSubview:rollView];
+    [rollView release];
     
-    UIImageView * rollImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 500*1.2, 940/2*1.2) ImageName:@"send_shine.png"];
+    UIImageView * rollImageView = [MyController createImageViewWithFrame:CGRectMake(0, 0, 500*1.2, 940/2*1.2) ImageName:@"send_shine.png"];
     rollImageView.center = CGPointMake(rollView.center.x, rollView.center.y-75/4.0-60);
     [rollView addSubview:rollImageView];
+    [rollImageView release];
     
     CABasicAnimation* rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0 ];
@@ -53,68 +72,73 @@
     rotationAnimation.repeatCount = NSUIntegerMax;
     [rollImageView.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
     //
-    label1 = [MyControl createLabelWithFrame:CGRectMake(0, 60, self.bgImageView.frame.size.width, 15) Font:13 Text:nil];
+    label1 = [MyController createLabelWithFrame:CGRectMake(0, 60, self.bgImageView.frame.size.width, 15) Font:13 Text:nil];
     label1.textColor = BGCOLOR;
     label1.textAlignment = NSTextAlignmentCenter;
     [self.bgImageView addSubview:label1];
     
-    label2 = [MyControl createLabelWithFrame:CGRectMake(0, 60, self.bgImageView.frame.size.width, 15) Font:13 Text:nil];
+    label2 = [MyController createLabelWithFrame:CGRectMake(0, 60, self.bgImageView.frame.size.width, 15) Font:13 Text:nil];
     label2.textColor = BGCOLOR;
     label2.textAlignment = NSTextAlignmentCenter;
     [self.bgImageView addSubview:label2];
     
-    label3 = [MyControl createLabelWithFrame:CGRectMake(0, 60, self.bgImageView.frame.size.width, 15) Font:13 Text:nil];
+    label3 = [MyController createLabelWithFrame:CGRectMake(0, 60, self.bgImageView.frame.size.width, 15) Font:13 Text:nil];
     label3.textColor = BGCOLOR;
     label3.textAlignment = NSTextAlignmentCenter;
     [self.bgImageView addSubview:label3];
     
     
-    UIImageView * circle = [MyControl createImageViewWithFrame:CGRectMake((self.bgImageView.frame.size.width-80)/2.0, 143, 80, 80) ImageName:@"head_cricle1.png"];
+    UIImageView * circle = [MyController createImageViewWithFrame:CGRectMake((self.bgImageView.frame.size.width-80)/2.0, 143, 80, 80) ImageName:@"head_cricle1.png"];
     [self.bgImageView addSubview:circle];
+    [circle release];
     
-    self.headImageView = [MyControl createImageViewWithFrame:CGRectMake(6, 6, 68, 68) ImageName:@""];
+    self.headImageView = [MyController createImageViewWithFrame:CGRectMake(6, 6, 68, 68) ImageName:@""];
     self.headImageView.layer.cornerRadius = 34;
     self.headImageView.layer.masksToBounds = YES;
     [circle addSubview:self.headImageView];
     
     //
-    self.confirmBtn = [MyControl createButtonWithFrame:CGRectMake((self.bgImageView.frame.size.width-100)/2.0, 490/2.0, 100, 35) ImageName:@"alert_greenBg.png" Target:self Action:@selector(confirmClick) Title:@"确定"];
+    self.confirmBtn = [MyController createButtonWithFrame:CGRectMake((self.bgImageView.frame.size.width-100)/2.0, 490/2.0, 100, 35) ImageName:@"alert_greenBg.png" Target:self Action:@selector(confirmClick) Title:@"确定"];
     self.confirmBtn.titleLabel.font = [UIFont systemFontOfSize:17];
     [self.bgImageView addSubview:self.confirmBtn];
     
     //分享
-    UIView * shareBg = [MyControl createViewWithFrame:CGRectMake(0, 300, self.bgImageView.frame.size.width, 53)];
+    UIView * shareBg = [MyController createViewWithFrame:CGRectMake(0, 300, self.bgImageView.frame.size.width, 53)];
     [self.bgImageView addSubview:shareBg];
+    [shareBg release];
     
-    UIView * shareAlphaView = [MyControl createViewWithFrame:CGRectMake(0, 0, shareBg.frame.size.width, shareBg.frame.size.height)];
+    UIView * shareAlphaView = [MyController createViewWithFrame:CGRectMake(0, 0, shareBg.frame.size.width, shareBg.frame.size.height)];
     shareAlphaView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
     [shareBg addSubview:shareAlphaView];
+    [shareAlphaView release];
     
-    UILabel * shareLabel = [MyControl createLabelWithFrame:CGRectMake(15, 0, 50, shareBg.frame.size.height) Font:12 Text:@"分享"];
+    UILabel * shareLabel = [MyController createLabelWithFrame:CGRectMake(15, 0, 50, shareBg.frame.size.height) Font:12 Text:@"分享"];
     shareLabel.textColor = BGCOLOR;
     [shareBg addSubview:shareLabel];
+    [shareLabel release];
     
     NSArray * array = @[@"more_weixin.png", @"more_friend.png", @"more_sina.png"];
     float space = (self.bgImageView.frame.size.width-50-50-37*3)/2.0;
     
     for (int i=0; i<3; i++) {
-        UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(50+(space+37)*i, 8, 37, 37) ImageName:array[i] Target:self Action:@selector(shareClick:) Title:nil];
+        UIButton * btn = [MyController createButtonWithFrame:CGRectMake(50+(space+37)*i, 8, 37, 37) ImageName:array[i] Target:self Action:@selector(shareClick:) Title:nil];
         [shareBg addSubview:btn];
         btn.tag = 100+i;
     }
     
     //
-    UIImageView * roundBg = [MyControl createImageViewWithFrame:CGRectMake(9, 352, 60, 60) ImageName:@"head_cricle1.png"];
+    UIImageView * roundBg = [MyController createImageViewWithFrame:CGRectMake(9, 352, 60, 60) ImageName:@"head_cricle1.png"];
     [self.bgImageView addSubview:roundBg];
+    [roundBg release];
     
     //
-    self.headImage = [MyControl createImageViewWithFrame:CGRectMake(3.5, 3.5, 54, 54) ImageName:@"defaultPetHead.png"];
+    self.headImage = [MyController createImageViewWithFrame:CGRectMake(3.5, 3.5, 54, 54) ImageName:@"defaultPetHead.png"];
     self.headImage.layer.cornerRadius = 27;
     self.headImage.layer.masksToBounds = YES;
     [roundBg addSubview:self.headImage];
     
     //
-    self.actLabel = [MyControl createLabelWithFrame:CGRectMake(75, 360, 220, 53-8) Font:12 Text:nil];
+    self.actLabel = [MyController createLabelWithFrame:CGRectMake(75, 360, 220, 53-8) Font:12 Text:nil];
     self.actLabel.textColor = BGCOLOR;
     [self.bgImageView addSubview:self.actLabel];
 }

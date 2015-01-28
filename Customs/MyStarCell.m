@@ -60,7 +60,7 @@
     inviteBtn.titleLabel.font = [UIFont systemFontOfSize:13];
     [bgView addSubview:inviteBtn];
     
-    if([[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"]){
+    if([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
         inviteBtn.hidden = YES;
     }
     

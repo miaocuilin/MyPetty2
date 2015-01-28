@@ -250,7 +250,7 @@
             _switch = [[UISwitch alloc] initWithFrame:CGRectMake(self.view.frame.size.width-50-20, 7, 0, 0)];
             [_switch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
             [cell addSubview:_switch];
-            if ([[USER objectForKey:@"notShowCostAlert"] intValue] == 0) {
+            if ([[USER objectForKey:@"showCostAlert"] intValue] == 0) {
                 _switch.on = NO;
             }else{
                 _switch.on = YES;
@@ -267,9 +267,9 @@
 -(void)switchChanged:(UISwitch *)sw
 {
     if (sw.on) {
-        [USER setObject:@"1" forKey:@"notShowCostAlert"];
+        [USER setObject:@"1" forKey:@"showCostAlert"];
     }else{
-        [USER setObject:@"0" forKey:@"notShowCostAlert"];
+        [USER setObject:@"0" forKey:@"showCostAlert"];
     }
 }
 //设置箭头和初始化cell

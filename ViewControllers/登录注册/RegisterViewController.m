@@ -1180,13 +1180,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        [alert release];
         return;
     }
-    if (tfUserName.text.length >8 || tf.text.length>8) {
+//    if (tfUserName.text.length >8 || tf.text.length>8) {
 //        StartLoading;
 //        [MMProgressHUD dismissWithError:@"昵称不可以超过8个字哦~" afterDelay:1];
-        [MyControl popAlertWithView:self.view Msg:@"昵称不可以超过8个字哦~"];
+//        [MyControl popAlertWithView:self.view Msg:@"昵称不可以超过8个字哦~"];
 //        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"昵称不可以超过8个汉字哦~"];
-        return;
-    }
+//        return;
+//    }
     
 //    if ([ageTextField.text intValue]>=100) {
 ////        UIAlertView * alert = [MyControl createAlertViewWithTitle:@"不可以谎报年龄哦~"];
@@ -1676,8 +1676,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         [[EaseMob sharedInstance].chatManager setApnsNickname:[dict objectForKey:@"name"]];
                         if (![[USER objectForKey:@"setMsgDetail"] intValue]) {
                             EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
-                            if(options.displayStyle != ePushNotificationDisplayStyle_messageDetail){
-                                options.displayStyle = ePushNotificationDisplayStyle_messageDetail;
+                            if(options.displayStyle != ePushNotificationDisplayStyle_messageSummary){
+                                options.displayStyle = ePushNotificationDisplayStyle_messageSummary;
                                 [[EaseMob sharedInstance].chatManager asyncUpdatePushOptions:options completion:^(EMPushNotificationOptions *options, EMError *error) {
                                     if (error) {
                                         NSLog(@"%@", error);

@@ -526,7 +526,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             };
             [self addChildViewController:vc];
             [vc didMoveToParentViewController:self];
-            
             [self.view addSubview:vc.view];
             [vc release];
             

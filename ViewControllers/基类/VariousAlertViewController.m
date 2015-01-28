@@ -8,6 +8,7 @@
 
 #import "VariousAlertViewController.h"
 #import "ChooseInViewController.h"
+#import "EaseMob.h"
 
 @interface VariousAlertViewController ()
 
@@ -44,7 +45,7 @@
 //    [regBtn setBackgroundImage:[[UIImage imageNamed:@"various_regBtn.png"] stretchableImageWithLeftCapWidth:17 topCapHeight:0] forState:UIControlStateNormal];
     [bgView addSubview:regBtn];
     
-    if ([[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"]) {
+    if ([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]) {
         UIButton * logBtn = [MyControl createButtonWithFrame:CGRectMake(32, 123, bgView.frame.size.width-64, 42) ImageName:@"various_regBtn.png" Target:self Action:@selector(logBtnClick) Title:@"昵称登录"];
         [logBtn setTitleColor:ORANGE forState:UIControlStateNormal];
         //    [regBtn setBackgroundImage:[[UIImage imageNamed:@"various_regBtn.png"] stretchableImageWithLeftCapWidth:17 topCapHeight:0] forState:UIControlStateNormal];
@@ -243,10 +244,44 @@
             [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
             [USER setObject:[dict objectForKey:@"password"] forKey:@"password"];
             
+            [USER setObject:[dict objectForKey:@"code"] forKey:@"code"];
+            
             if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
                 [USER setObject:[dict objectForKey:@"tx"] forKey:@"tx"];
             }
             
+            //登出
+            [[EaseMob sharedInstance].chatManager asyncLogoffWithCompletion:^(NSDictionary *info, EMError *error) {
+                //                NSLog(@"%@", info);
+                NSLog(@"%@", [USER objectForKey:@"usr_id"]);
+                [[EaseMob sharedInstance].chatManager asyncLoginWithUsername:[USER objectForKey:@"usr_id"] password:[dict objectForKey:@"code"] completion:^(NSDictionary *loginInfo, EMError *error) {
+                    if (!error) {
+                        NSLog(@"登录成功");
+                        if (self.isFromCenter) {
+                            self.modifyCenter();
+                        }
+                        
+                        [MyControl popAlertWithView:self.view Msg:@"登录成功"];
+                        [[EaseMob sharedInstance].chatManager setApnsNickname:[dict objectForKey:@"name"]];
+                        if (![[USER objectForKey:@"setMsgDetail"] intValue]) {
+                            EMPushNotificationOptions *options = [[EaseMob sharedInstance].chatManager pushNotificationOptions];
+                            if(options.displayStyle != ePushNotificationDisplayStyle_messageSummary){
+                                options.displayStyle = ePushNotificationDisplayStyle_messageSummary;
+                                [[EaseMob sharedInstance].chatManager asyncUpdatePushOptions:options completion:^(EMPushNotificationOptions *options, EMError *error) {
+                                    if (error) {
+                                        NSLog(@"%@", error);
+                                    }else{
+                                        NSLog(@"消息推送类型更新成功");
+                                        [USER setObject:@"1" forKey:@"setMsgDetail"];
+                                    }
+                                } onQueue:nil];
+                            }
+                        }
+                    }else{
+                        NSLog(@"%@", error);
+                    }
+                } onQueue:nil];
+            } onQueue:nil];
             
             //获取宠物信息，存储到本地
             [self loadPetInfo];

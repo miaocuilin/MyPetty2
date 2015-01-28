@@ -462,6 +462,7 @@
         [tv reloadData];
     }else{
         didSelected = button.tag-100;
+        //此处友盟有崩溃2015.01.26 暂未测出具体问题
         [self loadCardDataWithTag:didSelected];
     }
     

@@ -604,11 +604,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        [MMProgressHUD dismissWithError:@"" afterDelay:1];
         return;
     }
-    if (tf.text.length>8) {
-        [MyControl popAlertWithView:self.view Msg:@"名字不可以超过8个字哦~"];
+//    if (tf.text.length>8) {
+//        [MyControl popAlertWithView:self.view Msg:@"名字不可以超过8个字哦~"];
 //        [MMProgressHUD dismissWithError:@"名字不可以超过8个字哦~" afterDelay:1];
-        return;
-    }
+//        return;
+//    }
     NSLog(@"============符合要求============");
     self.name = tf.text;
     if (boy.selected) {
@@ -669,13 +669,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        [MMProgressHUD dismissWithError:@"您有信息没有填写!" afterDelay:1];
         return;
     }
-    if (tfUserName.text.length >8)
-    {
-        [MyControl popAlertWithView:self.view Msg:@"昵称不可以超过8个字哦~"];
+//    if (tfUserName.text.length >8)
+//    {
+//        [MyControl popAlertWithView:self.view Msg:@"昵称不可以超过8个字哦~"];
 //        StartLoading;
 //        [MMProgressHUD dismissWithError:@"昵称不可以超过8个字哦~" afterDelay:1];
-        return;
-    }
+//        return;
+//    }
     NSLog(@"============符合要求============");
     self.u_name = tfUserName.text;
     if (man.selected) {

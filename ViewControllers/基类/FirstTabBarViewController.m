@@ -222,6 +222,7 @@
         sv.contentOffset = CGPointMake(0, self.view.frame.size.height);
     } completion:^(BOOL finished) {
         sv.hidden = YES;
+        [sv removeFromSuperview];
     }];
     
     

@@ -95,7 +95,7 @@
     title.textAlignment = NSTextAlignmentCenter;
     [sv addSubview:title];
     
-    UILabel * version = [MyControl createLabelWithFrame:CGRectMake(100, 220, 120, 20) Font:16 Text:@"V1.1.3"];
+    UILabel * version = [MyControl createLabelWithFrame:CGRectMake(100, 220, 120, 20) Font:16 Text:[NSString stringWithFormat:@"V%@", [USER objectForKey:@"versionKey"]]];
 //    if ([[USER objectForKey:@"version"] isEqualToString:@"1.0"]) {
 //        version.text = @"V1.0.0";
 //    }else{

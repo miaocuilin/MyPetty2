@@ -33,7 +33,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    if ([[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"]) {
+    if ([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]) {
         isConfVersion = YES;
     }
     if(isConfVersion){

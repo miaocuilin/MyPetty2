@@ -187,7 +187,7 @@
 //                [self closeClick];
 //                return;
 //            }
-            if ([[load.dataDict objectForKey:@"confVersion"] isEqualToString:@"1.0"]) {
+            if ([[load.dataDict objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]) {
                 isTest = YES;
             }
             
@@ -301,7 +301,9 @@
     if (![[self.imageDict objectForKey:@"senders"] isKindOfClass:[NSString class]] || [[self.imageDict objectForKey:@"senders"] length] == 0) {
         return;
     }
-    LOADING;
+    if(isBackSide){
+        LOADING;
+    }
     NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", [self.imageDict objectForKey:@"senders"]];
     NSString * code = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, [self.imageDict objectForKey:@"senders"], code, [ControllerManager getSID]];
@@ -329,7 +331,9 @@
     if (!self.usrIdArray.count) {
         return;
     }
-    LOADING;
+    if(isBackSide){
+        LOADING;
+    }
     
     NSMutableString * mutableStr = [NSMutableString stringWithCapacity:0];
     for (int i=0; i<self.usrIdArray.count; i++) {
@@ -380,7 +384,9 @@
 //    if (!self.sharersArray.count) {
 //        return;
 //    }
-    LOADING;
+    if(isBackSide){
+        LOADING;
+    }
     NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", [self.imageDict objectForKey:@"sharers"]];
     NSString * code = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, [self.imageDict objectForKey:@"sharers"], code, [ControllerManager getSID]];
@@ -482,10 +488,13 @@
 #pragma mark -
 -(void)modifyUI
 {
-    LOADING;
+//    LOADING;
+//    bigImageView.canClick = NO;
     [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.imageDict objectForKey:@"url"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if(error){
             NSLog(@"%@", error);
+        }else{
+            bigImageView.canClick = YES;
         }
         ENDLOADING;
         sv.hidden = NO;
@@ -713,7 +722,7 @@
     [tap2 release];
     
     bigImageView = [[ClickImage alloc] initWithFrame:CGRectMake(8, 5, imageBgView.frame.size.width-16, 300)];
-    bigImageView.canClick = YES;
+//    bigImageView.canClick = YES;
     bigImageView.image = [UIImage imageNamed:@"water_white.png"];
 //    bigImageView = [MyControl createImageViewWithFrame:CGRectMake(8, 5, imageBgView.frame.size.width-16, 300) ImageName:@""];
     [imageBgView addSubview:bigImageView];
@@ -1603,6 +1612,15 @@
         //        [txsView removeFromSuperview];
         //    }
         [desTv reloadData];
+        
+        //在正面翻到背面，并切到评论列，在背面直接切
+        if(!isBackSide){
+           [self swipeLeft:swipeLeft];
+        }
+        if (triangleIndex != 2) {
+            UIButton * tempBtn = (UIButton *)[imageBgView2 viewWithTag:502];
+            [self backClick:tempBtn];
+        }
     }
     
 }

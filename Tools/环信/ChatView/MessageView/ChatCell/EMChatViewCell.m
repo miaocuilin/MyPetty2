@@ -101,11 +101,11 @@ NSString *const kShouldResendCell = @"kShouldResendCell";
 //    }else{
     
     if([model.username isEqualToString:@"1"]){
-        self.imageView.image = [UIImage imageNamed:@"miaomiao.png"];
+        self.headImageView.image = [UIImage imageNamed:@"miaomiao.png"];
     }else if([model.username isEqualToString:@"2"]){
-        self.imageView.image = [UIImage imageNamed:@"wangwang.png"];
+        self.headImageView.image = [UIImage imageNamed:@"wangwang.png"];
     }else if([model.username isEqualToString:@"3"]){
-        self.imageView.image = [UIImage imageNamed:@"xiaoge.png"];
+        self.headImageView.image = [UIImage imageNamed:@"xiaoge.png"];
     }else if ([[model.message.ext objectForKey:@"tx"] isKindOfClass:[NSString class]] && [[model.message.ext objectForKey:@"tx"] length]) {
         [MyControl setImageForImageView:self.headImageView Tx:[model.message.ext objectForKey:@"tx"] isPet:NO];
     }

@@ -252,6 +252,11 @@
         [login release];
         [vc.view removeFromSuperview];
     };
+    
+    vc.isFromCenter = YES;
+    vc.modifyCenter = ^(){
+        [self modifyUI];
+    };
     [self.view addSubview:vc.view];
 //    NSLog(@"%d", [vc retainCount]);
     [vc release];
@@ -261,6 +266,10 @@
 -(void)modifyClick
 {
     NSLog(@"modify");
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        [self shake];
+        return;
+    }
     ModifyPetOrUserInfoViewController * vc = [[ModifyPetOrUserInfoViewController alloc] init];
     vc.isModifyUser = YES;
     vc.refreshUserInfo = ^(NSString * Name, int gender, int city, UIImage * image){

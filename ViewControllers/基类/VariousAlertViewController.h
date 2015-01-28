@@ -12,5 +12,7 @@
 
 @property(nonatomic,copy)void (^regClick)(void);
 @property(nonatomic,copy)void (^fastClick)(void);
-//@property(nonatomic,copy)void (^)(void);
+
+@property(nonatomic,copy)void (^modifyCenter)(void);
+@property(nonatomic)BOOL isFromCenter;
 @end

@@ -30,8 +30,9 @@
 @implementation PetMainViewController
 -(void)dealloc{
     [super dealloc];
-    headBlurImage.image = nil;
-    [headBlurImage release];
+//    headBlurImage.image = nil;
+//    [headBlurImage release];
+    [_model release];
 }
 
 -(void)createGuide
@@ -133,7 +134,7 @@
 #pragma mark -
 -(void)createTableView
 {
-    UIImageView * blurImage = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * blurImage = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:blurImage];
     
     tv = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds style:UITableViewStylePlain];
@@ -144,6 +145,7 @@
     tv.dataSource = self;
     
     [self.view addSubview:tv];
+    [tv release];
     
     headerView = [MyControl createViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 590/2.0)];
     tv.tableHeaderView = headerView;
@@ -275,6 +277,7 @@
         headImageView.canClick = YES;
         [MyControl setImageForImageView:headImageView Tx:self.model.tx isPet:YES isRound:YES];
         [headCircle addSubview:headImageView];
+        [headImageView release];
     }
     
     nameLabel.text = self.model.name;
@@ -437,6 +440,7 @@
     vc.refreshPetInfo = ^(){
         [self loadData];
     };
+    vc.petInfoModel = self.model;
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
@@ -832,6 +836,7 @@
                             
                         }
                         [sheet showInView:self.view];
+                        [sheet release];
                     }else{
                         [MyControl popAlertWithView:self.view Msg:[NSString stringWithFormat:@"萌星%@，今天还没挣口粮呢~", self.model.name]];
                     }

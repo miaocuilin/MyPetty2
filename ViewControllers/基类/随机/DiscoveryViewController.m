@@ -79,7 +79,7 @@
     self.searchArray = [NSMutableArray arrayWithCapacity:0];
     self.searchUserArray = [NSMutableArray arrayWithCapacity:0];
     
-    UIImageView * blurBg = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * blurBg = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:blurBg];
     
     [self createHeader];
@@ -266,7 +266,7 @@
 }
 -(void)createTableView
 {
-//    blurImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"blurBg.png"];
+//    blurImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"blurBg.jpg"];
 //    [self.view insertSubview:blurImageView belowSubview:navView];
 //    blurImageView.hidden = YES;
     

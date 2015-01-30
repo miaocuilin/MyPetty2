@@ -68,7 +68,7 @@
     [self createHeader];
 //    [self getListData];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hidden) name:@"af" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hidden) name:@"af" object:nil];
     [USER setObject:@"1" forKey:@"isAdopt"];
 }
 -(void)loadRecommandListData
@@ -129,7 +129,7 @@
 }
 -(void)createBg
 {
-    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:imageView];
 //    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
 //    [self.view addSubview:self.bgImageView];
@@ -177,10 +177,10 @@
 ////        [self.totalArray addObject:str];
 ////    }
 //}
--(void)hidden
-{
-    [afView hide];
-}
+//-(void)hidden
+//{
+//    [afView hide];
+//}
 -(void)createFakeNavigation
 {
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];

@@ -1299,6 +1299,15 @@
  9.花费金币提示默认打开。
  10.刚注册的用户打开人气榜的时候显示整个榜单，取消自动找我。点击找我的时候提示“排行榜中没有您的萌星”。
  
+ 2015.01.29
+ 1.萌星资料修改没传值导致无法修改的bug。
+ 
+ 2015.01.30
+ 1.blurBg图片由237k缩小到27k。
+ 2.httpDownload注释掉[timer retain]。
+ 3.MyControl中image和button的图片加图片前判断是否为空。
+ 4.去掉了Talk，AFPopup文件夹以及TalkViewController，messageModel2，NoticeViewController，更改CenterViewController。
+ 5.
  
  
  ==============截止今天================

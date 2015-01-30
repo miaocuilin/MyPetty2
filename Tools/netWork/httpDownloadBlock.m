@@ -52,7 +52,7 @@
     
     if (timer == NULL) {
         timer = [NSTimer scheduledTimerWithTimeInterval:20 target:self selector:@selector(cancelConnection:) userInfo:nil repeats:NO];
-        [timer retain];
+//        [timer retain];
     }
 //    }
 //    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
@@ -175,7 +175,7 @@
             }
             /****************************/
             if ([[self.dataDict objectForKey:@"state"] intValue] == 1) {
-                UIView * keyView = [UIApplication sharedApplication].keyWindow;
+//                UIView * keyView = [UIApplication sharedApplication].keyWindow;
                 [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:msg];
 //                PopupView * pop = [[PopupView alloc] init];
 //                [pop modifyUIWithSize:keyView.frame.size msg:msg];

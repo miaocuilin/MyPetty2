@@ -37,20 +37,20 @@
 @end
 
 @implementation RockViewController
--(void)dealloc
-{
-    [super dealloc];
-    [totalView release];
-    [timesLabel release];
-    [rewardLabel release];
-    [rewardImage release];
-    [descRewardLabel release];
-    [floating1 release];
-    [floating2 release];
-    [floating3 release];
-    [_upView release];
-    NSLog(@"Rock release");
-}
+//-(void)dealloc
+//{
+//    [super dealloc];
+//    [totalView release];
+//    [timesLabel release];
+//    [rewardLabel release];
+//    [rewardImage release];
+//    [descRewardLabel release];
+//    [floating1 release];
+//    [floating2 release];
+//    [floating3 release];
+//    [_upView release];
+//    NSLog(@"Rock release");
+//}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -367,29 +367,26 @@
     totalView.layer.masksToBounds = YES;
     [self.view addSubview:totalView];
     
-    UIImageView *titleView = [MyController createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
+    UIImageView *titleView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 300, 40) ImageName:@"title_bg.png"];
     [totalView addSubview:titleView];
-    [titleView release];
     
-    UILabel *titleLabel = [MyController createLabelWithFrame:titleView.frame Font:17 Text:@"摇一摇"];
+    UILabel *titleLabel = [MyControl createLabelWithFrame:titleView.frame Font:17 Text:@"摇一摇"];
     titleLabel.text = self.titleString;
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [totalView addSubview:titleLabel];
     
-    UIImageView *closeImageView = [MyController createImageViewWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png"];
+    UIImageView *closeImageView = [MyControl createImageViewWithFrame:CGRectMake(260, 10, 20, 20) ImageName:@"30-1.png"];
     [totalView addSubview:closeImageView];
-    [closeImageView release];
     
-    UIButton *closeButton = [MyController createButtonWithFrame:CGRectMake(252.5, 2.5, 35, 35) ImageName:nil Target:self Action:@selector(colseGiftAction) Title:nil];
+    UIButton *closeButton = [MyControl createButtonWithFrame:CGRectMake(252.5, 2.5, 35, 35) ImageName:nil Target:self Action:@selector(colseGiftAction) Title:nil];
     closeButton.showsTouchWhenHighlighted = YES;
     [totalView addSubview:closeButton];
     
     
     //    bodyView = nil;
-    UIView *bodyView = [MyController createViewWithFrame:CGRectMake(0, 40, 300, 385)];
+    UIView *bodyView = [MyControl createViewWithFrame:CGRectMake(0, 40, 300, 385)];
     bodyView.backgroundColor = [UIColor whiteColor];
     [totalView addSubview:bodyView];
-    [bodyView release];
     
     //创建滚动视图
     _upView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, bodyView.frame.size.height-70)];
@@ -399,6 +396,7 @@
     _upView.contentSize = CGSizeMake(_upView.frame.size.width*4, _upView.frame.size.height);
     _upView.scrollEnabled = NO;
     [bodyView addSubview:_upView];
+    [_upView release];
 #pragma mark - one
     //1
 //    UIView *view1 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.upView.frame.size.width, self.upView.frame.size.height)];

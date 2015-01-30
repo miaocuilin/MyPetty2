@@ -75,7 +75,7 @@
 #pragma mark -
 -(void)createFakeNavigation
 {
-    UIImageView * blurImage = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * blurImage = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:blurImage];
     
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];

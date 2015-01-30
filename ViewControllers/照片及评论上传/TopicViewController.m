@@ -62,7 +62,7 @@
 }
 -(void)createBg
 {
-    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"blurBg.png"];
+    self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"blurBg.jpg"];
     [self.view addSubview:self.bgImageView];
     
 //    NSString * docDir = DOCDIR;

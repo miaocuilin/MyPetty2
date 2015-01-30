@@ -11,7 +11,6 @@
 #import "BackImageDetailViewCell.h"
 #import "UserInfoModel.h"
 #import "SendGiftViewController.h"
-#import "TalkViewController.h"
 #import "BackImageDetailCommentViewCell.h"
 #import "ChatViewController.h"
 

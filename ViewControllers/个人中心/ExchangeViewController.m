@@ -136,7 +136,7 @@
 }
 -(void)createBg
 {
-    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:imageView];
 }
 -(void)createFakeNavigation

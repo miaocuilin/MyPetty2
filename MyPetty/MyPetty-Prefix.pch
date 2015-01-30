@@ -14,7 +14,6 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import "MyControl.h"
-#import "MyController.h"
 #import "httpDownloadBlock.h"
 #import "MyMD5.h"
 #import "OpenUDID.h"
@@ -84,7 +83,7 @@
 #define USER [ControllerManager shareUserDefault]
 #define NET [UIApplication sharedApplication].networkActivityIndicatorVisible
 #define DOCDIR [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0]
-#define BLURBG [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"blurBg.png"]]
+#define BLURBG [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"blurBg.jpg"]]
 #define UDID [USER objectForKey:@"UDID"]
 
 //    #define StartLoading [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];[MMProgressHUD showWithStatus:@"加载中..."];

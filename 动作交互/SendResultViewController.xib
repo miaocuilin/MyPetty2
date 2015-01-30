@@ -39,6 +39,6 @@
         </view>
     </objects>
     <resources>
-        <image name="alert_sendGift_good.png" width="605" height="852"/>
+        <image name="alert_sendGift_good.png" width="596" height="852"/>
     </resources>
 </document>

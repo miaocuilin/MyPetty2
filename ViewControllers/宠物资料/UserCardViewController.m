@@ -8,7 +8,6 @@
 
 #import "UserCardViewController.h"
 #import "UserPetListModel.h"
-#import "TalkViewController.h"
 #import "ModifyPetOrUserInfoViewController.h"
 #import "ChatViewController.h"
 

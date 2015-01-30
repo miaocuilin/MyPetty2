@@ -82,7 +82,7 @@
 //}
 -(void)createBg
 {
-    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:imageView];
     
     UIView * alpha = [MyControl createViewWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
@@ -633,7 +633,7 @@
     {
         //NSLog(@"%d--%@", array.count, [array objectAtIndex:i]);
         NSString *fullPath = [path stringByAppendingPathComponent:[array objectAtIndex:i]];
-        if ([fullPath hasSuffix:@".plist"] || [fullPath rangeOfString:@"blurBg.png"].location != NSNotFound) {
+        if ([fullPath hasSuffix:@".plist"] || [fullPath rangeOfString:@"blurBg.jpg"].location != NSNotFound) {
             continue;
         }
         BOOL isDir;
@@ -673,7 +673,7 @@
         if (!([path hasSuffix:@".png"] || [path hasSuffix:@".jpg"] || [path hasSuffix:@".jpeg"] || [path hasSuffix:@".bmp"] || [path hasSuffix:@".mp3"])) {
             continue;
         }
-        if ([path rangeOfString:@"blurBg.png"].location != NSNotFound) {
+        if ([path rangeOfString:@"blurBg.jpg"].location != NSNotFound) {
             continue;
         }
         if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {

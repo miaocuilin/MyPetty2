@@ -42,7 +42,9 @@
     button.frame=frame;
     [button setTitle:title forState:UIControlStateNormal];
 //    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [button setBackgroundImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+    if(imageName != nil && imageName.length){
+        [button setBackgroundImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+    }
 //    [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
     [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
 //    button.showsTouchWhenHighlighted = YES;
@@ -53,14 +55,12 @@
 }
 +(UIImageView*)createImageViewWithFrame:(CGRect)frame ImageName:(NSString*)imageName
 {
-        UIImageView*imageView=[[UIImageView alloc]initWithFrame:frame];
+    UIImageView*imageView=[[UIImageView alloc]initWithFrame:frame];
+    if(imageName != nil && imageName.length){
         imageView.image=[UIImage imageNamed:imageName];
-        //    if ([imageName rangeOfString:@".png"].location != NSNotFound) {
-        //        imageName = [[imageName componentsSeparatedByString:@".png"] objectAtIndex:0];
-        //    }
-        //    imageView.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:imageName ofType:@"png"]];
-        imageView.userInteractionEnabled=YES;
-        return [imageView autorelease];
+    }
+    imageView.userInteractionEnabled=YES;
+    return [imageView autorelease];
 }
 +(UIView*)createViewWithFrame:(CGRect)frame
 {

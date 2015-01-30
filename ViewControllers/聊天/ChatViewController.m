@@ -95,7 +95,7 @@
     // Do any additional setup after loading the view.
 //    self.view.backgroundColor = [UIColor lightGrayColor];
 //    callBg@2x.png
-    UIImageView * blurBg = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * blurBg = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:blurBg];
     UIView * alphaView = [MyControl createViewWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-self.chatToolBar.frame.size.height)];
     alphaView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];

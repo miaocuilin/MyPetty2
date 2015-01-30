@@ -27,7 +27,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     [MobClick event:@"play"];
     
-    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:imageView];
     
     [self createWebView];

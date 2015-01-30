@@ -106,7 +106,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)createBg
 {
-    UIImageView * blueBg = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * blueBg = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:blueBg];
 }
 -(void)createFakeNavigation
@@ -407,6 +407,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         vc.aid = aid;
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
+        [vc release];
     };
     cell.actClick = ^(int a){
 //        self.actClick(a, indexPath.row);
@@ -488,10 +489,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 //                NSLog(@"%@--%d", cell.contributionLabel.text, contri+[add_rq intValue]);
             };
             [self addChildViewController:shake];
-            [shake release];
             [shake didMoveToParentViewController:self];
             [shake becomeFirstResponder];
             [self.view addSubview:shake.view];
+            [shake release];
+//            [shake release];
         }else if (a == 2) {
             SendGiftViewController * vc = [[SendGiftViewController alloc] init];
             vc.receiver_aid = self.pet_aid;

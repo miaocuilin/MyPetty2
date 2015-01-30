@@ -7,14 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AFPopupView.h"
 #import "NIDropDown.h"
 @interface ChooseFamilyViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,NIDropDownDelegate>
 {
     UIView * navView;
     UITableView * tv;
     UIView  * insertView;
-    AFPopupView * afView;
+//    AFPopupView * afView;
     int didSelected;
     
     NIDropDown *dropDown;

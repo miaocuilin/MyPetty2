@@ -134,7 +134,7 @@
 }
 -(void)createFakeNavigation
 {
-    UIImageView * image = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * image = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:image];
     
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
@@ -487,9 +487,11 @@
 {
     //跳转宠物主页
     PetMainViewController * vc = [[PetMainViewController alloc] init];
+//    NSLog(@"%d", [vc retainCount]);
     int a = tv.contentOffset.y/self.view.frame.size.width;
     vc.aid = [self.dataArray[a] aid];
     [self presentViewController:vc animated:YES completion:nil];
+    [vc release];
     [vc release];
 }
 -(void)jumpUserClick

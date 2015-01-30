@@ -33,7 +33,7 @@
 
 -(void)createUI
 {
-    UIImageView * bgImage = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * bgImage = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:bgImage];
     
     sv = [[UIScrollView alloc] initWithFrame:[UIScreen mainScreen].bounds];

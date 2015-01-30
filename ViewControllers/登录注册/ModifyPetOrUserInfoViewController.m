@@ -85,7 +85,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)createBg
 {
-    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.png"];
+    UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:imageView];
 //    bgBlurImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
 //    [self.view addSubview:bgBlurImageView];

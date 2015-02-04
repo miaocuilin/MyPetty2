@@ -51,6 +51,7 @@
     UIButton * bgButton;
     UIView * commentBgView;
     UITextField * commentTextField;
+    
     //判断是否在当前控制器，来限制键盘变化通知
     BOOL isInThisController;
     
@@ -87,7 +88,7 @@
 
 @property(nonatomic,retain)NSDictionary * petDict;
 
-@property(nonatomic,retain)NSString * img_id;
+@property(nonatomic,copy)NSString * img_id;
 
 //@property (nonatomic)BOOL is_follow;
 
@@ -109,4 +110,5 @@
 @property (nonatomic,retain)NSMutableArray * commentersArray;
 @property (nonatomic,retain)NSMutableArray * sharersArray;
 
+//@property (nonatomic)BOOL isFromKey;
 @end

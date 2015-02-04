@@ -29,6 +29,10 @@
     if (self.path) {
         CGPathRelease(self.path);
     }
+    if (self.completion) {
+        [self.completion release];
+        self.completion = nil;
+    }
     [super dealloc];
 }
 

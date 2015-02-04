@@ -13,7 +13,12 @@
 
 @implementation httpDownloadBlock
 
-
+- (void)dealloc
+{
+    [super dealloc];
+    
+//    [self deallocData];
+}
 
 -(void)httpRequest:(NSString*)urlStr{
     self.data=[NSMutableData dataWithCapacity:0];
@@ -63,6 +68,7 @@
 {
     [self.connection cancel];
     self.httpRequestBlock(NO,self);
+    [self deallocData];
     [timer invalidate];
 }
 - (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
@@ -165,12 +171,14 @@
                 msg = @"网络异常，请重新操作";
                 [self login];
                 self.httpRequestBlock(NO,self);
+                [self deallocData];
                 return;
             }
 
             if ([[self.dataDict objectForKey:@"state"] intValue] == 3) {
                 //未注册
                 self.httpRequestBlock(NO,self);
+                [self deallocData];
                 return;
             }
             /****************************/
@@ -193,6 +201,7 @@
 //                }];
                 
                 self.httpRequestBlock(NO,self);
+                [self deallocData];
                 return;
             }
             /****************************/
@@ -213,6 +222,7 @@
 //    [self.data writeToFile:self.FileName atomically:YES];
 
     self.httpRequestBlock(YES,self);
+    [self deallocData];
 }
 //失败
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -223,6 +233,7 @@
 //    self.httpRequestBlock(NO,self);
     [timer invalidate];
     self.httpRequestBlock(NO,self);
+    [self deallocData];
 }
 
 -(id)initWithUrlStr:(NSString*)str Block:(void(^)(BOOL,httpDownloadBlock*))a{
@@ -324,5 +335,34 @@
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.ios_url]];
         }
     }
+}
+
+/**释放页面数据*/
+- (void)deallocData
+{
+    [self.connection release];
+    [self.data release];
+    [self.FileName release];
+//    [self performSelector:@selector(delData) withObject:nil afterDelay:3];
+    
+}
+-(void)delData
+{
+    if (self.connection) {
+        [self.connection release];
+    }
+    if (self.data) {
+        [self.data release];
+    }
+    if (self.FileName) {
+        [self.FileName release];
+    }
+    if (self.dataArray) [self.dataArray release];
+    if (self.dataDict) [self.dataDict release];
+    if (self.dataImage) [self.dataImage release];
+    if (self.httpRequestBlock) {
+        [self.httpRequestBlock release];
+    }
+    if (self.ios_url) [self.ios_url release];
 }
 @end

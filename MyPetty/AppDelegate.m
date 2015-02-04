@@ -22,7 +22,6 @@
 
 //
 #import "FrontImageDetailViewController.h"
-#import "SendResultViewController.h"
 #import "ResultOfSendViewController.h"
 #import "LoginViewController.h"
 #import "SetPasswordViewController.h"
@@ -64,13 +63,7 @@
     NSLog(@"本机UUID:%@", [OpenUDID value]);
 
     FirstViewController * info = [[FirstViewController alloc] init];
-//    UIViewController * info = [[WaterCollectionViewController alloc] init];
 //    SendResultViewController * info = [[SendResultViewController alloc] initWithNibName:@"SendResultViewController" bundle:[NSBundle mainBundle]];
-//    ResultOfSendViewController * info = [[ResultOfSendViewController alloc] init];
-//    FrontImageDetailViewController * info = [[FrontImageDetailViewController alloc] init];
-//    NewWaterFlowViewController * info = [[NewWaterFlowViewController alloc] init];
-//    PetRecommendViewController * info = [[PetRecommendViewController alloc] init];
-//    DSImagesViewController * info = [[DSImagesViewController alloc] init];
     /*****************************/
 //    UIStoryboard *board = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
 //    ViewController1* vc =  [board instantiateInitialViewController];

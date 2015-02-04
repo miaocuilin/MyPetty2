@@ -13,6 +13,9 @@
 {
     UIView * navView;
     UITableView * tv;
+    
+    //用于粉丝列表分页
+    int page;
 }
 
 @property(nonatomic,retain)NSMutableArray * dataArray;

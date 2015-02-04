@@ -27,6 +27,8 @@
 @property(nonatomic,retain)UILabel * actLabel;
 
 @property(nonatomic,copy)NSString * pet_aid;
+@property(nonatomic,copy)NSString * pet_tx;
+@property(nonatomic,copy)NSString * pet_name;
 
 @property(nonatomic,copy)NSString * giftName;
 @property(nonatomic,copy)void (^closeBlock)(void);

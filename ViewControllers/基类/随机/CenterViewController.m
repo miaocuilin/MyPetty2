@@ -371,13 +371,14 @@
 -(void)chargeClick
 {
     NSLog(@"charge");
-    if (![[USER objectForKey:@"isSuccess"] intValue]) {
-        ShowAlertView;
-        return;
-    }
-    ChargeViewController * vc = [[ChargeViewController alloc] init];
-    [self presentViewController:vc animated:YES completion:nil];
-    [vc release];
+//    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+//        ShowAlertView;
+//        return;
+//    }
+//    ChargeViewController * vc = [[ChargeViewController alloc] init];
+//    [self presentViewController:vc animated:YES completion:nil];
+//    [vc release];
+    
 //    WalkAndTeaseViewController *vc = [[WalkAndTeaseViewController alloc] init];
 //    vc.aid = [USER objectForKey:@"aid"];
 //    [self presentViewController:vc animated:YES completion:nil];

@@ -9,28 +9,26 @@
 #import "ResultOfBuyView.h"
 
 @implementation ResultOfBuyView
-//-(void)dealloc
-//{
-//    [super dealloc];
-//    
-//    [_bgImageView release];
-//    [_titleLabel release];
-//    [_closeBtn release];
-//    [_giftNameLabel release];
-//    [_giftImage release];
-//    [_rqLabel release];
-//    [_pickMore release];
-//    [_confirmBtn release];
-//    [_headImage release];
-//    [_actLabel release];
-//    
-//    [rollView release];
-//    [rollImageView release];
-//    [badLineImageView release];
-//    [timer release];
-//    [giftNameBg release];
-//    [txBg release];
-//}
+-(void)dealloc
+{
+    [super dealloc];
+
+    [_bgImageView release];
+    [_titleLabel release];
+    [_closeBtn release];
+    [_giftNameLabel release];
+    [_giftImage release];
+    [_rqLabel release];
+    [_pickMore release];
+    [_confirmBtn release];
+    [_headImage release];
+    [_actLabel release];
+
+    [_confirm release];
+    [_shakeMore release];
+    [_sendThis release];
+    [_closeBlock release];
+}
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -202,7 +200,6 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.alpha = 0;
     } completion:^(BOOL finished) {
-//        timer = nil;
         [timer invalidate];
         timer = nil;
         [self removeFromSuperview];

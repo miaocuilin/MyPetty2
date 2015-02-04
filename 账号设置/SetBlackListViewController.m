@@ -185,15 +185,18 @@
     [cell configUIWithModel:model];
     cell.deleteBlack = ^(){
 //        NSIndexPath * cellIndexPath = [tv indexPathForCell:cell];
+        NSLog(@"%d", indexPath.row);
         //通过获取的索引值删除数组中的值
         [self.dataArray removeObjectAtIndex:indexPath.row];
         //删除单元格的某一行时，在用动画效果实现删除过程
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-//        [tv reloadData];
+        
+        [tv reloadData];
+        
         [self registerEaseMobDelegate];
         // 将6001移除黑名单
         EMError *error = [[EaseMob sharedInstance].chatManager unblockBuddy:model.usr_id];
-        if (!error) {
+        if (!error && self.dataArray.count == 0) {
             NSLog(@"发送成功");
             UILabel * label = [MyControl createLabelWithFrame:CGRectMake(0, 100, self.view.frame.size.width, 20) Font:15 Text:@"小黑屋里还没人~"];
             label.textColor = [UIColor blackColor];

@@ -231,6 +231,7 @@
     CGImageRef sourceImageRef = [image CGImage];
     CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, rect);
     UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+    CGImageRelease(newImageRef);
     return newImage;
 }
 
@@ -487,10 +488,10 @@
     if (w == h) {
         return image;
     }else if(w<h){
-        UIImage * img = [self imageFromImage:image inRect:CGRectMake(0, (h-w)/2, w, w)];
+        UIImage * img = [MyControl imageFromImage:image inRect:CGRectMake(0, (h-w)/2, w, w)];
         return img;
     }else{
-        UIImage * img = [self imageFromImage:image inRect:CGRectMake((w-h)/2, 0, h, h)];
+        UIImage * img = [MyControl imageFromImage:image inRect:CGRectMake((w-h)/2, 0, h, h)];
         return img;
     }
 }

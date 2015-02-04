@@ -20,6 +20,7 @@
 //    NSString * recordURL;
     
     UIView * totalView;
+    UIImageView *headImageView;
     
     BOOL notHaveRecord;
     UIButton *playAndPauseButton;

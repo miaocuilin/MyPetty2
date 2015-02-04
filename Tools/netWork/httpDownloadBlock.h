@@ -32,7 +32,7 @@
 -(id)initWithUrlStr:(NSString*)str Block:(void(^)(BOOL,httpDownloadBlock*))a;
 
 /**************************************/
-@property(nonatomic,copy)void(^overDue)(void);
+//@property(nonatomic,copy)void(^overDue)(void);
 
 @property(nonatomic,copy)NSString * ios_url;
 @end

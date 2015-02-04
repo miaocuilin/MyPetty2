@@ -31,4 +31,5 @@
     ASIFormDataRequest * _request;
 
 }
+@property(nonatomic,copy)NSString * pet_id;
 @end

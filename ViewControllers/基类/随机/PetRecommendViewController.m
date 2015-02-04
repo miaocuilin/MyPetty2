@@ -267,7 +267,7 @@
         FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = [[[self.dataArray[indexPath.row] images] objectAtIndex:a] objectForKey:@"img_id"];
 //        MainViewController * main = [ControllerManager shareMain];
-        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+        [ControllerManager addTabBarViewController:vc];
         [vc release];
     };
     cell.clipsToBounds = YES;

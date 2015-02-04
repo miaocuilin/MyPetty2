@@ -155,9 +155,16 @@
             view2.rewardNum = rewardNum.text;
             [view2 makeUI];
             view2.jumpCharge = ^(){
-                ChargeViewController * charge = [[ChargeViewController alloc] init];
-                [self presentViewController:charge animated:YES completion:nil];
-                [charge release];
+                Alert_oneBtnView * oneView = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+                oneView.type = 4;
+                [oneView makeUI];
+                oneView.jumpTB = ^(){
+                    ChargeViewController * charge = [[ChargeViewController alloc] init];
+                    [self presentViewController:charge animated:YES completion:nil];
+                    [charge release];
+                };
+                [[UIApplication sharedApplication].keyWindow addSubview:oneView];
+                [oneView release];
             };
             [[UIApplication sharedApplication].keyWindow addSubview:view2];
             [view2 release];

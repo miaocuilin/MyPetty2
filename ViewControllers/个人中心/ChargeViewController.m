@@ -13,18 +13,29 @@
 @end
 
 @implementation ChargeViewController
+-(void)dealloc
+{
+    [super dealloc];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
     [self createBg];
+    [self createWebView];
     [self createFakeNavigation];
 }
 -(void)createBg
 {
     UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:imageView];
+}
+-(void)createWebView
+{
+    UIWebView * chargeWebView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
+    [self.view addSubview:chargeWebView];
+    [chargeWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://t.cn/RwvTSmq"]]];
 }
 -(void)createFakeNavigation
 {

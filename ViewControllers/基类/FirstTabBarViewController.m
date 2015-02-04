@@ -245,7 +245,7 @@
         [bottomBg addSubview:halfBall];
         
         UIButton * ballBtn = [MyControl createButtonWithFrame:CGRectMake(halfBall.frame.origin.x+halfBall.frame.size.width/2.0-42.5/2.0, 2, 85/2.0, 94/2.0) ImageName:unSelectedArray[i] Target:self Action:@selector(ballBtnClick:) Title:nil];
-        ballBtn.tag = 100+i;
+        ballBtn.tag = 90+i;
         
         [ballBtn setBackgroundImage:[UIImage imageNamed:selectedArray[i]] forState:UIControlStateSelected];
         [bottomBg addSubview:ballBtn];
@@ -267,55 +267,51 @@
 }
 -(void)ballBtnClick:(UIButton *)btn
 {
-    [self ballAnimation:btn];
-    
-    if (![[USER objectForKey:@"isSuccess"] intValue] && btn.tag == 100) {
+//    [self ballAnimation:btn];
+
+    if (![[USER objectForKey:@"isSuccess"] intValue] && btn.tag == 90) {
         ShowAlertView;
         return;
     }
-    [self refreshMessageNum];
     
-    for (int i=0; i<4; i++) {
-        //这里写button的直接父控件bottomBg再去找tag，不然会出问题
-        UIButton * button = (UIButton *)[bottomBg viewWithTag:100+i];
-        //UIButton * button = (UIButton *)[self.view viewWithTag:100+i];
-        button.selected = NO;
+    [self refreshMessageNum];
+    NSLog(@"%d", self.selectedIndex);
+    if(btn.tag-90 != self.selectedIndex){
+        for (int i=0; i<4; i++) {
+            //这里写button的直接父控件bottomBg再去找tag，不然会出问题
+            UIButton * button = (UIButton *)[bottomBg viewWithTag:90+i];
+            button.selected = NO;
+        }
+        
+        btn.selected = YES;
     }
-    btn.selected = YES;
     
     //    NSLog(@"------%d", self.selectedIndex);
-    if (btn.tag == 100) {
-        MyStarViewController * vc = self.viewControllers[0];
-        [vc.tv headerBeginRefreshing];
-    }else if (btn.tag == 101 && self.selectedIndex == 1) {
+    if (btn.tag == 90) {
+//        MyStarViewController * vc = self.viewControllers[0];
+//        [vc.tv headerBeginRefreshing];
+    }else if (btn.tag == 91 && self.selectedIndex == 1) {
         FoodViewController * vc = self.viewControllers[1];
         [vc loadData];
-    }else if(btn.tag == 102 && self.selectedIndex == 2){
+    }else if(btn.tag == 92 && self.selectedIndex == 2){
         DiscoveryViewController * vc = self.viewControllers[2];
         [vc refresh];
-    }else if(btn.tag == 103 && self.selectedIndex == 3){
+    }else if(btn.tag == 93 && self.selectedIndex == 3){
         CenterViewController * vc = self.viewControllers[3];
         [vc refresh];
     }
-    self.selectedIndex = btn.tag-100;
+    self.selectedIndex = btn.tag-90;
     
-    //    NSLog(@"%d------", self.selectedIndex);
+    [self ballAnimation:btn];
     
-    //    if(btn.tag-100){
-    //
-    //    }else if(btn.tag-100){
-    //
-    //    }else if(btn.tag-100){
-    //
-    //    }else if(btn.tag-100){
-    //
-    //    }
 }
 
 //气泡动画
 -(void)ballAnimation:(UIView *)view
 {
     CGRect rect = view.frame;
+    
+    view.userInteractionEnabled = NO;
     [UIView animateWithDuration:0.1 animations:^{
         view.frame = CGRectMake(rect.origin.x-rect.size.width*0.1, rect.origin.y, rect.size.width*1.2, rect.size.height);
     } completion:^(BOOL finished) {
@@ -327,6 +323,7 @@
             } completion:^(BOOL finished) {
                 [UIView animateWithDuration:0.1 animations:^{
                     view.frame = rect;
+                    view.userInteractionEnabled = YES;
                 }];
             }];
         }];
@@ -663,7 +660,7 @@
                                                   cancelButtonTitle:@"确定"
                                                   otherButtonTitles:nil,
                                   nil];
-        alertView.tag = 100;
+//        alertView.tag = 99;
         [alertView show];
     } onQueue:nil];
 }

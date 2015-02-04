@@ -74,23 +74,25 @@
     NSString *animalInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",self.aid]];
     NSString *animalInfoAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ANIMALINFOAPI,self.aid,animalInfoSig, [ControllerManager getSID]];
     NSLog(@"萌星API:%@", animalInfoAPI);
-    [[httpDownloadBlock alloc] initWithUrlStr:animalInfoAPI Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    
+    __block PetMainViewController *blockSelf = self;
+    [[[httpDownloadBlock alloc] initWithUrlStr:animalInfoAPI Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"宠物信息:%@", load.dataDict);
             if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
-                self.model = [[PetInfoModel alloc] init];
-                [self.model setValuesForKeysWithDictionary:[load.dataDict objectForKey:@"data"]];
+                blockSelf.model = [[PetInfoModel alloc] init];
+                [blockSelf.model setValuesForKeysWithDictionary:[load.dataDict objectForKey:@"data"]];
                 
-                if ([self.model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
-                    isMyPet = YES;
+                if ([blockSelf.model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                    blockSelf->isMyPet = YES;
                 }
-                [self modifyUI];
+                [blockSelf modifyUI];
                 if ([[USER objectForKey:@"isSuccess"] intValue]) {
-                    if (isMyPet) {
-                        pBtn.selected = YES;
+                    if (blockSelf->isMyPet) {
+                        blockSelf->pBtn.selected = YES;
                         ENDLOADING;
                     }else{
-                        [self loadPetsData];
+                        [blockSelf loadPetsData];
                     }
                     
                 }else{
@@ -100,7 +102,8 @@
         }else{
             LOADFAILED;
         }
-    }];
+
+    }] autorelease];
 }
 -(void)loadPetsData
 {
@@ -256,7 +259,7 @@
     str = [NSString stringWithFormat:@"%@%@", PETTXURL, self.model.tx];
     defaultImage = [UIImage imageNamed:@"defaultPetHead.png"];
     [headBlurImage setImageWithURL:[NSURL URLWithString:str] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
+        if (image){
             headBlurImage.image = [image applyBlurWithRadius:15 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
         }
     }];
@@ -451,7 +454,7 @@
         ShowAlertView;
         return;
     }
-    Alert_oneBtnView * oneBtn = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    __block Alert_oneBtnView * oneBtn = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     if (!btn.selected) {
 //    user/petsApi&usr_id=(若用户为自己则留空不填)
         NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
@@ -473,13 +476,13 @@
                     oneBtn.type = 2;
                     oneBtn.petsNum = array.count;
                     [oneBtn makeUI];
-                    [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+                    [self.view addSubview:oneBtn];
                     [oneBtn release];
                 }else{
                     oneBtn.type = 2;
                     oneBtn.petsNum = array.count;
                     [oneBtn makeUI];
-                    [[UIApplication sharedApplication].keyWindow addSubview:oneBtn];
+                    [self.view addSubview:oneBtn];
                     [oneBtn release];
                 }
                 oneBtn.jump = ^(){
@@ -918,9 +921,9 @@
             
         };
         [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
         [vc didMoveToParentViewController:self];
         
-        [self.view addSubview:vc.view];
         [vc release];
     }else if (a == 3) {
 //        UILabel * label = (UILabel *)[self.view viewWithTag:303];

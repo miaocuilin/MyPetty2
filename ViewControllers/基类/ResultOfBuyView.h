@@ -13,7 +13,6 @@
     //是否真的是点击了X
     BOOL isNotTrue;
     
-    
     UIView * rollView;
     UIImageView * rollImageView;
     UIImageView * badLineImageView;

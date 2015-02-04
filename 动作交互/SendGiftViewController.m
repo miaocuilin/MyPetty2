@@ -15,6 +15,12 @@
 
 @implementation SendGiftViewController
 
+-(void)dealloc
+{
+    [super dealloc];
+    [sv release];
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -37,20 +43,25 @@
     
     [self backgroundView];
     [self loadBagData];
+
 //    [self createUI];
 }
 
 - (void)backgroundView
 {
     UIView *bgView = [MyControl createViewWithFrame:self.view.frame];
-    [self.view addSubview:bgView];
     bgView.backgroundColor = [UIColor blackColor];
     bgView.alpha = 0.5;
+    [self.view addSubview:bgView];
+    
 }
 #pragma mark - 背包数据
 - (void)loadBagData
 {
     LOADING;
+    
+    __block SendGiftViewController * blockSelf = self;
+    
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERGOODSLISTAPI, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
 //    NSLog(@"背包url:%@", url);
@@ -62,27 +73,27 @@
                     if([key intValue]%10 >4 || [key intValue]>=2200){
                         continue;
                     }
-                    [self.bagItemIdArray addObject:key];
+                    [blockSelf.bagItemIdArray addObject:key];
                 }
                 //排序
-                for (int i=0; i<self.bagItemIdArray.count; i++) {
-                    for (int j=0; j<self.bagItemIdArray.count-i-1; j++) {
-                        if ([self.bagItemIdArray[j] intValue] > [self.bagItemIdArray[j+1] intValue]) {
-                            NSString * str1 = [NSString stringWithFormat:@"%@", self.bagItemIdArray[j]];
-                            NSString * str2 = [NSString stringWithFormat:@"%@", self.bagItemIdArray[j+1]];
-                            self.bagItemIdArray[j] = str2;
-                            self.bagItemIdArray[j+1] = str1;
+                for (int i=0; i<blockSelf.bagItemIdArray.count; i++) {
+                    for (int j=0; j<blockSelf.bagItemIdArray.count-i-1; j++) {
+                        if ([blockSelf.bagItemIdArray[j] intValue] > [blockSelf.bagItemIdArray[j+1] intValue]) {
+                            NSString * str1 = [NSString stringWithFormat:@"%@", blockSelf.bagItemIdArray[j]];
+                            NSString * str2 = [NSString stringWithFormat:@"%@", blockSelf.bagItemIdArray[j+1]];
+                            blockSelf.bagItemIdArray[j] = str2;
+                            blockSelf.bagItemIdArray[j+1] = str1;
                         }
                     }
                 }
                 //
-                for (NSString * str in self.bagItemIdArray) {
-                    [self.bagItemNumArray addObject:[[load.dataDict objectForKey:@"data"] objectForKey:str]];
+                for (NSString * str in blockSelf.bagItemIdArray) {
+                    [blockSelf.bagItemNumArray addObject:[[load.dataDict objectForKey:@"data"] objectForKey:str]];
                 }
-                for(int i=0;i<self.bagItemIdArray.count;i++){
-                    if ([self.bagItemNumArray[i] intValue] == 0) {
-                        [self.bagItemIdArray removeObjectAtIndex:i];
-                        [self.bagItemNumArray removeObjectAtIndex:i];
+                for(int i=0;i<blockSelf.bagItemIdArray.count;i++){
+                    if ([blockSelf.bagItemNumArray[i] intValue] == 0) {
+                        [blockSelf.bagItemIdArray removeObjectAtIndex:i];
+                        [blockSelf.bagItemNumArray removeObjectAtIndex:i];
                         i--;
                     }
                 }
@@ -90,10 +101,10 @@
             
             //将背包中有的从所有物品中剔除
 //            NSLog(@"%d", self.tempGiftArray.count);
-            for (int i=0; i<self.tempGiftArray.count; i++) {
-                for (int j=0; j<self.bagItemIdArray.count; j++) {
-                    if ([[self.tempGiftArray[i] objectForKey:@"no"] isEqualToString:self.bagItemIdArray[j]]) {
-                        [self.tempGiftArray removeObjectAtIndex:i];
+            for (int i=0; i<blockSelf.tempGiftArray.count; i++) {
+                for (int j=0; j<blockSelf.bagItemIdArray.count; j++) {
+                    if ([[blockSelf.tempGiftArray[i] objectForKey:@"no"] isEqualToString:blockSelf.bagItemIdArray[j]]) {
+                        [blockSelf.tempGiftArray removeObjectAtIndex:i];
                         i--;
                         break;
                     }
@@ -102,8 +113,8 @@
 //            NSLog(@"%d", self.tempGiftArray.count);
             //
             ENDLOADING;
-            [self createBgView];
-            [self createUI];
+            [blockSelf createBgView];
+            [blockSelf createUI];
         }else{
             ENDLOADING;
         }
@@ -339,97 +350,6 @@
             rqz2.text = [NSString stringWithFormat:@"+%@", rqz2.text];
         }
     }
-    
-    
-    
-    
-    
-    
- 
-    
-    /*********************************************/
-//    for(int i=0;i<self.bagItemIdArray.count+self.tempGiftArray.count;i++){
-//    
-//        UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(h+i%3*(80+h)+300*(i/9), h+(i/3)%3*(90+v), 80, 90)];
-//        if (i<self.bagItemIdArray.count) {
-//            //背包
-//            if ([self.bagItemIdArray[i] intValue]>=2000) {
-//                imageView.image = [UIImage imageNamed:@"trick_bg.png"];
-//            }else{
-//                imageView.image = [UIImage imageNamed:@"product_bg.png"];
-//            }
-//        }else{
-//            //商店
-//            if ([[self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"no"] intValue]>2000) {
-//                imageView.image = [UIImage imageNamed:@"trick_bg.png"];
-//            }else{
-//                imageView.image = [UIImage imageNamed:@"product_bg.png"];
-//            }
-//        }
-//        [sv addSubview:imageView];
-//        [imageView release];
-//        
-//        UIImageView *productImageView = [MyControl createImageViewWithFrame:CGRectMake((imageView.frame.size.width-75)/2, 20, 75, 50) ImageName:[NSString stringWithFormat:@"%@.png",[self.giftArray[i] objectForKey:@"no"]]];
-//        [imageView addSubview:productImageView];
-//        
-//        UILabel * productLabel = [MyControl createLabelWithFrame:CGRectMake(0, 10, imageView.frame.size.width, 10) Font:10 Text:[self.giftArray[i] objectForKey:@"name"]];
-//        productLabel.textAlignment = NSTextAlignmentCenter;
-//        productLabel.font = [UIFont boldSystemFontOfSize:10];
-//        productLabel.textColor = [UIColor grayColor];
-//        [imageView addSubview:productLabel];
-//
-//        UILabel *numberCoinLabel = [MyControl createLabelWithFrame:CGRectMake(38, 75, 50, 10) Font:13 Text:nil];
-//        numberCoinLabel.textColor =BGCOLOR;
-//        [imageView addSubview:numberCoinLabel];
-//        
-//        UIImageView *coinImageView = [MyControl createImageViewWithFrame:CGRectMake(20, 73, 13, 13) ImageName:@"gold.png"];
-//        [imageView addSubview:coinImageView];
-//        
-//        UILabel *leftCornerLabel1 =[MyControl createLabelWithFrame:CGRectMake(-3, 4, 20, 8) Font:7 Text:@"人气"];
-//        leftCornerLabel1.textAlignment = NSTextAlignmentCenter;
-//        leftCornerLabel1.font = [UIFont boldSystemFontOfSize:7];
-//        CGAffineTransform transform =  CGAffineTransformMakeRotation(-45.0 *M_PI / 180.0);
-//        leftCornerLabel1.transform = transform;
-//        
-//        UILabel *leftCornerLabel2 = [MyControl createLabelWithFrame:CGRectMake(-1, 11, 25, 10) Font:8 Text:@"+50"];
-//        leftCornerLabel2.font = [UIFont systemFontOfSize:8];
-//        leftCornerLabel2.textAlignment = NSTextAlignmentCenter;
-//        leftCornerLabel2.transform = transform;
-//        [imageView addSubview:leftCornerLabel1];
-//        [imageView addSubview:leftCornerLabel2];
-//        
-////        GiftShopModel *model = self.giftArray[i];
-//        if (i>=self.bagItemIdArray.count) {
-//            productImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"no"]]];
-//            productLabel.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"name"];
-//            numberCoinLabel.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"price"];
-//            if ([[self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
-//                leftCornerLabel2.text = [NSString stringWithFormat:@"+%@", [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"add_rq"]];
-//            }else{
-//                leftCornerLabel2.text = [self.tempGiftArray[i-self.bagItemIdArray.count] objectForKey:@"add_rq"];
-//            }
-//            
-//        }else{
-//            productImageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", self.bagItemIdArray[i]]];
-//            productLabel.text = [[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"name"];
-//            numberCoinLabel.text = [NSString stringWithFormat:@"X %@", self.bagItemNumArray[i]];
-//            coinImageView.image = [UIImage imageNamed:@"giftIcon.png"];
-//            if ([[[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"add_rq"] rangeOfString:@"-"].location == NSNotFound) {
-//                leftCornerLabel2.text = [NSString stringWithFormat:@"+%@", [[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"add_rq"]];
-//            }else{
-//                leftCornerLabel2.text = [[ControllerManager returnGiftDictWithItemId:self.bagItemIdArray[i]] objectForKey:@"add_rq"];
-//            }
-//        }
-//        
-////        NSLog(@"rq:%d",[[self.giftArray[i] objectForKey:@"add_rq"] intValue]);
-//        
-//        
-//        
-//        UIButton * button = [MyControl createButtonWithFrame:imageView.frame ImageName:nil Target:self Action:@selector(clickBtn:) Title:nil];
-//        [sv addSubview:button];
-//        button.tag = 1000+i;
-//    }
-    /*****************************/
 }
 
 -(void)sendGiftBtnClick:(UIButton *)btn
@@ -446,8 +366,8 @@
     vc.isQuick = YES;
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    
+    [ControllerManager deleTabBarViewController:self];
 }
 -(void)clickBtn:(UIButton *)btn;
 {
@@ -565,9 +485,7 @@
 }
 -(void)closeGiftAction
 {
-    [self willMoveToParentViewController:nil];
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    [ControllerManager deleTabBarViewController:self];
 }
 #pragma mark -
 #pragma mark - ScrollViewDelegate

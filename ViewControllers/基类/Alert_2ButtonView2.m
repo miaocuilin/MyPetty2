@@ -71,18 +71,19 @@
         
         selectImage.hidden = YES;
         selectBtn.hidden = YES;
-        CGRect rect = selectLabel.frame;
-        rect.origin.x = 0;
-        rect.size.width = bgView.frame.size.width;
-        selectLabel.frame = rect;
-        selectLabel.text = @"先去应用挣钱吧~";
-        selectLabel.textAlignment = NSTextAlignmentCenter;
+        selectLabel.hidden = YES;
+//        CGRect rect = selectLabel.frame;
+//        rect.origin.x = 0;
+//        rect.size.width = bgView.frame.size.width;
+//        selectLabel.frame = rect;
+//        selectLabel.text = @"先去应用挣钱吧~";
+//        selectLabel.textAlignment = NSTextAlignmentCenter;
         
-        [confirmBtn setTitle:@"好吧~" forState:UIControlStateNormal];
-        cancelBtn.hidden = YES;
-        CGRect rect2 = confirmBtn.frame;
-        rect2.origin.x = (bgView.frame.size.width-rect2.size.width)/2.0;
-        confirmBtn.frame = rect2;
+        [confirmBtn setTitle:@"去充值" forState:UIControlStateNormal];
+//        cancelBtn.hidden = YES;
+//        CGRect rect2 = confirmBtn.frame;
+//        rect2.origin.x = (bgView.frame.size.width-rect2.size.width)/2.0;
+//        confirmBtn.frame = rect2;
         
     }else if(self.type == 3){
         label1.text = @"支付";
@@ -159,7 +160,7 @@
         self.reward();
     }else if (self.type == 2){
         //block跳转充值
-//        self.jumpCharge();
+        self.jumpCharge();
     }else if(self.type == 3){
         //block确认兑换
         self.exchange();

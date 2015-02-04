@@ -42,7 +42,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     [super viewWillAppear:animated];
     if (isLoaded) {
-//        [self.tv headerBeginRefreshing];
+        [self.tv headerBeginRefreshing];
     }else if(![[USER objectForKey:@"guide_star"] intValue]){
         [self createGuide];
         [USER setObject:@"1" forKey:@"guide_star"];
@@ -407,7 +407,6 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         vc.aid = aid;
         [self presentViewController:vc animated:YES completion:nil];
         [vc release];
-        [vc release];
     };
     cell.actClick = ^(int a){
 //        self.actClick(a, indexPath.row);
@@ -488,10 +487,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [self.tv reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:0];
                 //                NSLog(@"%@--%d", cell.contributionLabel.text, contri+[add_rq intValue]);
             };
-            [self addChildViewController:shake];
-            [shake didMoveToParentViewController:self];
+//            [self addChildViewController:shake];
+//            [shake didMoveToParentViewController:self];
             [shake becomeFirstResponder];
-            [self.view addSubview:shake.view];
+            [ControllerManager addTabBarViewController:shake];
             [shake release];
 //            [shake release];
         }else if (a == 2) {
@@ -522,44 +521,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     [vc closeGiftAction];
                 };
                 [result configUIWithName:self.pet_name ItemId:itemId Tx:self.pet_tx];
-                [self.view addSubview:result];
-                
+                [vc.view addSubview:result];
+                [result release];
                 
             };
-            [self addChildViewController:vc];
-            [vc didMoveToParentViewController:self];
-            [self.view addSubview:vc.view];
+            [ControllerManager addTabBarViewController:vc];
             [vc release];
-            
-            
-            
-            
-//            if ([model.master_id isEqualToString:[USER objectForKey:@"usr_id"]]) {
-////                NSLog(@"叫一叫");
-////                label.text = @"叫一叫";
-//                
-//                RecordViewController *shout = [[RecordViewController alloc] init];
-//                shout.isFromStar = YES;
-//                shout.recordBack = ^(void){
-//                    label.text = @"叫过了";
-//                    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
-//                    [dict setObject:[NSNumber numberWithInt:1] forKey:@"is_voiced"];
-//                    model.dict = dict;
-//                    model.is_voiced = [NSNumber numberWithInt:1];
-//                };
-//                shout.pet_aid = self.pet_aid;
-//                shout.pet_name = self.pet_name;
-//                shout.pet_tx = self.pet_tx;
-//                [self addChildViewController:shout];
-//                [shout release];
-//                [shout didMoveToParentViewController:self];
-//                //        [shout createRecordOne];
-//                [self.view addSubview:shout.view];
-//            }else{
-//                NSLog(@"摸一摸");
-//                label.text = @"摸一摸";
-            
-//            }
+
         }else if (a == 3) {
             UILabel * label = (UILabel *)[cell viewWithTag:303];
             TouchViewController *touch = [[TouchViewController alloc] init];
@@ -576,7 +544,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             touch.pet_tx = self.pet_tx;
 //            [self addChildViewController:touch];
 //            [touch didMoveToParentViewController:self];
-            [[UIApplication sharedApplication].keyWindow addSubview:touch.view];
+            [ControllerManager addTabBarViewController:touch];
             [touch release];
             
             
@@ -589,8 +557,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     cell.imageClick = ^(NSString * img_id){
         FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = img_id;
-
-        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+        [ControllerManager addTabBarViewController:vc];
+//        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
         [vc release];
     };
     

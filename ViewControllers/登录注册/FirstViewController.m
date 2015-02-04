@@ -687,7 +687,8 @@
 //        mainTab.selectedIndex = 3;
 //    }
     
-    [self presentViewController:mainTab animated:YES completion:nil];
+//    [self presentViewController:mainTab animated:YES completion:nil];
+    [[UIApplication sharedApplication].delegate window].rootViewController = mainTab;
     [mainTab release];
 }
 //#pragma mark -获取用户数据

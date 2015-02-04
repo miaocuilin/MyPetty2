@@ -60,12 +60,11 @@
 
 -(void)loadData
 {
-//    LOADING;
-//    if (isLoaded) {
-//        [UIView animateWithDuration:0.2 animations:^{
-//            tv.contentOffset = CGPointMake(0, 0);
-//        }];
-//    }
+    if (isLoading) {
+        NSLog(@"拒绝访问");
+        return;
+    }
+    isLoading = YES;
     page = 0;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%ddog&cat", page]];
     NSString * url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", BEGFOODAPI, page, sig, [ControllerManager getSID]];
@@ -73,11 +72,12 @@
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            NSLog(@"%@", load.dataDict);
-            [self.dataArray removeAllObjects];
             if (![[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSArray class]] || [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] count] == 0) {
 //                ENDLOADING;
                 return;
             }
+            
+            [self.dataArray removeAllObjects];
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
                 BegFoodListModel * model = [[BegFoodListModel alloc] init];
@@ -85,22 +85,26 @@
                 [self.dataArray addObject:model];
                 [model release];
             }
+            
             page++;
             [tv reloadData];
-            
+
             [UIView animateWithDuration:0.2 animations:^{
                 tv.contentOffset = CGPointMake(0, 0);
             }];
             
             [self refreshHeader:0];
+            isLoading = NO;
 //            ENDLOADING;
         }else{
+            isLoading = NO;
             LOADFAILED;
             NSLog(@"========myStar========");
         }
     }];
     [request release];
 }
+
 -(void)loadMoreData
 {
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%ddog&cat", page]];
@@ -314,14 +318,19 @@
         cell = [[[FoodCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
     }
     BegFoodListModel * model = self.dataArray[indexPath.row];
+    //有可能泄露
     [cell modifyUI:model];
     cell.bigClick = ^(){
         FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = model.img_id;
-        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+        [ControllerManager addTabBarViewController:vc];
+//        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
         [vc release];
     };
-    
+    if (addAnimationSwitch) {
+        [cell addAnimation:[rewardNum.text intValue]];
+        addAnimationSwitch = NO;
+    }
     cell.transform = CGAffineTransformMakeRotation(M_PI/2);
     cell.backgroundColor = [UIColor clearColor];
     cell.selectionStyle = 0;
@@ -426,9 +435,16 @@
         view2.rewardNum = rewardNum.text;
         [view2 makeUI];
         view2.jumpCharge = ^(){
-            ChargeViewController * charge = [[ChargeViewController alloc] init];
-            [self presentViewController:charge animated:YES completion:nil];
-            [charge release];
+            Alert_oneBtnView * oneView = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+            oneView.type = 4;
+            [oneView makeUI];
+            oneView.jumpTB = ^(){
+                ChargeViewController * charge = [[ChargeViewController alloc] init];
+                [self presentViewController:charge animated:YES completion:nil];
+                [charge release];
+            };
+            [[UIApplication sharedApplication].keyWindow addSubview:oneView];
+            [oneView release];
         };
         [[UIApplication sharedApplication].keyWindow addSubview:view2];
         [view2 release];
@@ -471,7 +487,8 @@
                 [USER setObject:[NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"gold"]] forKey:@"gold"];
                 BegFoodListModel * model = self.dataArray[a];
                 model.food = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"food"]];
-                [MyControl popAlertWithView:self.view Msg:[NSString stringWithFormat:@"打赏成功，萌星 %@ 感谢您的爱心！", [self.dataArray[a] name]]];
+//                [MyControl popAlertWithView:self.view Msg:[NSString stringWithFormat:@"打赏成功，萌星 %@ 感谢您的爱心！", [self.dataArray[a] name]]];
+                addAnimationSwitch = YES;
                 [tv reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:a inSection:0]] withRowAnimation:0];
                 
                 
@@ -491,7 +508,6 @@
     int a = tv.contentOffset.y/self.view.frame.size.width;
     vc.aid = [self.dataArray[a] aid];
     [self presentViewController:vc animated:YES completion:nil];
-    [vc release];
     [vc release];
 }
 -(void)jumpUserClick

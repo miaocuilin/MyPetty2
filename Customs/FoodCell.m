@@ -67,13 +67,30 @@
     bigImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 100, 100) ImageName:@""];
     [whiteView addSubview:bigImageView];
     
-//    addLabel = [MyControl createLabelWithFrame:CGRectZero Font:15 Text:nil];
-//    addLabel.textColor = ORANGE;
-//    addLabel.textAlignment = NSTextAlignmentCenter;
-//    [whiteView addSubview:addLabel];
     bigBtn = [MyControl createButtonWithFrame:whiteView.frame ImageName:@"" Target:self Action:@selector(bigBtnClick) Title:nil];
 //    bigBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
     [self addSubview:bigBtn];
+    
+    foodAnimation = [MyControl createImageViewWithFrame:CGRectMake(whiteView.frame.size.width-10-105, leftTime.frame.origin.y-84, 105, 84) ImageName:@""];
+    foodAnimation.animationImages = @[[UIImage imageNamed:@"foodAnimation_1.png"], [UIImage imageNamed:@"foodAnimation_2.png"]];
+    foodAnimation.animationDuration = 0.6;
+    foodAnimation.animationRepeatCount = 0;
+    [foodAnimation startAnimating];
+    [whiteView addSubview:foodAnimation];
+    
+    
+    addBgView = [MyControl createViewWithFrame:CGRectMake(0, 0, 70, 20)];
+    [whiteView addSubview:addBgView];
+    addBgView.hidden = YES;
+    
+    foodImage = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 20, 20) ImageName:@"pet_icon_food.png"];
+    [addBgView addSubview:foodImage];
+    
+    addNum = [MyControl createLabelWithFrame:CGRectMake(25, 0, 50, 20) Font:17 Text:nil];
+    addNum.font = [UIFont boldSystemFontOfSize:17];
+    addNum.textColor = ORANGE;
+    addNum.textAlignment = NSTextAlignmentCenter;
+    [addBgView addSubview:addNum];
 }
 -(void)bigBtnClick
 {
@@ -87,6 +104,7 @@
 }
 -(void)modifyUI:(BegFoodListModel *)model
 {
+
     leftTime.text = nil;
     self.timeStamp = model.create_time;
     timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(minTime) userInfo:nil repeats:YES];
@@ -105,17 +123,27 @@
     foodNum.frame = CGRectMake(5, line.frame.origin.y-25, 200, 20);
     [mutableStr release];
     
+    CGRect rect = addBgView.frame;
+    rect.origin.x = foodNum.frame.origin.x;
+    rect.origin.y = foodNum.frame.origin.y-20;
+    addBgView.frame = rect;
+    
     //
 //    addLabel.frame = CGRectMake(foodNum.frame.origin.x, foodNum.frame.origin.y-15, foodNum.frame.size.width, 20);
 //    addLabel.alpha = 0;
     
     //
     leftTime.frame = CGRectMake(whiteView.frame.size.width-220, foodNum.frame.origin.y, 210, 20);
+
+    foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-105, leftTime.frame.origin.y-84, 105, 84);
+    [foodAnimation startAnimating];
+//    [self bringSubviewToFront:foodAnimation];
     
     //517_1417699704@50512@_640&853.png
     [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] placeholderImage:[UIImage imageNamed:@"water_white.png"] options:0 progress:^(NSUInteger receivedSize, long long expectedSize) {
 //        NSLog(@"%d--%lld--%.2lld", receivedSize, expectedSize, receivedSize/expectedSize);
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+#warning image 有可能内存泄露 __block
         if (image) {
 //            bigImageView.image = nil;
 //            bigImageView.image = [UIImage imageWithData:[MyControl compressImage:image]];
@@ -138,6 +166,8 @@
             
         }
     }];
+    
+    
 //    [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
 //        if (image) {
 //            
@@ -161,23 +191,24 @@
 //    }];
     
 }
-//-(void)addAnimation:(int)num
-//{
-//    NSLog(@"add:%d", num);
-//    addLabel.text = [NSString stringWithFormat:@"+%d", num];
-//    addLabel.alpha = 1;
-//    [UIView animateWithDuration:0.8 animations:^{
-//        addLabel.alpha = 0;
-//        CGRect rect = addLabel.frame;
-//        rect.origin.y -= 15;
-//        addLabel.frame = rect;
-//    }completion:^(BOOL finished) {
-//        addLabel.frame = CGRectMake(foodNum.frame.origin.x, foodNum.frame.origin.y-15, foodNum.frame.size.width, 20);
-//    }];
-//}
+-(void)addAnimation:(int)num
+{
+    NSLog(@"add:%d", num);
+    addBgView.hidden = NO;
+    addNum.text = [NSString stringWithFormat:@"+%d", num];
+    addBgView.alpha = 1;
+    [UIView animateWithDuration:1.0 animations:^{
+        addBgView.alpha = 0;
+        CGRect rect = addBgView.frame;
+        rect.origin.y -= 25;
+        addBgView.frame = rect;
+    }completion:^(BOOL finished) {
+        addBgView.frame = CGRectMake(foodNum.frame.origin.x, foodNum.frame.origin.y-20, foodNum.frame.size.width, 20);
+        addBgView.hidden = YES;
+    }];
+}
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
     // Configure the view for the selected state
 }
 

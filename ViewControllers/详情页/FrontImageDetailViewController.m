@@ -21,45 +21,70 @@
 @implementation FrontImageDetailViewController
 -(void)dealloc
 {
+    [super dealloc];
     [sv release];
     [sv2 release];
     [swipeLeft release];
     [swipeRight release];
     [bigImageView release];
-    [super dealloc];
-}
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    if (!isLoad) {
-        if (![[USER objectForKey:@"guide_detail"] intValue]) {
-            [USER setObject:@"1" forKey:@"guide_detail"];
-            [self createGuide];
-        }
-        
-    }
-}
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    isLoad = YES;
     
-    isInThisController = YES;
-    //底部4个球跳动动画
-    UIButton * b1 = (UIButton *)[self.view viewWithTag:100];
-    UIButton * b2 = (UIButton *)[self.view viewWithTag:101];
-    UIButton * b3 = (UIButton *)[self.view viewWithTag:102];
-    UIButton * b4 = (UIButton *)[self.view viewWithTag:103];
-    CGRect r1 = b1.frame;
-    CGRect r2 = b2.frame;
-    CGRect r3 = b3.frame;
-    CGRect r4 = b4.frame;
+    [_usrIdArray release];
+    [_nameArray release];
+    [_bodyArray release];
+    [_createTimeArray release];
+    [_cmtTxArray release];
+    //
+    [_likerTxArray release];
+    [_senderTxArray release];
+    [_likerIdArray release];
+    [_senderIdArray release];
+    //
+    [_likersArray release];
+    [_sendersArray release];
+    [_commentersArray release];
+    [_sharersArray release];
     
-    [self animationWithView:b1 Size:r1];
-    [self animationWithView:b2 Size:r2];
-    [self animationWithView:b3 Size:r3];
-    [self animationWithView:b4 Size:r4];
+    [_picDict release];
+    [_imageDict release];
+    [_petDict release];
+    [_img_id release];
+    
+    //清除缓存图片
+//    SDImageCache * cache = [SDImageCache sharedImageCache];
+//    [cache clearMemory];
 }
+//-(void)viewWillAppear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    if (!isLoad) {
+//        if (![[USER objectForKey:@"guide_detail"] intValue]) {
+//            [USER setObject:@"1" forKey:@"guide_detail"];
+//            [self createGuide];
+//        }
+//        
+//    }
+//}
+//-(void)viewDidAppear:(BOOL)animated
+//{
+//    [super viewDidAppear:animated];
+//    isLoad = YES;
+//    
+//    isInThisController = YES;
+//    //底部4个球跳动动画
+//    UIButton * b1 = (UIButton *)[self.view viewWithTag:100];
+//    UIButton * b2 = (UIButton *)[self.view viewWithTag:101];
+//    UIButton * b3 = (UIButton *)[self.view viewWithTag:102];
+//    UIButton * b4 = (UIButton *)[self.view viewWithTag:103];
+//    CGRect r1 = b1.frame;
+//    CGRect r2 = b2.frame;
+//    CGRect r3 = b3.frame;
+//    CGRect r4 = b4.frame;
+//    
+//    [self animationWithView:b1 Size:r1];
+//    [self animationWithView:b2 Size:r2];
+//    [self animationWithView:b3 Size:r3];
+//    [self animationWithView:b4 Size:r4];
+//}
 -(void)createGuide
 {
     guide = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"guide1.png"];
@@ -121,11 +146,11 @@
         } completion:nil];
     }];
 }
--(void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    isInThisController = NO;
-}
+//-(void)viewDidDisappear:(BOOL)animated
+//{
+//    [super viewDidDisappear:animated];
+//    isInThisController = NO;
+//}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -166,8 +191,29 @@
     [self loadImageData];
     
     self.view.alpha = 0;
-    [UIView animateWithDuration:0.4 animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         self.view.alpha = 1;
+    } completion:^(BOOL finished) {
+        if (![[USER objectForKey:@"guide_detail"] intValue]) {
+            [USER setObject:@"1" forKey:@"guide_detail"];
+            [self createGuide];
+        }
+        //
+        isInThisController = YES;
+        //底部4个球跳动动画
+        UIButton * b1 = (UIButton *)[self.view viewWithTag:100];
+        UIButton * b2 = (UIButton *)[self.view viewWithTag:101];
+        UIButton * b3 = (UIButton *)[self.view viewWithTag:102];
+        UIButton * b4 = (UIButton *)[self.view viewWithTag:103];
+        CGRect r1 = b1.frame;
+        CGRect r2 = b2.frame;
+        CGRect r3 = b3.frame;
+        CGRect r4 = b4.frame;
+        
+        [self animationWithView:b1 Size:r1];
+        [self animationWithView:b2 Size:r2];
+        [self animationWithView:b3 Size:r3];
+        [self animationWithView:b4 Size:r4];
     }];
     
 }
@@ -178,6 +224,7 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@&usr_id=%@dog&cat", self.img_id, [USER objectForKey:@"usr_id"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&usr_id=%@&sig=%@&SID=%@", IMAGEINFOAPI, self.img_id, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
     NSLog(@"imageInfoAPI:%@", url);
+    
     
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -487,6 +534,7 @@
 #pragma mark -
 -(void)modifyUI
 {
+    
 //    LOADING;
 //    bigImageView.canClick = NO;
     [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.imageDict objectForKey:@"url"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -624,7 +672,7 @@
     
     [userTx setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [self.petDict objectForKey:@"u_tx"]]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (image) {
-            [userTx setImage:[MyControl returnSquareImageWithImage:image]];
+//            [bUserTx setImage:[MyControl returnSquareImageWithImage:image]];
         }
     }];
     
@@ -778,7 +826,7 @@
 //    [tap4 release];
     
     headBtn = [MyControl createButtonWithFrame:CGRectMake(5, 12, 46, 46) ImageName:@"defaultPetHead.png" Target:self Action:@selector(headBtnClick) Title:nil];
-    headBtn.layer.cornerRadius = 23;
+    headBtn.layer.cornerRadius = headBtn.frame.size.width/2.0;
     headBtn.layer.masksToBounds = YES;
     [imageBgView2 addSubview:headBtn];
     
@@ -796,6 +844,7 @@
     userTx = [MyControl createImageViewWithFrame:CGRectMake(imageBgView2.frame.size.width-20-13, 32, 20, 20) ImageName:@"defaultUserHead.png"];
     userTx.layer.cornerRadius = 10;
     userTx.layer.masksToBounds = YES;
+    userTx.contentMode = UIViewContentModeScaleAspectFill;
     [imageBgView2 addSubview:userTx];
     
     userName = [MyControl createLabelWithFrame:CGRectMake(userTx.frame.origin.x-150, 36, 150, 15) Font:11 Text:@""];
@@ -1672,12 +1721,12 @@
     if ([str isEqualToString:@"zh-Hans"]) {
         
         [UIView animateWithDuration:0.25 animations:^{
-            commentBgView.frame = CGRectMake(0, self.view.frame.size.height-height-commentBgView.frame.size.height, 320, commentBgView.frame.size.height);
+            commentBgView.frame = CGRectMake(0, self.view.frame.size.height-height-commentBgView.frame.size.height, self.view.frame.size.width, commentBgView.frame.size.height);
             originalY = commentBgView.frame.origin.y;
         }];
     }else{
         [UIView animateWithDuration:0.25 animations:^{
-            commentBgView.frame = CGRectMake(0, self.view.frame.size.height-height-commentBgView.frame.size.height, 320, commentBgView.frame.size.height);
+            commentBgView.frame = CGRectMake(0, self.view.frame.size.height-height-commentBgView.frame.size.height, self.view.frame.size.width, commentBgView.frame.size.height);
             originalY = commentBgView.frame.origin.y;
         }];
     }
@@ -2156,12 +2205,15 @@
 -(void)closeClick
 {
     NSLog(@"close");
-    [UIView animateWithDuration:0.4 animations:^{
+    isInThisController = NO;
+    
+//    [ControllerManager deleTabBarViewController:self];
+//    __block FrontImageDetailViewController * blockSelf = self;
+    [UIView animateWithDuration:0.3 animations:^{
         self.view.alpha = 0;
     }completion:^(BOOL finished) {
-        [self.view removeFromSuperview];
+        [ControllerManager deleTabBarViewController:self];
     }];
-//    [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)headBtnClick
 {

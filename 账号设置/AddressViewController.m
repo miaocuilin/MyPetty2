@@ -49,8 +49,8 @@
 }
 - (void)loadData
 {
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *addressAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ADDRESSAPI,[USER objectForKey:@"aid" ],sig,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_id]];
+    NSString *addressAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ADDRESSAPI, self.pet_id, sig, [ControllerManager getSID]];
     NSLog(@"获取地址信息：%@",addressAPI);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:addressAPI Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"收货地址信息数据：%@",load.dataDict);
@@ -91,8 +91,8 @@
     }
 //    宠物地址：animal/addressApi&aid=
     NSLog(@"%@-%@-%@-%@-%@",receiveName,telphone,codeNumber,area,detailarea);
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *addressAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ADDRESSAPI,[USER objectForKey:@"aid" ],sig,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_id]];
+    NSString *addressAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",ADDRESSAPI, self.pet_id,sig,[ControllerManager getSID]];
     NSLog(@"%@",addressAPI);
     
     _request = [[ASIFormDataRequest alloc] initWithURL:[NSURL URLWithString:addressAPI]];
@@ -128,8 +128,8 @@
 }
 - (void)loadDataAPI
 {
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aids=%@dog&cat",[USER objectForKey:@"aid"]]];
-    NSString *string = [NSString stringWithFormat:@"http://release4pet.aidigame.com/index.php?r=animal/othersApi&aids=%@&sig=%@&SID=%@",[USER objectForKey:@"aid"],sig,[ControllerManager getSID]];
+    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aids=%@dog&cat", self.pet_id]];
+    NSString *string = [NSString stringWithFormat:@"http://release4pet.aidigame.com/index.php?r=animal/othersApi&aids=%@&sig=%@&SID=%@", self.pet_id, sig,[ControllerManager getSID]];
     NSLog(@"string:%@",string);
     
     NSString *sigRecommed = [MyMD5 md5:@"dog&cat"];

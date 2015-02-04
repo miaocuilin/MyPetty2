@@ -469,11 +469,25 @@
 //        [self.tableView  deleteRowsAtIndexPaths:[NSArray arrayWithObject:_currentLongPressIndex] withRowAnimation:UITableViewRowAnimationFade];
 //        [self.tableView  endUpdates];
         
-        [[EaseMob sharedInstance].chatManager blockBuddy:buddy.username relationship:eRelationshipBoth];
+        EMError * error = [[EaseMob sharedInstance].chatManager blockBuddy:buddy.username relationship:eRelationshipBoth];
+        if (!error) {
+            [MyControl popAlertWithView:self.view Msg:@"拉黑成功"];
+        }else{
+            [MyControl popAlertWithView:self.view Msg:@"拉黑失败"];
+            NSLog(@"%@", error);
+        }
     }
     
     _currentLongPressIndex = nil;
 }
+
+//#pragma mark - IChatManagerDelegate
+//- (void)didBlockBuddy:(EMBuddy *)buddy error:(EMError **)pError{
+//    if (!pError) {
+//        NSLog(@"添加成功");
+//        [MyControl popAlertWithView:self.view Msg:@"拉黑成功"];
+//    }
+//}
 
 #pragma mark - registerNotifications
 -(void)registerNotifications{

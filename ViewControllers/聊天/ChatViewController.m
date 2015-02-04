@@ -130,8 +130,9 @@
         [(DXChatBarMoreView *)self.chatToolBar.moreView setDelegate:self];
     }
     
+    /*这里点击事件使添加到上面的frontImage页面的cell点击事件失效*/
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(keyBoardHidden)];
-    [self.view addGestureRecognizer:tap];
+    [self.tableView addGestureRecognizer:tap];
     
     //通过会话管理者获取已收发消息
     [self loadMoreMessages];
@@ -460,12 +461,18 @@
 //            NSLog(@"%@", cell.messageModel.message.ext);
             
             cell.jumpClick = ^(int type){
+                [self keyBoardHidden];
+                
                 NSDictionary * dict = model.message.ext;
                 if (type == 1) {
                     //照片详情
                     FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
                     vc.img_id = [dict objectForKey:@"img_id"];
+//                    vc.isFromKey = YES;
+//                    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+                    [self addChildViewController:vc];
                     [self.view addSubview:vc.view];
+                    [vc didMoveToParentViewController:self];
                 }else if(type == 2){
                     //赏口粮
                     SimpleRewardViewController * vc = [[SimpleRewardViewController alloc] init];
@@ -483,6 +490,7 @@
     
     return nil;
 }
+
 
 #pragma mark - Table view delegate
 

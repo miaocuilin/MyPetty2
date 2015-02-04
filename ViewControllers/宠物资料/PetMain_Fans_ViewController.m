@@ -29,6 +29,7 @@
 #pragma mark - 国家成员数据
 - (void)loadKingMembersData
 {
+    page = 0;
     NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.model.aid]];
     NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETMEMBERSAPI, self.model.aid, animalMembersSig, [ControllerManager getSID]];
     NSLog(@"国王成员API:%@",animalMembersString);
@@ -60,6 +61,7 @@
             
             //            NSLog(@"%@", [self.countryMembersDataArray[0] usr_id]);
             [tv reloadData];
+            page++;
             //            [self loadKingPresentsData];
         }
     }];
@@ -68,8 +70,8 @@
 }
 - (void)loadKingMembersDataMore
 {
-    NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&rank=%@&usr_id=%@dog&cat",self.model.aid,self.lastRank,self.lastUsr_id]];
-    NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&rank=%@&usr_id=%@&sig=%@&SID=%@", PETMEMBERSAPI,self.model.aid,self.lastRank,self.lastUsr_id,animalMembersSig, [ControllerManager getSID]];
+    NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&page=%ddog&cat", self.model.aid, page]];
+    NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&page=%d&sig=%@&SID=%@", PETMEMBERSAPI, self.model.aid, page, animalMembersSig, [ControllerManager getSID]];
     NSLog(@"更多国王成员API:%@",animalMembersString);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalMembersString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
@@ -91,6 +93,8 @@
                 [model release];
             }
             [tv footerEndRefreshing];
+            [tv reloadData];
+            page++;
         }
     }];
     [request release];

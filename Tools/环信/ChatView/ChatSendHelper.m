@@ -97,16 +97,23 @@
               isChatGroup:(BOOL)isChatGroup
         requireEncryption:(BOOL)requireEncryption nickName:(NSString *)nickName tx:(NSString *)tx other_nickName:(NSString *)other_nickName other_tx:(NSString *)other_tx
 {
-    EMMessage *retureMsg = [[EMMessage alloc] initWithReceiver:username bodies:[NSArray arrayWithObject:body]];
-    retureMsg.requireEncryption = requireEncryption;
-    retureMsg.isGroup = isChatGroup;
-    retureMsg.ext = @{@"nickname":nickName, @"tx":tx, @"other_nickname":other_nickName, @"other_tx":other_tx, @"id":[USER objectForKey:@"usr_id"]};
+    EMMessage *returnMsg = [[EMMessage alloc] initWithReceiver:username bodies:[NSArray arrayWithObject:body]];
+    returnMsg.requireEncryption = requireEncryption;
+    returnMsg.isGroup = isChatGroup;
+//    NSLog(@"%@--%@--%@--%@--%@", nickName, tx, other_nickName, other_tx, [USER objectForKey:@"usr_id"]);
+    if (![other_tx isKindOfClass:[NSString class]]) {
+        other_tx = @"";
+    }
+    if (![tx isKindOfClass:[NSString class]]) {
+        tx = @"";
+    }
+    returnMsg.ext = @{@"nickname":nickName, @"tx":tx, @"other_nickname":other_nickName, @"other_tx":other_tx, @"id":[USER objectForKey:@"usr_id"]};
     
     [MobClick event:@"message"];
 //    , @"type":@"3", @"img_id":@"3475", @"nickname":@"毛大师"
 //    , @"type":@"2", @"img_id":@"3350"
 //    NSLog(@"%@", retureMsg.ext);
-    EMMessage *message = [[EaseMob sharedInstance].chatManager asyncSendMessage:retureMsg progress:nil];
+    EMMessage *message = [[EaseMob sharedInstance].chatManager asyncSendMessage:returnMsg progress:nil];
     
 //    EMChatText *text = [[EMChatText alloc] initWithText:@"1111111"];
 //    EMTextMessageBody *textbody = [[EMTextMessageBody alloc] initWithChatObject:text];

@@ -9,6 +9,10 @@
 #import "Alert_oneBtnView.h"
 
 @implementation Alert_oneBtnView
+-(void)dealloc
+{
+    [super dealloc];
+}
 -(void)makeUI
 {
     //黑 %60  白 %80
@@ -28,6 +32,7 @@
     UIButton * closeBtn = [MyControl createButtonWithFrame:CGRectMake(bgView.frame.size.width-36, 0, 36, 36) ImageName:@"various_close.png" Target:self Action:@selector(closeBtnClick) Title:nil];
     [bgView addSubview:closeBtn];
     
+    
     UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(20, closeBtn.frame.origin.y+closeBtn.frame.size.height+60, bgView.frame.size.width-40, 20) Font:16 Text:nil];
     label1.textAlignment = NSTextAlignmentCenter;
     label1.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
@@ -39,6 +44,14 @@
     if (self.type == 1) {
         label1.text = @"储粮不足呦，快去攒攒吧~";
     }else if(self.type == 2){
+        UIImageView * heartAnimation = [MyControl createImageViewWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-64)/2.0, bgView.frame.origin.y-92, 64, 92) ImageName:@""];
+        
+        heartAnimation.animationImages = @[[UIImage imageNamed:@"pAnimation_1.png"],[UIImage imageNamed:@"pAnimation_2.png"],[UIImage imageNamed:@"pAnimation_3.png"],[UIImage imageNamed:@"pAnimation_4.png"],[UIImage imageNamed:@"pAnimation_5.png"],[UIImage imageNamed:@"pAnimation_6.png"],[UIImage imageNamed:@"pAnimation_7.png"],[UIImage imageNamed:@"pAnimation_8.png"]];
+        heartAnimation.animationDuration = 0.8;
+        heartAnimation.animationRepeatCount = 0;
+        [heartAnimation startAnimating];
+        [self addSubview:heartAnimation];
+        
         label1.text = @"捧了人家可要对人家负责呀~\n一定要让TA成为宇宙中\n最闪亮的萌星";
         CGSize size = [label1.text sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(label1.frame.size.width, 100) lineBreakMode:1];
         label1.frame = CGRectMake(20, closeBtn.frame.origin.y+closeBtn.frame.size.height+10, bgView.frame.size.width-40, size.height);
@@ -80,17 +93,52 @@
         [bgView addSubview:label2];
         
         [confirmBtn setTitle:@"哎~好吧" forState:UIControlStateNormal];
+    }else if(self.type == 4){
+        CGRect rect = label1.frame;
+        rect.origin.y -= 20;
+        label1.frame = rect;
+        
+        label1.textColor = [UIColor blackColor];
+        NSMutableAttributedString * mutableStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"您的卖萌号：%@", [USER objectForKey:@"code"]]];
+        [mutableStr setAttributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:19]} range:NSMakeRange(6, 6)];
+        [mutableStr setAttributes:@{NSForegroundColorAttributeName:[UIColor redColor]} range:NSMakeRange(6, 6)];
+        label1.attributedText = mutableStr;
+        [mutableStr release];
+        
+        UILabel * label2 = [MyControl createLabelWithFrame:CGRectMake(0, label1.frame.origin.y+20, bgView.frame.size.width, 20) Font:16 Text:@"已复制到剪贴板!"];
+        label2.textAlignment = NSTextAlignmentCenter;
+        label2.textColor = [UIColor blackColor];
+        [bgView addSubview:label2];
+        
+        UILabel * label3 = [MyControl createLabelWithFrame:CGRectMake(0, label2.frame.origin.y+20, bgView.frame.size.width, 20) Font:16 Text:@"充值时一定要填写哦~"];
+        label3.textAlignment = NSTextAlignmentCenter;
+        label3.textColor = [UIColor blackColor];
+        [bgView addSubview:label3];
+        
+        [confirmBtn setTitle:@"OK!" forState:UIControlStateNormal];
+        
+        //复制到剪贴板
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        pasteboard.string = [USER objectForKey:@"code"];
     }
 }
 -(void)closeBtnClick
 {
+    if(self.jump)[self.jump release];
     [self removeFromSuperview];
 }
 -(void)confirmClick
 {
     if (self.type == 2) {
         self.jump();
+    }else if(self.type == 4){
+//        if (![[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]) {
+            //非审核版本
+            self.jumpTB();
+//        }
     }
+    if(self.jump) [self.jump release];
+    if(self.jumpTB) [self.jump release];
     [self removeFromSuperview];
 }
 /*

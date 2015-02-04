@@ -537,4 +537,23 @@ static FirstTabBarViewController * tabBar = nil;
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
     }
 }
+
+/**添加viewController到TabBar*/
++ (void)addTabBarViewController:(UIViewController *)vc
+{
+    UITabBarController *tabBar = (UITabBarController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    [tabBar addChildViewController:vc];
+    [tabBar.view addSubview:vc.view];
+//    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+    [vc didMoveToParentViewController:tabBar];
+}
+/**从tabBar上删除viewController*/
++ (void)deleTabBarViewController:(UIViewController *)vc
+{
+    [vc willMoveToParentViewController:nil];
+    [vc.view removeFromSuperview];
+//    [vc release];
+    [vc removeFromParentViewController];
+}
+
 @end

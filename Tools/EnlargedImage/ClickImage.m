@@ -97,7 +97,7 @@ UIActionSheet *sheet;
     } else {
         UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideImage:)];
         [goBackgroundView addGestureRecognizer:tap];
-        [tap release];
+//        [tap release];
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(saveImage)];
         [goBackgroundView addGestureRecognizer:longPress];
         sheet = [[UIActionSheet alloc] initWithTitle:@"保存到相册" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"保存", nil];

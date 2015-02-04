@@ -420,6 +420,10 @@
 //    if (isLoaded) {
 //        self.reloadRandom();
 //    }
+    //释放图片内存
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
+    
     NSLog(@"%@", [NSString stringWithFormat:@"%@%@", RECOMMENDAPI, [ControllerManager getSID]]);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", RECOMMENDAPI, [ControllerManager getSID]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -519,6 +523,10 @@
         [qtmquitView footerEndRefreshing];
         return;
     }
+    
+    //释放图片内存
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
     
     NSString * str = [NSString stringWithFormat:@"img_id=%@dog&cat", self.lastImg_id];
     NSString * sig = [MyMD5 md5:str];
@@ -945,7 +953,7 @@
 //    if ([ControllerManager getIsSuccess]) {
 //        vc.aid = [model.url substringToIndex:10];
 //    }
-    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+    [ControllerManager addTabBarViewController:vc];
 //    MainViewController * main = [ControllerManager shareMain];
 //    [main.view addSubview:vc.view];
     

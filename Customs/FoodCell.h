@@ -18,8 +18,13 @@
     UILabel * desLabel;
     UIView * line;
     UILabel * foodNum;
-//    UILabel * addLabel;
+
     UIButton * bigBtn;
+    UIImageView * foodAnimation;
+    
+    UIView * addBgView;
+    UIImageView * foodImage;
+    UILabel * addNum;
 }
 @property(nonatomic,copy)NSString * timeStamp;
 @property(nonatomic)CGSize cellSize;
@@ -27,5 +32,5 @@
 @property(nonatomic,copy)void (^bigClick)();
 
 -(void)modifyUI:(BegFoodListModel *)model;
-//-(void)addAnimation:(int)num;
+-(void)addAnimation:(int)num;
 @end

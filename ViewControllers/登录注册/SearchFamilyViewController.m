@@ -302,7 +302,7 @@
     showOrHideBtn.tag = 100+section;
     [headerBgView addSubview:showOrHideBtn];
     
-    UIButton * join = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-56-10, (70-36)/2, 56, 36) ImageName:@"recom_p.png" Target:self Action:@selector(joinClick:) Title:nil];
+    UIButton * join = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-73-10, (70-36)/2, 73, 36) ImageName:@"recom_p.png" Target:self Action:@selector(joinClick:) Title:nil];
     //    join.titleLabel.font = [UIFont systemFontOfSize:14];
     //    join.backgroundColor = GREEN;
     //    join.layer.cornerRadius = 5;

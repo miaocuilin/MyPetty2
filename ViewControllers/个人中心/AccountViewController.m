@@ -36,15 +36,20 @@
     if ([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]) {
         isConfVersion = YES;
     }
-    if(isConfVersion){
-        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"消息推送设置", @"同步分享到微信", @"同步分享到微博"];
-    }else{
-        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"填写邀请码", @"消息推送设置", @"同步分享到微信", @"同步分享到微博"];
-    }
-    
+//    if(isConfVersion){
+//        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"消息推送设置", @"同步分享到微信", @"同步分享到微博"];
+//    }else{
+//        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"填写邀请码", @"消息推送设置", @"同步分享到微信", @"同步分享到微博"];
+//    }
+    [self loadMyPets];
     [self createBg];
     [self createTableView];
     [self createFakeNavigation];
+    
+    //用于解除注册时设为1，第一次进入Login界面时直接返回的情况。
+    if([[USER objectForKey:@"isLoginShouldDismiss"] intValue]){
+        [USER setObject:@"0" forKey:@"isLoginShouldDismiss"];
+    }
     
 }
 -(void)createBg
@@ -122,9 +127,17 @@
     cell.selectionStyle = 0;
     int a = 0;
     if (isConfVersion) {
-        a = 4;
+        if (hasMyPet) {
+            a = 4;
+        }else{
+            a = 3;
+        }
     }else{
-        a = 5;
+        if (hasMyPet) {
+            a = 5;
+        }else{
+            a = 4;
+        }
     }
     if (indexPath.row <= a) {
 //        if (indexPath.row == a-1) {
@@ -226,44 +239,93 @@
 //        }
         
     }else if (x == 2) {
-        //收货地址
-        AddressViewController *address = [[AddressViewController alloc]init];
-        [self presentViewController:address animated:YES completion:^{
-            [address release];
-        }];
-    }else if (x == 3) {
-        //解除黑名单
-        SetBlackListViewController * vc = [[SetBlackListViewController alloc] init];
-        [self presentViewController:vc animated:YES completion:nil];
-        [vc release];
-    }else if(x == 4){
-        if (isConfVersion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                MessagePushSetViewController * vc = [[MessagePushSetViewController alloc] init];
-                [self presentViewController:vc animated:YES completion:nil];
-                [vc release];
-            });
-            //微信绑定
-//            if (![[USER objectForKey:@"wechat"] length]) {
-//                [self bindWeChat];
-//            };
+        if (hasMyPet) {
+            //收货地址
+            AddressViewController *address = [[AddressViewController alloc]init];
+            address.pet_id = self.pet_id;
+            [self presentViewController:address animated:YES completion:^{
+                [address release];
+            }];
         }else{
-            //填写邀请码
-            [self loadMyPets];
+            //解除黑名单
+            SetBlackListViewController * vc = [[SetBlackListViewController alloc] init];
+            [self presentViewController:vc animated:YES completion:nil];
+            [vc release];
         }
-        
+    }else if (x == 3) {
+        if (hasMyPet) {
+            //解除黑名单
+            SetBlackListViewController * vc = [[SetBlackListViewController alloc] init];
+            [self presentViewController:vc animated:YES completion:nil];
+            [vc release];
+        }else{
+            if (isConfVersion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    MessagePushSetViewController * vc = [[MessagePushSetViewController alloc] init];
+                    [self presentViewController:vc animated:YES completion:nil];
+                    [vc release];
+                });
+            }else{
+                //填写邀请码
+                [self inputCode];
+                //            [self loadMyPets];
+            }
+        }
+    }else if(x == 4){
+        if(hasMyPet){
+            if (isConfVersion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    MessagePushSetViewController * vc = [[MessagePushSetViewController alloc] init];
+                    [self presentViewController:vc animated:YES completion:nil];
+                    [vc release];
+                });
+                //微信绑定
+                //            if (![[USER objectForKey:@"wechat"] length]) {
+                //                [self bindWeChat];
+                //            };
+            }else{
+                //填写邀请码
+                [self inputCode];
+                //            [self loadMyPets];
+            }
+        }else{
+            if (!isConfVersion) {
+                
+                //            UINavigationController * nav = [[UINavigationController alloc] initWithRootViewController:vc];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    MessagePushSetViewController * vc = [[MessagePushSetViewController alloc] init];
+                    [self presentViewController:vc animated:YES completion:nil];
+                    [vc release];
+                });
+                
+                //            [nav release];
+            }
+        }
     }else if(x == 5){
-        if (!isConfVersion) {
-            
-//            UINavigationController * nav = [[UINavigationController alloc] initWithRootViewController:vc];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                MessagePushSetViewController * vc = [[MessagePushSetViewController alloc] init];
-                [self presentViewController:vc animated:YES completion:nil];
-                [vc release];
-            });
-            
-//            [nav release];
+        if (hasMyPet) {
+            if (!isConfVersion) {
+                
+                //            UINavigationController * nav = [[UINavigationController alloc] initWithRootViewController:vc];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    MessagePushSetViewController * vc = [[MessagePushSetViewController alloc] init];
+                    [self presentViewController:vc animated:YES completion:nil];
+                    [vc release];
+                });
+                
+                //            [nav release];
+            }
         }
+//        if (!isConfVersion) {
+//            
+////            UINavigationController * nav = [[UINavigationController alloc] initWithRootViewController:vc];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                MessagePushSetViewController * vc = [[MessagePushSetViewController alloc] init];
+//                [self presentViewController:vc animated:YES completion:nil];
+//                [vc release];
+//            });
+//            
+////            [nav release];
+//        }
     }
 //    else if(x == 5){
 //        if (isConfVersion) {
@@ -299,7 +361,7 @@
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]]) {
-//                NSArray * array = [load.dataDict objectForKey:@"data"];
+                NSArray * array = [load.dataDict objectForKey:@"data"];
                 //                if (array.count >= 10) {
                 //                    AlertView * view = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
                 //                    view.AlertType = 6;
@@ -307,8 +369,32 @@
                 //                    [self.view addSubview:view];
                 //                    [view release];
                 //                }else{
-                [self inputCode];
+                
                 //                }
+                for (NSDictionary * dict in array) {
+                    if ([[dict objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                        hasMyPet = YES;
+                        self.pet_id = [dict objectForKey:@"aid"];
+                        break;
+                    }
+                }
+                
+                if(isConfVersion){
+                    if (hasMyPet) {
+                        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"消息推送设置", @"同步分享到微信", @"同步分享到微博"];
+                    }else{
+                        self.array = @[@"设置密码", @"切换账号", @"解除黑名单", @"消息推送设置", @"同步分享到微信", @"同步分享到微博"];
+                    }
+                    
+                }else{
+                    if (hasMyPet) {
+                        self.array = @[@"设置密码", @"切换账号", @"收货地址", @"解除黑名单", @"填写邀请码", @"消息推送设置", @"同步分享到微信", @"同步分享到微博"];
+                    }else{
+                        self.array = @[@"设置密码", @"切换账号", @"解除黑名单", @"填写邀请码", @"消息推送设置", @"同步分享到微信", @"同步分享到微博"];
+                    }
+                    
+                }
+                [tv reloadData];
                 ENDLOADING;
             }else{
                 LOADFAILED;

@@ -63,4 +63,10 @@
 + (NSMutableArray *)getGift:(BOOL)isBad;
 
 +(void)clearTalkData;
+
+/**添加viewController到TabBar*/
++ (void)addTabBarViewController:(UIViewController *)vc;
+/**从tabBar上删除viewController*/
++ (void)deleTabBarViewController:(UIViewController *)vc;
+
 @end

@@ -84,6 +84,13 @@ NSString *const kShouldResendCell = @"kShouldResendCell";
     else{
         bubbleFrame.origin.x = HEAD_PADDING * 2 + HEAD_SIZE;
         _bubbleView.frame = bubbleFrame;
+        //
+        CGRect rect = jumpBtn.frame;
+        rect.origin.x = _bubbleView.frame.origin.x+_bubbleView.frame.size.width+5;
+        rect.origin.y = _bubbleView.frame.origin.y+5;
+        rect.size.width = 28;
+        rect.size.height = 28;
+        jumpBtn.frame = rect;
     }
 }
 
@@ -125,12 +132,15 @@ NSString *const kShouldResendCell = @"kShouldResendCell";
     _bubbleView.model = self.messageModel;
     [_bubbleView sizeToFit];
     
-    CGRect rect = jumpBtn.frame;
-    rect.origin.x = _bubbleView.frame.origin.x+_bubbleView.frame.size.width+5;
-    rect.origin.y = _bubbleView.frame.origin.y+5;
-    rect.size.width = 28;
-    rect.size.height = 28;
-    jumpBtn.frame = rect;
+//    NSLog(@"%f--%f--%f", _bubbleView.frame.origin.x, _bubbleView.frame.size.width, _bubbleView.frame.size.width);
+//    CGRect rect = jumpBtn.frame;
+////    +self.headImageView.frame.size.width+HEAD_PADDING
+//    rect.origin.x = _bubbleView.frame.origin.x+_bubbleView.frame.size.width+5;
+////    +CELLPADDING
+//    rect.origin.y = _bubbleView.frame.origin.y+5;
+//    rect.size.width = 28;
+//    rect.size.height = 28;
+//    jumpBtn.frame = rect;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

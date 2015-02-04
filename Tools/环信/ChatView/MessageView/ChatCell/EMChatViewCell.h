@@ -29,7 +29,7 @@ extern NSString *const kShouldResendCell;
     UIButton * jumpBtn;
     int type;
 }
-@property (nonatomic, strong) void (^jumpClick)(int);
+@property (nonatomic, copy) void (^jumpClick)(int);
 
 //sender
 @property (nonatomic, strong) UIActivityIndicatorView *activtiy;

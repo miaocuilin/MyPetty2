@@ -16,6 +16,7 @@
     
     UIView * totalView;
     BOOL isLoaded;
+    UIImageView * headImageView;
 }
 @property (nonatomic,strong)NSDictionary *animalInfoDict;
 @property (nonatomic,strong)NSString *titleString;

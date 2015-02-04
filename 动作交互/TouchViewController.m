@@ -19,11 +19,16 @@
 {
     UIView *bodyView;
 }
-@property (nonatomic, strong) HYScratchCardView *scratchCardView;
+@property (nonatomic, retain) HYScratchCardView *scratchCardView;
 @end
 
 @implementation TouchViewController
-
+-(void)dealloc
+{
+    [super dealloc];
+    _scratchCardView.surfaceImage = nil;
+    _scratchCardView.image = nil;
+}
 - (BOOL)getRecord
 {
     if (!_haveRecord) {
@@ -34,11 +39,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self backgroundView];
     
     [MobClick event:@"touch_button"];
-    _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
+//    _recordedFile = [[NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:@"RecordedFile"]]retain];
 //    [self loadRecordStringData];
+//    [self createAlertView];
     [self checkIsTouch];
 //    [self loadRecordStringData];
 }
@@ -53,7 +58,7 @@
 
 - (void)checkIsTouch
 {
-    LOADING2;
+    LOADING;
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
     NSString *isTouch = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ISTOUCHAPI, self.pet_aid, sig, [ControllerManager getSID]];
     NSLog(@"isTouch:%@",isTouch);
@@ -64,13 +69,15 @@
 //        }else{
         
 //        }
+        ENDLOADING;
         if (isFinish) {
             if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"img_url"] isKindOfClass:[NSString class]]) {
                 self.img_url = [[load.dataDict objectForKey:@"data"] objectForKey:@"img_url"];
             }
 //            [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.2];
-            [self loadRecordStringData];
-            
+//            [self loadRecordStringData];
+            [self backgroundView];
+            [self createAlertView];
             
         }else{
             LOADFAILED;
@@ -201,8 +208,9 @@
 - (void)createAlertView
 {
     [self shopGiftTitle];
+    [self addDownView];
     
-    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, 40) Font:16 Text:@"摸萌照，得金币，萌萌印心中~"];
+    UILabel *descLabel = [MyControl createLabelWithFrame:CGRectMake(0, 0, bodyView.frame.size.width, 40) Font:16 Text:@"摸萌照，萌萌印心中~"];
     if(notHaveRecord){
         descLabel.text = [NSString stringWithFormat:@"%@还没有萌叫叫", self.pet_name];
     }
@@ -219,47 +227,58 @@
     
     //看是否有照片
     if(self.img_url){
-        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.img_url]];
-        UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
-        if (animalHeaderImage) {
-            touchImageView.image = animalHeaderImage;
-            [self blurImage:touchImageView.image Frame:touchImageView.frame];
-        }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",IMAGEURL, self.img_url] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                if (isFinish) {
-                    touchImageView.image = load.dataImage;
-                    [load.data writeToFile:pngFilePath atomically:YES];
-                    [self blurImage:touchImageView.image Frame:touchImageView.frame];
-                }else{
-                    LOADFAILED;
-                }
-            }];
-            [request release];
-        }
+        [touchImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",IMAGEURL, self.img_url]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if (image) {
+                [self blurImage:image Frame:touchImageView.frame];
+            }
+        }];
+//        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.img_url]];
+//        UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
+//        if (animalHeaderImage) {
+//            touchImageView.image = animalHeaderImage;
+//            [self blurImage:touchImageView.image Frame:touchImageView.frame];
+//        }else{
+//            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",IMAGEURL, self.img_url] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//                if (isFinish) {
+//                    touchImageView.image = load.dataImage;
+//                    [load.data writeToFile:pngFilePath atomically:YES];
+//                    [self blurImage:touchImageView.image Frame:touchImageView.frame];
+//                }else{
+//                    LOADFAILED;
+//                }
+//            }];
+//            [request release];
+//        }
     }else{
         if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]==0)) {
-            NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
-            UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
-            if (animalHeaderImage) {
-                touchImageView.image = animalHeaderImage;
-                [self blurImage:touchImageView.image Frame:touchImageView.frame];
-            }else{
-                httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                    if (isFinish) {
-                        touchImageView.image = load.dataImage;
-                        [load.data writeToFile:pngFilePath atomically:YES];
-                        [self blurImage:touchImageView.image Frame:touchImageView.frame];
-                    }else{
-                        LOADFAILED;
-                    }
-                }];
-                [request release];
-            }
+            [touchImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                if (image) {
+                    [self blurImage:image Frame:touchImageView.frame];
+                }
+            }];
+//            NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
+//            UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
+//            if (animalHeaderImage) {
+//                touchImageView.image = animalHeaderImage;
+//                [self blurImage:touchImageView.image Frame:touchImageView.frame];
+//            }else{
+//                httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//                    if (isFinish) {
+//                        touchImageView.image = load.dataImage;
+//                        [load.data writeToFile:pngFilePath atomically:YES];
+//                        [self blurImage:touchImageView.image Frame:touchImageView.frame];
+//                    }else{
+//                        LOADFAILED;
+//                    }
+//                }];
+//                [request release];
+//            }
         }
     }
 }
 -(void)blurImage:(UIImage *)image Frame:(CGRect)frame
 {
+    //可能有没释放的图片
     image = [MyControl returnImageWithImage:image Width:frame.size.width Height:frame.size.height];
     UIImage *imageDemo = [image applyBlurWithRadius:60.0 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
     
@@ -270,40 +289,41 @@
     _scratchCardView.image = image;
     _scratchCardView.contentMode = UIViewContentModeScaleAspectFill;
     [bodyView addSubview:_scratchCardView];
+    [_scratchCardView release];
     
+    __block TouchViewController *blockSelf = self;
     self.scratchCardView.completion = ^(id userInfo) {
-        NSLog(@"%d",self.scratchCardView.isOpen);
-        [self touchAPIData];
-        [self shareViewCreate];
-        
-        if (!notHaveRecord && [self getRecord]) {
-            [self audioPlayerCreate];
-        }
+//        NSLog(@"%d",blockSelf.scratchCardView.isOpen);
+        [blockSelf touchAPIData];
+        [blockSelf shareViewCreate];
+
+//        if (!blockSelf->notHaveRecord && [blockSelf getRecord]) {
+//            [blockSelf audioPlayerCreate];
+//        }
     };
-    [self addDownView];
 }
 - (void)addDownView
 {
     UIView *downView = [MyControl createViewWithFrame:CGRectMake(0, bodyView.frame.size.height-70, bodyView.frame.size.width, 70)];
     [bodyView addSubview:downView];
     
-    UIImageView *headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
+    headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
     if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]== 0)) {
-        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
-        UIImage * image = [UIImage imageWithContentsOfFile:pngFilePath];
-        if (image) {
-            headImageView.image = image;
-        }else{
-            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-                if (isFinish) {
-                    headImageView.image = load.dataImage;
-                    [load.data writeToFile:pngFilePath atomically:YES];
-                }
-            }];
-            [request release];
-        }
+//        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
+        [MyControl setImageForImageView:headImageView Tx:self.pet_tx isPet:YES isRound:YES];
+//        UIImage * image = [UIImage imageWithContentsOfFile:pngFilePath];
+//        if (image) {
+//            headImageView.image = image;
+//        }else{
+//            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
+//                if (isFinish) {
+//                    headImageView.image = load.dataImage;
+//                    [load.data writeToFile:pngFilePath atomically:YES];
+//                }
+//            }];
+//            [request release];
+//        }
     }
-
     headImageView.layer.cornerRadius = 28;
     headImageView.layer.masksToBounds = YES;
     [downView addSubview:headImageView];
@@ -373,15 +393,24 @@
 //分享
 - (void)shareAction:(UIButton *)sender
 {
-    //截图
-    UIImage * image = [MyControl imageWithView:totalView];
+    //头像或record_upload.png
+    UIImage * image = nil;
+    if([self.pet_tx isKindOfClass:[NSString class]] && self.pet_tx.length && headImageView.image != nil){
+        image = headImageView.image;
+    }else{
+        image = [UIImage imageNamed:@"record_upload.png"];
+    }
+
     
     /**************/
     if(sender.tag == 77){
         NSLog(@"微信");
         //强制分享图片
-        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+        [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid];
+        [UMSocialData defaultData].extConfig.wechatSessionData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.pet_name];
+        
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
@@ -397,8 +426,11 @@
     }else if(sender.tag == 78){
         NSLog(@"朋友圈");
         //强制分享图片
-        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid];
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.pet_name];
+        
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
@@ -413,7 +445,7 @@
         }];
     }else if(sender.tag == 79){
         NSLog(@"微博");
-        NSString * str = [NSString stringWithFormat:@"我在宠物星球里面摸了萌星%@，%@乖巧地冲我叫了一声，真可爱~http://home4pet.aidigame.com/(分享自@宠物星球社交应用）", self.pet_name, self.pet_name];
+        NSString * str = [NSString stringWithFormat:@"人家在宠物星球好开心，快来跟我一起玩嘛~%@（分享自@宠物星球社交应用）", [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid]];
         
         BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
         NSLog(@"%d", oauth);
@@ -482,7 +514,7 @@
 {
     playAndPauseImageView.image = [UIImage imageNamed:@"record_play.png"];
 }
-- (UIView *)shopGiftTitle
+- (void)shopGiftTitle
 {
     totalView = [MyControl createViewWithFrame:CGRectMake(self.view.frame.size.width/2-150, self.view.frame.size.height/2-425/2.0, 300, 425)];
     totalView.layer.cornerRadius = 10;
@@ -503,7 +535,6 @@
     bodyView = [MyControl createViewWithFrame:CGRectMake(0, 40, 300, 385)];
     bodyView.backgroundColor = [UIColor whiteColor];
     [totalView addSubview:bodyView];
-    return bodyView;
 }
 #pragma mark - 摸完界面
 //- (void)createTouchEndView
@@ -572,8 +603,7 @@
 {
     [_player stop];
     [_player release],_player=nil;
-    [self.view removeFromSuperview];
-//    [self removeFromParentViewController];
+    [ControllerManager deleTabBarViewController:self];
 }
 #pragma mark - streamer
 - (void)destroyStreamer

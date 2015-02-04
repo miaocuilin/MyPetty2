@@ -36,8 +36,9 @@
     NSTimer * timer2;
     
     UILabel * addLabel;
-//    BOOL isLoaded;
     
+    BOOL isLoading;
+    BOOL addAnimationSwitch;
 }
 -(void)loadData;
 @property(nonatomic,retain)NSMutableArray * dataArray;

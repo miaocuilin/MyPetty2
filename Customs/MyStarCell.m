@@ -56,7 +56,7 @@
     [position addSubview:self.contributionLabel];
     
     //邀请按钮
-    inviteBtn = [MyControl createButtonWithFrame:CGRectMake(bgView.frame.size.width-10-50, 5, 50, 28) ImageName:@"inviteBtn.png" Target:self Action:@selector(inviteBtnClick) Title:@"邀请"];
+    inviteBtn = [MyControl createButtonWithFrame:CGRectMake(bgView.frame.size.width-10-50, 5, 50, 28) ImageName:@"inviteBtn.png" Target:self Action:@selector(inviteBtnClick) Title:@"拉粉丝"];
     inviteBtn.titleLabel.font = [UIFont systemFontOfSize:13];
     [bgView addSubview:inviteBtn];
     
@@ -256,6 +256,18 @@
 }
 -(void)configUI:(MyStarModel *)model
 {
+    if ([model.tb_version intValue] == 1) {
+        UILabel * tempLabel = (UILabel *)[self viewWithTag:202];
+        tempLabel.text = @"买周边";
+        
+        UIButton * button = (UIButton *)[self viewWithTag:102];
+        [button setBackgroundImage:[UIImage imageNamed:@"star_zb.png"] forState:UIControlStateNormal];
+        
+        UILabel * tempLabel2 = (UILabel *)[self viewWithTag:302];
+        tempLabel2.text = @"快来买";
+    }
+    
+    
     tf.userInteractionEnabled = NO;
     hyperBtn.hidden = YES;
     modifyBtn.hidden = YES;

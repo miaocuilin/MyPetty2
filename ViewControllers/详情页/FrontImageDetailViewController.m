@@ -1552,8 +1552,8 @@
 }
 -(void)sendButtonClick
 {
-    if(commentTextField.text == nil){
-        [MyControl popAlertWithView:self.view Msg:@"内容为空"];
+    if(commentTextField.text == nil || commentTextField.text.length == 0){
+//        [MyControl popAlertWithView:self.view Msg:@"内容为空"];
         return;
     }
     //post数据  参数img_id 和 body
@@ -1980,22 +1980,33 @@
         [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", WEBBEGFOODAPI, self.img_id];
         
         NSString * str = nil;
-        if(isFood){
-            [UMSocialData defaultData].extConfig.wechatTimelineData.title = @"轻轻一点，免费赏粮！我的口粮全靠你啦~";
-            if ([[self.imageDict objectForKey:@"cmt"] length]) {
-                str = [self.imageDict objectForKey:@"cmt"];
-            }else{
-                str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
-            }
+        if ([[self.imageDict objectForKey:@"cmt"] length]) {
+            str = [self.imageDict objectForKey:@"cmt"];
         }else{
-            [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"我是%@，你有没有爱上我？", [self.petDict objectForKey:@"name"]];
-            if ([[self.imageDict objectForKey:@"cmt"] length]) {
-                str = [self.imageDict objectForKey:@"cmt"];
+            if (isFood) {
+                str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
             }else{
                 str = @"这是我最新的美照哦~~打滚儿求表扬~~";
             }
+            
         }
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = str;
+//        if(isFood){
+//            [UMSocialData defaultData].extConfig.wechatTimelineData.title = @"轻轻一点，免费赏粮！我的口粮全靠你啦~";
+//            if ([[self.imageDict objectForKey:@"cmt"] length]) {
+//                str = [self.imageDict objectForKey:@"cmt"];
+//            }else{
+//                str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
+//            }
+//        }else{
+//            [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"我是%@，你有没有爱上我？", [self.petDict objectForKey:@"name"]];
+//            if ([[self.imageDict objectForKey:@"cmt"] length]) {
+//                str = [self.imageDict objectForKey:@"cmt"];
+//            }else{
+//                str = @"这是我最新的美照哦~~打滚儿求表扬~~";
+//            }
+//        }
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [self loadShareAPI];

@@ -12,4 +12,7 @@
 {
     UIView * navView;
 }
+
+@property(nonatomic)BOOL isZB;
+@property(nonatomic,copy)NSString * zbUrl;
 @end

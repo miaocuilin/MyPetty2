@@ -470,8 +470,10 @@
 -(void)reward
 {
     int a = tv.contentOffset.y/self.view.frame.size.width;
-    
-    LOADING;
+    if(!self.dataArray.count){
+        return;
+    }
+//    LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@&n=%@dog&cat", [self.dataArray[a] img_id], rewardNum.text]];
     NSString * url = [NSString stringWithFormat:@"%@%@&n=%@&sig=%@&SID=%@", REWARDFOODAPI, [self.dataArray[a] img_id], rewardNum.text, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
@@ -493,7 +495,7 @@
                 
                 
             }
-            ENDLOADING;
+//            ENDLOADING;
         }else{
             LOADFAILED;
         }

@@ -744,4 +744,5 @@
     }
     return unreadCount;
 }
+
 @end

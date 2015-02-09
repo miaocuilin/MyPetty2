@@ -35,6 +35,9 @@
     if (self.selectedIndex == 3) {
         CenterViewController * vc4 = self.viewControllers[3];
         [vc4 refresh];
+    }else if(self.selectedIndex == 0){
+        MyStarViewController * vc = self.viewControllers[0];
+        [vc.tv headerBeginRefreshing];
     }
     //
     int a = [MyControl returnUnreadMessageCount];
@@ -288,8 +291,8 @@
     
     //    NSLog(@"------%d", self.selectedIndex);
     if (btn.tag == 90) {
-//        MyStarViewController * vc = self.viewControllers[0];
-//        [vc.tv headerBeginRefreshing];
+        MyStarViewController * vc = self.viewControllers[0];
+        [vc.tv headerBeginRefreshing];
     }else if (btn.tag == 91 && self.selectedIndex == 1) {
         FoodViewController * vc = self.viewControllers[1];
         [vc loadData];

@@ -69,4 +69,5 @@
 /**从tabBar上删除viewController*/
 + (void)deleTabBarViewController:(UIViewController *)vc;
 
++(void)loadPetList;
 @end

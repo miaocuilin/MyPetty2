@@ -430,6 +430,9 @@
                         
                         [USER setObject:@"countryNum" forKey:[NSString stringWithFormat:@"%d", a+1]];
                     }
+                    
+                    LOADPETLIST;
+                    
                     //捧Ta成功界面
                     NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
                     noClose.confirm = ^(){

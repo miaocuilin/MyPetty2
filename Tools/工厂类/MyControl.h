@@ -72,6 +72,7 @@
 +(NSData *)scaleToSize:(UIImage *)sourceImage;
 
 + (UIImage *)thumbnailWithImageWithoutScale:(UIImage *)image size:(CGSize)asize;
+
 + (UIImage *)image: (UIImage *) image fitInSize: (CGSize) viewsize;
 +(UIImage *)returnSquareImageWithImage:(UIImage *)image;
 

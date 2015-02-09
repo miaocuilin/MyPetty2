@@ -44,13 +44,8 @@
     if (self.type == 1) {
         label1.text = @"储粮不足呦，快去攒攒吧~";
     }else if(self.type == 2){
-        UIImageView * heartAnimation = [MyControl createImageViewWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-64)/2.0, bgView.frame.origin.y-92, 64, 92) ImageName:@""];
         
-        heartAnimation.animationImages = @[[UIImage imageNamed:@"pAnimation_1.png"],[UIImage imageNamed:@"pAnimation_2.png"],[UIImage imageNamed:@"pAnimation_3.png"],[UIImage imageNamed:@"pAnimation_4.png"],[UIImage imageNamed:@"pAnimation_5.png"],[UIImage imageNamed:@"pAnimation_6.png"],[UIImage imageNamed:@"pAnimation_7.png"],[UIImage imageNamed:@"pAnimation_8.png"]];
-        heartAnimation.animationDuration = 0.8;
-        heartAnimation.animationRepeatCount = 0;
-        [heartAnimation startAnimating];
-        [self addSubview:heartAnimation];
+        [confirmBtn setTitle:@"没问题" forState:UIControlStateNormal];
         
         label1.text = @"捧了人家可要对人家负责呀~\n一定要让TA成为宇宙中\n最闪亮的萌星";
         CGSize size = [label1.text sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(label1.frame.size.width, 100) lineBreakMode:1];

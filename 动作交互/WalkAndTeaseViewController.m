@@ -15,7 +15,10 @@
 @end
 
 @implementation WalkAndTeaseViewController
-
+-(void)dealloc
+{
+    [super dealloc];
+}
 - (void)viewDidLoad
 
 {
@@ -58,6 +61,7 @@
 //    NSLog(@"%@--%@", self.URL, url);
     [protWebView loadRequest:[NSURLRequest requestWithURL:url]];
     [url release];
+    [protWebView release];
 }
 -(void)createFakeNavigation
 {
@@ -150,18 +154,24 @@
 //几个代理方法
 
 - (void)webViewDidStartLoad:(UIWebView *)webView{
+    LOADING;
     
     NSLog(@"webViewDidStartLoad");
     
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)web{
+    ENDLOADING;
     
     NSLog(@"webViewDidFinishLoad");
-    
+    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"WebKitCacheModelPreferenceKey"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"WebKitDiskImageCacheEnabled"];//自己添加的，原文没有提到。
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"WebKitOfflineWebApplicationCacheEnabled"];//自己添加的，原文没有提到。
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
--(void)webView:(UIWebView*)webView  DidFailLoadWithError:(NSError*)error{
+-(void)webView:(UIWebView*)webView DidFailLoadWithError:(NSError*)error{
+    LOADFAILED;
     
     NSLog(@"DidFailLoadWithError");
     

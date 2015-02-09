@@ -27,6 +27,9 @@
 @property(nonatomic,copy)NSString * u_tx;
 @property(nonatomic,copy)NSString * u_name;
 
+@property(nonatomic,copy)NSNumber * tb_version;
+@property(nonatomic,copy)NSString * tb_url;
+
 @property(nonatomic,retain)NSArray * images;
 @property(nonatomic,retain)NSDictionary * dict;
 @end

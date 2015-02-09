@@ -1264,6 +1264,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             if (self.oriImage) {
                 [self postImage];
             }else{
+                LOADPETLIST;
                 self.isOldUserTxOK = YES;
             }
             
@@ -1593,6 +1594,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if(!self.isOldUser){
         [self loadUserInfo];
     }
+    LOADPETLIST;
+    
 //                [USER setObject:[dict objectForKey:@"rank"] forKey:@"rank"];
     
 //                if (![[dict objectForKey:@"tx"] isKindOfClass:[NSNull class]]) {
@@ -1790,7 +1793,25 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    }];
 //    [request release];
 }
-
+//#pragma mark -
+//-(void)loadMyPets
+//{
+//    LOADING;
+//    //    user/petsApi&usr_id=(若用户为自己则留空不填)
+//    NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+//    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+//    NSLog(@"%@", url);
+//    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            NSLog(@"%@", load.dataDict);
+//            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]]) {
+//            }
+//        }else{
+//            LOADFAILED;
+//        }
+//    }];
+//    [request release];
+//}
 #pragma mark
 #pragma mark -ASI
 -(void)postImage
@@ -1862,6 +1883,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }else{
         [USER setObject:[[dic objectForKey:@"data"] objectForKey:@"tx"] forKey:@"a_tx"];
         [self loadPetInfo];
+        
+        LOADPETLIST;
     }
 //    [self getUserData];
 //    alert1.hidden = YES;

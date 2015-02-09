@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface NoCloseAlert : UIView
-
+{
+    UIImageView * heartAnimation;
+}
 @property(nonatomic,retain)UIImageView * bgImageView;
 @property(nonatomic,retain)UILabel * titleLabel;
 @property(nonatomic,retain)UIImageView * headImage;

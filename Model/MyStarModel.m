@@ -30,6 +30,8 @@
     [_u_name release];
     [_images release];
     [_invite_code release];
+    [_tb_version release];
+    [_tb_url release];
 }
 
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key

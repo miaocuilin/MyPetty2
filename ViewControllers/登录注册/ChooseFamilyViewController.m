@@ -559,6 +559,8 @@
 //                    [MMProgressHUD dismissWithSuccess:@"加入成功^_^" title:nil afterDelay:0.5];
                     //刷新列表
                     //[self loadUserPetsList];
+                    LOADPETLIST;
+                    
                     //捧Ta成功界面
                     NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
                     noClose.confirm = ^(){

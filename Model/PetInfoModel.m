@@ -33,6 +33,9 @@
     [_total_food release];
     [_msg release];
     
+    [_tb_version release];
+    [_tb_url release];
+    
     [super dealloc];
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key

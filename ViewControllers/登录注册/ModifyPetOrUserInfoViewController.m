@@ -645,6 +645,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             if (self.oriImage) {
                 [self postImage];
             }else{
+                LOADPETLIST;
+                
                 self.refreshPetInfo();
                 ENDLOADING;
                 [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"修改成功"];
@@ -782,6 +784,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [dict setObject:[[dic objectForKey:@"data"] objectForKey:@"tx"] forKey:@"tx"];
         [USER setObject:dict forKey:@"petInfoDict"];
 //        NSLog(@"%@", [[USER objectForKey:@"petInfoDict"] objectForKey:@"tx"]);
+        
+        LOADPETLIST;
     }
     //头像存放在本地
     NSString *docDir = DOCDIR;

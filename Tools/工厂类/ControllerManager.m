@@ -556,4 +556,29 @@ static FirstTabBarViewController * tabBar = nil;
     [vc removeFromParentViewController];
 }
 
++(void)loadPetList
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            //            NSLog(@"%@", load.dataDict);
+            //获取用户所有宠物，将信息存到本地
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            if([array isKindOfClass:[NSArray class]] && array.count>0){
+                [USER setObject:array forKey:@"myPetsDataArray"];
+            }
+            //            NSMutableArray * aidArray = [NSMutableArray arrayWithCapacity:0];
+            //            for (NSDictionary * dict in array) {
+            //                [aidArray addObject:[dict objectForKey:@"aid"]];
+            //            }
+            //            [USER setObject:aidArray forKey:@"petAidArray"];
+            //            NSLog(@"%@", [USER objectForKey:@"petAidArray"]);
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
+}
 @end

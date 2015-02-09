@@ -9,7 +9,10 @@
 #import "NoCloseAlert.h"
 
 @implementation NoCloseAlert
-
+-(void)dealloc
+{
+    [super dealloc];
+}
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -28,6 +31,11 @@
     [self addSubview:alphaView];
     //577  678
     self.bgImageView = [MyControl createImageViewWithFrame:CGRectMake((self.frame.size.width-577/2.0)/2.0, (self.frame.size.height-678/2)/2.0, 577/2.0, 678/2) ImageName:@""];
+    if([UIScreen mainScreen].bounds.size.height == 480){
+        CGRect rect = self.bgImageView.frame;
+        rect.origin.y += 50;
+        self.bgImageView.frame = rect;
+    }
     [self addSubview:self.bgImageView];
     
     UIView * alphaView2 = [MyControl createViewWithFrame:CGRectMake(0, 0, self.bgImageView.frame.size.width, self.bgImageView.frame.size.height)];
@@ -89,6 +97,14 @@
 //    self.confirmBtn.layer.masksToBounds = YES;
 //    self.confirmBtn.titleLabel.font = [UIFont systemFontOfSize:16];
 //    [self.bgImageView addSubview:self.confirmBtn];
+    
+    heartAnimation = [MyControl createImageViewWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-64)/2.0, self.bgImageView.frame.origin.y-92, 64, 92) ImageName:@""];
+    
+    heartAnimation.animationImages = @[[UIImage imageNamed:@"pAnimation_1.png"],[UIImage imageNamed:@"pAnimation_2.png"],[UIImage imageNamed:@"pAnimation_3.png"],[UIImage imageNamed:@"pAnimation_4.png"],[UIImage imageNamed:@"pAnimation_5.png"],[UIImage imageNamed:@"pAnimation_6.png"],[UIImage imageNamed:@"pAnimation_7.png"],[UIImage imageNamed:@"pAnimation_8.png"]];
+    heartAnimation.animationDuration = 0.8;
+    heartAnimation.animationRepeatCount = 0;
+    [heartAnimation startAnimating];
+    [self addSubview:heartAnimation];
 }
 
 -(void)configUIWithTx:(NSString *)tx Name:(NSString *)name Percent:(NSString *)percent
@@ -123,12 +139,13 @@
 
 -(void)confirmClick
 {
+    [heartAnimation stopAnimating];
     self.confirm();
-    [UIView animateWithDuration:0.3 animations:^{
-        self.alpha = 0;
-    } completion:^(BOOL finished) {
+//    [UIView animateWithDuration:0.3 animations:^{
+//        self.alpha = 0;
+//    } completion:^(BOOL finished) {
         [self removeFromSuperview];
-    }];
+//    }];
 }
 
 /*

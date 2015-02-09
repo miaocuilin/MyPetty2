@@ -112,24 +112,12 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 //    }];
     
     [_photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-//        if (image) {
-//            if (image.size.width>2000 || image.size.height>2000) {
-//                float w = image.size.width;
-//                float h = image.size.height;
-//                float p = 0;
-//                if (w>h && image.size.width>2000) {
-//                    p = 2000/w;
-//                }else if(h>w && image.size.height>2000){
-//                    p = 2000/h;
-//                }
-//                w *= p;
-//                h *= p;
-//                _photoView.image = [MyControl thumbnailWithImageWithoutScale:image size:CGSizeMake(w, h)];
-//            }else{
-//                _photoView.image = image;
-//            }
+//        if (image.size.width>3500 || image.size.height>3500) {
+//            [self performSelectorInBackground:@selector(modifyImage:) withObject:image];
 //        }
     }];
+    
+    
 //    if (!cmtHeight) {
 //        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35);
 //        self.titleLabel.frame = CGRectMake(4, self.frame.size.height - 18, self.frame.size.width-8, 0);
@@ -168,7 +156,53 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 //        isLike = NO;
 //    }
 }
-
+-(void)modifyImage:(UIImage *)tempImage
+{
+//    if (tempImage.size.width>2000 || tempImage.size.height>2000) {
+        NSLog(@"********超过3500！********");
+        float w = tempImage.size.width;
+        float h = tempImage.size.height;
+        float p = 0;
+        if (w>h && tempImage.size.width>3500) {
+            p = 2000/w;
+        }else if(h>w && tempImage.size.height>3500){
+            p = 2000/h;
+        }
+        w *= p;
+        h *= p;
+        NSLog(@"%f--%f", w, h);
+//    tempImage.size.width/2.0, tempImage.size.height/2.0
+        _photoView.image = [MyControl thumbnailWithImageWithoutScale:tempImage size:CGSizeMake(w, h)];
+//    [tempImage release];
+//        _photoView.image = tempImage;
+//        tempImage = nil;
+//    }
+//    __block UIImage * tempImage = image;
+//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//        if (tempImage) {
+//            if (tempImage.size.width>2000 || tempImage.size.height>2000) {
+//                tempImage = [[MyControl thumbnailWithImageWithoutScale:image size:CGSizeMake(tempImage.size.width/2.0, tempImage.size.height/2.0)] retain];
+//                                float w = image.size.width;
+//                                float h = image.size.height;
+//                                float p = 0;
+//                                if (w>h && image.size.width>2000) {
+//                                    p = 2000/w;
+//                                }else if(h>w && image.size.height>2000){
+//                                    p = 2000/h;
+//                                }
+//                                w *= p;
+//                                h *= p;
+//                //                _photoView.image = [MyControl thumbnailWithImageWithoutScale:image size:CGSizeMake(w, h)];
+//            }
+//            //                else{
+//            //                    _photoView.image = image;
+//            //                }
+//        }
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            _photoView.image = tempImage;
+//        });
+//    });
+}
 
 //-(void)buttonClick:(UIButton *)button
 //{

@@ -251,7 +251,7 @@
         cell = [[[ChatListCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identify] autorelease];
     }
     EMConversation *conversation = [self.dataSource objectAtIndex:indexPath.row];
-//    NSLog(@"%@", conversation.latestMessage.ext);
+    NSLog(@"%@", conversation.latestMessage.ext);
     BOOL hasOthersMsg;
     if ([conversation.latestMessageFromOthers.ext objectForKey:@"nickname"] == nil) {
         //昵称为空，说明没有对方发来的消息

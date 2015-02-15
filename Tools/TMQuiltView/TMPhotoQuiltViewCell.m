@@ -113,9 +113,15 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
     
     [_photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 //        if (image.size.width>3500 || image.size.height>3500) {
 //            [self performSelectorInBackground:@selector(modifyImage:) withObject:image];
 //        }
+=======
+        if (image.size.width>2000 || image.size.height>2000) {
+            [self performSelectorInBackground:@selector(modifyImage:) withObject:image];
+        }
+>>>>>>> dev-miao
 =======
         if (image.size.width>2000 || image.size.height>2000) {
             [self performSelectorInBackground:@selector(modifyImage:) withObject:image];
@@ -166,6 +172,7 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 {
 //    if (tempImage.size.width>2000 || tempImage.size.height>2000) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         NSLog(@"********超过3500！********");
         float w = tempImage.size.width;
         float h = tempImage.size.height;
@@ -174,6 +181,8 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
             p = 2000/w;
         }else if(h>w && tempImage.size.height>3500){
 =======
+=======
+>>>>>>> dev-miao
         NSLog(@"********超过2000！********");
         float w = tempImage.size.width;
         float h = tempImage.size.height;
@@ -181,6 +190,9 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
         if (w>h && tempImage.size.width>2000) {
             p = 2000/w;
         }else if(h>w && tempImage.size.height>2000){
+<<<<<<< HEAD
+>>>>>>> dev-miao
+=======
 >>>>>>> dev-miao
             p = 2000/h;
         }

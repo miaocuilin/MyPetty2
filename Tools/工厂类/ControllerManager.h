@@ -71,6 +71,11 @@
 
 +(void)loadPetList;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
++(void)addAlertWith:(UIViewController *)vc Cost:(int)cost SubType:(int)subType;
+>>>>>>> dev-miao
 =======
 
 +(void)addAlertWith:(UIViewController *)vc Cost:(int)cost SubType:(int)subType;

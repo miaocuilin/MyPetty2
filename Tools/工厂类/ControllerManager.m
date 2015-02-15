@@ -581,12 +581,6 @@ static FirstTabBarViewController * tabBar = nil;
     }];
     [request release];
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> dev-miao
-
 
 #pragma mark - 捧萌星的充值弹窗
 +(void)addAlertWith:(UIViewController *)vc Cost:(int)cost SubType:(int)subType
@@ -605,8 +599,5 @@ static FirstTabBarViewController * tabBar = nil;
     [vc.view addSubview:twoBtnView];
     [twoBtnView release];
 }
-<<<<<<< HEAD
->>>>>>> dev-miao
-=======
->>>>>>> dev-miao
+
 @end

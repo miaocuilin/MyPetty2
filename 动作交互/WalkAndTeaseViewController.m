@@ -18,18 +18,11 @@
 -(void)dealloc
 {
     [super dealloc];
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+
     ENDLOADING;
     [protWebView loadHTMLString:@"" baseURL:nil];
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
->>>>>>> dev-miao
-=======
-    ENDLOADING;
-    [protWebView loadHTMLString:@"" baseURL:nil];
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
->>>>>>> dev-miao
+
 }
 - (void)viewDidLoad
 

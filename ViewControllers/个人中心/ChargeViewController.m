@@ -9,35 +9,19 @@
 #import "ChargeViewController.h"
 
 @interface ChargeViewController () <UIWebViewDelegate>
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
 {
     UIWebView * chargeWebView;
 }
->>>>>>> dev-miao
-=======
-{
-    UIWebView * chargeWebView;
-}
->>>>>>> dev-miao
 @end
 
 @implementation ChargeViewController
 -(void)dealloc
 {
     [super dealloc];
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+
     ENDLOADING;
     [chargeWebView loadHTMLString:@"" baseURL:nil];
->>>>>>> dev-miao
-=======
-    ENDLOADING;
-    [chargeWebView loadHTMLString:@"" baseURL:nil];
->>>>>>> dev-miao
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 
@@ -56,15 +40,9 @@
 }
 -(void)createWebView
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     UIWebView * chargeWebView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
-=======
     chargeWebView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
->>>>>>> dev-miao
-=======
-    chargeWebView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
->>>>>>> dev-miao
+
     chargeWebView.delegate = self;
     [self.view addSubview:chargeWebView];
     if(self.isZB){

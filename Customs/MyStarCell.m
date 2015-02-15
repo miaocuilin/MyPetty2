@@ -256,14 +256,7 @@
 }
 -(void)configUI:(MyStarModel *)model
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    
->>>>>>> dev-miao
-=======
-    
->>>>>>> dev-miao
+
     if ([model.tb_version intValue] == 1) {
         UILabel * tempLabel = (UILabel *)[self viewWithTag:202];
         tempLabel.text = @"买周边";
@@ -273,21 +266,13 @@
         
         UILabel * tempLabel2 = (UILabel *)[self viewWithTag:302];
         tempLabel2.text = @"快来买";
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> dev-miao
+
     }else{
         UILabel * tempLabel = (UILabel *)[self viewWithTag:202];
         tempLabel.text = @"献爱心";
         
         UIButton * button = (UIButton *)[self viewWithTag:102];
         [button setBackgroundImage:[UIImage imageNamed:@"star_gift.png"] forState:UIControlStateNormal];
-<<<<<<< HEAD
->>>>>>> dev-miao
-=======
->>>>>>> dev-miao
     }
     
     

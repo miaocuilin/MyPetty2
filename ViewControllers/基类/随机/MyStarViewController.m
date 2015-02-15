@@ -20,6 +20,7 @@
 #import "PublishViewController.h"
 #import "Alert_BegFoodViewController.h"
 #import "ChatViewController.h"
+#import "ChargeViewController.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
@@ -42,7 +43,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     [super viewWillAppear:animated];
     if (isLoaded) {
-        [self.tv headerBeginRefreshing];
+//        [self.tv headerBeginRefreshing];
     }else if(![[USER objectForKey:@"guide_star"] intValue]){
         [self createGuide];
         [USER setObject:@"1" forKey:@"guide_star"];
@@ -170,6 +171,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
         }
         [sheet showInView:self.view];
+//        [sheet release];
     }else{
         //提示注册
         ShowAlertView;
@@ -203,6 +205,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //}
 -(void)loadData
 {
+//    [self.tv headerEndRefreshing];
+//    return;
+    
 //    if (!isLoaded) {
 //        LOADING;
 //    }
@@ -494,39 +499,56 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             [shake release];
 //            [shake release];
         }else if (a == 2) {
-            SendGiftViewController * vc = [[SendGiftViewController alloc] init];
-            vc.receiver_aid = self.pet_aid;
-            vc.receiver_name = self.pet_name;
-            vc.hasSendGift = ^(NSString * itemId){
-                NSLog(@"赠送礼物给默认宠物成功!");
-                if ([[model.dict objectForKey:@"gift_count"] isKindOfClass:[NSNull class]]) {
-                    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
-                    [dict setObject:[NSNumber numberWithInt:1] forKey:@"gift_count"];
-                    model.dict = dict;
-                    model.gift_count = [NSNumber numberWithInt:1];
+            if([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
+                //提交版本，关闭周边
+                [self sendGiftsWithModel:model Index:indexPath];
+            }else{
+                //非提交版本，打开周边
+                if([model.tb_version intValue] == 1){
+                    //开，有周边，判断url是否为空，如果空，出弹框，如果不为空，跳tb_url，和charge界面共用
+                    if([model.tb_url isKindOfClass:[NSString class]] && model.tb_url.length){
+                        ChargeViewController * charge = [[ChargeViewController alloc] init];
+                        charge.isZB = YES;
+                        charge.zbUrl = model.tb_url;
+                        [self presentViewController:charge animated:YES completion:nil];
+                        [charge release];
+                    }else{
+                        //提示没有没有周边弹框
+                        Alert_2ButtonView2 * zbView = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
+                        zbView.type = 5;
+                        zbView.pet_name = model.name;
+                        [zbView makeUI];
+                        zbView.zbBlock = ^(int a){
+                            if (a == 1) {
+                                //助TA集粉
+                                NSLog(@"分享");
+                                NSLog(@"More");
+                                if (!isMoreCreated) {
+                                    //create more
+                                    isMoreCreated = YES;
+                                    [self createMore];
+                                }
+                                //show more
+                                menuBgBtn.hidden = NO;
+                                CGRect rect = moreView.frame;
+                                rect.origin.y -= rect.size.height;
+                                [UIView animateWithDuration:0.3 animations:^{
+                                    moreView.frame = rect;
+                                    menuBgBtn.alpha = 0.6;
+                                }];
+                            }else if(a == 2){
+                                //送礼
+                                [self sendGiftsWithModel:model Index:indexPath];
+                            }
+                        };
+                        [self.view addSubview:zbView];
+                        [zbView release];
+                    }
                 }else{
-                    model.gift_count = [NSNumber numberWithInt:[model.gift_count intValue]+1];
+                    //关，打开送礼物
+                    [self sendGiftsWithModel:model Index:indexPath];
                 }
-                int contri = [[cell.contributionLabel.text substringFromIndex:3] intValue];
-                
-                model.t_contri = [NSString stringWithFormat:@"%d", contri+[[[ControllerManager returnGiftDictWithItemId:itemId] objectForKey:@"add_rq"] intValue]];
-                [self.tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-                //
-                //                MainViewController * main = [ControllerManager shareMain];
-                ResultOfBuyView * result = [[ResultOfBuyView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-                [UIView animateWithDuration:0.3 animations:^{
-                    result.alpha = 1;
-                }];
-                result.confirm = ^(){
-                    [vc closeGiftAction];
-                };
-                [result configUIWithName:self.pet_name ItemId:itemId Tx:self.pet_tx];
-                [vc.view addSubview:result];
-                [result release];
-                
-            };
-            [ControllerManager addTabBarViewController:vc];
-            [vc release];
+            }
 
         }else if (a == 3) {
             UILabel * label = (UILabel *)[cell viewWithTag:303];
@@ -554,8 +576,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            [walkAndTeasevc release];
         }
     };
+
     cell.imageClick = ^(NSString * img_id){
-        FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
+        __block FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = img_id;
         [ControllerManager addTabBarViewController:vc];
 //        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
@@ -588,6 +611,47 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         return 710.0/2;
     }
 }
+#pragma mark - sendGifts
+-(void)sendGiftsWithModel:(MyStarModel *)model Index:(NSIndexPath *)indexPath
+{
+    SendGiftViewController * vc = [[SendGiftViewController alloc] init];
+    vc.receiver_aid = self.pet_aid;
+    vc.receiver_name = self.pet_name;
+    vc.hasSendGift = ^(NSString * itemId){
+        NSLog(@"赠送礼物给默认宠物成功!");
+        if ([[model.dict objectForKey:@"gift_count"] isKindOfClass:[NSNull class]]) {
+            NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
+            [dict setObject:[NSNumber numberWithInt:1] forKey:@"gift_count"];
+            model.dict = dict;
+            model.gift_count = [NSNumber numberWithInt:1];
+        }else{
+            model.gift_count = [NSNumber numberWithInt:[model.gift_count intValue]+1];
+        }
+        
+        MyStarCell * cell = (MyStarCell *)[self.tv cellForRowAtIndexPath:indexPath];
+        int contri = [[cell.contributionLabel.text substringFromIndex:3] intValue];
+        
+        model.t_contri = [NSString stringWithFormat:@"%d", contri+[[[ControllerManager returnGiftDictWithItemId:itemId] objectForKey:@"add_rq"] intValue]];
+        [self.tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        //
+        //                MainViewController * main = [ControllerManager shareMain];
+        ResultOfBuyView * result = [[ResultOfBuyView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        [UIView animateWithDuration:0.3 animations:^{
+            result.alpha = 1;
+        }];
+        result.confirm = ^(){
+            [vc closeGiftAction];
+        };
+        [result configUIWithName:self.pet_name ItemId:itemId Tx:self.pet_tx];
+        [vc.view addSubview:result];
+        [result release];
+        
+    };
+    [ControllerManager addTabBarViewController:vc];
+    [vc release];
+}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -639,13 +703,32 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         
         imagePickerController.sourceType = sourceType;
         
-//        if ([self hasValidAPIKey]) {
-            [self presentViewController:imagePickerController animated:YES completion:^{}];
-//        }
+        //        if ([self hasValidAPIKey]) {
+        [self presentViewController:imagePickerController animated:YES completion:^{}];
+        //        }
         
         [imagePickerController release];
+//        [self performSelector:@selector(jumpCamaraOrPhoto:) withObject:[NSString stringWithFormat:@"%d", sourceType] afterDelay:0.5];
+        
     }
 }
+//-(void)jumpCamaraOrPhoto:(NSString *)str
+//{
+//    int sourceType = [str intValue];
+//    //跳转到相机或相册页面
+//    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+//    
+//    imagePickerController.delegate = self;
+//    
+//    imagePickerController.sourceType = sourceType;
+//    
+//    //        if ([self hasValidAPIKey]) {
+//    [self presentViewController:imagePickerController animated:YES completion:^{}];
+//    //        }
+//    
+//    [imagePickerController release];
+//}
+
 
 #pragma mark - UIImagePicker Delegate
 
@@ -653,7 +736,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     NSLog(@"%@", info);
     UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
-//    NSLog(@"%d", image.imageOrientation);
+    NSLog(@"%d", image.imageOrientation);
     image = [MyControl fixOrientation:image];
 //    NSLog(@"%d", image.imageOrientation);
 //    NSURL * assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
@@ -685,9 +768,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         vc.aid = self.tempAid;
         vc.showFrontImage = ^(NSString * img_id, BOOL isFood, NSString * aid, NSString * name){
             if (!isFood) {
-                FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
+                __block FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
                 front.img_id = img_id;
-                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
+                [ControllerManager addTabBarViewController:front];
+//                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
                 [front release];
             }else{
                 NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
@@ -895,5 +979,148 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     // Pass the selected object to the new view controller.
 }
 */
+#pragma mark - 创建更多视图
+-(void)createMore
+{
+    UITabBarController *tabBar = (UITabBarController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    menuBgBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) ImageName:@"" Target:self Action:@selector(cancelBtnClick) Title:nil];
+    menuBgBtn.backgroundColor = [UIColor blackColor];
+    [tabBar.view addSubview:menuBgBtn];
+    menuBgBtn.alpha = 0;
+    menuBgBtn.hidden = YES;
+    
+    // 318*234
+    moreView = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height, 320, 120)];
+    moreView.backgroundColor = [ControllerManager colorWithHexString:@"efefef"];
+    [tabBar.view addSubview:moreView];
+    
+    //orange line
+    UIView * orangeLine = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 4)];
+    orangeLine.backgroundColor = [ControllerManager colorWithHexString:@"fc7b51"];
+    [moreView addSubview:orangeLine];
+    //label
+    UILabel * shareLabel = [MyControl createLabelWithFrame:CGRectMake(15, 10, 80, 15) Font:13 Text:@"分享到"];
+    shareLabel.textColor = [UIColor blackColor];
+    [moreView addSubview:shareLabel];
+    //3个按钮
+    NSArray * arr = @[@"more_weixin.png", @"more_friend.png", @"more_sina.png"];
+    NSArray * arr2 = @[@"微信好友", @"朋友圈", @"微博"];
+    float spe = (self.view.frame.size.width-80-42*3)/2.0;
+    for(int i=0;i<3;i++){
+        UIButton * button = [MyControl createButtonWithFrame:CGRectMake(40+i*(spe+42), 33, 42, 42) ImageName:arr[i] Target:self Action:@selector(shareClick:) Title:nil];
+        button.tag = 400+i;
+        [moreView addSubview:button];
+        
+        CGRect rect = button.frame;
+        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(rect.origin.x-10, rect.origin.y+rect.size.height+5, rect.size.width+20, 15) Font:12 Text:arr2[i]];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.textColor = [UIColor blackColor];
+        //        label.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        [moreView addSubview:label];
+    }
+}
 
+#pragma mark - 分享截图
+-(void)shareClick:(UIButton *)button
+{
+    [self cancelBtnClick];
+    
+    __block UIImage * screenshotImage = nil;
+//    if (isMyPet) {
+//        screenshotImage = headBtn.currentBackgroundImage;
+//    }else{
+//        screenshotImage = headImageView.image;
+//    }
+    if ([self.pet_tx isKindOfClass:[NSString class]] && self.pet_tx.length) {
+        UIImageView * screenshotImageView = [[UIImageView alloc] init];
+        [screenshotImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, self.pet_tx]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if (image) {
+                [self shareWithButton:button Image:image];
+            }else{
+                screenshotImage = [UIImage imageNamed:@"record_upload.png"];
+                [self shareWithButton:button Image:screenshotImage];
+            }
+            [screenshotImageView release];
+        }];
+    }else{
+        screenshotImage = [UIImage imageNamed:@"record_upload.png"];
+        [self shareWithButton:button Image:screenshotImage];
+    }
+    
+    
+}
+-(void)shareWithButton:(UIButton *)button Image:(UIImage *)screenshotImage
+{
+    int a = button.tag-400;
+    
+    if (a == 0) {
+        NSLog(@"微信");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+        [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid];
+        [UMSocialData defaultData].extConfig.wechatSessionData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.pet_name];
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+                //                StartLoading;
+                //                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+                //                StartLoading;
+                //                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
+    }else if(a == 1){
+        NSLog(@"朋友圈");
+        //强制分享图片
+        [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
+        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid];
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.pet_name];
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+            if (response.responseCode == UMSResponseCodeSuccess) {
+                NSLog(@"分享成功！");
+                [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+                //                StartLoading;
+                //                [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
+            }else{
+                [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+                //                StartLoading;
+                //                [MMProgressHUD dismissWithError:@"分享失败" afterDelay:0.5];
+            }
+            
+        }];
+    }else{
+        NSLog(@"微博");
+        NSString * str = [NSString stringWithFormat:@"人家在宠物星球好开心，快来跟我一起玩嘛~%@（分享自@宠物星球社交应用）", [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid]];
+        
+        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+        NSLog(@"%d", oauth);
+        if (oauth) {
+            [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
+                [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:screenshotImage socialUIDelegate:self];
+                //设置分享内容和回调对象
+                [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+            }];
+        }else{
+            [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:screenshotImage socialUIDelegate:self];
+            //设置分享内容和回调对象
+            [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
+        }
+    }
+}
+-(void)cancelBtnClick
+{
+    NSLog(@"cancel");
+    CGRect rect = moreView.frame;
+    rect.origin.y += rect.size.height;
+    [UIView animateWithDuration:0.3 animations:^{
+        moreView.frame = rect;
+        menuBgBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        menuBgBtn.hidden = YES;
+    }];
+}
 @end

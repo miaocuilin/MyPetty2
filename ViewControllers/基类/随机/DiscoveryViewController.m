@@ -73,6 +73,11 @@
     [super viewDidAppear:animated];
     isLoaded = YES;
 }
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self hideSearch];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -91,6 +96,12 @@
 
 -(void)createHeader
 {
+    alphaBgBtn = [MyControl createButtonWithFrame:[UIScreen mainScreen].bounds ImageName:@"" Target:self Action:@selector(hideSearch) Title:nil];
+    alphaBgBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
+    alphaBgBtn.alpha = 0;
+    alphaBgBtn.hidden = YES;
+    [self.view addSubview:alphaBgBtn];
+    
     navView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64)];
     [self.view addSubview:navView];
     
@@ -122,6 +133,24 @@
     //    topBtn.backgroundColor = [UIColor greenColor];
     [navView addSubview:searchBtn];
 }
+-(void)hideSearch
+{
+    sc.userInteractionEnabled = YES;
+    tf.text = nil;
+    vc.view.hidden = NO;
+    vc2.view.hidden = NO;
+    tv.hidden = YES;
+    [tf resignFirstResponder];
+    //        sc.hidden = NO;
+    searchBg.hidden = YES;
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        alphaBgBtn.alpha = 0;
+    } completion:^(BOOL finished) {
+        alphaBgBtn.hidden = YES;
+    }];
+}
+
 -(void)jumpRQ
 {
     PopularityListViewController * rq = [[PopularityListViewController alloc] init];
@@ -136,6 +165,9 @@
     sv.pagingEnabled = YES;
     sv.showsHorizontalScrollIndicator = NO;
     [self.view addSubview:sv];
+    
+    [self.view bringSubviewToFront:alphaBgBtn];
+    [self.view bringSubviewToFront:navView];
 }
 -(void)createWaterFlow
 {
@@ -148,7 +180,7 @@
 //        }
 //    };
     [sv addSubview:vc.view];
-    [self.view bringSubviewToFront:navView];
+    
 }
 -(void)createRecommend
 {
@@ -156,13 +188,16 @@
     [self addChildViewController:vc2];
     [vc2.view setFrame:CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height)];
     [sv addSubview:vc2.view];
-    [self.view bringSubviewToFront:navView];
+//    [self.view bringSubviewToFront:navView];
 }
 -(void)searchBtnClick
 {
     [tf becomeFirstResponder];
     searchBg.hidden = NO;
-    
+    [UIView animateWithDuration:0.2 animations:^{
+        alphaBgBtn.hidden = NO;
+        alphaBgBtn.alpha = 1;
+    }];
 }
 -(void)segmentClick
 {
@@ -302,7 +337,7 @@
     static NSString * cellID = @"ID";
     PetSearchCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"PetSearchCell" owner:self options:nil] objectAtIndex:0];
+        cell = [[[[NSBundle mainBundle] loadNibNamed:@"PetSearchCell" owner:self options:nil] objectAtIndex:0] autorelease];
     }
     if (!isSearchUser) {
         SearchResultModel * model = self.searchArray[indexPath.row];
@@ -325,11 +360,13 @@
 {
     NSLog(@"%d", indexPath.row);
     if (isSearchUser) {
-        UserCardViewController * card = [[UserCardViewController alloc] init];
+        __block UserCardViewController * card = [[UserCardViewController alloc] init];
         card.usr_id = [self.searchUserArray[indexPath.row] usr_id];
-        [[UIApplication sharedApplication].keyWindow addSubview:card.view];
+        [ControllerManager addTabBarViewController:card];
+//        [[UIApplication sharedApplication].keyWindow addSubview:card.view];
         card.close = ^(){
-            [card.view removeFromSuperview];
+            [ControllerManager deleTabBarViewController:card];
+//            [card.view removeFromSuperview];
         };
         [card release];
 //        UserInfoViewController * uvc = [[UserInfoViewController alloc] init];
@@ -398,16 +435,17 @@
         [MobClick event:@"search"];
         [self textFieldShouldReturn:tf];
     }else{
+        [self hideSearch];
 //        self.sv.scrollEnabled = YES;
 ////        blurImageView.hidden = YES;
-        sc.userInteractionEnabled = YES;
-        tf.text = nil;
-        vc.view.hidden = NO;
-        vc2.view.hidden = NO;
-        tv.hidden = YES;
-        [tf resignFirstResponder];
-//        sc.hidden = NO;
-        searchBg.hidden = YES;
+//        sc.userInteractionEnabled = YES;
+//        tf.text = nil;
+//        vc.view.hidden = NO;
+//        vc2.view.hidden = NO;
+//        tv.hidden = YES;
+//        [tf resignFirstResponder];
+////        sc.hidden = NO;
+//        searchBg.hidden = YES;
     }
 }
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string

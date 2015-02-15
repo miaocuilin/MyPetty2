@@ -426,9 +426,14 @@
                     }
                     [USER setObject:@"1" forKey:@"isSuccess"];
                     [ControllerManager setIsSuccess:1];
+                    
+                    [USER setObject:@"0" forKey:@"lastPublishAid"];
+                    
                     if ([[dic objectForKey:@"usr_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
                         [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"登录成功"];
                         [ControllerManager clearTalkData];
+                        LOADPETLIST;
+                        
                         
                         [self dismissViewControllerAnimated:YES completion:nil];
                     }else{
@@ -538,6 +543,8 @@
             
             //获取宠物信息，存储到本地
             [self loadPetInfo];
+            
+            LOADPETLIST;
         }else{
             LOADFAILED;
         }
@@ -548,6 +555,7 @@
 {
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [USER objectForKey:@"aid"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [USER objectForKey:@"aid"], sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"petInfo:%@", load.dataDict);

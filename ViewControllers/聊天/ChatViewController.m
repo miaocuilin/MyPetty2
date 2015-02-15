@@ -152,7 +152,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(leftBtnClick) Title:nil];
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(leftBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
@@ -473,6 +473,7 @@
                     [self addChildViewController:vc];
                     [self.view addSubview:vc.view];
                     [vc didMoveToParentViewController:self];
+                    
                 }else if(type == 2){
                     //赏口粮
                     SimpleRewardViewController * vc = [[SimpleRewardViewController alloc] init];

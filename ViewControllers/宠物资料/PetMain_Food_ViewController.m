@@ -17,7 +17,10 @@
 @end
 
 @implementation PetMain_Food_ViewController
-
+-(void)dealloc
+{
+    [super dealloc];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -105,7 +108,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
@@ -211,7 +214,9 @@
     NSLog(@"%d", a);
     FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
     vc.img_id = [self.dataArray[a] img_id];
+    [self addChildViewController:vc];
     [self.view addSubview:vc.view];
+    [vc didMoveToParentViewController:self];
     [vc release];
 }
 - (void)didReceiveMemoryWarning {

@@ -144,28 +144,30 @@
     percent.text = [NSString stringWithFormat:@"%@%@", model.percent, @"%"];
     
     if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-            [headBtn setBackgroundImage:image forState:UIControlStateNormal];
-            //            headImageView.image = image;
-        }else{
-            //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                    //                    headImageView.image = load.dataImage;
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
-                }
-            }];
-            [request release];
-        }
+        [MyControl setImageForBtn:headBtn Tx:model.tx isPet:YES isRound:YES];
+        
+//        NSString * docDir = DOCDIR;
+//        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+//        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+//        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+//        if (image) {
+//            [headBtn setBackgroundImage:image forState:UIControlStateNormal];
+//            //            headImageView.image = image;
+//        }else{
+//            //下载头像
+//            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+//                    [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                    //                    headImageView.image = load.dataImage;
+//                    NSString * docDir = DOCDIR;
+//                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
+//                    [load.data writeToFile:txFilePath atomically:YES];
+//                }else{
+//                    NSLog(@"头像下载失败");
+//                }
+//            }];
+//            [request release];
+//        }
     }
     //
     CGRect rect2 = ownerHead.frame;
@@ -173,28 +175,30 @@
     ownerHead.frame = rect2;
     
     if (!([model.u_tx isKindOfClass:[NSNull class]] || [model.u_tx length]==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.u_tx]];
-        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-//            [headBtn setBackgroundImage:image forState:UIControlStateNormal];
-            ownerHead.image = image;
-        }else{
-            //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.u_tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-//                    [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                    ownerHead.image = load.dataImage;
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.u_tx]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
-                }
-            }];
-            [request release];
-        }
+        [MyControl setImageForImageView:ownerHead Tx:model.u_tx isPet:NO isRound:YES];
+        
+//        NSString * docDir = DOCDIR;
+//        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.u_tx]];
+//        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
+//        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+//        if (image) {
+////            [headBtn setBackgroundImage:image forState:UIControlStateNormal];
+//            ownerHead.image = image;
+//        }else{
+//            //下载头像
+//            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, model.u_tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+////                    [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                    ownerHead.image = load.dataImage;
+//                    NSString * docDir = DOCDIR;
+//                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.u_tx]];
+//                    [load.data writeToFile:txFilePath atomically:YES];
+//                }else{
+//                    NSLog(@"头像下载失败");
+//                }
+//            }];
+//            [request release];
+//        }
     }
     
     //

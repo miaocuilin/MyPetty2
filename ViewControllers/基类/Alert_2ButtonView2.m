@@ -28,7 +28,7 @@
     UIButton * closeBtn = [MyControl createButtonWithFrame:CGRectMake(bgView.frame.size.width-36, 0, 36, 36) ImageName:@"various_close.png" Target:self Action:@selector(closeBtnClick) Title:nil];
     [bgView addSubview:closeBtn];
     
-    UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(20, closeBtn.frame.origin.y+closeBtn.frame.size.height+10, bgView.frame.size.width-40, 20) Font:16 Text:nil];
+    UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(10, closeBtn.frame.origin.y+closeBtn.frame.size.height+10, bgView.frame.size.width-20, 20) Font:16 Text:nil];
     label1.textAlignment = NSTextAlignmentCenter;
     label1.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
     [bgView addSubview:label1];
@@ -56,9 +56,11 @@
     [bgView addSubview:selectLabel];
     
     UIButton * cancelBtn = [MyControl createButtonWithFrame:CGRectMake(8, 346/2, 276/2*0.9, 93/2.0*0.9) ImageName:@"various_grayBtn.png" Target:self Action:@selector(cancelClick) Title:@"再想想"];
+    cancelBtn.titleLabel.font = [UIFont systemFontOfSize:17];
     [bgView addSubview:cancelBtn];
     
     UIButton * confirmBtn = [MyControl createButtonWithFrame:CGRectMake(bgView.frame.size.width-276/2*0.9-8, 346/2, 276/2*0.9, 93/2.0*0.9) ImageName:@"various_orangeBtn.png" Target:self Action:@selector(confirmClick) Title:@"没问题"];
+    confirmBtn.titleLabel.font = [UIFont systemFontOfSize:17];
     [bgView addSubview:confirmBtn];
     
     if(self.type == 1){
@@ -66,24 +68,42 @@
         label2.text = @"需要花费您：";
         
     }else if(self.type == 2){
-        label1.text = [NSString stringWithFormat:@"本次打赏%@份口粮", self.rewardNum];
-        label2.text = @"需要花费您：";
+        if(self.subType == 1){
+            label1.hidden = YES;
+            label2.text = @"本次捧星需要花费您：";
+            costLabel.text = self.rewardNum;
+        }else if(self.subType == 2){
+            label1.hidden = YES;
+            label2.text = @"本次购物需要花费您：";
+            costLabel.text = self.rewardNum;
+        }else{
+            label1.text = [NSString stringWithFormat:@"本次打赏%@份口粮", self.rewardNum];
+            label2.text = @"需要花费您：";
+        }
+        
         
         selectImage.hidden = YES;
         selectBtn.hidden = YES;
-        selectLabel.hidden = YES;
-//        CGRect rect = selectLabel.frame;
-//        rect.origin.x = 0;
-//        rect.size.width = bgView.frame.size.width;
-//        selectLabel.frame = rect;
-//        selectLabel.text = @"先去应用挣钱吧~";
-//        selectLabel.textAlignment = NSTextAlignmentCenter;
+//        selectLabel.hidden = YES;
+        CGRect rect = selectLabel.frame;
+        rect.origin.x = 0;
+        rect.size.width = bgView.frame.size.width;
+        selectLabel.frame = rect;
+        selectLabel.text = @"先去充值吧~";
+        selectLabel.textAlignment = NSTextAlignmentCenter;
         
         [confirmBtn setTitle:@"去充值" forState:UIControlStateNormal];
-//        cancelBtn.hidden = YES;
-//        CGRect rect2 = confirmBtn.frame;
-//        rect2.origin.x = (bgView.frame.size.width-rect2.size.width)/2.0;
-//        confirmBtn.frame = rect2;
+        
+        if([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
+            selectLabel.text = @"先在应用挣钱吧~";
+            
+            cancelBtn.hidden = YES;
+            CGRect rect2 = confirmBtn.frame;
+            rect2.origin.x = (bgView.frame.size.width-rect2.size.width)/2.0;
+            confirmBtn.frame = rect2;
+            
+            [confirmBtn setTitle:@"好吧" forState:UIControlStateNormal];
+        }
         
     }else if(self.type == 3){
         label1.text = @"支付";
@@ -138,7 +158,34 @@
         label3.textAlignment = NSTextAlignmentCenter;
         label3.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
         [bgView addSubview:label3];
+        
+        [confirmBtn setTitle:@"额，是的" forState:UIControlStateNormal];
+        [cancelBtn setBackgroundImage:[UIImage imageNamed:@"various_orangeBtn.png"] forState:UIControlStateNormal];
+        [confirmBtn setBackgroundImage:[UIImage imageNamed:@"various_grayBtn.png"] forState:UIControlStateNormal];
+    }else if (self.type == 5){
+        CGRect rect = label1.frame;
+        rect.origin.y += 20;
+        rect.size.height = 40;
+        label1.frame = rect;
+        
+        CGRect rect2 = label2.frame;
+        rect2.origin.y += 40;
+        label2.frame = rect2;
+        
+        label1.text = [NSString stringWithFormat:@"别着急~%@还没有周边呢。", self.pet_name];
+        
+        label2.text = @"不如先……";
+        
+        [cancelBtn setTitle:@"助TA集粉" forState:UIControlStateNormal];
+        [confirmBtn setTitle:@"给TA送礼" forState:UIControlStateNormal];
+        
+        selectImage.hidden = YES;
+        selectBtn.hidden = YES;
+        selectLabel.hidden = YES;
+        goldImage.hidden = YES;
+        costLabel.hidden = YES;
     }
+    
 //    if ([[USER objectForKey:@"showCostAlert"] intValue]) {
 //        selectImage.hidden = YES;
 //        selectBtn.hidden = YES;
@@ -151,6 +198,10 @@
 }
 -(void)cancelClick
 {
+    if(self.type == 5){
+        //助TA集粉
+        self.zbBlock(1);
+    }
     [self removeFromSuperview];
 }
 -(void)confirmClick
@@ -160,13 +211,18 @@
         self.reward();
     }else if (self.type == 2){
         //block跳转充值
-        self.jumpCharge();
+        if(![[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
+            self.jumpCharge();
+        }
     }else if(self.type == 3){
         //block确认兑换
         self.exchange();
     }else if(self.type == 4){
         //退出圈子
         self.quit();
+    }else if(self.type == 5){
+        //送礼
+        self.zbBlock(2);
     }
     [self removeFromSuperview];
 }

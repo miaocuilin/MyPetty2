@@ -150,6 +150,12 @@
                                 rect3.origin.y = sv.frame.origin.y+h+4;
                                 rect3.size.height = self.view.frame.size.height-64-25-(h+8);
                                 qtmquitView.frame = rect3;
+                                
+//                                CGRect rect5 = sv.frame;
+//                                rect5.size.height = image.size.height;
+//                                sv.frame = rect5;
+                                
+                                sv.contentSize = CGSizeMake(sv.contentSize.width, sv.frame.size.height);
                             }
                         }];
                     }else{
@@ -173,6 +179,8 @@
                                 rect3.origin.y = sv.frame.origin.y+h+4;
                                 rect3.size.height = self.view.frame.size.height-64-25-(h+8);
                                 qtmquitView.frame = rect3;
+                                
+                                sv.contentSize = CGSizeMake(sv.contentSize.width, sv.frame.size.height);
                             }];
                         }else if(i == pageCount-1){
                             [button setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/banner/%@", IMAGEURL, [array[0] objectForKey:@"img_url"]]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -215,6 +223,13 @@
                                 rect3.origin.y = sv.frame.origin.y+h+4;
                                 rect3.size.height = self.view.frame.size.height-64-25-(h+8);
                                 qtmquitView.frame = rect3;
+                                
+//                                CGRect rect5 = sv.frame;
+//                                rect5.size.height = image.size.height;
+//                                sv.frame = rect5;
+//                                
+                                sv.contentSize = CGSizeMake(sv.contentSize.width, sv.frame.size.height);
+                                
                             }];
                         }
                     }
@@ -949,6 +964,9 @@
 //    DetailViewController * vc = [[DetailViewController alloc] init];
     FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
     vc.img_id = model.img_id;
+    vc.isFromRandom = YES;
+    vc.imageURL = model.url;
+    vc.imageCmt = model.cmt;
 //    vc.usr_id = model.usr_id;
 //    if ([ControllerManager getIsSuccess]) {
 //        vc.aid = [model.url substringToIndex:10];

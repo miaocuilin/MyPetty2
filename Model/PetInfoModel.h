@@ -30,5 +30,8 @@
 @property(nonatomic,copy)NSString * total_food;
 @property(nonatomic,copy)NSString * msg;
 
+@property(nonatomic,copy)NSNumber * tb_version;
+@property(nonatomic,copy)NSString * tb_url;
+
 @property(nonatomic,copy)NSString * is_follow;
 @end

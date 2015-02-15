@@ -356,7 +356,7 @@
     }
     NSLog(@"%f--%f", sourceImage.size.width, sourceImage.size.height);
     CGFloat compression = 1.0f;
-    float maxFileSize = 256*1024;
+    float maxFileSize = 128*1024;
     
     NSData *imageData = UIImageJPEGRepresentation(sourceImage, compression);
 //    3746443 1748174 56556
@@ -499,15 +499,16 @@
 #pragma mark -
 +(void)popAlertWithView:(UIView *)keyView Msg:(NSString *)msg
 {
-    PopupView * pop = [ControllerManager sharePopView];
+//    PopupView * pop = [ControllerManager sharePopView];
+    PopupView * pop = [[PopupView alloc] init];
     [pop modifyUIWithSize:keyView.frame.size msg:msg];
     [keyView addSubview:pop];
-//    [pop release];
+    [pop release];
     
     [UIView animateWithDuration:0.2 animations:^{
         pop.bgView.alpha = 1;
     } completion:^(BOOL finished) {
-        [UIView animateKeyframesWithDuration:0.2 delay:2 options:0 animations:^{
+        [UIView animateKeyframesWithDuration:0.2 delay:1.5 options:0 animations:^{
             pop.bgView.alpha = 0;
         } completion:^(BOOL finished) {
             [pop removeFromSuperview];
@@ -664,9 +665,9 @@
         defaultImage = [UIImage imageNamed:@"defaultUserHead.png"];
     }
     [btn setBackgroundImageWithURL:[NSURL URLWithString:str] forState:UIControlStateNormal placeholderImage:defaultImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-//        if (image) {
-//            [btn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-//        }
+        if (image && image.size.width != image.size.height) {
+            [btn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+        }
     }];
 }
 +(void)setImageForImageView:(UIImageView *)imageView Tx:(NSString *)tx isPet:(BOOL)isPet
@@ -744,4 +745,5 @@
     }
     return unreadCount;
 }
+
 @end

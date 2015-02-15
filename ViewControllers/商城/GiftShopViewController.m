@@ -65,6 +65,19 @@
 - (void)buyGiftItemsAPI:(NSInteger)tag
 {
     GiftShopModel *model = self.giftDataArray[tag];
+    
+    if([model.price intValue] > [[USER objectForKey:@"gold"] intValue]){
+        //余额不足
+        if([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
+            //审核
+            [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来购物吧~"];
+        }else{
+            [ControllerManager addAlertWith:self Cost:[model.price intValue] SubType:2];
+        }
+        return;
+    }
+    
+    
     NSString *item = model.no;
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=%@&num=1dog&cat",item]];
     NSString *buyItemsString = [NSString stringWithFormat:@"%@%@&num=1&sig=%@&SID=%@",BUYSHOPGIFTAPI,item,sig,[ControllerManager getSID]];
@@ -215,7 +228,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
+    backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(backBtnClick:) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];

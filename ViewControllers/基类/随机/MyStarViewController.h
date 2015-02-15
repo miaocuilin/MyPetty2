@@ -22,6 +22,10 @@
     UIImageView * guide;
     
     UIButton * camara;
+    
+    UIButton * menuBgBtn;
+    UIView * moreView;
+    BOOL isMoreCreated;
 }
 @property(nonatomic,retain)UITableView * tv;
 

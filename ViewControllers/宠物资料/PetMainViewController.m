@@ -22,6 +22,7 @@
 #import "PetMain_Food_ViewController.h"
 #import "ModifyPetOrUserInfoViewController.h"
 #import "ChatViewController.h"
+#import "ChargeViewController.h"
 
 @interface PetMainViewController ()<UMSocialUIDelegate>
 
@@ -219,14 +220,17 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [self.view addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
+//    backBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
     [self.view addSubview:backBtn];
+    
     UIImageView * threePoint = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-36, 32+17/2.0-9/4.0, 47/2.0, 9/2.0) ImageName:@"threePoint.png"];
     [self.view addSubview:threePoint];
     
-    UIButton * threePBtn = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-42, 25, 25+8+4, 32) ImageName:@"" Target:self Action:@selector(threePBtnClick) Title:nil];
+    UIButton * threePBtn = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-42-10, 22, 25+8+4+10, 40) ImageName:@"" Target:self Action:@selector(threePBtnClick) Title:nil];
     threePBtn.showsTouchWhenHighlighted = YES;
+//    threePBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
     [self.view addSubview:threePBtn];
     
 }
@@ -455,6 +459,7 @@
         return;
     }
     __block Alert_oneBtnView * oneBtn = [[Alert_oneBtnView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    __block NoCloseAlert * noClose = nil;
     if (!btn.selected) {
 //    user/petsApi&usr_id=(若用户为自己则留空不填)
         NSString * code = [NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
@@ -470,7 +475,13 @@
                     }
                     if(cost>[[USER objectForKey:@"gold"] intValue]){
                         //余额不足
-                        [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                        if([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
+                            //审核
+                            [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                        }else{
+                            [ControllerManager addAlertWith:self Cost:cost SubType:1];
+                        }
+
                         return;
                     }
                     oneBtn.type = 2;
@@ -517,7 +528,7 @@
                             //                            [MyControl loadingSuccessWithContent:@"加入成功" afterDelay:0.5f];
                             ENDLOADING;
                             //捧Ta成功界面
-                            NoCloseAlert * noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+                            noClose = [[NoCloseAlert alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
                             noClose.confirm = ^(){};
                             [self.view addSubview:noClose];
                             NSString * percent = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"percent"]];
@@ -525,6 +536,7 @@
                             [UIView animateWithDuration:0.3 animations:^{
                                 noClose.alpha = 1;
                             }];
+                            [noClose release];
                         }else{
                             LOADFAILED;
                             NSLog(@"加入国家失败");
@@ -684,11 +696,17 @@
 -(void)userHeadBtnClick
 {
     NSLog(@"user");
-    UserCardViewController * vc = [[UserCardViewController alloc] init];
+    __block UserCardViewController * vc = [[UserCardViewController alloc] init];
     vc.usr_id = self.model.master_id;
+    
+    [self addChildViewController:vc];
     [self.view addSubview:vc.view];
+    [vc didMoveToParentViewController:self];
+    
     vc.close = ^(){
+        [vc willMoveToParentViewController:nil];
         [vc.view removeFromSuperview];
+        [vc removeFromParentViewController];
     };
     [vc release];
 }
@@ -751,7 +769,13 @@
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
             
             NSArray * array1 = @[@"star_food.png", @"star_shake.png", @"star_gift.png", @"star_touch.png"];
+            
             NSArray * array2 = @[@"挣口粮", @"摇一摇", @"献爱心", @"萌印象"];
+            if ([self.model.tb_version intValue] == 1) {
+                array1 = @[@"star_food.png", @"star_shake.png", @"star_zb.png", @"star_touch.png"];
+                array2 = @[@"挣口粮", @"摇一摇", @"买周边", @"萌印象"];
+            }
+            
             float spe = (self.view.frame.size.width-32-50*4)/3.0;
             for (int i=0; i<4; i++) {
                 UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(16+i*(50+spe), 8, 50, 50) ImageName:array1[i] Target:self Action:@selector(actBtnClick:) Title:nil];
@@ -889,42 +913,59 @@
         [shake becomeFirstResponder];
         [self.view addSubview:shake.view];
     }else if (a == 2) {
-        SendGiftViewController * vc = [[SendGiftViewController alloc] init];
-        vc.receiver_aid = self.model.aid;
-        vc.receiver_name = self.model.name;
-        vc.hasSendGift = ^(NSString * itemId){
-            NSLog(@"赠送礼物给默认宠物成功!");
-//            if ([[model.dict objectForKey:@"gift_count"] isKindOfClass:[NSNull class]]) {
-//                NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
-//                [dict setObject:[NSNumber numberWithInt:1] forKey:@"gift_count"];
-//                model.dict = dict;
-//                model.gift_count = [NSNumber numberWithInt:1];
-//            }else{
-//                model.gift_count = [NSNumber numberWithInt:[model.gift_count intValue]+1];
-//            }
-//            int contri = [[cell.contributionLabel.text substringFromIndex:3] intValue];
-//            
-//            model.t_contri = [NSString stringWithFormat:@"%d", contri+[[[ControllerManager returnGiftDictWithItemId:itemId] objectForKey:@"add_rq"] intValue]];
-//            [self.tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            //
-            //                MainViewController * main = [ControllerManager shareMain];
-            ResultOfBuyView * result = [[ResultOfBuyView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-            [UIView animateWithDuration:0.3 animations:^{
-                result.alpha = 1;
-            }];
-            result.confirm = ^(){
-                [vc closeGiftAction];
-            };
-            [result configUIWithName:self.model.name ItemId:itemId Tx:self.model.tx];
-            [self.view addSubview:result];
-            
-            
-        };
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc didMoveToParentViewController:self];
+        if([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
+            //提交版本，关闭周边
+            [self sendGifts];
+        }else{
+            //非提交版本，打开周边
+            if([self.model.tb_version intValue] == 1){
+                //开，有周边，判断url是否为空，如果空，出弹框，如果不为空，跳tb_url，和charge界面共用
+                if([self.model.tb_url isKindOfClass:[NSString class]] && self.model.tb_url.length){
+                    ChargeViewController * charge = [[ChargeViewController alloc] init];
+                    charge.isZB = YES;
+                    charge.zbUrl = self.model.tb_url;
+                    [self presentViewController:charge animated:YES completion:nil];
+                    [charge release];
+                }else{
+                    //提示没有没有周边弹框
+                    Alert_2ButtonView2 * zbView = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
+                    zbView.type = 5;
+                    zbView.pet_name = self.model.name;
+                    [zbView makeUI];
+                    zbView.zbBlock = ^(int a){
+                        if (a == 1) {
+                            //助TA集粉
+                            NSLog(@"分享");
+                            NSLog(@"More");
+                            if (!isMoreCreated) {
+                                //create more
+                                isMoreCreated = YES;
+                                [self createMore];
+                            }
+                            //show more
+                            menuBgBtn.hidden = NO;
+                            CGRect rect = moreView.frame;
+                            rect.origin.y -= rect.size.height;
+                            [UIView animateWithDuration:0.3 animations:^{
+                                moreView.frame = rect;
+                                menuBgBtn.alpha = 0.6;
+                            }];
+                        }else if(a == 2){
+                            //送礼
+                            [self sendGifts];
+                        }
+                    };
+                    [self.view addSubview:zbView];
+                    [zbView release];
+                }
+            }else{
+                //关，打开送礼物
+                [self sendGifts];
+
+            }
+        }
+
         
-        [vc release];
     }else if (a == 3) {
 //        UILabel * label = (UILabel *)[self.view viewWithTag:303];
         TouchViewController *touch = [[TouchViewController alloc] init];
@@ -945,6 +986,48 @@
         [self.view addSubview:touch.view];
     }
 }
+#pragma mark - sendGifts
+-(void)sendGifts
+{
+    SendGiftViewController * vc = [[SendGiftViewController alloc] init];
+    vc.receiver_aid = self.model.aid;
+    vc.receiver_name = self.model.name;
+    vc.hasSendGift = ^(NSString * itemId){
+        NSLog(@"赠送礼物给默认宠物成功!");
+        //            if ([[model.dict objectForKey:@"gift_count"] isKindOfClass:[NSNull class]]) {
+        //                NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:model.dict];
+        //                [dict setObject:[NSNumber numberWithInt:1] forKey:@"gift_count"];
+        //                model.dict = dict;
+        //                model.gift_count = [NSNumber numberWithInt:1];
+        //            }else{
+        //                model.gift_count = [NSNumber numberWithInt:[model.gift_count intValue]+1];
+        //            }
+        //            int contri = [[cell.contributionLabel.text substringFromIndex:3] intValue];
+        //
+        //            model.t_contri = [NSString stringWithFormat:@"%d", contri+[[[ControllerManager returnGiftDictWithItemId:itemId] objectForKey:@"add_rq"] intValue]];
+        //            [self.tv reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        //
+        //                MainViewController * main = [ControllerManager shareMain];
+        ResultOfBuyView * result = [[ResultOfBuyView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+        [UIView animateWithDuration:0.3 animations:^{
+            result.alpha = 1;
+        }];
+        result.confirm = ^(){
+            [vc closeGiftAction];
+        };
+        [result configUIWithName:self.model.name ItemId:itemId Tx:self.model.tx];
+        [self.view addSubview:result];
+        
+        
+    };
+    [self addChildViewController:vc];
+    [self.view addSubview:vc.view];
+    [vc didMoveToParentViewController:self];
+    
+    [vc release];
+}
+
+
 #pragma mark - 创建更多视图
 -(void)createMore
 {
@@ -1158,9 +1241,13 @@
         vc.aid = self.model.aid;
         vc.showFrontImage = ^(NSString * img_id, BOOL isFood, NSString * aid, NSString * name){
             if (!isFood) {
-                FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
+                __block FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
                 front.img_id = img_id;
-                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
+                
+                [self addChildViewController:front];
+                [self.view addSubview:front.view];
+                [front didMoveToParentViewController:front];
+//                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
                 [front release];
             }else{
                 NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];

@@ -556,4 +556,48 @@ static FirstTabBarViewController * tabBar = nil;
     [vc removeFromParentViewController];
 }
 
++(void)loadPetList
+{
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
+    NSLog(@"%@", url);
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            //            NSLog(@"%@", load.dataDict);
+            //获取用户所有宠物，将信息存到本地
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            if([array isKindOfClass:[NSArray class]] && array.count>0){
+                [USER setObject:array forKey:@"myPetsDataArray"];
+            }
+            //            NSMutableArray * aidArray = [NSMutableArray arrayWithCapacity:0];
+            //            for (NSDictionary * dict in array) {
+            //                [aidArray addObject:[dict objectForKey:@"aid"]];
+            //            }
+            //            [USER setObject:aidArray forKey:@"petAidArray"];
+            //            NSLog(@"%@", [USER objectForKey:@"petAidArray"]);
+        }else{
+            LOADFAILED;
+        }
+    }];
+    [request release];
+}
+
+
+#pragma mark - 捧萌星的充值弹窗
++(void)addAlertWith:(UIViewController *)vc Cost:(int)cost SubType:(int)subType
+{
+    //充值弹窗
+    Alert_2ButtonView2 * twoBtnView = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    twoBtnView.type = 2;
+    twoBtnView.subType = subType;
+    twoBtnView.rewardNum = [NSString stringWithFormat:@"%d", cost];
+    [twoBtnView makeUI];
+    twoBtnView.jumpCharge = ^(){
+        ChargeViewController * charge = [[ChargeViewController alloc] init];
+        [vc presentViewController:charge animated:YES completion:nil];
+        [charge release];
+    };
+    [vc.view addSubview:twoBtnView];
+    [twoBtnView release];
+}
 @end

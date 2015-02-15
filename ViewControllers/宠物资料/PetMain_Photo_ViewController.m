@@ -17,6 +17,12 @@
 
 @implementation PetMain_Photo_ViewController
 
+-(void)dealloc
+{
+    [super dealloc];
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -33,11 +39,13 @@
     NSString *petImagesSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.model.aid]];
     NSString *petImageAPIString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@",PETIMAGESAPI,self.model.aid,petImagesSig,[ControllerManager getSID]];
     NSLog(@" 国王照片数据API:%@",petImageAPIString);
-    [[httpDownloadBlock alloc] initWithUrlStr:petImageAPIString Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    
+    __block PetMain_Photo_ViewController * blockSelf = self;
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:petImageAPIString Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             ENDLOADING;
             //            NSLog(@"国王照片数据:%@", load.dataDict);
-            [self.dataArray removeAllObjects];
+            [blockSelf.dataArray removeAllObjects];
             
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for(int i=0;i<array.count;i++){
@@ -48,27 +56,29 @@
                 //model.headImage = tempImage;
                 model.title = [USER objectForKey:@"name"];
                 model.detail = [USER objectForKey:@"detailName"];
-                [self.dataArray addObject:model];
+                [blockSelf.dataArray addObject:model];
                 if (i == array.count-1) {
-                    self.lastImg_id = model.img_id;
+                    blockSelf.lastImg_id = model.img_id;
                 }
                 [model release];
             }
             
-            [collection reloadData];
-            [collection headerEndRefreshing];
+            [blockSelf->collection reloadData];
+            [blockSelf->collection headerEndRefreshing];
         }else{
-            [collection headerEndRefreshing];
+            [blockSelf->collection headerEndRefreshing];
             LOADFAILED;
         }
     }];
+    [request release];
 }
 - (void)loadMorePhoto
 {
     NSString *petImagesSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&img_id=%@dog&cat",self.model.aid,self.lastImg_id]];
     NSString *petImageAPIString = [NSString stringWithFormat:@"%@%@&img_id=%@&sig=%@&SID=%@",PETIMAGESAPI,self.model.aid,self.lastImg_id,petImagesSig,[ControllerManager getSID]];
     //    NSLog(@" 更多国王照片数据API:%@",petImageAPIString);
-    [[httpDownloadBlock alloc] initWithUrlStr:petImageAPIString Block:^(BOOL isFinish, httpDownloadBlock * load) {
+    __block PetMain_Photo_ViewController * blockSelf = self;
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:petImageAPIString Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             //            NSLog(@"更多国王照片数据:%@", load.dataDict);
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
@@ -80,25 +90,25 @@
                 //model.headImage = tempImage;
                 model.title = [USER objectForKey:@"name"];
                 model.detail = [USER objectForKey:@"detailName"];
-                [self.dataArray addObject:model];
+                [blockSelf.dataArray addObject:model];
                 if (i == array.count-1) {
-                    self.lastImg_id = model.img_id;
+                    blockSelf.lastImg_id = model.img_id;
                 }
                 [model release];
             }
 //            isPhotoDownload = YES;
-            [collection reloadData];
-            [collection footerEndRefreshing];
+            [blockSelf->collection reloadData];
+            [blockSelf->collection footerEndRefreshing];
             //            self.view.userInteractionEnabled = YES;
 //            NET = NO;
         }else{
-            [collection headerEndRefreshing];
+            [blockSelf->collection headerEndRefreshing];
             //            self.view.userInteractionEnabled = YES;
 //            NSLog(@"数据加载失败。");
 //            NET = NO;
         }
     }];
-    
+    [request release];
 }
 #pragma mark -
 
@@ -118,7 +128,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
@@ -152,7 +162,7 @@
     [collection addFooterWithTarget:self action:@selector(loadMorePhoto)];
     
     [flow release];
-    //    [collection release];
+    [collection release];
 }
 #pragma mark - collectionDataSource
 //-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -190,7 +200,10 @@
     NSLog(@"%d", indexPath.row);
     FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
     vc.img_id = [self.dataArray[indexPath.row] img_id];
+    
+    [self addChildViewController:vc];
     [self.view addSubview:vc.view];
+    [vc didMoveToParentViewController:self];
     [vc release];
 }
 

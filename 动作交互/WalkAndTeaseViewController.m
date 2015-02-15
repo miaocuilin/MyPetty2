@@ -15,7 +15,13 @@
 @end
 
 @implementation WalkAndTeaseViewController
-
+-(void)dealloc
+{
+    [super dealloc];
+    ENDLOADING;
+    [protWebView loadHTMLString:@"" baseURL:nil];
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+}
 - (void)viewDidLoad
 
 {
@@ -58,6 +64,7 @@
 //    NSLog(@"%@--%@", self.URL, url);
     [protWebView loadRequest:[NSURLRequest requestWithURL:url]];
     [url release];
+    [protWebView release];
 }
 -(void)createFakeNavigation
 {
@@ -72,7 +79,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
@@ -150,18 +157,24 @@
 //几个代理方法
 
 - (void)webViewDidStartLoad:(UIWebView *)webView{
+    LOADING;
     
     NSLog(@"webViewDidStartLoad");
     
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)web{
+    ENDLOADING;
     
     NSLog(@"webViewDidFinishLoad");
-    
+    [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"WebKitCacheModelPreferenceKey"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"WebKitDiskImageCacheEnabled"];//自己添加的，原文没有提到。
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"WebKitOfflineWebApplicationCacheEnabled"];//自己添加的，原文没有提到。
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
--(void)webView:(UIWebView*)webView  DidFailLoadWithError:(NSError*)error{
+-(void)webView:(UIWebView*)webView DidFailLoadWithError:(NSError*)error{
+    LOADFAILED;
     
     NSLog(@"DidFailLoadWithError");
     

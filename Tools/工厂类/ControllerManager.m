@@ -581,4 +581,26 @@ static FirstTabBarViewController * tabBar = nil;
     }];
     [request release];
 }
+<<<<<<< HEAD
+=======
+
+
+#pragma mark - 捧萌星的充值弹窗
++(void)addAlertWith:(UIViewController *)vc Cost:(int)cost SubType:(int)subType
+{
+    //充值弹窗
+    Alert_2ButtonView2 * twoBtnView = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    twoBtnView.type = 2;
+    twoBtnView.subType = subType;
+    twoBtnView.rewardNum = [NSString stringWithFormat:@"%d", cost];
+    [twoBtnView makeUI];
+    twoBtnView.jumpCharge = ^(){
+        ChargeViewController * charge = [[ChargeViewController alloc] init];
+        [vc presentViewController:charge animated:YES completion:nil];
+        [charge release];
+    };
+    [vc.view addSubview:twoBtnView];
+    [twoBtnView release];
+}
+>>>>>>> dev-miao
 @end

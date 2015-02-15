@@ -16,7 +16,10 @@
 @end
 
 @implementation PetMain_Fans_ViewController
-
+-(void)dealloc
+{
+    [super dealloc];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -118,7 +121,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
@@ -172,11 +175,15 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CountryMembersModel * model = self.dataArray[indexPath.row];
-    UserCardViewController * vc = [[UserCardViewController alloc] init];
+    __block UserCardViewController * vc = [[UserCardViewController alloc] init];
     vc.usr_id = model.usr_id;
+    [self addChildViewController:vc];
     [self.view addSubview:vc.view];
+    [vc didMoveToParentViewController:self];
     vc.close = ^(){
+        [vc willMoveToParentViewController:nil];
         [vc.view removeFromSuperview];
+        [vc removeFromParentViewController];
     };
     [vc release];
 }

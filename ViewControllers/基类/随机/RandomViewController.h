@@ -49,6 +49,6 @@
 //@property(nonatomic,copy)void (^offsetY)(int);
 -(void)headerRefresh;
 
--(void)shutdownList;
--(void)openList;
+//-(void)shutdownList;
+//-(void)openList;
 @end

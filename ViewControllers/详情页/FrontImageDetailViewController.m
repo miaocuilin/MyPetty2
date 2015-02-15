@@ -44,9 +44,9 @@
     [_commentersArray release];
     [_sharersArray release];
     
-    [_picDict release];
-    [_imageDict release];
-    [_petDict release];
+//    [_picDict release];
+//    [_imageDict release];
+//    [_petDict release];
     [_img_id release];
     
     //清除缓存图片
@@ -188,6 +188,7 @@
     
     [self createUI];
     
+//    [self modifyUI];
     [self loadImageData];
     
     self.view.alpha = 0;
@@ -225,7 +226,7 @@
     NSString * url = [NSString stringWithFormat:@"%@%@&usr_id=%@&sig=%@&SID=%@", IMAGEINFOAPI, self.img_id, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
     NSLog(@"imageInfoAPI:%@", url);
     
-    
+    __block FrontImageDetailViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSNull class]]) {
@@ -234,7 +235,7 @@
 //                return;
 //            }
             if ([[load.dataDict objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]) {
-                isTest = YES;
+                blockSelf->isTest = YES;
             }
             
             NSLog(@"imageInfo:%@", load.dataDict);
@@ -243,8 +244,8 @@
             //            if (self.is_follow) {
             //                self.attentionBtn.selected = YES;
             //            }
-            self.picDict = load.dataDict;
-            self.imageDict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
+            blockSelf.picDict = load.dataDict;
+            blockSelf.imageDict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
             
             //判断是否过期
             NSDate * date = [NSDate date];
@@ -254,13 +255,13 @@
             //24小时为期限
             int t = 0;
             //当前时间戳-时间戳 < 24h 才显示
-            if ([stamp intValue]-[[self.imageDict objectForKey:@"create_time"] intValue] < 24*60*60) {
+            if ([stamp intValue]-[[blockSelf.imageDict objectForKey:@"create_time"] intValue] < 24*60*60) {
                 t = 1;
             }
-            if ([[self.imageDict objectForKey:@"is_food"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"is_food"] intValue] == 1 && t == 1) {
-                isFood = YES;
+            if ([[blockSelf.imageDict objectForKey:@"is_food"] isKindOfClass:[NSString class]] && [[blockSelf.imageDict objectForKey:@"is_food"] intValue] == 1 && t == 1) {
+                blockSelf->isFood = YES;
             }else{
-                isFood = NO;
+                blockSelf->isFood = NO;
             }
 
 //            NSLog(@"%@", [self.imageDict objectForKey:@"is_food"]);
@@ -273,8 +274,8 @@
 //                
 //            }
             
-            if([[USER objectForKey:@"isSuccess"] intValue] && [[self.imageDict objectForKey:@"likers"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"likers"] rangeOfString:[USER objectForKey:@"usr_id"]].location != NSNotFound){
-                UIButton * button = (UIButton *)[self.view viewWithTag:100];
+            if([[USER objectForKey:@"isSuccess"] intValue] && [[blockSelf.imageDict objectForKey:@"likers"] isKindOfClass:[NSString class]] && [[blockSelf.imageDict objectForKey:@"likers"] rangeOfString:[USER objectForKey:@"usr_id"]].location != NSNotFound){
+                UIButton * button = (UIButton *)[blockSelf.view viewWithTag:100];
                 button.selected = YES;
             }
             //likerId
@@ -296,17 +297,17 @@
             
 //            [self loadLikersData];
             
-            [self analyseComments];
+            [blockSelf analyseComments];
             
 //            ENDLOADING;
             
-            [self modifyUI];
+            [blockSelf modifyUI];
             
-            [self loadPetData];
+            [blockSelf loadPetData];
         }else{
-            imageNotExist = YES;
-            sv.hidden = NO;
-            [MyControl popAlertWithView:self.view Msg:@"网络或数据异常"];
+            blockSelf->imageNotExist = YES;
+            blockSelf->sv.hidden = NO;
+            [MyControl popAlertWithView:blockSelf.view Msg:@"网络或数据异常"];
             NSLog(@"数据加载失败");
         }
     }];
@@ -322,20 +323,21 @@
     NSString * code = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, [self.imageDict objectForKey:@"likers"], code, [ControllerManager getSID]];
     NSLog(@"赞列表：%@", url);
+    __block FrontImageDetailViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            ENDLOADING;
-            isLoaded[0] = 1;
+            blockSelf->isLoaded[0] = 1;
             
             NSLog(@"zan:%@", load.dataDict);
             NSArray * array = [load.dataDict objectForKey:@"data"] ;
             for (NSDictionary * dict in array) {
                 UserInfoModel * model = [[UserInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.likersArray addObject:model];
+                [blockSelf.likersArray addObject:model];
                 [model release];
             }
-            [tv reloadData];
+            [blockSelf->tv reloadData];
         }else{
 //            LOADFAILED;
         }
@@ -354,19 +356,20 @@
     NSString * code = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, [self.imageDict objectForKey:@"senders"], code, [ControllerManager getSID]];
     NSLog(@"送礼列表：%@", url);
+    __block FrontImageDetailViewController * blockSelf = self;
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             ENDLOADING;
-            isLoaded[1] = 1;
+            blockSelf->isLoaded[1] = 1;
             
             NSArray * array = [load.dataDict objectForKey:@"data"] ;
             for (NSDictionary * dict in array) {
                 UserInfoModel * model = [[UserInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.sendersArray addObject:model];
+                [blockSelf.sendersArray addObject:model];
                 [model release];
             }
-            [tv reloadData];
+            [blockSelf->tv reloadData];
         }else{
             LOADFAILED;
         }
@@ -395,27 +398,28 @@
     NSString * code = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, mutableStr, code, [ControllerManager getSID]];
     NSLog(@"评论列表：%@", url);
+    __block FrontImageDetailViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             ENDLOADING;
-            isLoaded[2] = 1;
+            blockSelf->isLoaded[2] = 1;
             
             NSArray * array = [load.dataDict objectForKey:@"data"] ;
             for (NSDictionary * dict in array) {
                 UserInfoModel * model = [[UserInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.commentersArray addObject:model];
+                [blockSelf.commentersArray addObject:model];
                 [model release];
             }
             
-            for (int i=0; i<self.commentersArray.count; i++) {
-                for (int j=0; j<self.usrIdArray.count; j++) {
-                    if ([[self.commentersArray[i] usr_id] isEqualToString:self.usrIdArray[j]]) {
-                        self.cmtTxArray[j] = [self.commentersArray[i] tx];
+            for (int i=0; i<blockSelf.commentersArray.count; i++) {
+                for (int j=0; j<blockSelf.usrIdArray.count; j++) {
+                    if ([[blockSelf.commentersArray[i] usr_id] isEqualToString:blockSelf.usrIdArray[j]]) {
+                        blockSelf.cmtTxArray[j] = [blockSelf.commentersArray[i] tx];
                     }
                 }
             }
-            [desTv reloadData];
+            [blockSelf->desTv reloadData];
         }else{
             LOADFAILED;
         }
@@ -437,19 +441,20 @@
     NSString * code = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, [self.imageDict objectForKey:@"sharers"], code, [ControllerManager getSID]];
     NSLog(@"送礼列表：%@", url);
+    __block FrontImageDetailViewController * blockSelf = self;
     [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             ENDLOADING;
-            isLoaded[3] = 1;
+            blockSelf->isLoaded[3] = 1;
             
             NSArray * array = [load.dataDict objectForKey:@"data"] ;
             for (NSDictionary * dict in array) {
                 UserInfoModel * model = [[UserInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.sharersArray addObject:model];
+                [blockSelf.sharersArray addObject:model];
                 [model release];
             }
-            [tv reloadData];
+            [blockSelf->tv reloadData];
         }else{
             LOADFAILED;
         }
@@ -511,17 +516,22 @@
 
 -(void)loadPetData
 {
-    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [self.imageDict objectForKey:@"aid"]]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [self.imageDict objectForKey:@"aid"], sig, [ControllerManager getSID]];
+    
+    __block FrontImageDetailViewController * blockSelf = self;
+    
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", [blockSelf.imageDict objectForKey:@"aid"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETINFOAPI, [blockSelf.imageDict objectForKey:@"aid"], sig, [ControllerManager getSID]];
     NSLog(@"PetInfoAPI:%@", url);
+    
+//    return;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"照片详情页宠物信息：%@", load.dataDict);
 //            PetInfoModel * model = [[PetInfoModel alloc] init];
 
-            self.petDict = [load.dataDict objectForKey:@"data"];
+            blockSelf.petDict = [load.dataDict objectForKey:@"data"];
             
-            [self modifyBackPage];
+            [blockSelf modifyBackPage];
 //            ENDLOADING;
         }else{
 //            LOADFAILED;
@@ -654,6 +664,7 @@
 }
 -(void)modifyBackPage
 {
+    
     //back
 //    CGRect rect1 = tv.frame;
 //    rect1.size.height = imageBgView2.frame.size.height-rect1.origin.y-15;
@@ -670,11 +681,13 @@
         }
     }];
     
+    
     [userTx setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [self.petDict objectForKey:@"u_tx"]]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (image) {
 //            [bUserTx setImage:[MyControl returnSquareImageWithImage:image]];
         }
     }];
+    
     
     if ([[self.petDict objectForKey:@"gender"] intValue] == 1) {
         sex.image = [UIImage imageNamed:@"man.png"];
@@ -685,6 +698,7 @@
     petName.text = [self.petDict objectForKey:@"name"];
     petType.text = [ControllerManager returnCateNameWithType:[self.petDict objectForKey:@"type"]];
     userName.text = [NSString stringWithFormat:@"%@", [self.petDict objectForKey:@"u_name"]];
+    
     
     UILabel * zan = (UILabel *)[imageBgView2 viewWithTag:300];
     if ([zan.text intValue]<[[self.imageDict objectForKey:@"likes"] intValue]) {
@@ -699,6 +713,7 @@
     
     UILabel * share = (UILabel *)[imageBgView2 viewWithTag:303];
     share.text = [self.imageDict objectForKey:@"shares"];
+    
     
     //照片详情页反过来以后，能不能默认先显示评论，如果评论为0显示礼物，礼物为0显示点赞，点赞也为0显示转发，都是0的话就还是显示评论~
     if (self.usrIdArray.count) {
@@ -926,6 +941,65 @@
 //        btn.tag = 100+i;
 //    }
     
+    if (self.isFromRandom) {
+        [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, self.imageURL]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if(error){
+                NSLog(@"%@", error);
+            }else{
+                bigImageView.canClick = YES;
+            }
+            ENDLOADING;
+            sv.hidden = NO;
+            
+            
+            CGRect rect = bigImageView.frame;
+            if(!error){
+                
+                float p = rect.size.width*image.size.height/image.size.width;
+                rect.size.height = p;
+                bigImageView.frame = rect;
+            }
+            
+            
+            //
+            CGRect rect2 = desLabel.frame;
+            if ([self.imageCmt isKindOfClass:[NSString class]] && [self.imageCmt length]>0) {
+                desLabel.text = self.imageCmt;
+                CGSize size;
+                if ([MyControl isIOS7]) {
+                    size = [desLabel.text boundingRectWithSize:CGSizeMake(rect2.size.width, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]} context:nil].size;
+                }else{
+                    size = [desLabel.text sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(rect2.size.width, 100) lineBreakMode:1];
+                }
+                
+                rect2.size.height = size.height;
+                rect2.origin.y = rect.origin.y+rect.size
+                .height+10;
+                desLabel.frame = rect2;
+            }else{
+                rect2.size.height = 0;
+                rect2.origin.y = rect.origin.y+rect.size
+                .height+10;
+                desLabel.frame = rect2;
+            }
+            
+            CGRect rect5 = imageBgView.frame;
+            rect5.size.height = rect2.origin.y+rect2.size.height+10+20;
+            imageBgView.frame = rect5;
+            
+            sv.contentSize = CGSizeMake(sv.frame.size.width, rect5.origin.y + rect5.size.height+50);
+            
+            sv2.contentSize = CGSizeMake(sv.frame.size.width, rect5.origin.y + rect5.size.height+50);
+            
+            CGRect image2Rect = imageBgView2.frame;
+            if(imageBgView.frame.size.height>350){
+                image2Rect.size.height = rect5.size.height;
+            }else{
+                image2Rect.size.height = 350;
+            }
+            imageBgView2.frame = image2Rect;
+        }];
+    }
 }
 #pragma mark -
 -(void)createBottom
@@ -974,6 +1048,11 @@
         if (![ControllerManager getIsSuccess]) {
             //提示注册
             ShowAlertView;
+            return;
+        }
+        
+        if(!([[self.imageDict objectForKey:@"aid"] isKindOfClass:[NSString class]] && [[self.imageDict objectForKey:@"aid"] length])){
+            [MyControl popAlertWithView:self.view Msg:@"网络异常"];
             return;
         }
         
@@ -1076,11 +1155,18 @@
 #pragma mark - 
 -(void)jumpToUserClick
 {
-    UserCardViewController * vc = [[UserCardViewController alloc] init];
+    __block UserCardViewController * vc = [[UserCardViewController alloc] init];
     vc.usr_id = [self.petDict objectForKey:@"master_id"];
-    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+    [self addChildViewController:vc];
+    [self.view addSubview:vc.view];
+    [vc didMoveToParentViewController:self];
+    
+//    __block FrontImageDetailViewController * blockSelf = self;
     vc.close = ^(){
+        [vc willMoveToParentViewController:nil];
         [vc.view removeFromSuperview];
+        [vc removeFromParentViewController];
     };
     [vc release];
 //    UserInfoViewController * vc = [[UserInfoViewController alloc] init];
@@ -1808,6 +1894,11 @@
         [MyControl popAlertWithView:self.view Msg:@"不能给自己发私信哦~"];
         return;
     }
+    if (!([[self.petDict objectForKey:@"u_name"] isKindOfClass:[NSString class]] && [[self.petDict objectForKey:@"u_name"] length])) {
+        [MyControl popAlertWithView:self.view Msg:@"网络异常"];
+        return;
+    }
+    
     ChatViewController * chatController = [[ChatViewController alloc] initWithChatter:[self.petDict objectForKey:@"master_id"] isGroup:NO];
     chatController.isFromCard = YES;
     chatController.nickName = [USER objectForKey:@"name"];
@@ -1860,7 +1951,13 @@
                     }
                     if(cost>[[USER objectForKey:@"gold"] intValue]){
                         //余额不足
-                        [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                        if([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
+                            //审核
+                            [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                        }else{
+                            [ControllerManager addAlertWith:self Cost:cost SubType:1];
+                        }
+
                         return;
                     }
                     oneBtn.type = 2;
@@ -2134,6 +2231,7 @@
 }
 -(void)backClick:(UIButton *)btn
 {
+    
     NSLog(@"%d", btn.tag);
     
     int ori = triangleIndex;
@@ -2161,8 +2259,10 @@
                 [self bottomClick:giftBtn];
             }
         }else if (btn.tag == 502) {
+            
             if (!isLoaded[2]) {
                 isLoaded[2] = 1;
+                return;
                 [self loadCommentersData];
             }else if(ori == triangleIndex){
                 UIButton * cmtBtn = (UIButton *)[self.view viewWithTag:102];
@@ -2356,7 +2456,7 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UserCardViewController * vc = [[UserCardViewController alloc] init];
+    __block UserCardViewController * vc = [[UserCardViewController alloc] init];
     if (triangleIndex == 0) {
         vc.usr_id = [self.likersArray[indexPath.row] usr_id];
 //        [self presentViewController:vc animated:YES completion:nil];
@@ -2374,10 +2474,15 @@
 //        [self presentViewController:vc animated:YES completion:nil];
     }
     vc.close = ^(){
+        [vc willMoveToParentViewController:nil];
         [vc.view removeFromSuperview];
+        [vc removeFromParentViewController];
     };
     if (triangleIndex != 2) {
-        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+        [self addChildViewController:vc];
+        [self.view addSubview:vc.view];
+        [vc didMoveToParentViewController:self];
+//        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
     }
     
     [vc release];

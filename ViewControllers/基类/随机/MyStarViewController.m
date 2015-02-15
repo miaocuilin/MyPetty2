@@ -171,6 +171,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
         }
         [sheet showInView:self.view];
+//        [sheet release];
     }else{
         //提示注册
         ShowAlertView;
@@ -204,6 +205,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //}
 -(void)loadData
 {
+//    [self.tv headerEndRefreshing];
+//    return;
+    
 //    if (!isLoaded) {
 //        LOADING;
 //    }
@@ -572,8 +576,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //            [walkAndTeasevc release];
         }
     };
+
     cell.imageClick = ^(NSString * img_id){
-        FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
+        __block FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = img_id;
         [ControllerManager addTabBarViewController:vc];
 //        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
@@ -698,13 +703,32 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         
         imagePickerController.sourceType = sourceType;
         
-//        if ([self hasValidAPIKey]) {
-            [self presentViewController:imagePickerController animated:YES completion:^{}];
-//        }
+        //        if ([self hasValidAPIKey]) {
+        [self presentViewController:imagePickerController animated:YES completion:^{}];
+        //        }
         
         [imagePickerController release];
+//        [self performSelector:@selector(jumpCamaraOrPhoto:) withObject:[NSString stringWithFormat:@"%d", sourceType] afterDelay:0.5];
+        
     }
 }
+//-(void)jumpCamaraOrPhoto:(NSString *)str
+//{
+//    int sourceType = [str intValue];
+//    //跳转到相机或相册页面
+//    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+//    
+//    imagePickerController.delegate = self;
+//    
+//    imagePickerController.sourceType = sourceType;
+//    
+//    //        if ([self hasValidAPIKey]) {
+//    [self presentViewController:imagePickerController animated:YES completion:^{}];
+//    //        }
+//    
+//    [imagePickerController release];
+//}
+
 
 #pragma mark - UIImagePicker Delegate
 
@@ -712,7 +736,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     NSLog(@"%@", info);
     UIImage * image = [info objectForKey:UIImagePickerControllerOriginalImage];
-//    NSLog(@"%d", image.imageOrientation);
+    NSLog(@"%d", image.imageOrientation);
     image = [MyControl fixOrientation:image];
 //    NSLog(@"%d", image.imageOrientation);
 //    NSURL * assetURL = [info objectForKey:UIImagePickerControllerReferenceURL];
@@ -744,9 +768,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         vc.aid = self.tempAid;
         vc.showFrontImage = ^(NSString * img_id, BOOL isFood, NSString * aid, NSString * name){
             if (!isFood) {
-                FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
+                __block FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
                 front.img_id = img_id;
-                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
+                [ControllerManager addTabBarViewController:front];
+//                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
                 [front release];
             }else{
                 NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];

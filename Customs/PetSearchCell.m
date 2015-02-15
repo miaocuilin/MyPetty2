@@ -17,7 +17,7 @@
 -(void)makeUI
 {
     self.nameLabel.textColor = BGCOLOR;
-    self.cateAndAgeLabel.textColor = [UIColor blackColor];
+//    self.cateAndAgeLabel.textColor = [UIColor blackColor];
     
     self.headImage.layer.cornerRadius = 25;
     self.headImage.layer.masksToBounds = YES;

@@ -41,6 +41,8 @@
     
     BOOL isLoaded;
     UIImageView * guide;
+    
+    UIButton * alphaBgBtn;
 }
 @property(nonatomic,copy)NSString * lastAid;
 @property(nonatomic,copy)NSString * tfString;

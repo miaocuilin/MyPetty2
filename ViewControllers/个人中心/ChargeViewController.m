@@ -9,13 +9,24 @@
 #import "ChargeViewController.h"
 
 @interface ChargeViewController () <UIWebViewDelegate>
+<<<<<<< HEAD
 
+=======
+{
+    UIWebView * chargeWebView;
+}
+>>>>>>> dev-miao
 @end
 
 @implementation ChargeViewController
 -(void)dealloc
 {
     [super dealloc];
+<<<<<<< HEAD
+=======
+    ENDLOADING;
+    [chargeWebView loadHTMLString:@"" baseURL:nil];
+>>>>>>> dev-miao
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
 
@@ -34,7 +45,11 @@
 }
 -(void)createWebView
 {
+<<<<<<< HEAD
     UIWebView * chargeWebView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
+=======
+    chargeWebView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
+>>>>>>> dev-miao
     chargeWebView.delegate = self;
     [self.view addSubview:chargeWebView];
     if(self.isZB){
@@ -58,7 +73,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     

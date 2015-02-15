@@ -393,11 +393,13 @@
         return;
     }
 
-    UserCardViewController * vc = [[UserCardViewController alloc] init];
+    __block UserCardViewController * vc = [[UserCardViewController alloc] init];
     vc.usr_id = [USER objectForKey:@"usr_id"];
-    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+    [ControllerManager addTabBarViewController:vc];
     vc.close = ^(){
-        [vc.view removeFromSuperview];
+        [ControllerManager deleTabBarViewController:vc];
+//        [vc.view removeFromSuperview];
     };
     [vc release];
 //    UserInfoViewController * vc = [[UserInfoViewController alloc] init];

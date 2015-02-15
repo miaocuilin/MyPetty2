@@ -197,7 +197,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
@@ -1018,6 +1018,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     NSLog(@"failed");
     LOADFAILED;
+    publishButton.userInteractionEnabled = YES;
+    
 //    [MyControl popAlertWithView:self.view Msg:@"上传失败"];
 //    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"上传失败"];
 //    LoadingFailed;

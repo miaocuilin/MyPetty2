@@ -70,4 +70,9 @@
 + (void)deleTabBarViewController:(UIViewController *)vc;
 
 +(void)loadPetList;
+<<<<<<< HEAD
+=======
+
++(void)addAlertWith:(UIViewController *)vc Cost:(int)cost SubType:(int)subType;
+>>>>>>> dev-miao
 @end

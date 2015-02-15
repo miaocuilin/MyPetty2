@@ -964,6 +964,9 @@
 //    DetailViewController * vc = [[DetailViewController alloc] init];
     FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
     vc.img_id = model.img_id;
+    vc.isFromRandom = YES;
+    vc.imageURL = model.url;
+    vc.imageCmt = model.cmt;
 //    vc.usr_id = model.usr_id;
 //    if ([ControllerManager getIsSuccess]) {
 //        vc.aid = [model.url substringToIndex:10];

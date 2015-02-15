@@ -385,6 +385,19 @@
 #pragma mark - 买礼物
 -(void)buyGiftWithItemId:(NSString *)ItemId
 {
+    NSDictionary * tempDic = [ControllerManager returnGiftDictWithItemId:ItemId];
+    if([[tempDic objectForKey:@"price"] intValue] > [[USER objectForKey:@"gold"] intValue]){
+        //余额不足
+        if([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
+            //审核
+            [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来购物吧~"];
+        }else{
+            [ControllerManager addAlertWith:self Cost:[[tempDic objectForKey:@"price"] intValue] SubType:2];
+        }
+        return;
+    }
+
+    
     LOADING;
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=%@&num=1dog&cat", ItemId]];
     NSString * url = [NSString stringWithFormat:@"%@%@&num=1&sig=%@&SID=%@",BUYSHOPGIFTAPI, ItemId, sig, [ControllerManager getSID]];

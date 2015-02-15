@@ -16,7 +16,10 @@
 @end
 
 @implementation PetMain_Active_ViewController
-
+-(void)dealloc
+{
+    [super dealloc];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -120,7 +123,7 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
@@ -163,9 +166,11 @@
     [cell modifyWithModel:model PetName:self.model.name];
     
     cell.clickImage = ^(){
-        FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
+        __block FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = [[model content] objectForKey:@"img_id"];
+        [self addChildViewController:vc];
         [self.view addSubview:vc.view];
+        [vc didMoveToParentViewController:self];
         [vc release];
     };
     cell.sendGift = ^(){

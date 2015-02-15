@@ -220,14 +220,17 @@
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [self.view addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
+//    backBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
     [self.view addSubview:backBtn];
+    
     UIImageView * threePoint = [MyControl createImageViewWithFrame:CGRectMake(self.view.frame.size.width-36, 32+17/2.0-9/4.0, 47/2.0, 9/2.0) ImageName:@"threePoint.png"];
     [self.view addSubview:threePoint];
     
-    UIButton * threePBtn = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-42, 25, 25+8+4, 32) ImageName:@"" Target:self Action:@selector(threePBtnClick) Title:nil];
+    UIButton * threePBtn = [MyControl createButtonWithFrame:CGRectMake(self.view.frame.size.width-42-10, 22, 25+8+4+10, 40) ImageName:@"" Target:self Action:@selector(threePBtnClick) Title:nil];
     threePBtn.showsTouchWhenHighlighted = YES;
+//    threePBtn.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
     [self.view addSubview:threePBtn];
     
 }
@@ -472,7 +475,13 @@
                     }
                     if(cost>[[USER objectForKey:@"gold"] intValue]){
                         //余额不足
-                        [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                        if([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
+                            //审核
+                            [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                        }else{
+                            [ControllerManager addAlertWith:self Cost:cost SubType:1];
+                        }
+
                         return;
                     }
                     oneBtn.type = 2;
@@ -687,11 +696,17 @@
 -(void)userHeadBtnClick
 {
     NSLog(@"user");
-    UserCardViewController * vc = [[UserCardViewController alloc] init];
+    __block UserCardViewController * vc = [[UserCardViewController alloc] init];
     vc.usr_id = self.model.master_id;
+    
+    [self addChildViewController:vc];
     [self.view addSubview:vc.view];
+    [vc didMoveToParentViewController:self];
+    
     vc.close = ^(){
+        [vc willMoveToParentViewController:nil];
         [vc.view removeFromSuperview];
+        [vc removeFromParentViewController];
     };
     [vc release];
 }
@@ -1226,9 +1241,13 @@
         vc.aid = self.model.aid;
         vc.showFrontImage = ^(NSString * img_id, BOOL isFood, NSString * aid, NSString * name){
             if (!isFood) {
-                FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
+                __block FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
                 front.img_id = img_id;
-                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
+                
+                [self addChildViewController:front];
+                [self.view addSubview:front.view];
+                [front didMoveToParentViewController:front];
+//                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
                 [front release];
             }else{
                 NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];

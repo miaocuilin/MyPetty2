@@ -205,7 +205,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UIImageView * backImageView = [MyControl createImageViewWithFrame:CGRectMake(17, 32, 10, 17) ImageName:@"leftArrow.png"];
     [navView addSubview:backImageView];
     
-    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 25, 40, 30) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
+    UIButton * backBtn = [MyControl createButtonWithFrame:CGRectMake(10, 22, 60, 40) ImageName:@"" Target:self Action:@selector(backBtnClick) Title:nil];
     backBtn.showsTouchWhenHighlighted = YES;
     [navView addSubview:backBtn];
     
@@ -1827,7 +1827,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     _request.requestMethod = @"POST";
     _request.timeOutSeconds = 30;
     
-    NSData * data = UIImageJPEGRepresentation(self.oriImage, 0.1);
+    //对图片进行裁剪，成正方形
+    if(self.oriImage.size.width != self.oriImage.size.height){
+        self.oriImage = [MyControl returnSquareImageWithImage:self.oriImage];
+    }
+    
+    NSData * data = [MyControl scaleToSize:self.oriImage];
 //    NSLog(@"data:%@", data);
     //小图片用这种
 //    [_request setPostValue:data forKey:@"tx"];
@@ -1849,7 +1854,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     _requestUser.requestMethod = @"POST";
     _requestUser.timeOutSeconds = 30;
     
-    NSData * data = UIImageJPEGRepresentation(self.oriUserImage, 0.1);
+    //对图片进行裁剪，成正方形
+    if(self.oriUserImage.size.width != self.oriUserImage.size.height){
+        self.oriUserImage = [MyControl returnSquareImageWithImage:self.oriUserImage];
+    }
+    NSData * data = [MyControl scaleToSize:self.oriUserImage];
     //    NSLog(@"data:%@", data);
     //小图片用这种
     //    [_request setPostValue:data forKey:@"tx"];
@@ -2321,7 +2330,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 // This is called when the user taps "Done" in the photo editor.
 - (void) photoEditor:(AFPhotoEditorController *)editor finishedWithImage:(UIImage *)image
 {
-    
+    if(image.size.width != image.size.height){
+        image = [MyControl returnSquareImageWithImage:image];
+    }
     if (isUserPhoto) {
         self.oriUserImage = image;
         [self dismissViewControllerAnimated:YES completion:^{

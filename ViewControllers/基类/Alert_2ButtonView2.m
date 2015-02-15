@@ -68,8 +68,19 @@
         label2.text = @"需要花费您：";
         
     }else if(self.type == 2){
-        label1.text = [NSString stringWithFormat:@"本次打赏%@份口粮", self.rewardNum];
-        label2.text = @"需要花费您：";
+        if(self.subType == 1){
+            label1.hidden = YES;
+            label2.text = @"本次捧星需要花费您：";
+            costLabel.text = self.rewardNum;
+        }else if(self.subType == 2){
+            label1.hidden = YES;
+            label2.text = @"本次购物需要花费您：";
+            costLabel.text = self.rewardNum;
+        }else{
+            label1.text = [NSString stringWithFormat:@"本次打赏%@份口粮", self.rewardNum];
+            label2.text = @"需要花费您：";
+        }
+        
         
         selectImage.hidden = YES;
         selectBtn.hidden = YES;

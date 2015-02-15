@@ -42,6 +42,8 @@
     NSString *userInfoSig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", self.usr_id]];
     NSString *userInfoString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERINFOAPI, self.usr_id, userInfoSig,[ControllerManager getSID]];
     NSLog(@"用户信息API:%@",userInfoString);
+    
+    __block UserCardViewController * blockSelf = self;
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:userInfoString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
             ENDLOADING;
@@ -49,14 +51,14 @@
             NSLog(@"用户信息数据：%@",load.dataDict);
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]] && [[load.dataDict objectForKey:@"data"] count]) {
                 NSDictionary * dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
-                _userModel = [[UserInfoModel alloc] init];
-                [_userModel setValuesForKeysWithDictionary:dict];
+                blockSelf.userModel = [[UserInfoModel alloc] init];
+                [blockSelf.userModel setValuesForKeysWithDictionary:dict];
                 
-                if (isMyself) {
-                    [USER setObject:self.userModel.gold forKey:@"gold"];
+                if (blockSelf->isMyself) {
+                    [USER setObject:blockSelf.userModel.gold forKey:@"gold"];
                 }
-                
-                [self loadPetsData];
+                [blockSelf.userModel release];
+                [blockSelf loadPetsData];
             }
         }else{
             LOADFAILED;
@@ -71,26 +73,29 @@
     NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", self.usr_id];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, self.usr_id, [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"%@", url);
+    
+    __block UserCardViewController * blockSelf = self;
+    
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
-            [self.petsDataArray removeAllObjects];
+            [blockSelf.petsDataArray removeAllObjects];
             
             NSArray * array = [load.dataDict objectForKey:@"data"];
             for (NSDictionary * dict in array) {
-                UserPetListModel * model = [[UserPetListModel alloc] init];
+                __block UserPetListModel * model = [[UserPetListModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                if([model.master_id isEqualToString:self.usr_id]){
-                    [self.petsDataArray insertObject:model atIndex:0];
+                if([model.master_id isEqualToString:blockSelf.usr_id]){
+                    [blockSelf.petsDataArray insertObject:model atIndex:0];
                 }else{
-                    [self.petsDataArray addObject:model];
+                    [blockSelf.petsDataArray addObject:model];
                 }
                 
                 [model release];
                 
             }
             ENDLOADING;
-            [self modifyUI];
+            [blockSelf modifyUI];
         }else{
             LOADFAILED;
         }
@@ -251,6 +256,7 @@
     sv.scrollEnabled = NO;
     sv.showsHorizontalScrollIndicator = NO;
     [petsBg addSubview:sv];
+    [sv release];
     
     for (int i=0; i<self.petsDataArray.count; i++) {
         UIButton * picBtn = [MyControl createButtonWithFrame:CGRectMake(spe+(spe*2+picWidth)*i, 0, picWidth, picWidth) ImageName:@"" Target:self Action:@selector(picClick:) Title:nil];

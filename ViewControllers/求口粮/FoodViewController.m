@@ -74,6 +74,7 @@
 //            NSLog(@"%@", load.dataDict);
             if (![[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSArray class]] || [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] count] == 0) {
 //                ENDLOADING;
+                isLoading = NO;
                 return;
             }
             
@@ -514,12 +515,14 @@
 }
 -(void)jumpUserClick
 {
-    UserCardViewController * vc = [[UserCardViewController alloc] init];
+    __block UserCardViewController * vc = [[UserCardViewController alloc] init];
     int a = tv.contentOffset.y/self.view.frame.size.width;
     vc.usr_id = [self.dataArray[a] usr_id];
-    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+    [ControllerManager addTabBarViewController:vc];
     vc.close = ^(){
-        [vc.view removeFromSuperview];
+//        [vc.view removeFromSuperview];
+        [ControllerManager deleTabBarViewController:vc];
     };
 //    [self presentViewController:vc animated:YES completion:nil];
     [vc release];

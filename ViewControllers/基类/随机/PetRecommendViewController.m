@@ -137,11 +137,14 @@
         [vc release];
     };
     cell.jumpUserClick = ^(){
-        UserCardViewController * vc = [[UserCardViewController alloc] init];
+        __block UserCardViewController * vc = [[UserCardViewController alloc] init];
         vc.usr_id = model.master_id;
-        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+//        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+        [ControllerManager addTabBarViewController:vc];
+        
         vc.close = ^(){
-            [vc.view removeFromSuperview];
+            [ControllerManager deleTabBarViewController:vc];
+//            [vc.view removeFromSuperview];
         };
         [vc release];
 //        UserInfoViewController * vc = [[UserInfoViewController alloc] init];
@@ -172,7 +175,14 @@
                         }
                         if(cost > [[USER objectForKey:@"gold"] intValue]){
                             //余额不足
-                            [MyControl popAlertWithView:self.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                            UITabBarController *tabBar = (UITabBarController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+                            if([[USER objectForKey:@"confVersion"] isEqualToString:[USER objectForKey:@"versionKey"]]){
+                                //审核
+                                [MyControl popAlertWithView:tabBar.view Msg:@"钱包君告急！挣够金币再来捧萌星吧~"];
+                            }else{
+                                [ControllerManager addAlertWith:tabBar Cost:cost SubType:1];
+                            }
+
                             [oneBtn release];
                             return;
                         }

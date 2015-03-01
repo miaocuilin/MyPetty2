@@ -80,6 +80,10 @@
     __block PetMain_Photo_ViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:petImageAPIString Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
+            
+            [MyControl clearMemory];
+            
+            
             //            NSLog(@"更多国王照片数据:%@", load.dataDict);
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for(int i=0;i<array.count;i++){
@@ -140,6 +144,14 @@
 - (void)backBtnClick
 {
     NSLog(@"dismiss");
+    [collection addHeaderWithTarget:nil action:nil];
+    [collection addFooterWithTarget:nil action:nil];
+    [collection removeHeader];
+    [collection removeFooter];
+    
+    //清除缓存图片
+    [MyControl clearMemory];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark -

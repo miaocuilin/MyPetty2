@@ -450,7 +450,7 @@
 //            NSString * docDir = DOCDIR;
             NSString * imageUrl = [model.images[i] objectForKey:@"url"];
             
-            [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, imageUrl]]];
+            [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, imageUrl]] placeholderImage:[UIImage imageNamed:@"defaultPetPic.jpg"]];
             
 //            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", imageUrl]];
 //            //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);

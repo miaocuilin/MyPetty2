@@ -111,12 +111,17 @@
     [mutableStr release];
     
     desLabel.text = cmt;
-    if (textSize.height>15) {
-        CGRect desRect = desLabel.frame;
-        desRect.size.height = textSize.height;
-        desLabel.frame = desRect;
-    }
     
+    CGRect desRect = desLabel.frame;
+    if (textSize.height>15) {
+        
+        desRect.size.height = textSize.height;
+    }else{
+        desRect.size.height = 15;
+    }
+    desLabel.frame = desRect;
+    
+//    NSLog(@"desLabel's width and height is %f---%f", desLabel.frame.size.width, desLabel.frame.size.height);
     time.text = [MyControl timeFromTimeStamp:timeStr];
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

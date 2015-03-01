@@ -28,8 +28,8 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 //@synthesize titleLabel = _titleLabel;
 
 - (void)dealloc {
-    [_photoView release], _photoView = nil;
-    [_titleLabel release], _titleLabel = nil;
+//    [_photoView release], _photoView = nil;
+//    [_titleLabel release], _titleLabel = nil;
     
     [super dealloc];
 }
@@ -46,8 +46,11 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 -(void)makeUI
 {
     _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35)];
+//    [MyControl createImageViewWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35) ImageName:@""];
+//    [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35)];
     _photoView.clipsToBounds = YES;
     [self addSubview:_photoView];
+    [_photoView release];
     
     self.titleLabel = [MyControl createLabelWithFrame:CGRectMake(4, self.frame.size.height - 18, self.frame.size.width-8, 0) Font:12 Text:nil];
 //    self.titleLabel.numberOfLines = 1;
@@ -55,6 +58,7 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
     self.titleLabel.textColor = [UIColor blackColor];
     self.titleLabel.font = [UIFont systemFontOfSize:12];
 //    self.titleLabel.adjustsFontSizeToFitWidth = NO;
+    
     [self addSubview:self.titleLabel];
 }
 //- (UIImageView *)photoView {
@@ -110,8 +114,8 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 //            [_photoView setImage:[UIImage imageNamed:@"water_white.png"]];
 //        }
 //    }];
-    
     [_photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+<<<<<<< HEAD
 
 //        if (image.size.width>3500 || image.size.height>3500) {
 //            [self performSelectorInBackground:@selector(modifyImage:) withObject:image];
@@ -120,6 +124,12 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
         
         if (image.size.width>2000 || image.size.height>2000) {
             [self performSelectorInBackground:@selector(modifyImage:) withObject:image];
+=======
+        if (image.size.width>2500 || image.size.height>2500) {
+//            NSLog(@"waterflow pic size is %f--%f", image.size.width, image.size.height);
+            [MyControl thumbnailWithImage:image ImageView:_photoView TargetLength:2500.0f];
+//            [blockSelf receiveImage:image];
+>>>>>>> dev-miao
         }
     }];
     
@@ -162,6 +172,7 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 //        isLike = NO;
 //    }
 }
+<<<<<<< HEAD
 -(void)modifyImage:(UIImage *)tempImage
 {
 //    if (tempImage.size.width>2000 || tempImage.size.height>2000) {
@@ -219,56 +230,43 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 //        });
 //    });
 }
+=======
+>>>>>>> dev-miao
 
-//-(void)buttonClick:(UIButton *)button
+//-(void)receiveImage:(UIImage *)tempImage
 //{
-//    button.selected = !button.selected;
-//    button.userInteractionEnabled = NO;
-    
-//    NSString * code = [NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id];
-//    NSString * sig = [MyMD5 md5:code];
-    
-//    if (button.selected) {
-//        self.heart.image = [UIImage imageNamed:@"11-2.png"];
-//        _titleLabel.text = [NSString stringWithFormat:@"%d", [_titleLabel.text intValue]+1];
-
-        //赞
-//        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", LIKEAPI, self.img_id, sig, [ControllerManager getSID]];
-//        NSLog(@"likeURL:%@", url);
+//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+////        [self modifyImage:tempImage];
+//        NSLog(@"********超过2000！********");
+//        float w = tempImage.size.width;
+//        float h = tempImage.size.height;
+//        float p = 0;
+//        if (w>h && tempImage.size.width>2000) {
+//            p = 2000/w;
+//        }else if(h>w && tempImage.size.height>2000){
+//            p = 2000/h;
+//        }
+//        w *= p;
+//        h *= p;
+//        NSLog(@"%f--%f", w, h);
+//        //改变图片大小
+//        CGRect rect = CGRectMake(0, 0, w, h);
+//        UIGraphicsBeginImageContext(rect.size);
+//        //重新绘图
+//        [tempImage drawInRect:rect];
+//        UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
+//        UIGraphicsEndImageContext();
 //        
-//        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-//            if (isFinish) {
-//                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-//                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"点赞失败 = =."];
-//                    heart.image = [UIImage imageNamed:@"11-1.png"];
-//                    _titleLabel.text = [NSString stringWithFormat:@"%d", [_titleLabel.text intValue]-1];
-//                }
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (image) {
+//                _photoView.image = image;
 //            }else{
-//                NSLog(@"数据请求失败");
+//                NSLog(@"***thumbnail image is nil***");
+//                _photoView.image = tempImage;
 //            }
-//            button.userInteractionEnabled = YES;
-//        }];
-//    }else{
-//        self.heart.image = [UIImage imageNamed:@"11-1.png"];
-//        _titleLabel.text = [NSString stringWithFormat:@"%d", [_titleLabel.text intValue]-1];
-
-        //取消赞
-//        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UNLIKEAPI, self.img_id, sig, [ControllerManager getSID]];
-//        NSLog(@"likeURL:%@", url);
-//        
-//        [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-//            if (isFinish) {
-//                if (![[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]) {
-//                    UIAlertView * alert = [MyControl createAlertViewWithTitle:@"取消赞失败 = =."];
-//                    heart.image = [UIImage imageNamed:@"11-2.png"];
-//                    _titleLabel.text = [NSString stringWithFormat:@"%d", [_titleLabel.text intValue]+1];
-//                }
-//            }else{
-//                NSLog(@"数据请求失败");
-//            }
-//            button.userInteractionEnabled = YES;
-//        }];
-//    }
+//        });
+//    });
+////    [self performSelectorInBackground:@selector(modifyImage:) withObject:tempImage];
 //}
 
 - (void)layoutSubviews {

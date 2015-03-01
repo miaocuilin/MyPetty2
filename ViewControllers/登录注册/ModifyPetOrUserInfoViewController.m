@@ -283,26 +283,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
     /**************************/
     if (!([self.petInfoModel.tx isKindOfClass:[NSNull class]] || [self.petInfoModel.tx length]==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.petInfoModel.tx]];
-        //        NSLog(@"--%@--", txFilePath);
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-            [photoButton setBackgroundImage:image forState:UIControlStateNormal];
-        }else{
-            //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, self.petInfoModel.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    [photoButton setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.petInfoModel.tx]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
-                }
-            }];
-            [request release];
-        }
+        [MyControl setImageForBtn:photoButton Tx:self.petInfoModel.tx isPet:YES];
     }
     
     /**************************/
@@ -427,26 +408,29 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [sv addSubview:photoButton2];
     /**************************/
     if ([ControllerManager getIsSuccess] && !([[USER objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[USER objectForKey:@"tx"] length]==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
-        //        NSLog(@"--%@--", txFilePath);
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-            [photoButton2 setBackgroundImage:image forState:UIControlStateNormal];
-        }else{
-            //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    [photoButton2 setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
-                }
-            }];
-            [request release];
-        }
+        
+        [MyControl setImageForBtn:photoButton2 Tx:[USER objectForKey:@"tx"] isPet:NO];
+        
+//        NSString * docDir = DOCDIR;
+//        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+//        //        NSLog(@"--%@--", txFilePath);
+//        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
+//        if (image) {
+//            [photoButton2 setBackgroundImage:image forState:UIControlStateNormal];
+//        }else{
+//            //下载头像
+//            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//                if (isFinish) {
+//                    [photoButton2 setBackgroundImage:load.dataImage forState:UIControlStateNormal];
+//                    NSString * docDir = DOCDIR;
+//                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [USER objectForKey:@"tx"]]];
+//                    [load.data writeToFile:txFilePath atomically:YES];
+//                }else{
+//                    NSLog(@"头像下载失败");
+//                }
+//            }];
+//            [request release];
+//        }
     }
     
     /**************************/

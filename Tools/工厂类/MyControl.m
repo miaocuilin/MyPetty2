@@ -346,7 +346,7 @@
     float w = sourceImage.size.width;
     float h = sourceImage.size.height;
     float p = 0;
-    if (w>h && sourceImage.size.width>2000) {
+    if (w>=h && sourceImage.size.width>2000) {
         p = 2000/w;
         sourceImage = [self image:sourceImage fitInSize:CGSizeMake(w*p, h*p)];
 //        sourceImage = [self OriginImage:sourceImage scaleToSize:CGSizeMake(w*p, h*p)];
@@ -383,7 +383,6 @@
 
 #pragma mark - 图片缩略图
 + (UIImage *)thumbnailWithImageWithoutScale:(UIImage *)image size:(CGSize)asize
-
 {
     UIImage *newimage;
     
@@ -746,4 +745,52 @@
     return unreadCount;
 }
 
++(void)clearMemory
+{
+    SDImageCache * cache = [SDImageCache sharedImageCache];
+    [cache clearMemory];
+}
+
+//图片缩略图
++(void)thumbnailWithImage:(UIImage *)OriImage ImageView:(UIImageView *)imageView TargetLength:(float)length
+{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        //        [self modifyImage:tempImage];
+        NSLog(@"********超过设定宽度！********");
+//        float length = [UIScreen mainScreen].bounds.size.width;
+        
+        float w = OriImage.size.width;
+        float h = OriImage.size.height;
+        float p = 0;
+        if (w>=h && OriImage.size.width>length) {
+            p = length/w;
+        }else if(h>w && OriImage.size.height>length){
+            p = length/h;
+        }
+        w *= p;
+        h *= p;
+//        NSLog(@"%f--%f", w, h);
+        
+        CGRect rect = CGRectMake(0, 0, w, h);
+        if (!OriImage) {
+            NSLog(@"原图为空");
+        }else{
+            UIGraphicsBeginImageContext(rect.size);
+            //重新绘图
+            [OriImage drawInRect:rect];
+            UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            
+//            dispatch_async(dispatch_get_main_queue(), ^{
+                if (image) {
+                    imageView.image = image;
+                }else{
+                    NSLog(@"***square thumbnail image is nil***");
+                    //                imageView.image = OriImage;
+                }
+//            });
+        }
+    });
+    
+}
 @end

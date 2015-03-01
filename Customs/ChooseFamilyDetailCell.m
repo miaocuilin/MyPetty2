@@ -45,7 +45,7 @@
 //        if (i%2 == 0) {
 //            [btn setImage:[UIImage imageNamed:@"cat1.jpg"] forState:UIControlStateNormal];
 //        }else{
-            [btn setBackgroundImage:[UIImage imageNamed:@"defaultPic.png"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"defaultPic.jpg"] forState:UIControlStateNormal];
 //        }
         
         [self.contentView addSubview:btn];
@@ -187,7 +187,7 @@
     sv.contentSize = CGSizeMake(320*4, [UIScreen mainScreen].bounds.size.height);
     
     for(int i=0;i<4;i++){
-        UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(10+i%2*75, 25+i/2*45, 65, 40) ImageName:@"defaultPic.png" Target:self Action:@selector(btnClick:) Title:nil];
+        UIButton * btn = [MyControl createButtonWithFrame:CGRectMake(10+i%2*75, 25+i/2*45, 65, 40) ImageName:@"defaultPic.jpg" Target:self Action:@selector(btnClick:) Title:nil];
         
         [self.contentView addSubview:btn];
         btn.tag = 100+i;

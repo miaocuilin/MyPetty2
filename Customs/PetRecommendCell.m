@@ -82,7 +82,7 @@
     UIImageView * alphaView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, view1.frame.size.width+15, view1.frame.size.height) ImageName:@"recom_percentBg.png"];
     [view1 addSubview:alphaView];
     
-    UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(10, 4.5, 30, 20) Font:14 Text:@"成员"];
+    UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(10, 4.5, 30, 20) Font:14 Text:@"粉丝"];
     [view1 addSubview:label1];
     
     UIView * view2 = [MyControl createViewWithFrame:CGRectMake(170/2, 4.5, 1, 20)];

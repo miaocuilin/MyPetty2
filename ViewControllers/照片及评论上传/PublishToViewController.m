@@ -163,6 +163,16 @@
 {
     return 70.0f;
 }
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.selectArray removeAllObjects];
+    [self.selectNameArray removeAllObjects];
+    
+    [self.selectArray addObject:[self.dataArray[indexPath.row] aid]];
+    [self.selectNameArray addObject:[self.dataArray[indexPath.row] name]];
+    self.index = indexPath.row;
+    [tv reloadData];
+}
 //-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 //{
 //    NSLog(@"选择了第%d个", indexPath.row);

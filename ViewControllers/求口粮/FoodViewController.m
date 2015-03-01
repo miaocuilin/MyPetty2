@@ -69,36 +69,39 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%ddog&cat", page]];
     NSString * url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", BEGFOODAPI, page, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
+    
+    __block FoodViewController * blockSelf = self;
+    
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            NSLog(@"%@", load.dataDict);
             if (![[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSArray class]] || [[[load.dataDict objectForKey:@"data"] objectAtIndex:0] count] == 0) {
 //                ENDLOADING;
-                isLoading = NO;
+                blockSelf->isLoading = NO;
                 return;
             }
             
-            [self.dataArray removeAllObjects];
+            [blockSelf.dataArray removeAllObjects];
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
                 BegFoodListModel * model = [[BegFoodListModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.dataArray addObject:model];
+                [blockSelf.dataArray addObject:model];
                 [model release];
             }
             
-            page++;
-            [tv reloadData];
+            blockSelf->page++;
+            [blockSelf->tv reloadData];
 
             [UIView animateWithDuration:0.2 animations:^{
-                tv.contentOffset = CGPointMake(0, 0);
+                blockSelf->tv.contentOffset = CGPointMake(0, 0);
             }];
             
-            [self refreshHeader:0];
-            isLoading = NO;
+            [blockSelf refreshHeader:0];
+            blockSelf->isLoading = NO;
 //            ENDLOADING;
         }else{
-            isLoading = NO;
+            blockSelf->isLoading = NO;
             LOADFAILED;
             NSLog(@"========myStar========");
         }
@@ -111,6 +114,7 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"page=%ddog&cat", page]];
     NSString * url = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@", BEGFOODAPI, page, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
+    __block FoodViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
@@ -128,8 +132,8 @@
                 [self.dataArray addObject:model];
                 [model release];
             }
-            page++;
-            [tv reloadData];
+            blockSelf->page++;
+            [blockSelf->tv reloadData];
 //            ENDLOADING;
         }else{
             LOADFAILED;

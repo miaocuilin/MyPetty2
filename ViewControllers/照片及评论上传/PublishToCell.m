@@ -25,6 +25,7 @@
     self.selectBtn = [MyControl createButtonWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width-15-20, 25, 20, 20) ImageName:@"atUsers_unSelected.png" Target:self Action:@selector(selectBtnClick:) Title:nil];
     [self.selectBtn setBackgroundImage:[UIImage imageNamed:@"atUsers_selected.png"] forState:UIControlStateSelected];
     [self addSubview:self.selectBtn];
+    self.selectBtn.userInteractionEnabled = NO;
     
     UIView * line = [MyControl createViewWithFrame:CGRectMake(0, 69, [UIScreen mainScreen].bounds.size.width, 1)];
     line.backgroundColor = [UIColor lightGrayColor];
@@ -33,6 +34,8 @@
 }
 -(void)configUI:(UserPetListModel *)model Index:(int)index BtnSelected:(BOOL)select
 {
+    
+    
     [self.headImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (image) {
             [self.headImage setImage:[MyControl returnSquareImageWithImage:image]];

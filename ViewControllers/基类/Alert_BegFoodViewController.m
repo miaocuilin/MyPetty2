@@ -153,7 +153,7 @@
             
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-//                [self loadShakeShare];
+                [self shareSuccess];
                 [MyControl popAlertWithView:self.view Msg:@"分享成功"];
             }else{
                 [MyControl popAlertWithView:self.view Msg:@"分享失败"];
@@ -175,6 +175,7 @@
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:str image:bigImage.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
+                [self shareSuccess];
                 [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
                 //            StartLoading;
                 //            [MMProgressHUD dismissWithSuccess:@"分享成功" title:nil afterDelay:0.5];
@@ -238,6 +239,28 @@
 //        }];
     }
 }
+
+#pragma mark -
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+{
+    //    NSLog(@"%@", response);
+    if (response.responseCode == UMSResponseCodeSuccess) {
+        NSLog(@"分享成功！");
+        [self shareSuccess];
+        
+        [MyControl popAlertWithView:self.view Msg:@"分享成功"];
+    }else{
+        NSLog(@"失败原因：%@", response);
+        
+        [MyControl popAlertWithView:self.view Msg:@"分享失败"];
+    }
+}
+-(void)shareSuccess
+{
+    [MobClick event:@"food_share_suc"];
+}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

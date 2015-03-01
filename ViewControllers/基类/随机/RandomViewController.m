@@ -593,6 +593,9 @@
         cell = [[[TMPhotoQuiltViewCell alloc] initWithReuseIdentifier:@"PhotoCell"] autorelease];
         cell.layer.borderWidth = 0.8;
         cell.layer.borderColor = [UIColor colorWithRed:206/255.0 green:206/255.0 blue:206/255.0 alpha:1].CGColor;
+//        NSLog(@"new alloc at index: %d", indexPath.row);
+    }else{
+//        NSLog(@"use old at index: %d", indexPath.row);
     }
     cell.photoView.image = [UIImage imageNamed:@"water_white.png"];
     
@@ -600,7 +603,9 @@
     
     PhotoModel * model = self.dataArray[indexPath.row];
     self.tempUrl = model.url;
+    
     [cell configUI:model];
+    
     //解析点赞者字符串，与[USER objectForKey:@"usr_id"]对比
     //    if(![model.likers isKindOfClass:[NSNull class]]){
     //        self.likersArray = [model.likers componentsSeparatedByString:@","];

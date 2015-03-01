@@ -651,7 +651,7 @@
             isRaceShow = NO;
             [self rel];
         }
-        [dropDown2 release];
+//        [dropDown2 release];
     }else{
         isSystemShow = NO;
         [dropDown2 hideDropDown:systemBtn];

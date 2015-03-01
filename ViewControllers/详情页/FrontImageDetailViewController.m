@@ -377,9 +377,11 @@
 }
 -(void)loadCommentersData
 {
+//    return;
     if (!self.usrIdArray.count) {
         return;
     }
+    
     if(isBackSide){
         LOADING;
     }
@@ -394,14 +396,17 @@
             [mutableStr appendString:@","];
         }
     }
+    
     NSString * str = [NSString stringWithFormat:@"usr_ids=%@dog&cat", mutableStr];
     NSString * code = [MyMD5 md5:str];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERSINFOAPI, mutableStr, code, [ControllerManager getSID]];
     NSLog(@"评论列表：%@", url);
+    
     __block FrontImageDetailViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             ENDLOADING;
+            
             blockSelf->isLoaded[2] = 1;
             
             NSArray * array = [load.dataDict objectForKey:@"data"] ;
@@ -681,7 +686,7 @@
         }
     }];
     
-    
+//    NSLog(@"%@", self.petDict);
     [userTx setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [self.petDict objectForKey:@"u_tx"]]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (image) {
 //            [bUserTx setImage:[MyControl returnSquareImageWithImage:image]];
@@ -941,65 +946,65 @@
 //        btn.tag = 100+i;
 //    }
     
-    if (self.isFromRandom) {
-        [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, self.imageURL]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            if(error){
-                NSLog(@"%@", error);
-            }else{
-                bigImageView.canClick = YES;
-            }
-            ENDLOADING;
-            sv.hidden = NO;
-            
-            
-            CGRect rect = bigImageView.frame;
-            if(!error){
-                
-                float p = rect.size.width*image.size.height/image.size.width;
-                rect.size.height = p;
-                bigImageView.frame = rect;
-            }
-            
-            
-            //
-            CGRect rect2 = desLabel.frame;
-            if ([self.imageCmt isKindOfClass:[NSString class]] && [self.imageCmt length]>0) {
-                desLabel.text = self.imageCmt;
-                CGSize size;
-                if ([MyControl isIOS7]) {
-                    size = [desLabel.text boundingRectWithSize:CGSizeMake(rect2.size.width, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]} context:nil].size;
-                }else{
-                    size = [desLabel.text sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(rect2.size.width, 100) lineBreakMode:1];
-                }
-                
-                rect2.size.height = size.height;
-                rect2.origin.y = rect.origin.y+rect.size
-                .height+10;
-                desLabel.frame = rect2;
-            }else{
-                rect2.size.height = 0;
-                rect2.origin.y = rect.origin.y+rect.size
-                .height+10;
-                desLabel.frame = rect2;
-            }
-            
-            CGRect rect5 = imageBgView.frame;
-            rect5.size.height = rect2.origin.y+rect2.size.height+10+20;
-            imageBgView.frame = rect5;
-            
-            sv.contentSize = CGSizeMake(sv.frame.size.width, rect5.origin.y + rect5.size.height+50);
-            
-            sv2.contentSize = CGSizeMake(sv.frame.size.width, rect5.origin.y + rect5.size.height+50);
-            
-            CGRect image2Rect = imageBgView2.frame;
-            if(imageBgView.frame.size.height>350){
-                image2Rect.size.height = rect5.size.height;
-            }else{
-                image2Rect.size.height = 350;
-            }
-            imageBgView2.frame = image2Rect;
-        }];
-    }
+//    if (self.isFromRandom) {
+//        [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, self.imageURL]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//            if(error){
+//                NSLog(@"%@", error);
+//            }else{
+//                bigImageView.canClick = YES;
+//            }
+//            ENDLOADING;
+//            sv.hidden = NO;
+//            
+//            
+//            CGRect rect = bigImageView.frame;
+//            if(!error){
+//                
+//                float p = rect.size.width*image.size.height/image.size.width;
+//                rect.size.height = p;
+//                bigImageView.frame = rect;
+//            }
+//            
+//            
+//            //
+//            CGRect rect2 = desLabel.frame;
+//            if ([self.imageCmt isKindOfClass:[NSString class]] && [self.imageCmt length]>0) {
+//                desLabel.text = self.imageCmt;
+//                CGSize size;
+//                if ([MyControl isIOS7]) {
+//                    size = [desLabel.text boundingRectWithSize:CGSizeMake(rect2.size.width, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]} context:nil].size;
+//                }else{
+//                    size = [desLabel.text sizeWithFont:[UIFont systemFontOfSize:13] constrainedToSize:CGSizeMake(rect2.size.width, 100) lineBreakMode:1];
+//                }
+//                
+//                rect2.size.height = size.height;
+//                rect2.origin.y = rect.origin.y+rect.size
+//                .height+10;
+//                desLabel.frame = rect2;
+//            }else{
+//                rect2.size.height = 0;
+//                rect2.origin.y = rect.origin.y+rect.size
+//                .height+10;
+//                desLabel.frame = rect2;
+//            }
+//            
+//            CGRect rect5 = imageBgView.frame;
+//            rect5.size.height = rect2.origin.y+rect2.size.height+10+20;
+//            imageBgView.frame = rect5;
+//            
+//            sv.contentSize = CGSizeMake(sv.frame.size.width, rect5.origin.y + rect5.size.height+50);
+//            
+//            sv2.contentSize = CGSizeMake(sv.frame.size.width, rect5.origin.y + rect5.size.height+50);
+//            
+//            CGRect image2Rect = imageBgView2.frame;
+//            if(imageBgView.frame.size.height>350){
+//                image2Rect.size.height = rect5.size.height;
+//            }else{
+//                image2Rect.size.height = 350;
+//            }
+//            imageBgView2.frame = image2Rect;
+//        }];
+//    }
 }
 #pragma mark -
 -(void)createBottom
@@ -2194,6 +2199,10 @@
 #pragma mark - 分享API
 -(void)loadShareAPI
 {
+    if (isFood) {
+        [MobClick event:@"food_share_suc"];
+    }
+    
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", SHAREIMAGEAPI, self.img_id, sig, [ControllerManager getSID]];
     NSLog(@"shareUrl:%@", url);
@@ -2233,6 +2242,7 @@
 {
     
     NSLog(@"%d", btn.tag);
+    __block FrontImageDetailViewController * blockSelf = self;
     
     int ori = triangleIndex;
     triangleIndex = btn.tag%100;
@@ -2262,7 +2272,7 @@
             
             if (!isLoaded[2]) {
                 isLoaded[2] = 1;
-                return;
+//                return;
                 [self loadCommentersData];
             }else if(ori == triangleIndex){
                 UIButton * cmtBtn = (UIButton *)[self.view viewWithTag:102];
@@ -2302,14 +2312,14 @@
 //        
 //    }
     
-    if (triangleIndex == 2) {
-        desTv.hidden = NO;
-        tv.hidden = YES;
-        [desTv reloadData];
+    if (blockSelf->triangleIndex == 2) {
+        blockSelf->desTv.hidden = NO;
+        blockSelf->tv.hidden = YES;
+        [blockSelf->desTv reloadData];
     }else{
-        desTv.hidden = YES;
-        tv.hidden = NO;
-        [tv reloadData];
+        blockSelf->desTv.hidden = YES;
+        blockSelf->tv.hidden = NO;
+        [blockSelf->tv reloadData];
     }
     
 }
@@ -2569,22 +2579,6 @@
     
     [sv2.layer addAnimation:t forKey:@"Transition"];
 }
-//-(void)showSv
-//{
-//    sv.hidden = NO;
-//}
-//-(void)hideSv
-//{
-//    sv.hidden = YES;
-//}
-//-(void)showSv2
-//{
-//    sv2.hidden = NO;
-//}
-//-(void)hideSv2
-//{
-//    sv2.hidden = YES;
-//}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -2592,15 +2586,5 @@
     SDImageCache * cache = [SDImageCache sharedImageCache];
     [cache clearMemory];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

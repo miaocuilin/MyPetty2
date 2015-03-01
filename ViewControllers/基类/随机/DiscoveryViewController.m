@@ -13,9 +13,13 @@
 #import "UserInfoModel.h"
 #import "PetSearchCell.h"
 #import "PopularityListViewController.h"
+#import "WaterflowViewController.h"
+#import "DemoViewController.h"
 
 @interface DiscoveryViewController ()
-
+{
+//    WaterflowViewController * vc;
+}
 @end
 
 @implementation DiscoveryViewController
@@ -180,7 +184,6 @@
 //        }
 //    };
     [sv addSubview:vc.view];
-    
 }
 -(void)createRecommend
 {
@@ -337,7 +340,7 @@
     static NSString * cellID = @"ID";
     PetSearchCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
-        cell = [[[[NSBundle mainBundle] loadNibNamed:@"PetSearchCell" owner:self options:nil] objectAtIndex:0] autorelease];
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"PetSearchCell" owner:self options:nil] objectAtIndex:0];
     }
     if (!isSearchUser) {
         SearchResultModel * model = self.searchArray[indexPath.row];

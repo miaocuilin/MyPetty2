@@ -870,11 +870,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     
 //    float p = 1.0;
 //    image.
+    
+    //将图片处理到2000以下再返回data数据
     NSData * data = [MyControl scaleToSize:image];
+    /*计算处理到2000以下图片的尺寸是多少，将尺寸加到图片名称中，方便瀑布流使用*/
     float W = image.size.width;
     float H = image.size.height;
     float p = 0;
-    if (W>H && image.size.width>2000) {
+    if (W>=H && image.size.width>2000) {
         p = 2000/W;
         W *= p;
         H *= p;
@@ -963,6 +966,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         publishSuc = YES;
         
         [MobClick event:@"photo"];
+        if(self.isBeg){
+            [MobClick event:@"food_suc"];
+        }
+        
         
         if (shareSuc) {
             [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{

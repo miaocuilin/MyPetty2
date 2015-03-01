@@ -112,23 +112,24 @@
     NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"%@", url);
+    __block PetMainViewController *blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
-            [self.petsDataArray removeAllObjects];
+            [blockSelf.petsDataArray removeAllObjects];
             
             NSArray * array = [load.dataDict objectForKey:@"data"];
             for (NSDictionary * dict in array) {
                 UserPetListModel * model = [[UserPetListModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                if ([model.aid isEqualToString:self.aid]) {
-                    pBtn.selected = YES;
+                if ([model.aid isEqualToString:blockSelf.aid]) {
+                    blockSelf->pBtn.selected = YES;
                 }
-                [self.petsDataArray addObject:model];
+                [blockSelf.petsDataArray addObject:model];
                 [model release];
             }
             ENDLOADING;
-            [self modifyUI];
+            [blockSelf modifyUI];
         }else{
             LOADFAILED;
         }

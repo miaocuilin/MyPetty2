@@ -44,7 +44,8 @@
     name.text = model.name;
     
 //    headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-    [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"]];
+    [MyControl setImageForImageView:headImageView Tx:model.tx isPet:NO isRound:YES];
+//    [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, model.tx]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"]];
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

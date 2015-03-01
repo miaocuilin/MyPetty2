@@ -96,6 +96,12 @@
 +(NSData*)compressImage:(UIImage*)image;
 
 +(NSInteger)returnUnreadMessageCount;
+
+//清除sdwebimage图片缓存
++(void)clearMemory;
+
+//图片缩略图
++(void)thumbnailWithImage:(UIImage *)OriImage ImageView:(UIImageView *)imageView TargetLength:(float)length;
 @end
 
 

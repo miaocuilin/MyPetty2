@@ -139,6 +139,7 @@
     [foodAnimation startAnimating];
 //    [self bringSubviewToFront:foodAnimation];
     
+    
     //517_1417699704@50512@_640&853.png
     [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] placeholderImage:[UIImage imageNamed:@"water_white.png"] options:0 progress:^(NSUInteger receivedSize, long long expectedSize) {
 //        NSLog(@"%d--%lld--%.2lld", receivedSize, expectedSize, receivedSize/expectedSize);

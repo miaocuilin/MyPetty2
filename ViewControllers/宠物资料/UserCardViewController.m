@@ -262,13 +262,10 @@
         UIButton * picBtn = [MyControl createButtonWithFrame:CGRectMake(spe+(spe*2+picWidth)*i, 0, picWidth, picWidth) ImageName:@"" Target:self Action:@selector(picClick:) Title:nil];
 //        picBtn.currentBackgroundImage = UIViewContentModeScaleAspectFill;
         picBtn.tag = 100+i;
-        picBtn.layer.cornerRadius = picWidth/2.0;
-        picBtn.layer.masksToBounds = YES;
-        [picBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.petsDataArray[i] tx]]] forState:UIControlStateNormal  placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            if (image) {
-//                [picBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-            }
-        }];
+//        picBtn.layer.cornerRadius = picWidth/2.0;
+//        picBtn.layer.masksToBounds = YES;
+        [MyControl setImageForBtn:picBtn Tx:[self.petsDataArray[i] tx] isPet:YES isRound:YES];
+
         
         [sv addSubview:picBtn];
         

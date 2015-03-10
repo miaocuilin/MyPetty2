@@ -263,9 +263,10 @@
     UIImage * defaultImage = nil;
     str = [NSString stringWithFormat:@"%@%@", PETTXURL, self.model.tx];
     defaultImage = [UIImage imageNamed:@"defaultPetHead.png"];
+    __block PetMainViewController * blockSelf = self;
     [headBlurImage setImageWithURL:[NSURL URLWithString:str] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (image){
-            headBlurImage.image = [image applyBlurWithRadius:15 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
+            blockSelf->headBlurImage.image = [image applyBlurWithRadius:15 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
         }
     }];
     
@@ -840,6 +841,8 @@
         NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.aid]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ALERT7DATAAPI, self.aid, sig, [ControllerManager getSID]];
         NSLog(@"%@", url);
+        
+        __block PetMainViewController * blockSelf = self;
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 NSLog(@"%@", load.dataDict);
@@ -874,7 +877,10 @@
                     Alert_BegFoodViewController * vc = [[Alert_BegFoodViewController alloc] init];
                     vc.dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
                     vc.name = self.model.name;
-                    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+                    vc.is_food = 1;
+                    
+                    [ControllerManager addViewController:vc To:blockSelf];
+//                    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
                     //                        [vc release];
                 }
                 ENDLOADING;
@@ -1231,6 +1237,8 @@
     //    NSLog(@"%d", image.imageOrientation);
     image = [MyControl fixOrientation:image];
 
+    __block PetMainViewController * blockSelf = self;
+    
     [self dismissViewControllerAnimated:NO completion:^{
         //Publish
         [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
@@ -1238,17 +1246,16 @@
 
         vc.isBeg = YES;
         vc.oriImage = image;
-        vc.name = self.model.name;
-        vc.aid = self.model.aid;
-        vc.showFrontImage = ^(NSString * img_id, BOOL isFood, NSString * aid, NSString * name){
+        vc.name = blockSelf.model.name;
+        vc.aid = blockSelf.model.aid;
+        vc.publishType = 1;
+        vc.showFrontImage = ^(NSString * img_id, NSInteger isFood, NSString * aid, NSString * name){
             if (!isFood) {
                 __block FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
                 front.img_id = img_id;
                 
-                [self addChildViewController:front];
-                [self.view addSubview:front.view];
-                [front didMoveToParentViewController:front];
-//                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
+                [ControllerManager addViewController:front To:blockSelf];
+                //                [[UIApplication sharedApplication].keyWindow addSubview:front.view];
                 [front release];
             }else{
                 NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", aid]];
@@ -1258,7 +1265,9 @@
                     Alert_BegFoodViewController * vc = [[Alert_BegFoodViewController alloc] init];
                     vc.dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
                     vc.name = name;
-                    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+                    vc.is_food = isFood;
+                    [ControllerManager addViewController:vc To:blockSelf];
+//                    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
                     [vc release];
                 }];
                 [request release];

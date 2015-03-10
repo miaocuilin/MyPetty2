@@ -9,11 +9,18 @@
 #import "Alert_BegFoodViewController.h"
 
 @interface Alert_BegFoodViewController () <UMSocialUIDelegate>
-
+{
+    NSTimer * timer;
+}
 @end
 
 @implementation Alert_BegFoodViewController
 
+//- (void)dealloc
+//{
+//    [super dealloc];
+//    
+//}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -55,6 +62,7 @@
     UILabel * lab3 = [MyControl createLabelWithFrame:CGRectMake(lab2.frame.origin.x, lab2.frame.origin.y+lab2.frame.size.height+20, bgView.frame.size.width-258/2-10, size3.height) Font:13 Text:nil];
     lab3.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
     [bgView addSubview:lab3];
+    
     NSMutableAttributedString * mutableStr3 = [[NSMutableAttributedString alloc] initWithString:str3];
     [mutableStr3 addAttribute:NSForegroundColorAttributeName value:ORANGE range:NSMakeRange(11, self.name.length)];
     lab3.attributedText = mutableStr3;
@@ -69,11 +77,6 @@
     UIView * bgView1 = [MyControl createViewWithFrame:CGRectZero];
     [bgView addSubview:bgView1];
     
-//    NSString * str = @"已收到";
-//    CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:17] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
-//    UILabel * label1 = [MyControl createLabelWithFrame:CGRectMake(0, 0, size.width, 25) Font:15 Text:str];
-//    label1.textColor = ORANGE;
-//    [bgView1 addSubview:label1];
     
     UIImageView * foodImage = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 32, 32) ImageName:@"exchange_orangeFood.png"];
     [bgView1 addSubview:foodImage];
@@ -92,8 +95,9 @@
     CGSize size2 = [str2 sizeWithFont:[UIFont systemFontOfSize:17] constrainedToSize:CGSizeMake(200, 32) lineBreakMode:1];
     deadLine = [MyControl createLabelWithFrame:CGRectMake(clock.frame.origin.x+clock.frame.size.width+5, 0, size2.width, 32) Font:17 Text:str2];
     deadLine.textColor = ORANGE;
+    
     [self time];
-    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(time) userInfo:nil repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(time) userInfo:nil repeats:YES];
     [bgView1 addSubview:deadLine];
     
     float w = 32+5+size1.width+size2.width+clock.frame.size.width+25;
@@ -127,7 +131,9 @@
 }
 -(void)closeBtnClick
 {
-    [self.view removeFromSuperview];
+    [timer invalidate];
+    timer = nil;
+    [ControllerManager deleTabBarViewController:self];
 }
 -(void)shareClick:(UIButton *)sender
 {
@@ -257,7 +263,14 @@
 }
 -(void)shareSuccess
 {
-    [MobClick event:@"food_share_suc"];
+    if(self.is_food == 1){
+        [MobClick event:@"food_share_suc"];
+    }else if(self.is_food == 2){
+        [MobClick event:@"topic1_share_suc"];
+    }else if(self.is_food == 3){
+        [MobClick event:@"topic2_share_suc"];
+    }
+    
 }
 
 

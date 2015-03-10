@@ -64,12 +64,21 @@
 //路径文件转dictonary
 +(NSDictionary *)returnDictionaryWithDataPath:(NSString *)path;
 
+//NSArray转data
++(NSData *)returnDataWithArray:(NSArray *)array;
+//路径文件转NSArray
++(NSArray *)returnArrayWithData:(NSData *)data;
+
 //传进NSURL返回图片的宽高字典
 +(NSDictionary *)imageSizeFrom:(NSURL *)imageUrl;
 
 //限制图片大小
 +(UIImage*)OriginImage:(UIImage *)image scaleToSize:(CGSize)size;
 +(NSData *)scaleToSize:(UIImage *)sourceImage;
+
++(NSData *)scaleImage:(UIImage *)sourceImage WithSize:(CGSize)TargetSize;
+
+
 
 + (UIImage *)thumbnailWithImageWithoutScale:(UIImage *)image size:(CGSize)asize;
 
@@ -102,9 +111,8 @@
 
 //图片缩略图
 +(void)thumbnailWithImage:(UIImage *)OriImage ImageView:(UIImageView *)imageView TargetLength:(float)length;
+
+
+//+(void)updatePetsData;
+
 @end
-
-
-
-
-

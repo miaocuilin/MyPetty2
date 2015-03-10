@@ -161,26 +161,7 @@
     
     /**************************/
     if (!([[master objectForKey:@"tx"] isKindOfClass:[NSNull class]] || [[master objectForKey:@"tx"] length]==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [master objectForKey:@"tx"]]];
-        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-            headImageView.image = image;
-        }else{
-            //下载头像
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", USERTXURL, [master objectForKey:@"tx"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    headImageView.image = load.dataImage;
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [master objectForKey:@"tx"]]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
-                }
-            }];
-            [request release];
-        }
+        [MyControl setImageForImageView:headImageView Tx:[master objectForKey:@"tx"] isPet:NO isRound:YES];
     }
     
     /**************************/

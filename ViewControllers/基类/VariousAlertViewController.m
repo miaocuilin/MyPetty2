@@ -19,6 +19,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [MobClick event:@"register_hint"];
+    
     [self createUI];
 }
 -(void)createUI

@@ -68,9 +68,15 @@
 + (void)addTabBarViewController:(UIViewController *)vc;
 /**从tabBar上删除viewController*/
 + (void)deleTabBarViewController:(UIViewController *)vc;
++ (void)addViewController:(UIViewController *)vc To:(UIViewController *)root;
 
 +(void)loadPetList;
 
 +(void)addAlertWith:(UIViewController *)vc Cost:(int)cost SubType:(int)subType;
 
+<<<<<<< HEAD
+=======
+//创建单例队列
++(NSOperationQueue *)createOperationQueue;
+>>>>>>> dev-miao
 @end

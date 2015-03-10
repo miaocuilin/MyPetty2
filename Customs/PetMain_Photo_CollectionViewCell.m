@@ -9,6 +9,7 @@
 #import "PetMain_Photo_CollectionViewCell.h"
 
 @implementation PetMain_Photo_CollectionViewCell
+
 -(void)dealloc
 {
     [super dealloc];
@@ -31,15 +32,68 @@
 }
 -(void)modifyUIWithUrl:(NSString *)url
 {
-    imageView.image = nil;
-    __block PetMain_Photo_CollectionViewCell * blockSelf = self;
-    [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, url]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image.size.width>[UIScreen mainScreen].bounds.size.width || image.size.height>[UIScreen mainScreen].bounds.size.width) {
-            imageView.image = nil;
-            [MyControl thumbnailWithImage:image ImageView:imageView TargetLength:[UIScreen mainScreen].bounds.size.width];
-        }
+//    imageView.image = nil;
+//    __block PetMain_Photo_CollectionViewCell * blockSelf = self;
+//    
+//    SDWebImageManager * manager = [SDWebImageManager sharedManager];
+//    [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, url]] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+//        if (image.size.width>[UIScreen mainScreen].bounds.size.width || image.size.height>[UIScreen mainScreen].bounds.size.width) {
+//            //            imageView.image = nil;
+//            NSOperationQueue * queue = [ControllerManager createOperationQueue];
+//            NSInvocationOperation * operation = [[NSInvocationOperation alloc] initWithTarget:blockSelf selector:@selector(thumbnail:) object:image];
+//            [queue addOperation:operation];
+//        }
+//    }];
+    
+    [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, url]] placeholderImage:[UIImage imageNamed:@"water_white.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//        if (image.size.width>[UIScreen mainScreen].bounds.size.width || image.size.height>[UIScreen mainScreen].bounds.size.width) {
+//            imageView.image = nil;
+//            NSOperationQueue * queue = [ControllerManager createOperationQueue];
+//            NSInvocationOperation * operation = [[NSInvocationOperation alloc] initWithTarget:blockSelf selector:@selector(thumbnail:) object:image];
+//            [queue addOperation:operation];
+//        }
     }];
+    
+    
 }
+
+-(void)thumbnail:(UIImage *)OriImage
+{
+    float length = [UIScreen mainScreen].bounds.size.width;
+//    [MyControl thumbnailWithImage:image ImageView:imageView TargetLength:[UIScreen mainScreen].bounds.size.width];
+    float w = OriImage.size.width;
+    float h = OriImage.size.height;
+    float p = 0;
+    if (w>=h && OriImage.size.width>length) {
+        p = length/w;
+    }else if(h>w && OriImage.size.height>length){
+        p = length/h;
+    }
+    w *= p;
+    h *= p;
+    //        NSLog(@"%f--%f", w, h);
+    
+    CGRect rect = CGRectMake(0, 0, w, h);
+    if (!OriImage) {
+        NSLog(@"原图为空");
+    }else{
+        UIGraphicsBeginImageContext(rect.size);
+        //重新绘图
+        [OriImage drawInRect:rect];
+        UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        //            dispatch_async(dispatch_get_main_queue(), ^{
+        if (image) {
+            imageView.image = image;
+        }else{
+            NSLog(@"***square thumbnail image is nil***");
+            //                imageView.image = OriImage;
+        }
+        //            });
+    }
+}
+
 
 //-(void)receiveImage:(UIImage *)tempImage
 //{

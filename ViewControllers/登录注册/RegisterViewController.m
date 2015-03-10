@@ -1428,6 +1428,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //                [alert0 release];
                 
             }else{
+                //友盟事件，成功注册（有无宠物）
+                if (self.isAdoption) {
+                    [MobClick event:@"register_suc_nopet"];
+                }else if (!self.isModify){
+                    [MobClick event:@"register_suc_pet"];
+                }
+                
                 //[USER setObject:@"1" forKey:@"isLogin"];
 //                [self login];
                 [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];

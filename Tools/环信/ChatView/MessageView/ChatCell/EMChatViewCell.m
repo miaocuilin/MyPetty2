@@ -17,6 +17,13 @@
 NSString *const kResendButtonTapEventName = @"kResendButtonTapEventName";
 NSString *const kShouldResendCell = @"kShouldResendCell";
 
+@interface EMChatViewCell()
+
+@property(nonatomic,strong)UIButton * headBtn;
+
+@property(nonatomic,strong)MessageModel * model;
+@end
+
 @implementation EMChatViewCell
 
 - (id)initWithMessageModel:(MessageModel *)model reuseIdentifier:(NSString *)reuseIdentifier
@@ -24,8 +31,13 @@ NSString *const kShouldResendCell = @"kShouldResendCell";
     self = [super initWithMessageModel:model reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        _headBtn = [MyControl createButtonWithFrame:CGRectZero ImageName:@"" Target:self Action:@selector(jumpUser) Title:nil];
+//        self.headBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        [self.contentView addSubview:self.headBtn];
+        
         self.headImageView.clipsToBounds = YES;
         self.headImageView.layer.cornerRadius = self.headImageView.frame.size.width/2.0;
+        self.headImageView.contentMode = UIViewContentModeScaleAspectFill;
     }
     return self;
 }
@@ -39,10 +51,12 @@ NSString *const kShouldResendCell = @"kShouldResendCell";
 {
     [super layoutSubviews];
     
+    self.headBtn.frame = self.headImageView.frame;
+    
     CGRect bubbleFrame = _bubbleView.frame;
     bubbleFrame.origin.y = self.headImageView.frame.origin.y;
 //    [self.headImageView setImageWithURL:self.messageModel.imageRemoteURL];
-    if (self.messageModel.isSender) {
+    if (self.messageModel.isSender && ![self.messageModel.username isEqualToString:@"25030"]) {
         bubbleFrame.origin.y = self.headImageView.frame.origin.y;
         // 菊花状态 （因不确定菊花具体位置，要在子类中实现位置的修改）
         switch (self.messageModel.status) {
@@ -94,8 +108,18 @@ NSString *const kShouldResendCell = @"kShouldResendCell";
     }
 }
 
+-(void)jumpUser
+{
+//    NSLog(@"jump to user :%@", self.usr_id);
+    if ([self.usr_id intValue]<=3) {
+        return;
+    }
+    self.userBlock(self.usr_id);
+}
+
 - (void)setMessageModel:(MessageModel *)model
 {
+    self.model = model;
     [super setMessageModel:model];
 //    NSLog(@"%@--%@", model.nickName, model.message.ext);
     /*
@@ -165,8 +189,9 @@ NSString *const kShouldResendCell = @"kShouldResendCell";
 {
     [super setupSubviewsForMessageModel:messageModel];
     
+    self.usr_id = messageModel.username;
     
-    if (messageModel.isSender) {
+    if (messageModel.isSender && ![messageModel.username isEqualToString:@"25030"]) {
         // 发送进度显示view
         _activityView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SEND_STATUS_SIZE, SEND_STATUS_SIZE)];
         [_activityView setHidden:YES];
@@ -191,7 +216,7 @@ NSString *const kShouldResendCell = @"kShouldResendCell";
     [self.contentView addSubview:_bubbleView];
     
     type = [[messageModel.message.ext objectForKey:@"type"] intValue];
-    if (!messageModel.isSender && type != 0) {
+    if ((!messageModel.isSender || [messageModel.username isEqualToString:@"25030"]) && type != 0) {
         jumpBtn = [MyControl createButtonWithFrame:CGRectMake(_bubbleView.frame.origin.x+_bubbleView.frame.size.width+5, _bubbleView.frame.origin.y, 38, 38) ImageName:@"talkArrow.png" Target:self Action:@selector(arrowClick) Title:nil];
         [self.contentView addSubview:jumpBtn];
     }

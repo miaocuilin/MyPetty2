@@ -57,35 +57,57 @@
     sv.backgroundColor = [ControllerManager colorWithHexString:@"f2f2f2"];
     [bgView addSubview:sv];
     
+
     NSArray * array = [self.model.des componentsSeparatedByString:@"&"];
-    NSString * nameStr = array[0];
-    NSString * rangeStr = array[1];
-    NSString * weightStr = array[2];
-    NSString * compStr = array[3];
-    
     float w = sv.frame.size.width-10;
+    float totalHeight = 0;
+    int a;
+    for (int i=0; i<array.count; i++) {
+        NSString * str = array[i];
+        CGSize size1 = [str sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(w, 100) lineBreakMode:1];
+        if (i == 0) {
+            a = 5;
+        }else{
+            a = 10;
+        }
+        UILabel * label = [MyControl createLabelWithFrame:CGRectMake(5, a+totalHeight, size1.width, size1.height) Font:12 Text:str];
+        label.textColor = [ControllerManager colorWithHexString:@"414141"];
+        [sv addSubview:label];
+        totalHeight = label.frame.origin.y + size1.height;
+    }
     
-    CGSize size1 = [nameStr sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(w, 100) lineBreakMode:1];
-    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(5, 5, size1.width, size1.height) Font:12 Text:nameStr];
-    name.textColor = [ControllerManager colorWithHexString:@"414141"];
-    [sv addSubview:name];
+    sv.contentSize = CGSizeMake(bgView.frame.size.width-10, totalHeight+5);
     
-    CGSize size2 = [rangeStr sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(w, 100) lineBreakMode:1];
-    UILabel * range = [MyControl createLabelWithFrame:CGRectMake(5, name.frame.origin.y+size1.height+10, size2.width, size2.height) Font:12 Text:rangeStr];
-    range.textColor = [ControllerManager colorWithHexString:@"414141"];
-    [sv addSubview:range];
+//    NSString * nameStr = array[0];
+//    NSString * rangeStr = array[1];
+//    NSString * weightStr = array[2];
+//    NSString * compStr = array[3];
     
-    CGSize size3 = [weightStr sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(w, 100) lineBreakMode:1];
-    UILabel * weight = [MyControl createLabelWithFrame:CGRectMake(5, range.frame.origin.y+size2.height+10, size3.width, size3.height) Font:12 Text:weightStr];
-    weight.textColor = [ControllerManager colorWithHexString:@"414141"];
-    [sv addSubview:weight];
+//    @"产品描述：萌星专属明信片，宠物星球特别设计，一式九张哦~&特别说明：设计和印刷需要排期哦，最多需要大约两周~&&"
+//    @"包装：自分装&规格：500g&适合：喵星人&特别说明：感恩新春，球长大酬宾~现在兑换，不但包邮，更有惊喜礼包哦~"
     
-    CGSize size4 = [compStr sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(w, 100) lineBreakMode:1];
-    UILabel * comp = [MyControl createLabelWithFrame:CGRectMake(5, weight.frame.origin.y+size3.height+10, size4.width, size4.height) Font:12 Text:compStr];
-    comp.textColor = [ControllerManager colorWithHexString:@"414141"];
-    [sv addSubview:comp];
     
-    sv.contentSize = CGSizeMake(bgView.frame.size.width-10, comp.frame.origin.y+comp.frame.size.height+10);
+//    CGSize size1 = [nameStr sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(w, 100) lineBreakMode:1];
+//    UILabel * name = [MyControl createLabelWithFrame:CGRectMake(5, 5, size1.width, size1.height) Font:12 Text:nameStr];
+//    name.textColor = [ControllerManager colorWithHexString:@"414141"];
+//    [sv addSubview:name];
+//    
+//    CGSize size2 = [rangeStr sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(w, 100) lineBreakMode:1];
+//    UILabel * range = [MyControl createLabelWithFrame:CGRectMake(5, name.frame.origin.y+size1.height+10, size2.width, size2.height) Font:12 Text:rangeStr];
+//    range.textColor = [ControllerManager colorWithHexString:@"414141"];
+//    [sv addSubview:range];
+//    
+//    CGSize size3 = [weightStr sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(w, 100) lineBreakMode:1];
+//    UILabel * weight = [MyControl createLabelWithFrame:CGRectMake(5, range.frame.origin.y+size2.height+10, size3.width, size3.height) Font:12 Text:weightStr];
+//    weight.textColor = [ControllerManager colorWithHexString:@"414141"];
+//    [sv addSubview:weight];
+//    
+//    CGSize size4 = [compStr sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(w, 100) lineBreakMode:1];
+//    UILabel * comp = [MyControl createLabelWithFrame:CGRectMake(5, weight.frame.origin.y+size3.height+10, size4.width, size4.height) Font:12 Text:compStr];
+//    comp.textColor = [ControllerManager colorWithHexString:@"414141"];
+//    [sv addSubview:comp];
+    
+    
 }
 
 -(void)confirmBtnClick

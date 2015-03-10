@@ -207,11 +207,6 @@
     if (self.userPetListArray.count) {
         [MyControl setImageForBtn:headBtn Tx:[self.userPetListArray[0] tx] isPet:YES isRound:YES];
     }
-//    [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userPetListArray[0] tx]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-//        if (image) {
-//            [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-//        }
-//    }];
     
 //    UIImageView * leftArrow = [MyControl createImageViewWithFrame:CGRectMake(8, 64, 9, 15.5) ImageName:@"leftArrow.png"];
 //    [bottomImage addSubview:leftArrow];
@@ -237,23 +232,18 @@
         button.layer.masksToBounds = YES;
         [sv addSubview:button];
         button.tag = 2000+i;
-        [button setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userPetListArray[i] tx]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-            if (image) {
-                [button setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-            }
-        }];
+        [MyControl setImageForBtn:button Tx:[self.userPetListArray[i] tx] isPet:YES isRound:YES];
+        
     }
 }
 -(void)headClick:(UIButton *)btn
 {
     NSLog(@"tag:%d", btn.tag);
     int x = btn.tag-2000;
-    foodNum.text = [self.userPetListArray[x] food];
-    [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.userPetListArray[x] tx]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-            [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-        }
-    }];
+    foodNum.text = [NSString stringWithFormat:@"%@", [self.userPetListArray[x] food]];
+    
+    [MyControl setImageForBtn:headBtn Tx:[self.userPetListArray[x] tx] isPet:YES isRound:YES];
+
     self.tempModel = self.userPetListArray[x];
     self.tempAid = [self.userPetListArray[x] aid];
     [self upButtonClick:upButton];

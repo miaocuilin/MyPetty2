@@ -49,7 +49,8 @@ NSString *const kRouterEventChatCellBubbleTapEventName = @"kRouterEventChatCellB
 {
     _model = model;
     
-    BOOL isReceiver = !_model.isSender;
+    //此处有改动
+    BOOL isReceiver = !_model.isSender || [model.username isEqualToString:@"25030"];
     NSString *imageName = isReceiver ? BUBBLE_LEFT_IMAGE_NAME : BUBBLE_RIGHT_IMAGE_NAME;
     NSInteger leftCapWidth = isReceiver?BUBBLE_LEFT_LEFT_CAP_WIDTH:BUBBLE_RIGHT_LEFT_CAP_WIDTH;
     NSInteger topCapHeight =  isReceiver?BUBBLE_LEFT_TOP_CAP_HEIGHT:BUBBLE_RIGHT_TOP_CAP_HEIGHT;

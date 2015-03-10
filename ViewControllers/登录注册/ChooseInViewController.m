@@ -39,6 +39,10 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
+    if (!self.isFromAdd) {
+        [MobClick event:@"register_choose"];
+    }
+    
     if ([[USER objectForKey:@"planet"] intValue] == 1) {
         self.isMi = YES;
     }
@@ -63,120 +67,16 @@
     UIImageView * icon = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-w)/2.0, 100, w, h) ImageName:@"choosein_icon.png"];
     [self.view addSubview:icon];
     /******************************/
-//    UIView * statusView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 20)];
-//    statusView.backgroundColor = BGCOLOR;
-//    [self.view addSubview:statusView];
     
-//    ambassadorMessage = [MyControl createLabelWithFrame:CGRectMake(80, 60, 140, 40) Font:15 Text:nil];
-//    ambassadorMessage.font = [UIFont boldSystemFontOfSize:15];
-//    if (_isMi) {
-//        ambassadorMessage.text = @"我 是 喵 星 大 使，\n欢 迎 来 到 喵 星！";
-//    }else{
-//        ambassadorMessage.text = @"我 是 汪 星 大 使，\n欢 迎 来 到 汪 星！";
-//    }
-//    Timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateAmbassadorMessage) userInfo:nil repeats:YES];
-//    [self.view addSubview:ambassadorMessage];
-    
-    
-//    UIImageView * ambassador = [MyControl createImageViewWithFrame:CGRectMake(370/2, 170/2, 230/2, 206/2) ImageName:@""];
-//    if (_isMi) {
-//        ambassador.image = [UIImage imageNamed:@"catAmbassador.png"];
-//    }else{
-//        ambassador.image = [UIImage imageNamed:@"dogAmbassador.png"];
-//    }
-//    [self.view addSubview:ambassador];
-    
-//    UIImageView * cloud = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-572/2)/2, self.view.frame.size.height-170-50-342/2, 572/2, 342/2) ImageName:@"2-c.png"];
-//    [self.view addSubview:cloud];
-    
-    /************Mi*************/
-//    UIImageView * haveBg = [MyControl createImageViewWithFrame:CGRectMake(130/2-10, 15, 373/2+10, 95/2) ImageName:@""];
-//    haveBg.image = [[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2-e" ofType:@"png"]] stretchableImageWithLeftCapWidth:130 topCapHeight:0];
-//    [cloud addSubview:haveBg];
-//    
-//    UILabel * haveLable1 = [MyControl createLabelWithFrame:CGRectMake(10+3, 0, 50, 20) Font:14 Text:@"有喵喵"];
-//    if (!_isMi) {
-//        haveLable1.text = @"有汪汪";
-//    }
-//    [haveBg addSubview:haveLable1];
-//    
-//    UILabel * haveLable2 = [MyControl createLabelWithFrame:CGRectMake(10+5, 22, 170, 20) Font:14 Text:@"立 刻 创 建 喵 喵 的 王 国"];
-//    haveLable2.font = [UIFont boldSystemFontOfSize:15];
-//    if (!_isMi) {
-//        haveLable2.text = @"立 刻 创 建 汪 汪 的 家 族";
-//    }
-//    [haveBg addSubview:haveLable2];
-    
-//    UIImageView * haveBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-520/2)/2.0, (self.view.frame.size.height-117/2.0)/2.0, 520/2, 117/2) ImageName:@"has_star.png"];
-//    if (_isMi) {
-//        haveBg.image = [UIImage imageNamed:@"haveCat.png"];
-//    }else{
-//        haveBg.image = [UIImage imageNamed:@"haveDog.png"];
-//    }
-//    [self.view addSubview:haveBg];
-    
-    UIButton * haveBtn = [MyControl createButtonWithFrame:CGRectMake((self.view.frame.size.width-520/2)/2.0, self.view.frame.size.height-530/2.0, 520/2, 117/2) ImageName:@"has_star.png" Target:self Action:@selector(haveBtnClick) Title:nil];
+    UIButton * haveBtn = [MyControl createButtonWithFrame:CGRectMake((self.view.frame.size.width-520/2)/2.0, self.view.frame.size.height-530/2.0, 520/2, 123/2) ImageName:@"has_star.jpg" Target:self Action:@selector(haveBtnClick) Title:nil];
     [self.view addSubview:haveBtn];
     /************Wa*************/
-//    UIImageView * notHaveBg = [MyControl createImageViewWithFrame:CGRectMake(130/2-10, 70, 373/2+10, 95/2) ImageName:@""];
-//    notHaveBg.image = [[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"2-d" ofType:@"png"]] stretchableImageWithLeftCapWidth:30 topCapHeight:0];
-//    [cloud addSubview:notHaveBg];
+
     
-//    UILabel * notHaveLable1 = [MyControl createLabelWithFrame:CGRectMake(250/2+13, 0, 50, 20) Font:14 Text:@"没喵喵"];
-//    if (!_isMi) {
-//        notHaveLable1.text = @"没汪汪";
-//    }
-//    [notHaveBg addSubview:notHaveLable1];
-//    
-//    UILabel * notHaveLable2 = [MyControl createLabelWithFrame:CGRectMake(10-5, 22, 190, 20) Font:14 Text:@"快 来 加 入 萌 猫 们 的 王 国"];
-//    notHaveLable2.font = [UIFont boldSystemFontOfSize:15];
-//    if (!_isMi) {
-//        notHaveLable2.text = @"快 来 加 入 萌 狗 们 的 家 族";
-//    }
-//    [notHaveBg addSubview:notHaveLable2];
-//    
-//    UIImageView * notHaveBg = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-434/2)/2, cloud.frame.origin.y+60, 434/2, 167/2) ImageName:@"choosein_noPet.png"];
-//    if (_isMi) {
-//        notHaveBg.image = [UIImage imageNamed:@"noCat.png"];
-//    }else{
-//        notHaveBg.image = [UIImage imageNamed:@"noDog.png"];
-//    }
-//    [self.view addSubview:notHaveBg];
-    
-    UIButton * notHaveBtn = [MyControl createButtonWithFrame:CGRectMake((self.view.frame.size.width-520/2)/2.0, self.view.frame.size.height-348/2.0, 520/2, 117/2) ImageName:@"no_star.png" Target:self Action:@selector(notHaveBtnClick) Title:nil];
+    UIButton * notHaveBtn = [MyControl createButtonWithFrame:CGRectMake((self.view.frame.size.width-520/2)/2.0, self.view.frame.size.height-348/2.0, 520/2, 123/2) ImageName:@"no_star.jpg" Target:self Action:@selector(notHaveBtnClick) Title:nil];
     [self.view addSubview:notHaveBtn];
     /******************************/
-//    UIImageView * earth = [MyControl createImageViewWithFrame:CGRectMake(0, self.view.frame.size.height-100, 320, 219/2) ImageName:@"2-b.png"];
-//    [self.view addSubview:earth];
-    
-//    UIImageView * switchBg = [MyControl createImageViewWithFrame:CGRectMake(0, self.view.frame.size.height-45, 150, 45) ImageName:@""];
-//    switchBg.image = [[UIImage imageNamed:@"switchBg.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:20];
-//    [self.view addSubview:switchBg];
-//    
-//    UIImageView * head = [MyControl createImageViewWithFrame:CGRectMake(2, 2, 60, 40) ImageName:@"dogHead.png"];
-//    if (!_isMi) {
-//        head.frame = CGRectMake(2, 2, 40, 40);
-//        head.image = [UIImage imageNamed:@"catHead.png"];
-//    }
-//    [switchBg addSubview:head];
-//    
-//    UILabel * label = [MyControl createLabelWithFrame:CGRectMake(60, 12, 80, 20) Font:15 Text:@"切换到喵星"];
-//    if (_isMi) {
-//        label.text = @"切换到汪星";
-//    }
-//    label.textColor = [UIColor colorWithRed:250/255.0 green:162/255.0 blue:134/255.0 alpha:1];
-//    [switchBg addSubview:label];
-    
-//    UIButton * switchBtn = [MyControl createButtonWithFrame:CGRectMake(0, self.view.frame.size.height-167/2, 275/2, 167/2) ImageName:@"" Target:self Action:@selector(switchBtnClick) Title:nil];
-//    if (self.isMi) {
-//        [switchBtn setBackgroundImage:[UIImage imageNamed:@"dogHead.png"] forState:UIControlStateNormal];
-//    }else{
-//        [switchBtn setBackgroundImage:[UIImage imageNamed:@"catHead.png"] forState:UIControlStateNormal];
-//    }
-//    [self.view addSubview:switchBtn];
-    
-//    UIImageView * catAndDog = [MyControl createImageViewWithFrame:CGRectMake((self.view.frame.size.width-450/2)/2, earth.frame.origin.y-70, 450/2, 203/2) ImageName:@"choosein_cat_dog.png"];
-//    [self.view addSubview:catAndDog];
+
     
     shakeBgView = [MyControl createViewWithFrame:CGRectMake(notHaveBtn.frame.origin.x, notHaveBtn.frame.origin.y+117/2+5, 300, 20)];
     [self.view addSubview:shakeBgView];
@@ -188,14 +88,8 @@
     [shakeBgView addSubview:rightBtn];
     
     UILabel * label = [MyControl createLabelWithFrame:CGRectMake(rightBtn.frame.origin.x+25, rightBtn.frame.origin.y, 200, 20) Font:12 Text:@"我已经阅读并同意"];
-//    NSMutableAttributedString * attString = [[NSMutableAttributedString alloc] initWithString:@"我已经阅读并同意《用户协议》"];
-//    [attString addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:85/255.0 green:134/255.0 blue:156/255.0 alpha:1] range:NSMakeRange(8, 6)];
-//    [attString addAttribute:NSUnderlineStyleAttributeName value:[NSString stringWithFormat:@"%d", NSUnderlineStyleSingle] range:NSMakeRange(8, 6)];
-//    NSDictionary * dic = @{NSFontAttributeName:[UIFont fontWithName:@"" size:12], NSUnderlineStyleSingle:[NSNumber numberWithInteger:NSUnderlineStyleSingle]};
-//    [attString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:NSMakeRange(8, 6)];
-//    label.attributedText = attString;
     [shakeBgView addSubview:label];
-//    [attString release];
+
     CGSize size = [label.text sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(100, 20) lineBreakMode:1];
     
     NSString * str = @"《用户协议》";

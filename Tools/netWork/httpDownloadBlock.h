@@ -35,4 +35,6 @@
 //@property(nonatomic,copy)void(^overDue)(void);
 
 @property(nonatomic,copy)NSString * ios_url;
+
+@property(nonatomic,copy)NSString * updateDetailMsg;
 @end

@@ -30,6 +30,7 @@
 @property(nonatomic)CGSize cellSize;
 
 @property(nonatomic,copy)void (^bigClick)();
+//@property(nonatomic,copy)void (^foodTypeChange)(NSInteger);
 
 -(void)modifyUI:(BegFoodListModel *)model;
 -(void)addAnimation:(int)num;

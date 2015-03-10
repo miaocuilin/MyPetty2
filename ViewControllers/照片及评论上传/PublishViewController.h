@@ -57,6 +57,8 @@
 
 @property(nonatomic,retain)NSMutableArray * dataArray;
 
-@property(nonatomic,copy)void (^showFrontImage)(NSString *, BOOL, NSString *, NSString *);
+@property(nonatomic,copy)void (^showFrontImage)(NSString *, NSInteger, NSString *, NSString *);
 @property (nonatomic,copy)NSString * img_id;
+
+@property (nonatomic) int publishType;
 @end

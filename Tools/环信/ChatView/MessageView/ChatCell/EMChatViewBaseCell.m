@@ -51,7 +51,8 @@ NSString *const kRouterEventChatHeadImageTapEventName = @"kRouterEventChatHeadIm
     [super layoutSubviews];
     
     CGRect frame = _headImageView.frame;
-    frame.origin.x = _messageModel.isSender ? (self.bounds.size.width - _headImageView.frame.size.width - HEAD_PADDING) : HEAD_PADDING;
+    //此处自己改动过
+    frame.origin.x = (_messageModel.isSender && ![_messageModel.username isEqualToString:@"25030"]) ? (self.bounds.size.width - _headImageView.frame.size.width - HEAD_PADDING) : HEAD_PADDING;
     _headImageView.frame = frame;
     
     _nameLabel.frame = CGRectMake(CGRectGetMinX(_headImageView.frame), CGRectGetMaxY(_headImageView.frame), CGRectGetWidth(_headImageView.frame), NAME_LABEL_HEIGHT);
@@ -92,7 +93,8 @@ NSString *const kRouterEventChatHeadImageTapEventName = @"kRouterEventChatHeadIm
 
 - (void)setupSubviewsForMessageModel:(MessageModel *)model
 {
-    if (model.isSender) {
+    //此处有改动
+    if (model.isSender && ![_messageModel.username isEqualToString:@"25030"]) {
         self.headImageView.frame = CGRectMake(self.bounds.size.width - HEAD_SIZE - HEAD_PADDING, CELLPADDING, HEAD_SIZE, HEAD_SIZE);
     }
     else{
@@ -103,7 +105,8 @@ NSString *const kRouterEventChatHeadImageTapEventName = @"kRouterEventChatHeadIm
 + (NSString *)cellIdentifierForMessageModel:(MessageModel *)model
 {
     NSString *identifier = @"MessageCell";
-    if (model.isSender) {
+    //此处有改动
+    if (model.isSender && ![model.username isEqualToString:@"25030"]) {
         identifier = [identifier stringByAppendingString:@"Sender"];
     }
     else{

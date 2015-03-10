@@ -391,6 +391,17 @@
     [bodyView addSubview:shareTextLabel];
 }
 //分享
+-(NSString *)returnShareURL
+{
+    if ([self.img_url isKindOfClass:[NSString class]] && self.img_url.length) {
+        return [NSString stringWithFormat:@"%@%@&img_url=%@&SID=%@", TOUCHSHAREAPI, self.pet_aid, self.img_url, [ControllerManager getSID]];
+    }else if([self.pet_tx isKindOfClass:[NSString class]] && self.pet_tx.length){
+        return [NSString stringWithFormat:@"%@%@&img_url=%@&SID=%@", TOUCHSHAREAPI, self.pet_aid, self.pet_tx, [ControllerManager getSID]];
+    }else{
+        return [NSString stringWithFormat:@"%@%@&img_url=%@&SID=%@", TOUCHSHAREAPI, self.pet_aid, @"", [ControllerManager getSID]];
+    }
+}
+
 - (void)shareAction:(UIButton *)sender
 {
     //头像或record_upload.png
@@ -407,10 +418,10 @@
         NSLog(@"微信");
         //强制分享图片
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
-        [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid];
-        [UMSocialData defaultData].extConfig.wechatSessionData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.pet_name];
+        [UMSocialData defaultData].extConfig.wechatSessionData.url = [self returnShareURL];
+        [UMSocialData defaultData].extConfig.wechatSessionData.title = @"摸一摸，屏幕清晰~";
         
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:[NSString stringWithFormat:@"我在宠物星球摸了摸萌星%@，软软哒真可爱~~舍不得洗手了呢嘤嘤嘤", self.pet_name] image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
@@ -427,10 +438,10 @@
         NSLog(@"朋友圈");
         //强制分享图片
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
-        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid];
-        [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.pet_name];
+        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [self returnShareURL];
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"我在宠物星球摸了摸萌星%@，软软哒真可爱~~舍不得洗手了呢嘤嘤嘤", self.pet_name];
         
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
                 [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"分享成功"];
@@ -445,7 +456,8 @@
         }];
     }else if(sender.tag == 79){
         NSLog(@"微博");
-        NSString * str = [NSString stringWithFormat:@"人家在宠物星球好开心，快来跟我一起玩嘛~%@（分享自@宠物星球社交应用）", [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid]];
+        NSString * str = [NSString stringWithFormat:@"我在宠物星球摸了摸萌星%@，软软哒真可爱~~舍不得洗手了呢嘤嘤嘤%@（分享自@宠物星球社交应用）", self.pet_name, [self returnShareURL]];
+//        NSString * str = [NSString stringWithFormat:@"人家在宠物星球好开心，快来跟我一起玩嘛~%@（分享自@宠物星球社交应用）", [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid]];
         
         BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
         NSLog(@"%d", oauth);

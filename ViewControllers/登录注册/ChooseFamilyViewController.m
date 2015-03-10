@@ -199,7 +199,7 @@
 //    backBtn.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
     [navView addSubview:backBtn];
     
-    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"选择萌星"];
+    UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-12, 200, 20) Font:17 Text:@"认养萌星"];
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     [navView addSubview:titleLabel];
@@ -376,7 +376,7 @@
             headImageView.image = [MyControl image:image fitInSize:CGSizeMake(100, 100)];
         }else{
             //下载头像
-            NSLog(@"%@", [NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]);
+//            NSLog(@"%@", [NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]);
             httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(100, 100)];

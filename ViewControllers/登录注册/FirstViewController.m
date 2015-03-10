@@ -12,6 +12,7 @@
 #import "ASIFormDataRequest.h"
 #import <ImageIO/ImageIO.h>
 #import "EaseMob.h"
+#import "MenuModel.h"
 //#import "FoodFirstViewController.h"
 //#import "MainTabBarViewController.h"
 
@@ -221,6 +222,8 @@
     [USER setObject:@"" forKey:@"weChatUserInfo"];
     [USER setObject:@"" forKey:@"sinaUserInfo"];
     [USER setObject:@"" forKey:@"password"];
+    
+//    [USER setObject:@"0" forKey:@"shouldLogin"];
     //从本地读取种类数据，然后
 //    NSString * path = [DOCDIR stringByAppendingPathComponent:@"CateNameList.plist"];
 //    NSLog(@"CateNameList= %@",path);
@@ -501,6 +504,7 @@
         LOADING;
     }
     
+    __block FirstViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (shouldLoading) {
             ENDLOADING;
@@ -596,11 +600,11 @@
                 
                 
                 //获取宠物信息，存储到本地
-                [self loadPetInfo];
+                [blockSelf loadPetInfo];
                 //获取本人所有宠物信息
 //                [self loadPetList];
                 LOADPETLIST;
-                
+                [blockSelf loadMenuData];
             }
         }else{
             UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:nil otherTitles:@"确定"];
@@ -642,6 +646,36 @@
         }else{
             UIAlertView * alert = [MyControl createAlertViewWithTitle:@"网络异常，请重试" Message:nil delegate:self cancelTitle:nil otherTitles:@"确定"];
             alert.delegate = self;
+        }
+    }];
+    [request release];
+}
+
+-(void)loadMenuData
+{
+    NSString * url = [NSString stringWithFormat:@"%@%@", MENUAPI, [ControllerManager getSID]];
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            NSArray * array = [load.dataDict objectForKey:@"data"];
+            if ([array isKindOfClass:[NSArray class]]) {
+                if ([array[0] isKindOfClass:[NSArray class]]) {
+                    NSArray * arr = array[0];
+                    if (arr.count == 0) {
+                        return;
+                    }
+                    NSMutableArray * mutableArray = [NSMutableArray arrayWithCapacity:0];
+                    for (NSDictionary * dict in arr) {
+                        MenuModel * model = [[MenuModel alloc] init];
+                        [model setValuesForKeysWithDictionary:dict];
+                        [mutableArray addObject:model];
+                        [model release];
+                    }
+                    NSData * data = [MyControl returnDataWithArray:mutableArray];
+                    [USER setObject:data forKey:@"MenuData"];
+                }
+            }
+        }else{
+            [USER setObject:@"" forKey:@"MenuData"];
         }
     }];
     [request release];

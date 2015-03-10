@@ -368,6 +368,8 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     [[EaseMob sharedInstance] applicationWillTerminate:application];
+    
+//    [USER setObject:nil forKey:@"petsData"];
     NSLog(@"软件即将关闭");
 //    [USER removeAllObjects];
 //    [USER setObject:@"0" forKey:@"isSuccess"];

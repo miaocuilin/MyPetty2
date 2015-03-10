@@ -248,20 +248,24 @@
             blockSelf.imageDict = [[load.dataDict objectForKey:@"data"] objectForKey:@"image"];
             
             //判断是否过期
-            NSDate * date = [NSDate date];
+//            NSDate * date = [NSDate date];
             //当前时间戳
-            NSString * stamp = [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
+//            NSString * stamp = [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
             //t为时间差
             //24小时为期限
-            int t = 0;
+//            int t = 0;
             //当前时间戳-时间戳 < 24h 才显示
-            if ([stamp intValue]-[[blockSelf.imageDict objectForKey:@"create_time"] intValue] < 24*60*60) {
-                t = 1;
-            }
-            if ([[blockSelf.imageDict objectForKey:@"is_food"] isKindOfClass:[NSString class]] && [[blockSelf.imageDict objectForKey:@"is_food"] intValue] == 1 && t == 1) {
-                blockSelf->isFood = YES;
-            }else{
-                blockSelf->isFood = NO;
+//            if ([stamp intValue]-[[blockSelf.imageDict objectForKey:@"create_time"] intValue] < 24*60*60) {
+//                t = 1;
+//            }
+            if ([[blockSelf.imageDict objectForKey:@"is_food"] isKindOfClass:[NSString class]]){
+                if ([[blockSelf.imageDict objectForKey:@"is_food"] intValue] == 1) {
+                    is_food = 1;
+                }else if ([[blockSelf.imageDict objectForKey:@"is_food"] intValue] == 2) {
+                    is_food = 2;
+                }else if ([[blockSelf.imageDict objectForKey:@"is_food"] intValue] == 3) {
+                    is_food = 3;
+                }
             }
 
 //            NSLog(@"%@", [self.imageDict objectForKey:@"is_food"]);
@@ -2028,11 +2032,29 @@
     [request release];
 }
 
+-(BOOL)isOver24Hour
+{
+    NSDate * date = [NSDate date];
+    //当前时间戳
+    NSString * stamp = [NSString stringWithFormat:@"%f", [date timeIntervalSince1970]];
+    //t为时间差
+    //24小时为期限
+
+    //当前时间戳-时间戳 < 24h 才返回NO,说明未超过24小时
+    if ([stamp intValue]-[[self.imageDict objectForKey:@"create_time"] intValue] < 24*60*60) {
+        return NO;
+    }else{
+        return YES;
+    }
+}
 #pragma mark - 分享截图
 -(void)shareClick:(UIButton *)btn
 {
     int index = btn.tag;
     [MobClick event:@"photo_share"];
+    
+    //判断图片发布时间是否超过24小时
+    BOOL isOvertime = [self isOver24Hour];
     
     if (index == 400) {
         NSLog(@"微信");
@@ -2042,7 +2064,7 @@
         [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@", WEBBEGFOODAPI, self.img_id];
         
         NSString * str = nil;
-        if(isFood){
+        if(is_food && !isOvertime){
             [UMSocialData defaultData].extConfig.wechatSessionData.title = @"轻轻一点，免费赏粮！我的口粮全靠你啦~";
             if ([[self.imageDict objectForKey:@"cmt"] length]) {
                 str = [self.imageDict objectForKey:@"cmt"];
@@ -2084,8 +2106,8 @@
         NSString * str = nil;
         if ([[self.imageDict objectForKey:@"cmt"] length]) {
             str = [self.imageDict objectForKey:@"cmt"];
-        }else{
-            if (isFood) {
+         }else{
+            if (is_food && !isOvertime) {
                 str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
             }else{
                 str = @"这是我最新的美照哦~~打滚儿求表扬~~";
@@ -2127,7 +2149,7 @@
     }else if(index == 402){
         NSLog(@"微博");
         NSString * str = nil;
-        if(isFood){
+        if(is_food && !isOvertime){
             if ([[self.imageDict objectForKey:@"cmt"] length]) {
                 str = [self.imageDict objectForKey:@"cmt"];
             }else{
@@ -2199,8 +2221,12 @@
 #pragma mark - 分享API
 -(void)loadShareAPI
 {
-    if (isFood) {
+    if (is_food == 1) {
         [MobClick event:@"food_share_suc"];
+    }else if (is_food == 2) {
+        [MobClick event:@"topic1_share_suc"];
+    }else if (is_food == 3) {
+        [MobClick event:@"topic2_share_suc"];
     }
     
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id]];

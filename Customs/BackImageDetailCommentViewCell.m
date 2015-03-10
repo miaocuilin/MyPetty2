@@ -67,7 +67,8 @@
     }
     
     if (![tx isEqualToString:@"0"]) {
-        [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, tx]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"]];
+        [MyControl setImageForImageView:headImageView Tx:tx isPet:NO isRound:YES];
+//        [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, tx]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"]];
     }else{
         headImageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
     }

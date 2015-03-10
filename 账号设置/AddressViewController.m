@@ -43,8 +43,19 @@
     [self createBg];
     [self performSelector:@selector(createNavgation) withObject:nil afterDelay:0.1f];
 //    [self createNavgation];
+    
+    NSArray * array = [USER objectForKey:@"myPetsDataArray"];
+    for (int i=0; i<array.count; i++) {
+        if ([[array[i] objectForKey:@"master_id"] isEqualToString:[USER objectForKey:@"usr_id"]]) {
+            self.pet_id = [array[i] objectForKey:@"aid"];
+            break;
+        }else if(i == array.count-1){
+            [self createBody];
+            return;
+        }
+    }
     [self loadData];
-    [self loadDataAPI];
+//    [self loadDataAPI];
 
 }
 - (void)loadData
@@ -53,8 +64,8 @@
     NSString *addressAPI = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ADDRESSAPI, self.pet_id, sig, [ControllerManager getSID]];
     NSLog(@"获取地址信息：%@",addressAPI);
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:addressAPI Block:^(BOOL isFinish, httpDownloadBlock *load) {
-        NSLog(@"收货地址信息数据：%@",load.dataDict);
-        NSLog(@"data:%@",[[[load.dataDict objectForKey:@"data"] objectAtIndex:0] class]);
+//        NSLog(@"收货地址信息数据：%@",load.dataDict);
+//        NSLog(@"data:%@",[[[load.dataDict objectForKey:@"data"] objectAtIndex:0] class]);
         if (isFinish) {
             if ([[[load.dataDict objectForKey:@"data"] objectAtIndex:0] isKindOfClass:[NSDictionary class]]) {
                 dataDict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
@@ -63,7 +74,6 @@
                 codeNumber = [dataDict objectForKey:@"zipcode"];
                 area = [dataDict objectForKey:@"region"];
                 detailarea = [dataDict objectForKey:@"building"];
-                NSLog(@"111");
             }
             
             [self createBody];
@@ -126,19 +136,19 @@
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-- (void)loadDataAPI
-{
-    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aids=%@dog&cat", self.pet_id]];
-    NSString *string = [NSString stringWithFormat:@"http://release4pet.aidigame.com/index.php?r=animal/othersApi&aids=%@&sig=%@&SID=%@", self.pet_id, sig,[ControllerManager getSID]];
-    NSLog(@"string:%@",string);
-    
-    NSString *sigRecommed = [MyMD5 md5:@"dog&cat"];
-    NSString *recommen = [NSString stringWithFormat:@"http://release4pet.aidigame.com/index.php?r=animal/recommendApi&sig=%@&SID=%@",sigRecommed,[ControllerManager getSID]];
-    NSLog(@"recommend:%@",recommen);
-    
-    //    rank/rqApi&category=  rank/contributionApi&aid=&category=
-    
-}
+//- (void)loadDataAPI
+//{
+//    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aids=%@dog&cat", self.pet_id]];
+//    NSString *string = [NSString stringWithFormat:@"http://release4pet.aidigame.com/index.php?r=animal/othersApi&aids=%@&sig=%@&SID=%@", self.pet_id, sig,[ControllerManager getSID]];
+//    NSLog(@"string:%@",string);
+//    
+//    NSString *sigRecommed = [MyMD5 md5:@"dog&cat"];
+//    NSString *recommen = [NSString stringWithFormat:@"http://release4pet.aidigame.com/index.php?r=animal/recommendApi&sig=%@&SID=%@",sigRecommed,[ControllerManager getSID]];
+//    NSLog(@"recommend:%@",recommen);
+//    
+//    //    rank/rqApi&category=  rank/contributionApi&aid=&category=
+//    
+//}
 
 - (void)createIQ
 {

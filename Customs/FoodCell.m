@@ -7,6 +7,7 @@
 //
 
 #import "FoodCell.h"
+#import "MenuModel.h"
 
 @implementation FoodCell
 -(void)dealloc
@@ -104,7 +105,7 @@
 }
 -(void)modifyUI:(BegFoodListModel *)model
 {
-
+    
     leftTime.text = nil;
     self.timeStamp = model.create_time;
     timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(minTime) userInfo:nil repeats:YES];
@@ -135,13 +136,46 @@
     //
     leftTime.frame = CGRectMake(whiteView.frame.size.width-220, foodNum.frame.origin.y, 210, 20);
 
-    foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-105, leftTime.frame.origin.y-84, 105, 84);
-    [foodAnimation startAnimating];
+//    foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-105, leftTime.frame.origin.y-84, 105, 84);
+    NSArray * array = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
+    MenuModel * menuModel = nil;
+    
+//    self.foodTypeChange([model.is_food intValue]);
+    
+    if ([model.is_food intValue] == 1) {
+        foodAnimation.animationImages = @[[UIImage imageNamed:@"foodAnimation_1.png"], [UIImage imageNamed:@"foodAnimation_2.png"]];
+        foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-105, leftTime.frame.origin.y-84, 105, 84);
+        [foodAnimation startAnimating];
+
+    }else{
+        if([model.is_food intValue] == 2){
+            menuModel = array[0];
+        }else if([model.is_food intValue] == 3){
+            menuModel = array[1];
+        }
+        SDWebImageManager * manager = [SDWebImageManager sharedManager];
+        
+        __block FoodCell * blockSelf = self;
+        [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", MENUURL, menuModel.animate1]] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+            if (image) {
+                UIImage * image1 = image;
+                [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", MENUURL, menuModel.animate2]] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+                    if (image) {
+                        blockSelf->foodAnimation.animationImages = @[image1, image];
+                        blockSelf->foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-image.size.width/2.0, leftTime.frame.origin.y-image.size.height/2.0, image.size.width/2.0, image.size.height/2.0);
+                        [blockSelf->foodAnimation startAnimating];
+                    }
+                }];
+            }
+        }];
+    }
+    
+    
 //    [self bringSubviewToFront:foodAnimation];
     
     
     //517_1417699704@50512@_640&853.png
-    [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] placeholderImage:[UIImage imageNamed:@"water_white.png"] options:0 progress:^(NSUInteger receivedSize, long long expectedSize) {
+    [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] placeholderImage:[UIImage imageNamed:@"water_white.png"] options:SDWebImageRetryFailed | SDWebImageLowPriority | SDWebImageProgressiveDownload progress:^(NSUInteger receivedSize, long long expectedSize) {
 //        NSLog(@"%d--%lld--%.2lld", receivedSize, expectedSize, receivedSize/expectedSize);
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
 #warning image 有可能内存泄露 __block

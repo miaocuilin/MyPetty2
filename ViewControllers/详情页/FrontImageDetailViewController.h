@@ -81,7 +81,7 @@
     BOOL isMoreCreated;
     
     //判断当前图片是否是求口粮图片并且未过时
-    BOOL isFood;
+    NSInteger is_food;
 }
 @property(nonatomic,retain)NSDictionary * picDict;
 @property(nonatomic,retain)NSDictionary * imageDict;

@@ -32,6 +32,7 @@
 #import "EaseMob.h"
 #import "AddressViewController.h"
 #import "SimpleRewardViewController.h"
+#import "UserCardViewController.h"
 
 #define KPageCount 20
 
@@ -459,6 +460,24 @@
             }
             cell.messageModel = model;
 //            NSLog(@"%@", cell.messageModel.message.ext);
+            
+            __block ChatViewController * blockSelf = self;
+            cell.userBlock = ^(NSString * usr_id){
+                [blockSelf keyBoardHidden];
+                
+                UserCardViewController * vc = [[UserCardViewController alloc] init];
+                vc.usr_id = usr_id;
+                [blockSelf addChildViewController:vc];
+                [blockSelf.view addSubview:vc.view];
+                //    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+                [vc didMoveToParentViewController:blockSelf];
+                
+                __block UserCardViewController * vcSelf = vc;
+                vc.close = ^(){
+                    //        [vc.view removeFromSuperview];
+                    [ControllerManager deleTabBarViewController:vcSelf];
+                };
+            };
             
             cell.jumpClick = ^(int type){
                 [self keyBoardHidden];
@@ -922,7 +941,13 @@
     BOOL isLogin = [[[EaseMob sharedInstance] chatManager] isLoggedIn];
     if (isLogin) {
         if (text && text.length > 0) {
+            if ([self.chatter isEqualToString:[USER objectForKey:@"usr_id"]]) {
+                [self keyBoardHidden];
+                [MyControl popAlertWithView:self.view Msg:@"不能给自己发消息~"];
+                return;
+            }
             [self sendTextMessage:text];
+            [self keyBoardHidden];
         }
     }else{
         [self examLogin];

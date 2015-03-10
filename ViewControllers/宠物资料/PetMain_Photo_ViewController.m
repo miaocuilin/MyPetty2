@@ -20,7 +20,6 @@
 -(void)dealloc
 {
     [super dealloc];
-    
 }
 
 - (void)viewDidLoad {
@@ -86,6 +85,12 @@
             
             //            NSLog(@"更多国王照片数据:%@", load.dataDict);
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
+            
+            if(array.count == 0){
+                [blockSelf->collection footerEndRefreshing];
+                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"没有更多了~"];
+                return;
+            }
             for(int i=0;i<array.count;i++){
                 NSDictionary * dict = array[i];
                 PhotoModel * model = [[PhotoModel alloc] init];
@@ -191,9 +196,8 @@
 {
     static NSString * cellID = @"collection";
     PetMain_Photo_CollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
-    if (!cell) {
-        cell = [[[PetMain_Photo_CollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width/3.0, self.view.frame.size.width/3.0)] autorelease];
-    }
+
+    
     PhotoModel * model = self.dataArray[indexPath.row];
     [cell modifyUIWithUrl:model.url];
     

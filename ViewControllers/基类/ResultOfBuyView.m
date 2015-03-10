@@ -105,11 +105,11 @@
     [self.bgImageView addSubview:self.confirmBtn];
     
     //
-    UIImageView * roundBg = [MyControl createImageViewWithFrame:CGRectMake(9, 352, 60, 60) ImageName:@"head_cricle1.png"];
+    UIImageView * roundBg = [MyControl createImageViewWithFrame:CGRectMake(9, 354, 60, 60) ImageName:@"head_cricle1.png"];
     [self.bgImageView addSubview:roundBg];
     
     //
-    self.headImage = [MyControl createImageViewWithFrame:CGRectMake(3.5, 3.5, 54, 54) ImageName:@"defaultPetHead.png"];
+    self.headImage = [MyControl createImageViewWithFrame:CGRectMake(3, 3, 54, 54) ImageName:@"defaultPetHead.png"];
     self.headImage.layer.cornerRadius = 27;
     self.headImage.layer.masksToBounds = YES;
     [roundBg addSubview:self.headImage];
@@ -165,8 +165,11 @@
     }
     
     self.giftImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", itemId]];
+
     
-    [self.headImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
+    [MyControl setImageForImageView:self.headImage Tx:tx isPet:YES isRound:YES];
+//    [self.headImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//    }];
     
 //    NSString * path = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", tx]];
 //    UIImage * image = [UIImage imageWithContentsOfFile:path];

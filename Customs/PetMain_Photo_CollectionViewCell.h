@@ -11,6 +11,7 @@
 @interface PetMain_Photo_CollectionViewCell : UICollectionViewCell
 {
     UIImageView * imageView;
+    
 }
 -(void)modifyUIWithUrl:(NSString *)url;
 @end

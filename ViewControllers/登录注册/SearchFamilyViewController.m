@@ -246,27 +246,7 @@
     /**************************/
     //    NSLog(@"--%@", model.tx);
     if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-            headImageView.image = [MyControl image:image fitInSize:CGSizeMake(100, 100)];
-        }else{
-            //下载头像
-            NSLog(@"%@", [NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]);
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(100, 100)];
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
-                }
-            }];
-            [request release];
-        }
+        [MyControl setImageForImageView:headImageView Tx:model.tx isPet:YES isRound:YES];
     }
     
     /**************************/

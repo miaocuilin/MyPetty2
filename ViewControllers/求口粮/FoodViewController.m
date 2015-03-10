@@ -14,7 +14,7 @@
 #import "UserCardViewController.h"
 #import "PetMainViewController.h"
 #import "MsgViewController.h"
-
+#import "MenuModel.h"
 
 @interface FoodViewController ()
 
@@ -97,6 +97,8 @@
                 blockSelf->tv.contentOffset = CGPointMake(0, 0);
             }];
             
+            //刷新赏按钮
+            [blockSelf scrollViewDidEndDecelerating:blockSelf->tv];
             [blockSelf refreshHeader:0];
             blockSelf->isLoading = NO;
 //            ENDLOADING;
@@ -323,8 +325,7 @@
         cell = [[[FoodCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
     }
     BegFoodListModel * model = self.dataArray[indexPath.row];
-    //有可能泄露
-    [cell modifyUI:model];
+    
     cell.bigClick = ^(){
         FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = model.img_id;
@@ -332,15 +333,21 @@
 //        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
         [vc release];
     };
+    
     if (addAnimationSwitch) {
         [cell addAnimation:[rewardNum.text intValue]];
         addAnimationSwitch = NO;
     }
+    
+    //有可能泄露
+    [cell modifyUI:model];
+    
     cell.transform = CGAffineTransformMakeRotation(M_PI/2);
     cell.backgroundColor = [UIColor clearColor];
     cell.selectionStyle = 0;
     return cell;
 }
+
 -(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return self.view.frame.size.width;
@@ -359,18 +366,34 @@
     if (scrollView == tv && self.dataArray.count) {
         int a = tv.contentOffset.y/self.view.frame.size.width;
         [self refreshHeader:a];
+        
+        //更换赏按钮
+        BegFoodListModel * model = self.dataArray[a];
+        NSInteger is_food = [model.is_food integerValue];
+        if (is_food == 1) {
+            [heartBtn setBackgroundImage:[UIImage imageNamed:@"food_heart.png"] forState:UIControlStateNormal];
+        }else if (is_food == 2) {
+            NSArray * array = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
+            MenuModel * menuModel = array[is_food-2];
+            [heartBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", MENUURL, menuModel.pic]] forState:UIControlStateNormal];
+        }else if (is_food == 3) {
+            NSArray * array = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
+            MenuModel * menuModel = array[is_food-2];
+            [heartBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", MENUURL, menuModel.pic]] forState:UIControlStateNormal];
+        }
     }
 }
 -(void)refreshHeader:(int)a
 {
     //更新顶栏数据
     BegFoodListModel * model = self.dataArray[a];
-    
-    [petHeadBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-            [petHeadBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-        }
-    }];
+
+    [MyControl setImageForBtn:petHeadBtn Tx:model.tx isPet:YES isRound:YES];
+//    [petHeadBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//        if (image) {
+//            [petHeadBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
+//        }
+//    }];
     sex.hidden = NO;
     if ([model.gender intValue] == 1) {
         sex.image = [UIImage imageNamed:@"man.png"];
@@ -380,11 +403,13 @@
     petName.text = model.name;
     petType.text = [ControllerManager returnCateNameWithType:model.type];
     userName.text = [NSString stringWithFormat:@"%@", model.u_name];
-    [userHeadImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, model.u_tx]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-            userHeadImage.image = [MyControl returnSquareImageWithImage:image];
-        }
-    }];
+    
+    [MyControl setImageForImageView:userHeadImage Tx:model.u_tx isPet:NO isRound:YES];
+//    [userHeadImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, model.u_tx]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//        if (image) {
+//            userHeadImage.image = [MyControl returnSquareImageWithImage:image];
+//        }
+//    }];
 }
 
 #pragma mark -

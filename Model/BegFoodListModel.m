@@ -26,6 +26,7 @@
     [_u_name release];
     [_u_tx release];
     [_usr_id release];
+    [_is_food release];
 }
 -(void)setValue:(id)value forUndefinedKey:(NSString *)key
 {

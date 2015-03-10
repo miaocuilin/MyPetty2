@@ -11,7 +11,7 @@
 #define IOS7 [[[UIDevice currentDevice] systemVersion] floatValue]>=7.0
 #import "EMConversation.h"
 #import "EaseMob.h"
-
+#import "UserPetListModel.h"
 
 @implementation MyControl
 //工厂模式   +方法
@@ -311,6 +311,34 @@
 
     return myDictionary;
 }
+//NSArray转data
++(NSData *)returnDataWithArray:(NSArray *)array
+{
+    NSMutableData * data = [[NSMutableData alloc] init];
+    NSKeyedArchiver * archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+    [archiver encodeObject:array forKey:@"petsData"];
+    [archiver finishEncoding];
+    
+    [data autorelease];
+    [archiver autorelease];
+    
+    return data;
+}
+//路径文件转NSArray
++(NSArray *)returnArrayWithData:(NSData *)data
+{
+    if (data.length == 0) {
+        return nil;
+    }
+    NSKeyedUnarchiver * unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+    NSArray * array = [[unarchiver decodeObjectForKey:@"petsData"] retain];
+    [unarchiver finishDecoding];
+    //    NSLog(@"%@", myDictionary);
+    [unarchiver autorelease];
+    
+    return [array autorelease];
+}
+
 
 #pragma mark - 传进NSURL返回图片的宽高字典
 +(NSDictionary *)imageSizeFrom:(NSURL *)imageUrl
@@ -375,6 +403,35 @@
 ////        NSLog(@"======压缩后的图片大小：%d======%d", imageData.length, count);
 //    }
     if (compression < 1) {
+        imageData = UIImageJPEGRepresentation(sourceImage, compression);
+    }
+    NSLog(@"======压缩后的图片大小：%d======", imageData.length);
+    return imageData;
+}
+
++ (NSData *)scaleImage:(UIImage *)sourceImage WithSize:(CGSize)TargetSize
+{
+    float w = sourceImage.size.width;
+    float h = sourceImage.size.height;
+    float p = 0;
+    if (w>=h && sourceImage.size.width>TargetSize.width) {
+        p = 2000/w;
+        sourceImage = [self image:sourceImage fitInSize:CGSizeMake(w*p, h*p)];
+        //        sourceImage = [self OriginImage:sourceImage scaleToSize:CGSizeMake(w*p, h*p)];
+    }else if(h>w && sourceImage.size.height>TargetSize.height){
+        p = 2000/h;
+        sourceImage = [self image:sourceImage fitInSize:CGSizeMake(w*p, h*p)];
+    }
+    NSLog(@"%f--%f", sourceImage.size.width, sourceImage.size.height);
+    CGFloat compression = 1.0f;
+    float maxFileSize = 128*1024;
+    
+    NSData *imageData = UIImageJPEGRepresentation(sourceImage, compression);
+    //    3746443 1748174 56556
+    //    13278499 4440060 284031
+    NSLog(@"%d", imageData.length);
+    compression = maxFileSize / [imageData length];
+        if (compression < 1) {
         imageData = UIImageJPEGRepresentation(sourceImage, compression);
     }
     NSLog(@"======压缩后的图片大小：%d======", imageData.length);
@@ -654,6 +711,10 @@
 
 +(void)setImageForBtn:(UIButton *)btn Tx:(NSString *)tx isPet:(BOOL)isPet
 {
+    if (![tx isKindOfClass:[NSString class]] || tx.length == 0) {
+        tx = @"";
+    }
+    
     NSString * str = nil;
     UIImage * defaultImage = nil;
     if (isPet) {
@@ -671,6 +732,10 @@
 }
 +(void)setImageForImageView:(UIImageView *)imageView Tx:(NSString *)tx isPet:(BOOL)isPet
 {
+    if (![tx isKindOfClass:[NSString class]] || tx.length == 0) {
+        tx = @"";
+    }
+    
     NSString * str = nil;
     UIImage * defaultImage = nil;
     if (isPet) {
@@ -756,7 +821,7 @@
 {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         //        [self modifyImage:tempImage];
-        NSLog(@"********超过设定宽度！********");
+//        NSLog(@"********超过设定宽度！********");
 //        float length = [UIScreen mainScreen].bounds.size.width;
         
         float w = OriImage.size.width;
@@ -791,6 +856,36 @@
 //            });
         }
     });
-    
+
 }
+
+#pragma mark -
+//+(void)updatePetsData
+//{
+//    LOADING;
+//    NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
+//    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
+//    //    NSLog(@"%@", url);
+//    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        if (isFinish) {
+//            NSMutableArray * petsDataArray = [NSMutableArray arrayWithCapacity:0];
+//            
+//            NSArray * array = [load.dataDict objectForKey:@"data"];
+//            for (NSDictionary * dict in array) {
+//                UserPetListModel * model = [[UserPetListModel alloc] init];
+//                [model setValuesForKeysWithDictionary:dict];
+//                [petsDataArray addObject:model];
+//            }
+//            
+//            NSData * data = [MyControl returnDataWithArray:petsDataArray];
+//            [USER setObject:data forKey:@"petsData"];
+//            
+//            ENDLOADING;
+////            [blockSelf showPets];
+//        }else{
+//            LOADFAILED;
+//        }
+//    }];
+//    [request release];
+//}
 @end

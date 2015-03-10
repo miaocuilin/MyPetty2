@@ -145,6 +145,8 @@
     vc2.view.hidden = NO;
     tv.hidden = YES;
     [tf resignFirstResponder];
+    
+    [self hideDrop];
     //        sc.hidden = NO;
     searchBg.hidden = YES;
     
@@ -361,7 +363,9 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%d", indexPath.row);
+//    NSLog(@"%d", indexPath.row);
+    [self hideDrop];
+    
     if (isSearchUser) {
         __block UserCardViewController * card = [[UserCardViewController alloc] init];
         card.usr_id = [self.searchUserArray[indexPath.row] usr_id];
@@ -389,9 +393,15 @@
 -(void)createSearchView
 {
     //532/2  58/2  226 215 215
-    searchBg = [MyControl createViewWithFrame:CGRectMake(0, 69-5, self.view.frame.size.width, 58/2)];
+    searchBg = [MyControl createViewWithFrame:CGRectMake(0, 64, self.view.frame.size.width, 58/2+10)];
     searchBg.hidden = YES;
+//    searchBg.clipsToBounds = YES;
+//    searchBg.backgroundColor = [UIColor purpleColor];
     [self.view addSubview:searchBg];
+    
+    UIButton * searchBgBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, searchBg.frame.size.width, searchBg.frame.size.height+89) ImageName:@"" Target:self Action:@selector(hideSearch) Title:nil];
+//    searchBgBtn.backgroundColor = [UIColor redColor];
+    [searchBg addSubview:searchBgBtn];
     
     UIView * brownView = [MyControl createViewWithFrame:CGRectMake(10, 5, 532/2, 58/2)];
     brownView.backgroundColor = BROWNCOLOR;
@@ -399,6 +409,10 @@
     brownView.layer.cornerRadius = 13;
     brownView.layer.masksToBounds = YES;
     [searchBg addSubview:brownView];
+    
+//    UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideSearch)];
+//    [searchBg addGestureRecognizer:tap];
+//    [tap release];
     
     typeBtn = [MyControl createButtonWithFrame:CGRectMake(10+5, 4.5+5, 144/2, 20) ImageName:@"" Target:self Action:@selector(typeBtnClick:) Title:@"萌 星"];
     [typeBtn setTitleColor:WORDCOLOR forState:UIControlStateNormal];
@@ -478,6 +492,8 @@
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [tf resignFirstResponder];
+    [self hideDrop];
+    
     [cancel setTitle:@"取消" forState:UIControlStateNormal];
     if (self.tfString != nil) {
         //开始搜索
@@ -583,6 +599,7 @@
         //        NSLog(@"%@", self.totalArray);
         [dropDown setCellTextColor:WORDCOLOR Font:[UIFont systemFontOfSize:13] BgColor:BROWNCOLOR lineColor:[UIColor brownColor]];
         dropDown.alpha = 0.9;
+        
         CGRect rect = searchBg.frame;
         rect.size.height += 89;
         searchBg.frame = rect;
@@ -593,6 +610,14 @@
         [self rel];
     }
 }
+-(void)hideDrop
+{
+    if (dropDown != nil) {
+        [dropDown hideDropDown:typeBtn];
+        [self rel];
+    }
+}
+
 #pragma mark - niDrop代理
 -(void)niDropDownDelegateMethod:(NIDropDown *)sender
 {

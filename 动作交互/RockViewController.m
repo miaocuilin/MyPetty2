@@ -489,7 +489,11 @@
     UIView *downView = [MyControl createViewWithFrame:CGRectMake(0, bodyView.frame.size.height-70, bodyView.frame.size.width, 70)];
     [bodyView addSubview:downView];
     
-    headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
+    UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:CGRectMake(8, -2, 60, 60) ImageName:@"head_cricle1.png"];
+    [downView addSubview:cricleHeadImageView];
+    
+//    10, 0, 54, 54
+    headImageView = [MyControl createImageViewWithFrame:CGRectMake(3, 3, 54, 54) ImageName:@"defaultPetHead.png"];
     if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]== 0)) {
         [MyControl setImageForImageView:headImageView Tx:self.pet_tx isPet:YES isRound:YES];
         
@@ -509,10 +513,9 @@
     }
 //    headImageView.layer.cornerRadius = 28;
 //    headImageView.layer.masksToBounds = YES;
-    [downView addSubview:headImageView];
+    [cricleHeadImageView addSubview:headImageView];
     
-    UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:CGRectMake(8, -2, 60, 60) ImageName:@"head_cricle1.png"];
-    [downView addSubview:cricleHeadImageView];
+    
     UILabel *helpPetLabel = [MyControl createLabelWithFrame:CGRectMake(70, 5, 200, 20) Font:12 Text:nil];
     
     NSAttributedString *helpPetString = [self firstString:@"帮摇一摇" formatString:self.pet_name insertAtIndex:1];
@@ -559,10 +562,10 @@
         NSLog(@"微信");
         //强制分享图片
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
-        [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid];
-        [UMSocialData defaultData].extConfig.wechatSessionData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.pet_name];
+        [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@&SID=%@", SHAKESHAREAPI, self.pet_aid, [ControllerManager getSID]];
+        [UMSocialData defaultData].extConfig.wechatSessionData.title = @"摇一摇，手不酸了~";
         
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:@"你有事儿么？没事摇一摇~" image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
 
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
@@ -577,8 +580,8 @@
         NSLog(@"朋友圈");
         //强制分享图片
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
-        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid];
-        [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.pet_name];
+        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@&SID=%@", SHAKESHAREAPI, self.pet_aid, [ControllerManager getSID]];
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = @"你有事儿么？没事摇一摇~";
         
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
 
@@ -593,7 +596,7 @@
         }];
     }else if(sender.tag == 102){
         NSLog(@"微博");
-        NSString * str = [NSString stringWithFormat:@"人家在宠物星球好开心，快来跟我一起玩嘛~%@（分享自@宠物星球社交应用）", [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid]];
+        NSString * str = [NSString stringWithFormat:@"你有事儿么？没事摇一摇~%@（分享自@宠物星球社交应用）", [NSString stringWithFormat:@"%@%@&SID=%@", SHAKESHAREAPI, self.pet_aid, [ControllerManager getSID]]];
         
         BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
         NSLog(@"%d", oauth);
@@ -639,7 +642,7 @@
 {
     LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", SHAKESHAREAPI, self.pet_aid, sig, [ControllerManager getSID]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", SHAKESHARERESULTAPI, self.pet_aid, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {

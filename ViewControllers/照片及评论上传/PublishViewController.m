@@ -18,6 +18,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 #import "PublishToViewController.h"
 #import "UserPetListModel.h"
 #import "IQKeyboardManager.h"
+#import "MenuModel.h"
 
 @interface PublishViewController () <UITextViewDelegate,AFPhotoEditorControllerDelegate,UMSocialUIDelegate>
 {
@@ -29,6 +30,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 @property (nonatomic, strong) ALAssetsLibrary * assetLibrary;
 @property (nonatomic, strong) NSMutableArray * sessions;
+
+@property (nonatomic, retain) NSArray * menuDataArray;
 @end
 
 @implementation PublishViewController
@@ -77,11 +80,22 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     //清空topic
-    if (self.isBeg) {
+    self.menuDataArray = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
+    
+    if (self.publishType == 0) {
+        [USER setObject:@"点击添加话题" forKey:@"topic"];
+    }else if (self.publishType == 1){
         [USER setObject:@"挣口粮" forKey:@"topic"];
     }else{
-        [USER setObject:@"点击添加话题" forKey:@"topic"];
+        MenuModel * model = self.menuDataArray[self.publishType-2];
+        [USER setObject:model.subject forKey:@"topic"];
     }
+    
+//    if (self.isBeg) {
+//        [USER setObject:@"挣口粮" forKey:@"topic"];
+//    }else{
+//        
+//    }
     
 //    NSLog(@"%d--%@--%@", self.isBeg, self.aid, self.name);
     // Do any additional setup after loading the view.
@@ -105,7 +119,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self makeUI];
 //    if (self.aid == nil || self.aid.length == 0) {
 //        self.aids = [NSMutableString stringWithString:[USER objectForKey:@"aid"]];
-    if(self.isBeg){
+    if(self.publishType != 0){
         self.aids = [NSMutableString stringWithString:self.aid];
     }
     [self loadData];
@@ -131,7 +145,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                 [model release];
             }
             //如果有aid
-            if (!self.isBeg) {
+            if (!self.publishType) {
                 for (int i=0; i<self.dataArray.count; i++) {
                     if ([[self.dataArray[i] aid] isEqualToString:[USER objectForKey:@"lastPublishAid"]]) {
                         self.aids = [NSMutableString stringWithString:[self.dataArray[i] aid]];
@@ -202,8 +216,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [navView addSubview:backBtn];
     
     UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"发布照片"];
-    if (self.isBeg) {
+    if (self.publishType == 1) {
         titleLabel.text = @"挣口粮";
+    }else if(self.publishType >=2 ){
+        MenuModel * model = self.menuDataArray[self.publishType-2];
+        titleLabel.text = model.subject;
     }
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
     titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -264,7 +281,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     float space = 7.5;
     
     topic = [MyControl createButtonWithFrame:CGRectMake(10, bigImageView.frame.origin.y+bigImageView.frame.size.height+4, width, 30) ImageName:@"" Target:self Action:@selector(topicClick) Title:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]]];
-    if(self.isBeg){
+    if(self.publishType){
         topic.userInteractionEnabled = NO;
     }
     topic.titleLabel.font = [UIFont systemFontOfSize:13];
@@ -292,7 +309,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if ([self.name isKindOfClass:[NSString class]] && self.name.length) {
         [publishTo setTitle:[NSString stringWithFormat:@"发布到%@", self.name] forState:UIControlStateNormal];
     }
-    if(self.isBeg){
+    if(self.publishType != 0){
         publishTo.userInteractionEnabled = NO;
     }
     publishTo.titleLabel.font = [UIFont systemFontOfSize:13];
@@ -448,6 +465,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [self presentViewController:vc animated:YES completion:nil];
     [vc release];
 }
+
+-(void)shareEvent
+{
+    if(self.publishType == 1){
+        [MobClick event:@"food_share_suc"];
+    }else if(self.publishType == 2){
+        [MobClick event:@"topic1_share_suc"];
+    }else if(self.publishType == 3){
+        [MobClick event:@"topic2_share_suc"];
+    }
+}
 #pragma mark -
 -(void)publishButtonClick:(UIButton *)button
 {
@@ -477,12 +505,17 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     w = [[USER objectForKey:@"weChat"] intValue];
     
     [self postData:self.oriImage];
+    
+    __block PublishViewController * blockSelf = self;
+    
     if (s == 0 && w == 0) {
         shareSuc = YES;
         if (publishSuc) {
             [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                self.showFrontImage(self.img_id, self.isBeg, self.aid, self.name);
-                [self dismissViewControllerAnimated:YES completion:nil];
+                
+                [blockSelf dismissViewControllerAnimated:NO completion:^{
+                    blockSelf.showFrontImage(blockSelf.img_id, blockSelf.publishType, blockSelf.aid, blockSelf.name);
+                }];
             } completion:nil];
         }
     }else if (s == 1 && w == 0) {
@@ -494,7 +527,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        }
         NSString * str = nil;
         if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"] || _textView.text.length == 0) {
-            if (self.isBeg) {
+            if (self.publishType) {
                 str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
             }else{
                 str = @"这是我最新的美照哦~~打滚儿求表扬~~";
@@ -557,7 +590,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", WEBBEGFOODAPI, self.img_id];
         NSString * str = nil;
         if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"] || _textView.text.length == 0) {
-            if (self.isBeg) {
+            if (self.publishType) {
                 str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
             }else{
                 str = @"这是我最新的美照哦~~打滚儿求表扬~~";
@@ -569,11 +602,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             NSLog(@"weChat-response:%@", response);
-            shareSuc = YES;
-            if (publishSuc) {
+            blockSelf->shareSuc = YES;
+            if (blockSelf->publishSuc) {
                 [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                    self.showFrontImage(self.img_id, self.isBeg, self.aid, self.name);
-                    [self dismissViewControllerAnimated:YES completion:nil];
+                    //分享
+                    [blockSelf shareEvent];
+                    
+                    [blockSelf dismissViewControllerAnimated:NO completion:^(){
+                        blockSelf.showFrontImage(blockSelf.img_id, blockSelf.publishType, blockSelf.aid, blockSelf.name);
+                    }];
                 } completion:nil];
             }
             
@@ -590,7 +627,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         
         NSString * str = nil;
         if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"] || _textView.text.length == 0) {
-            if (self.isBeg) {
+            if (self.publishType) {
                 str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
             }else{
                 str = @"这是我最新的美照哦~~打滚儿求表扬~~";
@@ -655,13 +692,19 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 {
     publishButton.userInteractionEnabled = YES;
     
+    __block PublishViewController * blockSelf = self;
+    
     NSLog(@"%@", response);
     if (!isDouble) {
         shareSuc = YES;
         if (publishSuc) {
             [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                self.showFrontImage(self.img_id, self.isBeg, self.aid, self.name);
-                [self dismissViewControllerAnimated:YES completion:nil];
+                //分享
+                [blockSelf shareEvent];
+                
+                [blockSelf dismissViewControllerAnimated:NO completion:^(){
+                    blockSelf.showFrontImage(blockSelf.img_id, blockSelf.publishType, blockSelf.aid, blockSelf.name);
+                }];
             } completion:nil];
         }
         
@@ -674,7 +717,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", WEBBEGFOODAPI, self.img_id];
         NSString * str = nil;
         if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"] || _textView.text.length == 0) {
-            if (self.isBeg) {
+            if (self.publishType) {
                 str = @"看在我这么努力卖萌的份上快来宠宠我！免费送我点口粮好不好？";
             }else{
                 str = @"这是我最新的美照哦~~打滚儿求表扬~~";
@@ -685,11 +728,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
         
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-            shareSuc = YES;
-            if (publishSuc) {
+            blockSelf->shareSuc = YES;
+            if (blockSelf->publishSuc) {
                 [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                    self.showFrontImage(self.img_id, self.isBeg, self.aid, self.name);
-                    [self dismissViewControllerAnimated:YES completion:nil];
+                    //分享
+                    [blockSelf shareEvent];
+                    
+                    [blockSelf dismissViewControllerAnimated:NO completion:^(){
+                        blockSelf.showFrontImage(blockSelf.img_id, blockSelf.publishType, blockSelf.aid, blockSelf.name);
+                    }];
                 } completion:nil];
             }
             
@@ -894,9 +941,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        data = UIImageJPEGRepresentation(image, p);
 //        NSLog(@"%d", data.length);
 //    }
-    if (self.isBeg) {
-        [_request setPostValue:@"1" forKey:@"is_food"];
-    }
+//    if (self.isBeg) {
+        [_request setPostValue:[NSString stringWithFormat:@"%d", self.publishType] forKey:@"is_food"];
+//    }
     
     
     NSTimeInterval  timeInterval = [[NSDate date] timeIntervalSince1970];
@@ -966,15 +1013,20 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         publishSuc = YES;
         
         [MobClick event:@"photo"];
-        if(self.isBeg){
+        if(self.publishType == 1){
             [MobClick event:@"food_suc"];
+        }else if(self.publishType == 2){
+            [MobClick event:@"topic1_suc"];
+        }else if(self.publishType == 3){
+            [MobClick event:@"topic2_suc"];
         }
         
-        
+        __block PublishViewController * blockSelf = self;
         if (shareSuc) {
             [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                self.showFrontImage(self.img_id, self.isBeg, self.aid, self.name);
-                [self dismissViewControllerAnimated:YES completion:nil];
+                [blockSelf dismissViewControllerAnimated:NO completion:^(){
+                    blockSelf.showFrontImage(blockSelf.img_id, blockSelf.publishType, blockSelf.aid, blockSelf.name);
+                }];
             } completion:nil];
         }
         

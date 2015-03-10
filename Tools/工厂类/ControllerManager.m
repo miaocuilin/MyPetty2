@@ -25,6 +25,8 @@ static int isSuccess;
 static LoadingView * load = nil;
 static PopupView * pop = nil;
 
+static NSOperationQueue * queue = nil;
+
 MBProgressHUD *HUD;
 
 static FirstTabBarViewController * tabBar = nil;
@@ -483,7 +485,7 @@ static FirstTabBarViewController * tabBar = nil;
             actionStr = @"满意的躺到了新家里，身子暖暖哒~~";
             break;
         case 1402:
-            actionStr = @"捧着金饭碗，再也不愁木得粮食吃啦！";
+            actionStr = @"捧着萌星合约，决心一定要做大萌星！";
             break;
         case 1403:
             actionStr = @"戴上了新项圈，跑到镜子前臭美去了~~";
@@ -555,6 +557,13 @@ static FirstTabBarViewController * tabBar = nil;
 //    [vc release];
     [vc removeFromParentViewController];
 }
++ (void)addViewController:(UIViewController *)vc To:(UIViewController *)root
+{
+    [root addChildViewController:vc];
+    [root.view addSubview:vc.view];
+    //    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+    [vc didMoveToParentViewController:root];
+}
 
 +(void)loadPetList
 {
@@ -599,5 +608,16 @@ static FirstTabBarViewController * tabBar = nil;
     };
     [vc.view addSubview:twoBtnView];
     [twoBtnView release];
+}
+
+//创建单例队列
++(NSOperationQueue *)createOperationQueue
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = [[NSOperationQueue alloc] init];
+        [queue setMaxConcurrentOperationCount:3];
+    });
+    return queue;
 }
 @end

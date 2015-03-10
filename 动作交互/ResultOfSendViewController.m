@@ -113,11 +113,11 @@
     }
     
     //
-    UIImageView * roundBg = [MyControl createImageViewWithFrame:CGRectMake(9, 352, 60, 60) ImageName:@"head_cricle1.png"];
+    UIImageView * roundBg = [MyControl createImageViewWithFrame:CGRectMake(9, 354, 60, 60) ImageName:@"head_cricle1.png"];
     [self.bgImageView addSubview:roundBg];
     
     //
-    self.headImage = [MyControl createImageViewWithFrame:CGRectMake(3.5, 3.5, 54, 54) ImageName:@"defaultPetHead.png"];
+    self.headImage = [MyControl createImageViewWithFrame:CGRectMake(3, 3, 54, 54) ImageName:@"defaultPetHead.png"];
     self.headImage.layer.cornerRadius = 27;
     self.headImage.layer.masksToBounds = YES;
     [roundBg addSubview:self.headImage];
@@ -137,9 +137,12 @@
     
     self.actLabel.text = @"每天只能送1个礼物哦~\n每日第一次成功分享后可以多送1个礼物~";
     
-    [self.headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
+    [MyControl setImageForImageView:self.headImageView Tx:tx isPet:YES isRound:YES];
+    [MyControl setImageForImageView:self.headImage Tx:tx isPet:YES isRound:YES];
     
-    [self.headImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
+//    [self.headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
+//    
+//    [self.headImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
     NSDictionary * dict = [ControllerManager returnGiftDictWithItemId:itemId];
     
     label1.text = [NSString stringWithFormat:@"%@收到了您送的%@", name, [dict objectForKey:@"name"]];
@@ -184,10 +187,10 @@
         NSLog(@"微信");
         //强制分享图片
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
-        [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid];
-        [UMSocialData defaultData].extConfig.wechatSessionData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.pet_name];
+        [UMSocialData defaultData].extConfig.wechatSessionData.url = [NSString stringWithFormat:@"%@%@&SID=%@", SHAKESHAREAPI, self.pet_aid, [ControllerManager getSID]];
+        [UMSocialData defaultData].extConfig.wechatSessionData.title = @"摇一摇，手不酸了~";
         
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatSession] content:[NSString stringWithFormat:@"duang~%@从天而降，满眼都是幸福的小星星n(*≧▽≦*)n", self.giftName] image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
 
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
@@ -202,10 +205,10 @@
         NSLog(@"朋友圈");
         //强制分享图片
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
-        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid];
-        [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"我是%@，来自宠物星球的大萌星！", self.pet_name];
+        [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@&SID=%@", SHAKESHAREAPI, self.pet_aid, [ControllerManager getSID]];
+        [UMSocialData defaultData].extConfig.wechatTimelineData.title = [NSString stringWithFormat:@"duang~%@从天而降，满眼都是幸福的小星星n(*≧▽≦*)n", self.giftName];
         
-        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:@"人家在宠物星球好开心，快来跟我一起玩嘛~" image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:nil image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
 
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
@@ -218,7 +221,7 @@
         }];
     }else if(sender.tag == 102){
         NSLog(@"微博");
-        NSString * str = [NSString stringWithFormat:@"人家在宠物星球好开心，快来跟我一起玩嘛~%@（分享自@宠物星球社交应用）", [NSString stringWithFormat:@"%@%@", PETMAINSHAREAPI, self.pet_aid]];
+        NSString * str = [NSString stringWithFormat:@"duang~%@从天而降，满眼都是幸福的小星星n(*≧▽≦*)n%@（分享自@宠物星球社交应用）", self.giftName, [NSString stringWithFormat:@"%@%@&SID=%@", SHAKESHAREAPI, self.pet_aid, [ControllerManager getSID]]];
         
         BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
         NSLog(@"%d", oauth);
@@ -264,7 +267,7 @@
 {
     LOADING;
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
-    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", SHAKESHAREAPI, self.pet_aid, sig, [ControllerManager getSID]];
+    NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", SHAKESHARERESULTAPI, self.pet_aid, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {

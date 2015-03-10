@@ -29,6 +29,10 @@ extern NSString *const kShouldResendCell;
     UIButton * jumpBtn;
     int type;
 }
+@property (nonatomic, copy)NSString * usr_id;
+
+@property (nonatomic, copy) void (^userBlock)(NSString *);
+
 @property (nonatomic, copy) void (^jumpClick)(int);
 
 //sender

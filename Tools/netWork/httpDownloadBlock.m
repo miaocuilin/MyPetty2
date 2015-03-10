@@ -210,6 +210,11 @@
                 [USER setObject:[self.dataDict objectForKey:@"confVersion"] forKey:@"confVersion"];
             }
             
+//            if ([[USER objectForKey:@"shouldLogin"] intValue] == 0) {
+//                [self login];
+//                [USER setObject:@"1" forKey:@"shouldLogin"];
+//            }
+            
 //            NSLog(@"self.dataDict = %@",self.dataDict);
         }else{
             
@@ -278,26 +283,33 @@
      本地保存version作为参考对象，如果login里的外层version与本地不同就是
      强制更新，如果是里层的不同就不强制，安排取消按钮，取消后不做任何操作。
      */
+    NSString * localVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    
     int type1 = 0;
     int type2 = 0;
-    if (![outVer isEqualToString:[USER objectForKey:@"version"]]) {
+    if ([outVer compare:localVersion]>0) {
         //强制更新
         type1 = 1;
         isForce = YES;
     }
-    if (![insideVer isEqualToString:[USER objectForKey:@"version"]]) {
+    if ([insideVer compare:localVersion]>0) {
         type2 = 1;
     }
     if (type1 == 1 || type2 == 1) {
-        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"version=%@dog&cat", [USER objectForKey:@"version"]]];
-        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UPDATEAPI, [USER objectForKey:@"version"], sig, [ControllerManager getSID]];
+        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"version=%@dog&cat", outVer]];
+        NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UPDATEAPI, outVer, sig, [ControllerManager getSID]];
         NSLog(@"%@", url);
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 self.ios_url = [[load.dataDict objectForKey:@"data"] objectForKey:@"ios_url"];
                 NSString * msg = [[load.dataDict objectForKey:@"data"] objectForKey:@"upgrade_content"];
                 
-                NSString * msg2 = [msg stringByReplacingOccurrencesOfString:@"&" withString:@"\n"];
+                NSString * msg2 = @"";
+                if ([msg isKindOfClass:[NSString class]] && msg.length) {
+                    msg2 = [msg stringByReplacingOccurrencesOfString:@"&" withString:@"\n"];
+                }
+                self.updateDetailMsg = msg2;
+                
                 if(type1 == 1){
                     //强制
                     UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"更新提示" message:msg2 delegate:self cancelButtonTitle:nil otherButtonTitles:@"马上更新", nil];
@@ -310,8 +322,7 @@
                     [alert release];
                 }
             }else{
-                StartLoading;
-                LoadingFailed;
+                LOADFAILED;
             }
         }];
         [request release];
@@ -325,6 +336,11 @@
         if (buttonIndex == 0) {
             //马上更新
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.ios_url]];
+            
+            //
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"更新提示" message:self.updateDetailMsg delegate:self cancelButtonTitle:nil otherButtonTitles:@"马上更新", nil];
+            [alert show];
+            [alert release];
         }
     }else{
         if (buttonIndex == 0) {
@@ -333,6 +349,11 @@
         }else{
             //马上更新
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.ios_url]];
+            
+            //非强制更新
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"更新提示" message:self.updateDetailMsg delegate:self cancelButtonTitle:@"稍后更新" otherButtonTitles:@"马上更新", nil];
+            [alert show];
+            [alert release];
         }
     }
 }

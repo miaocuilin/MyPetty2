@@ -25,6 +25,9 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <QuartzCore/QuartzCore.h>
 #import <AviarySDK/AviarySDK.h>
+
+#import "ChoosePicTypeViewController.h"
+
 static NSString * const kAFAviaryAPIKey = @"b681eafd0b581b46";
 static NSString * const kAFAviarySecret = @"389160adda815809";
 
@@ -150,6 +153,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 }
 -(void)camaraClick
 {
+    ChoosePicTypeViewController * pictype = [[ChoosePicTypeViewController alloc] init];
+    [self presentViewController:pictype animated:YES completion:nil];
+    return;
+    
     self.tempAid = [USER objectForKey:@"aid"];
     self.tempName = @"";
     isBeg = NO;
@@ -424,6 +431,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", model.aid]];
             NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ALERT7DATAAPI, model.aid, sig, [ControllerManager getSID]];
             NSLog(@"%@", url);
+            
+            __block MyStarViewController * blockSelf = self;
             httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
                     NSLog(@"%@", load.dataDict);
@@ -458,8 +467,10 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                         Alert_BegFoodViewController * vc = [[Alert_BegFoodViewController alloc] init];
                         vc.dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
                         vc.name = model.name;
-                        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
-//                        [vc release];
+                        vc.is_food = 1;
+                        
+                        [ControllerManager addViewController:vc To:blockSelf];
+                        [vc release];
                     }
                     ENDLOADING;
                 }else{
@@ -756,17 +767,20 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //        }};
     
 //    [self dismissViewControllerAnimated:NO completion:completion];
+    __block MyStarViewController * blockSelf = self;
+    
     [self dismissViewControllerAnimated:NO completion:^{
         //Publish
         [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
         PublishViewController * vc = [[PublishViewController alloc] init];
-        if (isBeg) {
-            vc.isBeg = isBeg;
+        if (blockSelf->isBeg) {
+            vc.isBeg = blockSelf->isBeg;
         }
         vc.oriImage = image;
-        vc.name = self.tempName;
-        vc.aid = self.tempAid;
-        vc.showFrontImage = ^(NSString * img_id, BOOL isFood, NSString * aid, NSString * name){
+        vc.name = blockSelf.tempName;
+        vc.aid = blockSelf.tempAid;
+        vc.publishType = 1;
+        vc.showFrontImage = ^(NSString * img_id, NSInteger isFood, NSString * aid, NSString * name){
             if (!isFood) {
                 __block FrontImageDetailViewController * front = [[FrontImageDetailViewController alloc] init];
                 front.img_id = img_id;
@@ -781,13 +795,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     Alert_BegFoodViewController * vc = [[Alert_BegFoodViewController alloc] init];
                     vc.dict = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
                     vc.name = name;
-                    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+                    vc.is_food = isFood;
+                    
+                    [ControllerManager addViewController:vc To:blockSelf];
                     [vc release];
                 }];
                 [request release];
             }
         };
-        [self presentViewController:vc animated:YES completion:nil];
+        [blockSelf presentViewController:vc animated:YES completion:nil];
         [vc release];
     }];
     

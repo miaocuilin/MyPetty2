@@ -16,4 +16,7 @@
 }
 @property(nonatomic,retain)NSDictionary * dict;
 @property(nonatomic,copy)NSString * name;
+
+@property(nonatomic)NSInteger is_food;
+
 @end

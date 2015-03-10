@@ -23,4 +23,6 @@
 @property(nonatomic,copy)NSString * u_name;
 @property(nonatomic,copy)NSString * u_tx;
 @property(nonatomic,copy)NSString * usr_id;
+
+@property(nonatomic,copy)NSString * is_food;
 @end

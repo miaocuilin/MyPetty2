@@ -23,6 +23,7 @@
 @property (nonatomic, strong) NSString *detailMsg;
 @property (nonatomic, strong) NSString *time;
 @property (nonatomic, strong) NSString *usr_id;
+@property (nonatomic, strong) NSString *tx;
 @property (nonatomic) NSInteger unreadCount;
 
 @property (nonatomic, copy) void (^longPress)();

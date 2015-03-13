@@ -167,6 +167,7 @@
 -(void)backBtnClick
 {
     NSLog(@"返回");
+    [tf resignFirstResponder];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)rightButtonClick
@@ -198,6 +199,8 @@
         [MyControl popAlertWithView:self.view Msg:@"没有@用户哦~"];
         return;
     }
+    
+    [tf resignFirstResponder];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

@@ -52,7 +52,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[IQKeyboardManager sharedManager] setEnable:YES];
+//    [self resignFirstResponder];
+    
+//    [[IQKeyboardManager sharedManager] setEnable:YES];
     
     if ([[USER objectForKey:@"selectTopic"] intValue] == 1) {
         [topic setTitle:[NSString stringWithFormat:@"#%@#", [USER objectForKey:@"topic"]] forState:UIControlStateNormal];
@@ -64,13 +66,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 //    }else{
 //        [users setTitle:[NSString stringWithFormat:@"@豆豆 等%d个用户", [[[USER objectForKey:@"atUsers"] count] intValue]] forState:UIControlStateNormal];
 //    }
-    
-    
 }
-//-(void)viewDidAppear:(BOOL)animated
-//{
+-(void)viewDidAppear:(BOOL)animated
+{
+    [[IQKeyboardManager sharedManager] setEnable:YES];
 //    isInPublish = YES;
-//}
+}
 //-(void)viewWillDisappear:(BOOL)animated
 //{
 //    isInPublish = NO;
@@ -544,9 +545,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             str = [NSString stringWithFormat:@"%@ #%@# %@", str, topStr, last];
         }
 //        if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"]) {
-//            str = @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）";
+//            str = @"http://home4pet.imengstar.com/（分享自@宠物星球社交应用）";
 //        }else{
-//            str = [NSString stringWithFormat:@"%@ %@", _textView.text, @"http://home4pet.aidigame.com/（分享自@宠物星球社交应用）"];
+//            str = [NSString stringWithFormat:@"%@ %@", _textView.text, @"http://home4pet.imengstar.com/（分享自@宠物星球社交应用）"];
 //        }
         
         BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];

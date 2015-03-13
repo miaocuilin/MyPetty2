@@ -65,7 +65,7 @@
     leftTime.textColor = [UIColor grayColor];
     [whiteView addSubview:leftTime];
     
-    bigImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 100, 100) ImageName:@""];
+    bigImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 200, 200) ImageName:@""];
     [whiteView addSubview:bigImageView];
     
     bigBtn = [MyControl createButtonWithFrame:whiteView.frame ImageName:@"" Target:self Action:@selector(bigBtnClick) Title:nil];
@@ -175,15 +175,13 @@
     
     
     //517_1417699704@50512@_640&853.png
-    [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] placeholderImage:[UIImage imageNamed:@"water_white.png"] options:SDWebImageRetryFailed | SDWebImageLowPriority | SDWebImageProgressiveDownload progress:^(NSUInteger receivedSize, long long expectedSize) {
-//        NSLog(@"%d--%lld--%.2lld", receivedSize, expectedSize, receivedSize/expectedSize);
-    } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-#warning image 有可能内存泄露 __block
+    NSURL * url = [MyControl returnThumbImageURLwithName:model.url Width:[UIScreen mainScreen].bounds.size.width Height:[UIScreen mainScreen].bounds.size.height];
+    
+    __block FoodCell * blockSelf = self;
+    [bigImageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"water_white.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (image) {
-//            bigImageView.image = nil;
-//            bigImageView.image = [UIImage imageWithData:[MyControl compressImage:image]];
-            float w = whiteView.frame.size.width;
-            float h = leftTime.frame.origin.y;
+            float w = blockSelf->whiteView.frame.size.width;
+            float h = blockSelf->leftTime.frame.origin.y;
             
             float imageW = image.size.width;
             float imageH = image.size.height;
@@ -192,38 +190,14 @@
             if (imageW/imageH > w/h) {
                 //过宽
                 float realHeight = (w-margin*2)*imageH/imageW;
-                bigImageView.frame = CGRectMake(margin, (h-realHeight)/2.0, w-margin*2, realHeight);
+                blockSelf->bigImageView.frame = CGRectMake(margin, (h-realHeight)/2.0, w-margin*2, realHeight);
             }else{
                 //过高
                 float realWidth = (h-margin*2)*imageW/imageH;
-                bigImageView.frame = CGRectMake((w-realWidth)/2.0, margin, realWidth, h-margin*2);
+                blockSelf->bigImageView.frame = CGRectMake((w-realWidth)/2.0, margin, realWidth, h-margin*2);
             }
-            
         }
     }];
-    
-    
-//    [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-//        if (image) {
-//            
-//            float w = whiteView.frame.size.width;
-//            float h = leftTime.frame.origin.y;
-//            
-//            float imageW = image.size.width;
-//            float imageH = image.size.height;
-//            
-//            int margin = 5;
-//            if (imageW/imageH > w/h) {
-//                //过宽
-//                float realHeight = (w-margin*2)*imageH/imageW;
-//                bigImageView.frame = CGRectMake(margin, (h-realHeight)/2.0, w-margin*2, realHeight);
-//            }else{
-//                //过高
-//                float realWidth = (h-margin*2)*imageW/imageH;
-//                 bigImageView.frame = CGRectMake((w-realWidth)/2.0, margin, realWidth, h-margin*2);
-//            }
-//        }
-//    }];
     
 }
 -(void)addAnimation:(int)num

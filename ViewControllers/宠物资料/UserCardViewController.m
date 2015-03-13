@@ -72,7 +72,7 @@
     LOADING2;
     NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", self.usr_id];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, self.usr_id, [MyMD5 md5:code], [ControllerManager getSID]];
-    NSLog(@"%@", url);
+//    NSLog(@"%@", url);
     
     __block UserCardViewController * blockSelf = self;
     
@@ -197,20 +197,10 @@
     }else{
         if (isMyself) {
             [MyControl setImageForBtn:headBtn Tx:self.userModel.tx isPet:NO isRound:YES];
-//            [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, self.userModel.tx]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-//                if (image) {
-//                    [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-//                }
-//            }];
             
             [msgBtn setTitle:@"修改资料" forState:UIControlStateNormal];
         }else{
             [MyControl setImageForImageView:headImageView Tx:self.userModel.tx isPet:NO isRound:YES];
-//            [headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, self.userModel.tx]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-//                if (image) {
-//                    headImageView.image = [MyControl returnSquareImageWithImage:image];
-//                }
-//            }];
         }
     }
     

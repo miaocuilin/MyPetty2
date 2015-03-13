@@ -53,17 +53,6 @@
 //        pic.canClick = YES;
     }
     
-//    UIView * bgView1 = [MyControl createViewWithFrame:CGRectMake(200, 20, 70, 70)];
-//    bgView1.layer.cornerRadius = 35;
-//    bgView1.layer.masksToBounds = YES;
-////    bgView1.backgroundColor = [ControllerManager colorWithHexString:@"f8d7bd"];
-//    [self.contentView addSubview:bgView1];
-//    
-//    UIView * bgView2 = [MyControl createViewWithFrame:CGRectMake(205, 25, 60, 60)];
-//    bgView2.layer.cornerRadius = 30;
-//    bgView2.layer.masksToBounds = YES;
-//    bgView2.backgroundColor = [UIColor whiteColor];
-//    [self.contentView addSubview:bgView2];
     UIImageView * circleBgView = [MyControl createImageViewWithFrame:CGRectMake(410/2, 20, 55, 55) ImageName:@"circleBg.png"];
     [self.contentView addSubview:circleBgView];
     
@@ -177,80 +166,11 @@
         }
         /**************************/
         if (!([[self.imagesArray[i] objectForKey:@"url"] isKindOfClass:[NSNull class]] || [[self.imagesArray[i] objectForKey:@"url"] length]==0)) {
-//            NSString * docDir = DOCDIR;
-            NSString * txFilePath = [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@_card.png", [self.imagesArray[i] objectForKey:@"url"]]];
-            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-            if (image) {
-                [btn setBackgroundImage:image forState:UIControlStateNormal];
-//                [btn setImage:image forState:UIControlStateNormal];
-            }else{
-                //下载图片
-                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.imagesArray[i] objectForKey:@"url"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                    if (isFinish) {
-                        //对图片进行缩放和截取
-                        UIImage * image1 = load.dataImage;
-                        float Width = image1.size.width;
-                        float Height = image1.size.height;
-                        
-                        UIImage * image2 = nil;
-                        
-                        if (Width/Height>65/40.0) {
-                            //偏宽，保证高度
-                            float rate = 65/40.0;
-                            image2 = [self imageFromImage:image1 inRect:CGRectMake((Width-Height*rate)/2, 0, Width*rate, Height)];
-
-//                            Height = 40.0;
-//                            Width = 40.0/Height*Width;
-                        }else{
-                            //偏高，保证宽度
-                            float rate = 40.0/65;
-                            
-                            image2 = [self imageFromImage:image1 inRect:CGRectMake(0, (Height-Width*rate)/2, Width, Width*rate)];
-//                            Width = 65.0;
-//                            Height = 65.0/Width*Height;
-                        }
-
-                        [btn setBackgroundImage:image2 forState:UIControlStateNormal];
-                        
-                        NSString * docDir = DOCDIR;
-                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [self.imagesArray[i] objectForKey:@"url"]]];
-                        [load.data writeToFile:txFilePath atomically:YES];
-                        //
-                        NSString * txFilePath2 = [NSTemporaryDirectory() stringByAppendingString:[NSString stringWithFormat:@"%@_card.png", [self.imagesArray[i] objectForKey:@"url"]]];
-                        NSData * data = UIImageJPEGRepresentation(image2, 0.1);
-                        [data writeToFile:txFilePath2 atomically:YES];
-                    }else{
-                        NSLog(@"头像下载失败");
-                    }
-                }];
-                [request release];
-            }
+            NSURL *url = [MyControl returnClipThumbImageURLwithName:[self.imagesArray[i] objectForKey:@"url"] Width:btn.frame.size.width*2 Height:btn.frame.size.height*2];
+            [btn setImageWithURL:url forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPic.png"]];
         }
         /**************************/
     }
-}
-#pragma mark -取图片的一部分
-/**
- *从图片中按指定的位置大小截取图片的一部分
- * UIImage image 原始的图片
- * CGRect rect 要截取的区域
- */
-- (UIImage *)imageFromImage:(UIImage *)image inRect:(CGRect)rect {
-    CGImageRef sourceImageRef = [image CGImage];
-    CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, rect);
-    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
-    return newImage;
-}
-- (void)awakeFromNib
-{
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 @end

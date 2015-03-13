@@ -20,11 +20,10 @@
 @end
 
 @implementation ExchangeViewController
-//-(void)dealloc
-//{
-//    [super dealloc];
-//    [collection release];
-//}
+-(void)dealloc
+{
+    [super dealloc];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -45,15 +44,16 @@
     NSString * sig = [MyMD5 md5:@"dog&cat"];
     NSString * url = [NSString stringWithFormat:@"%@&sig=%@&SID=%@", TRUEGIFTLISTAPI, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
+    
+    __block ExchangeViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"%@", load.dataDict);
-            self.itemsArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"item_ids"];
-            if(self.itemsArray.count){
-                [self loadItemInfo:self.itemsArray[index]];
+//            NSLog(@"%@", load.dataDict);
+            blockSelf.itemsArray = [[load.dataDict objectForKey:@"data"] objectForKey:@"item_ids"];
+            if(blockSelf.itemsArray.count){
+                [blockSelf loadItemInfo:blockSelf.itemsArray[index]];
             }
-            
-            [self loadUserPetList];
+            [blockSelf loadUserPetList];
         }else{
             LOADFAILED;
         }
@@ -67,10 +67,12 @@
     NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"%@", url);
+    
+    __block ExchangeViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"%@", load.dataDict);
-            [self.userPetListArray removeAllObjects];
+//            NSLog(@"%@", load.dataDict);
+            [blockSelf.userPetListArray removeAllObjects];
             NSArray * array = [load.dataDict objectForKey:@"data"];
             for (NSDictionary * dict in array) {
                 UserPetListModel * model = [[UserPetListModel alloc] init];
@@ -81,20 +83,20 @@
                     [model release];
                     continue;
                 }
-                if ([model.aid isEqualToString:self.tempAid]) {
-                    foodNum.text = model.food;
-                    self.tempModel = model;
+                if ([model.aid isEqualToString:blockSelf.tempAid]) {
+                    blockSelf->foodNum.text = model.food;
+                    blockSelf.tempModel = model;
                 }
                 
-                [self.userPetListArray addObject:model];
+                [blockSelf.userPetListArray addObject:model];
                 [model release];
                 //
             }
-            if ([self.tempModel.food length] == 0 && self.userPetListArray.count) {
-                self.tempModel = self.userPetListArray[0];
+            if ([blockSelf.tempModel.food length] == 0 && blockSelf.userPetListArray.count) {
+                blockSelf.tempModel = blockSelf.userPetListArray[0];
             }
-            [bottomBg removeFromSuperview];
-            [self createBottom];
+            [blockSelf->bottomBg removeFromSuperview];
+            [blockSelf createBottom];
 //            [tv reloadData];
 //            ENDLOADING;
         }else{
@@ -109,24 +111,26 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=%@dog&cat", item_id]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TRUEGIFTDETAILAPI, item_id, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
+    
+    __block ExchangeViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"%@", load.dataDict);
+//            NSLog(@"%@", load.dataDict);
             
             ExchangeItemModel * model = [[ExchangeItemModel alloc] init];
             [model setValuesForKeysWithDictionary:[load.dataDict objectForKey:@"data"]];
             model.des = [[load.dataDict objectForKey:@"data"] objectForKey:@"description"];
-            [self.tempDataArray addObject:model];
+            [blockSelf.tempDataArray addObject:model];
             [model release];
             
             
-            if (index == self.itemsArray.count-1) {
-                self.dataArray = [NSMutableArray arrayWithArray:self.tempDataArray];
-                [collection reloadData];
+            if (blockSelf->index == blockSelf.itemsArray.count-1) {
+                blockSelf.dataArray = [NSMutableArray arrayWithArray:blockSelf.tempDataArray];
+                [blockSelf->collection reloadData];
 //                [self createCollectionView];
                 ENDLOADING;
             }else{
-                [self loadItemInfo:self.itemsArray[++index]];
+                [blockSelf loadItemInfo:blockSelf.itemsArray[++blockSelf->index]];
             }
         }else{
             LOADFAILED;
@@ -287,10 +291,10 @@
     collection.delegate = self;
     collection.dataSource = self;
     collection.backgroundColor = [UIColor clearColor];
-    [collection registerClass:[ExchangeCollectionViewCell class] forCellWithReuseIdentifier:@"collection"];
+    [collection registerNib:[UINib nibWithNibName:@"ExchangeCollectionViewCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"collection"];
     [self.view addSubview:collection];
     [flow release];
-//    [collection release];
+    [collection release];
 }
 #pragma mark - collectionDataSource
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -306,10 +310,11 @@
         cell.hidden = YES;
     }else{
         cell.hidden = NO;
-//        cell config
+
         [cell configUI:self.dataArray[indexPath.row]];
+        __block ExchangeViewController * blockSelf = self;
         cell.exchange = ^(){
-            [self exchangeBtnClick:indexPath.row];
+            [blockSelf exchangeBtnClick:indexPath.row];
         };
     }
     
@@ -369,22 +374,24 @@
             NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&item_id=%@dog&cat", self.tempAid, itemModel.item_id]];
             NSString * url = [NSString stringWithFormat:@"%@%@&item_id=%@&sig=%@&SID=%@", EXCHANGEAPI, self.tempAid, itemModel.item_id, sig, [ControllerManager getSID]];
             NSLog(@"%@", url);
+            
+            __block ExchangeViewController * blockSelf = self;
             httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
                 if (isFinish) {
-                    NSLog(@"%@", load.dataDict);
-                    if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[load.dataDict objectForKey:@"data"] objectForKey:@"food"] isKindOfClass:[NSNumber class]] && [[[load.dataDict objectForKey:@"data"] objectForKey:@"food"] intValue] != [self.tempModel.food intValue]){
-                        self.tempModel.food = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"food"]];
-                        foodNum.text = self.tempModel.food;
+//                    NSLog(@"%@", load.dataDict);
+                    if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]] && [[[load.dataDict objectForKey:@"data"] objectForKey:@"food"] isKindOfClass:[NSNumber class]] && [[[load.dataDict objectForKey:@"data"] objectForKey:@"food"] intValue] != [blockSelf.tempModel.food intValue]){
+                        blockSelf.tempModel.food = [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"food"]];
+                        blockSelf->foodNum.text = blockSelf.tempModel.food;
                         //兑换成功
                         Alert_HyperlinkView * one = [[Alert_HyperlinkView alloc] initWithFrame:[UIScreen mainScreen].bounds];
                         one.type = 2;
                         one.jumpAddress = ^(){
                             AddressViewController * vc = [[AddressViewController alloc] init];
-                            [self presentViewController:vc animated:YES completion:nil];
+                            [blockSelf presentViewController:vc animated:YES completion:nil];
                             [vc release];
                         };
                         [one makeUI];
-                        [self.view addSubview:one];
+                        [blockSelf.view addSubview:one];
                         [one release];
                         
                     }else{
@@ -473,15 +480,5 @@
     SDImageCache * cache = [SDImageCache sharedImageCache];
     [cache clearMemory];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

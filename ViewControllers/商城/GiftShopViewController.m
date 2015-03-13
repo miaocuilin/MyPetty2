@@ -17,6 +17,11 @@
 
 @implementation GiftShopViewController
 
+//-(void)dealloc
+//{
+//    [super dealloc];
+//}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -82,6 +87,8 @@
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"item_id=%@&num=1dog&cat",item]];
     NSString *buyItemsString = [NSString stringWithFormat:@"%@%@&num=1&sig=%@&SID=%@",BUYSHOPGIFTAPI,item,sig,[ControllerManager getSID]];
 //    NSLog(@"购买商品api:%@",buyItemsString);
+    
+    __block GiftShopViewController * blockSelf = self;
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:buyItemsString Block:^(BOOL isFinish, httpDownloadBlock *load) {
 //        NSLog(@"购买商品结果：%@",load.dataDict);
         if (isFinish) {
@@ -90,28 +97,29 @@
             [MobClick event:@"buy_gift" attributes:@{@"level":level, @"name":name}];
             
             [USER setObject:[NSString stringWithFormat:@"%@",[[load.dataDict objectForKey:@"data"] objectForKey:@"user_gold"]] forKey:@"gold"];
-            BottomGold.text = [USER objectForKey:@"gold"];
+            blockSelf->BottomGold.text = [USER objectForKey:@"gold"];
             int noViewGiftNumber = [[USER objectForKey:@"noViewGift"] intValue];
             [USER setObject:[NSString stringWithFormat:@"%d",noViewGiftNumber+1] forKey:@"noViewGift"];
-            giftNum.text = [NSString stringWithFormat:@"%@",[USER objectForKey:@"noViewGift"]];
-            if ([giftNum.text isEqualToString:@""]) {
-                greenBall.hidden = YES;
+            blockSelf->giftNum.text = [NSString stringWithFormat:@"%@",[USER objectForKey:@"noViewGift"]];
+            if ([blockSelf->giftNum.text isEqualToString:@""]) {
+                blockSelf->greenBall.hidden = YES;
             }else{
-                greenBall.hidden = NO;
+                blockSelf->greenBall.hidden = NO;
             }
             
             PopupView * pop = [[PopupView alloc] init];
-            [pop modifyUIWithSize:self.view.frame.size msg:[NSString stringWithFormat:@"大人，您购买的 %@，小的已经给您送到储物箱了", model.name]];
-            [self.view addSubview:pop];
+            [pop modifyUIWithSize:blockSelf.view.frame.size msg:[NSString stringWithFormat:@"大人，您购买的 %@，小的已经给您送到储物箱了", model.name]];
+            [blockSelf.view addSubview:pop];
             [pop release];
             
+            __block PopupView * blockPop = pop;
             [UIView animateWithDuration:0.2 animations:^{
-                pop.bgView.alpha = 1;
+                blockPop.bgView.alpha = 1;
             } completion:^(BOOL finished) {
                 [UIView animateKeyframesWithDuration:0.2 delay:2 options:0 animations:^{
-                    pop.bgView.alpha = 0;
+                    blockPop.bgView.alpha = 0;
                 } completion:^(BOOL finished) {
-                    [pop removeFromSuperview];
+                    [blockPop removeFromSuperview];
                 }];
             }];
 //            [ControllerManager HUDText:[NSString stringWithFormat:@"大人，您购买的 %@，小的已经给您送到储物箱了", model.name] showView:self.view yOffset:0];
@@ -402,7 +410,7 @@
 }
 -(void)didSelected:(NIDropDown *)sender Line:(int)Line Words:(NSString *)Words
 {
-    NSLog(@"%d--%@", Line, Words);
+//    NSLog(@"%d--%@", Line, Words);
     if (sender == dropDown) {
         [sv removeFromSuperview];
         if (Line == 0) {
@@ -471,7 +479,7 @@
     }else{
         sv.contentSize = CGSizeMake(self.view.frame.size.width, 15+(index/2)*160);
     }
-    NSLog(@"index:%d",index);
+//    NSLog(@"index:%d",index);
     
     /***************************/
     for(int i=0; i<index; i+=2){
@@ -563,7 +571,7 @@
         sendGiftBtn2.tag = 1000+i+1;
         [giftBgImageView2 addSubview:sendGiftBtn2];
         /*******************i*********************/
-        NSLog(@"%@", self.showArray[i]);
+//        NSLog(@"%@", self.showArray[i]);
         if ([[self.showArray[i] no] intValue]>2000) {
             hang_tag.image = [UIImage imageNamed:@"giftAlert_badBg.png"];
         }else{

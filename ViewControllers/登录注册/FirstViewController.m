@@ -64,6 +64,7 @@
 //}
 -(void)downloadLaunchImageInfo
 {
+//    NSLog(@"%@", [USER objectForKey:@"SID"]);
     if (![USER objectForKey:@"SID"]) {
         [self tempLogin];
         return;
@@ -78,7 +79,10 @@
     isLoadImage = YES;
     
     NSString * url = [NSString stringWithFormat:@"%@%@", WELCOMEAPI, [USER objectForKey:@"SID"]];
-    NSLog(@"%@", url);
+//    NSLog(@"%@", url);
+//    NSURL * url = [MyControl returnThumbImageURLwithName:name Width:[UIScreen mainScreen].bounds.size.width Height:[UIScreen mainScreen].bounds.size.height];
+//    SDWebImageDownloader *downloader = [SDWebImageDownloader sharedDownloader];
+    
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
 //        NSLog(@"%@", load.dataDict);
         if (isFinish) {

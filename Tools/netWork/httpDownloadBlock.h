@@ -37,4 +37,6 @@
 @property(nonatomic,copy)NSString * ios_url;
 
 @property(nonatomic,copy)NSString * updateDetailMsg;
+
+@property(nonatomic,copy)NSString * urlStr;
 @end

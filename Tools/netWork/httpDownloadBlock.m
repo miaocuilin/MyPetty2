@@ -210,6 +210,18 @@
                 [USER setObject:[self.dataDict objectForKey:@"confVersion"] forKey:@"confVersion"];
             }
             
+            //登录、getSID、welcomeApi不检查更新
+            if([ControllerManager getCheckUpdate] == 0 && [self.urlStr rangeOfString:@"user/loginApi"].location == NSNotFound && [self.urlStr rangeOfString:@"user/getSIDApi"].location == NSNotFound && [self.urlStr rangeOfString:@"user/welcomeApi"].location == NSNotFound){
+                NSString * version = [self.dataDict objectForKey:@"version"];
+                NSString * localVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+                if([version compare:localVersion] > 0){
+                    //强制更新
+                    [self checkUpdateOutVer:version InsideVer:localVersion];
+                    [ControllerManager setCheckUpdate];
+                }
+            }
+            
+            
 //            if ([[USER objectForKey:@"shouldLogin"] intValue] == 0) {
 //                [self login];
 //                [USER setObject:@"1" forKey:@"shouldLogin"];
@@ -225,7 +237,8 @@
     }
     //数据保存 下次请求时候判断可否在次使用
 //    [self.data writeToFile:self.FileName atomically:YES];
-
+    
+    
     self.httpRequestBlock(YES,self);
     [self deallocData];
 }
@@ -243,7 +256,7 @@
 
 -(id)initWithUrlStr:(NSString*)str Block:(void(^)(BOOL,httpDownloadBlock*))a{
     if (self=[super init]) {
-        
+        self.urlStr = str;
         self.httpRequestBlock=a;
         [self httpRequest:str];
     }
@@ -258,9 +271,11 @@
     NSString * code = [NSString stringWithFormat:@"uid=%@dog&cat", UDID];
     NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@", LOGINAPI, UDID, [MyMD5 md5:code]];
     NSLog(@"login-url:%@", url);
+    
+    __block httpDownloadBlock * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){
-            NSLog(@"%@", load.dataDict);
+//            NSLog(@"%@", load.dataDict);
             [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
             [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
             [USER setObject:[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] forKey:@"isSuccess"];
@@ -269,7 +284,7 @@
 //            self.overDue();
             NSLog(@"============SID过期============");
             //检查更新
-            [self checkUpdateOutVer:[load.dataDict objectForKey:@"version"] InsideVer:[[load.dataDict objectForKey:@"data"] objectForKey:@"version"]];
+            [blockSelf checkUpdateOutVer:[load.dataDict objectForKey:@"version"] InsideVer:[[load.dataDict objectForKey:@"data"] objectForKey:@"version"]];
         }else{
             LOADFAILED;
         }
@@ -298,17 +313,19 @@
     if (type1 == 1 || type2 == 1) {
         NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"version=%@dog&cat", outVer]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", UPDATEAPI, outVer, sig, [ControllerManager getSID]];
-        NSLog(@"%@", url);
+        NSLog(@"下载更新内容API：%@", url);
+        
+        __block httpDownloadBlock * blockSelf = self;
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
-                self.ios_url = [[load.dataDict objectForKey:@"data"] objectForKey:@"ios_url"];
+                blockSelf.ios_url = [[load.dataDict objectForKey:@"data"] objectForKey:@"ios_url"];
                 NSString * msg = [[load.dataDict objectForKey:@"data"] objectForKey:@"upgrade_content"];
                 
                 NSString * msg2 = @"";
                 if ([msg isKindOfClass:[NSString class]] && msg.length) {
                     msg2 = [msg stringByReplacingOccurrencesOfString:@"&" withString:@"\n"];
                 }
-                self.updateDetailMsg = msg2;
+                blockSelf.updateDetailMsg = msg2;
                 
                 if(type1 == 1){
                     //强制

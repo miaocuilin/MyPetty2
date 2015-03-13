@@ -115,4 +115,9 @@
 
 //+(void)updatePetsData;
 
++(NSURL *)returnClipThumbImageURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h;
+
++(NSURL *)returnThumbImageURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h;
++(NSURL *)returnThumbUserTxURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h;
++(NSURL *)returnThumbPetTxURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h;
 @end

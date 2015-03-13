@@ -5463,8 +5463,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-3";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -5488,7 +5488,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "dog&cat";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f468dc41-3e8d-40eb-8917-fb570823286a";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -5502,8 +5502,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-3";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_MODULES_AUTOLINK = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Aidi Game Ltd. (7LDU7D66UY)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Tools/AviarySDK",
@@ -5526,7 +5526,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "dog&cat";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f468dc41-3e8d-40eb-8917-fb570823286a";
 				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

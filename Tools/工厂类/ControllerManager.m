@@ -31,6 +31,7 @@ MBProgressHUD *HUD;
 
 static FirstTabBarViewController * tabBar = nil;
 
+static NSInteger checkUpdate;
 
 +(id)shareManagerRandom
 {
@@ -619,5 +620,14 @@ static FirstTabBarViewController * tabBar = nil;
         [queue setMaxConcurrentOperationCount:3];
     });
     return queue;
+}
+
++(NSInteger)getCheckUpdate
+{
+    return checkUpdate;
+}
++(void)setCheckUpdate
+{
+    checkUpdate = 1;
 }
 @end

@@ -61,149 +61,20 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
     
     [self addSubview:self.titleLabel];
 }
-//- (UIImageView *)photoView {
-//    if (!_photoView) {
-//        _photoView = [[UIImageView alloc] init];
-//        _photoView.contentMode = UIViewContentModeScaleAspectFill;
-////        _photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-20);
-//        _photoView.clipsToBounds = YES;
-//        [self addSubview:_photoView];
-//    }
-//    return _photoView;
-//}
 
-//- (UILabel *)titleLabel {
-//    if (!_titleLabel) {
-////        _titleLabel = [MyControl createLabelWithFrame:CGRectZero Font:15 Text:nil];
-//        _titleLabel = [MyControl createLabelWithFrame:CGRectZero Font:12 Text:nil];
-////        _titleLabel.backgroundColor = [[UIColor darkGrayColor] colorWithAlphaComponent:0.7];
-//        _titleLabel.textColor = [UIColor blackColor];
-////        _titleLabel.layer.masksToBounds = YES;
-////        _titleLabel.layer.cornerRadius = 5;
-////        _titleLabel.textAlignment = NSTextAlignmentRight;
-//        _titleLabel.font = [UIFont systemFontOfSize:12];
-////        _titleLabel.userInteractionEnabled = YES;
-//
-//        [self addSubview:_titleLabel];
-////
-////        self.heart = [MyControl createImageViewWithFrame:CGRectMake(5, 5, 20, 20) ImageName:@"11-1.png"];
-////        [_titleLabel addSubview:self.heart];
-////        
-////        
-////        self.heartButton = [MyControl createButtonWithFrame:CGRectMake(0, 0, 55, 26) ImageName:@"" Target:self Action:@selector(buttonClick:) Title:nil];
-////        [_titleLabel addSubview:self.heartButton];
-//    }
-//    return _titleLabel;
-//}
 -(void)configUI:(PhotoModel *)model
 {
     cmtHeight = model.cmtHeight;
     cmtWidth = model.cmtWidth;
     
-    NSURL * URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]];
-//    SDWebImageManager * manager = [SDWebImageManager sharedManager];
-//    [manager downloadWithURL:URL options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-//        if (image) {
-//            if (image.size.width>2000 || image.size.height>2000) {
-//                _photoView.image = [UIImage imageWithData:[MyControl scaleToSize:image]];
-//            }else{
-//                _photoView.image = image;
-//            }
-//            
-//        }else{
-//            [_photoView setImage:[UIImage imageNamed:@"water_white.png"]];
-//        }
-//    }];
-    [_photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image.size.width>2500 || image.size.height>2500) {
-//            NSLog(@"waterflow pic size is %f--%f", image.size.width, image.size.height);
-            [MyControl thumbnailWithImage:image ImageView:_photoView TargetLength:2500.0f];
-//            [blockSelf receiveImage:image];
-        }
-    }];
-    
-    
-//    if (!cmtHeight) {
-//        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35);
-//        self.titleLabel.frame = CGRectMake(4, self.frame.size.height - 18, self.frame.size.width-8, 0);
-//    }else{
-//        NSLog(@"%f--%f--%@", cmtHeight, cmtHeight-10-18, self.titleLabel.text);
-//        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-cmtHeight);
-//        self.titleLabel.frame = CGRectMake(4, self.frame.size.height - cmtHeight + 10, self.frame.size.width-8, cmtHeight-10-18);
-//    }
-    
-//    if (!model.cmtHeight) {
-//        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35);
-//    }else{
-//        self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-model.cmtHeight);
-//        self.titleLabel.frame = CGRectMake(kTMPhotoQuiltViewMargin+4, self.bounds.size.height - 30 - kTMPhotoQuiltViewMargin, self.frame.size.width-8, 40);
-//    }
-    
-//    NSLog(@"%@", self.titleLabel.text);
-    
-    //解析点赞者字符串，与[USER objectForKey:@"usr_id"]对比
-//    if(![model.likers isKindOfClass:[NSNull class]]){
-//        self.likersArray = [model.likers componentsSeparatedByString:@","];
-//        
-//        for(NSString * str in self.likersArray){
-//            if ([str isEqualToString:[USER objectForKey:@"usr_id"]]) {
-//                isLike = YES;
-//                break;
-//            }
-//        }
-//    }
-//    NSLog(@"%@--%@", model.likers, self.likersArray);
-    
-//    if (isLike) {
-//
-//        self.heart.image = [UIImage imageNamed:@"11-2.png"];
-//        self.heartButton.selected = YES;
-//        isLike = NO;
-//    }
+    NSURL * URL = [MyControl returnThumbImageURLwithName:model.url Width:[UIScreen mainScreen].bounds.size.width Height:0];
+
+    [_photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"]];
 }
 
-//-(void)receiveImage:(UIImage *)tempImage
-//{
-//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-////        [self modifyImage:tempImage];
-//        NSLog(@"********超过2000！********");
-//        float w = tempImage.size.width;
-//        float h = tempImage.size.height;
-//        float p = 0;
-//        if (w>h && tempImage.size.width>2000) {
-//            p = 2000/w;
-//        }else if(h>w && tempImage.size.height>2000){
-//            p = 2000/h;
-//        }
-//        w *= p;
-//        h *= p;
-//        NSLog(@"%f--%f", w, h);
-//        //改变图片大小
-//        CGRect rect = CGRectMake(0, 0, w, h);
-//        UIGraphicsBeginImageContext(rect.size);
-//        //重新绘图
-//        [tempImage drawInRect:rect];
-//        UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
-//        UIGraphicsEndImageContext();
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            if (image) {
-//                _photoView.image = image;
-//            }else{
-//                NSLog(@"***thumbnail image is nil***");
-//                _photoView.image = tempImage;
-//            }
-//        });
-//    });
-////    [self performSelectorInBackground:@selector(modifyImage:) withObject:tempImage];
-//}
 
 - (void)layoutSubviews {
-//    CGSize size = [self.titleLabel.text sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(cmtWidth, 100) lineBreakMode:1];
-//    NSLog(@"%d--%@--%.0f--%f", cmtHeight, self.titleLabel.text, size.height, self.frame.size.height);
-    
-//    self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35);
-//    NSLog(@"%@", self.titleLabel.text);
+
     if (!cmtHeight) {
         self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-35);
         self.titleLabel.frame = CGRectMake(4, self.frame.size.height - 18, self.frame.size.width-8, 0);
@@ -212,7 +83,6 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
         self.photoView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height-cmtHeight);
         self.titleLabel.frame = CGRectMake(4, self.frame.size.height - cmtHeight + 10, self.frame.size.width-8, cmtHeight-10-18);
     }
-//    self.ph
 //    self.titleLabel.frame = CGRectMake(kTMPhotoQuiltViewMargin+4, self.bounds.size.height - 30 - kTMPhotoQuiltViewMargin, self.frame.size.width-8, 7);
 }
 

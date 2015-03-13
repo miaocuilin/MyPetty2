@@ -70,7 +70,10 @@
     //
     bigImage = [MyControl createImageViewWithFrame:CGRectMake(8, 10, lab1.frame.origin.x-20, 160) ImageName:@""];
     bigImage.contentMode = UIViewContentModeScaleAspectFit;
-    [bigImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.dict objectForKey:@"url"]]]];
+    
+    NSURL *url = [MyControl returnThumbImageURLwithName:[self.dict objectForKey:@"url"] Width:bigImage.frame.size.width*2 Height:bigImage.frame.size.height*2];
+    [bigImage setImageWithURL:url placeholderImage:[UIImage imageNamed:@"water_white.png"]];
+    
     [bgView addSubview:bigImage];
     
     //

@@ -265,6 +265,7 @@
         NSString * tx = [conversation.latestMessageFromOthers.ext objectForKey:@"tx"];
         if (![tx isKindOfClass:[NSNull class]] && tx.length) {
             cell.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, tx]];
+            cell.tx = tx;
         }
         cell.name = [conversation.latestMessageFromOthers.ext objectForKey:@"nickname"];
         cell.usr_id = conversation.chatter;
@@ -273,6 +274,7 @@
         NSString * tx = [conversation.latestMessage.ext objectForKey:@"other_tx"];
         if (![tx isKindOfClass:[NSNull class]] && tx.length) {
             cell.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, tx]];
+            cell.tx = tx;
         }
         cell.name = [conversation.latestMessage.ext objectForKey:@"other_nickname"];
         cell.usr_id = conversation.chatter;

@@ -14,14 +14,6 @@
     // Initialization code
 //    [self modifyUI];
 }
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self){
-      self = [[[NSBundle mainBundle] loadNibNamed:@"ExchangeCollectionViewCell" owner:self options:nil] objectAtIndex:0];
-    }
-    return self;
-}
 
 -(void)configUI:(ExchangeItemModel *)model
 {

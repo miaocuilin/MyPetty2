@@ -734,9 +734,9 @@
 //        NSLog(@"微博");
 //        NSString * str = nil;
 //        if (!self.isTrouble) {
-//            str = [NSString stringWithFormat:@"随便一摇就摇出了一个%@，好惊喜，你也想试试吗？http://home4pet.aidigame.com/（分享自@宠物星球社交应用）", self.giftName];
+//            str = [NSString stringWithFormat:@"随便一摇就摇出了一个%@，好惊喜，你也想试试吗？http://home4pet.imengstar.com/（分享自@宠物星球社交应用）", self.giftName];
 //        }else{
-//            str = [NSString stringWithFormat:@"嘿嘿~我在宠物星球捉弄了萌宠%@，恶作剧的感觉真是妙不可言~http://home4pet.aidigame.com/(分享自@宠物星球社交应用）", self.pet_name];
+//            str = [NSString stringWithFormat:@"嘿嘿~我在宠物星球捉弄了萌宠%@，恶作剧的感觉真是妙不可言~http://home4pet.imengstar.com/(分享自@宠物星球社交应用）", self.pet_name];
 //        }
 //        
 //        BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];

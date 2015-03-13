@@ -715,20 +715,17 @@
         tx = @"";
     }
     
-    NSString * str = nil;
+    NSURL * url = nil;
     UIImage * defaultImage = nil;
     if (isPet) {
-        str = [NSString stringWithFormat:@"%@%@", PETTXURL, tx];
+        url = [MyControl returnThumbPetTxURLwithName:tx Width:btn.frame.size.width*2 Height:btn.frame.size.height*2];
         defaultImage = [UIImage imageNamed:@"defaultPetHead.png"];
     }else{
-        str = [NSString stringWithFormat:@"%@%@", USERTXURL, tx];
+        url = [MyControl returnThumbUserTxURLwithName:tx Width:btn.frame.size.width*2 Height:btn.frame.size.height*2];
         defaultImage = [UIImage imageNamed:@"defaultUserHead.png"];
     }
-    [btn setBackgroundImageWithURL:[NSURL URLWithString:str] forState:UIControlStateNormal placeholderImage:defaultImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image && image.size.width != image.size.height) {
-            [btn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-        }
-    }];
+    [btn setBackgroundImageWithURL:url forState:UIControlStateNormal placeholderImage:defaultImage options:SDWebImageRetryFailed | SDWebImageLowPriority];
+//    [btn setBackgroundImageWithURL:url forState:UIControlStateNormal placeholderImage:defaultImage];
 }
 +(void)setImageForImageView:(UIImageView *)imageView Tx:(NSString *)tx isPet:(BOOL)isPet
 {
@@ -736,26 +733,20 @@
         tx = @"";
     }
     
-    NSString * str = nil;
+    NSURL * url = nil;
     UIImage * defaultImage = nil;
     if (isPet) {
-        str = [NSString stringWithFormat:@"%@%@", PETTXURL, tx];
+        url = [MyControl returnThumbPetTxURLwithName:tx Width:imageView.frame.size.width*2 Height:imageView.frame.size.height*2];
+//        str = [NSString stringWithFormat:@"%@%@", PETTXURL, tx];
         defaultImage = [UIImage imageNamed:@"defaultPetHead.png"];
     }else{
-        str = [NSString stringWithFormat:@"%@%@", USERTXURL, tx];
+        url = [MyControl returnThumbUserTxURLwithName:tx Width:imageView.frame.size.width*2 Height:imageView.frame.size.height*2];
+//        str = [NSString stringWithFormat:@"%@%@", USERTXURL, tx];
         defaultImage = [UIImage imageNamed:@"defaultUserHead.png"];
     }
-    [imageView setImageWithURL:[NSURL URLWithString:str] placeholderImage:defaultImage completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (!image) {
-            if (!isPet) {
-                [imageView setImage:[UIImage imageNamed:@"defaultUserHead.png"]];
-            }else{
-                [imageView setImage:[UIImage imageNamed:@"defaultPetHead.png"]];
-            }
-            
-//            [imageView setImage:[MyControl returnSquareImageWithImage:image]];
-        }
-    }];
+    [imageView setImageWithURL:url placeholderImage:defaultImage options:SDWebImageRetryFailed | SDWebImageLowPriority];
+//    [imageView setImageWithURL:url placeholderImage:defaultImage];
+    
     imageView.contentMode = UIViewContentModeScaleAspectFill;
 }
 
@@ -888,4 +879,44 @@
 //    }];
 //    [request release];
 //}
+
+
++(NSURL *)returnThumbImageURLwithType:(NSString *)type Name:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h
+{
+    /*指定宽高，1l表示如果缩略图大于原图不处理，.src表示返回原格式图片，避免变形*/
+    NSString * string = nil;
+    if(w == 0){
+        string = [NSString stringWithFormat:@"%@%@@%dh_1l.src", type, name, h];
+    }else if(h == 0){
+        string = [NSString stringWithFormat:@"%@%@@%dw_1l.src", type, name, w];
+    }else{
+        //如果是头像就进行自动裁剪处理1e_1c伴随使用
+        if ([type isEqualToString:THUMBPETTXURL] || [type isEqualToString:THUMBUSERTXURL]) {
+            string = [NSString stringWithFormat:@"%@%@@%dw_%dh_1l_1e_1c.src", type, name, w, h];
+        }else{
+            string = [NSString stringWithFormat:@"%@%@@%dw_%dh_1l.src", type, name, w, h];
+        }
+    }
+    
+    return [NSURL URLWithString:string];
+}
+//经过裁剪的非头像图片
++(NSURL *)returnClipThumbImageURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h
+{
+    NSString * string = [NSString stringWithFormat:@"%@%@@%dw_%dh_1l_1e_1c.src", THUMBIMAGEURL, name, w, h];
+    return [NSURL URLWithString:string];
+}
+
++(NSURL *)returnThumbImageURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h
+{
+    return [self returnThumbImageURLwithType:THUMBIMAGEURL Name:name Width:w Height:h];
+}
++(NSURL *)returnThumbUserTxURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h
+{
+    return [self returnThumbImageURLwithType:THUMBUSERTXURL Name:name Width:w Height:h];
+}
++(NSURL *)returnThumbPetTxURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h
+{
+    return [self returnThumbImageURLwithType:THUMBPETTXURL Name:name Width:w Height:h];
+}
 @end

@@ -292,11 +292,7 @@
 //    charge.hidden = NO;
     slogan.hidden = YES;
     
-    [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [USER objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-            [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-        }
-    }];
+    [MyControl setImageForBtn:headBtn Tx:[USER objectForKey:@"tx"] isPet:NO isRound:YES];
     
     name.text = [USER objectForKey:@"name"];
     

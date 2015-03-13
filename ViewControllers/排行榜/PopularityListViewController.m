@@ -17,6 +17,12 @@
 
 @implementation PopularityListViewController
 
+//-(void)dealloc
+//{
+//    [super dealloc];
+//}
+
+
 - (NSInteger)category
 {
     if (!_category) {
@@ -80,6 +86,7 @@
     
     [self loadData];
     
+    [tv registerNib:[UINib nibWithNibName:@"PopularityCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"PopularityCell"];
 }
 - (void)loadData
 {
@@ -87,16 +94,18 @@
     NSString *rankSig = [MyMD5 md5:[NSString stringWithFormat:@"category=%ddog&cat",self.category]];
     NSString *rank = [NSString stringWithFormat:@"%@%d&sig=%@&SID=%@",POPULARRANKAPI,self.category,rankSig,[ControllerManager getSID]];
     NSLog(@"rank:%@",rank);
+    
+    __block PopularityListViewController * blockSelf = self;
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:rank Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
 //            NSLog(@"人气排行数据：%@",load.dataDict);
 //            arrow.hidden = NO;
-            [self.rankDataArray removeAllObjects];
-            [self.limitRankDataArray removeAllObjects];
+            [blockSelf.rankDataArray removeAllObjects];
+            [blockSelf.limitRankDataArray removeAllObjects];
             if (![[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]]) {
                 
                 [MyControl loadingFailedWithContent:@"数据异常" afterDelay:0.7];
-                [tv reloadData];
+                [blockSelf->tv reloadData];
                 return;
             }
             NSArray *array = [load.dataDict objectForKey:@"data"];
@@ -105,19 +114,19 @@
                 NSDictionary *dict = array[i];
                 popularityListModel *model = [[popularityListModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.rankDataArray addObject:model];
+                [blockSelf.rankDataArray addObject:model];
                 [model release];
             }
             
-            NSLog(@"%@--%d", self.selectedWords, selectLine);
-            if ([self.selectedWords isEqualToString:@"所有"]) {
-                [self.limitRankDataArray addObjectsFromArray:self.rankDataArray];
+//            NSLog(@"%@--%d", blockSelf.selectedWords, blockSelf->selectLine);
+            if ([blockSelf.selectedWords isEqualToString:@"所有"]) {
+                [blockSelf.limitRankDataArray addObjectsFromArray:blockSelf.rankDataArray];
             }else{
-                for (int i=0; i<self.rankDataArray.count; i++) {
-                    popularityListModel * model = self.rankDataArray[i];
+                for (int i=0; i<blockSelf.rankDataArray.count; i++) {
+                    popularityListModel * model = blockSelf.rankDataArray[i];
                     
-                    if([[model type] intValue]/100 == selectLine){
-                        [self.limitRankDataArray addObject:self.rankDataArray[i]];
+                    if([[model type] intValue]/100 == blockSelf->selectLine){
+                        [blockSelf.limitRankDataArray addObject:blockSelf.rankDataArray[i]];
                     }
 //                    if ([[ControllerManager returnCateNameWithType:[model type]] isEqualToString:self.selectedWords]) {
 //                        
@@ -127,13 +136,14 @@
             
 //            [self createTableView];
             if ([[USER objectForKey:@"isSuccess"] intValue]) {
-                [self loadUserPetsInfo];
+                [blockSelf loadUserPetsInfo];
+//                ENDLOADING;
             }else{
-                [tv reloadData];
-                if(self.isFromPetMain && self.targetAid != nil){
-                    for (int i=0; i<self.limitRankDataArray.count; i++) {
-                        if ([[self.limitRankDataArray[i] aid] isEqualToString:self.targetAid]) {
-                            tv.contentOffset = CGPointMake(0, i*50);
+                [blockSelf->tv reloadData];
+                if(blockSelf.isFromPetMain && blockSelf.targetAid != nil){
+                    for (int i=0; i<blockSelf.limitRankDataArray.count; i++) {
+                        if ([[blockSelf.limitRankDataArray[i] aid] isEqualToString:blockSelf.targetAid]) {
+                            blockSelf->tv.contentOffset = CGPointMake(0, i*50);
                             break;
                         }
                     }
@@ -153,22 +163,23 @@
     NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"%@", url);
+    __block PopularityListViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"--%@", load.dataDict);
-            [self.aidsArray removeAllObjects];
-            [self.myCountryArray removeAllObjects];
+//            NSLog(@"--%@", load.dataDict);
+            [blockSelf.aidsArray removeAllObjects];
+            [blockSelf.myCountryArray removeAllObjects];
             
-            self.myCountryRankArray = [load.dataDict objectForKey:@"data"];
-            for (int i=0; i<self.myCountryRankArray.count; i++) {
-                [self.aidsArray addObject:[self.myCountryRankArray[i] objectForKey:@"aid"]];
+            blockSelf.myCountryRankArray = [load.dataDict objectForKey:@"data"];
+            for (int i=0; i<blockSelf.myCountryRankArray.count; i++) {
+                [blockSelf.aidsArray addObject:[blockSelf.myCountryRankArray[i] objectForKey:@"aid"]];
             }
             //筛选出我的国家在数组中的位置
 //            if ([self.selectedWords isEqualToString:@"所有种族"]) {
-                for (int i=0; i<self.limitRankDataArray.count; i++) {
-                    for (int j=0; j<self.aidsArray.count; j++) {
-                        if ([[self.limitRankDataArray[i] aid] isEqualToString:self.aidsArray[j]]) {
-                            [self.myCountryArray addObject:[NSString stringWithFormat:@"%d", i+1]];
+                for (int i=0; i<blockSelf.limitRankDataArray.count; i++) {
+                    for (int j=0; j<blockSelf.aidsArray.count; j++) {
+                        if ([[blockSelf.limitRankDataArray[i] aid] isEqualToString:blockSelf.aidsArray[j]]) {
+                            [blockSelf.myCountryArray addObject:[NSString stringWithFormat:@"%d", i+1]];
                             break;
                         }
                     }
@@ -178,8 +189,8 @@
 //                
 //            }
             
-            NSLog(@"-----self.myCountryArray:%@", self.myCountryArray);
-            count = 0;
+//            NSLog(@"-----self.myCountryArray:%@", self.myCountryArray);
+            blockSelf->count = 0;
             /***************逻辑判断*****************/
 //            if (self.view.frame.size.height == 480) {
 //                //iPhone4s  3名，7名
@@ -223,22 +234,22 @@
 //                }
 //            }
             ENDLOADING;
-            if (self.isFromPetMain) {
-                if(self.targetAid != nil){
-                    for (int i=0; i<self.limitRankDataArray.count; i++) {
-                        if ([[self.limitRankDataArray[i] aid] isEqualToString:self.targetAid]) {
-                            tv.contentOffset = CGPointMake(0, i*50);
-                            [tv reloadData];
+            if (blockSelf.isFromPetMain) {
+                if(blockSelf.targetAid != nil){
+                    for (int i=0; i<blockSelf.limitRankDataArray.count; i++) {
+                        if ([[blockSelf.limitRankDataArray[i] aid] isEqualToString:blockSelf.targetAid]) {
+                            blockSelf->tv.contentOffset = CGPointMake(0, i*50);
+                            [blockSelf->tv reloadData];
                             break;
-                        }else if(i == self.limitRankDataArray.count-1){
+                        }else if(i == blockSelf.limitRankDataArray.count-1){
 //                            [self findMeBtnClick];
-                            [tv reloadData];
+                            [blockSelf->tv reloadData];
                         }
                     }
                 }
             }else{
 //                [self findMeBtnClick];
-                [tv reloadData];
+                [blockSelf->tv reloadData];
             }
             
 //            [tv reloadData];
@@ -273,55 +284,23 @@
         }
     }
 
-    
-//    for (int i=0; i<[dict3 count]; i++) {
-//        NSString * str = [dict3 objectForKey:[NSString stringWithFormat:@"%d", 300+i+1]];
-//        [self.otherArray addObject:str];
-//        [self.totalArray addObject:str];
-//    }
 }
 -(void)createBg
 {
     UIImageView * imageView = [MyControl createImageViewWithFrame:[UIScreen mainScreen].bounds ImageName:@"blurBg.jpg"];
     [self.view addSubview:imageView];
-//    bgImageView = [MyControl createImageViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height) ImageName:@""];
-//    [self.view addSubview:bgImageView];
-//    //    self.bgImageView.backgroundColor = [UIColor redColor];
-////    NSString * docDir = DOCDIR;
-//    NSString * filePath = BLURBG;
-//    NSLog(@"%@", filePath);
-//    NSData * data = [NSData dataWithContentsOfFile:filePath];
-//    //    NSLog(@"%@", data);
-//    UIImage * image = [UIImage imageWithData:data];
-//    bgImageView.image = image;
-//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
-//    tempView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
-//    [self.view addSubview:tempView];
 }
 #pragma mark - 创建tableView
 -(void)createTableView
 {
     tv = [[UITableView alloc] initWithFrame:CGRectMake(0, 64+35+35, self.view.frame.size.width, self.view.frame.size.height-(64+35+35)) style:UITableViewStylePlain];
-//    if (self.view.frame.size.height == 480) {
-//        tv.frame = CGRectMake(0, 0, 320, 64+35+35+50*3);
-//    }
+
     tv.delegate = self;
     tv.dataSource = self;
     tv.separatorStyle = 0;
     tv.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tv];
-
-//    UIView * tempView = [MyControl createViewWithFrame:CGRectMake(0, 0, 320, 64+35+35)];
-//    tv.tableHeaderView = tempView;
-    
-//    tv2 = [[UITableView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-50*3, 320, 50*3) style:UITableViewStylePlain];
-//    tv2.delegate = self;
-//    tv2.dataSource = self;
-//    tv2.separatorStyle = 0;
-//    tv2.showsVerticalScrollIndicator = NO;
-//    tv2.scrollEnabled = NO;
-//    tv2.backgroundColor = [UIColor clearColor];
-//    [self.view addSubview:tv2];
+    [tv release];
 }
 #pragma mark - 创建arrow
 -(void)createArrow
@@ -353,24 +332,19 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString * cellID = @"xibCell";
-    BOOL nibsRegistered = NO;
-    if (!nibsRegistered) {
-        UINib * nib = [UINib nibWithNibName:@"PopularityCell" bundle:nil];
-        [tableView registerNib:nib forCellReuseIdentifier:cellID];
-        nibsRegistered = YES;
-    }
+    static NSString * cellID = @"PopularityCell";
+
     PopularityCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-//    if (!cell) {
-//        cell = [[[NSBundle mainBundle] loadNibNamed:@"PopularityCell" owner:self options:nil] objectAtIndex:0];
-//    }
+    
     popularityListModel *model = [self.limitRankDataArray objectAtIndex:indexPath.row];
     [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:indexPath.row%2 shouldLarge:NO];
+    
+    __block PopularityListViewController * blockSelf = self;
     cell.cellClick = ^(int num){
         NSLog(@"跳转到第%d个国家", num);
         PetMainViewController *petInfoVC = [[PetMainViewController alloc] init];
         petInfoVC.aid = model.aid;
-        [self presentViewController:petInfoVC animated:YES completion:nil];
+        [blockSelf presentViewController:petInfoVC animated:YES completion:nil];
         [petInfoVC release];
     };
     cell.selectionStyle = 0;
@@ -392,50 +366,9 @@
     }else{
         [cell configUIWithName:model.name rq:model.t_rq rank:indexPath.row+1 upOrDown:model.vary shouldLarge:NO];
     }
-    
-    [cell.headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-            cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(64, 64)];
-        }else{
-            
-        }
-    }];
-//    SDWebImageManager *manager = [SDWebImageManager sharedManager];
-//    cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-//    
-//    [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx]] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-//        cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(64, 64)];
-//        if (!image) {
-//            cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-//        }
-//    }];
-    
-    
-//    [cell.headImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx]] placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"]];
-    
-//    NSLog(@"model.tx:%@",model.tx);
-//    if ([model.tx isEqualToString:@""]) {
-//        cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-//    }else{
-//        NSString *headImagePath = [DOCDIR stringByAppendingString:model.tx];
-//        UIImage *image = [UIImage imageWithContentsOfFile:headImagePath];
-//        if (image) {
-//            cell.headImageView.image = [MyControl image:image fitInSize:CGSizeMake(32, 32)];
-////            NSLog(@"%f--%f", image.size.width, image.size.height);
-//        }else{
-//            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL,model.tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-////                NSLog(@"load.image:%@",load.dataImage);
-//                if (isFinish) {
-//                    if (load.dataImage == NULL) {
-//                        cell.headImageView.image = [UIImage imageNamed:@"defaultPetHead.png"];
-//                    }else{
-//                        cell.headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(64, 64)];
-//                    }
-//                }
-//            }];
-//            [request release];
-//        }
-//    }
+
+    [MyControl setImageForImageView:cell.headImageView Tx:model.tx isPet:YES isRound:YES];
+
 //    NSLog(@"titleBtn.currentTitle:%@",titleBtn.currentTitle);
     if ([titleBtn.currentTitle isEqualToString:@"总人气榜"]) {
         cell.rqNum.text = model.t_rq;
@@ -456,7 +389,7 @@
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView == tv) {
-        NSLog(@"%d----%d", self.rankDataArray.count, self.limitRankDataArray.count);
+//        NSLog(@"%d----%d", self.rankDataArray.count, self.limitRankDataArray.count);
 //        arrow.alpha = 0;
 //        arrow.hidden = YES;
 //        findMeBtn.userInteractionEnabled = NO;

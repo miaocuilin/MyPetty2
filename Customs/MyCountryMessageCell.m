@@ -129,29 +129,10 @@
         
 //        photoImage.image = [UIImage imageNamed:@"cat2.jpg"];
         /**************************/
-        if (!([[model.content objectForKey:@"img_url"] isKindOfClass:[NSNull class]] || [[model.content objectForKey:@"img_url"] length]==0)) {
-            NSString * docDir = DOCDIR;
-            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [model.content objectForKey:@"img_url"]]];
-            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-            if (image) {
-                picture.image = image;
-//                [photoImage setBackgroundImage:image forState:UIControlStateNormal];
-            }else{
-                //下载头像
-                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, [model.content objectForKey:@"img_url"]] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                    if (isFinish) {
-                        picture.image = load.dataImage;
-//                        [photoImage setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-                        NSString * docDir = DOCDIR;
-                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", [model.content objectForKey:@"img_url"]]];
-                        [load.data writeToFile:txFilePath atomically:YES];
-                    }else{
-                        NSLog(@"照片下载失败");
-                    }
-                }];
-                [request release];
-            }
-        }
+        
+        NSURL *url = [MyControl returnClipThumbImageURLwithName:[model.content objectForKey:@"img_url"] Width:photoImage.frame.size.width*2 Height:photoImage.frame.size.height*2];
+        
+        [photoImage setImageWithURL:url forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPic.jpg"]];
         /**************************/
     }else if (type == 4) {
         //礼物
@@ -284,27 +265,16 @@
     self.clickImage();
 }
 
-- (void)awakeFromNib
-{
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
--(void)dealloc
-{
-    [grayLine release];
-    [time release];
-    [body release];
-    [typeImageView release];
-    [photoImage release];
-    [sendOne release];
-    [playOne release];
-    [touchOne release];
-    [super dealloc];
-}
+//-(void)dealloc
+//{
+//    [grayLine release];
+//    [time release];
+//    [body release];
+//    [typeImageView release];
+//    [photoImage release];
+//    [sendOne release];
+//    [playOne release];
+//    [touchOne release];
+//    [super dealloc];
+//}
 @end

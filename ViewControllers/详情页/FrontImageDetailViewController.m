@@ -673,29 +673,9 @@
 }
 -(void)modifyBackPage
 {
+    [MyControl setImageForBtn:headBtn Tx:[self.petDict objectForKey:@"tx"] isPet:YES isRound:YES];
     
-    //back
-//    CGRect rect1 = tv.frame;
-//    rect1.size.height = imageBgView2.frame.size.height-rect1.origin.y-15;
-//    tv.frame = rect1;
-//    
-//    CGRect rect2 = desTv.frame;
-//    rect2.size.height = imageBgView2.frame.size.height-rect2.origin.y-15;
-//    desTv.frame = rect2;
-    
-    
-    [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.petDict objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-            [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-        }
-    }];
-    
-//    NSLog(@"%@", self.petDict);
-    [userTx setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [self.petDict objectForKey:@"u_tx"]]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-//            [bUserTx setImage:[MyControl returnSquareImageWithImage:image]];
-        }
-    }];
+    [MyControl setImageForImageView:userTx Tx:[self.petDict objectForKey:@"u_tx"] isPet:NO isRound:YES];
     
     
     if ([[self.petDict objectForKey:@"gender"] intValue] == 1) {
@@ -1528,7 +1508,7 @@
 //        }];
 //    }else{
 //        NSLog(@"微博");
-//        NSString * str = @"雷达报告发现一只萌宠，火速围观！http://home4pet.aidigame.com/（分享自@宠物星球社交应用）";
+//        NSString * str = @"雷达报告发现一只萌宠，火速围观！http://home4pet.imengstar.com/（分享自@宠物星球社交应用）";
 //        //        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
 //        //            if (response.responseCode == UMSResponseCodeSuccess) {
 //        //                NSLog(@"分享成功！");
@@ -2437,9 +2417,9 @@
         
         CGSize size;
         if ([MyControl isIOS7]) {
-            size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+            size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 1000) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
         }else{
-            size = [self.bodyArray[indexPath.row] sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(textWidth, 100) lineBreakMode:1];
+            size = [self.bodyArray[indexPath.row] sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(textWidth, 1000) lineBreakMode:1];
         }
 //        CGSize size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
         if (size.height>15.0) {
@@ -2475,9 +2455,9 @@
         
         CGSize size;
         if ([MyControl isIOS7]) {
-            size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+            size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 1000) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
         }else{
-            size = [self.bodyArray[indexPath.row] sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(textWidth, 100) lineBreakMode:1];
+            size = [self.bodyArray[indexPath.row] sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(textWidth, 1000) lineBreakMode:1];
         }
 //        CGSize size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
         if (size.height>15.0) {

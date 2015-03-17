@@ -79,11 +79,17 @@
 //创建单例队列
 +(NSOperationQueue *)createOperationQueue;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> dev-miao
 =======
+=======
+>>>>>>> dev-miao
 
 //检查强制更新用
 +(NSInteger)getCheckUpdate;
 +(void)setCheckUpdate;
+<<<<<<< HEAD
+>>>>>>> dev-miao
+=======
 >>>>>>> dev-miao
 @end

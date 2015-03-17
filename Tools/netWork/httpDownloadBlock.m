@@ -169,9 +169,13 @@
             if ([[self.dataDict objectForKey:@"state"] intValue] == 2) {
                 //SID过期 login
                 msg = @"网络异常，请重新操作";
-                [self login];
+                if([ControllerManager getCheckUpdate] == 0){
+                    [self login];
+                    [ControllerManager setCheckUpdate];
+                }
+                
                 self.httpRequestBlock(NO,self);
-                [self deallocData];
+//                [self deallocData];
                 return;
             }
 
@@ -272,9 +276,16 @@
     NSString * url = [NSString stringWithFormat:@"%@&uid=%@&sig=%@", LOGINAPI, UDID, [MyMD5 md5:code]];
     NSLog(@"login-url:%@", url);
     
+<<<<<<< HEAD
     __block httpDownloadBlock * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if(isFinish){
+=======
+//    __block httpDownloadBlock * blockSelf = self;
+    httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if(isFinish){
+//            httpDownloadBlock * http = blockSelf;
+>>>>>>> dev-miao
 //            NSLog(@"%@", load.dataDict);
             [ControllerManager setIsSuccess:[[[load.dataDict objectForKey:@"data"] objectForKey:@"isSuccess"] intValue]];
             [ControllerManager setSID:[[load.dataDict objectForKey:@"data"] objectForKey:@"SID"]];
@@ -378,9 +389,9 @@
 /**释放页面数据*/
 - (void)deallocData
 {
-    [self.connection release];
-    [self.data release];
-    [self.FileName release];
+    if(self.connection)[self.connection release];
+    if(self.data)[self.data release];
+    if(self.FileName)[self.FileName release];
 //    [self performSelector:@selector(delData) withObject:nil afterDelay:3];
     
 }

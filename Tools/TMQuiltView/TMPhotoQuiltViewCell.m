@@ -68,6 +68,7 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
     cmtWidth = model.cmtWidth;
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     NSURL * URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]];
 //    SDWebImageManager * manager = [SDWebImageManager sharedManager];
 //    [manager downloadWithURL:URL options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
@@ -144,12 +145,18 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 
     [_photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"]];
 >>>>>>> dev-miao
+=======
+    NSURL * URL = [MyControl returnThumbImageURLwithName:model.url Width:[UIScreen mainScreen].bounds.size.width Height:0];
+
+    [_photoView setImageWithURL:URL placeholderImage:[UIImage imageNamed:@"water_white.png"]];
+>>>>>>> dev-miao
 }
 <<<<<<< HEAD
 -(void)modifyImage:(UIImage *)tempImage
 {
 //    if (tempImage.size.width>2000 || tempImage.size.height>2000) {
 
+<<<<<<< HEAD
 //        NSLog(@"********超过3500！********");
 //        float w = tempImage.size.width;
 //        float h = tempImage.size.height;
@@ -206,6 +213,8 @@ const CGFloat kTMPhotoQuiltViewMargin = 0;
 =======
 >>>>>>> dev-miao
 
+=======
+>>>>>>> dev-miao
 
 - (void)layoutSubviews {
 

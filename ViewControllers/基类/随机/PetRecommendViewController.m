@@ -276,7 +276,9 @@
         NSLog(@"跳转到第%d张图片详情页", a);
         FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = [[[self.dataArray[indexPath.row] images] objectAtIndex:a] objectForKey:@"img_id"];
-//        MainViewController * main = [ControllerManager shareMain];
+        NSString * name = [model.images[a] objectForKey:@"url"];
+        NSURL * url = [MyControl returnThumbImageURLwithName:name Width:130.0*2 Height:130.0*2];
+        vc.imageURL = url;
         [ControllerManager addTabBarViewController:vc];
         [vc release];
     };

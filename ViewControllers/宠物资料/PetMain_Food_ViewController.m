@@ -223,9 +223,13 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     int a = indexPath.row;
-    NSLog(@"%d", a);
+//    NSLog(@"%d", a);
+    BegFoodListModel *model = self.dataArray[a];
     FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
     vc.img_id = [self.dataArray[a] img_id];
+    NSURL *url = [MyControl returnThumbImageURLwithName:model.url Width:86.0*2 Height:86.0*2];
+    vc.imageURL = url;
+    
     [self addChildViewController:vc];
     [self.view addSubview:vc.view];
     [vc didMoveToParentViewController:self];

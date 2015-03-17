@@ -326,9 +326,10 @@
     }
     BegFoodListModel * model = self.dataArray[indexPath.row];
     
-    cell.bigClick = ^(){
+    cell.bigClick = ^(NSURL *url){
         FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = model.img_id;
+        vc.imageURL = url;
         [ControllerManager addTabBarViewController:vc];
         [vc release];
     };
@@ -371,14 +372,22 @@
         NSInteger is_food = [model.is_food integerValue];
         if (is_food == 1) {
             [heartBtn setBackgroundImage:[UIImage imageNamed:@"food_heart.png"] forState:UIControlStateNormal];
-        }else if (is_food == 2) {
-            NSArray * array = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
-            MenuModel * menuModel = array[is_food-2];
-            [heartBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", MENUURL, menuModel.pic]] forState:UIControlStateNormal];
-        }else if (is_food == 3) {
-            NSArray * array = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
-            MenuModel * menuModel = array[is_food-2];
-            [heartBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", MENUURL, menuModel.pic]] forState:UIControlStateNormal];
+        }else{
+            NSDictionary * totalMenuDict = [MyControl returnDictionaryWithData:[USER objectForKey:@"MenuData"]];
+            
+            if (totalMenuDict.count == 0) {
+                [heartBtn setBackgroundImage:[UIImage imageNamed:@"food_heart.png"] forState:UIControlStateNormal];
+            }else{
+                if ([[totalMenuDict objectForKey:model.is_food] isKindOfClass:[MenuModel class]]) {
+                    //有数据
+                    MenuModel * tempModel = [totalMenuDict objectForKey:model.is_food];
+                    [heartBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", MENUURL, tempModel.pic]] forState:UIControlStateNormal];
+                }else{
+                    //没数据
+                    [heartBtn setBackgroundImage:[UIImage imageNamed:@"food_heart.png"] forState:UIControlStateNormal];
+                }
+            }
+            
         }
     }
 }

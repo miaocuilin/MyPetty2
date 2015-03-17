@@ -61,6 +61,8 @@
 
 //字典转data
 +(NSData *)returnDataWithDictionary:(NSDictionary *)dict;
+//data转字典
++(NSDictionary *)returnDictionaryWithData:(NSData *)data;
 //路径文件转dictonary
 +(NSDictionary *)returnDictionaryWithDataPath:(NSString *)path;
 

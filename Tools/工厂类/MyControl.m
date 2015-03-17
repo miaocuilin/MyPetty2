@@ -298,6 +298,21 @@
     
     return data;
 }
+
+//路径文件转NSArray
++(NSDictionary *)returnDictionaryWithData:(NSData *)data
+{
+    if (data.length == 0) {
+        return nil;
+    }
+    NSKeyedUnarchiver * unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+    NSDictionary * dict = [[unarchiver decodeObjectForKey:@"talkData"] retain];
+    [unarchiver finishDecoding];
+    //    NSLog(@"%@", myDictionary);
+    [unarchiver autorelease];
+    
+    return [dict autorelease];
+}
 //路径文件转dictonary
 +(NSDictionary *)returnDictionaryWithDataPath:(NSString *)path
 {
@@ -338,6 +353,8 @@
     
     return [array autorelease];
 }
+
+
 
 
 #pragma mark - 传进NSURL返回图片的宽高字典

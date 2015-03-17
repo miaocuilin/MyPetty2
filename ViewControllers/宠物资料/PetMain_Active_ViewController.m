@@ -174,6 +174,11 @@
     cell.clickImage = ^(){
         FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = [[model content] objectForKey:@"img_id"];
+<<<<<<< HEAD
+=======
+        NSURL *url = [MyControl returnClipThumbImageURLwithName:[model.content objectForKey:@"img_url"] Width:190.0 Height:120.0];
+        vc.imageURL = url;
+>>>>>>> dev-miao
         [ControllerManager addViewController:vc To:blockSelf];
         [vc release];
     };

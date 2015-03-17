@@ -555,8 +555,13 @@ static NSInteger checkUpdate;
 {
     [vc willMoveToParentViewController:nil];
     [vc.view removeFromSuperview];
-//    [vc release];
+
+    [vc retain];
+//    if (![[UIDevice currentDevice].model isEqualToString:@"iPad"]) {
     [vc removeFromParentViewController];
+//    }
+    [vc release];
+    
 }
 + (void)addViewController:(UIViewController *)vc To:(UIViewController *)root
 {
@@ -623,8 +628,11 @@ static NSInteger checkUpdate;
     return queue;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> dev-miao
 =======
+=======
+>>>>>>> dev-miao
 
 +(NSInteger)getCheckUpdate
 {
@@ -634,5 +642,8 @@ static NSInteger checkUpdate;
 {
     checkUpdate = 1;
 }
+<<<<<<< HEAD
+>>>>>>> dev-miao
+=======
 >>>>>>> dev-miao
 @end

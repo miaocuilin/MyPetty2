@@ -205,8 +205,11 @@
 }
 -(void)imageBtnClick:(UIButton *)btn
 {
-    NSLog(@"%d", btn.tag);
-    self.imageClick([self.imageArray[btn.tag-400] objectForKey:@"img_id"]);
+//    NSLog(@"%d", btn.tag);
+    NSString * imageUrl = [self.imageArray[btn.tag-400] objectForKey:@"url"];
+    NSURL * url = [MyControl returnThumbImageURLwithName:imageUrl Width:100 Height:100];
+    
+    self.imageClick([self.imageArray[btn.tag-400] objectForKey:@"img_id"], url);
     [tf resignFirstResponder];
 }
 -(void)adjustCellHeight:(int)a

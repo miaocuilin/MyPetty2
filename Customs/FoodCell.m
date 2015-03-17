@@ -9,6 +9,11 @@
 #import "FoodCell.h"
 #import "MenuModel.h"
 
+@interface FoodCell ()
+
+@property (nonatomic, copy)NSString * urlStr;
+@end
+
 @implementation FoodCell
 -(void)dealloc
 {
@@ -95,7 +100,8 @@
 }
 -(void)bigBtnClick
 {
-    self.bigClick();
+    NSURL *url = [MyControl returnThumbImageURLwithName:self.urlStr Width:[UIScreen mainScreen].bounds.size.width Height:[UIScreen mainScreen].bounds.size.height];
+    self.bigClick(url);
 }
 -(void)minTime
 {
@@ -105,6 +111,7 @@
 }
 -(void)modifyUI:(BegFoodListModel *)model
 {
+    self.urlStr = model.url;
     
     leftTime.text = nil;
     self.timeStamp = model.create_time;
@@ -137,8 +144,8 @@
     leftTime.frame = CGRectMake(whiteView.frame.size.width-220, foodNum.frame.origin.y, 210, 20);
 
 //    foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-105, leftTime.frame.origin.y-84, 105, 84);
-    NSArray * array = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
-    MenuModel * menuModel = nil;
+//    NSArray * array = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
+//    MenuModel * menuModel = nil;
     
 //    self.foodTypeChange([model.is_food intValue]);
     
@@ -148,26 +155,72 @@
         [foodAnimation startAnimating];
 
     }else{
-        if([model.is_food intValue] == 2){
-            menuModel = array[0];
-        }else if([model.is_food intValue] == 3){
-            menuModel = array[1];
-        }
-        SDWebImageManager * manager = [SDWebImageManager sharedManager];
+        NSDictionary * totalMenuDict = [MyControl returnDictionaryWithData:[USER objectForKey:@"MenuData"]];
         
-        __block FoodCell * blockSelf = self;
-        [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", MENUURL, menuModel.animate1]] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
-            if (image) {
-                UIImage * image1 = image;
-                [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", MENUURL, menuModel.animate2]] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+        if (totalMenuDict.count == 0) {
+            foodAnimation.animationImages = @[[UIImage imageNamed:@"foodAnimation_1.png"], [UIImage imageNamed:@"foodAnimation_2.png"]];
+            foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-105, leftTime.frame.origin.y-84, 105, 84);
+            [foodAnimation startAnimating];
+            
+        }else{
+            if ([[totalMenuDict objectForKey:model.is_food] isKindOfClass:[MenuModel class]]) {
+                //有数据
+                MenuModel * tempModel = [totalMenuDict objectForKey:model.is_food];
+                SDWebImageManager * manager = [SDWebImageManager sharedManager];
+                
+                __block FoodCell * blockSelf = self;
+                [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", MENUURL, tempModel.animate1]] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
                     if (image) {
-                        blockSelf->foodAnimation.animationImages = @[image1, image];
-                        blockSelf->foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-image.size.width/2.0, leftTime.frame.origin.y-image.size.height/2.0, image.size.width/2.0, image.size.height/2.0);
-                        [blockSelf->foodAnimation startAnimating];
+                        UIImage * image1 = image;
+                        [manager downloadWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", MENUURL, tempModel.animate2]] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+                            if (image) {
+                                blockSelf->foodAnimation.animationImages = @[image1, image];
+                                blockSelf->foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-image.size.width/2.0, leftTime.frame.origin.y-image.size.height/2.0, image.size.width/2.0, image.size.height/2.0);
+                                [blockSelf->foodAnimation startAnimating];
+                            }
+                        }];
                     }
                 }];
+            }else{
+                foodAnimation.animationImages = @[[UIImage imageNamed:@"foodAnimation_1.png"], [UIImage imageNamed:@"foodAnimation_2.png"]];
+                foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-105, leftTime.frame.origin.y-84, 105, 84);
+                [foodAnimation startAnimating];
             }
-        }];
+        }
+        
+        
+        
+//        if (array.count == 0) {
+//            foodAnimation.animationImages = @[[UIImage imageNamed:@"foodAnimation_1.png"], [UIImage imageNamed:@"foodAnimation_2.png"]];
+//            foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-105, leftTime.frame.origin.y-84, 105, 84);
+//            [foodAnimation startAnimating];
+//        }else{
+//            //判断是否有相应label数据
+//            BOOL hasData = NO;
+//            NSInteger index;
+//            
+//            for (NSInteger i=0;i<array.count;i++) {
+//                MenuModel * tempModel = array[i];
+//                if ([tempModel.label isEqualToString:model.is_food]) {
+//                    hasData = YES;
+//                    index = i;
+//                    break;
+//                }else{
+//                    hasData = NO;
+//                }
+//            }
+//            
+//            if (!hasData) {
+//                foodAnimation.animationImages = @[[UIImage imageNamed:@"foodAnimation_1.png"], [UIImage imageNamed:@"foodAnimation_2.png"]];
+//                foodAnimation.frame = CGRectMake(whiteView.frame.size.width-10-105, leftTime.frame.origin.y-84, 105, 84);
+//                [foodAnimation startAnimating];
+//            }else{
+//                menuModel = array[index];
+//                
+//                
+//            }
+//        }
+        
     }
     
     

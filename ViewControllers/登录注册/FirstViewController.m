@@ -203,6 +203,8 @@
 
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor blackColor];
+//    [USER setObject:@"vbca2r8lqamojob4fndmb1lup1" forKey:@"SID"];
+    
     
     [USER setObject:@"1" forKey:@"planet"];
     [USER setObject:@"" forKey:@"petInfoDict"];
@@ -658,6 +660,7 @@
 -(void)loadMenuData
 {
     NSString * url = [NSString stringWithFormat:@"%@%@", MENUAPI, [ControllerManager getSID]];
+    NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSArray * array = [load.dataDict objectForKey:@"data"];
@@ -665,21 +668,28 @@
                 if ([array[0] isKindOfClass:[NSArray class]]) {
                     NSArray * arr = array[0];
                     if (arr.count == 0) {
+                        [USER setObject:@[@"0"] forKey:@"MenuList"];
                         return;
                     }
-                    NSMutableArray * mutableArray = [NSMutableArray arrayWithCapacity:0];
+                    
+                    NSMutableDictionary * totalMenuDict = [NSMutableDictionary dictionaryWithDictionary:[MyControl returnDictionaryWithData:[USER objectForKey:@"MenuData"]]];
+                    NSMutableArray * totalMenuListArray = [NSMutableArray arrayWithObject:@"0"];
+                    
                     for (NSDictionary * dict in arr) {
                         MenuModel * model = [[MenuModel alloc] init];
                         [model setValuesForKeysWithDictionary:dict];
-                        [mutableArray addObject:model];
+                        [totalMenuDict setObject:model forKey:model.label];
+                        [totalMenuListArray addObject:model.label];
+                        
                         [model release];
                     }
-                    NSData * data = [MyControl returnDataWithArray:mutableArray];
+                    NSData * data = [MyControl returnDataWithDictionary:totalMenuDict];
                     [USER setObject:data forKey:@"MenuData"];
+                    [USER setObject:totalMenuListArray forKey:@"MenuList"];
                 }
             }
         }else{
-            [USER setObject:@"" forKey:@"MenuData"];
+//            [USER setObject:@"" forKey:@"MenuData"];
         }
     }];
     [request release];

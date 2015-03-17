@@ -31,7 +31,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 @property (nonatomic, strong) ALAssetsLibrary * assetLibrary;
 @property (nonatomic, strong) NSMutableArray * sessions;
 
-@property (nonatomic, retain) NSArray * menuDataArray;
+@property (nonatomic, retain) NSDictionary * menuDataDict;
 @end
 
 @implementation PublishViewController
@@ -81,14 +81,14 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     //清空topic
-    self.menuDataArray = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
+    self.menuDataDict = [MyControl returnDictionaryWithData:[USER objectForKey:@"MenuData"]];
     
     if (self.publishType == 0) {
         [USER setObject:@"点击添加话题" forKey:@"topic"];
     }else if (self.publishType == 1){
         [USER setObject:@"挣口粮" forKey:@"topic"];
     }else{
-        MenuModel * model = self.menuDataArray[self.publishType-2];
+        MenuModel * model = [self.menuDataDict objectForKey:[NSString stringWithFormat:@"%d", self.publishType]];
         [USER setObject:model.subject forKey:@"topic"];
     }
     
@@ -219,8 +219,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     UILabel * titleLabel = [MyControl createLabelWithFrame:CGRectMake(60, 64-20-15, 200, 20) Font:17 Text:@"发布照片"];
     if (self.publishType == 1) {
         titleLabel.text = @"挣口粮";
-    }else if(self.publishType >=2 ){
-        MenuModel * model = self.menuDataArray[self.publishType-2];
+    }else if(self.publishType >=2){
+        MenuModel * model = [self.menuDataDict objectForKey:[NSString stringWithFormat:@"%d", self.publishType]];
         titleLabel.text = model.subject;
     }
     titleLabel.font = [UIFont boldSystemFontOfSize:17];
@@ -469,13 +469,28 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 
 -(void)shareEvent
 {
-    if(self.publishType == 1){
+    if (self.publishType == 1) {
         [MobClick event:@"food_share_suc"];
-    }else if(self.publishType == 2){
-        [MobClick event:@"topic1_share_suc"];
-    }else if(self.publishType == 3){
-        [MobClick event:@"topic2_share_suc"];
+    }else{
+        NSArray * menuList = [USER objectForKey:@"MenuList"];
+        if (menuList.count <2) {
+            [MobClick event:@"food_share_suc"];
+        }else{
+            //匹配
+            for(int i=1;i<menuList.count;i++){
+                if ([menuList[i] integerValue] == self.publishType) {
+                    if (i == 1) {
+                        [MobClick event:@"topic1_share_suc"];
+                    }else if(i == 2){
+                        [MobClick event:@"topic2_share_suc"];
+                    }
+                }else if(i == menuList.count-1){
+                    [MobClick event:@"food_share_suc"];
+                }
+            }
+        }
     }
+
 }
 #pragma mark -
 -(void)publishButtonClick:(UIButton *)button
@@ -502,11 +517,15 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     }
     
     button.userInteractionEnabled = NO;
-    s = [[USER objectForKey:@"sina"] intValue];
-    w = [[USER objectForKey:@"weChat"] intValue];
+    
     
     [self postData:self.oriImage];
-    
+}
+#pragma mark - 准备同步分享
+-(void)synShare
+{
+    s = [[USER objectForKey:@"sina"] intValue];
+    w = [[USER objectForKey:@"weChat"] intValue];
     __block PublishViewController * blockSelf = self;
     
     if (s == 0 && w == 0) {
@@ -520,12 +539,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             } completion:nil];
         }
     }else if (s == 1 && w == 0) {
-        button.userInteractionEnabled = NO;
+        publishButton.userInteractionEnabled = NO;
         
-//        BOOL isOauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
-//        if (isOauth) {
-//            
-//        }
+        //        BOOL isOauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
+        //        if (isOauth) {
+        //
+        //        }
         NSString * str = nil;
         if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"] || _textView.text.length == 0) {
             if (self.publishType) {
@@ -543,12 +562,18 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         NSString * topStr = [[topic.titleLabel.text componentsSeparatedByString:@"#"] objectAtIndex:1];
         if(![topStr isEqualToString:@"点击添加话题"]){
             str = [NSString stringWithFormat:@"%@ #%@# %@", str, topStr, last];
+        }else{
+            str = [NSString stringWithFormat:@"%@%@", str, last];
         }
+<<<<<<< HEAD
 //        if ([_textView.text isEqualToString:@"为您爱宠的靓照写个描述吧~"]) {
 //            str = @"http://home4pet.imengstar.com/（分享自@宠物星球社交应用）";
 //        }else{
 //            str = [NSString stringWithFormat:@"%@ %@", _textView.text, @"http://home4pet.imengstar.com/（分享自@宠物星球社交应用）"];
 //        }
+=======
+
+>>>>>>> dev-miao
         
         BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
         NSLog(@"%d", oauth);
@@ -563,29 +588,9 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             //设置分享内容和回调对象
             [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
         }
-//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-//            NSLog(@"sina-response:%@", response);
-//            shareSuc = YES;
-//            if (publishSuc) {
-//                [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-//                    self.showFrontImage(self.img_id);
-//                    [self dismissViewControllerAnimated:YES completion:nil];
-//                } completion:nil];
-//            }
-//            
-//            button.userInteractionEnabled = YES;
-//            if ([response.message isEqualToString:@"user cancel the operation"]) {
-//                return;
-//            }
-//            
-//            if (response.responseCode == UMSResponseCodeSuccess) {
-//                NSLog(@"分享成功！");
-////                [self postData:self.oriImage];
-//            }
-//            
-//        }];
+        
     }else if(s == 0 && w == 1){
-        button.userInteractionEnabled = NO;
+        publishButton.userInteractionEnabled = NO;
         
         [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeWeb;
         [UMSocialData defaultData].extConfig.wechatTimelineData.url = [NSString stringWithFormat:@"%@%@", WEBBEGFOODAPI, self.img_id];
@@ -617,12 +622,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");
-//                [self postData:self.oriImage];
+                //                [self postData:self.oriImage];
             }
         }];
-
+        
     }else if(s == 1 && w == 1){
-        button.userInteractionEnabled = NO;
+        publishButton.userInteractionEnabled = NO;
         
         isDouble = YES;
         
@@ -643,6 +648,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         NSString * topStr = [[topic.titleLabel.text componentsSeparatedByString:@"#"] objectAtIndex:1];
         if(![topStr isEqualToString:@"点击添加话题"]){
             str = [NSString stringWithFormat:@"%@ #%@# %@", str, topStr, last];
+        }else{
+            str = [NSString stringWithFormat:@"%@%@", str, last];
         }
         
         BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
@@ -658,37 +665,12 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             //设置分享内容和回调对象
             [UMSocialSnsPlatformManager getSocialPlatformWithName:UMShareToSina].snsClickHandler(self,[UMSocialControllerService defaultControllerService],YES);
         }
-//        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-//            button.userInteractionEnabled = YES;
-//            //分享微信
-//            [UMSocialData defaultData].extConfig.wxMessageType = UMSocialWXMessageTypeImage;
-//            [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToWechatTimeline] content:_textView.text image:bigImageView.image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
-//                shareSuc = YES;
-//                if (publishSuc) {
-//                    [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-//                        self.showFrontImage(self.img_id);
-//                        [self dismissViewControllerAnimated:YES completion:nil];
-//                    } completion:nil];
-//                }
-//                
-//                NSLog(@"weChat-response:%@", response);
-//                if (response.responseCode == UMSResponseCodeSuccess) {
-//                    NSLog(@"分享成功！");
-//                }
-//            }];
-//            
-//            NSLog(@"sina-response:%@", response);
-//            if (response.responseCode == UMSResponseCodeSuccess) {
-//                NSLog(@"分享成功！");
-//                
-////                [self postData:self.oriImage];
-//            }
-//            
-//        }];
+        
     }
-    
 }
-#pragma mark - 
+
+#pragma mark -
+
 -(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
 {
     publishButton.userInteractionEnabled = YES;
@@ -699,14 +681,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     if (!isDouble) {
         shareSuc = YES;
         if (publishSuc) {
-            [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                //分享
-                [blockSelf shareEvent];
-                
-                [blockSelf dismissViewControllerAnimated:NO completion:^(){
-                    blockSelf.showFrontImage(blockSelf.img_id, blockSelf.publishType, blockSelf.aid, blockSelf.name);
-                }];
-            } completion:nil];
+            [self performSelector:@selector(dismiss) withObject:nil afterDelay:0.5];
         }
         
         publishButton.userInteractionEnabled = YES;
@@ -735,6 +710,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     //分享
                     [blockSelf shareEvent];
                     
+                    
                     [blockSelf dismissViewControllerAnimated:NO completion:^(){
                         blockSelf.showFrontImage(blockSelf.img_id, blockSelf.publishType, blockSelf.aid, blockSelf.name);
                     }];
@@ -747,6 +723,16 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
             }
         }];
     }
+}
+
+-(void)dismiss
+{
+    //分享
+    [self shareEvent];
+    __block PublishViewController *blockSelf = self;
+    [self dismissViewControllerAnimated:NO completion:^(){
+        blockSelf.showFrontImage(blockSelf.img_id, blockSelf.publishType, blockSelf.aid, blockSelf.name);
+    }];
 }
 
 #pragma mark - 新浪、微信点击事件
@@ -1014,22 +1000,38 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         publishSuc = YES;
         
         [MobClick event:@"photo"];
-        if(self.publishType == 1){
+        
+        if (self.publishType == 1) {
             [MobClick event:@"food_suc"];
-        }else if(self.publishType == 2){
-            [MobClick event:@"topic1_suc"];
-        }else if(self.publishType == 3){
-            [MobClick event:@"topic2_suc"];
+        }else{
+            NSArray * menuList = [USER objectForKey:@"MenuList"];
+            if (menuList.count <2) {
+                [MobClick event:@"food_suc"];
+            }else{
+                //匹配
+                for(int i=1;i<menuList.count;i++){
+                    if ([menuList[i] integerValue] == self.publishType) {
+                        if (i == 1) {
+                            [MobClick event:@"topic1_suc"];
+                        }else if(i == 2){
+                            [MobClick event:@"topic2_suc"];
+                        }
+                    }else if(i == menuList.count-1){
+                        [MobClick event:@"food_suc"];
+                    }
+                }
+            }
         }
         
-        __block PublishViewController * blockSelf = self;
-        if (shareSuc) {
-            [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
-                [blockSelf dismissViewControllerAnimated:NO completion:^(){
-                    blockSelf.showFrontImage(blockSelf.img_id, blockSelf.publishType, blockSelf.aid, blockSelf.name);
-                }];
-            } completion:nil];
-        }
+        [self synShare];
+//        __block PublishViewController * blockSelf = self;
+//        if (shareSuc) {
+//            [UIView animateWithDuration:0 delay:0.2 options:0 animations:^{
+//                [blockSelf dismissViewControllerAnimated:NO completion:^(){
+//                    blockSelf.showFrontImage(blockSelf.img_id, blockSelf.publishType, blockSelf.aid, blockSelf.name);
+//                }];
+//            } completion:nil];
+//        }
         
     }
     

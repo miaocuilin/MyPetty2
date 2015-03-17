@@ -588,9 +588,11 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         }
     };
 
-    cell.imageClick = ^(NSString * img_id){
+    cell.imageClick = ^(NSString *img_id, NSURL *url){
         __block FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = img_id;
+        vc.imageURL = url;
+        
         [ControllerManager addTabBarViewController:vc];
 //        [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
         [vc release];

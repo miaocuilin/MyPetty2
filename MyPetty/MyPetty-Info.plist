@@ -44,7 +44,11 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
+<<<<<<< HEAD
 	<string>1.1.4.8</string>
+=======
+	<string>1.1.4.10</string>
+>>>>>>> dev-miao
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>

@@ -266,12 +266,26 @@
 }
 -(void)shareSuccess
 {
-    if(self.is_food == 1){
+    if (self.is_food == 1) {
         [MobClick event:@"food_share_suc"];
-    }else if(self.is_food == 2){
-        [MobClick event:@"topic1_share_suc"];
-    }else if(self.is_food == 3){
-        [MobClick event:@"topic2_share_suc"];
+    }else{
+        NSArray * menuList = [USER objectForKey:@"MenuList"];
+        if (menuList.count <2) {
+            [MobClick event:@"food_share_suc"];
+        }else{
+            //匹配
+            for(int i=1;i<menuList.count;i++){
+                if ([menuList[i] integerValue] == self.is_food) {
+                    if (i == 1) {
+                        [MobClick event:@"topic1_share_suc"];
+                    }else if(i == 2){
+                        [MobClick event:@"topic2_share_suc"];
+                    }
+                }else if(i == menuList.count-1){
+                    [MobClick event:@"food_share_suc"];
+                }
+            }
+        }
     }
     
 }

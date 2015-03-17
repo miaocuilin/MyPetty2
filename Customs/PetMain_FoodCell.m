@@ -55,6 +55,12 @@
 }
 -(void)createReward
 {
+    if (rewardBg) {
+        rewardBg.hidden = NO;
+        selectView.hidden = YES;
+        heartBtn.hidden = NO;
+        return;
+    }
 //    [line removeFromSuperview];
     
     float width = [UIScreen mainScreen].bounds.size.width;
@@ -107,23 +113,16 @@
     UIButton * selectBtn = [MyControl createButtonWithFrame:CGRectMake(0, 0, rewardBg.frame.size.width/2.0, rewardBg.frame.size.height) ImageName:@"" Target:self Action:@selector(selectBtnClick:) Title:nil];
     selectBtn.titleLabel.font = [UIFont boldSystemFontOfSize:20];
     [rewardBg addSubview:selectBtn];
-    
-    //    UIButton * rewardBtn = [MyControl createButtonWithFrame:CGRectMake(rewardBg.frame.size.width/2.0, 0, rewardBg.frame.size.width/2.0, rewardBg.frame.size.height) ImageName:@"" Target:self Action:@selector(rewardBtnClick:) Title:@""];
-    //    rewardBtn.titleLabel.font = [UIFont boldSystemFontOfSize:20];
-    //    [rewardBg addSubview:rewardBtn];
+
     
     heartBtn = [MyControl createButtonWithFrame:CGRectMake([UIScreen mainScreen].bounds.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2) ImageName:@"food_heart.png" Target:self Action:@selector(rewardBtnClick:) Title:nil];
-//    [heartBtn addTarget:self action:@selector(heartTouchDown) forControlEvents:UIControlEventTouchDown];
-//    [heartBtn addTarget:self action:@selector(heartUpOutside) forControlEvents:UIControlEventTouchUpOutside];
+
     [self addSubview:heartBtn];
-//    timer = [NSTimer scheduledTimerWithTimeInterval:1.9 target:self selector:@selector(heartAnimation) userInfo:nil repeats:YES];
 }
 -(void)rewardBtnClick:(UIButton *)btn
 {
     self.rewardClick(rewardNum);
-    
-    
-//    [self reward];
+
 }
 -(void)reward
 {
@@ -133,23 +132,22 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@&n=%@dog&cat", self.img_id, rewardNum.text]];
     NSString * url = [NSString stringWithFormat:@"%@%@&n=%@&sig=%@&SID=%@", REWARDFOODAPI, self.img_id, rewardNum.text, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
+    __block PetMain_FoodCell * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             if([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]){
-                if ([rewardNum.text intValue]>[[USER objectForKey:@"food"] intValue]) {
+                if ([blockSelf->rewardNum.text intValue]>[[USER objectForKey:@"food"] intValue]) {
                     [USER setObject:@"0" forKey:@"food"];
                 }else{
-                    [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"food"] intValue]-[rewardNum.text intValue]] forKey:@"food"];
+                    [USER setObject:[NSString stringWithFormat:@"%d", [[USER objectForKey:@"food"] intValue]-[blockSelf->rewardNum.text intValue]] forKey:@"food"];
                 }
                 
                 [USER setObject:[NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"gold"]] forKey:@"gold"];
 //                BegFoodListModel * model = self.dataArray[a];
                 
-                foodNum.text = [NSString stringWithFormat:@"已挣得口粮：%@ 份", [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"food"]]];
+                blockSelf->foodNum.text = [NSString stringWithFormat:@"已挣得口粮：%@ 份", [NSString stringWithFormat:@"%@", [[load.dataDict objectForKey:@"data"] objectForKey:@"food"]]];
 //                self.begModel.food = [[load.dataDict objectForKey:@"data"] objectForKey:@"food"];
                 [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"打赏成功，感谢您的爱心！"];
-//                [tv reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:a inSection:0]] withRowAnimation:0];
-                
                 
             }
             ENDLOADING;
@@ -159,42 +157,6 @@
     }];
     [request release];
 }
-//-(void)heartTouchDown
-//{
-//    [timer invalidate];
-//    timer = nil;
-//    [UIView animateWithDuration:0.2 animations:^{
-//        CGRect rect = heartBtn.frame;
-//        rect.origin.x -= 7;
-//        rect.origin.y -= 7;
-//        rect.size.width += 14;
-//        rect.size.height += 14;
-//        heartBtn.frame = rect;
-//    }];
-//}
-//-(void)heartUpOutside
-//{
-//    [UIView animateWithDuration:0.2 animations:^{
-//        heartBtn.frame = CGRectMake([UIScreen mainScreen].bounds.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2);
-//    } completion:^(BOOL finished) {
-//        timer = [NSTimer scheduledTimerWithTimeInterval:2.4 target:self selector:@selector(heartAnimation) userInfo:nil repeats:YES];
-//    }];
-//}
-//-(void)heartAnimation
-//{
-//    [UIView animateWithDuration:0.2 animations:^{
-//        CGRect rect = heartBtn.frame;
-//        rect.origin.x -= 7;
-//        rect.origin.y -= 7;
-//        rect.size.width += 14;
-//        rect.size.height += 14;
-//        heartBtn.frame = rect;
-//    } completion:^(BOOL finished) {
-//        [UIView animateWithDuration:0.2 animations:^{
-//            heartBtn.frame = CGRectMake([UIScreen mainScreen].bounds.size.width-90, rewardBg.frame.origin.y-2, 126/2, 115/2);
-//        }];
-//    }];
-//}
 
 #pragma mark -
 -(void)numBtnClick:(UIButton *)btn
@@ -234,12 +196,15 @@
 
 -(void)configUI:(BegFoodListModel *)model
 {
-//    NSLog(@"%@", model.name);
-//    self.petName = model.name;
+    rewardBg.hidden = YES;
+    selectView.hidden = YES;
+    heartBtn.hidden = YES;
+    
     self.img_id = model.img_id;
     
-    [headImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, model.url]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-    }];
+    NSURL *url = [MyControl returnThumbImageURLwithName:model.url Width:headImage.frame.size.width*2 Height:headImage.frame.size.height*2];
+    [headImage setImageWithURL:url placeholderImage:[UIImage imageNamed:@"defaultPetPic.jpg"]];
+    
     desLabel.text = model.cmt;
     timeLabel.text = [MyControl timeFromTimeStamp:model.create_time];
     foodNum.text = [NSString stringWithFormat:@"已挣得口粮：%@ 份", model.food];
@@ -254,6 +219,7 @@
         line.frame = rect;
     }else{
         [self createReward];
+        
         CGRect rect = line.frame;
         rect.origin.y = 164.0;
         line.frame = rect;
@@ -261,11 +227,5 @@
 }
 
 
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
 
 @end

@@ -38,6 +38,7 @@
     self.cateAndAgeLabel.text = [NSString stringWithFormat:@"%@ | %@", [ControllerManager returnCateNameWithType:model.type], [MyControl returnAgeStringWithCountOfMonth:model.age]];
     
     self.headImage.image = [UIImage imageNamed:@"defaultPetHead.png"];
+    
     if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
         
         [MyControl setImageForImageView:self.headImage Tx:model.tx isPet:YES isRound:YES];

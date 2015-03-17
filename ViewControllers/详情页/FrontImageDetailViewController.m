@@ -217,6 +217,7 @@
         [self animationWithView:b4 Size:r4];
     }];
     
+    [self showThumbImage];
 }
 -(void)loadImageData
 {
@@ -227,7 +228,10 @@
     NSLog(@"imageInfoAPI:%@", url);
     
     __block FrontImageDetailViewController * blockSelf = self;
+    [blockSelf retain];
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//        [blockSelf retain];
+        
         if (isFinish) {
 //            if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSNull class]]) {
 //                [MyControl popAlertWithView:[UIApplication sharedApplication].keyWindow Msg:@"图片离家出走了~"];
@@ -259,13 +263,13 @@
 //                t = 1;
 //            }
             if ([[blockSelf.imageDict objectForKey:@"is_food"] isKindOfClass:[NSString class]]){
-                if ([[blockSelf.imageDict objectForKey:@"is_food"] intValue] == 1) {
-                    is_food = 1;
-                }else if ([[blockSelf.imageDict objectForKey:@"is_food"] intValue] == 2) {
-                    is_food = 2;
-                }else if ([[blockSelf.imageDict objectForKey:@"is_food"] intValue] == 3) {
-                    is_food = 3;
-                }
+//                if ([[blockSelf.imageDict objectForKey:@"is_food"] intValue] == 1) {
+                    blockSelf->is_food = [[blockSelf.imageDict objectForKey:@"is_food"] intValue];
+//                }else if ([[blockSelf.imageDict objectForKey:@"is_food"] intValue] == 2) {
+//                    blockSelf->is_food = 2;
+//                }else if ([[blockSelf.imageDict objectForKey:@"is_food"] intValue] == 3) {
+//                    blockSelf->is_food = 3;
+//                }
             }
 
 //            NSLog(@"%@", [self.imageDict objectForKey:@"is_food"]);
@@ -308,12 +312,16 @@
             [blockSelf modifyUI];
             
             [blockSelf loadPetData];
+            
         }else{
+            
             blockSelf->imageNotExist = YES;
             blockSelf->sv.hidden = NO;
             [MyControl popAlertWithView:blockSelf.view Msg:@"网络或数据异常"];
             NSLog(@"数据加载失败");
         }
+        
+        [blockSelf release];
     }];
     [request release];
 }
@@ -551,12 +559,38 @@
 }
 
 #pragma mark -
+-(void)showThumbImage
+{
+    if ([self.imageURL isKindOfClass:[NSURL class]] && self.imageURL != nil) {
+        [bigImageView setImageWithURL:self.imageURL completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            if (!error && image != nil) {
+                bigImageView.canClick = YES;
+                
+                CGRect rect = bigImageView.frame;
+
+                    float p = rect.size.width*image.size.height/image.size.width;
+                    rect.size.height = p;
+                    bigImageView.frame = rect;
+                
+                CGRect rect2 = imageBgView.frame;
+                rect2.size.height = rect.size.height+20;
+                imageBgView.frame = rect2;
+                
+                sv.contentSize = CGSizeMake(sv.frame.size.width, rect2.origin.y + rect2.size.height+50);
+                
+                sv.hidden = NO;
+            }
+            
+        }];
+    }
+}
+
 -(void)modifyUI
 {
     
 //    LOADING;
 //    bigImageView.canClick = NO;
-    [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.imageDict objectForKey:@"url"]]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+    [bigImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.imageDict objectForKey:@"url"]]] placeholderImage:bigImageView.image completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if(error){
             NSLog(@"%@", error);
         }else{
@@ -673,29 +707,9 @@
 }
 -(void)modifyBackPage
 {
+    [MyControl setImageForBtn:headBtn Tx:[self.petDict objectForKey:@"tx"] isPet:YES isRound:YES];
     
-    //back
-//    CGRect rect1 = tv.frame;
-//    rect1.size.height = imageBgView2.frame.size.height-rect1.origin.y-15;
-//    tv.frame = rect1;
-//    
-//    CGRect rect2 = desTv.frame;
-//    rect2.size.height = imageBgView2.frame.size.height-rect2.origin.y-15;
-//    desTv.frame = rect2;
-    
-    
-    [headBtn setBackgroundImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", PETTXURL, [self.petDict objectForKey:@"tx"]]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"defaultPetHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-            [headBtn setBackgroundImage:[MyControl returnSquareImageWithImage:image] forState:UIControlStateNormal];
-        }
-    }];
-    
-//    NSLog(@"%@", self.petDict);
-    [userTx setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", USERTXURL, [self.petDict objectForKey:@"u_tx"]]] placeholderImage:[UIImage imageNamed:@"defaultUserHead.png"] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-        if (image) {
-//            [bUserTx setImage:[MyControl returnSquareImageWithImage:image]];
-        }
-    }];
+    [MyControl setImageForImageView:userTx Tx:[self.petDict objectForKey:@"u_tx"] isPet:NO isRound:YES];
     
     
     if ([[self.petDict objectForKey:@"gender"] intValue] == 1) {
@@ -1528,7 +1542,7 @@
 //        }];
 //    }else{
 //        NSLog(@"微博");
-//        NSString * str = @"雷达报告发现一只萌宠，火速围观！http://home4pet.aidigame.com/（分享自@宠物星球社交应用）";
+//        NSString * str = @"雷达报告发现一只萌宠，火速围观！http://home4pet.imengstar.com/（分享自@宠物星球社交应用）";
 //        //        [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:screenshotImage location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
 //        //            if (response.responseCode == UMSResponseCodeSuccess) {
 //        //                NSLog(@"分享成功！");
@@ -2223,11 +2237,26 @@
 {
     if (is_food == 1) {
         [MobClick event:@"food_share_suc"];
-    }else if (is_food == 2) {
-        [MobClick event:@"topic1_share_suc"];
-    }else if (is_food == 3) {
-        [MobClick event:@"topic2_share_suc"];
+    }else{
+        NSArray * menuList = [USER objectForKey:@"MenuList"];
+        if (menuList.count <2) {
+            [MobClick event:@"food_share_suc"];
+        }else{
+            //匹配
+            for(int i=1;i<menuList.count;i++){
+                if ([menuList[i] integerValue] == is_food) {
+                    if (i == 1) {
+                        [MobClick event:@"topic1_share_suc"];
+                    }else if(i == 2){
+                        [MobClick event:@"topic2_share_suc"];
+                    }
+                }else if(i == menuList.count-1){
+                    [MobClick event:@"food_share_suc"];
+                }
+            }
+        }
     }
+
     
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"img_id=%@dog&cat", self.img_id]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", SHAREIMAGEAPI, self.img_id, sig, [ControllerManager getSID]];
@@ -2437,9 +2466,9 @@
         
         CGSize size;
         if ([MyControl isIOS7]) {
-            size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+            size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 1000) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
         }else{
-            size = [self.bodyArray[indexPath.row] sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(textWidth, 100) lineBreakMode:1];
+            size = [self.bodyArray[indexPath.row] sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(textWidth, 1000) lineBreakMode:1];
         }
 //        CGSize size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
         if (size.height>15.0) {
@@ -2475,9 +2504,9 @@
         
         CGSize size;
         if ([MyControl isIOS7]) {
-            size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
+            size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 1000) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
         }else{
-            size = [self.bodyArray[indexPath.row] sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(textWidth, 100) lineBreakMode:1];
+            size = [self.bodyArray[indexPath.row] sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(textWidth, 1000) lineBreakMode:1];
         }
 //        CGSize size = [self.bodyArray[indexPath.row] boundingRectWithSize:CGSizeMake(textWidth, 100) options:1 attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12]} context:nil].size;
         if (size.height>15.0) {

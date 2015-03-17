@@ -217,6 +217,11 @@
     FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
     vc.img_id = [self.dataArray[indexPath.row] img_id];
     
+    int w = [UIScreen mainScreen].bounds.size.width/3.0*2;
+    PhotoModel * model = self.dataArray[indexPath.row];
+    NSURL *urlStr = [MyControl returnThumbImageURLwithName:model.url Width:w Height:w];
+    vc.imageURL = urlStr;
+    
     [self addChildViewController:vc];
     [self.view addSubview:vc.view];
     [vc didMoveToParentViewController:self];

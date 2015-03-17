@@ -68,7 +68,7 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
     self.catArray = [NSMutableArray arrayWithCapacity:0];
     self.dogArray = [NSMutableArray arrayWithCapacity:0];
     self.otherArray = [NSMutableArray arrayWithCapacity:0];
-    self.cateArray = @[@"喵喵", @"汪汪"];
+    self.cateArray = @[@"喵喵", @"汪汪", @"其他"];
     self.u_city = 1000;
     
     typeTag = 1;
@@ -959,6 +959,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
         if (component == 0) {
             self.cateName = self.cateArray[row];
             if (row == 0) {
+                typeTag = 1;
+                
                 self.tempArray = self.catArray;
                 count = self.catArray.count;
                 if (num<self.catArray.count) {
@@ -968,6 +970,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     self.detailName = self.catArray[self.catArray.count-1];
                 }
             }else if(row == 1){
+                typeTag = 2;
+                
                 self.tempArray = self.dogArray;
                 count = self.dogArray.count;
                 if (num<self.dogArray.count) {
@@ -977,6 +981,8 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
                     self.detailName = self.dogArray[self.dogArray.count-1];
                 }
             }else{
+                typeTag = 3;
+                
                 self.tempArray = self.otherArray;
                 count = self.otherArray.count;
                 if (num<self.otherArray.count) {

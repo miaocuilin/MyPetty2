@@ -21,7 +21,7 @@
     UIColor * cellBgColor;
     UIColor * lineColor;
 }
-@property (nonatomic, retain) id <NIDropDownDelegate> delegate;
+@property (nonatomic, assign) id <NIDropDownDelegate> delegate;
 
 -(void)hideDropDown:(UIButton *)b;
 - (id)showDropDown:(UIButton *)b:(CGFloat *)height:(NSArray *)arr;

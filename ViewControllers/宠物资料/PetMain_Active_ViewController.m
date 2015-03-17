@@ -19,6 +19,7 @@
 -(void)dealloc
 {
     [super dealloc];
+    [tv release];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -28,9 +29,6 @@
     [self createFakeNavigation];
     [self createTableView];
     [self loadData];
-    
-//    UISwipeGestureRecognizer * swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(backBtnClick)];
-//    [self.view addGestureRecognizer:swipe];
 }
 -(void)loadData
 {
@@ -38,10 +36,12 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.model.aid]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETNEWSAPI, self.model.aid, sig, [ControllerManager getSID]];
     NSLog(@"国王动态API:%@", url);
+    
+    __block PetMain_Active_ViewController * blockSelf = self;
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"国王动态数据：%@",load.dataDict);
-            [self.dataArray removeAllObjects];
+//            NSLog(@"国王动态数据：%@",load.dataDict);
+            [blockSelf.dataArray removeAllObjects];
             NSArray * array = [load.dataDict objectForKey:@"data"];
             for (int i=0; i<array.count; i++) {
                 PetNewsModel * model = [[PetNewsModel alloc] init];
@@ -49,18 +49,19 @@
                 model.content = [array[i] objectForKey:@"content"];
                 if([model.type intValue] != 1){
                     if(!(([model.type intValue] == 4 || [model.type intValue] == 7) && ([[model.content objectForKey:@"item_id"] intValue]%10 >4 || [[model.content objectForKey:@"item_id"] intValue]>=2200))){
-                        [self.dataArray addObject:model];
+                        [blockSelf.dataArray addObject:model];
                     }
                     
                 }
                 [model release];
             }
-            if (self.dataArray.count) {
-                self.lastNid = [self.dataArray[self.dataArray.count-1] nid];
+
+            if (blockSelf.dataArray.count) {
+                blockSelf.lastNid = [blockSelf.dataArray[blockSelf.dataArray.count-1] nid];
             }
             
             
-            [tv reloadData];
+            [blockSelf->tv reloadData];
             ENDLOADING;
         }else{
             LOADFAILED;
@@ -74,6 +75,8 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&nid=%@dog&cat", self.model.aid, self.lastNid]];
     NSString * url = [NSString stringWithFormat:@"%@%@&nid=%@&sig=%@&SID=%@", PETNEWSAPI2, self.model.aid, self.lastNid, sig, [ControllerManager getSID]];
     NSLog(@"国王动态API2:%@", url);
+    
+    __block PetMain_Active_ViewController *blockSelf = self;
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"国王动态数据2：%@",load.dataDict);
@@ -85,21 +88,21 @@
                 model.content = [array[i] objectForKey:@"content"];
                 if([model.type intValue] != 1){
                     if(!(([model.type intValue] == 4 || [model.type intValue] == 7) && ([[model.content objectForKey:@"item_id"] intValue]%10 >4 || [[model.content objectForKey:@"item_id"] intValue]>=2200))){
-                        [self.dataArray addObject:model];
+                        [blockSelf.dataArray addObject:model];
                     }
                     
                 }
                 [model release];
             }
             if (array.count) {
-                self.lastNid = [self.dataArray[self.dataArray.count-1] nid];
+                blockSelf.lastNid = [blockSelf.dataArray[blockSelf.dataArray.count-1] nid];
             }
-            [tv footerEndRefreshing];
-            [tv reloadData];
+            [blockSelf->tv footerEndRefreshing];
+            [blockSelf->tv reloadData];
             ENDLOADING;
             
         }else{
-            [tv footerEndRefreshing];
+            [blockSelf->tv footerEndRefreshing];
             LOADFAILED;
         }
     }];
@@ -135,6 +138,7 @@
 - (void)backBtnClick
 {
     NSLog(@"dismiss");
+    [tv addFooterWithTarget:nil action:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark -
@@ -147,6 +151,7 @@
     tv.showsVerticalScrollIndicator = NO;
     [self.view addSubview:tv];
     [tv addFooterWithTarget:self action:@selector(loadMoreData)];
+//    [tv release];
 }
 #pragma mark -
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -165,16 +170,17 @@
     PetNewsModel * model = self.dataArray[indexPath.row];
     [cell modifyWithModel:model PetName:self.model.name];
     
+    __block PetMain_Active_ViewController * blockSelf = self;
     cell.clickImage = ^(){
-        __block FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
+        FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
         vc.img_id = [[model content] objectForKey:@"img_id"];
-        [self addChildViewController:vc];
-        [self.view addSubview:vc.view];
-        [vc didMoveToParentViewController:self];
+        NSURL *url = [MyControl returnClipThumbImageURLwithName:[model.content objectForKey:@"img_url"] Width:190.0 Height:120.0];
+        vc.imageURL = url;
+        [ControllerManager addViewController:vc To:blockSelf];
         [vc release];
     };
     cell.sendGift = ^(){
-        [self sendGift];
+        [blockSelf sendGift];
     };
     return cell;
 }
@@ -214,8 +220,9 @@
         quictGiftvc.receiver_aid = self.model.aid;
         quictGiftvc.receiver_name = self.model.name;
         //
+        __block PetMain_Active_ViewController * blockSelf = self;
         quictGiftvc.hasSendGift = ^(NSString * itemId){
-            [self loadData];
+            [blockSelf loadData];
         };
         
         [self addChildViewController:quictGiftvc];

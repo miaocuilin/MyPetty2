@@ -240,8 +240,6 @@
     //    headerBgView.backgroundColor = [UIColor whiteColor];
     
     UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(20, 10, 50, 50) ImageName:@"defaultPetHead.png"];
-    headImageView.layer.cornerRadius = headImageView.frame.size.width/2;
-    headImageView.layer.masksToBounds = YES;
     [headerBgView addSubview:headImageView];
     /**************************/
     //    NSLog(@"--%@", model.tx);
@@ -458,6 +456,7 @@
 }
 -(void)backBtnClick
 {
+    [tf resignFirstResponder];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"af" object:nil];
 }
 -(void)cancelBtnClick

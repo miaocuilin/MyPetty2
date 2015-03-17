@@ -47,7 +47,7 @@
 @property(nonatomic,copy)NSString * aid;
 @property(nonatomic,retain)NSArray * imageArray;
 @property(nonatomic,copy)void (^headClick)(NSString *);
-@property(nonatomic,copy)void (^imageClick)(NSString *);
+@property(nonatomic,copy)void (^imageClick)(NSString *, NSURL *);
 @property(nonatomic,copy)void (^actClick)(int);
 @property(nonatomic,copy)void (^actClickSend)(NSString *,NSString *,NSString *);
 //-(void)makeUIWithWidth:(float)width Height:(float)height;

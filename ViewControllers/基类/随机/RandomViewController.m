@@ -953,16 +953,7 @@
 - (void)quiltView:(TMQuiltView *)quiltView didSelectCellAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSLog(@"index:%d",indexPath.row+1);
-//    [ControllerManager HUDText:@"你得到了一个魔法棒" showView:self.view yOffset:110];
-//    [ControllerManager HUDImageIcon:@"gold.png" showView:self.view yOffset:-40 Number:10];
-//    [self HUDImageIcon:[UIImage imageNamed:@"gold.png"] showView:self.view yOffset:50 Number:100];
-//    if (![ControllerManager getIsSuccess]) {
-//        [USER setObject:[NSString stringWithFormat:@"%d", 1000+indexPath.row] forKey:@"pageNum"];
-//        [UIView animateWithDuration:0.3 animations:^{
-//            view.frame = CGRectMake(0, 0, 320, self.view.frame.size.height+[MyControl isIOS7]);
-//        }];
-//        return;
-//    }
+
     PhotoModel * model = self.dataArray[indexPath.row];
     //跳转到详情页，并传值
 //    PicDetailViewController * vc = [[PicDetailViewController alloc] init];
@@ -970,7 +961,7 @@
     FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
     vc.img_id = model.img_id;
     vc.isFromRandom = YES;
-    vc.imageURL = model.url;
+    vc.imageURL = [MyControl returnThumbImageURLwithName:model.url Width:[UIScreen mainScreen].bounds.size.width Height:0];
     vc.imageCmt = model.cmt;
 //    vc.usr_id = model.usr_id;
 //    if ([ControllerManager getIsSuccess]) {

@@ -40,7 +40,8 @@
 @property (nonatomic) int publishType;
 
 @property (nonatomic, retain) NSMutableArray * petsDataArray;
-@property (nonatomic, retain) NSArray * menuDataArray;
+@property (nonatomic, retain) NSDictionary * menuDataDict;
+@property (nonatomic, retain) NSArray * menuListArray;
 @end
 
 @implementation ChoosePicTypeViewController
@@ -67,65 +68,76 @@
     self.count = 1;
     
     [self makeUI];
-    
-    if ([[USER objectForKey:@"MenuData"] isKindOfClass:[NSData class]]){
-        self.menuDataArray = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
-        if (self.menuDataArray.count) {
-            self.count = self.menuDataArray.count+1;
-            [self adjustUI];
-        }else{
-            [self loadMenuData];
-        }
-    }
-//    [self loadMenuData];
-}
--(void)loadMenuData
-{
-//    if ([[USER objectForKey:@"MenuData"] isKindOfClass:[NSData class]] && [[USER objectForKey:@"MenuData"] length] > 0) {
-//        NSLog(@"%d", [[USER objectForKey:@"MenuData"] length]);
-//        self.menuDataArray = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
-//        self.count = self.menuDataArray.count+1;
-//        
-//        [self adjustUI];
-//    }else{
-        //加载数据
-        LOADING;
-        __block ChoosePicTypeViewController * blockSelf = self;
-        NSString * url = [NSString stringWithFormat:@"%@%@", MENUAPI, [ControllerManager getSID]];
-        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-            if (isFinish) {
-                ENDLOADING;
-                
-                NSArray * array = [load.dataDict objectForKey:@"data"];
-                if ([array isKindOfClass:[NSArray class]]) {
-                    if ([array[0] isKindOfClass:[NSArray class]]) {
-                        NSArray * arr = array[0];
-                        if (arr.count == 0) {
-                            return;
-                        }
-                        NSMutableArray * mutableArray = [NSMutableArray arrayWithCapacity:0];
-                        for (NSDictionary * dict in arr) {
-                            MenuModel * model = [[MenuModel alloc] init];
-                            [model setValuesForKeysWithDictionary:dict];
-                            [mutableArray addObject:model];
-                        }
-                        NSData * data = [MyControl returnDataWithArray:mutableArray];
-                        [USER setObject:data forKey:@"MenuData"];
-                        
-                        blockSelf.menuDataArray = [NSArray arrayWithArray:mutableArray];
-                        blockSelf.count = blockSelf.menuDataArray.count+1;
-                        
-                        [blockSelf adjustUI];
-                    }
-                }
-            }else{
-                [USER setObject:@"" forKey:@"MenuData"];
-                LOADFAILED;
-            }
-        }];
 
+    
+    self.menuListArray = [USER objectForKey:@"MenuList"];
+    self.menuDataDict = [MyControl returnDictionaryWithData:[USER objectForKey:@"MenuData"]];
+    
+    self.count = self.menuListArray.count;
+    
+    [self adjustUI];
+//    if ([[USER objectForKey:@"MenuData"] isKindOfClass:[NSData class]]){
+//        self.menuDataDict = [MyControl returnDictionaryWithData:[USER objectForKey:@"MenuData"]];
+//        if (self.menuDataDict.count>1) {
+//            self.count = self.menuDataDict.count;
+//            [self adjustUI];
+//        }
+////        else{
+////            [self loadMenuData];
+////        }
 //    }
+//    else{
+//        [self loadMenuData];
+//    }
+    
 }
+//-(void)loadMenuData
+//{
+////    if ([[USER objectForKey:@"MenuData"] isKindOfClass:[NSData class]] && [[USER objectForKey:@"MenuData"] length] > 0) {
+////        NSLog(@"%d", [[USER objectForKey:@"MenuData"] length]);
+////        self.menuDataArray = [MyControl returnArrayWithData:[USER objectForKey:@"MenuData"]];
+////        self.count = self.menuDataArray.count+1;
+////        
+////        [self adjustUI];
+////    }else{
+//        //加载数据
+//        LOADING;
+//        __block ChoosePicTypeViewController * blockSelf = self;
+//        NSString * url = [NSString stringWithFormat:@"%@%@", MENUAPI, [ControllerManager getSID]];
+//        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
+//            if (isFinish) {
+//                ENDLOADING;
+//                
+//                NSArray * array = [load.dataDict objectForKey:@"data"];
+//                if ([array isKindOfClass:[NSArray class]]) {
+//                    if ([array[0] isKindOfClass:[NSArray class]]) {
+//                        NSArray * arr = array[0];
+//                        if (arr.count == 0) {
+//                            return;
+//                        }
+//                        NSMutableArray * mutableArray = [NSMutableArray arrayWithCapacity:0];
+//                        for (NSDictionary * dict in arr) {
+//                            MenuModel * model = [[MenuModel alloc] init];
+//                            [model setValuesForKeysWithDictionary:dict];
+//                            [mutableArray addObject:model];
+//                        }
+//                        NSData * data = [MyControl returnDataWithArray:mutableArray];
+//                        [USER setObject:data forKey:@"MenuData"];
+//                        
+//                        blockSelf.menuDataArray = [NSArray arrayWithArray:mutableArray];
+//                        blockSelf.count = blockSelf.menuDataArray.count+1;
+//                        
+//                        [blockSelf adjustUI];
+//                    }
+//                }
+//            }else{
+//                [USER setObject:@"" forKey:@"MenuData"];
+//                LOADFAILED;
+//            }
+//        }];
+//
+////    }
+//}
 
 -(void)makeUI
 {
@@ -374,7 +386,7 @@
     rect1.origin.x = SECONDSPE;
     foodBtn.frame = rect1;
     
-    MenuModel * model = self.menuDataArray[0];
+    MenuModel * model = [self.menuDataDict objectForKey:self.menuListArray[1]];
     
     secondBtn = [MyControl createButtonWithFrame:CGRectMake(rect1.origin.x + picWidth + SECONDSPE, rect1.origin.y, picWidth, picWidth) ImageName:@"" Target:self Action:@selector(secondBtnClick) Title:nil];
     secondBtn.showsTouchWhenHighlighted = YES;
@@ -398,7 +410,7 @@
     rect2.origin.x = rect1.origin.x + picWidth + THIRDSPE;
     secondBtn.frame = rect2;
     
-    MenuModel * model = self.menuDataArray[1];
+    MenuModel * model = [self.menuDataDict objectForKey:self.menuListArray[2]];
     
     thirdBtn = [MyControl createButtonWithFrame:CGRectMake(rect2.origin.x + picWidth + THIRDSPE, rect2.origin.y, picWidth, picWidth) ImageName:@"" Target:self Action:@selector(thirdBtnClick) Title:nil];
     thirdBtn.showsTouchWhenHighlighted = YES;
@@ -426,13 +438,13 @@
 -(void)secondBtnClick
 {
     NSLog(@"第二按钮");
-    self.publishType = 2;
+    self.publishType = [self.menuListArray[1] integerValue];
     [self judgeFood:self.publishType];
 }
 -(void)thirdBtnClick
 {
     NSLog(@"第三按钮");
-    self.publishType = 3;
+    self.publishType = [self.menuListArray[2] integerValue];
     [self judgeFood:self.publishType];
 }
 #pragma mark -
@@ -585,22 +597,24 @@
                 front.img_id = img_id;
 //                [ControllerManager addViewController:front To:blockSelf];
                 [ControllerManager addTabBarViewController:front];
+                
             }else{
                 NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&is_food=%ddog&cat", [dict objectForKey:@"aid"], isFood]];
                 NSString * url = [NSString stringWithFormat:@"%@%@&is_food=%d&sig=%@&SID=%@", JUDGEDOAPI, [dict objectForKey:@"aid"], isFood, sig, [ControllerManager getSID]];
                 NSLog(@"%@", url);
                 httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
                     if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"r"] isKindOfClass:[NSDictionary class]]) {
-                        Alert_BegFoodViewController * vc = [[Alert_BegFoodViewController alloc] init];
-                        vc.dict = [[load.dataDict objectForKey:@"data"] objectForKey:@"r"];
-                        vc.name = model.name;
-                        vc.is_food = isFood;
-                        [ControllerManager addTabBarViewController:vc];
+                        __block Alert_BegFoodViewController * begFood = [[Alert_BegFoodViewController alloc] init];
+                        begFood.dict = [[load.dataDict objectForKey:@"data"] objectForKey:@"r"];
+                        begFood.name = model.name;
+                        begFood.is_food = isFood;
+                        [ControllerManager addTabBarViewController:begFood];
                     }
                     
                 }];
             }
 
+            
             [blockSelf dismissViewControllerAnimated:NO completion:nil];
         };
         [blockSelf presentViewController:vc animated:YES completion:nil];

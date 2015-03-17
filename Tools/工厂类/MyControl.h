@@ -61,6 +61,8 @@
 
 //字典转data
 +(NSData *)returnDataWithDictionary:(NSDictionary *)dict;
+//data转字典
++(NSDictionary *)returnDictionaryWithData:(NSData *)data;
 //路径文件转dictonary
 +(NSDictionary *)returnDictionaryWithDataPath:(NSString *)path;
 
@@ -115,4 +117,9 @@
 
 //+(void)updatePetsData;
 
++(NSURL *)returnClipThumbImageURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h;
+
++(NSURL *)returnThumbImageURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h;
++(NSURL *)returnThumbUserTxURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h;
++(NSURL *)returnThumbPetTxURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h;
 @end

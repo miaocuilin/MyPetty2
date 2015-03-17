@@ -725,7 +725,7 @@
         }];
     }else if(sender.tag == 79){
         NSLog(@"微博");
-        NSString * str = [NSString stringWithFormat:@"我家萌宠%@今天乖巧的冲我撒娇，来听听吧。http://home4pet.aidigame.com/（分享自@宠物星球社交应用）", self.pet_name];
+        NSString * str = [NSString stringWithFormat:@"我家萌宠%@今天乖巧的冲我撒娇，来听听吧。http://home4pet.imengstar.com/（分享自@宠物星球社交应用）", self.pet_name];
         [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[UMShareToSina] content:str image:image location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
             if (response.responseCode == UMSResponseCodeSuccess) {
                 NSLog(@"分享成功！");

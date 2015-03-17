@@ -264,7 +264,9 @@
     str = [NSString stringWithFormat:@"%@%@", PETTXURL, self.model.tx];
     defaultImage = [UIImage imageNamed:@"defaultPetHead.png"];
     __block PetMainViewController * blockSelf = self;
-    [headBlurImage setImageWithURL:[NSURL URLWithString:str] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+    
+    NSURL * url = [MyControl returnThumbPetTxURLwithName:self.model.tx Width:headBlurImage.frame.size.width*2 Height:headBlurImage.frame.size.height*2];
+    [headBlurImage setImageWithURL:url completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
         if (image){
             blockSelf->headBlurImage.image = [image applyBlurWithRadius:15 tintColor:[UIColor clearColor] saturationDeltaFactor:1.0 maskImage:nil];
         }

@@ -144,7 +144,7 @@
 -(void)dealloc {
     [super dealloc];
     [table release];
-    [self release];
+//    [self release];
 }
 
 @end

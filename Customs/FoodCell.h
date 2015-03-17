@@ -29,7 +29,7 @@
 @property(nonatomic,copy)NSString * timeStamp;
 @property(nonatomic)CGSize cellSize;
 
-@property(nonatomic,copy)void (^bigClick)();
+@property(nonatomic,copy)void (^bigClick)(NSURL *);
 //@property(nonatomic,copy)void (^foodTypeChange)(NSInteger);
 
 -(void)modifyUI:(BegFoodListModel *)model;

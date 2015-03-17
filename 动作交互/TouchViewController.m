@@ -62,6 +62,8 @@
     NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.pet_aid]];
     NSString *isTouch = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", ISTOUCHAPI, self.pet_aid, sig, [ControllerManager getSID]];
     NSLog(@"isTouch:%@",isTouch);
+    
+    __block TouchViewController * blockSelf = self;
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:isTouch Block:^(BOOL isFinish, httpDownloadBlock *load) {
         NSLog(@"是否已经摸过：%@",load.dataDict);
 //        if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"is_touched"] intValue]) {
@@ -72,12 +74,12 @@
         ENDLOADING;
         if (isFinish) {
             if ([[[load.dataDict objectForKey:@"data"] objectForKey:@"img_url"] isKindOfClass:[NSString class]]) {
-                self.img_url = [[load.dataDict objectForKey:@"data"] objectForKey:@"img_url"];
+                blockSelf.img_url = [[load.dataDict objectForKey:@"data"] objectForKey:@"img_url"];
             }
 //            [MyControl loadingSuccessWithContent:@"加载完成" afterDelay:0.2];
 //            [self loadRecordStringData];
-            [self backgroundView];
-            [self createAlertView];
+            [blockSelf backgroundView];
+            [blockSelf createAlertView];
             
         }else{
             LOADFAILED;
@@ -227,52 +229,22 @@
     
     //看是否有照片
     if(self.img_url){
-        [touchImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",IMAGEURL, self.img_url]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        NSURL *url = [MyControl returnThumbImageURLwithName:self.img_url Width:touchImageView.frame.size.width*2 Height:touchImageView.frame.size.height*2];
+        
+        [touchImageView setImageWithURL:url completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
             if (image) {
                 [self blurImage:image Frame:touchImageView.frame];
             }
         }];
-//        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.img_url]];
-//        UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
-//        if (animalHeaderImage) {
-//            touchImageView.image = animalHeaderImage;
-//            [self blurImage:touchImageView.image Frame:touchImageView.frame];
-//        }else{
-//            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",IMAGEURL, self.img_url] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-//                if (isFinish) {
-//                    touchImageView.image = load.dataImage;
-//                    [load.data writeToFile:pngFilePath atomically:YES];
-//                    [self blurImage:touchImageView.image Frame:touchImageView.frame];
-//                }else{
-//                    LOADFAILED;
-//                }
-//            }];
-//            [request release];
-//        }
     }else{
         if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]==0)) {
-            [touchImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+            NSURL *url = [MyControl returnThumbPetTxURLwithName:self.img_url Width:touchImageView.frame.size.width*2 Height:touchImageView.frame.size.height*2];
+            
+            [touchImageView setImageWithURL:url completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                 if (image) {
                     [self blurImage:image Frame:touchImageView.frame];
                 }
             }];
-//            NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
-//            UIImage *animalHeaderImage = [UIImage imageWithContentsOfFile:pngFilePath];
-//            if (animalHeaderImage) {
-//                touchImageView.image = animalHeaderImage;
-//                [self blurImage:touchImageView.image Frame:touchImageView.frame];
-//            }else{
-//                httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-//                    if (isFinish) {
-//                        touchImageView.image = load.dataImage;
-//                        [load.data writeToFile:pngFilePath atomically:YES];
-//                        [self blurImage:touchImageView.image Frame:touchImageView.frame];
-//                    }else{
-//                        LOADFAILED;
-//                    }
-//                }];
-//                [request release];
-//            }
         }
     }
 }
@@ -309,23 +281,8 @@
     
     headImageView = [MyControl createImageViewWithFrame:CGRectMake(10, 0, 56, 56) ImageName:@"defaultPetHead.png"];
     if (!([self.pet_tx isKindOfClass:[NSNull class]] || [self.pet_tx length]== 0)) {
-//        NSString *pngFilePath = [DOCDIR stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", self.pet_tx]];
         [MyControl setImageForImageView:headImageView Tx:self.pet_tx isPet:YES isRound:YES];
-//        UIImage * image = [UIImage imageWithContentsOfFile:pngFilePath];
-//        if (image) {
-//            headImageView.image = image;
-//        }else{
-//            httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@",PETTXURL, self.pet_tx] Block:^(BOOL isFinish, httpDownloadBlock *load) {
-//                if (isFinish) {
-//                    headImageView.image = load.dataImage;
-//                    [load.data writeToFile:pngFilePath atomically:YES];
-//                }
-//            }];
-//            [request release];
-//        }
     }
-    headImageView.layer.cornerRadius = 28;
-    headImageView.layer.masksToBounds = YES;
     [downView addSubview:headImageView];
     
     UIImageView *cricleHeadImageView = [MyControl createImageViewWithFrame:CGRectMake(8, -2, 60, 60) ImageName:@"head_cricle.png"];

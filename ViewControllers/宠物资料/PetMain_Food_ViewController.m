@@ -37,23 +37,26 @@
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", FOODLISTAPI, self.model.aid, sig, [ControllerManager getSID]];
 //    NSLog(@"%@", url);
     LOADING;
+    __block PetMain_Food_ViewController * blockSelf = self;
+    
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        [tv headerEndRefreshing];
+        [blockSelf->tv headerEndRefreshing];
+        
         if (isFinish) {
             ENDLOADING;
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]]) {
                 NSArray * array = [load.dataDict objectForKey:@"data"];
                 if ([array[0] isKindOfClass:[NSArray class]] && [array[0] count]) {
-                    [self.dataArray removeAllObjects];
+                    [blockSelf.dataArray removeAllObjects];
                     
                     for (NSDictionary * dict in array[0]) {
                         BegFoodListModel * model = [[BegFoodListModel alloc] init];
                         [model setValuesForKeysWithDictionary:dict];
-                        [self.dataArray addObject:model];
+                        [blockSelf.dataArray addObject:model];
                         [model release];
                     }
-                    page = 1;
-                    [tv reloadData];
+                    blockSelf->page = 1;
+                    [blockSelf->tv reloadData];
                 }
             }
         }else{
@@ -67,8 +70,9 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&page=%ddog&cat", self.model.aid, page]];
     NSString * url = [NSString stringWithFormat:@"%@%@&page=%d&sig=%@&SID=%@", FOODLISTAPI, self.model.aid, page, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
+    __block PetMain_Food_ViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-        [tv footerEndRefreshing];
+        [blockSelf->tv footerEndRefreshing];
         if (isFinish) {
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSArray class]]) {
                 NSArray * array = [load.dataDict objectForKey:@"data"];
@@ -76,13 +80,13 @@
                     for (NSDictionary * dict in array[0]) {
                         BegFoodListModel * model = [[BegFoodListModel alloc] init];
                         [model setValuesForKeysWithDictionary:dict];
-                        [self.dataArray addObject:model];
+                        [blockSelf.dataArray addObject:model];
                         [model release];
                     }
-                    page++;
-                    [tv reloadData];
+                    blockSelf->page++;
+                    [blockSelf->tv reloadData];
                 }else{
-                    [MyControl popAlertWithView:self.view Msg:@"木有更多了~"];
+                    [MyControl popAlertWithView:blockSelf.view Msg:@"木有更多了~"];
                 }
             }
         }else{
@@ -120,6 +124,9 @@
 - (void)backBtnClick
 {
     NSLog(@"dismiss");
+    [tv addHeaderWithTarget:nil action:nil];
+    [tv addFooterWithTarget:nil action:nil];
+
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark -
@@ -141,12 +148,17 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     NSString * cellID = @"ID";
     PetMain_FoodCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
         cell = [[[PetMain_FoodCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
     }
+    
     [cell configUI:self.dataArray[indexPath.row]];
+//    return cell;
+    __block PetMain_Food_ViewController * blockSelf = self;
+    __block PetMain_FoodCell * blockCell = cell;
     cell.rewardClick = ^(UILabel * rewardNum){
         if (![[USER objectForKey:@"isSuccess"] intValue]) {
             ShowAlertView;
@@ -163,7 +175,7 @@
                 [oneView makeUI];
                 oneView.jumpTB = ^(){
                     ChargeViewController * charge = [[ChargeViewController alloc] init];
-                    [self presentViewController:charge animated:YES completion:nil];
+                    [blockSelf presentViewController:charge animated:YES completion:nil];
                     [charge release];
                 };
                 [[UIApplication sharedApplication].keyWindow addSubview:oneView];
@@ -178,7 +190,7 @@
             Alert_2ButtonView2 * view2 = [[Alert_2ButtonView2 alloc] initWithFrame:[UIScreen mainScreen].bounds];
             view2.type = 1;
             view2.reward = ^(){
-                [cell reward];
+                [blockCell reward];
             };
             view2.rewardNum = rewardNum.text;
             [view2 makeUI];
@@ -186,7 +198,7 @@
             [view2 release];
             return;
         }
-        [cell reward];
+        [blockCell reward];
     };
     
     
@@ -211,9 +223,13 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     int a = indexPath.row;
-    NSLog(@"%d", a);
+//    NSLog(@"%d", a);
+    BegFoodListModel *model = self.dataArray[a];
     FrontImageDetailViewController * vc = [[FrontImageDetailViewController alloc] init];
     vc.img_id = [self.dataArray[a] img_id];
+    NSURL *url = [MyControl returnThumbImageURLwithName:model.url Width:86.0*2 Height:86.0*2];
+    vc.imageURL = url;
+    
     [self addChildViewController:vc];
     [self.view addSubview:vc.view];
     [vc didMoveToParentViewController:self];

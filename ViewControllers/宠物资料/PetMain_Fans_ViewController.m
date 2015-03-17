@@ -28,6 +28,8 @@
     [self createFakeNavigation];
     [self createTableView];
     [self loadKingMembersData];
+    
+    [tv registerNib:[UINib nibWithNibName:@"MyCountryContributeCell" bundle:nil] forCellReuseIdentifier:@"MyCountryContributeCell"];
 }
 #pragma mark - 国家成员数据
 - (void)loadKingMembersData
@@ -36,9 +38,11 @@
     NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.model.aid]];
     NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", PETMEMBERSAPI, self.model.aid, animalMembersSig, [ControllerManager getSID]];
     NSLog(@"国王成员API:%@",animalMembersString);
+    
+    __block PetMain_Fans_ViewController * blockSelf = self;
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalMembersString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
-            [self.dataArray removeAllObjects];
+            [blockSelf.dataArray removeAllObjects];
             //            NSLog(@"国王成员数据：%@",load.dataDict);
             NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             
@@ -48,14 +52,14 @@
                 [model setValuesForKeysWithDictionary:dict];
                 //                NSLog(@"model.usr_id:%@",model.usr_id);
                 if (i == array.count-1) {
-                    self.lastUsr_id = model.usr_id;
-                    self.lastRank = model.rank;
+                    blockSelf.lastUsr_id = model.usr_id;
+                    blockSelf.lastRank = model.rank;
                 }
                 //给主人调整位置到第一位
-                if ([model.usr_id isEqualToString:self.model.master_id]) {
-                    [self.dataArray insertObject:model atIndex:0];
+                if ([model.usr_id isEqualToString:blockSelf.model.master_id]) {
+                    [blockSelf.dataArray insertObject:model atIndex:0];
                 }else{
-                    [self.dataArray addObject:model];
+                    [blockSelf.dataArray addObject:model];
                 }
                 
                 [model release];
@@ -63,8 +67,8 @@
             
             
             //            NSLog(@"%@", [self.countryMembersDataArray[0] usr_id]);
-            [tv reloadData];
-            page++;
+            [blockSelf->tv reloadData];
+            blockSelf->page++;
             //            [self loadKingPresentsData];
         }
     }];
@@ -76,28 +80,30 @@
     NSString *animalMembersSig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@&page=%ddog&cat", self.model.aid, page]];
     NSString *animalMembersString = [NSString stringWithFormat:@"%@%@&page=%d&sig=%@&SID=%@", PETMEMBERSAPI, self.model.aid, page, animalMembersSig, [ControllerManager getSID]];
     NSLog(@"更多国王成员API:%@",animalMembersString);
+    
+    __block PetMain_Fans_ViewController * blockSelf = self;
     httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:animalMembersString Block:^(BOOL isFinish, httpDownloadBlock *load) {
         if (isFinish) {
             NSLog(@"更多国王成员数据：%@",load.dataDict);
             //            [self.countryMembersDataArray removeAllObjects];
             NSArray *array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             if (array.count == 0) {
-                [tv footerEndRefreshing];
+                [blockSelf->tv footerEndRefreshing];
                 return;
             }
             for (int i = 0; i<array.count; i++) {
                 NSDictionary * dict = array[i];
                 CountryMembersModel *model = [[CountryMembersModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.dataArray addObject:model];
+                [blockSelf.dataArray addObject:model];
                 if (i == array.count-1) {
-                    self.lastUsr_id = model.usr_id;
+                    blockSelf.lastUsr_id = model.usr_id;
                 }
                 [model release];
             }
-            [tv footerEndRefreshing];
-            [tv reloadData];
-            page++;
+            [blockSelf->tv footerEndRefreshing];
+            [blockSelf->tv reloadData];
+            blockSelf->page++;
         }
     }];
     [request release];
@@ -133,6 +139,7 @@
 - (void)backBtnClick
 {
     NSLog(@"dismiss");
+    [tv addFooterWithTarget:nil action:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 #pragma mark -
@@ -153,13 +160,13 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString * cellID3 = @"ID3";
-    BOOL nibsRegistered = NO;
-    if (!nibsRegistered) {
-        UINib * nib = [UINib nibWithNibName:@"MyCountryContributeCell" bundle:nil];
-        [tableView registerNib:nib forCellReuseIdentifier:cellID3];
-        nibsRegistered = YES;
-    }
+    static NSString * cellID3 = @"MyCountryContributeCell";
+//    BOOL nibsRegistered = NO;
+//    if (!nibsRegistered) {
+//        UINib * nib = [UINib nibWithNibName:@"MyCountryContributeCell" bundle:nil];
+//        [tableView registerNib:nib forCellReuseIdentifier:cellID3];
+//        nibsRegistered = YES;
+//    }
     MyCountryContributeCell * cell = [tableView dequeueReusableCellWithIdentifier:cellID3];
     cell.selectionStyle = 0;
     

@@ -74,12 +74,12 @@
     
     [UMSocialData setAppKey:@"538fddca56240b40a105fcfb"];
     //微信
-    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" appSecret:@"a5287571075736dc5760aafc1e5ff34e" url:@"http://home4pet.aidigame.com"];
+    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" appSecret:@"a5287571075736dc5760aafc1e5ff34e" url:@"http://home4pet.imengstar.com"];
     //微博
     [UMSocialSinaHandler openSSOWithRedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
     
-//    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" appSecret:@"a5287571075736dc5760aafc1e5ff34e" url:@"http://aidigame.com"];
-//    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" url:@"http://aidigame.com"];
+//    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" appSecret:@"a5287571075736dc5760aafc1e5ff34e" url:@"http://imengstar.com"];
+//    [UMSocialWechatHandler setWXAppId:@"wxc8c5912cc28194b6" url:@"http://imengstar.com"];
 //    [UMSocialConfig set];
 //    新浪
 //    阿猫阿狗
@@ -111,8 +111,8 @@
     
     /**********环信***********/
 //    aps_development.cer
-    NSString * apnsCertName = @"imengstar";
-    [[EaseMob sharedInstance] registerSDKWithAppKey:@"aidigame#imengstar" apnsCertName:apnsCertName];
+    NSString * apnsCertName = @"imengstar4test";
+    [[EaseMob sharedInstance] registerSDKWithAppKey:@"aidigame#imengstar4test" apnsCertName:apnsCertName];
     [[EaseMob sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
 
     [self registerRemoteNotification];
@@ -224,6 +224,11 @@
         [USER setObject:@"1" forKey:@"hasRemoteNotification"];
 //        [MyControl createAlertViewWithTitle:[NSString stringWithFormat:@"启动：%@", [USER objectForKey:@"hasRemoteNotification"]]];
     }
+    
+    /*****************/
+    //查收货地址API
+//    NSLog(@"%@%@&sig=%@&SID=%@", @"http://dev4pet.imengstar.com/index.php?r=animal/addressApi&aid=", @"497", [MyMD5 md5:@"aid=497dog&cat"], @"uovn0advruo160oss94cjceho0");
+    /*****************/
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];

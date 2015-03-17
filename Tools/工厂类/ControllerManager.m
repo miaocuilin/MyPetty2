@@ -31,6 +31,7 @@ MBProgressHUD *HUD;
 
 static FirstTabBarViewController * tabBar = nil;
 
+static NSInteger checkUpdate;
 
 +(id)shareManagerRandom
 {
@@ -554,8 +555,13 @@ static FirstTabBarViewController * tabBar = nil;
 {
     [vc willMoveToParentViewController:nil];
     [vc.view removeFromSuperview];
-//    [vc release];
+
+    [vc retain];
+//    if (![[UIDevice currentDevice].model isEqualToString:@"iPad"]) {
     [vc removeFromParentViewController];
+//    }
+    [vc release];
+    
 }
 + (void)addViewController:(UIViewController *)vc To:(UIViewController *)root
 {
@@ -619,5 +625,14 @@ static FirstTabBarViewController * tabBar = nil;
         [queue setMaxConcurrentOperationCount:3];
     });
     return queue;
+}
+
++(NSInteger)getCheckUpdate
+{
+    return checkUpdate;
+}
++(void)setCheckUpdate
+{
+    checkUpdate = 1;
 }
 @end

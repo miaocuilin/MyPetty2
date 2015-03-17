@@ -205,8 +205,11 @@
 }
 -(void)imageBtnClick:(UIButton *)btn
 {
-    NSLog(@"%d", btn.tag);
-    self.imageClick([self.imageArray[btn.tag-400] objectForKey:@"img_id"]);
+//    NSLog(@"%d", btn.tag);
+    NSString * imageUrl = [self.imageArray[btn.tag-400] objectForKey:@"url"];
+    NSURL * url = [MyControl returnThumbImageURLwithName:imageUrl Width:100 Height:100];
+    
+    self.imageClick([self.imageArray[btn.tag-400] objectForKey:@"img_id"], url);
     [tf resignFirstResponder];
 }
 -(void)adjustCellHeight:(int)a
@@ -394,45 +397,10 @@
         label2.text = [NSString stringWithFormat:@"送了%@次", model.gift_count];
     }
     //
-//    if ([[model.dict objectForKey:@"is_touched"] isKindOfClass:[NSNull class]]) {
-//        label3.text = @"送了0次";
-//    }else{
-//        label3.text = [NSString stringWithFormat:@"送了%@次", model.gift_count];
-//    }
-    //
-//    if ([[model.dict objectForKey:@"gift_count"] isKindOfClass:[NSNull class]]) {
-//        label2.text = @"送了0次";
-//    }else{
-//        label2.text = [NSString stringWithFormat:@"送了%@次", model.gift_count];
-//    }
-    
-//    return;
+
     [headBtn setBackgroundImage:[UIImage imageNamed:@"defaultPetHead.png"] forState:UIControlStateNormal];
     if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
         [MyControl setImageForBtn:headBtn Tx:model.tx isPet:YES isRound:YES];
-        
-//        NSString * docDir = DOCDIR;
-//        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-//        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-//        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-//        if (image) {
-//            [headBtn setBackgroundImage:image forState:UIControlStateNormal];
-//            //            headImageView.image = image;
-//        }else{
-//            //下载头像
-//            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-//                if (isFinish) {
-//                    [headBtn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-//                    //                    headImageView.image = load.dataImage;
-//                    NSString * docDir = DOCDIR;
-//                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-//                    [load.data writeToFile:txFilePath atomically:YES];
-//                }else{
-//                    NSLog(@"头像下载失败");
-//                }
-//            }];
-//            [request release];
-//        }
     }
     
     if (model.images.count) {
@@ -446,32 +414,10 @@
             imageView.clipsToBounds = YES;
             imageView.hidden = NO;
             
-//            NSString * docDir = DOCDIR;
             NSString * imageUrl = [model.images[i] objectForKey:@"url"];
+            NSURL * url = [MyControl returnThumbImageURLwithName:imageUrl Width:imageView.frame.size.width*2 Height:imageView.frame.size.height*2];
             
-            [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, imageUrl]] placeholderImage:[UIImage imageNamed:@"defaultPetPic.jpg"]];
-            
-//            NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", imageUrl]];
-//            //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-//            UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-//            if (image) {
-////                [btn setBackgroundImage:image forState:UIControlStateNormal];
-//                imageView.image = image;
-//            }else{
-//                //下载图片
-//                httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", IMAGEURL, imageUrl] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-//                    if (isFinish) {
-////                        [btn setBackgroundImage:load.dataImage forState:UIControlStateNormal];
-//                        imageView.image = load.dataImage;
-//                        NSString * docDir = DOCDIR;
-//                        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", imageUrl]];
-//                        [load.data writeToFile:txFilePath atomically:YES];
-//                    }else{
-//                        NSLog(@"图片下载失败");
-//                    }
-//                }];
-//                [request release];
-//            }
+            [imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"defaultPetPic.jpg"]];
         }
     }
 }
@@ -502,25 +448,6 @@
     [textField resignFirstResponder];
     if (![tf.text isEqualToString:self.tempTfString] && tf.text.length>0) {
         [self postMsg];
-        //API
-//        NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"aid=%@dog&cat", self.aid]];
-//        NSString * url = [NSString stringWithFormat:@"%@%@&msg=%@&sig=%@&SID=%@", MODIFYDECLAREAPI, self.aid, [tf.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], sig, [ControllerManager getSID]];
-//        NSLog(@"%@", url);
-//        httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
-//            if (isFinish) {
-//                NSLog(@"%@", load.dataDict);
-//                
-//                CGSize tfSize = [tf.text sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(250, 20) lineBreakMode:1];
-//                tf.frame = CGRectMake((bgView.frame.size.width-tfSize.width)/2, 152/2, tfSize.width, 20);
-//                //    tf.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
-//                CGRect hyRect = hyperBtn.frame;
-//                hyRect.origin.x = tf.frame.origin.x+tfSize.width-10;
-//                hyperBtn.frame = hyRect;
-//            }else{
-//                
-//            }
-//        }];
-//        [request release];
     }
     return YES;
 }

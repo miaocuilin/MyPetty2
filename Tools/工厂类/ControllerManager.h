@@ -60,7 +60,7 @@
 //+(BOOL)levelPOP:(NSString *)exp addExp:(NSInteger)add;
 //+(BOOL)rankPOP:(NSString *)contribution addContribution:(NSInteger)add planet:(NSString *)dogOrcat;
 
-+ (NSMutableArray *)getGift:(BOOL)isBad;
+//+ (NSMutableArray *)getGift:(BOOL)isBad;
 
 +(void)clearTalkData;
 
@@ -76,4 +76,8 @@
 
 //创建单例队列
 +(NSOperationQueue *)createOperationQueue;
+
+//检查强制更新用
++(NSInteger)getCheckUpdate;
++(void)setCheckUpdate;
 @end

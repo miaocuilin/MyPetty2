@@ -111,6 +111,6 @@
 @property (nonatomic,retain)NSMutableArray * sharersArray;
 
 @property (nonatomic)BOOL isFromRandom;
-@property (nonatomic,copy)NSString * imageURL;
+@property (nonatomic,copy)NSURL * imageURL;
 @property (nonatomic,copy)NSString * imageCmt;
 @end

@@ -19,6 +19,12 @@
 
 @implementation ChooseFamilyViewController
 
+//-(void)dealloc
+//{
+//    [super dealloc];
+//
+//}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -76,24 +82,26 @@
     LOADING;
     NSString * url = [NSString stringWithFormat:@"%@%@", RECOMMANDCOUNTRYLISTAPI, [ControllerManager getSID]];
     NSLog(@"%@", url);
+    
+    __block ChooseFamilyViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            [self.limitDataArray removeAllObjects];
+            [blockSelf.limitDataArray removeAllObjects];
             //        NSLog(@"%@", load.dataDict);
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
                 PetInfoModel * model = [[PetInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.limitDataArray addObject:model];
+                [blockSelf.limitDataArray addObject:model];
                 [model release];
             }
 //            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
-            pageNum = 1;
+            blockSelf->pageNum = 1;
             
             if ([[USER objectForKey:@"isSuccess"] intValue]) {
-                [self loadUserPetsList];
+                [blockSelf loadUserPetsList];
             }else{
-                [self createTableView];
+                [blockSelf createTableView];
                 ENDLOADING;
             }
             
@@ -108,16 +116,18 @@
     NSString * code = [NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]];
     NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], [MyMD5 md5:code], [ControllerManager getSID]];
     NSLog(@"%@", url);
+    
+    __block ChooseFamilyViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"UserPetsList:%@", load.dataDict);
-            self.userPetsListArray = [load.dataDict objectForKey:@"data"];
-            [self removeUserPets];
+//            NSLog(@"UserPetsList:%@", load.dataDict);
+            blockSelf.userPetsListArray = [load.dataDict objectForKey:@"data"];
+            [blockSelf removeUserPets];
             
-            if (isTvCreated) {
-                [tv reloadData];
+            if (blockSelf->isTvCreated) {
+                [blockSelf->tv reloadData];
             }else{
-                [self createTableView];
+                [blockSelf createTableView];
             }
             
             ENDLOADING;
@@ -362,33 +372,11 @@
 //    headerBgView.backgroundColor = [UIColor whiteColor];
     
     UIImageView * headImageView = [MyControl createImageViewWithFrame:CGRectMake(20, 10, 50, 50) ImageName:@"defaultPetHead.png"];
-    headImageView.layer.cornerRadius = headImageView.frame.size.width/2;
-    headImageView.layer.masksToBounds = YES;
     [headerBgView addSubview:headImageView];
     /**************************/
 //    NSLog(@"--%@", model.tx);
     if (!([model.tx isKindOfClass:[NSNull class]] || [model.tx length]==0)) {
-        NSString * docDir = DOCDIR;
-        NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-        //        NSLog(@"--%@--%@", txFilePath, self.headImageURL);
-        UIImage * image = [UIImage imageWithContentsOfFile:txFilePath];
-        if (image) {
-            headImageView.image = [MyControl image:image fitInSize:CGSizeMake(100, 100)];
-        }else{
-            //下载头像
-//            NSLog(@"%@", [NSString stringWithFormat:@"%@%@", PETTXURL, model.tx]);
-            httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:[NSString stringWithFormat:@"%@%@", PETTXURL, model.tx] Block:^(BOOL isFinish, httpDownloadBlock * load) {
-                if (isFinish) {
-                    headImageView.image = [MyControl image:load.dataImage fitInSize:CGSizeMake(100, 100)];
-                    NSString * docDir = DOCDIR;
-                    NSString * txFilePath = [docDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", model.tx]];
-                    [load.data writeToFile:txFilePath atomically:YES];
-                }else{
-                    NSLog(@"头像下载失败");
-                }
-            }];
-            [request release];
-        }
+        [MyControl setImageForImageView:headImageView Tx:model.tx isPet:YES isRound:YES];
     }
     
     /**************************/
@@ -605,6 +593,7 @@
 
 -(void)backBtnClick
 {
+    [tv addFooterWithTarget:nil action:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)raceBtnClick
@@ -788,23 +777,25 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", self.from]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI2, self.from, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
+    
+    __block ChooseFamilyViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            [self.dataArray removeAllObjects];
-            [self.limitDataArray removeAllObjects];
+            [blockSelf.limitDataArray removeAllObjects];
             //        NSLog(@"%@", load.dataDict);
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
                 PetInfoModel * model = [[PetInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.limitDataArray addObject:model];
+                [blockSelf.limitDataArray addObject:model];
                 [model release];
             }
 //            [self.limitDataArray addObjectsFromArray:self.dataArray];
 //            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
-            [self removeUserPets];
-            pageNum = 1;
-            [tv reloadData];
+            [blockSelf removeUserPets];
+            blockSelf->pageNum = 1;
+            [blockSelf->tv reloadData];
             ENDLOADING;
         }else{
             LOADFAILED;
@@ -818,23 +809,25 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", self.from]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI, self.from, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
+    
+    __block ChooseFamilyViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
 //            [self.dataArray2 removeAllObjects];
-            [self.limitDataArray removeAllObjects];
+            [blockSelf.limitDataArray removeAllObjects];
             //        NSLog(@"%@", load.dataDict);
             NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
             for (NSDictionary * dict in array) {
                 PetInfoModel * model = [[PetInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.limitDataArray addObject:model];
+                [blockSelf.limitDataArray addObject:model];
                 [model release];
             }
 //            [self.limitDataArray addObjectsFromArray:self.dataArray2];
 //            self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
-            [self removeUserPets];
-            [tv reloadData];
-            pageNum = 1;
+            [blockSelf removeUserPets];
+            [blockSelf->tv reloadData];
+            blockSelf->pageNum = 1;
             ENDLOADING;
         }else{
             LOADFAILED;
@@ -853,10 +846,12 @@
         NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", type]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", RECOMMANDCOUNTRYLISTAPI2, type, sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
+    
+    __block ChooseFamilyViewController * blockSelf = self;
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 NSLog(@"%@", load.dataDict);
-                [self.limitDataArray removeAllObjects];
+                [blockSelf.limitDataArray removeAllObjects];
                 //        NSLog(@"%@", load.dataDict);
                 
                 NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
@@ -864,18 +859,18 @@
                 for (NSDictionary * dict in array) {
                     PetInfoModel * model = [[PetInfoModel alloc] init];
                     [model setValuesForKeysWithDictionary:dict];
-                    [self.limitDataArray addObject:model];
+                    [blockSelf.limitDataArray addObject:model];
                     [model release];
                 }
-                pageNum = 1;
+                blockSelf->pageNum = 1;
 //                if (array.count) {
 //                    self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
 //                }else{
 //                    self.lastAid = @"";
 //                }
-                [self removeUserPets];
+                [blockSelf removeUserPets];
                 ENDLOADING;
-                [tv reloadData];
+                [blockSelf->tv reloadData];
             }else{
                 LOADFAILED;
             }
@@ -891,27 +886,29 @@
         LOADING;
         NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"from=%@dog&cat", type]];
         NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", TOPICCOUNTRYLISTAPI2, type, sig, [ControllerManager getSID]];
+    
+    __block ChooseFamilyViewController * blockSelf = self;
         httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
             if (isFinish) {
                 NSLog(@"%@", load.dataDict);
-                [self.limitDataArray removeAllObjects];
+                [blockSelf.limitDataArray removeAllObjects];
                 //        NSLog(@"%@", load.dataDict);
                 NSArray * array = [[load.dataDict objectForKey:@"data"] objectAtIndex:0];
                 for (NSDictionary * dict in array) {
                     PetInfoModel * model = [[PetInfoModel alloc] init];
                     [model setValuesForKeysWithDictionary:dict];
-                    [self.limitDataArray addObject:model];
+                    [blockSelf.limitDataArray addObject:model];
                     [model release];
                 }
                 //排除该种类为空的情况
-                pageNum = 1;
+                blockSelf->pageNum = 1;
 //                if (array.count) {
 //                    self.lastAid = [self.limitDataArray[self.limitDataArray.count-1] aid];
 //                }else{
 //                    self.lastAid = @"";
 //                }
-                [self removeUserPets];
-                [tv reloadData];
+                [blockSelf removeUserPets];
+                [blockSelf->tv reloadData];
                 ENDLOADING;
             }else{
                 LOADFAILED;
@@ -936,6 +933,8 @@
 //    }
     //
     LOADING;
+    
+    __block ChooseFamilyViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
@@ -943,16 +942,16 @@
             for (NSDictionary * dict in array) {
                 PetInfoModel * model = [[PetInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.limitDataArray addObject:model];
+                [blockSelf.limitDataArray addObject:model];
                 [model release];
             }
             //排除该种类为空的情况
             if (array.count) {
-                pageNum++;
-                [self removeUserPets];
-                [tv reloadData];
+                blockSelf->pageNum++;
+                [blockSelf removeUserPets];
+                [blockSelf->tv reloadData];
             }
-            [tv footerEndRefreshing];
+            [blockSelf->tv footerEndRefreshing];
             ENDLOADING;
         }else{
             LOADFAILED;
@@ -975,6 +974,8 @@
 //    }
     //
     LOADING;
+    
+    __block ChooseFamilyViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
             NSLog(@"%@", load.dataDict);
@@ -982,17 +983,17 @@
             for (NSDictionary * dict in array) {
                 PetInfoModel * model = [[PetInfoModel alloc] init];
                 [model setValuesForKeysWithDictionary:dict];
-                [self.limitDataArray addObject:model];
+                [blockSelf.limitDataArray addObject:model];
                 [model release];
             }
             //排除该种类为空的情况
             if (array.count) {
-                pageNum++;
-                [self removeUserPets];
-                [tv reloadData];
+                blockSelf->pageNum++;
+                [blockSelf removeUserPets];
+                [blockSelf->tv reloadData];
             }
             
-            [tv footerEndRefreshing];
+            [blockSelf->tv footerEndRefreshing];
             ENDLOADING;
         }else{
             LOADFAILED;
@@ -1009,16 +1010,5 @@
     SDImageCache * cache = [SDImageCache sharedImageCache];
     [cache clearMemory];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -70,8 +70,7 @@
     
     if (longPress.state == UIGestureRecognizerStateBegan) {
         self.longPress();
-//        if(_delegate && _indexPath && [_delegate respondsToSelector:@selector(cellImageViewLongPressAtIndexPath:)])
-//        {
+//        if(_delegate && _indexPath && [_delegate respondsToSelector:@selector(cellImageViewLongPressAtIndexPath:)])   //        {
 //            [_delegate cellImageViewLongPressAtIndexPath:self.indexPath];
 //        }
     }
@@ -102,18 +101,21 @@
     CGRect frame = self.imageView.frame;
     self.imageView.image = [UIImage imageNamed:@"defaultUserHead.png"];
     
+    self.imageView.frame = CGRectMake(10, 7, 45, 45);
+    
     if([self.usr_id isEqualToString:@"1"]){
         self.imageView.image = [UIImage imageNamed:@"miaomiao.png"];
     }else if([self.usr_id isEqualToString:@"2"]){
         self.imageView.image = [UIImage imageNamed:@"wangwang.png"];
     }else if([self.usr_id isEqualToString:@"3"]){
         self.imageView.image = [UIImage imageNamed:@"xiaoge.png"];
-    }else if([_imageURL isKindOfClass:[NSURL class]] && _imageURL != nil) {
-        [self.imageView setImageWithURL:_imageURL placeholderImage:_placeholderImage];
+    }else if([self.tx isKindOfClass:[NSString class]] && self.tx.length>0) {
+        [MyControl setImageForImageView:self.imageView Tx:self.tx isPet:NO isRound:YES];
+//        [self.imageView setImageWithURL:_imageURL placeholderImage:_placeholderImage];
     }
     
 //    [self.imageView sd_setImageWithURL:_imageURL placeholderImage:_placeholderImage];
-    self.imageView.frame = CGRectMake(10, 7, 45, 45);
+    
     self.imageView.layer.cornerRadius = self.imageView.frame.size.width/2.0;
     self.imageView.layer.masksToBounds = YES;
     

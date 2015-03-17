@@ -7,14 +7,17 @@
 //
 
 #import "UserBagViewController.h"
-#import "UserBagCollectionViewCell.h"
+//#import "UserBagCollectionViewCell.h"
 @interface UserBagViewController ()
 
 
 @end
 
 @implementation UserBagViewController
-
+//-(void)dealloc
+//{
+//    [super dealloc];
+//}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -32,44 +35,46 @@
     NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
     NSString * url = [NSString stringWithFormat:@"%@%@&sig=%@&SID=%@", USERGOODSLISTAPI, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
 //    NSLog(@"%@", url);
+    
+    __block UserBagViewController * blockSelf = self;
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
-            NSLog(@"背包物品:%@", load.dataDict);
+//            NSLog(@"背包物品:%@", load.dataDict);
             if ([[load.dataDict objectForKey:@"data"] isKindOfClass:[NSDictionary class]]) {
                 NSDictionary * dict = [load.dataDict objectForKey:@"data"];
-                [self.goodsArray removeAllObjects];
-                [self.goodsNumArray removeAllObjects];
+                [blockSelf.goodsArray removeAllObjects];
+                [blockSelf.goodsNumArray removeAllObjects];
                 
                 for (NSString * itemId in [dict allKeys]) {
                     if ([itemId intValue]%10 >4 || [itemId intValue]>=2200) {
                         continue;
                     }
-                    [self.goodsArray addObject:itemId];
+                    [blockSelf.goodsArray addObject:itemId];
                 }
                 //排序
-                for (int i=0; i<self.goodsArray.count; i++) {
-                    for (int j=0; j<self.goodsArray.count-i-1; j++) {
-                        if ([self.goodsArray[j] intValue] > [self.goodsArray[j+1] intValue]) {
-                            NSString * str1 = [NSString stringWithFormat:@"%@", self.goodsArray[j]];
-                            NSString * str2 = [NSString stringWithFormat:@"%@", self.goodsArray[j+1]];
-                            self.goodsArray[j] = str2;
-                            self.goodsArray[j+1] = str1;
+                for (int i=0; i<blockSelf.goodsArray.count; i++) {
+                    for (int j=0; j<blockSelf.goodsArray.count-i-1; j++) {
+                        if ([blockSelf.goodsArray[j] intValue] > [blockSelf.goodsArray[j+1] intValue]) {
+                            NSString * str1 = [NSString stringWithFormat:@"%@", blockSelf.goodsArray[j]];
+                            NSString * str2 = [NSString stringWithFormat:@"%@", blockSelf.goodsArray[j+1]];
+                            blockSelf.goodsArray[j] = str2;
+                            blockSelf.goodsArray[j+1] = str1;
                         }
                     }
                 }
                 //获取对应数量
-                for (int i=0; i<self.goodsArray.count; i++) {
-                    self.goodsNumArray[i] = [dict objectForKey:self.goodsArray[i]];
+                for (int i=0; i<blockSelf.goodsArray.count; i++) {
+                    blockSelf.goodsNumArray[i] = [dict objectForKey:blockSelf.goodsArray[i]];
                 }
-                for(int i=0;i<self.goodsArray.count;i++){
-                    if ([self.goodsNumArray[i] intValue] == 0) {
-                        [self.goodsArray removeObjectAtIndex:i];
-                        [self.goodsNumArray removeObjectAtIndex:i];
+                for(int i=0;i<blockSelf.goodsArray.count;i++){
+                    if ([blockSelf.goodsNumArray[i] intValue] == 0) {
+                        [blockSelf.goodsArray removeObjectAtIndex:i];
+                        [blockSelf.goodsNumArray removeObjectAtIndex:i];
                         i--;
                     }
                 }
 //                [self.collectionView reloadData];
-                [self createScrollView];
+                [blockSelf createScrollView];
             }
         }else{
         

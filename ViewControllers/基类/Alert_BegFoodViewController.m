@@ -70,7 +70,10 @@
     //
     bigImage = [MyControl createImageViewWithFrame:CGRectMake(8, 10, lab1.frame.origin.x-20, 160) ImageName:@""];
     bigImage.contentMode = UIViewContentModeScaleAspectFit;
-    [bigImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@", IMAGEURL, [self.dict objectForKey:@"url"]]]];
+    
+    NSURL *url = [MyControl returnThumbImageURLwithName:[self.dict objectForKey:@"url"] Width:bigImage.frame.size.width*2 Height:bigImage.frame.size.height*2];
+    [bigImage setImageWithURL:url placeholderImage:[UIImage imageNamed:@"water_white.png"]];
+    
     [bgView addSubview:bigImage];
     
     //
@@ -263,12 +266,26 @@
 }
 -(void)shareSuccess
 {
-    if(self.is_food == 1){
+    if (self.is_food == 1) {
         [MobClick event:@"food_share_suc"];
-    }else if(self.is_food == 2){
-        [MobClick event:@"topic1_share_suc"];
-    }else if(self.is_food == 3){
-        [MobClick event:@"topic2_share_suc"];
+    }else{
+        NSArray * menuList = [USER objectForKey:@"MenuList"];
+        if (menuList.count <2) {
+            [MobClick event:@"food_share_suc"];
+        }else{
+            //匹配
+            for(int i=1;i<menuList.count;i++){
+                if ([menuList[i] integerValue] == self.is_food) {
+                    if (i == 1) {
+                        [MobClick event:@"topic1_share_suc"];
+                    }else if(i == 2){
+                        [MobClick event:@"topic2_share_suc"];
+                    }
+                }else if(i == menuList.count-1){
+                    [MobClick event:@"food_share_suc"];
+                }
+            }
+        }
     }
     
 }

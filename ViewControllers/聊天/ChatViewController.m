@@ -489,6 +489,7 @@
                     vc.img_id = [dict objectForKey:@"img_id"];
 //                    vc.isFromKey = YES;
 //                    [[UIApplication sharedApplication].keyWindow addSubview:vc.view];
+                    
                     [self addChildViewController:vc];
                     [self.view addSubview:vc.view];
                     [vc didMoveToParentViewController:self];

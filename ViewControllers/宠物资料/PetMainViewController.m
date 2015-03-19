@@ -237,6 +237,7 @@
 }
 -(void)backBtnClick
 {
+    headBlurImage.image = nil;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)threePBtnClick

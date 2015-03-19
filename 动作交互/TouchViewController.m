@@ -23,12 +23,15 @@
 @end
 
 @implementation TouchViewController
--(void)dealloc
-{
-    [super dealloc];
-    _scratchCardView.surfaceImage = nil;
-    _scratchCardView.image = nil;
-}
+//-(void)dealloc
+//{
+//    [super dealloc];
+//    if(_scratchCardView){
+//        _scratchCardView.surfaceImage = nil;
+//        _scratchCardView.image = nil;
+////        [_scratchCardView release];
+//    }
+//}
 - (BOOL)getRecord
 {
     if (!_haveRecord) {
@@ -572,6 +575,10 @@
 {
     [_player stop];
     [_player release],_player=nil;
+    
+    _scratchCardView.surfaceImage = nil;
+    _scratchCardView.image = nil;
+
     [ControllerManager deleTabBarViewController:self];
 }
 #pragma mark - streamer

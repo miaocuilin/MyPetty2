@@ -1259,8 +1259,8 @@
  2015.01.22
  1.系统消息，3种系统消息后面加按钮，跳转照片详情、赏口粮页面和地址。
  2.引导图。
- 3.求口粮弹框的分享 = 详情页分享 = http://dev4pet.imengstar.com/index.php?r=social/foodShareApi&img_id=
- 宠物主页分享 = 邀请分享 = http://dev4pet.imengstar.com/index.php?r=animal/infoShare&aid=
+ 3.求口粮弹框的分享 = 详情页分享 = http://release4pet.imengstar.com/index.php?r=social/foodShareApi&img_id=
+ 宠物主页分享 = 邀请分享 = http://release4pet.imengstar.com/index.php?r=animal/infoShare&aid=
  
  2015.01.23
  1.照片详情添加“捧TA”，并且界面进行修改及其他事件添加。
@@ -1471,8 +1471,10 @@
  10.微博分享时取消，choosePic页面不消失
  【[self performSelector:@selector(dismiss) withObject:nil afterDelay:0.5];】。
  
+ 2015.03.19
+ 1.图片缩小4M左右，减少安装包的大小，摇一摇声音文件大小缩减。
+ 2.摸一摸、宠物主页返回时将毛玻璃图片置为nil，释放内存。
  
- *.
  
  *.打开详情页迅速关闭，数据下载完之后页面已释放，赋值闪退【将blockSelf retain】。
  *.宠物求口粮，摸一摸。

@@ -63,9 +63,10 @@
     [MobClick event:@"shake_button"];
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"rocking" ofType:@"wav"];
-    NSString *path2 = [[NSBundle mainBundle] pathForResource:@"rocked" ofType:@"wav"];
-    AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path2], &soundID2);
+    NSString *path2 = [[NSBundle mainBundle] pathForResource:@"rocked" ofType:@"mp3"];
+    
 	AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path], &soundID);
+    AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path2], &soundID2);
     
     if ([self.titleString isEqualToString:@"捣捣乱"]) {
         self.isTrouble = YES;

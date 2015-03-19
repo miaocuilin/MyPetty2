@@ -111,8 +111,8 @@
     
     /**********环信***********/
 //    aps_development.cer
-    NSString * apnsCertName = @"imengstar4test";
-    [[EaseMob sharedInstance] registerSDKWithAppKey:@"aidigame#imengstar4test" apnsCertName:apnsCertName];
+    NSString * apnsCertName = @"imengstar";
+    [[EaseMob sharedInstance] registerSDKWithAppKey:@"aidigame#imengstar" apnsCertName:apnsCertName];
     [[EaseMob sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
 
     [self registerRemoteNotification];
@@ -227,7 +227,7 @@
     
     /*****************/
     //查收货地址API
-//    NSLog(@"%@%@&sig=%@&SID=%@", @"http://dev4pet.imengstar.com/index.php?r=animal/addressApi&aid=", @"497", [MyMD5 md5:@"aid=497dog&cat"], @"uovn0advruo160oss94cjceho0");
+//    NSLog(@"%@%@&sig=%@&SID=%@", @"http://release4pet.imengstar.com/index.php?r=animal/addressApi&aid=", @"497", [MyMD5 md5:@"aid=497dog&cat"], @"uovn0advruo160oss94cjceho0");
     /*****************/
     
     self.window.backgroundColor = [UIColor whiteColor];

@@ -139,11 +139,11 @@
 //- (void)loadDataAPI
 //{
 //    NSString *sig = [MyMD5 md5:[NSString stringWithFormat:@"aids=%@dog&cat", self.pet_id]];
-//    NSString *string = [NSString stringWithFormat:@"http://dev4pet.imengstar.com/index.php?r=animal/othersApi&aids=%@&sig=%@&SID=%@", self.pet_id, sig,[ControllerManager getSID]];
+//    NSString *string = [NSString stringWithFormat:@"http://release4pet.imengstar.com/index.php?r=animal/othersApi&aids=%@&sig=%@&SID=%@", self.pet_id, sig,[ControllerManager getSID]];
 //    NSLog(@"string:%@",string);
 //    
 //    NSString *sigRecommed = [MyMD5 md5:@"dog&cat"];
-//    NSString *recommen = [NSString stringWithFormat:@"http://dev4pet.imengstar.com/index.php?r=animal/recommendApi&sig=%@&SID=%@",sigRecommed,[ControllerManager getSID]];
+//    NSString *recommen = [NSString stringWithFormat:@"http://release4pet.imengstar.com/index.php?r=animal/recommendApi&sig=%@&SID=%@",sigRecommed,[ControllerManager getSID]];
 //    NSLog(@"recommend:%@",recommen);
 //    
 //    //    rank/rqApi&category=  rank/contributionApi&aid=&category=

@@ -101,245 +101,245 @@
 #define SHOWMENU JDSideMenu * menu = [ControllerManager shareJDSideMenu];[menu showMenuAnimated:YES];
 
 //拉黑举报5个API
-#define REPORTUSERAPI @"http://dev4pet.imengstar.com/index.php?r=user/reportApi&usr_id="
-#define REPORTIMAGEAPI @"http://dev4pet.imengstar.com/index.php?r=image/reportApi&img_id="
-#define BOLCKTALKAPI @"http://dev4pet.imengstar.com/index.php?r=talk/blockApi&talk_id="
-#define UNBOLCKTALKAPI @"http://dev4pet.imengstar.com/index.php?r=talk/unBlockApi&usr_id="
-#define BLOCKLISTAPI @"http://dev4pet.imengstar.com/index.php?r=talk/blockListApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define REPORTUSERAPI @"http://release4pet.imengstar.com/index.php?r=user/reportApi&usr_id="
+#define REPORTIMAGEAPI @"http://release4pet.imengstar.com/index.php?r=image/reportApi&img_id="
+#define BOLCKTALKAPI @"http://release4pet.imengstar.com/index.php?r=talk/blockApi&talk_id="
+#define UNBOLCKTALKAPI @"http://release4pet.imengstar.com/index.php?r=talk/unBlockApi&usr_id="
+#define BLOCKLISTAPI @"http://release4pet.imengstar.com/index.php?r=talk/blockListApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
 //瀑布流新API
-#define RECOAPI @"http://dev4pet.imengstar.com/index.php?r=image/recoApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-#define RECOAPI2 @"http://dev4pet.imengstar.com/index.php?r=image/recoApi&page="
+#define RECOAPI @"http://release4pet.imengstar.com/index.php?r=image/recoApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define RECOAPI2 @"http://release4pet.imengstar.com/index.php?r=image/recoApi&page="
 
 //萌星推荐
-#define STARRECOMAPI @"http://dev4pet.imengstar.com/index.php?r=user/recommendApi&usr_id="
-#define STARRECOMAPI2 @"http://dev4pet.imengstar.com/index.php?r=user/recommendApi&page="
+#define STARRECOMAPI @"http://release4pet.imengstar.com/index.php?r=user/recommendApi&usr_id="
+#define STARRECOMAPI2 @"http://release4pet.imengstar.com/index.php?r=user/recommendApi&page="
 
 //我的萌星
-#define MYSTARAPI @"http://dev4pet.imengstar.com/index.php?r=animal/mineApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define MYSTARAPI @"http://release4pet.imengstar.com/index.php?r=animal/mineApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
 //修改宣言 参数：aid    post:msg
-#define MODIFYDECLAREAPI @"http://dev4pet.imengstar.com/index.php?r=animal/modifyMsgApi&aid="
+#define MODIFYDECLAREAPI @"http://release4pet.imengstar.com/index.php?r=animal/modifyMsgApi&aid="
 
 //输入邀请码API
-#define INVITECODEAPI @"http://dev4pet.imengstar.com/index.php?r=user/inputCodeApi&code="
+#define INVITECODEAPI @"http://release4pet.imengstar.com/index.php?r=user/inputCodeApi&code="
 
 //搜索人 name=[&page=]
-#define SEARCHUSERAPI @"http://dev4pet.imengstar.com/index.php?r=user/searchApi&name="
+#define SEARCHUSERAPI @"http://release4pet.imengstar.com/index.php?r=user/searchApi&name="
 
 //打虫子
-#define HITBUGS @"http://dev4pet.imengstar.com/index.php?r=game/dcz&aid="
+#define HITBUGS @"http://release4pet.imengstar.com/index.php?r=game/dcz&aid="
 
 //检查更新
-#define UPDATEAPI @"http://dev4pet.imengstar.com/index.php?r=user/upgradeApi&version="
+#define UPDATEAPI @"http://release4pet.imengstar.com/index.php?r=user/upgradeApi&version="
 
 //摇一摇API 供分享完之后确定剩余摇动次数用
-#define SHAKESHARERESULTAPI @"http://dev4pet.imengstar.com/index.php?r=animal/shakeShareApi&aid="
+#define SHAKESHARERESULTAPI @"http://release4pet.imengstar.com/index.php?r=animal/shakeShareApi&aid="
 
 //求口粮列表
-#define BEGFOODAPI @"http://dev4pet.imengstar.com/index.php?r=image/ask4FoodApi&page="
+#define BEGFOODAPI @"http://release4pet.imengstar.com/index.php?r=image/ask4FoodApi&page="
 
 //赏口粮API  img_id=&n=
-#define REWARDFOODAPI @"http://dev4pet.imengstar.com/index.php?r=image/rewardFoodApi&img_id="
+#define REWARDFOODAPI @"http://release4pet.imengstar.com/index.php?r=image/rewardFoodApi&img_id="
 
 //设置密码
-#define SETPWDAPI @"http://dev4pet.imengstar.com/index.php?r=user/setPwdApi&pwd="
+#define SETPWDAPI @"http://release4pet.imengstar.com/index.php?r=user/setPwdApi&pwd="
 
 //微信微博登录或注册  weibo=&wechat=
-#define LOGINBY3PARTY @"http://dev4pet.imengstar.com/index.php?r=user/loginBy3PartyApi"
+#define LOGINBY3PARTY @"http://release4pet.imengstar.com/index.php?r=user/loginBy3PartyApi"
 
 //密码登录API  &pwd=
-#define BINDUSERAPI @"http://dev4pet.imengstar.com/index.php?r=user/bindUserApi&name="
+#define BINDUSERAPI @"http://release4pet.imengstar.com/index.php?r=user/bindUserApi&name="
 
 //兑换API  item/exchangeApi&item_id=&aid=
-#define EXCHANGEAPI @"http://dev4pet.imengstar.com/index.php?r=item/exchangeApi&aid="
+#define EXCHANGEAPI @"http://release4pet.imengstar.com/index.php?r=item/exchangeApi&aid="
 
 //更新本地实物列表信息API item/listApi&code=
-#define TRUEGIFTLISTAPI @"http://dev4pet.imengstar.com/index.php?r=item/listApi"
+#define TRUEGIFTLISTAPI @"http://release4pet.imengstar.com/index.php?r=item/listApi"
 
 //实物详情页API item/infoApi&item_id=
-#define TRUEGIFTDETAILAPI @"http://dev4pet.imengstar.com/index.php?r=item/infoApi&item_id="
+#define TRUEGIFTDETAILAPI @"http://release4pet.imengstar.com/index.php?r=item/infoApi&item_id="
 
 //获取弹窗样式7所需数据API
-#define ALERT7DATAAPI @"http://dev4pet.imengstar.com/index.php?r=animal/foodApi&aid="
+#define ALERT7DATAAPI @"http://release4pet.imengstar.com/index.php?r=animal/foodApi&aid="
 
 //求口粮网页版 img_id=  to=   kouliang.tuturead
-#define WEBBEGFOODAPI @"http://dev4pet.imengstar.com/index.php?r=social/foodShareApi&img_id="
+#define WEBBEGFOODAPI @"http://release4pet.imengstar.com/index.php?r=social/foodShareApi&img_id="
 
 //banner API
-#define BANNERAPI @"http://dev4pet.imengstar.com/index.php?r=image/bannerApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define BANNERAPI @"http://release4pet.imengstar.com/index.php?r=image/bannerApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
 //宠物主页挣口粮页面API
-#define FOODLISTAPI @"http://dev4pet.imengstar.com/index.php?r=animal/foodListApi&aid="
+#define FOODLISTAPI @"http://release4pet.imengstar.com/index.php?r=animal/foodListApi&aid="
 
 //宠物主页分享API
-#define PETMAINSHAREAPI @"http://dev4pet.imengstar.com/index.php?r=animal/infoShare&aid="
+#define PETMAINSHAREAPI @"http://release4pet.imengstar.com/index.php?r=animal/infoShare&aid="
 
 //用户协议网页URL
-#define AGREEMENTAPI @"http://dev4pet.imengstar.com/index.php?r=site/agreement"
+#define AGREEMENTAPI @"http://release4pet.imengstar.com/index.php?r=site/agreement"
 
 //faq网页URL
-#define FAQAPI @"http://dev4pet.imengstar.com/index.php?r=site/faq"
+#define FAQAPI @"http://release4pet.imengstar.com/index.php?r=site/faq"
 
 //摇一摇分享API  &SID=
-#define SHAKESHAREAPI @"http://dev4pet.imengstar.com/index.php?r=social/shake&aid="
+#define SHAKESHAREAPI @"http://release4pet.imengstar.com/index.php?r=social/shake&aid="
 
 //摸一摸分享API  aid=&img_url=&SID=
-#define TOUCHSHAREAPI @"http://dev4pet.imengstar.com/index.php?r=social/touch&aid="
+#define TOUCHSHAREAPI @"http://release4pet.imengstar.com/index.php?r=social/touch&aid="
 
 //获取照片选择类型列表
-#define MENUAPI @"http://dev4pet.imengstar.com/index.php?r=image/menuApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define MENUAPI @"http://release4pet.imengstar.com/index.php?r=image/menuApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
 //判断动作今天是否做过 is_food=
-#define JUDGEDOAPI @"http://dev4pet.imengstar.com/index.php?r=image/isMenuApi&aid="
+#define JUDGEDOAPI @"http://release4pet.imengstar.com/index.php?r=image/isMenuApi&aid="
 
 //图片缩略图URL
-#define THUMBIMAGEURL @"http://devuploadthumb.imengstar.com/"
+#define THUMBIMAGEURL @"http://uploadthumb.imengstar.com/"
 
 //用户头像缩略图URL
-#define THUMBUSERTXURL @"http://devtxthumb.imengstar.com/tx_usr/"
+#define THUMBUSERTXURL @"http://txthumb.imengstar.com/tx_usr/"
 
 //宠物头像缩略图URL
-#define THUMBPETTXURL @"http://devtxthumb.imengstar.com/tx_ani/"
+#define THUMBPETTXURL @"http://txthumb.imengstar.com/tx_ani/"
 /********************************/
 
 //IP头API
 #define IPURL @"http://54.199.161.210/dc/index.php"
-#define IPURL2 @"http://dev4pet.imengstar.com/index.php"
+#define IPURL2 @"http://release4pet.imengstar.com/index.php"
 
 //注册API
-#define REGISTERAPI @"http://dev4pet.imengstar.com/index.php?r=user/registerApi&age=&code=&gender=&type=&wechat=&weibo=&sig=%@&SID=%@"
+#define REGISTERAPI @"http://release4pet.imengstar.com/index.php?r=user/registerApi&age=&code=&gender=&type=&wechat=&weibo=&sig=%@&SID=%@"
 
 //创建圈子  age gender name type
-#define CREATECOUNTRY @"http://dev4pet.imengstar.com/index.php?r=animal/createApi"
+#define CREATECOUNTRY @"http://release4pet.imengstar.com/index.php?r=animal/createApi"
 
 //修改宠物信息API
-#define MODIFYPETINFOAPI @"http://dev4pet.imengstar.com/index.php?r=animal/modifyInfoApi&"
+#define MODIFYPETINFOAPI @"http://release4pet.imengstar.com/index.php?r=animal/modifyInfoApi&"
 
 //修改个人信息API
-#define MODIFYUSERINFOAPI @"http://dev4pet.imengstar.com/index.php?r=user/modifyInfoApi&"
+#define MODIFYUSERINFOAPI @"http://release4pet.imengstar.com/index.php?r=user/modifyInfoApi&"
 
 //获取以前的SID
-#define GETPRESID @"http://dev4pet.imengstar.com/index.php?r=user/getSIDApi&uid="
+#define GETPRESID @"http://release4pet.imengstar.com/index.php?r=user/getSIDApi&uid="
 
 //登录API
-#define LOGINAPI @"http://dev4pet.imengstar.com/index.php?r=user/loginApi"
+#define LOGINAPI @"http://release4pet.imengstar.com/index.php?r=user/loginApi"
 
 //穿越API
-#define THROUGHAPI @"http://dev4pet.imengstar.com/index.php?r=user/planetApi&planet="
+#define THROUGHAPI @"http://release4pet.imengstar.com/index.php?r=user/planetApi&planet="
 
 //已由头像或图片的名称，获取头像的具体数据，后面需要加图片的名称
-#define IMAGEURL @"http://pet-test4upload.oss-cn-beijing.aliyuncs.com/"
-#define MENUURL @"http://pet-test4upload.oss-cn-beijing.aliyuncs.com/menu/"
-#define USERTXURL @"http://pet-test4tx.oss-cn-beijing.aliyuncs.com/tx_usr/"
-#define PETTXURL @"http://pet-test4tx.oss-cn-beijing.aliyuncs.com/tx_ani/"
+#define IMAGEURL @"http://pet4upload.oss-cn-beijing.aliyuncs.com/"
+#define MENUURL @"http://pet4upload.oss-cn-beijing.aliyuncs.com/menu/"
+#define USERTXURL @"http://pet4tx.oss-cn-beijing.aliyuncs.com/tx_usr/"
+#define PETTXURL @"http://pet4tx.oss-cn-beijing.aliyuncs.com/tx_ani/"
 
 //图片、头像上传API
-#define PETIMAGEAPI @"http://dev4pet.imengstar.com/index.php?r=image/uploadApi&aid="
+#define PETIMAGEAPI @"http://release4pet.imengstar.com/index.php?r=image/uploadApi&aid="
 
 //图片、头像上传API
-#define IMAGEAPI @"http://dev4pet.imengstar.com/index.php?r=image/uploadApi&aid="
+#define IMAGEAPI @"http://release4pet.imengstar.com/index.php?r=image/uploadApi&aid="
 
-#define IMAGEUPLOADAPI @"http://dev4pet.imengstar.com/index.php?r=image/uploadApi&aid="
+#define IMAGEUPLOADAPI @"http://release4pet.imengstar.com/index.php?r=image/uploadApi&aid="
 //IMAGEUPLOAD需要POST的数据：comment topic_id(可留空), topic_name, relates(usr_id1,usr_id2...)"
 
 //头像上传API 宠物参数aid
-#define TXAPI @"http://dev4pet.imengstar.com/index.php?r=user/txApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-#define PETTXAPI @"http://dev4pet.imengstar.com/index.php?r=animal/txApi&aid="
+#define TXAPI @"http://release4pet.imengstar.com/index.php?r=user/txApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define PETTXAPI @"http://release4pet.imengstar.com/index.php?r=animal/txApi&aid="
 
 
 //获取用户信息API
-#define INFOAPI @"http://dev4pet.imengstar.com/index.php?r=user/infoApi&usr_id=&sig=c47578e3a7aec3b5de510773bfdb9011&SID="
+#define INFOAPI @"http://release4pet.imengstar.com/index.php?r=user/infoApi&usr_id=&sig=c47578e3a7aec3b5de510773bfdb9011&SID="
 
 //其它用户信息
-#define USERINFOAPI @"http://dev4pet.imengstar.com/index.php?r=user/infoApi&usr_id="
+#define USERINFOAPI @"http://release4pet.imengstar.com/index.php?r=user/infoApi&usr_id="
 
 //修改默认宠物信息
-#define CHANGEDEFAULTPETAPI @"http://dev4pet.imengstar.com/index.php?r=user/chgDefAniApi&aid="
+#define CHANGEDEFAULTPETAPI @"http://release4pet.imengstar.com/index.php?r=user/chgDefAniApi&aid="
 
 //发布照片 #话题#
-#define PUBLISHTOPICLISTAPI @"http://dev4pet.imengstar.com/index.php?r=image/topicApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define PUBLISHTOPICLISTAPI @"http://release4pet.imengstar.com/index.php?r=image/topicApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 /***************************/
 //用户宠物列表：
 //参数：usr_id,  另外参数：is_simple,区别
 //侧边栏里和设置默认宠物里is_simple为1
 //个人主页里is_simple为0
-#define USERPETLISTAPI @"http://dev4pet.imengstar.com/index.php?r=user/petsApi&is_simple="
+#define USERPETLISTAPI @"http://release4pet.imengstar.com/index.php?r=user/petsApi&is_simple="
 //用户关注列表：
-#define USERATTENTIONLISTAPI @"http://dev4pet.imengstar.com/index.php?r=user/followingApi&usr_id="
+#define USERATTENTIONLISTAPI @"http://release4pet.imengstar.com/index.php?r=user/followingApi&usr_id="
 //用户活动列表：
-#define USERACTLISTAPI @"http://dev4pet.imengstar.com/index.php?r=user/topicApi&usr_id="
+#define USERACTLISTAPI @"http://release4pet.imengstar.com/index.php?r=user/topicApi&usr_id="
 //用户物品列表：
-#define USERGOODSLISTAPI @"http://dev4pet.imengstar.com/index.php?r=user/itemsApi&usr_id="
+#define USERGOODSLISTAPI @"http://release4pet.imengstar.com/index.php?r=user/itemsApi&usr_id="
 /***************************/
 //宠物动态API
 //1 成为粉丝 2 加入王国 3发图片 4送礼物 5叫一叫 6逗一逗 7捣捣乱
-#define PETNEWS @"http://dev4pet.imengstar.com/index.php?r=animal/newsApi&aid="
+#define PETNEWS @"http://release4pet.imengstar.com/index.php?r=animal/newsApi&aid="
 
 //还有一个nid参数用来上拉加载
-#define PETNEWS2 @"http://dev4pet.imengstar.com/index.php?r=animal/newsApi&aid="
+#define PETNEWS2 @"http://release4pet.imengstar.com/index.php?r=animal/newsApi&aid="
 
 //宠物背包
-#define PETGOODSLISTAPI @"http://dev4pet.imengstar.com/index.php?r=animal/itemsApi&aid="
+#define PETGOODSLISTAPI @"http://release4pet.imengstar.com/index.php?r=animal/itemsApi&aid="
 /***************************/
 //注册王国推荐列表
-#define RECOMMANDCOUNTRYLISTAPI @"http://dev4pet.imengstar.com/index.php?r=animal/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-#define RECOMMANDCOUNTRYLISTAPI2 @"http://dev4pet.imengstar.com/index.php?r=animal/recommendApi&from="
-#define RECOMMANDCOUNTRYLISTAPI3 @"http://dev4pet.imengstar.com/index.php?r=animal/recommendApi&from="
+#define RECOMMANDCOUNTRYLISTAPI @"http://release4pet.imengstar.com/index.php?r=animal/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define RECOMMANDCOUNTRYLISTAPI2 @"http://release4pet.imengstar.com/index.php?r=animal/recommendApi&from="
+#define RECOMMANDCOUNTRYLISTAPI3 @"http://release4pet.imengstar.com/index.php?r=animal/recommendApi&from="
 //注册王国人气列表  type=  aid=
-#define TOPICCOUNTRYLISTAPI @"http://dev4pet.imengstar.com/index.php?r=animal/popularApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-#define TOPICCOUNTRYLISTAPI2 @"http://dev4pet.imengstar.com/index.php?r=animal/popularApi&from="
-#define TOPICCOUNTRYLISTAPI3 @"http://dev4pet.imengstar.com/index.php?r=animal/popularApi&from="
+#define TOPICCOUNTRYLISTAPI @"http://release4pet.imengstar.com/index.php?r=animal/popularApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define TOPICCOUNTRYLISTAPI2 @"http://release4pet.imengstar.com/index.php?r=animal/popularApi&from="
+#define TOPICCOUNTRYLISTAPI3 @"http://release4pet.imengstar.com/index.php?r=animal/popularApi&from="
 
 //宠物名片
-#define PETCARDAPI @"http://dev4pet.imengstar.com/index.php?r=animal/cardApi&aid="
+#define PETCARDAPI @"http://release4pet.imengstar.com/index.php?r=animal/cardApi&aid="
 
 //join家族API
-#define JOINFAMILYAPI @"http://dev4pet.imengstar.com/index.php?r=animal/joinApi&aid="
+#define JOINFAMILYAPI @"http://release4pet.imengstar.com/index.php?r=animal/joinApi&aid="
 
 //退出王国API
-#define EXITFAMILYAPI @"http://dev4pet.imengstar.com/index.php?r=animal/exitApi&aid="
+#define EXITFAMILYAPI @"http://release4pet.imengstar.com/index.php?r=animal/exitApi&aid="
 /***************************/
 //获取宠物信息API
-#define PETINFOAPI @"http://dev4pet.imengstar.com/index.php?r=animal/infoApi&aid="
+#define PETINFOAPI @"http://release4pet.imengstar.com/index.php?r=animal/infoApi&aid="
 
 /*********活动详情*************/
-#define PETLISTAPI @"http://dev4pet.imengstar.com/index.php?r=animal/othersApi&aids="
+#define PETLISTAPI @"http://release4pet.imengstar.com/index.php?r=animal/othersApi&aids="
 //获取用户照片API
 #define IMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 #define IMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
 
-#define PETIMAGESAPI @"http://dev4pet.imengstar.com/index.php?r=animal/imagesApi&aid="
-#define PETIMAGESAPI2 @"http://dev4pet.imengstar.com/index.php?r=animal/imagesApi&aid="
+#define PETIMAGESAPI @"http://release4pet.imengstar.com/index.php?r=animal/imagesApi&aid="
+#define PETIMAGESAPI2 @"http://release4pet.imengstar.com/index.php?r=animal/imagesApi&aid="
 
 //获取其它用户照片API
 #define OTHERIMAGESAPI @"http://54.199.161.210/dc/index.php?r=user/imagesApi&usr_id="
 #define OTHERIMAGESAPI2 @"http://54.199.161.210/dc/index.php?r=user/imagesApi&img_id="
 
 //首页推荐照片API
-#define RECOMMENDAPI @"http://dev4pet.imengstar.com/index.php?r=image/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-#define RECOMMENDAPI2 @"http://dev4pet.imengstar.com/index.php?r=image/recommendApi&img_id="
+#define RECOMMENDAPI @"http://release4pet.imengstar.com/index.php?r=image/recommendApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define RECOMMENDAPI2 @"http://release4pet.imengstar.com/index.php?r=image/recommendApi&img_id="
 
 
 //随机照片API
-#define RANDOMAPI @"http://dev4pet.imengstar.com/index.php?r=image/randomApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-#define RANDOMAPI2 @"http://dev4pet.imengstar.com/index.php?r=image/randomApi&img_id="
+#define RANDOMAPI @"http://release4pet.imengstar.com/index.php?r=image/randomApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define RANDOMAPI2 @"http://release4pet.imengstar.com/index.php?r=image/randomApi&img_id="
 
 //用户喜爱照片API
-#define FAVORITEAPI @"http://dev4pet.imengstar.com/index.php?r=image/favoriteApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-#define FAVORITEAPI2 @"http://dev4pet.imengstar.com/index.php?r=image/favoriteApi&img_id="
+#define FAVORITEAPI @"http://release4pet.imengstar.com/index.php?r=image/favoriteApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define FAVORITEAPI2 @"http://release4pet.imengstar.com/index.php?r=image/favoriteApi&img_id="
 
 //照片信息
-#define IMAGEINFOAPI @"http://dev4pet.imengstar.com/index.php?r=image/infoApi&img_id="
+#define IMAGEINFOAPI @"http://release4pet.imengstar.com/index.php?r=image/infoApi&img_id="
 //照片分享API
-#define SHAREIMAGEAPI @"http://dev4pet.imengstar.com/index.php?r=image/shareApi&img_id="
+#define SHAREIMAGEAPI @"http://release4pet.imengstar.com/index.php?r=image/shareApi&img_id="
 
 
 //加关注API
-#define FOLLOWAPI @"http://dev4pet.imengstar.com/index.php?r=animal/followApi&aid="
+#define FOLLOWAPI @"http://release4pet.imengstar.com/index.php?r=animal/followApi&aid="
 
 //取消关注API
-#define UNFOLLOWAPI @"http://dev4pet.imengstar.com/index.php?r=animal/unFollowApi&aid="
+#define UNFOLLOWAPI @"http://release4pet.imengstar.com/index.php?r=animal/unFollowApi&aid="
 
 
 //我关注的API
@@ -351,125 +351,125 @@
 #define FOLLOWERAPI2 @"http://54.199.161.210/dc/index.php?r=user/followerApi&usr_id="
 
 //点赞API
-#define LIKEAPI @"http://dev4pet.imengstar.com/index.php?r=image/likeApi&img_id="
+#define LIKEAPI @"http://release4pet.imengstar.com/index.php?r=image/likeApi&img_id="
 //取消赞API
-#define UNLIKEAPI @"http://dev4pet.imengstar.com/index.php?r=image/unlikeApi&img_id="
+#define UNLIKEAPI @"http://release4pet.imengstar.com/index.php?r=image/unlikeApi&img_id="
 
 //宠物类型
 #define TYPEAPI @"http://54.199.161.210/dc/index.php?r=user/typeApi&&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
 //封面照片
-#define WELCOMEAPI @"http://dev4pet.imengstar.com/index.php?r=user/welcomeApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
-#define WELCOMEAPI2 @"http://pet-test4welcome.oss-cn-beijing.aliyuncs.com/"
+#define WELCOMEAPI @"http://release4pet.imengstar.com/index.php?r=user/welcomeApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define WELCOMEAPI2 @"http://pet4welcome.oss-cn-beijing.aliyuncs.com/"
 
 //照片点赞的人的列表
-#define LIKERSAPI @"http://dev4pet.imengstar.com/index.php?r=user/othersApi&usr_ids="
-#define USERSINFOAPI @"http://dev4pet.imengstar.com/index.php?r=user/othersApi&usr_ids="
+#define LIKERSAPI @"http://release4pet.imengstar.com/index.php?r=user/othersApi&usr_ids="
+#define USERSINFOAPI @"http://release4pet.imengstar.com/index.php?r=user/othersApi&usr_ids="
 
 //用户是否绑定微博或微信  &wechat=&weibo=
-#define BIND3PARTYAPI @"http://dev4pet.imengstar.com/index.php?r=user/bindApi"
+#define BIND3PARTYAPI @"http://release4pet.imengstar.com/index.php?r=user/bindApi"
 
 //活动页面API
-#define TOPICLISTAPI @"http://dev4pet.imengstar.com/index.php?r=topic/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define TOPICLISTAPI @"http://release4pet.imengstar.com/index.php?r=topic/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
 //活动图片请求API
 #define TOPICIMAGEAPI @"http://54.199.161.210/dc/images/topic/"
 
 //活动详情API
-#define TOPICINFOAPI @"http://dev4pet.imengstar.com/index.php?r=topic/infoApi&topic_id="
+#define TOPICINFOAPI @"http://release4pet.imengstar.com/index.php?r=topic/infoApi&topic_id="
 
 //最热
-#define POPULARAPI @"http://dev4pet.imengstar.com/index.php?r=topic/popularApi&topic_id="
-#define POPULARAPI2 @"http://dev4pet.imengstar.com/index.php?r=topic/popularApi&topic_id=%@&img_id="
+#define POPULARAPI @"http://release4pet.imengstar.com/index.php?r=topic/popularApi&topic_id="
+#define POPULARAPI2 @"http://release4pet.imengstar.com/index.php?r=topic/popularApi&topic_id=%@&img_id="
 
 //最新
-#define NEWESTAPI @"http://dev4pet.imengstar.com/index.php?r=topic/newestApi&topic_id="
-#define NEWESTAPI2 @"http://dev4pet.imengstar.com/index.php?r=topic/newestApi&topic_id=%@&img_id="
+#define NEWESTAPI @"http://release4pet.imengstar.com/index.php?r=topic/newestApi&topic_id="
+#define NEWESTAPI2 @"http://release4pet.imengstar.com/index.php?r=topic/newestApi&topic_id=%@&img_id="
 
 //活动排名
-#define ACTRANKLISTAPI @"http://dev4pet.imengstar.com/index.php?r=topic/rankApi&topic_id="
-#define ACTRANKLISTAPI2 @"http://dev4pet.imengstar.com/index.php?r=topic/rankApi&topic_id="
+#define ACTRANKLISTAPI @"http://release4pet.imengstar.com/index.php?r=topic/rankApi&topic_id="
+#define ACTRANKLISTAPI2 @"http://release4pet.imengstar.com/index.php?r=topic/rankApi&topic_id="
 
 //奖品
-#define REWARDAPI @"http://dev4pet.imengstar.com/index.php?r=topic/rewardApi&topic_id="
+#define REWARDAPI @"http://release4pet.imengstar.com/index.php?r=topic/rewardApi&topic_id="
 
 //消息列表 mail_id=&is_system=
-#define NOTIFYAPI @"http://dev4pet.imengstar.com/index.php?r=talk/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define NOTIFYAPI @"http://release4pet.imengstar.com/index.php?r=talk/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 //    #define NOTIFYAPI2 @"http://54.199.161.210/dc/index.php?r=mail/listApi&is_system="
 
 //发送消息 POST方法 参数为msg
-#define POSTMESSAGEAPI @"http://dev4pet.imengstar.com/index.php?r=talk/sendMsgApi&usr_id="
+#define POSTMESSAGEAPI @"http://release4pet.imengstar.com/index.php?r=talk/sendMsgApi&usr_id="
 
 //根据usr_id获取talk_id
-#define GETTALKIDAPI @"http://dev4pet.imengstar.com/index.php?r=talk/searchApi&usr_id="
+#define GETTALKIDAPI @"http://release4pet.imengstar.com/index.php?r=talk/searchApi&usr_id="
 
 //获取新消息
-#define GETNEWMSGAPI @"http://dev4pet.imengstar.com/index.php?r=talk/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define GETNEWMSGAPI @"http://release4pet.imengstar.com/index.php?r=talk/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
 //删除消息
 #define DELMESSAGEAPI @"http://54.199.161.210/dc/index.php?r=mail/deleteApi&mail_id="
 
 //评论 POST方法  参数img_id 和 body
-#define COMMENTAPI @"http://dev4pet.imengstar.com/index.php?r=image/commentApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define COMMENTAPI @"http://release4pet.imengstar.com/index.php?r=image/commentApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 
 //获取活动数和消息数
-#define ACTIVITYANDNOTIFYAPI @"http://dev4pet.imengstar.com/index.php?r=user/notifyApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+#define ACTIVITYANDNOTIFYAPI @"http://release4pet.imengstar.com/index.php?r=user/notifyApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
 //逗一逗
-#define HAVEFUNAPI @"http://dev4pet.imengstar.com/index.php?r=game/2048&aid="
+#define HAVEFUNAPI @"http://release4pet.imengstar.com/index.php?r=game/2048&aid="
 
 //注销API
-#define DELETEAPI @"http://dev4pet.imengstar.com/index.php?r=site/clearUser&name="
+#define DELETEAPI @"http://release4pet.imengstar.com/index.php?r=site/clearUser&name="
 
 
 #pragma mark - 张景瑞API
 //宠物礼物API
-#define PETPRESENTSAPI @"http://dev4pet.imengstar.com/index.php?r=animal/itemsApi&aid="
+#define PETPRESENTSAPI @"http://release4pet.imengstar.com/index.php?r=animal/itemsApi&aid="
 //宠物成员API
-#define PETMEMBERSAPI @"http://dev4pet.imengstar.com/index.php?r=animal/fansApi&aid="
-#define  PETMEMBERSAPI2 @"http://dev4pet.imengstar.com/index.php?r=animal/fansApi&aid="
+#define PETMEMBERSAPI @"http://release4pet.imengstar.com/index.php?r=animal/fansApi&aid="
+#define  PETMEMBERSAPI2 @"http://release4pet.imengstar.com/index.php?r=animal/fansApi&aid="
 //宠物动态API
-#define PETNEWSAPI @"http://dev4pet.imengstar.com/index.php?r=animal/newsApi&aid="
-#define PETNEWSAPI2 @"http://dev4pet.imengstar.com/index.php?r=animal/newsApi&aid="
+#define PETNEWSAPI @"http://release4pet.imengstar.com/index.php?r=animal/newsApi&aid="
+#define PETNEWSAPI2 @"http://release4pet.imengstar.com/index.php?r=animal/newsApi&aid="
 //宠物信息API
-#define ANIMALINFOAPI @"http://dev4pet.imengstar.com/index.php?r=animal/infoApi&aid="
+#define ANIMALINFOAPI @"http://release4pet.imengstar.com/index.php?r=animal/infoApi&aid="
 //宠物头像
-#define ANIMALTXAPI @"http://dev4pet.imengstar.com/index.php?r=animal/txApi&aid="
+#define ANIMALTXAPI @"http://release4pet.imengstar.com/index.php?r=animal/txApi&aid="
 //加入宠物圈子
-#define JOINPETCRICLEAPI @"http://dev4pet.imengstar.com/index.php?r=animal/joinApi&aid="
+#define JOINPETCRICLEAPI @"http://release4pet.imengstar.com/index.php?r=animal/joinApi&aid="
 //退出宠物圈子
-#define EXITPETCRICLEAPI @"http://dev4pet.imengstar.com/index.php?r=animal/exitApi&aid="
+#define EXITPETCRICLEAPI @"http://release4pet.imengstar.com/index.php?r=animal/exitApi&aid="
 //关注宠物圈子
-#define PETATTENTIONAPI @"http://dev4pet.imengstar.com/index.php?r=animal/followApi&aid="
+#define PETATTENTIONAPI @"http://release4pet.imengstar.com/index.php?r=animal/followApi&aid="
 //取消关注宠物圈子
-#define PETATTENTIONCANCELAPI @"http://dev4pet.imengstar.com/index.php?r=animal/unFollowApi&aid="
+#define PETATTENTIONCANCELAPI @"http://release4pet.imengstar.com/index.php?r=animal/unFollowApi&aid="
 //关注关系
-#define RELATIONAPI @"http://dev4pet.imengstar.com/index.php?r=animal/relationApi&aid="
+#define RELATIONAPI @"http://release4pet.imengstar.com/index.php?r=animal/relationApi&aid="
 //上传录音
-#define RECORDUPLOADAPI @"http://dev4pet.imengstar.com/index.php?r=animal/voiceUpApi&aid="
+#define RECORDUPLOADAPI @"http://release4pet.imengstar.com/index.php?r=animal/voiceUpApi&aid="
 //下载录音url
-#define RECORDDOWNLOADAPI @"http://dev4pet.imengstar.com/index.php?r=animal/voiceDownApi&aid="
+#define RECORDDOWNLOADAPI @"http://release4pet.imengstar.com/index.php?r=animal/voiceDownApi&aid="
 //下载录音文件，后面拼文件名
-#define RECORDDOWNLOADAPI2 @"http://pet-test4voices.oss-cn-beijing.aliyuncs.com/ani/";
+#define RECORDDOWNLOADAPI2 @"http://pet4voices.oss-cn-beijing.aliyuncs.com/ani/";
 //地址
-#define ADDRESSAPI @"http://dev4pet.imengstar.com/index.php?r=animal/addressApi&aid="
+#define ADDRESSAPI @"http://release4pet.imengstar.com/index.php?r=animal/addressApi&aid="
 //人气排行榜
-#define POPULARRANKAPI @"http://dev4pet.imengstar.com/index.php?r=rank/rqRankApi&category="
+#define POPULARRANKAPI @"http://release4pet.imengstar.com/index.php?r=rank/rqRankApi&category="
 //国家贡献排行榜
-#define CONTRIBUTIONAPI @"http://dev4pet.imengstar.com/index.php?r=rank/contributionRankApi&aid="
+#define CONTRIBUTIONAPI @"http://release4pet.imengstar.com/index.php?r=rank/contributionRankApi&aid="
 //
-#define SHOPITEMSAPI @"http://dev4pet.imengstar.com/index.php?r=item/listApi&code="
+#define SHOPITEMSAPI @"http://release4pet.imengstar.com/index.php?r=item/listApi&code="
 //搜索  animal/searchApi&name=[&aid=]
-#define SEARCHAPI @"http://dev4pet.imengstar.com/index.php?r=animal/searchApi"
+#define SEARCHAPI @"http://release4pet.imengstar.com/index.php?r=animal/searchApi"
 //摇一摇
-#define SHAKEAPI @"http://dev4pet.imengstar.com/index.php?r=animal/shakeApi&aid="
+#define SHAKEAPI @"http://release4pet.imengstar.com/index.php?r=animal/shakeApi&aid="
 //摇一摇物品自动赠送&物品赠送
-#define SENDSHAKEGIFT @"http://dev4pet.imengstar.com/index.php?r=animal/sendGiftApi&aid="
+#define SENDSHAKEGIFT @"http://release4pet.imengstar.com/index.php?r=animal/sendGiftApi&aid="
 //是否已经进行过叫一叫
-#define ISRECORDERAPI @"http://dev4pet.imengstar.com/index.php?r=animal/isVoicedApi&aid="
+#define ISRECORDERAPI @"http://release4pet.imengstar.com/index.php?r=animal/isVoicedApi&aid="
 //摸一摸api
-#define TOUCHAPI @"http://dev4pet.imengstar.com/index.php?r=animal/touchApi&aid="
+#define TOUCHAPI @"http://release4pet.imengstar.com/index.php?r=animal/touchApi&aid="
 //是否已经进行过摸一摸
-#define ISTOUCHAPI @"http://dev4pet.imengstar.com/index.php?r=animal/isTouchedApi&aid="
+#define ISTOUCHAPI @"http://release4pet.imengstar.com/index.php?r=animal/isTouchedApi&aid="
 //购买礼物
-#define BUYSHOPGIFTAPI @"http://dev4pet.imengstar.com/index.php?r=item/buyApi&item_id="
+#define BUYSHOPGIFTAPI @"http://release4pet.imengstar.com/index.php?r=item/buyApi&item_id="
 #endif

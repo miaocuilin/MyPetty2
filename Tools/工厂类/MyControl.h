@@ -122,4 +122,21 @@
 +(NSURL *)returnThumbImageURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h;
 +(NSURL *)returnThumbUserTxURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h;
 +(NSURL *)returnThumbPetTxURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h;
+
+#pragma mark -
++(void)setOriginX:(CGFloat)originX WithView:(UIView *)view;
++(void)setOriginY:(CGFloat)originY WithView:(UIView *)view;
++(void)setWidth:(CGFloat)width WithView:(UIView *)view;
++(void)setHeight:(CGFloat)height WithView:(UIView *)view;
+
++(CGFloat)returnOriginAndHeightWithView:(UIView *)view;
++(CGFloat)returnOriginAndWidthWithView:(UIView *)view;
+
++(void)setVerticalSpace:(CGFloat)space FromView:(UIView *)fromView ToView:(UIView *)toView;
++(void)setHorizonSpace:(CGFloat)space FromView:(UIView *)fromView ToView:(UIView *)toView;
+
++(BOOL)isShouldRegist:(UIViewController *)controller;
+
+
++(CGSize)returnSizeAboutString:(NSString *)str FontSize:(CGFloat)font DefaultSize:(CGSize)defaultSize;
 @end

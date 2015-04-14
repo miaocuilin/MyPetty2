@@ -584,7 +584,9 @@
         [UIView animateKeyframesWithDuration:0.2 delay:1.5 options:0 animations:^{
             pop.bgView.alpha = 0;
         } completion:^(BOOL finished) {
-            [pop removeFromSuperview];
+            if (keyView != nil) {
+                [pop removeFromSuperview];
+            }
         }];
     }];
 }
@@ -935,5 +937,82 @@
 +(NSURL *)returnThumbPetTxURLwithName:(NSString *)name Width:(NSInteger)w Height:(NSInteger)h
 {
     return [self returnThumbImageURLwithType:THUMBPETTXURL Name:name Width:w Height:h];
+}
+
+#pragma mark -
++(void)setOriginY:(CGFloat)originY WithView:(UIView *)view
+{
+    CGRect rect = view.frame;
+    rect.origin.y = originY;
+    view.frame = rect;
+}
++(void)setOriginX:(CGFloat)originX WithView:(UIView *)view
+{
+    CGRect rect = view.frame;
+    rect.origin.x = originX;
+    view.frame = rect;
+}
+
++(void)setWidth:(CGFloat)width WithView:(UIView *)view
+{
+    CGRect rect = view.frame;
+    rect.size.width = width;
+    view.frame = rect;
+}
+
++(void)setHeight:(CGFloat)height WithView:(UIView *)view
+{
+    CGRect rect = view.frame;
+    rect.size.height = height;
+    view.frame = rect;
+}
++(CGFloat)returnOriginAndHeightWithView:(UIView *)view
+{
+    return view.frame.origin.y+view.frame.size.height;
+}
++(CGFloat)returnOriginAndWidthWithView:(UIView *)view
+{
+    return view.frame.origin.x+view.frame.size.width;
+}
++(void)setVerticalSpace:(CGFloat)space FromView:(UIView *)fromView ToView:(UIView *)toView
+{
+    [self setOriginY:[self returnOriginAndHeightWithView:toView]+space WithView:fromView];
+}
++(void)setHorizonSpace:(CGFloat)space FromView:(UIView *)fromView ToView:(UIView *)toView
+{
+    [self setOriginX:[self returnOriginAndWidthWithView:toView] WithView:fromView];
+}
+
+#pragma mark - 判断注册
++(BOOL)isShouldRegist:(UIViewController *)controller
+{
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        VariousAlertViewController * vc = [[VariousAlertViewController alloc] init];
+        __unsafe_unretained VariousAlertViewController *weakVarious = vc;
+        __block UIViewController *blockSelf = controller;
+        vc.regClick = ^(){
+            ChooseInViewController * choose = [[ChooseInViewController alloc] init];
+            [blockSelf presentViewController:choose  animated:YES completion:nil];
+            [weakVarious.view removeFromSuperview];
+            [choose autorelease];
+        };
+        vc.fastClick = ^(){
+            LoginViewController * login = [[LoginViewController alloc] init];
+            [blockSelf presentViewController:login animated:YES completion:nil];
+            [weakVarious.view removeFromSuperview];
+            [login autorelease];
+        };
+        [controller.view addSubview:vc.view];
+        [vc autorelease];
+        return YES;
+    }else{
+        return NO;
+    }
+}
+
++(CGSize)returnSizeAboutString:(NSString *)str FontSize:(CGFloat)font DefaultSize:(CGSize)defaultSize
+{
+    CGSize size = [str boundingRectWithSize:defaultSize options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:font]} context:nil].size;
+    return size;
 }
 @end

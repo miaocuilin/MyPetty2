@@ -184,6 +184,47 @@
         selectLabel.hidden = YES;
         goldImage.hidden = YES;
         costLabel.hidden = YES;
+    }else if(self.type == 6){
+        UILabel *titleLabel = [MyControl createLabelWithFrame:CGRectMake(0, 20, bgView.frame.size.width, 20) Font:16 Text:@"今天的推荐票用完啦"];
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        titleLabel.textColor = [UIColor colorWithRed:114/255.0 green:72/255.0 blue:43/255.0 alpha:1];
+        [bgView addSubview:titleLabel];
+        
+        CGRect label1Rect = label1.frame;
+        label1Rect.origin.x += 20;
+        label1Rect.origin.y += 20;
+        label1.frame = label1Rect;
+        
+        label1.text = @"花费";
+        label1.textAlignment = NSTextAlignmentLeft;
+        
+        UILabel * label3 = [MyControl createLabelWithFrame:CGRectMake(label1.frame.origin.x, label1.frame.origin.y+40, 100, 20) Font:16 Text:@"兑换"];
+        label3.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
+        [bgView addSubview:label3];
+
+        
+        selectImage.hidden = YES;
+        selectLabel.hidden = YES;
+        
+        CGRect rect = goldImage.frame;
+        rect.origin.y = label1.frame.origin.y-4;
+        rect.origin.x += 20;
+        goldImage.frame = rect;
+        
+        NSString * str = @"推荐票 x 3";
+        label2.text = str;
+        label2.font = [UIFont systemFontOfSize:16];
+        label2.textAlignment = NSTextAlignmentLeft;
+        CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(bgView.frame.size.width-130, 100) lineBreakMode:1];
+        label2.frame = CGRectMake(goldImage.frame.origin.x, label3.frame.origin.y, bgView.frame.size.width-130, size.height);
+        
+        costLabel.text = @"100";
+        costLabel.frame = CGRectMake(goldImage.frame.origin.x+goldImage.frame.size.width+10, goldImage.frame.origin.y+5, bgView.frame.size.width/2, 20);
+        costLabel.textColor = [ControllerManager colorWithHexString:@"7a7a7a"];
+        costLabel.font = [UIFont systemFontOfSize:16];
+        
+        [cancelBtn setTitle:@"不了…" forState:UIControlStateNormal];
+        [confirmBtn setTitle:@"好的！" forState:UIControlStateNormal];
     }
     
 //    if ([[USER objectForKey:@"showCostAlert"] intValue]) {
@@ -223,6 +264,8 @@
     }else if(self.type == 5){
         //送礼
         self.zbBlock(2);
+    }else if(self.type == 6){
+        self.exchangeRecommend();
     }
     [self removeFromSuperview];
 }

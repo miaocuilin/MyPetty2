@@ -374,11 +374,6 @@
         chatController.other_nickName = self.userModel.name;
         chatController.other_tx = self.userModel.tx;
         
-//        TalkViewController * vc = [[TalkViewController alloc] init];
-//        vc.friendName = self.userModel.name;
-//        vc.usr_id = self.usr_id;
-//        vc.otherTX = self.userModel.tx;
-//        NSLog(@"%@--%@--%@", [headerDict objectForKey:@"name"], [headerDict objectForKey:@"usr_id"], [headerDict objectForKey:@"tx"]);
         [self presentViewController:chatController animated:YES completion:nil];
         [chatController release];
     }

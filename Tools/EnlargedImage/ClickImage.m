@@ -165,15 +165,14 @@ UIActionSheet *sheet;
 }
 - (void)imageSavedToPhotosAlbum:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
 {
-    NSString *message = @"呵呵";
+//    NSString *message = @"呵呵";
     if (!error) {
 //        message = @"成功保存到相册";
         UIAlertView *alert = [MyControl createAlertViewWithTitle:@"已保存至相册"];
         
-    }else
-    {
+    }else{
         UIAlertView *alert = [MyControl createAlertViewWithTitle:@"保存失败"];
-        message = [error description];
+//        message = [error description];
     }
 //    NSLog(@"message is %@",message);
 }

@@ -28,6 +28,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.navigationController.navigationBarHidden = YES;
     // Do any additional setup after loading the view.
 //    self.array = @[@"萌星与捧TA", @"挣口粮与兑换", @"贡献度", @"萌星人气值", @"基本动作", @"金币", @"献爱心"];
 //    self.dataArray = [NSMutableArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FAQ" ofType:@"plist"]];
@@ -92,7 +93,8 @@
 //        tv.hidden = NO;
 //        tv2.hidden = YES;
 //    }else{
-        [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
+//        [self dismissViewControllerAnimated:YES completion:nil];
 //    }
 }
 //-(void)createTableView

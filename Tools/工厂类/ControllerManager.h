@@ -89,7 +89,14 @@
 +(NSInteger)getCheckUpdate;
 +(void)setCheckUpdate;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> dev-miao
 =======
+>>>>>>> dev-miao
+=======
+
+//tabBar的隐藏和显示
++(void)hideTabBar;
++(void)showTabBar;
 >>>>>>> dev-miao
 @end

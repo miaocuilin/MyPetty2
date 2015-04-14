@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "BegFoodListModel.h"
+
+
 @interface FoodCell : UITableViewCell
 {
     UIView * whiteView;

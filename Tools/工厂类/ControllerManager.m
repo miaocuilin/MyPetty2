@@ -573,8 +573,8 @@ static NSInteger checkUpdate;
 
 +(void)loadPetList
 {
-    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"is_simple=1&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
-    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 1, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
+    NSString * sig = [MyMD5 md5:[NSString stringWithFormat:@"is_simple=0&usr_id=%@dog&cat", [USER objectForKey:@"usr_id"]]];
+    NSString * url = [NSString stringWithFormat:@"%@%d&usr_id=%@&sig=%@&SID=%@", USERPETLISTAPI, 0, [USER objectForKey:@"usr_id"], sig, [ControllerManager getSID]];
     NSLog(@"%@", url);
     httpDownloadBlock * request = [[httpDownloadBlock alloc] initWithUrlStr:url Block:^(BOOL isFinish, httpDownloadBlock * load) {
         if (isFinish) {
@@ -643,7 +643,22 @@ static NSInteger checkUpdate;
     checkUpdate = 1;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> dev-miao
 =======
+>>>>>>> dev-miao
+=======
+
+
++(void)hideTabBar
+{
+    FirstTabBarViewController *tabBar = (FirstTabBarViewController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    [tabBar hideBottom];
+}
++(void)showTabBar
+{
+    FirstTabBarViewController *tabBar = (FirstTabBarViewController *)[[UIApplication sharedApplication].delegate window].rootViewController;
+    [tabBar showBottom];
+}
 >>>>>>> dev-miao
 @end

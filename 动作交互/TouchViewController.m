@@ -354,11 +354,11 @@
 -(NSString *)returnShareURL
 {
     if ([self.img_url isKindOfClass:[NSString class]] && self.img_url.length) {
-        return [NSString stringWithFormat:@"%@%@&img_url=%@&SID=%@", TOUCHSHAREAPI, self.pet_aid, self.img_url, [ControllerManager getSID]];
+        return [NSString stringWithFormat:@"%@%@&img_url=%@", TOUCHSHAREAPI, self.pet_aid, self.img_url];
     }else if([self.pet_tx isKindOfClass:[NSString class]] && self.pet_tx.length){
-        return [NSString stringWithFormat:@"%@%@&img_url=%@&SID=%@", TOUCHSHAREAPI, self.pet_aid, self.pet_tx, [ControllerManager getSID]];
+        return [NSString stringWithFormat:@"%@%@&img_url=%@", TOUCHSHAREAPI, self.pet_aid, self.pet_tx];
     }else{
-        return [NSString stringWithFormat:@"%@%@&img_url=%@&SID=%@", TOUCHSHAREAPI, self.pet_aid, @"", [ControllerManager getSID]];
+        return [NSString stringWithFormat:@"%@%@&img_url=%@", TOUCHSHAREAPI, self.pet_aid, @""];
     }
 }
 

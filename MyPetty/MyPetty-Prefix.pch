@@ -58,6 +58,10 @@
 
 #define ShowAlertView VariousAlertViewController * vc = [[VariousAlertViewController alloc] init];vc.regClick = ^(){ChooseInViewController * choose = [[ChooseInViewController alloc] init];[self presentViewController:choose  animated:YES completion:nil];[choose release];[vc.view removeFromSuperview];};vc.fastClick = ^(){LoginViewController * login = [[LoginViewController alloc] init];[self presentViewController:login animated:YES completion:nil];[login release];[vc.view removeFromSuperview];};[self.view addSubview:vc.view];[vc release];
 
+#define ShouldShowRegist FirstTabBarViewController *first = (FirstTabBarViewController *)[[UIApplication sharedApplication].delegate window].rootViewController;if ([MyControl isShouldRegist:first]) {return;}
+
+//#define ShowAlertView_ARC VariousAlertViewController * vc = [[VariousAlertViewController alloc] init];vc.regClick = ^(){ChooseInViewController * choose = [[ChooseInViewController alloc] init];[self presentViewController:choose  animated:YES completion:nil];[vc.view removeFromSuperview];};vc.fastClick = ^(){LoginViewController * login = [[LoginViewController alloc] init];[self presentViewController:login animated:YES completion:nil];[vc.view removeFromSuperview];};[self.view addSubview:vc.view];
+
 
 #define LOADPETLIST [ControllerManager loadPetList]
 //#define ShowAlertView AlertView * alert = [[AlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];[alert makeUI];alert.jump = ^(){LoginViewController * vc = [[LoginViewController alloc] init];[self presentViewController:vc animated:YES completion:nil];[vc release];};[self.view addSubview:alert];[alert release];
@@ -99,6 +103,10 @@
 #define LoadingFailed [MMProgressHUD dismissWithError:@"网络连接异常" afterDelay:1.5];
 
 #define SHOWMENU JDSideMenu * menu = [ControllerManager shareJDSideMenu];[menu showMenuAnimated:YES];
+
+#define WIDTH [UIScreen mainScreen].bounds.size.width
+#define HEIGHT [UIScreen mainScreen].bounds.size.height
+
 
 //拉黑举报5个API
 #define REPORTUSERAPI @"http://release4pet.imengstar.com/index.php?r=user/reportApi&usr_id="
@@ -201,6 +209,18 @@
 
 //宠物头像缩略图URL
 #define THUMBPETTXURL @"http://txthumb.imengstar.com/tx_ani/"
+
+
+//充值网址URL
+#define RECHARGEURLAPI @"http://release4pet.imengstar.com/index.php?r=site/rechargeUrl"
+
+//文章API
+#define ARTICLESAPI @"http://release4pet.imengstar.com/index.php?r=social/articles"
+
+//海选API
+#define MASSELECTIONAPI @"http://release4pet.imengstar.com/index.php?r=star/listApi&sig=beac851bfcd1b0d3dc98b327aa7fbad2&SID="
+
+
 /********************************/
 
 //IP头API

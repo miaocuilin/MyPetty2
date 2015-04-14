@@ -14,7 +14,7 @@
 #import "BackImageDetailCommentViewCell.h"
 #import "ChatViewController.h"
 
-@interface FrontImageDetailViewController () <UMSocialUIDelegate>
+@interface FrontImageDetailViewController () <UMSocialUIDelegate,UIGestureRecognizerDelegate>
 
 @end
 
@@ -146,6 +146,17 @@
         } completion:nil];
     }];
 }
+
+//-(void)viewWillAppear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    [ControllerManager hideTabBar];
+//}
+//-(void)viewWillDisappear:(BOOL)animated
+//{
+//    [super viewWillDisappear:animated];
+//    [ControllerManager showTabBar];
+//}
 //-(void)viewDidDisappear:(BOOL)animated
 //{
 //    [super viewDidDisappear:animated];
@@ -154,6 +165,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    [ControllerManager hideTabBar];
+    
     [MobClick event:@"photopage"];
     
     self.view.backgroundColor = [UIColor clearColor];
@@ -793,6 +806,7 @@
     
     //手势
     UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+    tap.delegate = self;
     [sv addGestureRecognizer:tap];
     [tap release];
     
@@ -802,9 +816,9 @@
     imageBgView.layer.borderColor = [UIColor colorWithRed:206/255.0 green:206/255.0 blue:206/255.0 alpha:1].CGColor;
     [sv addSubview:imageBgView];
     
-    UITapGestureRecognizer * tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap2:)];
-    [imageBgView addGestureRecognizer:tap2];
-    [tap2 release];
+//    UITapGestureRecognizer * tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap2:)];
+//    [imageBgView addGestureRecognizer:tap2];
+//    [tap2 release];
     
     bigImageView = [[ClickImage alloc] initWithFrame:CGRectMake(8, 5, imageBgView.frame.size.width-16, 300)];
 //    bigImageView.canClick = YES;
@@ -849,9 +863,11 @@
     swipeLeft2.direction = UISwipeGestureRecognizerDirectionLeft;
     [sv2 addGestureRecognizer:swipeRight2];
     
-//    UITapGestureRecognizer * tap3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
-//    [sv2 addGestureRecognizer:tap3];
-//    [tap3 release];
+    UITapGestureRecognizer * tap3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+//    tap3.cancelsTouchesInView = NO;
+    tap3.delegate = self;
+    [sv2 addGestureRecognizer:tap3];
+    [tap3 release];
     
     imageBgView2 = [MyControl createViewWithFrame:CGRectMake(13, 30, self.view.frame.size.width-13*2, 350)];
     imageBgView2.backgroundColor = [UIColor whiteColor];
@@ -860,6 +876,7 @@
     [sv2 addSubview:imageBgView2];
     
 //    UITapGestureRecognizer * tap4 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap2:)];
+//    tap4.cancelsTouchesInView = NO;
 //    [imageBgView2 addGestureRecognizer:tap4];
 //    [tap4 release];
     
@@ -1033,7 +1050,7 @@
     NSArray * selectedArray = @[@"front_zan_select", @"front_gift_select", @"front_comment_select", @"front_more_select"];
     NSArray * unSelectedArray = @[@"front_zan_unSelect", @"front_gift_unSelect", @"front_comment_unSelect", @"front_more_unSelect"];
     for (int i=0; i<selectedArray.count; i++) {
-        UIImageView * halfBall = [MyControl createImageViewWithFrame:CGRectMake(i*(self.view.frame.size.width/4.0), bottomBg.frame.size.height-50, self.view.frame.size.width/4.0, 50) ImageName:@"food_bottom_halfBall.png"];
+        UIImageView * halfBall = [MyControl createImageViewWithFrame:CGRectMake(i*(self.view.frame.size.width/4.0), bottomBg.frame.size.height-50, self.view.frame.size.width/4.0, 50) ImageName:@"food_bottom_halfBall1.png"];
         [bottomBg addSubview:halfBall];
         
         UIButton * ballBtn = [MyControl createButtonWithFrame:CGRectMake(halfBall.frame.origin.x+halfBall.frame.size.width/2.0-42.5/2.0, 2, 85/2.0, 94/2.0) ImageName:unSelectedArray[i] Target:self Action:@selector(ballBtnClick:) Title:nil];
@@ -1165,6 +1182,19 @@
         }];
     }];
 }
+#pragma mark - delegate
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+//    NSLog(@"%@", NSStringFromClass([touch.view class]));
+//    if ([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]) {
+//        return NO;
+//    }
+    if (![NSStringFromClass([touch.view class]) isEqualToString:@"UIScrollView"]) {
+        return NO;
+    }
+    return YES;
+}
+
 #pragma mark -
 -(void)tap:(UIGestureRecognizer *)tap
 {
@@ -2385,6 +2415,8 @@
     
 //    [ControllerManager deleTabBarViewController:self];
 //    __block FrontImageDetailViewController * blockSelf = self;
+    [ControllerManager showTabBar];
+    
     [UIView animateWithDuration:0.3 animations:^{
         self.view.alpha = 0;
     }completion:^(BOOL finished) {

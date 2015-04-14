@@ -237,8 +237,10 @@
 }
 -(void)backBtnClick
 {
-    headBlurImage.image = nil;
-    [self dismissViewControllerAnimated:YES completion:nil];
+    __block PetMainViewController *blockSelf = self;
+    [self dismissViewControllerAnimated:YES completion:^{
+        blockSelf->headBlurImage.image = nil;
+    }];
 }
 -(void)threePBtnClick
 {

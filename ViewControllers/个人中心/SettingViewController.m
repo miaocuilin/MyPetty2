@@ -34,6 +34,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.navigationController.navigationBarHidden = YES;
     
 //    if ([[USER objectForKey:@"confVersion"] isEqualToString:@"1.0"]) {
 //        isConfVersion = YES;
@@ -141,7 +142,8 @@
 }
 -(void)backBtnClick:(UIButton *)button
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+//    [self dismissViewControllerAnimated:YES completion:nil];
 //    button.selected = !button.selected;
 //    JDSideMenu * menu = [ControllerManager shareJDSideMenu];
 //    if (button.selected) {
@@ -410,7 +412,8 @@
 //                }];
 //            }else{
                 FAQViewController * vc = [[FAQViewController alloc] init];
-                [self presentViewController:vc animated:YES completion:nil];
+            [self.navigationController pushViewController:vc animated:YES];
+//                [self presentViewController:vc animated:YES completion:nil];
                 [vc release];
 //            }
             
@@ -422,15 +425,18 @@
 //                //好评
 //            }else{
                 FeedbackViewController *feedBackVC = [[FeedbackViewController alloc] init];
-                [self presentViewController:feedBackVC animated:YES completion:^{
-                    [feedBackVC release];
-                }];
+            [self.navigationController pushViewController:feedBackVC animated:YES];
+            [feedBackVC release];
+//                [self presentViewController:feedBackVC animated:YES completion:^{
+//                    [feedBackVC release];
+//                }];
 //            }
         }
         else if (indexPath.row == 4){
 //            if (isConfVersion) {
                 AboutViewController * vc = [[AboutViewController alloc] init];
-                [self presentViewController:vc animated:YES completion:nil];
+            [self.navigationController pushViewController:vc animated:YES];
+//                [self presentViewController:vc animated:YES completion:nil];
                 [vc release];
 //            }else{
 //                //好评

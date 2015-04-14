@@ -775,11 +775,13 @@ static NSString * const kAFAviarySecret = @"389160adda815809";
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
     [[IQKeyboardManager sharedManager] setEnable:YES];
+    sv.scrollEnabled = NO;
     return YES;
 }
 -(BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
     [[IQKeyboardManager sharedManager] setEnable:NO];
+    sv.scrollEnabled = YES;
     return YES;
 }
 -(void)textViewDidBeginEditing:(UITextView *)textView

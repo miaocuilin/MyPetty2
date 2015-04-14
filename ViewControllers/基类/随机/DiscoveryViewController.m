@@ -15,11 +15,17 @@
 #import "PopularityListViewController.h"
 #import "WaterflowViewController.h"
 #import "DemoViewController.h"
+#import "ArticleViewController.h"
+#import "DiscoverPictureViewController.h"
 
 @interface DiscoveryViewController ()
 {
-//    WaterflowViewController * vc;
+    DiscoverPictureViewController * vc;
+    ArticleViewController *article;
 }
+
+@property(nonatomic,retain)UITableView *table;
+@property(nonatomic,retain)UISegmentedControl *seg;
 @end
 
 @implementation DiscoveryViewController
@@ -64,7 +70,7 @@
 {
     if(sc.selectedSegmentIndex == 0){
         if (isLoaded) {
-            [vc headerRefresh];
+            [vc refreshTop];
         }
     }else{
         if (isListLoaded) {
@@ -96,6 +102,31 @@
     [self createWaterFlow];
     [self createTableView];
     [self createSearchView];
+    
+//    [self createNewTableView];
+}
+
+
+-(void)createNewTableView
+{
+    _table = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, WIDTH, HEIGHT-64-44) style:UITableViewStylePlain];
+    self.table.delegate = self;
+    self.table.dataSource = self;
+    self.table.separatorStyle = 0;
+    [sv addSubview:self.table];
+    
+    UIView *view = [MyControl createViewWithFrame:CGRectMake(0, 0, WIDTH, 30)];
+    self.seg = [[UISegmentedControl alloc] initWithItems:@[@"精选", @"最新", @"关注"]];
+    self.seg.frame = CGRectMake(WIDTH/4.0, 7, WIDTH/2.0, 30);
+    self.seg.tintColor = [UIColor clearColor];
+    [self.seg setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]} forState:UIControlStateNormal];
+    [self.seg setTitleTextAttributes:@{NSForegroundColorAttributeName:ORANGE} forState:UIControlStateSelected];
+    [self.seg setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} forState:UIControlStateNormal | UIControlStateSelected];
+    self.seg.selectedSegmentIndex = 0;
+    [view addSubview:self.seg];
+    
+    
+    self.table.tableHeaderView = view;
 }
 
 -(void)createHeader
@@ -117,13 +148,14 @@
     UIButton * listBtn = [MyControl createButtonWithFrame:CGRectMake(5, 28, 27, 27) ImageName:@"discover_list.png" Target:self Action:@selector(jumpRQ) Title:nil];
     [navView addSubview:listBtn];
     
-    sc = [[UISegmentedControl alloc] initWithItems:@[@"最新萌照", @"萌星推荐"]];
+    sc = [[UISegmentedControl alloc] initWithItems:@[@"图片", @"文章"]];
     sc.frame = CGRectMake(40, 28, self.view.frame.size.width-40*2, 28);
     sc.layer.cornerRadius = 5;
     sc.layer.masksToBounds = YES;
-    sc.backgroundColor = [UIColor whiteColor];
-    sc.alpha = 0.7;
+    sc.backgroundColor = [UIColor clearColor];
+//    sc.alpha = 0.7;
     sc.tintColor = ORANGE;
+    [sc setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]} forState:UIControlStateNormal];
     [sc setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]} forState:UIControlStateSelected];
     [sc addTarget:self action:@selector(segmentClick) forControlEvents:UIControlEventValueChanged];
     sc.selectedSegmentIndex = 0;
@@ -165,7 +197,7 @@
 }
 -(void)createScrollView
 {
-    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height)];
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     sv.delegate = self;
     sv.contentSize = CGSizeMake(self.view.frame.size.width*2, self.view.frame.size.height);
     sv.pagingEnabled = YES;
@@ -177,9 +209,9 @@
 }
 -(void)createWaterFlow
 {
-    vc = [[RandomViewController alloc] init];
+    vc = [[DiscoverPictureViewController alloc] init];
     [self addChildViewController:vc];
-    [vc.view setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [vc.view setFrame:CGRectMake(0, 64, WIDTH, HEIGHT-64)];
 //    vc.reloadRandom = ^(){
 //        if([ControllerManager getIsSuccess]){
 //            [self getNewMessage];
@@ -189,10 +221,17 @@
 }
 -(void)createRecommend
 {
-    vc2 = [[PetRecommendViewController alloc] init];
-    [self addChildViewController:vc2];
-    [vc2.view setFrame:CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [sv addSubview:vc2.view];
+    article = [[ArticleViewController alloc] init];
+    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:article];
+    nc.view.frame = CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self addChildViewController:nc];
+    [sv addSubview:nc.view];
+    [nc didMoveToParentViewController:self];
+    
+//    vc2 = [[PetRecommendViewController alloc] init];
+//    [self addChildViewController:vc2];
+//    [vc2.view setFrame:CGRectMake(self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height)];
+//    [sv addSubview:vc2.view];
 //    [self.view bringSubviewToFront:navView];
 }
 -(void)searchBtnClick
@@ -212,6 +251,7 @@
             isListLoaded = YES;
             [self createRecommend];
         }
+        [ControllerManager showTabBar];
     }
     [UIView animateWithDuration:0.3 animations:^{
         sv.contentOffset = CGPointMake(self.view.frame.size.width*sc.selectedSegmentIndex, 0);
@@ -357,10 +397,18 @@
     cell.backgroundColor = [UIColor clearColor];
     return cell;
 }
--(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 70.0f;
 }
+//-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    if (tableView == self.table) {
+//        return 44.0;
+//    }else{
+//        return 0.1;
+//    }
+//}
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 //    NSLog(@"%d", indexPath.row);

@@ -44,10 +44,24 @@
     if(self.isZB){
         [chargeWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.zbUrl]]];
     }else{
-        [chargeWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://t.cn/RwvTSmq"]]];
+        [self loadChargeUrl];
+//        [chargeWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://suo.im/bbon7"]]];
     }
     
     [chargeWebView release];
+}
+-(void)loadChargeUrl
+{
+    LOADING;
+    __block ChargeViewController *blockSelf = self;
+    httpDownloadBlock *request = [[httpDownloadBlock alloc] initWithUrlStr:RECHARGEURLAPI Block:^(BOOL isFinish, httpDownloadBlock * load) {
+        if (isFinish) {
+            [blockSelf->chargeWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[[load.dataDict objectForKey:@"data"] objectForKey:@"recharge_url"]]]];
+            ENDLOADING;
+        }else{
+            LOADFAILED;
+        }
+    }];
 }
 -(void)createFakeNavigation
 {

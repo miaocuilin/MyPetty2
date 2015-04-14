@@ -12,7 +12,7 @@
 {
     UIView * navView;
 }
-
+//是否是周边
 @property(nonatomic)BOOL isZB;
 @property(nonatomic,copy)NSString * zbUrl;
 @end

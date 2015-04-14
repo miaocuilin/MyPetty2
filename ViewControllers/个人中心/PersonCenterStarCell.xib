@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="PersonCenterStarCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultPetHead.png" translatesAutoresizingMaskIntoConstraints="NO" id="iAG-OS-F4z">
+                        <rect key="frame" x="23" y="7" width="35" height="35"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="35" id="GLH-o1-o2p"/>
+                            <constraint firstAttribute="width" constant="35" id="Vku-Jd-L0F"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zMd-zv-Mna">
+                        <rect key="frame" x="78" y="14" width="197" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="wAk-qB-GZm"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="title_2.png" translatesAutoresizingMaskIntoConstraints="NO" id="GGL-oG-H2o">
+                        <rect key="frame" x="280" y="16" width="32" height="16"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="32" id="VGA-9n-uMh"/>
+                            <constraint firstAttribute="height" constant="16" id="XMz-fa-x52"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="iAG-OS-F4z" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="7.5" id="6QN-HN-uEO"/>
+                    <constraint firstItem="iAG-OS-F4z" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="35" id="8d5-Is-IPb"/>
+                    <constraint firstItem="zMd-zv-Mna" firstAttribute="leading" secondItem="iAG-OS-F4z" secondAttribute="trailing" constant="20" id="Bih-85-EdN"/>
+                    <constraint firstItem="iAG-OS-F4z" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="15" id="CE7-UT-zf3"/>
+                    <constraint firstItem="GGL-oG-H2o" firstAttribute="leading" secondItem="zMd-zv-Mna" secondAttribute="trailing" constant="5" id="EwP-VQ-ALg"/>
+                    <constraint firstAttribute="centerY" secondItem="iAG-OS-F4z" secondAttribute="centerY" constant="0.25" id="HoL-XM-671"/>
+                    <constraint firstAttribute="centerY" secondItem="GGL-oG-H2o" secondAttribute="centerY" constant="0.25" id="Rkj-uM-WQl"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="GGL-oG-H2o" secondAttribute="trailing" id="pTF-M2-uu5"/>
+                    <constraint firstAttribute="centerX" secondItem="iAG-OS-F4z" secondAttribute="centerX" id="qIy-ta-RgM"/>
+                    <constraint firstAttribute="centerY" secondItem="zMd-zv-Mna" secondAttribute="centerY" constant="0.75" id="wns-E2-z5H"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="6QN-HN-uEO"/>
+                        <exclude reference="8d5-Is-IPb"/>
+                        <exclude reference="qIy-ta-RgM"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="headImage" destination="iAG-OS-F4z" id="YVI-cQ-8WM"/>
+                <outlet property="nameLabel" destination="zMd-zv-Mna" id="h94-34-fz7"/>
+                <outlet property="rankImage" destination="GGL-oG-H2o" id="Ggt-pr-2zY"/>
+            </connections>
+            <point key="canvasLocation" x="244" y="185"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="defaultPetHead.png" width="140" height="140"/>
+        <image name="title_2.png" width="64" height="32"/>
+    </resources>
+</document>

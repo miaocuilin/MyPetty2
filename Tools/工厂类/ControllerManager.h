@@ -80,4 +80,8 @@
 //检查强制更新用
 +(NSInteger)getCheckUpdate;
 +(void)setCheckUpdate;
+
+//tabBar的隐藏和显示
++(void)hideTabBar;
++(void)showTabBar;
 @end

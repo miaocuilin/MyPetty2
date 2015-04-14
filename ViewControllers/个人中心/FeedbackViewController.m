@@ -39,6 +39,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.navigationController.navigationBarHidden = YES;
+    
     [self createBg];
 
     self.umFeedback = [UMFeedback sharedInstance];
@@ -86,7 +88,8 @@
 - (void)backBtnClick:(UIButton *)sender
 {
     NSLog(@"返回");
-    [self dismissViewControllerAnimated:YES completion:nil];
+//    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)makeUI

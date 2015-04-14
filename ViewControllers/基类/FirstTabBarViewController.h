@@ -43,4 +43,7 @@
 
 -(void)modifyUI;
 -(void)refreshMessageNum;
+
+-(void)hideBottom;
+-(void)showBottom;
 @end

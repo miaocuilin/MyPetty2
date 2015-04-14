@@ -21,7 +21,7 @@
     UITableView * tv;
 //    UITableView * tv2;
     
-    RandomViewController * vc;
+//    RandomViewController * vc;
     PetRecommendViewController * vc2;
     
     //榜单是否加载过

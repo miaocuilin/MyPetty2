@@ -14,9 +14,13 @@
 #import "CenterViewController.h"
 #import "SingleTalkModel.h"
 #import "EaseMob.h"
+#import "ChoosePicTypeViewController.h"
+#import "Mass_electionViewController.h"
+#import "MyCenterViewController.h"
+#import "PersonCenterViewController.h"
 
 @interface FirstTabBarViewController () <IChatManagerDelegate>
-
+@property(nonatomic,retain)UIButton *camaraBtn;
 @end
 
 @implementation FirstTabBarViewController
@@ -33,11 +37,12 @@
         [self modifyUI];
     }
     if (self.selectedIndex == 3) {
-        CenterViewController * vc4 = self.viewControllers[3];
-        [vc4 refresh];
-    }else if(self.selectedIndex == 0){
-        MyStarViewController * vc = self.viewControllers[0];
-        [vc.tv headerBeginRefreshing];
+        UINavigationController *nc4 = self.viewControllers[3];
+        PersonCenterViewController * vc4 = nc4.viewControllers[0];
+//        [vc4 refresh];
+    }else if(self.selectedIndex == 1){
+//        Mass_electionViewController * vc = self.viewControllers[1];
+//        [vc.tv headerBeginRefreshing];
     }
     //
     int a = [MyControl returnUnreadMessageCount];
@@ -98,11 +103,16 @@
     
     [self registerNotifications];
     
-    MyStarViewController * vc1 = [[MyStarViewController alloc] init];
-    FoodViewController * vc2 = [[FoodViewController alloc] init];
-    DiscoveryViewController * vc3 = [[DiscoveryViewController alloc] init];
-    CenterViewController * vc4 = [[CenterViewController alloc] init];
-    vc4.tabBar = self;
+    DiscoveryViewController * vc1 = [[DiscoveryViewController alloc] init];
+    Mass_electionViewController * vc2 = [[Mass_electionViewController alloc] init];
+    UINavigationController *nc2 = [[UINavigationController alloc] initWithRootViewController:vc2];
+    
+    FoodViewController * vc3 = [[FoodViewController alloc] init];
+    
+    PersonCenterViewController * vc4 = [[PersonCenterViewController alloc] init];
+    UINavigationController *nc4 = [[UINavigationController alloc] initWithRootViewController:vc4];
+    
+//    vc4.tabBar = self;
     //    tbc = [[UITabBarController alloc] init];
     
     self.talkIDArray = [NSMutableArray arrayWithCapacity:0];
@@ -111,14 +121,16 @@
     self.keysArray = [NSMutableArray arrayWithCapacity:0];
     self.valuesArray = [NSMutableArray arrayWithCapacity:0];
     
-    self.viewControllers = @[vc1, vc2, vc3, vc4];
-    self.selectedIndex = 1;
+    self.viewControllers = @[vc1, nc2, vc3, nc4];
+//    self.selectedIndex = 1;
     
     self.tabBar.hidden = YES;
     [vc1 release];
     [vc2 release];
     [vc3 release];
     [vc4 release];
+    [nc2 release];
+    [nc4 release];
     
     [self createBottom];
     //    NSArray * scArray = @[@"萌宠推荐", @"宇宙广场", @"星球关注"];
@@ -238,21 +250,31 @@
 #pragma mark -
 -(void)createBottom
 {
-    bottomBg = [MyControl createViewWithFrame:CGRectMake(0, self.view.frame.size.height-50, self.view.frame.size.width, 50)];
+    CGFloat spe = [UIScreen mainScreen].bounds.size.width/5.0;
+    //    140 101
+    
+    bottomBg = [MyControl createViewWithFrame:CGRectMake(spe, self.view.frame.size.height-50, self.view.frame.size.width-spe, 50)];
     [self.view addSubview:bottomBg];
     
-    NSArray * selectedArray = @[@"food_myStar_selected", @"food_beg_selected", @"food_discovery_selected", @"food_center_selected"];
-    NSArray * unSelectedArray = @[@"food_myStar_unSelected", @"food_beg_unSelected", @"food_discovery_unSelected", @"food_center_unSelected"];
+    NSArray * selectedArray = @[@"food_discovery_selected", @"food_myStar_selected", @"food_beg_selected", @"food_center_selected"];
+    NSArray * unSelectedArray = @[@"food_discovery_unSelected", @"food_myStar_unSelected", @"food_beg_unSelected", @"food_center_unSelected"];
+
+    CGFloat height = spe*5/7;
+    
+    CGFloat circleWidth = 94/140.0*spe*0.9;
+    CGFloat ballWidth = circleWidth;
+    CGFloat ballHeight = circleWidth*94/85;
+    
     for (int i=0; i<selectedArray.count; i++) {
-        UIImageView * halfBall = [MyControl createImageViewWithFrame:CGRectMake(i*(self.view.frame.size.width/4.0), bottomBg.frame.size.height-50, self.view.frame.size.width/4.0, 50) ImageName:@"food_bottom_halfBall.png"];
+        UIImageView * halfBall = [MyControl createImageViewWithFrame:CGRectMake(i*spe, bottomBg.frame.size.height-height, spe, height) ImageName:@"food_bottom_halfBall.png"];
         [bottomBg addSubview:halfBall];
         
-        UIButton * ballBtn = [MyControl createButtonWithFrame:CGRectMake(halfBall.frame.origin.x+halfBall.frame.size.width/2.0-42.5/2.0, 2, 85/2.0, 94/2.0) ImageName:unSelectedArray[i] Target:self Action:@selector(ballBtnClick:) Title:nil];
+        UIButton * ballBtn = [MyControl createButtonWithFrame:CGRectMake(halfBall.frame.origin.x+halfBall.frame.size.width/2.0-ballWidth/2.0, 5, ballWidth, ballHeight) ImageName:unSelectedArray[i] Target:self Action:@selector(ballBtnClick:) Title:nil];
         ballBtn.tag = 90+i;
         
         [ballBtn setBackgroundImage:[UIImage imageNamed:selectedArray[i]] forState:UIControlStateSelected];
         [bottomBg addSubview:ballBtn];
-        if (i == 1) {
+        if (i == 0) {
             ballBtn.selected = YES;
         }
         if (i == 3) {
@@ -266,16 +288,33 @@
         }
     }
     
+    CGFloat addWidth = spe*0.1;
+    _camaraBtn = [MyControl createButtonWithFrame:CGRectMake(0, [UIScreen mainScreen].bounds.size.height-spe-addWidth, spe+addWidth, spe+addWidth) ImageName:@"bottom_camera.png" Target:self Action:@selector(camaraClick) Title:nil];
+    [self.view addSubview:self.camaraBtn];
+    
     [self refreshMessageNum];
 }
+#pragma mark - 相机按钮
+-(void)camaraClick
+{
+    if (![[USER objectForKey:@"isSuccess"] intValue]) {
+        ShowAlertView;
+        return;
+    }
+    ChoosePicTypeViewController *picVC = [[ChoosePicTypeViewController alloc] init];
+    [self presentViewController:picVC animated:YES completion:nil];
+    [picVC release];
+}
+
+#pragma mark -
 -(void)ballBtnClick:(UIButton *)btn
 {
 //    [self ballAnimation:btn];
 
-    if (![[USER objectForKey:@"isSuccess"] intValue] && btn.tag == 90) {
-        ShowAlertView;
-        return;
-    }
+//    if (![[USER objectForKey:@"isSuccess"] intValue] && btn.tag == 91) {
+//        ShowAlertView;
+//        return;
+//    }
     
     [self refreshMessageNum];
     NSLog(@"%d", self.selectedIndex);
@@ -291,17 +330,20 @@
     
     //    NSLog(@"------%d", self.selectedIndex);
     if (btn.tag == 90) {
-        MyStarViewController * vc = self.viewControllers[0];
-        [vc.tv headerBeginRefreshing];
+        if(self.selectedIndex == btn.tag-90){
+            DiscoveryViewController * vc = self.viewControllers[0];
+            [vc refresh];
+        }
+        
     }else if (btn.tag == 91 && self.selectedIndex == 1) {
-        FoodViewController * vc = self.viewControllers[1];
-        [vc loadData];
+//        Mass_electionViewController * vc = self.viewControllers[1];
+//        [vc.tv headerBeginRefreshing];
     }else if(btn.tag == 92 && self.selectedIndex == 2){
-        DiscoveryViewController * vc = self.viewControllers[2];
-        [vc refresh];
+        FoodViewController * vc = self.viewControllers[2];
+        [vc loadData];
     }else if(btn.tag == 93 && self.selectedIndex == 3){
-        CenterViewController * vc = self.viewControllers[3];
-        [vc refresh];
+        PersonCenterViewController * vc = self.viewControllers[3];
+//        [vc refresh];
     }
     self.selectedIndex = btn.tag-90;
     
@@ -676,5 +718,34 @@
     // Pass the selected object to the new view controller.
 }
 */
-
+-(void)hideBottom
+{
+    __block CGRect rectCamera = self.camaraBtn.frame;
+    __block CGRect rectBottom = bottomBg.frame;
+    __block FirstTabBarViewController *blockSelf = self;
+    [UIView animateWithDuration:0.2 animations:^{
+        rectCamera.origin.y = HEIGHT;
+        blockSelf.camaraBtn.frame = rectCamera;
+        
+        rectBottom.origin.y = HEIGHT;
+        blockSelf->bottomBg.frame = rectBottom;
+    }];
+//    self.camaraBtn.hidden = YES;
+//    bottomBg.hidden = YES;
+}
+-(void)showBottom
+{
+    __block CGRect rectCamera = self.camaraBtn.frame;
+    __block CGRect rectBottom = bottomBg.frame;
+    __block FirstTabBarViewController *blockSelf = self;
+    [UIView animateWithDuration:0.2 animations:^{
+        rectCamera.origin.y = HEIGHT-rectCamera.size.height;
+        blockSelf.camaraBtn.frame = rectCamera;
+        
+        rectBottom.origin.y = HEIGHT-rectBottom.size.height;
+        blockSelf->bottomBg.frame = rectBottom;
+    }];
+//    self.camaraBtn.hidden = NO;
+//    bottomBg.hidden = NO;
+}
 @end

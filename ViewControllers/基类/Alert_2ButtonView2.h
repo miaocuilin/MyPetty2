@@ -16,7 +16,7 @@
 @property(nonatomic,copy)NSString * foodCost;
 @property(nonatomic,copy)NSString * productName;
 @property(nonatomic,copy)NSString * pet_name;
-//1.打赏，有勾选的  2.提示去充值 3.提示是否确认兑换 4.退出圈子 5.宠物没周边提示
+//1.打赏，有勾选的  2.提示去充值 3.提示是否确认兑换 4.退出圈子 5.宠物没周边提示  //6.推荐票数用完
 @property(nonatomic)int type;
 //1.本次捧星  2.本次购物
 @property(nonatomic)int subType;
@@ -25,6 +25,7 @@
 @property(nonatomic,copy)void (^jumpCharge)();
 @property(nonatomic,copy)void (^exchange)();
 @property(nonatomic,copy)void (^quit)();
+@property(nonatomic,copy)void (^exchangeRecommend)();
 
 //1.助TA集粉  2.送礼
 @property(nonatomic,copy)void (^zbBlock)(int);

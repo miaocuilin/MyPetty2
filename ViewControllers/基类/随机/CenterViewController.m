@@ -310,7 +310,7 @@
     }
     
     location.text = [ControllerManager returnProvinceAndCityWithCityNum:[USER objectForKey:@"city"]];
-    
+
     goldNum.text = [USER objectForKey:@"gold"];
 }
 -(void)btnClick:(UIButton *)btn

@@ -735,7 +735,7 @@
     mainTab.foodNum = self.foodNum;
     mainTab.modalTransitionStyle = 2;
     
-    mainTab.selectedIndex = 1;
+//    mainTab.selectedIndex = 1;
 //    if ([[USER objectForKey:@"hasRemoteNotification"] intValue]) {
 //        mainTab.selectedIndex = 3;
 //    }

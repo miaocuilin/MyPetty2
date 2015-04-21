@@ -16,7 +16,7 @@
 
 static NSString *handpickCellID = @"DiscoverHandPickedCell";
 
-@interface DiscoverPictureViewController () <UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UITextFieldDelegate>
+@interface DiscoverPictureViewController () <UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UITextFieldDelegate,UMSocialUIDelegate>
 {
     BOOL isWaterFlowCreated;
     BOOL isAttentionLoaded;
@@ -740,6 +740,7 @@ static NSString *handpickCellID = @"DiscoverHandPickedCell";
         
         BOOL oauth = [UMSocialAccountManager isOauthAndTokenNotExpired:UMShareToSina];
         NSLog(@"%d", oauth);
+//        __weak DiscoverPictureViewController *weakSelf = self;
         if (oauth) {
             [[UMSocialDataService defaultDataService] requestUnOauthWithType:UMShareToSina  completion:^(UMSocialResponseEntity *response){
                 [[UMSocialControllerService defaultControllerService] setShareText:str shareImage:bigImageView.image socialUIDelegate:self];

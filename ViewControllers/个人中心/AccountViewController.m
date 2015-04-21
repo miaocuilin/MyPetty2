@@ -420,7 +420,7 @@
     }
     
     CodeAlertView * codeView = [[CodeAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    codeView.AlertType = 1;
+    codeView.alertType = 1;
     [codeView makeUI];
     [self.view addSubview:codeView];
     [UIView animateWithDuration:0.2 animations:^{
@@ -469,7 +469,7 @@
 -(void)codeViewSuccess:(InviteCodeModel *)model
 {
     CodeAlertView * codeView = [[CodeAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    codeView.AlertType = 2;
+    codeView.alertType = 2;
     codeView.codeModel = model;
     [codeView makeUI];
     [self.view addSubview:codeView];
@@ -483,7 +483,7 @@
 -(void)codeViewFailed:(InviteCodeModel *)model
 {
     CodeAlertView * codeView = [[CodeAlertView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    codeView.AlertType = 3;
+    codeView.alertType = 3;
     codeView.codeModel = model;
     [codeView makeUI];
     [self.view addSubview:codeView];
